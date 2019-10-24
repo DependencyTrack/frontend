@@ -1,0 +1,29 @@
+{
+  "en": {
+    "message": {
+      "login": "Login",
+      "login_desc": "Sign In to your account",
+      "login_unauthorized": "Invalid username or password",
+      "login_forbidden": "This account is inactive or has been suspended",
+      "username": "Username",
+      "password": "Password",
+      "portfolio": "Portfolio",
+      "dashboard": "Dashboard",
+      "projects": "Projects",
+      "components": "Components",
+      "dependencies": "Dependencies",
+      "vulnerabilities": "Vulnerabilities",
+      "licenses": "Licenses",
+      "portfolio_vulnerabilities": "Portfolio Vulnerabilities",
+      "projects_at_risk": "Projects at Risk",
+      "vulnerable_components": "Vulnerable Components",
+      "vulnerable_dependencies": "Vulnerable Dependencies",
+      "inherited_risk_score": "Inherited Risk Score",
+      "vulnerable_projects": "Vulnerable Projects",
+      "findings_audited": "Findings Audited",
+      "auditing_progress": "Auditing Progress",
+      "projectName": "Project Name",
+      "version": "Version"
+    }
+  }
+}
