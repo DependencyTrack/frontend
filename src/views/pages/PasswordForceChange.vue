@@ -6,20 +6,28 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <b-form>
-                  <h1>{{ $t('message.login') }}</h1>
-                  <p class="text-muted">{{ $t('message.login_desc') }}</p>
+                <b-form @submit.prevent="changePassword()">
+                  <h1>{{ $t('message.password_force_change') }}</h1>
+                  <p class="text-muted">{{ $t('message.password_force_change_desc') }}</p>
                   <b-input-group class="mb-3">
                     <b-input-group-prepend><b-input-group-text><i class="icon-user"></i></b-input-group-text></b-input-group-prepend>
                     <b-form-input type="text" class="form-control" v-model="input.username" :placeholder="this.$t('message.username')" autocomplete="username email" />
                   </b-input-group>
                   <b-input-group class="mb-4">
                     <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="password" class="form-control" v-model="input.password" :placeholder="this.$t('message.password')" autocomplete="current-password" />
+                    <b-form-input type="password" class="form-control" v-model="input.password" :placeholder="this.$t('message.password_current')" autocomplete="current-password" />
+                  </b-input-group>
+                  <b-input-group class="mb-4">
+                    <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
+                    <b-form-input type="password" class="form-control" v-model="input.newPassword" :placeholder="this.$t('message.password_new')" autocomplete="off" />
+                  </b-input-group>
+                  <b-input-group class="mb-4">
+                    <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
+                    <b-form-input type="password" class="form-control" v-model="input.confirmPassword" :placeholder="this.$t('message.password_confirm')" autocomplete="off" />
                   </b-input-group>
                   <b-row>
-                    <b-col cols="6">
-                      <b-button variant="primary" class="px-4" v-on:click="login()">{{ $t('message.login') }}</b-button>
+                    <b-col>
+                      <b-button block variant="primary" class="px-4" type="submit">{{ $t('message.password_change') }}</b-button>
                     </b-col>
                   </b-row>
                 </b-form>
@@ -36,7 +44,7 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="loginError"/>
+    <InformationalModal v-bind:message="passwordChangeError"/>
   </div>
 </template>
 
@@ -47,26 +55,29 @@
   const qs = require('querystring');
 
   export default {
-    name: 'Login',
+    name: 'PasswordForceChange',
     components: {
       InformationalModal
     },
     data() {
       return {
-        loginError: "",
+        passwordChangeError: "",
         input: {
           username: "",
-          password: ""
+          password: "",
+          newPassword: "",
+          confirmPassword: ""
         }
       }
     },
     methods: {
-      login() {
-        const url = api.BASE_URL + "/" + api.URL_LOGIN;
-        console.log(url);
+      changePassword() {
+        const url = `${api.BASE_URL}/${api.URL_FORCE_PW_CHANGE}`;
         const requestBody = {
           username: this.input.username,
-          password: this.input.password
+          password: this.input.password,
+          newPassword: this.input.newPassword,
+          confirmPassword: this.input.confirmPassword
         };
         const config = {
           headers: {
@@ -75,22 +86,20 @@
         };
         axios.post(url, qs.stringify(requestBody), config)
           .then((result) => {
-            if(result.statusText === 'OK') {
-              sessionStorage.setItem('token', result.data); // store the JWT in session storage
-              this.$router.replace({ name: "Dashboard" });
+            if (result.status === 200) {
+              this.$bvToast.toast(this.$t('message.password_change_success'));
+              // We don't get the JWT token on a successfull password change,
+              // reroute users back to login
+              this.$router.replace({ name: "Login" });
             }
           })
           .catch((err) => {
             if (err.response.status === 401) {
-              if (err.response.data === api.FORCE_PASSWORD_CHANGE) {
-                this.$router.replace({ name: "PasswordForceChange" })
-                return;
-              }
               this.$bvModal.show('modal-informational');
-              this.loginError = this.$t('message.login_unauthorized');
-            } else if (err.response.status === 403) {
+              this.passwordChangeError = this.$t('message.password_unauthorized');
+            } else if (err.response.status === 406) {
               this.$bvModal.show('modal-informational');
-              this.loginError = this.$t('message.login_forbidden');
+              this.passwordChangeError = this.$t('message.password_not_acceptable');
             }
           })
       }
