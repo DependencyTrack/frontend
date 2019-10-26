@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from 'axios';
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
   export default {
@@ -18,7 +18,9 @@
       if(!this.authenticated) {
         this.$router.replace({ name: "Login" });
       }
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+      if (this.authenticated && jwt !== null) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+      }
       $.ajaxSetup({
         beforeSend: function(xhr) {
           if (jwt !== null) {
