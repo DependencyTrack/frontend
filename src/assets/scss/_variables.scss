@@ -26,6 +26,17 @@ $light-blue: #63c2de !default;
 $body-bg:       $gray-800 !default;
 $body-color:    $gray-200 !default;
 
+$severity-critical: $red;
+$severity-high: $orange;
+$severity-medium: $yellow;
+$severity-low: $green;
+
+:root {
+  --severity-critical: #{$severity-critical};
+  --severity-high: #{$severity-high};
+  --severity-medium: #{$severity-medium};
+  --severity-low: #{$severity-low};
+}
 
 // Components
 //
