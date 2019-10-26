@@ -3,6 +3,8 @@
 </template>
 
 <script>
+  // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
+  import $ from 'jquery';
   export default {
     name: 'app',
     data() {
@@ -14,6 +16,14 @@
       if(!this.authenticated) {
         this.$router.replace({ name: "Login" });
       }
+      $.ajaxSetup({
+        beforeSend: function(xhr) {
+          let jwt = sessionStorage.getItem('token');
+          if (jwt !== null) {
+            xhr.setRequestHeader("Authorization", "Bearer " + jwt);
+          }
+        }
+      });
     },
     methods: {
       setAuthenticated(status) {
