@@ -87,8 +87,11 @@
         axios.post(url, qs.stringify(requestBody), config)
           .then((result) => {
             if (result.status === 200) {
-              this.$bvToast.toast(this.$t('message.password_change_success'));
-              // We don't get the JWT token on a successfull password change,
+              this.$root.$bvToast.toast(this.$t('message.password_change_success'), {
+                title: this.$t('message.password_change'),
+                variant: 'success'
+              });
+              // We don't get the JWT token on a successful password change,
               // reroute users back to login
               this.$router.replace({ name: "Login" });
             }
