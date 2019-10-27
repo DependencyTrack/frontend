@@ -6,7 +6,7 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <b-form @submit.prevent="login()">
+                <b-form @submit.prevent.stop="login()">
                   <h1>{{ $t('message.login') }}</h1>
                   <p class="text-muted">{{ $t('message.login_desc') }}</p>
                   <b-input-group class="mb-3">
@@ -19,7 +19,7 @@
                   </b-input-group>
                   <b-row>
                     <b-col cols="6">
-                      <b-button variant="primary" type="submit" class="px-4" v-on:click="login()">{{ $t('message.login') }}</b-button>
+                      <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
                     </b-col>
                   </b-row>
                 </b-form>
