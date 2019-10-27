@@ -43,7 +43,7 @@
             }
           });
         })
-        .catch((err) => {
+        .catch(() => {
           // Token is stale, clear stored token and redirect to login view
           sessionStorage.removeItem('token');
           this.$router.replace({ name: "Login" });
