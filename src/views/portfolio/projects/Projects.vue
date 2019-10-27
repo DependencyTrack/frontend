@@ -114,26 +114,8 @@ export default {
         search: true,
         showColumns: true,
         url: `${api.BASE_URL}/${api.URL_PROJECT}`,
-        ajaxOptions: {
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader(
-              "Authorization",
-              `Bearer ${sessionStorage.getItem("token")}`
-            );
-          }
-        }
       }
     };
-    // mounted() {
-    //   axios
-    //     .get(`${api.BASE_URL}/${api.URL_PROJECT}`, {
-    //       headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
-    //     })
-    //     .then(result => {
-    //       this.data = result.data;
-    //       console.log(this.data);
-    //     });
-    // }
   }
 };
 </script>
