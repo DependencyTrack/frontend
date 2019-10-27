@@ -15,6 +15,7 @@ const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
 // Pages
 const Login = () => import('@/views/pages/Login');
+const PasswordForceChange = () => import('@/views/pages/PasswordForceChange');
 
 Vue.use(Router);
 
@@ -67,6 +68,11 @@ function configRoutes() {
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/change-password',
+      name: 'PasswordForceChange',
+      component: PasswordForceChange
     }
   ]
 }

@@ -82,6 +82,10 @@
           })
           .catch((err) => {
             if (err.response.status === 401) {
+              if (err.response.data === api.FORCE_PASSWORD_CHANGE) {
+                this.$router.replace({ name: "PasswordForceChange" })
+                return;
+              }
               this.$bvModal.show('modal-informational');
               this.loginError = this.$t('message.login_unauthorized');
             } else if (err.response.status === 403) {
