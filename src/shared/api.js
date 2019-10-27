@@ -3,7 +3,8 @@
  * All API calls to the Dependency-Track server should make use of these constants in order to
  * avoid typographical errors.
  */
-const BASE_URL = process.env.VUE_APP_SERVER_URL;
+const BASE_URL =
+  process.env.NODE_ENV === "production" ? process.env.VUE_APP_SERVER_URL : "";
 
 const CONTENT_TYPE_JSON = "application/json";
 const ENCODE_MULTIPART_FORM_DATA = "multipart/form-data";
