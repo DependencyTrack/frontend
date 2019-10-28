@@ -7,25 +7,18 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
-import VueI18n from 'vue-i18n'
-import Messages from './i18n/messages.json'
+import i18n from './i18n'
+import './validation'
 import './plugins/table.js'
 
 Vue.use(BootstrapVue);
-Vue.use(VueI18n);
-
-const i18n = new VueI18n({
-  locale: 'en',
-  fallbackLocale: 'en',
-  messages: Messages
-});
 
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
   components: {
-    App
+    App,
   }
   ,i18n
 });
