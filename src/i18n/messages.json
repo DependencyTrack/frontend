@@ -33,6 +33,9 @@
       "auditing_progress": "Auditing Progress",
       "projectName": "Project Name",
       "version": "Version"
+    },
+    "validation": {
+      "required": "{_field_} is required"
     }
   }
 }
