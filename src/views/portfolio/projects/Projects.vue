@@ -1,23 +1,26 @@
 <template>
   <div class="animated fadeIn">
     <portfolio-widget-row />
-    <BootstrapTable
+    <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options"
-    ></BootstrapTable>
+      :options="options">
+    </bootstrap-table>
   </div>
 </template>
 
 <script>
 //import axios from "axios";
+import Vue from 'vue'
 import api from "../../../shared/api";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+import SeverityProgressBar from "../../components/SeverityProgressBar";
 
 export default {
   components: {
-    PortfolioWidgetRow
+    PortfolioWidgetRow,
+    SeverityProgressBar
   },
   data() {
     return {
@@ -70,42 +73,19 @@ export default {
               return "-"; // No vulnerability info available
             }
 
-            if (metrics.vulnerabilities === 0) {
-              return '<span class="progress"><div class="progress-bar" style="width: 100%">0</div></span>';
-            }
-
-            return `
-            <span class="progress">
-              ${
-                metrics.critical > 0
-                  ? `<div class="progress-bar severity-critical-bg" style="width:${(100 *
-                      metrics.critical) /
-                      metrics.vulnerabilities}%">${metrics.critical}</div>`
-                  : ""
-              }
-              ${
-                metrics.high > 0
-                  ? `<div class="progress-bar severity-high-bg" style="width:${(100 *
-                      metrics.high) /
-                      metrics.vulnerabilities}%">${metrics.high}</div>`
-                  : ""
-              }
-              ${
-                metrics.medium > 0
-                  ? `<div class="progress-bar severity-medium-bg" style="width:${(100 *
-                      metrics.medium) /
-                      metrics.vulnerabilities}%">${metrics.medium}</div>`
-                  : ""
-              }
-              ${
-                metrics.low > 0
-                  ? `<div class="progress-bar severity-low-bg" style="width:${(100 *
-                      metrics.low) /
-                      metrics.vulnerabilities}%">${metrics.low}</div>`
-                  : ""
-              }
-            </span>
-            `;
+            // Programmatically instantiate SeverityProgressBar Vue component
+            let ComponentClass = Vue.extend(SeverityProgressBar);
+            let progressBar = new ComponentClass({
+              propsData: {
+                vulnerabilities: metrics.vulnerabilities,
+                critical: metrics.critical,
+                high: metrics.high,
+                medium: metrics.medium,
+                low: metrics.low,
+                unassigned: metrics.unassigned }
+            });
+            progressBar.$mount();
+            return progressBar.$el.outerHTML;
           }
         }
       ],
@@ -119,18 +99,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.severity-critical-bg {
-  background: var(--severity-critical, red);
-}
-.severity-high-bg {
-  background: var(--severity-high, orange);
-}
-.severity-medium-bg {
-  background: var(--severity-medium, yellow);
-}
-.severity-low-bg {
-  background: var(--severity-low, green);
-}
-</style>
