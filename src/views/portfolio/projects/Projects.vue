@@ -19,8 +19,7 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
 
 export default {
   components: {
-    PortfolioWidgetRow,
-    SeverityProgressBar
+    PortfolioWidgetRow
   },
   data() {
     return {
