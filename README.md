@@ -14,17 +14,20 @@ This repo contains a 2nd experimental front-end web client for OWASP Dependency-
 ## Build Setup
 
 ``` bash
-# install dependencies
+# Install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# Serve with hot reload at localhost:8080
 npm run serve
 
-# build for production with minification
+# Build for production with minification
 npm run build
 
-# run linter
+# Run linter
 npm run lint
+
+# Generates a CycloneDX software bill-of-materials
+npm run bom
 ```
 
 ## Development Setup

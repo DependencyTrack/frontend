@@ -13,8 +13,9 @@
   "scripts": {
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "vue-cli-service build && npm run bom",
+    "lint": "vue-cli-service lint",
+    "bom": "cyclonedx-bom -o bom.xml"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -41,6 +42,7 @@
     "vue-router": "^3.0.6"
   },
   "devDependencies": {
+    "@cyclonedx/bom": "^1.0.4",
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
     "@vue/cli-service": "^3.8.4",
