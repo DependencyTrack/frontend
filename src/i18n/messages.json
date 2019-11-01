@@ -23,6 +23,8 @@
       "dependencies": "Dependencies",
       "vulnerabilities": "Vulnerabilities",
       "licenses": "Licenses",
+      "administration": "Administration",
+      "policy_management": "Policy Management",
       "portfolio_vulnerabilities": "Portfolio Vulnerabilities",
       "projects_at_risk": "Projects at Risk",
       "vulnerable_components": "Vulnerable Components",

@@ -21,7 +21,6 @@
 </template>
 
 <script>
-  import nav from '@/_nav'
   import { Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, Breadcrumb } from '@coreui/vue'
   import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown'
   import DefaultHeader from './DefaultHeader'
@@ -44,7 +43,61 @@
     },
     data () {
       return {
-        nav: nav.items
+        nav: [
+        {
+          name: this.$t('message.dashboard'),
+          url: '/dashboard',
+          icon: 'icon-speedometer'
+        },
+        {
+          title: true,
+          name: this.$t('message.portfolio'),
+          class: '',
+          wrapper: {
+            element: '',
+            attributes: {}
+          }
+        },
+        {
+          name: this.$t('message.projects'),
+          url: '/projects',
+          icon: 'fa fa-sitemap'
+        },
+        {
+          name: this.$t('message.components'),
+          url: '/components',
+          icon: 'fa fa-cubes'
+        },
+        {
+          name: this.$t('message.vulnerabilities'),
+          url: '/vulnerabilities',
+          icon: 'fa fa-shield'
+        },
+        {
+          name: this.$t('message.licenses'),
+          url: '/licenses',
+          icon: 'fa fa-balance-scale'
+        },
+        {
+          title: true,
+          name: this.$t('message.administration'),
+          class: '',
+          wrapper: {
+            element: '',
+            attributes: {}
+          }
+        },
+        {
+          name: this.$t('message.policy_management'),
+          url: '/policy',
+          icon: 'fa fa-list-alt'
+        },
+        {
+          name: this.$t('message.administration'),
+          url: '/admin',
+          icon: 'fa fa-cogs'
+        }
+      ]
       }
     },
     computed: {
