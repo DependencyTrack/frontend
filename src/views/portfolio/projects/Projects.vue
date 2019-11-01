@@ -11,7 +11,6 @@
 </template>
 
 <script>
-//import axios from "axios";
 import Vue from 'vue'
 import api from "../../../shared/api";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
@@ -25,17 +24,17 @@ export default {
     return {
       columns: [
         {
-          title: "Project Name",
+          title: this.$t('message.project_name'),
           field: "name",
           sortable: true
         },
         {
-          title: "Version",
+          title: this.$t('message.version'),
           field: "version",
           sortable: true
         },
         {
-          title: "Last BOM Import",
+          title: this.$t('message.last_bom_import'),
           field: "lastBomImport",
           sortable: true,
           formatter(timestamp, row, index) {
@@ -45,17 +44,17 @@ export default {
           }
         },
         {
-          title: "BOM Format",
+          title: this.$t('message.bom_format'),
           field: "lastBomImportFormat",
           sortable: true
         },
         {
-          title: "Risk Score",
+          title: this.$t('message.risk_score'),
           field: "metrics.inheritedRiskScore",
           sortable: true
         },
         {
-          title: "Active",
+          title: this.$t('message.active'),
           field: "active",
           formatter(value, row, index) {
             return value === true ? '<i class="fa fa-check-square-o" />' : "";
@@ -64,7 +63,7 @@ export default {
           sortable: true
         },
         {
-          title: "Vulnerabilities",
+          title: this.$t('message.vulnerabilities'),
           field: "metrics",
           sortable: true,
           formatter(metrics, row, index) {

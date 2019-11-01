@@ -28,11 +28,15 @@
       "vulnerable_components": "Vulnerable Components",
       "vulnerable_dependencies": "Vulnerable Dependencies",
       "inherited_risk_score": "Inherited Risk Score",
+      "risk_score": "Risk Score",
       "vulnerable_projects": "Vulnerable Projects",
       "findings_audited": "Findings Audited",
       "auditing_progress": "Auditing Progress",
-      "projectName": "Project Name",
-      "version": "Version"
+      "project_name": "Project Name",
+      "version": "Version",
+      "last_bom_import": "Last BOM Import",
+      "bom_format": "BOM Format",
+      "active": "Active"
     },
     "validation": {
       "required": "{_field_} is required"
