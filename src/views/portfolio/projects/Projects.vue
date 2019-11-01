@@ -92,7 +92,21 @@ export default {
       options: {
         search: true,
         showColumns: true,
-        url: `${api.BASE_URL}/${api.URL_PROJECT}`,
+        showRefresh: true,
+        pagination: true,
+        silentSort: false,
+        sidePagination: 'server',
+        queryParamsType: 'pageSize',
+        pageList: '[10, 25, 50, 100]',
+        pageSize: 10,
+        icons: {
+          refresh: 'fa-refresh'
+        },
+        responseHandler: function (res, xhr) {
+          res.total = xhr.getResponseHeader("X-Total-Count");
+          return res;
+        },
+        url: `${api.BASE_URL}/${api.URL_PROJECT}`
       }
     };
   }
