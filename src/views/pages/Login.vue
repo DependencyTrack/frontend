@@ -52,7 +52,7 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="loginError"/>
+    <informational-modal v-bind:message="loginError"/>
   </div>
 </template>
 
@@ -99,7 +99,7 @@
             if(result.statusText === 'OK') {
               sessionStorage.setItem('token', result.data); // store the JWT in session storage
               // Set authorization headers for axios and jQuery
-              axios.defaults.headers.common['Authorization'] = `Bearer ${result.data}`; 
+              axios.defaults.headers.common['Authorization'] = `Bearer ${result.data}`;
               $.ajaxSetup({
                 beforeSend: function(xhr) {
                   xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
@@ -111,7 +111,7 @@
           .catch((err) => {
             if (err.response.status === 401) {
               if (err.response.data === api.FORCE_PASSWORD_CHANGE) {
-                this.$router.replace({ name: "PasswordForceChange" })
+                this.$router.replace({ name: "PasswordForceChange" });
                 return;
               }
               this.$bvModal.show('modal-informational');
