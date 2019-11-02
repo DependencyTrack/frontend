@@ -40,6 +40,7 @@
             title: this.$t('message.osi_approved'),
             field: "isOsiApproved",
             sortable: false,
+            align: "center",
             class: "tight",
             formatter: function (value, row, index) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
@@ -49,6 +50,7 @@
             title: this.$t('message.fsf_libre'),
             field: "isFsfLibre",
             sortable: false,
+            align: "center",
             class: "tight",
             formatter: function (value, row, index) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
