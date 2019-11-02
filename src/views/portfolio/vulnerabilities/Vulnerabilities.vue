@@ -27,6 +27,7 @@
             title: this.$t('message.name'),
             field: "vulnId",
             sortable: true,
+            class: "tight",
             formatter(value, row, index) {
               let vulnurl = xssFilters.uriInUnQuotedAttr("../vulnerability/?source=" + row.source + "&vulnId=" + value);
               return common.formatSourceLabel(row.source) + " <a href=\"" + vulnurl + "\">" + value + "</a>";
@@ -36,6 +37,7 @@
             title: this.$t('message.published'),
             field: "published",
             sortable: true,
+            class: "tight",
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
                 return common.formatTimestamp(value);
@@ -46,6 +48,7 @@
             title: this.$t('message.cwe'),
             field: "cwe",
             sortable: false,
+            class: "expand",
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
                 return "CWE-" + value.cweId + " " + value.name;
@@ -55,6 +58,7 @@
           {
             title: this.$t('message.severity'),
             field: "severity",
+            class: "tight",
             sortable: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
