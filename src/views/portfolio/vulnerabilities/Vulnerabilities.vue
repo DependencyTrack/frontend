@@ -25,23 +25,42 @@
         columns: [
           {
             title: this.$t('message.name'),
-            field: "vulnerabilityhref",
-            sortable: true
+            field: "vulnId",
+            sortable: true,
+            formatter(value, row, index) {
+              let vulnurl = xssFilters.uriInUnQuotedAttr("../vulnerability/?source=" + row.source + "&vulnId=" + value);
+              return common.formatSourceLabel(row.source) + " <a href=\"" + vulnurl + "\">" + value + "</a>";
+            }
           },
           {
             title: this.$t('message.published'),
-            field: "publishedLabel",
-            sortable: true
+            field: "published",
+            sortable: true,
+            formatter(value, row, index) {
+              if (typeof value !== 'undefined') {
+                return common.formatTimestamp(value);
+              }
+            }
           },
           {
             title: this.$t('message.cwe'),
-            field: "cwefield",
-            sortable: false
+            field: "cwe",
+            sortable: false,
+            formatter(value, row, index) {
+              if (typeof value !== 'undefined') {
+                return "CWE-" + value.cweId + " " + value.name;
+              }
+            }
           },
           {
             title: this.$t('message.severity'),
-            field: "severityLabel",
-            sortable: false
+            field: "severity",
+            sortable: false,
+            formatter(value, row, index) {
+              if (typeof value !== 'undefined') {
+                return common.formatSeverityLabel(value);
+              }
+            }
           }
         ],
         data: [],
@@ -60,19 +79,6 @@
           },
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
-            for (let i=0; i<res.length; i++) {
-              let vulnurl = xssFilters.uriInUnQuotedAttr("../vulnerability/?source=" + res[i].source + "&vulnId=" + res[i].vulnId);
-              res[i].vulnerabilityhref = common.formatSourceLabel(res[i].source) + " <a href=\"" + vulnurl + "\">" + res[i].vulnId + "</a>";
-              if (res[i].hasOwnProperty("cwe")) {
-                res[i].cwefield = "CWE-" + res[i].cwe.cweId + " " + res[i].cwe.name;
-              }
-              if (res[i].hasOwnProperty("severity")) {
-                res[i].severityLabel = common.formatSeverityLabel(res[i].severity);
-              }
-              if (res[i].hasOwnProperty("published")) {
-                res[i].publishedLabel = common.formatTimestamp(res[i].published);
-              }
-            }
             return res;
           },
           url: `${api.BASE_URL}/${api.URL_VULNERABILITY}`
