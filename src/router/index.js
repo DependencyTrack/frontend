@@ -6,10 +6,10 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 
 // Views
 const Dashboard = () => import('@/views/Dashboard');
-const Projects = () => import('@/views/portfolio/projects/Projects');
-const Components = () => import('@/views/portfolio/components/Components');
-const Vulnerabilities = () => import('@/views/portfolio/vulnerabilities/Vulnerabilities');
-const Licenses = () => import('@/views/portfolio/licenses/Licenses');
+const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
+const ComponentList = () => import('@/views/portfolio/components/ComponentList');
+const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');
+const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const Administration = () => import('@/views/administration/Administration');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
@@ -35,22 +35,22 @@ function configRoutes() {
         {
           path: 'projects',
           name: 'Projects',
-          component: Projects
+          component: ProjectList
         },
         {
           path: 'components',
           name: 'Components',
-          component: Components
+          component: ComponentList
         },
         {
           path: 'vulnerabilities',
           name: 'Vulnerabilities',
-          component: Vulnerabilities
+          component: VulnerabilityList
         },
         {
           path: 'licenses',
           name: 'Licenses',
-          component: Licenses
+          component: LicenseList
         },
         {
           path: 'policy',
