@@ -36,54 +36,59 @@
       </div>
     </b-card>
 
+    <b-row>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-projects" class="card-title mb-0">{{ $t('message.projects') }}</h4>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+        </b-card>
+      </b-col>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-auditing-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+        </b-card>
+      </b-col>
+    </b-row>
 
-    <b-card>
-      <b-row>
-        <b-col sm="5">
-          <h4 id="chart-projects" class="card-title mb-0">{{ $t('message.projects') }}</h4>
-        </b-col>
-        <b-col sm="7" class="d-none d-md-block">
-        </b-col>
-      </b-row>
-      <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
-    </b-card>
-
-
-    <b-card>
-      <b-row>
-        <b-col sm="5">
-          <h4 id="chart-auditing-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
-        </b-col>
-        <b-col sm="7" class="d-none d-md-block">
-        </b-col>
-      </b-row>
-      <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
-    </b-card>
-
-
-    <b-card>
-      <b-row>
-        <b-col sm="5">
-          <h4 id="chart-dependencies" class="card-title mb-0">{{ $t('message.dependencies') }}</h4>
-        </b-col>
-        <b-col sm="7" class="d-none d-md-block">
-        </b-col>
-      </b-row>
-      <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
-    </b-card>
-
-
-
-    <b-card>
-      <b-row>
-        <b-col sm="5">
-          <h4 id="chart-components" class="card-title mb-0">{{ $t('message.components') }}</h4>
-        </b-col>
-        <b-col sm="7" class="d-none d-md-block">
-        </b-col>
-      </b-row>
-      <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
-    </b-card>
+    <b-row>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-dependencies" class="card-title mb-0">{{ $t('message.dependencies') }}</h4>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+        </b-card>
+      </b-col>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-components" class="card-title mb-0">{{ $t('message.components') }}</h4>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+        </b-card>
+      </b-col>
+    </b-row>
 
   </div>
 </template>
