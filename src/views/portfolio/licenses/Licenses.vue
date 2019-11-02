@@ -33,7 +33,7 @@
             sortable: true,
             formatter: function (value, row, index) {
               let licenseurl = xssFilters.uriInUnQuotedAttr("../license/?licenseId=" + value);
-              return "<a href=\"" + licenseurl + "\">" + value + "</a>";
+              return `<a href="${licenseurl}">${value}</a>`;
             },
           },
           {

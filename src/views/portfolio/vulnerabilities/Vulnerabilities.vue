@@ -30,7 +30,7 @@
             class: "tight",
             formatter(value, row, index) {
               let vulnurl = xssFilters.uriInUnQuotedAttr("../vulnerability/?source=" + row.source + "&vulnId=" + value);
-              return common.formatSourceLabel(row.source) + " <a href=\"" + vulnurl + "\">" + value + "</a>";
+              return common.formatSourceLabel(row.source) + ` <a href="${vulnurl}">${value}</a>`;
             }
           },
           {
@@ -51,7 +51,7 @@
             class: "expand",
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
-                return "CWE-" + value.cweId + " " + value.name;
+                return `CWE-${value.cweId} ${value.name}`;
               }
             }
           },
