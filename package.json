@@ -39,7 +39,8 @@
     "vue-chartjs": "^3.4.2",
     "vue-i18n": "^8.15.0",
     "vue-perfect-scrollbar": "^0.1.0",
-    "vue-router": "^3.0.6"
+    "vue-router": "^3.0.6",
+    "xss-filters": "^1.2.7"
   },
   "devDependencies": {
     "@cyclonedx/bom": "^1.0.4",

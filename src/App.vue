@@ -7,6 +7,7 @@
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
   import api from './shared/api';
+  import common from './shared/common';
   export default {
     name: 'app',
     data() {
@@ -34,7 +35,7 @@
         .then((result) => {
           this.authenticated = true;
           this.user = result.data;
-          axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`; 
+          axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
           $.ajaxSetup({
             beforeSend: function(xhr) {
               if (jwt !== null) {

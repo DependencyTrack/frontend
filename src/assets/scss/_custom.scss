@@ -3,7 +3,54 @@
 .modal-header {
   background-color: $gray-800;
 }
-
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
+}
+.severity-critical-bg {
+  background: $severity-critical none;
+}
+.severity-high-bg {
+  background: $severity-high none;
+}
+.severity-medium-bg {
+  background: $severity-medium none;
+}
+.severity-low-bg {
+  background: $severity-low none;
+}
+.severity-info-bg {
+  background: $severity-info none;
+}
+.severity-unassigned-bg, .severity-unknown-bg {
+  background: $severity-unassigned none;
+}
+.label-source {
+  color: #222222;
+  padding: .2em .6em .3em;
+  font-weight: normal;
+  font-size: 75%;
+}
+.label-source-nvd {
+  background-color: #AECEE5;
+  border: 1px solid #5C9CCB;
+}
+.label-source-npm {
+  background-color: #B4AFE4;
+  border: 1px solid #6E63CC;
+}
+.label-source-ossindex {
+  background-color: #AFE4BF;
+  border: 1px solid #73D08F;
+}
+.label-source-vulndb {
+  background-color: #FFC78B;
+  border: 1px solid #FE9536;
+}
+.label-source-victims {
+  background-color: #E4AFAF;
+  border: 1px solid #CC6666;
+}
+.label-source-internal {
+  background-color: #EBE5A8;
+  border: 1px solid #DCD167;
 }

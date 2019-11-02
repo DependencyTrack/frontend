@@ -38,7 +38,11 @@
       "version": "Version",
       "last_bom_import": "Last BOM Import",
       "bom_format": "BOM Format",
-      "active": "Active"
+      "active": "Active",
+      "name": "Name",
+      "published": "Published",
+      "cwe": "CWE",
+      "severity": "Severity"
     },
     "validation": {
       "required": "{_field_} is required"

@@ -33,18 +33,3 @@
     }
   }
 </script>
-
-<style>
-  .severity-critical-bg {
-    background: var(--severity-critical, red);
-  }
-  .severity-high-bg {
-    background: var(--severity-high, orange);
-  }
-  .severity-medium-bg {
-    background: var(--severity-medium, yellow);
-  }
-  .severity-low-bg {
-    background: var(--severity-low, green);
-  }
-</style>

@@ -18,7 +18,7 @@ $white:      #fff;
 
 $blue:       #20a8d8 !default;
 $red:        #f86c6b !default;
-$orange:     #f8cb00 !default;
+$orange:     #fd8c00 !default;
 $yellow:     #ffc107 !default;
 $green:      #4dbd74 !default;
 $light-blue: #63c2de !default;
@@ -26,16 +26,20 @@ $light-blue: #63c2de !default;
 $body-bg:       $gray-800 !default;
 $body-color:    $gray-200 !default;
 
-$severity-critical: #dc0000;
-$severity-high: #fd8c00;
-$severity-medium: #fdc500;
-$severity-low: #4cae4c;
+$severity-critical: $red;
+$severity-high: $orange;
+$severity-medium: $yellow;
+$severity-low: $green;
+$severity-info: $blue;
+$severity-unassigned: #777777;
 
 :root {
   --severity-critical: #{$severity-critical};
   --severity-high: #{$severity-high};
   --severity-medium: #{$severity-medium};
   --severity-low: #{$severity-low};
+  --severity-info: #{$severity-info};
+  --severity-unassigned: #{$severity-unassigned};
 }
 
 // Components
