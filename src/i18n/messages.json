@@ -42,7 +42,10 @@
       "name": "Name",
       "published": "Published",
       "cwe": "CWE",
-      "severity": "Severity"
+      "severity": "Severity",
+      "spdx_license_id": "SPDX License ID",
+      "osi_approved": "OSI Approved",
+      "fsf_libre": "FSF Libre"
     },
     "validation": {
       "required": "{_field_} is required"
