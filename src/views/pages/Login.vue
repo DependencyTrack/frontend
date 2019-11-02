@@ -10,28 +10,28 @@
                   <b-form @submit.prevent.stop="passes(login)">
                     <h1>{{ $t('message.login') }}</h1>
                     <p class="text-muted">{{ $t('message.login_desc') }}</p>
-                    <validation-provider :name="$t('message.username')" rules="required" v-slot="{ errors, valid }">
-                      <b-form-group id="login-username" :label="$t('message.username')" label-for="username-input">
-                        <b-input-group class="mb-3">
-                          <b-input-group-prepend><b-input-group-text><i class="icon-user"></i></b-input-group-text></b-input-group-prepend>
-                          <b-form-input id="username-input" type="text" class="form-control" v-model="input.username" :placeholder="$t('message.username')" :state="errors[0] ? false : (valid ? true : null)" autocomplete="username email" />
-                        </b-input-group>
-                        <b-form-invalid-feedback :state="errors[0] ? false : (valid ? true : null)">
-                          {{ errors[0] }}
-                        </b-form-invalid-feedback>
-                      </b-form-group>
-                    </validation-provider>
-                    <validation-provider :name="$t('message.password')" rules="required" v-slot="{ errors, valid }">
-                      <b-form-group id="login-password" :label="$t('message.password')" label-for="password-input">
-                        <b-input-group class="mb-4">
-                          <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
-                          <b-form-input id="password-input" type="password" class="form-control" v-model="input.password" :placeholder="$t('message.password')" :state="errors[0] ? false : (valid ? true : null)" autocomplete="current-password" />
-                        </b-input-group>
-                        <b-form-invalid-feedback :state="errors[0] ? false : (valid ? true : null)">
-                          {{ errors[0] }}
-                        </b-form-invalid-feedback>
-                      </b-form-group>
-                    </validation-provider>
+                    <b-validated-input-group-form-input
+                      name="username"
+                      :label="$t('message.username')"
+                      input-group-size="mb-3"
+                      rules="required"
+                      icon="icon-user"
+                      type="text"
+                      autocomplete="username email"
+                      :value="input.username"
+                      v-on:input="input.username = $event"
+                    />
+                    <b-validated-input-group-form-input
+                      name="password"
+                      :label="$t('message.password')"
+                      input-group-size="mb-3"
+                      rules="required"
+                      icon="icon-lock"
+                      type="password"
+                      autcomplete="currentpassword"
+                      :value="input.password"
+                      v-on:input="input.password = $event"
+                    />
                     <b-row>
                       <b-col cols="6">
                         <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
@@ -60,8 +60,9 @@
   import axios from 'axios'
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery'
-  import { ValidationProvider, ValidationObserver } from 'vee-validate'
-  import api from '../../shared/api';
+  import { ValidationObserver } from 'vee-validate'
+  import api from '../../shared/api'
+  import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput'
   import InformationalModal from '../modals/InformationalModal'
   const qs = require('querystring');
 
@@ -69,7 +70,7 @@
     name: 'Login',
     components: {
       InformationalModal,
-      ValidationProvider,
+      BValidatedInputGroupFormInput,
       ValidationObserver
     },
     data() {
