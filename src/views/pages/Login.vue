@@ -11,15 +11,14 @@
                     <h1>{{ $t('message.login') }}</h1>
                     <p class="text-muted">{{ $t('message.login_desc') }}</p>
                     <b-validated-input-group-form-input
-                      name="username"
+                      id="username"
                       :label="$t('message.username')"
                       input-group-size="mb-3"
                       rules="required"
                       icon="icon-user"
                       type="text"
                       autocomplete="username email"
-                      :value="input.username"
-                      v-on:input="input.username = $event"
+                      v-model="input.username"
                     />
                     <b-validated-input-group-form-input
                       name="password"
@@ -29,8 +28,7 @@
                       icon="icon-lock"
                       type="password"
                       autcomplete="currentpassword"
-                      :value="input.password"
-                      v-on:input="input.password = $event"
+                      v-model="input.password"
                     />
                     <b-row>
                       <b-col cols="6">

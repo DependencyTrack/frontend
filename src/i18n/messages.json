@@ -58,7 +58,8 @@
       "unassigned": "Unassigned"
     },
     "validation": {
-      "required": "{_field_} is required"
+      "required": "{_field_} is required",
+      "confirmed": "{_field_} doesn't match"
     }
   }
 }

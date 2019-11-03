@@ -11,48 +11,44 @@
                     <h1>{{ $t('message.password_force_change') }}</h1>
                     <p class="text-muted">{{ $t('message.password_force_change_desc') }}</p>
                     <b-validated-input-group-form-input
-                      name="username"
+                      id="username"
                       :label="$t('message.username')"
                       input-group-size="mb-3"
                       rules="required"
                       icon="icon-user"
                       type="text"
                       autocomplete="username email"
-                      :value="input.username"
-                      v-on:input="input.username = $event"
+                      v-model="input.username"
                     />
                     <b-validated-input-group-form-input
-                      name="current-password"
+                      id="current-password"
                       :label="$t('message.password_current')"
                       input-group-size="mb-3"
                       rules="required"
                       icon="icon-lock"
                       type="password"
                       autocomplete="current-password"
-                      :value="input.password"
-                      v-on:input="input.password = $event"
+                      v-model="input.password"
                     />
                     <b-validated-input-group-form-input
-                      name="new-password"
+                      id="new-password"
                       :label="$t('message.password_new')"
                       input-group-size="mb-3"
                       rules="required"
                       icon="icon-lock"
                       type="password"
                       autocomplete="off"
-                      :value="input.newPassword"
-                      v-on:input="input.newPassword = $event"
+                      v-model="input.newPassword"
                     />
                     <b-validated-input-group-form-input
-                      name="confirm-password"
+                      id="confirm-password"
                       :label="$t('message.password_confirm')"
                       input-group-size="mb-3"
-                      rules="required"
+                      rules="required|confirmed:new-password"
                       icon="icon-lock"
                       type="password"
                       autocomplete="off"
-                      :value="input.confirmPassword"
-                      v-on:input="input.confirmPassword = $event"
+                      v-model="input.confirmPassword"
                     />
                     <b-row>
                       <b-col>

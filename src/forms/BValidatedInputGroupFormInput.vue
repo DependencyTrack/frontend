@@ -1,13 +1,13 @@
 <template>
-  <validation-provider :name="label" :rules="rules" v-slot="{ errors, valid }">
-    <b-form-group :id="name" :label="label" :label-for="`${name}-input`">
+  <validation-provider :vid="id" :name="label" :rules="rules" v-slot="{ errors, valid }">
+    <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
       <b-input-group :class="inputGroupSize">
         <b-input-group-prepend><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
         <b-form-input
-          :id="`${name}-input`"
+          :id="`${id}-input`"
           :type="type"
           class="form-control"
-          v-model="value"
+          v-model="innerValue"
           :placeholder="label"
           :state="errors[0] ? false : (valid ? true : null)"
           :autocomplete="autocomplete"
@@ -30,9 +30,9 @@
       ValidationProvider
     },
     props: {
-      name: String,
+      id: String,
       label: String,
-      initialValue: String,
+      value: String,
       inputGroupSize: String,
       icon: String,
       rules: String,
@@ -41,7 +41,7 @@
     },
     data() {
       return {
-        value: this.initialValue
+        innerValue: this.value
       }
     },
     computed: {
