@@ -36,6 +36,7 @@
     "simple-line-icons": "^2.4.1",
     "vee-validate": "^3.0.11",
     "vue": "^2.6.10",
+    "vue-axios": "^2.1.5",
     "vue-chartjs": "^3.4.2",
     "vue-i18n": "^8.15.0",
     "vue-perfect-scrollbar": "^0.1.0",

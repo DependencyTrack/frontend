@@ -10,8 +10,11 @@ import router from './router'
 import i18n from './i18n'
 import './validation'
 import './plugins/table.js'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Vue.use(BootstrapVue);
+Vue.use(VueAxios, axios);
 
 new Vue({
   el: '#app',
