@@ -110,7 +110,7 @@
       ChartProjectVulnerabilities,
       ChartAuditedProgress
     },
-    async mounted () {
+    mounted () {
       const daysBack = 90;
       let url = `${api.BASE_URL}/${api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
