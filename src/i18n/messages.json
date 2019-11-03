@@ -49,6 +49,14 @@
       "osi_approved": "OSI Approved",
       "fsf_libre": "FSF Libre"
     },
+    "severity": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "info": "Info",
+      "unassigned": "Unassigned"
+    },
     "validation": {
       "required": "{_field_} is required"
     }
