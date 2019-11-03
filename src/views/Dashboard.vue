@@ -9,7 +9,7 @@
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
       </b-row>
-      <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+      <chart-portfolio-vulnerabilities ref="chartPortfolioVulnerabilities" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
@@ -46,7 +46,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+          <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-project-vulnerabilities>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -58,7 +58,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+          <chart-audited-progress ref="chartAuditedProgress" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-audited-progress>
         </b-card>
       </b-col>
     </b-row>
@@ -94,8 +94,11 @@
 </template>
 
 <script>
+  import api from "../shared/api";
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
+  import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
+  import ChartAuditedProgress from "./dashboard/ChartAuditingProgress";
   import { Callout } from '@coreui/vue'
 
   export default {
@@ -103,7 +106,18 @@
     components: {
       Callout,
       PortfolioWidgetRow,
-      ChartPortfolioVulnerabilities
+      ChartPortfolioVulnerabilities,
+      ChartProjectVulnerabilities,
+      ChartAuditedProgress
+    },
+    async mounted () {
+      const daysBack = 90;
+      let url = `${api.BASE_URL}/${api.URL_METRICS}/portfolio/${daysBack}/days`;
+      this.axios.get(url).then((response) => {
+        this.$refs.chartPortfolioVulnerabilities.render(response.data);
+        this.$refs.chartProjectVulnerabilities.render(response.data);
+        this.$refs.chartAuditedProgress.render(response.data);
+      });
     }
   }
 </script>
