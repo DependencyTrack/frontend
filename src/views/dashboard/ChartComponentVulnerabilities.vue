@@ -10,21 +10,21 @@
     methods: {
       render: function(metrics) {
         const totalStyle = getStyle('--severity-unassigned');
-        const auditedStyle = getStyle('--severity-low');
+        const affectedStyle = getStyle('--severity-info');
 
         let labels = [];
         let totalData = [];
-        let auditedData = [];
+        let affectedData = [];
 
         for (let i = 0; i < metrics.length; i++) {
           labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-          totalData.push(metrics[i].findingsTotal);
-          auditedData.push(metrics[i].findingsAudited);
+          totalData.push(metrics[i].components);
+          affectedData.push(metrics[i].vulnerableComponents);
 
           if (i === metrics.length - 1) {
             labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
-            totalData.push(metrics[i].findingsTotal);
-            auditedData.push(metrics[i].findingsAudited);
+            totalData.push(metrics[i].components);
+            affectedData.push(metrics[i].vulnerableComponents);
           }
         }
 
@@ -32,18 +32,18 @@
           labels: labels,
           datasets: [
             {
-              label: this.$t('message.total_findings'),
+              label: this.$t('message.total'),
               backgroundColor: 'transparent',
               borderColor: totalStyle,
               pointHoverBackgroundColor: '#fff',
               data: totalData
             },
             {
-              label: this.$t('message.findings_audited'),
-              backgroundColor: hexToRgba(auditedStyle, 10),
-              borderColor: auditedStyle,
+              label: this.$t('message.vulnerable'),
+              backgroundColor: hexToRgba(affectedStyle, 10),
+              borderColor: affectedStyle,
               pointHoverBackgroundColor: '#fff',
-              data: auditedData
+              data: affectedData
             }
           ]
         }, {

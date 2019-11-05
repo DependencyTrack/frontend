@@ -34,6 +34,7 @@
       "inherited_risk_score": "Inherited Risk Score",
       "risk_score": "Risk Score",
       "vulnerable_projects": "Vulnerable Projects",
+      "total_findings": "Total Findings",
       "findings_audited": "Findings Audited",
       "auditing_progress": "Auditing Progress",
       "project_name": "Project Name",
@@ -47,7 +48,9 @@
       "severity": "Severity",
       "spdx_license_id": "SPDX License ID",
       "osi_approved": "OSI Approved",
-      "fsf_libre": "FSF Libre"
+      "fsf_libre": "FSF Libre",
+      "total": "Total",
+      "vulnerable": "Vulnerable"
     },
     "severity": {
       "critical": "Critical",

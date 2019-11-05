@@ -9,7 +9,7 @@
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
       </b-row>
-      <chart-portfolio-vulnerabilities ref="chartPortfolioVulnerabilities" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+      <chart-portfolio-vulnerabilities ref="chartPortfolioVulnerabilities" chartId="chartPortfolioVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
@@ -46,7 +46,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-project-vulnerabilities>
+          <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="chartProjectVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-project-vulnerabilities>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -58,7 +58,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-audited-progress ref="chartAuditedProgress" chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-audited-progress>
+          <chart-audited-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-audited-progress>
         </b-card>
       </b-col>
     </b-row>
@@ -73,7 +73,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+          <chart-dependency-vulnerabilities ref="chartDependencyVulnerabilities" chartId="chartDependencyVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-dependency-vulnerabilities>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -85,7 +85,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-portfolio-vulnerabilities chartId="main-chart-01" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+          <chart-component-vulnerabilities ref="chartComponentVulnerabilities" chartId="chartComponentVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-component-vulnerabilities>
         </b-card>
       </b-col>
     </b-row>
@@ -99,6 +99,8 @@
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
   import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
   import ChartAuditedProgress from "./dashboard/ChartAuditingProgress";
+  import ChartDependencyVulnerabilities from "./dashboard/ChartDependencyVulnerabilities";
+  import ChartComponentVulnerabilities from "./dashboard/ChartComponentVulnerabilities";
   import { Callout } from '@coreui/vue'
 
   export default {
@@ -108,7 +110,9 @@
       PortfolioWidgetRow,
       ChartPortfolioVulnerabilities,
       ChartProjectVulnerabilities,
-      ChartAuditedProgress
+      ChartAuditedProgress,
+      ChartDependencyVulnerabilities,
+      ChartComponentVulnerabilities
     },
     mounted () {
       const daysBack = 90;
@@ -117,6 +121,8 @@
         this.$refs.chartPortfolioVulnerabilities.render(response.data);
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartAuditedProgress.render(response.data);
+        this.$refs.chartDependencyVulnerabilities.render(response.data);
+        this.$refs.chartComponentVulnerabilities.render(response.data);
       });
     }
   }
