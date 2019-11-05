@@ -1,5 +1,5 @@
 import { extend, configure } from 'vee-validate'
-import { required } from 'vee-validate/dist/rules'
+import { required, confirmed } from 'vee-validate/dist/rules'
 
 import i18n from '../i18n'
 
@@ -9,3 +9,4 @@ configure({
 });
 
 extend('required', required);
+extend('confirmed', confirmed);
