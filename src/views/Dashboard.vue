@@ -14,23 +14,23 @@
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_projects') }}</div>
-            <strong>29 (40%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="success" :value="40"></b-progress>
+            <strong>{{vulnerableProjects}} ({{vulnerableProjectPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="success" v-bind:value="vulnerableProjectPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0 d-md-down-none">
             <div class="text-muted">{{ $t('message.vulnerable_dependencies') }}</div>
-            <strong>100 (20%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="info" :value="20"></b-progress>
+            <strong>{{vulnerableDependencies}} ({{vulnerableDependencyPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="info" v-bind:value="vulnerableDependencyPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_components') }}</div>
-            <strong>78 (60%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="warning" :value="60"></b-progress>
+            <strong>{{vulnerableComponents}} ({{vulnerableComponentPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="warning" v-bind:value="vulnerableComponentPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.findings_audited') }}</div>
-            <strong>22 (10%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="danger" :value="10"></b-progress>
+            <strong>{{auditedFindings}} ({{auditedFindingPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="danger" v-bind:value="auditedFindingPercent"></b-progress>
           </b-col>
         </b-row>
       </div>
@@ -95,6 +95,7 @@
 
 <script>
   import api from "../shared/api";
+  import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
   import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
@@ -114,6 +115,56 @@
       ChartDependencyVulnerabilities,
       ChartComponentVulnerabilities
     },
+    data() {
+      return {
+        totalProjects: 0,
+        vulnerableProjects: 0,
+        vulnerableProjectPercent: 0,
+
+        totalDependencies: 0,
+        vulnerableDependencies: 0,
+        vulnerableDependencyPercent: 0,
+
+        totalComponents: 0,
+        vulnerableComponents: 0,
+        vulnerableComponentPercent: 0,
+
+        totalFindings: 0,
+        auditedFindings: 0,
+        auditedFindingPercent: 0,
+
+        vulnerabilities: 0,
+        suppressed: 0,
+        lastMeasurement: ""
+      }
+    },
+    methods: {
+      extractStats(metrics) {
+        if (!metrics || metrics.length === 0) {
+          return;
+        }
+        let metric = metrics[metrics.length - 1]; //Use the most recent metric
+        this.totalProjects = common.valueWithDefault(metric.projects, "0");
+        this.vulnerableProjects = common.valueWithDefault(metric.vulnerableProjects, "0");
+        this.vulnerableProjectPercent = common.calcProgressPercent(this.totalProjects, this.vulnerableProjects);
+
+        this.totalDependencies = common.valueWithDefault(metric.dependencies, "0");
+        this.vulnerableDependencies = common.valueWithDefault(metric.vulnerableDependencies, "0");
+        this.vulnerableDependencyPercent = common.calcProgressPercent(this.totalDependencies, this.vulnerableDependencies);
+
+        this.totalComponents = common.valueWithDefault(metric.components, "0");
+        this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
+        this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
+
+        this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
+        this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
+        this.auditedFindingPercent = common.calcProgressPercent(findingsTotal, findingsAudited);
+
+        this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
+        this.suppressed = common.valueWithDefault(metric.suppressed, "0");
+        this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
+      }
+    },
     mounted () {
       const daysBack = 90;
       let url = `${api.BASE_URL}/${api.URL_METRICS}/portfolio/${daysBack}/days`;
@@ -123,6 +174,7 @@
         this.$refs.chartAuditedProgress.render(response.data);
         this.$refs.chartDependencyVulnerabilities.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);
+        this.extractStats(response.data);
       });
     }
   }

@@ -65,9 +65,43 @@ $common.formatTimestamp = function formatTimestamp(timestamp, includeTime) {
   }
 };
 
+/**
+ * Helper function that returns the variable if it is not null, undefined, NaN,
+ * an empty string (""), 0, or false. Otherwise, returns the default value.
+ */
+$common.valueWithDefault = function valueWithDefault(variable, defaultValue) {
+  if (variable) {
+    return variable;
+  } else {
+    return defaultValue;
+  }
+};
+
+/**
+ * Given a total number of something and a lower number that is completed,
+ * function will return a percentage rounded to the tenth decimal place.
+ */
+$common.calcProgressPercent = function calcProgressPercent(total, completed) {
+  if (total > 0) {
+    if (completed === 0) {
+      return 0;
+    } else {
+      let percentage = (completed / total) * 100;
+      return Math.round(percentage * 10) / 10;
+    }
+  } else if (completed > total) {
+    // In something has already been completed (e.g. suppressed) and the completed value
+    // is greater than the total, return 100%
+    return 100;
+  }
+  return 0; // the absence of work does not imply progress.
+};
+
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
-  formatTimestamp: $common.formatTimestamp
+  formatTimestamp: $common.formatTimestamp,
+  valueWithDefault: $common.valueWithDefault,
+  calcProgressPercent: $common.calcProgressPercent
 };
