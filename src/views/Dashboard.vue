@@ -158,7 +158,7 @@
 
         this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
         this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-        this.auditedFindingPercent = common.calcProgressPercent(findingsTotal, findingsAudited);
+        this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
