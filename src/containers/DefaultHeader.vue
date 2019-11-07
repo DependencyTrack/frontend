@@ -1,7 +1,7 @@
 <template>
   <AppHeader fixed>
     <SidebarToggler class="d-lg-none" display="md" mobile />
-    <img class="d-lg-inline d-md-none d-sm-none bv-d-xs-down-none" style="margin-left:10px" src="img/brand/logo-symbol-greyscale.svg" width="30" height="30" alt="Dependency-Track Logo"/>
+    <img class="d-lg-inline d-md-none d-sm-none bv-d-xs-down-none" style="margin-left:10px" src="@/assets/img/brand/logo-symbol-greyscale.svg" width="30" height="30" alt="Dependency-Track Logo"/>
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen=true />
     <b-navbar-nav class="ml-auto">
       <DefaultHeaderProfileDropdown/>
