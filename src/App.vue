@@ -49,6 +49,47 @@
           sessionStorage.removeItem('token');
           this.$router.replace({ name: "Login" });
         });
+
+      /**
+       * The Bootstrap-Table Vue component does not support Vue components in custom formatters.
+       * Custom formatters are used when modifying the contents of data in a cell, for example,
+       * creating a hyperlink to another page. Because Vue components cannot be used in this case,
+       * using router-link is not possible. So, we need a way to intercept traditional <a href>
+       * and delegate the link to the Vue router. This function provides that.
+       *
+       * The following code is a slightly modified version derived from:
+       * https://dennisreimann.de/articles/delegating-html-links-to-vue-router.html
+       */
+      window.addEventListener('click', event => {
+        // ensure we use the link, in case the click has been received by a subelement
+        let { target } = event;
+        while (target && target.tagName !== 'A') target = target.parentNode;
+        // handle only links that do not reference external resources
+        if (target && target.matches("a:not([href*='://'])") && target.href) {
+          // some sanity checks taken from vue-router:
+          // https://github.com/vuejs/vue-router/blob/dev/src/components/link.js#L106
+          const { altKey, ctrlKey, metaKey, shiftKey, button, defaultPrevented } = event;
+          // don't handle with control keys
+          if (metaKey || altKey || ctrlKey || shiftKey) return;
+          // don't handle when preventDefault called
+          if (defaultPrevented) return;
+          // don't handle right clicks
+          if (button !== undefined && button !== 0) return;
+          // don't handle if `target="_blank"`
+          if (target && target.getAttribute) {
+            const linkTarget = target.getAttribute('target');
+            if (/\b_blank\b/i.test(linkTarget)) return;
+          }
+          // don't handle same page links/anchors
+          const url = new URL(target.href);
+          const to = url.pathname;
+          if (window.location.pathname !== to && event.preventDefault) {
+            event.preventDefault();
+            this.$router.push(to + url.search);
+          }
+        }
+      })
+
     },
     methods: {
       setAuthenticated(status) {
