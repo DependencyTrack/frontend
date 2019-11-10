@@ -29,7 +29,7 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let componenturl = xssFilters.uriInUnQuotedAttr("../component/?uuid=" + row.uuid);
+              let componenturl = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
               return `<a href="${componenturl}">${value}</a>`;
             }
           },

@@ -25,6 +25,7 @@
   import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown'
   import DefaultHeader from './DefaultHeader'
   import DefaultFooter from './DefaultFooter'
+  import EventBus from '../shared/eventbus';
 
   export default {
     name: 'DefaultContainer',
@@ -43,6 +44,7 @@
     },
     data () {
       return {
+        breadcrumbs: [],
         nav: [
         {
           name: this.$t('message.dashboard'),
@@ -100,13 +102,47 @@
       ]
       }
     },
+    methods: {
+      generateBreadcrumbs: function generateBreadcrumbs(crumbName) {
+        let sectionLabel = this.$t(this.$route.meta.i18n);
+        let sectionPath = this.$route.meta.sectionPath;
+        if (crumbName) {
+          return [
+            { path: '', name: this.$t('message.home') },
+            { path: sectionPath, name: sectionLabel },
+            { name: crumbName, active: true }
+          ];
+        } else {
+          return [
+            { path: '', name: this.$t('message.home') },
+            { path: sectionPath, name: sectionLabel }
+          ];
+        }
+      }
+    },
     computed: {
       name () {
         return this.$route.name
       },
       list () {
-        return this.$route.matched.filter((route) => route.name || route.meta.label )
+        if (this.breadcrumbs.length === 0) {
+          return this.generateBreadcrumbs();
+        } else {
+          return this.breadcrumbs;
+        }
       }
+    },
+    created() {
+      EventBus.$on('crumble', () => {
+        this.breadcrumbs = [];
+      });
+      EventBus.$on('addCrumb', (crumb) => {
+        if (crumb) {
+          this.breadcrumbs = this.generateBreadcrumbs(crumb);
+        } else {
+          this.breadcrumbs = [];
+        }
+      });
     }
   }
 </script>

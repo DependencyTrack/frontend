@@ -15,6 +15,7 @@ import Vue from 'vue'
 import api from "../../../shared/api";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
+import xssFilters from "xss-filters";
 
 export default {
   components: {
@@ -26,7 +27,11 @@ export default {
         {
           title: this.$t('message.project_name'),
           field: "name",
-          sortable: true
+          sortable: true,
+          formatter(value, row, index) {
+            let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
+            return `<a href="${url}">${value}</a>`;
+          }
         },
         {
           title: this.$t('message.version'),

@@ -17,6 +17,7 @@
       "password_new": "New password",
       "password_confirm": "Confirm new password",
       "portfolio": "Portfolio",
+      "home": "Home",
       "dashboard": "Dashboard",
       "projects": "Projects",
       "components": "Components",
@@ -50,7 +51,10 @@
       "osi_approved": "OSI Approved",
       "fsf_libre": "FSF Libre",
       "total": "Total",
-      "vulnerable": "Vulnerable"
+      "vulnerable": "Vulnerable",
+      "portfolio_statistics": "Portfolio Statistics",
+      "suppressed": "Suppressed",
+      "last_measurement": "Last Measurement"
     },
     "severity": {
       "critical": "Critical",
