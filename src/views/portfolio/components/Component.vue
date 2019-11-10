@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-
+    <portfolio-widget-row />
   </div>
 </template>
 
@@ -17,7 +17,7 @@
       PortfolioWidgetRow
     },
     mounted() {
-      EventBus.$emit('addCrumb', 'my awesome project xx01');
+      EventBus.$emit('addCrumb', 'Apache Struts 2.0.0');
     },
     destroyed() {
       EventBus.$emit('crumble');
