@@ -98,12 +98,20 @@ function configRoutes() {
         {
           path: 'policy',
           name: 'Policy Management',
-          component: PolicyManagement
+          component: PolicyManagement,
+          meta: {
+            i18n: 'message.policy_management',
+            sectionPath: '/policy'
+          }
         },
         {
           path: 'admin',
           name: 'Administration',
-          component: Administration
+          component: Administration,
+          meta: {
+            i18n: 'message.administration',
+            sectionPath: '/admin'
+          }
         },
         // The following route redirects URLs from legacy Dependency-Track UI to new URL format.
         {
