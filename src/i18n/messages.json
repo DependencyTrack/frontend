@@ -30,6 +30,7 @@
       "policy_management": "Policy Management",
       "portfolio_vulnerabilities": "Portfolio Vulnerabilities",
       "projects_at_risk": "Projects at Risk",
+      "project_vulnerabilities": "Project Vulnerabilities",
       "vulnerable_components": "Vulnerable Components",
       "vulnerable_dependencies": "Vulnerable Dependencies",
       "inherited_risk_score": "Inherited Risk Score",

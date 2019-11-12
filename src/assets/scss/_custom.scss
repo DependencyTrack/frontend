@@ -88,3 +88,39 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.body-bg-color {
+  background-color: $body-bg;
+}
+.tab-content {
+  background: $body-bg;
+}
+.nav-tabs .nav-link.active {
+  background: $gray-700;
+  border-bottom-color: $gray-700;
+  color: $white;
+}
+.nav-tabs .nav-link.active:focus {
+  background: $gray-700;
+  border-bottom-color: $gray-700;
+}
+.card-footer-action:hover {
+  background: $gray-800;
+}
+.callout-severity-critical {
+  border-left-color: $severity-critical;
+}
+.callout-severity-high {
+  border-left-color: $severity-high;
+}
+.callout-severity-medium {
+  border-left-color: $severity-medium;
+}
+.callout-severity-low {
+  border-left-color: $severity-low;
+}
+.callout-severity-info {
+  border-left-color: $severity-info;
+}
+.callout-severity-unassigned {
+  border-left-color: $severity-unassigned;
+}
