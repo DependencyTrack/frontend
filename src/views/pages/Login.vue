@@ -39,7 +39,7 @@
                 </validation-observer>
               </b-card-body>
             </b-card>
-            <b-card no-body class="text-white bg-gray-900 py-5 d-md-down-none" style="width:44%">
+            <b-card no-body class="text-white bg-grey-900 py-5 d-md-down-none" style="width:44%">
               <b-card-body class="text-center">
                 <div>
                   <img src="@/assets/img/brand/logo-symbol-greyscale.svg" width="60%"/>

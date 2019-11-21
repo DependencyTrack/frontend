@@ -1,7 +1,7 @@
 // Here you can add other styles
 
 .modal-header {
-  background-color: $gray-800;
+  background-color: $grey-800;
 }
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
@@ -95,16 +95,16 @@
   background: $body-bg;
 }
 .nav-tabs .nav-link.active {
-  background: $gray-700;
-  border-bottom-color: $gray-700;
+  background: $grey-700;
+  border-bottom-color: $grey-700;
   color: $white;
 }
 .nav-tabs .nav-link.active:focus {
-  background: $gray-700;
-  border-bottom-color: $gray-700;
+  background: $grey-700;
+  border-bottom-color: $grey-700;
 }
 .card-footer-action:hover {
-  background: $gray-800;
+  background: $grey-800;
 }
 .callout-severity-critical {
   border-left-color: $severity-critical;
