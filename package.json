@@ -53,6 +53,7 @@
     "https-proxy-agent": "^2.2.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
+    "vue-easy-pie-chart": "DependencyTrack/vue-easy-pie-chart#master",
     "vue-template-compiler": "^2.6.10"
   },
   "browserslist": [

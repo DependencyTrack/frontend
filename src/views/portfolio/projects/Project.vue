@@ -13,7 +13,66 @@
             </div>
           </b-col>
           <b-col>
+            <b-row class="float-right">
+              <vue-easy-pie-chart style="margin-right: 1rem"
+                :bar-color="severityCritical"
+                font-size="14px"
+                :track-color="trackColor"
+                scale-color=""
+                line-cap="round"
+                :line-width="3"
+                :percent="100"
+                :size="50"
+                :animate="true"
+              >40</vue-easy-pie-chart>
+              <vue-easy-pie-chart style="margin-right: 1rem"
+                :bar-color="severityHigh"
+                font-size="14px"
+                :track-color="trackColor"
+                scale-color=""
+                line-cap="round"
+                :line-width="3"
+                :percent="100"
+                :size="50"
+                :animate="true"
+              >40</vue-easy-pie-chart>
+              <vue-easy-pie-chart style="margin-right: 1rem"
+                :bar-color="severityMedium"
+                font-size="14px"
+                :track-color="trackColor"
+                scale-color=""
+                line-cap="round"
+                :line-width="3"
+                :percent="100"
+                :size="50"
+                :animate="true"
+              >40</vue-easy-pie-chart>
+              <vue-easy-pie-chart style="margin-right: 1rem"
+                :bar-color="severityLow"
+                font-size="14px"
+                :track-color="trackColor"
+                scale-color=""
+                line-cap="round"
+                :line-width="3"
+                :percent="100"
+                :size="50"
+                :animate="true"
+              >40</vue-easy-pie-chart>
+            <vue-easy-pie-chart style="margin-right: 1rem"
+              :bar-color="severityUnassigned"
+              font-size="14px"
+              :track-color="trackColor"
+              scale-color=""
+              line-cap="round"
+              :line-width="3"
+              :percent="100"
+              :size="50"
+              :animate="true"
+            >40</vue-easy-pie-chart>
+            </b-row>
+            <!--
             <severity-bar-chart ref="severityBarChart" chartId="severityBarChart" class="chart-wrapper float-right" style="width:100px;height:50px" width="100" height="50"/>
+            -->
           </b-col>
         </b-row>
       </b-card-body>
@@ -41,6 +100,8 @@
 <script>
   import Vue from 'vue'
   import api from "../../../shared/api";
+  import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
+  import VueEasyPieChart from 'vue-easy-pie-chart'
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ProjectDashboard from "./ProjectDashboard";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
@@ -51,12 +112,28 @@
     components: {
       SeverityBarChart,
       ProjectDashboard,
-      PortfolioWidgetRow
+      PortfolioWidgetRow,
+      VueEasyPieChart
+    },
+    data() {
+      return {
+        severityCritical: this.getStyle('--severity-critical'),
+        severityHigh: this.getStyle('--severity-high'),
+        severityMedium: this.getStyle('--severity-medium'),
+        severityLow: this.getStyle('--severity-low'),
+        severityUnassigned: this.getStyle('--severity-unassigned'),
+        trackColor: this.getStyle('--component-active-color')
+      }
+    },
+    methods: {
+      getStyle: function(style) {
+        return getStyle(style);
+      }
     },
     mounted() {
       EventBus.$emit('addCrumb', 'Acme Application ▸ 1.0');
       //this.$refs.severityLineChart.render(response.data);
-      this.$refs.severityBarChart.render();
+      //this.$refs.severityBarChart.render();
     },
     destroyed() {
       EventBus.$emit('crumble');

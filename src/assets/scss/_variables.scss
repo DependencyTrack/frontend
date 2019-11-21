@@ -33,15 +33,6 @@ $severity-low: $green;
 $severity-info: $blue;
 $severity-unassigned: #777777;
 
-:root {
-  --severity-critical: #{$severity-critical};
-  --severity-high: #{$severity-high};
-  --severity-medium: #{$severity-medium};
-  --severity-low: #{$severity-low};
-  --severity-info: #{$severity-info};
-  --severity-unassigned: #{$severity-unassigned};
-}
-
 // Components
 //
 // Define common padding and border radius sizes and more.
@@ -205,3 +196,15 @@ $list-group-accent-divider-bg: $grey-800 !default;
 $popover-bg:           $grey-900 !default;
 $popover-border-color: rgba($white, .2) !default;
 $popover-header-bg:    lighten($popover-bg, 3%) !default;
+
+
+:root {
+  --severity-critical: #{$severity-critical};
+  --severity-high: #{$severity-high};
+  --severity-medium: #{$severity-medium};
+  --severity-low: #{$severity-low};
+  --severity-info: #{$severity-info};
+  --severity-unassigned: #{$severity-unassigned};
+
+  --component-active-color: #{$component-active-color};
+}
