@@ -55,7 +55,10 @@
       "vulnerable": "Vulnerable",
       "portfolio_statistics": "Portfolio Statistics",
       "suppressed": "Suppressed",
-      "last_measurement": "Last Measurement"
+      "last_measurement": "Last Measurement",
+      "overview": "Overview",
+      "audit": "Audit",
+      "view_details": "View Details"
     },
     "admin": {
       "configuration": "Configuration",

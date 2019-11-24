@@ -5,92 +5,89 @@
         <b-row>
           <b-col>
             <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
-            <div class="h5 text-primary mb-0 mt-2">Acme Application ▸ 1.0</div>
+            <div class="h5 text-primary mb-0 mt-2">{{ projectLabel }}</div>
             <div class="text-muted text-uppercase font-weight-bold font-xs">
-              <b-badge href="#" variant="secondary">java</b-badge>
-              <b-badge href="#" variant="secondary">strategic</b-badge>
-              <b-badge href="#" variant="secondary">external-facing</b-badge>
+              <span v-for="tag in projectTags">
+                <b-badge :href="'../projects/?tag='+tag.name" variant="secondary">{{ tag.name }}</b-badge>
+              </span>
             </div>
           </b-col>
           <b-col>
-            <b-row class="float-right">
+            <b-row class="d-none d-md-flex float-right">
               <vue-easy-pie-chart style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-              >40</vue-easy-pie-chart>
+                                  :bar-color="severityCritical"
+                                  font-size="14px"
+                                  :track-color="trackColor"
+                                  scale-color=""
+                                  line-cap="round"
+                                  :line-width="3"
+                                  :percent="100"
+                                  :size="50"
+                                  :animate="true"
+              >{{ currentCritical }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-              >40</vue-easy-pie-chart>
+                                  :bar-color="severityHigh"
+                                  font-size="14px"
+                                  :track-color="trackColor"
+                                  scale-color=""
+                                  line-cap="round"
+                                  :line-width="3"
+                                  :percent="100"
+                                  :size="50"
+                                  :animate="true"
+              >{{ currentHigh }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-              >40</vue-easy-pie-chart>
+                                  :bar-color="severityMedium"
+                                  font-size="14px"
+                                  :track-color="trackColor"
+                                  scale-color=""
+                                  line-cap="round"
+                                  :line-width="3"
+                                  :percent="100"
+                                  :size="50"
+                                  :animate="true"
+              >{{ currentMedium }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-              >40</vue-easy-pie-chart>
-            <vue-easy-pie-chart style="margin-right: 1rem"
-              :bar-color="severityUnassigned"
-              font-size="14px"
-              :track-color="trackColor"
-              scale-color=""
-              line-cap="round"
-              :line-width="3"
-              :percent="100"
-              :size="50"
-              :animate="true"
-            >40</vue-easy-pie-chart>
+                                  :bar-color="severityLow"
+                                  font-size="14px"
+                                  :track-color="trackColor"
+                                  scale-color=""
+                                  line-cap="round"
+                                  :line-width="3"
+                                  :percent="100"
+                                  :size="50"
+                                  :animate="true"
+              >{{ currentLow }}</vue-easy-pie-chart>
+              <vue-easy-pie-chart style="margin-right: 1rem"
+                                  :bar-color="severityUnassigned"
+                                  font-size="14px"
+                                  :track-color="trackColor"
+                                  scale-color=""
+                                  line-cap="round"
+                                  :line-width="3"
+                                  :percent="100"
+                                  :size="50"
+                                  :animate="true"
+              >{{ currentUnassigned }}</vue-easy-pie-chart>
             </b-row>
-            <!--
-            <severity-bar-chart ref="severityBarChart" chartId="severityBarChart" class="chart-wrapper float-right" style="width:100px;height:50px" width="100" height="50"/>
-            -->
           </b-col>
         </b-row>
       </b-card-body>
       <div id="project-info-footer" slot="footer">
-        <b-link class="font-weight-bold font-xs btn-block text-muted" href="#">View Details <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+        <b-link class="font-weight-bold font-xs btn-block text-muted" href="#">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
       <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
-        <template v-slot:title><i class="fa fa-line-chart"></i> Overview</template>
+        <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
         <project-dashboard style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-cubes"></i> Dependencies</template>
+        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }}</template>
         Dependency table here
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-tasks"></i> Audit</template>
+        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }}</template>
         Audit table here
       </b-tab>
     </b-tabs>
@@ -100,6 +97,7 @@
 <script>
   import Vue from 'vue'
   import api from "../../../shared/api";
+  import common from "../../../shared/common"
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
@@ -115,6 +113,15 @@
       PortfolioWidgetRow,
       VueEasyPieChart
     },
+    computed: {
+      projectLabel () {
+        if (this.projectName && this.projectVersion) {
+          return this.projectName + ' ▸ ' + this.projectVersion;
+        } else {
+          return this.projectName;
+        }
+      }
+    },
     data() {
       return {
         severityCritical: this.getStyle('--severity-critical'),
@@ -122,7 +129,17 @@
         severityMedium: this.getStyle('--severity-medium'),
         severityLow: this.getStyle('--severity-low'),
         severityUnassigned: this.getStyle('--severity-unassigned'),
-        trackColor: this.getStyle('--component-active-color')
+        severityInfo: this.getStyle('--severity-info'),
+        trackColor: this.getStyle('--component-active-color'),
+        projectName: '',
+        projectVersion: '',
+        projectTags: [],
+        currentCritical: 0,
+        currentHigh: 0,
+        currentMedium: 0,
+        currentLow: 0,
+        currentUnassigned: 0,
+        currentRiskScore: 0,
       }
     },
     methods: {
@@ -131,9 +148,26 @@
       }
     },
     mounted() {
-      EventBus.$emit('addCrumb', 'Acme Application ▸ 1.0');
-      //this.$refs.severityLineChart.render(response.data);
-      //this.$refs.severityBarChart.render();
+      let uuid = this.$route.params.uuid;
+      let projectUrl = `${api.BASE_URL}/${api.URL_PROJECT}/${uuid}`;
+      this.axios.get(projectUrl).then((response) => {
+        console.log(response.data);
+        this.projectName = response.data.name;
+        this.projectVersion = response.data.version;
+        this.projectTags = response.data.tags;
+        EventBus.$emit('addCrumb', this.projectLabel);
+      });
+
+      let metricsUrl = `${api.BASE_URL}/${api.URL_METRICS}/project/${uuid}/current`;
+      this.axios.get(metricsUrl).then((response) => {
+        console.log(response.data);
+        this.currentCritical = common.valueWithDefault(response.data.critical, 0);
+        this.currentHigh = common.valueWithDefault(response.data.high, 0);
+        this.currentMedium = common.valueWithDefault(response.data.medium, 0);
+        this.currentLow = common.valueWithDefault(response.data.low, 0);
+        this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
+        this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
+      });
     },
     destroyed() {
       EventBus.$emit('crumble');
