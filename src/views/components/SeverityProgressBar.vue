@@ -13,7 +13,14 @@
 
 <script>
   export default {
-    props: ['vulnerabilities', 'critical', 'high', 'medium', 'low', 'unassigned'],
+    props: {
+      vulnerabilities: Number,
+      critical: Number,
+      high: Number,
+      medium: Number,
+      low: Number,
+      unassigned: Number
+    },
     computed: {
       criticalWidth: function () {
         return "width:" + (100 * this.critical) / this.vulnerabilities + "%";

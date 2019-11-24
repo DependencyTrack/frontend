@@ -6,7 +6,9 @@
 
   export default {
     extends: Line,
-    props: ['height'],
+    props: {
+      height: Number
+    },
     methods: {
       render: function(metrics) {
         const totalStyle = getStyle('--severity-unassigned');

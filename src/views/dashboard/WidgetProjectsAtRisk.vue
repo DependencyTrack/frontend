@@ -5,9 +5,12 @@ import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
 
 export default {
   extends: Line,
-  props: ['height', 'width'],
+  props: {
+    height: Number,
+    width: Number
+  },
   mounted () {
-    const brandInfo = getStyle('--light-blue') || '#63c2de'
+    const brandInfo = getStyle('--light-blue') || '#63c2de';
     const datasets2 = [
       {
         label: 'My First dataset',
@@ -15,7 +18,7 @@ export default {
         borderColor: 'rgba(255,255,255,.55)',
         data: [1, 18, 9, 17, 34, 22, 11]
       }
-    ]
+    ];
 
     this.renderChart(
       {

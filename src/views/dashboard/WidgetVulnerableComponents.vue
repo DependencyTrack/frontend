@@ -4,7 +4,10 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 
 export default {
   extends: Line,
-  props: ['height', 'width'],
+  props: {
+    height: Number,
+    width: Number
+  },
   mounted () {
     const datasets3 = [
       {

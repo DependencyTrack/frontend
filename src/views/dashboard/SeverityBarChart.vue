@@ -5,7 +5,10 @@
 
   export default {
     extends: HorizontalBar,
-    props: ['width', 'height'],
+    props: {
+      height: Number,
+      width: Number
+    },
     components: {
       hexToRgba,
       CustomTooltips

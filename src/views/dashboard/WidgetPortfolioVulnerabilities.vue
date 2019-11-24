@@ -5,7 +5,10 @@ import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
 
 export default {
   extends: Line,
-  props: ['height', 'width'],
+  props: {
+    height: Number,
+    width: Number
+  },
   mounted () {
     const brandPrimary = getStyle('--primary') || '#20a8d8'
     const datasets1 = [
