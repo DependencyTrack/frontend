@@ -84,7 +84,7 @@
       </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }}</template>
-        Dependency table here
+        <project-dependencies :uuid="this.uuid"/>
       </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }}</template>
@@ -95,19 +95,19 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import api from "../../../shared/api";
   import common from "../../../shared/common"
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
+  import ProjectDependencies from "./ProjectDependencies";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ProjectDashboard from "./ProjectDashboard";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
-  import xssFilters from "xss-filters";
   import EventBus from '../../../shared/eventbus';
 
   export default {
     components: {
+      ProjectDependencies,
       SeverityBarChart,
       ProjectDashboard,
       PortfolioWidgetRow,
@@ -131,6 +131,7 @@
         severityUnassigned: this.getStyle('--severity-unassigned'),
         severityInfo: this.getStyle('--severity-info'),
         trackColor: this.getStyle('--component-active-color'),
+        uuid: null,
         projectName: '',
         projectVersion: '',
         projectTags: [],
@@ -147,20 +148,20 @@
         return getStyle(style);
       }
     },
+    beforeMount() {
+      this.uuid = this.$route.params.uuid;
+    },
     mounted() {
-      let uuid = this.$route.params.uuid;
-      let projectUrl = `${api.BASE_URL}/${api.URL_PROJECT}/${uuid}`;
+      let projectUrl = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}`;
       this.axios.get(projectUrl).then((response) => {
-        console.log(response.data);
         this.projectName = response.data.name;
         this.projectVersion = response.data.version;
         this.projectTags = response.data.tags;
         EventBus.$emit('addCrumb', this.projectLabel);
       });
 
-      let metricsUrl = `${api.BASE_URL}/${api.URL_METRICS}/project/${uuid}/current`;
+      let metricsUrl = `${api.BASE_URL}/${api.URL_METRICS}/project/${this.uuid}/current`;
       this.axios.get(metricsUrl).then((response) => {
-        console.log(response.data);
         this.currentCritical = common.valueWithDefault(response.data.critical, 0);
         this.currentHigh = common.valueWithDefault(response.data.high, 0);
         this.currentMedium = common.valueWithDefault(response.data.medium, 0);

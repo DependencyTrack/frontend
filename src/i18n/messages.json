@@ -21,6 +21,7 @@
       "dashboard": "Dashboard",
       "projects": "Projects",
       "components": "Components",
+      "component": "Component",
       "dependencies": "Dependencies",
       "vulnerabilities": "Vulnerabilities",
       "licenses": "Licenses",
