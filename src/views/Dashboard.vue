@@ -9,7 +9,7 @@
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
       </b-row>
-      <chart-portfolio-vulnerabilities ref="chartPortfolioVulnerabilities" chartId="chartPortfolioVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-portfolio-vulnerabilities>
+      <chart-portfolio-vulnerabilities ref="chartPortfolioVulnerabilities" chartId="chartPortfolioVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-portfolio-vulnerabilities>
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
@@ -46,7 +46,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="chartProjectVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-project-vulnerabilities>
+          <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="chartProjectVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-project-vulnerabilities>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -58,7 +58,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-audited-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-audited-progress>
+          <chart-audited-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-audited-progress>
         </b-card>
       </b-col>
     </b-row>
@@ -73,7 +73,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-dependency-vulnerabilities ref="chartDependencyVulnerabilities" chartId="chartDependencyVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-dependency-vulnerabilities>
+          <chart-dependency-vulnerabilities ref="chartDependencyVulnerabilities" chartId="chartDependencyVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-dependency-vulnerabilities>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -85,7 +85,48 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-component-vulnerabilities ref="chartComponentVulnerabilities" chartId="chartComponentVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" height="200"></chart-component-vulnerabilities>
+          <chart-component-vulnerabilities ref="chartComponentVulnerabilities" chartId="chartComponentVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-component-vulnerabilities>
+        </b-card>
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col md="12">
+        <b-card v-bind:header="$t('message.portfolio_statistics')">
+          <b-row>
+            <b-col sm="12" lg="6">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
+                    <strong class="h4">{{vulnerabilities}}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
+                    <strong class="h4">{{suppressed}}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="6">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="warning">
+                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
+                    <strong class="h4">{{suppressed}}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="success">
+                    <small class="text-muted">{{ $t('message.last_measurement') }}</small><br>
+                    <strong class="h5">{{lastMeasurement}}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card>
       </b-col>
     </b-row>

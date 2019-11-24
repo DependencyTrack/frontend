@@ -24,7 +24,7 @@
           <h4 class="mb-0">212</h4>
           <p>{{ $t('message.vulnerable_components') }}</p>
         </b-card-body>
-        <widget-vulnerable-components chartId="card-chart-03" class="chart-wrapper" style="height:70px;" height="70"/>
+        <widget-vulnerable-components chartId="card-chart-03" class="chart-wrapper" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
@@ -33,7 +33,7 @@
           <h4 class="mb-0">12,644</h4>
           <p>{{ $t('message.inherited_risk_score') }}</p>
         </b-card-body>
-        <widget-inherited-risk-score chartId="card-chart-04" class="chart-wrapper px-3" style="height:70px;" height="70"/>
+        <widget-inherited-risk-score chartId="card-chart-04" class="chart-wrapper px-3" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
   </b-row>
