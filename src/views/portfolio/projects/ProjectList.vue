@@ -107,7 +107,7 @@ export default {
           refresh: 'fa-refresh'
         },
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader("X-Total-Count");
+          res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
           return res;
         },
         url: `${api.BASE_URL}/${api.URL_PROJECT}`
