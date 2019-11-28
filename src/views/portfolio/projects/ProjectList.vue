@@ -21,6 +21,24 @@ export default {
   components: {
     PortfolioWidgetRow
   },
+  methods: {
+    apiUrl: function () {
+      let tag = this.$route.query.tag;
+      if (tag) {
+        return `${api.BASE_URL}/${api.URL_PROJECT}/tag/` + encodeURIComponent(tag);
+      } else {
+        return `${api.BASE_URL}/${api.URL_PROJECT}`;
+      }
+    }
+  },
+  watch:{
+    $route (to, from) {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        silent: true
+      });
+    }
+  },
   data() {
     return {
       columns: [
@@ -110,7 +128,7 @@ export default {
           res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
           return res;
         },
-        url: `${api.BASE_URL}/${api.URL_PROJECT}`
+        url: this.apiUrl()
       }
     };
   }
