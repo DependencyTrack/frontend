@@ -59,7 +59,8 @@
       "last_measurement": "Last Measurement",
       "overview": "Overview",
       "audit": "Audit",
-      "view_details": "View Details"
+      "view_details": "View Details",
+      "project_details": "Project Details"
     },
     "admin": {
       "configuration": "Configuration",

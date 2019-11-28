@@ -12,6 +12,7 @@ import './validation'
 import './plugins/table.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import '@/directives/VuePermission'
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
