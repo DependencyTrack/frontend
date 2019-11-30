@@ -5,7 +5,7 @@
       <AppSidebar fixed>
         <SidebarHeader/>
         <SidebarForm/>
-        <SidebarNav :navItems="nav"></SidebarNav>
+        <SidebarNav :navItems="permissibleNav"></SidebarNav>
         <SidebarFooter/>
         <SidebarMinimizer/>
       </AppSidebar>
@@ -26,6 +26,7 @@
   import DefaultHeader from './DefaultHeader'
   import DefaultFooter from './DefaultFooter'
   import EventBus from '../shared/eventbus';
+  import * as auth from '../shared/auth';
 
   export default {
     name: 'DefaultContainer',
@@ -49,7 +50,8 @@
         {
           name: this.$t('message.dashboard'),
           url: '/dashboard',
-          icon: 'icon-speedometer'
+          icon: 'icon-speedometer',
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           title: true,
@@ -58,27 +60,32 @@
           wrapper: {
             element: '',
             attributes: {}
-          }
+          },
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.projects'),
           url: '/projects',
-          icon: 'fa fa-sitemap'
+          icon: 'fa fa-sitemap',
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.components'),
           url: '/components',
-          icon: 'fa fa-cubes'
+          icon: 'fa fa-cubes',
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.vulnerabilities'),
           url: '/vulnerabilities',
-          icon: 'fa fa-shield'
+          icon: 'fa fa-shield',
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.licenses'),
           url: '/licenses',
-          icon: 'fa fa-balance-scale'
+          icon: 'fa fa-balance-scale',
+          permission: auth.VIEW_PORTFOLIO
         },
         {
           title: true,
@@ -87,17 +94,20 @@
           wrapper: {
             element: '',
             attributes: {}
-          }
+          },
+          permission: auth.SYSTEM_CONFIGURATION
         },
         {
           name: this.$t('message.policy_management'),
           url: '/policy',
-          icon: 'fa fa-list-alt'
+          icon: 'fa fa-list-alt',
+          permission: auth.SYSTEM_CONFIGURATION
         },
         {
           name: this.$t('message.administration'),
           url: '/admin',
-          icon: 'fa fa-cogs'
+          icon: 'fa fa-cogs',
+          permission: auth.SYSTEM_CONFIGURATION
         }
       ]
       }
@@ -130,6 +140,16 @@
         } else {
           return this.breadcrumbs;
         }
+      },
+      permissibleNav () {
+        let decodedToken = auth.decodeToken(auth.getToken());
+        let array = [];
+        for (const item of this.nav) {
+          if (item.permission !== null && auth.hasPermission(item.permission, decodedToken)) {
+            array.push(item);
+          }
+        }
+        return array;
       }
     },
     created() {
