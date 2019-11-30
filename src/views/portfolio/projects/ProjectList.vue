@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row />
     <bootstrap-table
       ref="table"

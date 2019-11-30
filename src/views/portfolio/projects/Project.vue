@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
       <b-card-body class="p-3 clearfix">
         <b-row>
@@ -74,7 +74,7 @@
         </b-row>
       </b-card-body>
       <div id="project-info-footer" slot="footer">
-        <b-link class="font-weight-bold font-xs btn-block text-muted" href="#">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+        <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.projectDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
@@ -91,6 +91,9 @@
         Audit table here
       </b-tab>
     </b-tabs>
+    <b-modal id="projectDetailsModal" size="lg" hide-header-close v-bind:title="$t('message.project_details')">
+      <p class="my-4">Hello from modal!</p>
+    </b-modal>
   </div>
 </template>
 

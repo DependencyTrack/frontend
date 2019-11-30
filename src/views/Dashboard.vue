@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row/>
     <b-card>
       <b-row>
@@ -136,6 +136,7 @@
 
 <script>
   import api from "../shared/api";
+  import * as auth from "../shared/auth"
   import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'

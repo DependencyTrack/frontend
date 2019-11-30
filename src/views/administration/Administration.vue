@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" v-permission="'SYSTEM_CONFIGURATION'">
 
     <b-row>
       <b-col xs="6" sm="4" md="2">
