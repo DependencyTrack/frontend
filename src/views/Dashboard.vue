@@ -136,7 +136,6 @@
 
 <script>
   import api from "../shared/api";
-  import * as auth from "../shared/auth"
   import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'

@@ -2,7 +2,7 @@
 * Permissions Vue Directive
 */
 import Vue from 'vue'
-import {hasPermission, decodeToken, getToken} from '../shared/auth'
+import {hasPermission, decodeToken, getToken} from '../shared/permissions'
 
 Vue.directive('permission', function(el, binding) {
   let decodedToken = decodeToken(getToken());

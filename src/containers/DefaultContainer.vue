@@ -26,7 +26,7 @@
   import DefaultHeader from './DefaultHeader'
   import DefaultFooter from './DefaultFooter'
   import EventBus from '../shared/eventbus';
-  import * as auth from '../shared/auth';
+  import * as permissions from '../shared/permissions';
 
   export default {
     name: 'DefaultContainer',
@@ -51,7 +51,7 @@
           name: this.$t('message.dashboard'),
           url: '/dashboard',
           icon: 'icon-speedometer',
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           title: true,
@@ -61,31 +61,31 @@
             element: '',
             attributes: {}
           },
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.projects'),
           url: '/projects',
           icon: 'fa fa-sitemap',
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.components'),
           url: '/components',
           icon: 'fa fa-cubes',
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.vulnerabilities'),
           url: '/vulnerabilities',
           icon: 'fa fa-shield',
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           name: this.$t('message.licenses'),
           url: '/licenses',
           icon: 'fa fa-balance-scale',
-          permission: auth.VIEW_PORTFOLIO
+          permission: permissions.VIEW_PORTFOLIO
         },
         {
           title: true,
@@ -95,19 +95,19 @@
             element: '',
             attributes: {}
           },
-          permission: auth.SYSTEM_CONFIGURATION
+          permission: permissions.SYSTEM_CONFIGURATION
         },
         {
           name: this.$t('message.policy_management'),
           url: '/policy',
           icon: 'fa fa-list-alt',
-          permission: auth.SYSTEM_CONFIGURATION
+          permission: permissions.SYSTEM_CONFIGURATION
         },
         {
           name: this.$t('message.administration'),
           url: '/admin',
           icon: 'fa fa-cogs',
-          permission: auth.SYSTEM_CONFIGURATION
+          permission: permissions.SYSTEM_CONFIGURATION
         }
       ]
       }
@@ -142,10 +142,10 @@
         }
       },
       permissibleNav () {
-        let decodedToken = auth.decodeToken(auth.getToken());
+        let decodedToken = permissions.decodeToken(permissions.getToken());
         let array = [];
         for (const item of this.nav) {
-          if (item.permission !== null && auth.hasPermission(item.permission, decodedToken)) {
+          if (item.permission !== null && permissions.hasPermission(item.permission, decodedToken)) {
             array.push(item);
           }
         }
