@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
+  <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
     <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
       <b-card-body class="p-3 clearfix">
         <b-row>
@@ -86,7 +86,7 @@
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }}</template>
         <project-dependencies :uuid="this.uuid"/>
       </b-tab>
-      <b-tab>
+      <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }}</template>
         Audit table here
       </b-tab>
@@ -107,8 +107,10 @@
   import ProjectDashboard from "./ProjectDashboard";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
   import EventBus from '../../../shared/eventbus';
+  import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
+    mixins: [permissionsMixin],
     components: {
       ProjectDependencies,
       SeverityBarChart,
