@@ -208,3 +208,6 @@ $popover-header-bg:    lighten($popover-bg, 3%) !default;
 
   --component-active-color: #{$component-active-color};
 }
+
+// Modal override
+$modal-md: 600px !default;

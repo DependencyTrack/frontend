@@ -1,0 +1,107 @@
+// If you want to override variables do it here
+@import "../../variables";
+
+/* style the background and the text color of the input ... */
+.vue-tags-input {
+}
+
+.vue-tags-input .ti-new-tag-input {
+  background: transparent;
+  color: #ffffff;
+}
+
+.vue-tags-input .ti-input {
+  background: $grey-650;
+  padding: 4px 10px;
+  transition: border-bottom 200ms ease;
+  border: 1px solid $border-color;
+  border-radius: 0.25rem;
+}
+
+/* we cange the border color if the user focuses the input */
+.vue-tags-input.ti-focus .ti-input {
+  border: 1px solid $light-blue;
+  box-shadow: 0 0 0 0.2rem rgba(99, 194, 222, 0.25);
+}
+
+/* some stylings for the autocomplete layer */
+.vue-tags-input .ti-autocomplete {
+  background: #283944;
+  border: 1px solid $grey-800;
+  border-top: none;
+  border-radius: 0.25rem;
+}
+
+/* the selected item in the autocomplete layer, should be highlighted */
+.vue-tags-input .ti-item.ti-selected-item {
+  background: $light-blue;
+  color: #283944;
+}
+
+/* style the placeholders color across all browser */
+.vue-tags-input ::-webkit-input-placeholder {
+  color: #a4b1b6;
+}
+
+.vue-tags-input ::-moz-placeholder {
+  color: #a4b1b6;
+}
+
+.vue-tags-input :-ms-input-placeholder {
+  color: #a4b1b6;
+}
+
+.vue-tags-input :-moz-placeholder {
+  color: #a4b1b6;
+}
+
+/* default styles for all the tags */
+.vue-tags-input .ti-tag {
+  position: relative;
+  color: $light-blue;
+  background-color: transparent;
+  border: 1px solid $light-blue;
+}
+
+/* we defined a custom css class in the data model, now we are using it to style the tag */
+.vue-tags-input .ti-tag.custom-class {
+  background: transparent;
+  border: 1px solid $light-blue;
+  color: $light-blue;
+  margin-right: 4px;
+  border-radius: 0.25rem;
+  font-size: 13px;
+}
+
+/* the styles if a tag is invalid */
+.vue-tags-input .ti-tag.ti-invalid {
+  background-color: $red;
+}
+
+/* if the user input is invalid, the input color should be red */
+.vue-tags-input .ti-new-tag-input.ti-invalid {
+  color: $red;
+}
+
+/* if a tag or the user input is a duplicate, it should be crossed out */
+.vue-tags-input .ti-duplicate span,
+.vue-tags-input .ti-new-tag-input.ti-duplicate {
+  text-decoration: line-through;
+}
+
+/* if the user presses backspace, the complete tag should be crossed out, to mark it for deletion */
+.vue-tags-input .ti-tag:after {
+  transition: transform .2s;
+  position: absolute;
+  content: '';
+  height: 2px;
+  width: 108%;
+  left: -4%;
+  top: calc(50% - 1px);
+  background-color: #000;
+  transform: scaleX(0);
+}
+
+.vue-tags-input .ti-deletion-mark:after {
+  transform: scaleX(1);
+}

@@ -63,7 +63,13 @@
 .table td.expand-20, .table th.expand-20 {
   width: 20%;
 }
-
+label.required:after {
+  color: #d62728;
+  content:" *";
+}
+input.required, select.required, textarea.required {
+  border-color: #ffd700;
+}
 
 /* usage: use outer div/span with class truncate-ellipsis or truncate-ellipsis-inline and inner span with content to truncate */
 .truncate-ellipsis {

@@ -7,7 +7,7 @@
             <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
             <div class="h5 text-primary mb-0 mt-2">{{ projectLabel }}</div>
             <div class="text-muted text-uppercase font-weight-bold font-xs">
-              <span v-for="tag in projectTags">
+              <span v-for="tag in project.tags">
                 <b-badge :href="'../projects/?tag='+tag.name" variant="secondary">{{ tag.name }}</b-badge>
               </span>
             </div>
@@ -91,9 +91,7 @@
         Audit table here
       </b-tab>
     </b-tabs>
-    <b-modal id="projectDetailsModal" size="lg" hide-header-close v-bind:title="$t('message.project_details')">
-      <p class="my-4">Hello from modal!</p>
-    </b-modal>
+    <project-details-modal :project="project" />
   </div>
 </template>
 
@@ -108,10 +106,12 @@
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
   import EventBus from '../../../shared/eventbus';
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import ProjectDetailsModal from "./ProjectDetailsModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
+      ProjectDetailsModal,
       ProjectDependencies,
       SeverityBarChart,
       ProjectDashboard,
@@ -120,10 +120,10 @@
     },
     computed: {
       projectLabel () {
-        if (this.projectName && this.projectVersion) {
-          return this.projectName + ' ▸ ' + this.projectVersion;
+        if (this.project.name && this.project.version) {
+          return this.project.name + ' ▸ ' + this.project.version;
         } else {
-          return this.projectName;
+          return this.project.name;
         }
       }
     },
@@ -137,9 +137,7 @@
         severityInfo: this.getStyle('--severity-info'),
         trackColor: this.getStyle('--component-active-color'),
         uuid: null,
-        projectName: '',
-        projectVersion: '',
-        projectTags: [],
+        project: {},
         currentCritical: 0,
         currentHigh: 0,
         currentMedium: 0,
@@ -159,9 +157,7 @@
     mounted() {
       let projectUrl = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}`;
       this.axios.get(projectUrl).then((response) => {
-        this.projectName = response.data.name;
-        this.projectVersion = response.data.version;
-        this.projectTags = response.data.tags;
+        this.project = response.data;
         EventBus.$emit('addCrumb', this.projectLabel);
       });
 
