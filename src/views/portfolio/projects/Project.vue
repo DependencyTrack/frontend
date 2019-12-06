@@ -91,7 +91,7 @@
         Audit table here
       </b-tab>
     </b-tabs>
-    <project-details-modal :project="project" />
+    <project-details-modal :project="this._.cloneDeep(project)" />
   </div>
 </template>
 
