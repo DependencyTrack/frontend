@@ -60,7 +60,12 @@
       "overview": "Overview",
       "audit": "Audit",
       "view_details": "View Details",
-      "project_details": "Project Details"
+      "project_details": "Project Details",
+      "description": "Description",
+      "tags": "Tags",
+      "add_tag": "Add Tag",
+      "update": "Update",
+      "cancel": "Cancel"
     },
     "admin": {
       "configuration": "Configuration",

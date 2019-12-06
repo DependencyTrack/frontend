@@ -1,5 +1,9 @@
 <template>
-  <b-modal id="projectDetailsModal" size="md" hide-header-close v-bind:title="$t('message.project_details')">
+  <b-modal id="projectDetailsModal" size="md" hide-header-close
+           :title="$t('message.project_details')"
+           :ok-title="$t('message.update')"
+           :cancel-title="$t('message.cancel')"
+  >
     <b-form-group
       id="fieldset-1"
       :label="this.$t('message.project_name')"
@@ -23,7 +27,7 @@
       id="fieldset-4"
       :label="this.$t('message.tags')"
       label-for="input-4">
-      <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys" style="max-width:none; background-color:transparent;"/>
+      <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys" :placeholder="$t('message.add_tag')" style="max-width:none; background-color:transparent;"/>
     </b-form-group>
   </b-modal>
 </template>
@@ -47,7 +51,9 @@
       }
     },
     beforeUpdate() {
-      this.project.tags.forEach((tag) => this.tags.push({text: tag.name}));
+      if (this.tags.length === 0 && this.project && this.project.tags)  { // Prevents line from being executed when entering new tags
+        this.project.tags.forEach((tag) => this.tags.push({text: tag.name}));
+      }
     }
   }
 </script>
