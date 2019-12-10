@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
   import api from './shared/api';
@@ -31,11 +30,11 @@
         }
       };
 
-      axios.get(url, config)
+      this.axios.get(url, config)
         .then((result) => {
           this.authenticated = true;
           this.user = result.data;
-          axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+          this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
           $.ajaxSetup({
             beforeSend: function(xhr) {
               if (jwt !== null) {
@@ -49,6 +48,15 @@
           sessionStorage.removeItem('token');
           this.$router.replace({ name: "Login" });
         });
+
+      // Intercept all HTTP Responses (from Axios). On error status codes (4xx - 5xx),
+      //display a modal with the HTTP status code text.
+      this.axios.interceptors.response.use(response => {
+        return response;
+      }, error => {
+        this.displayUnsuccessfulResponseModal(error.response.status, error.response.statusText);
+        return Promise.reject(error);
+      });
 
       /**
        * The Bootstrap-Table Vue component does not support Vue components in custom formatters.
@@ -97,6 +105,29 @@
       },
       logout() {
         this.authenticated = false;
+      },
+      displayUnsuccessfulResponseModal(statusCode, statusText) {
+        const h = this.$createElement;
+        const messageVNode =
+          h('div', {}, [
+            h('div', {class: ['pull-left'], style: ['width:70px; min-width:70px; max-width:70px;']}, [
+              h('i', {class: ['fa fa-exclamation-triangle fa-4x'], ariaHidden: ['true']})
+            ]),
+            h('div', {style: 'margin-left: 5em'}, [
+              h('p', {}, [
+                this.$t('condition.http_status_code') + ': ' + statusCode
+              ]),
+              h('p', {}, [
+                statusText
+              ])
+            ])
+        ]);
+        this.$bvModal.msgBoxOk([messageVNode], {
+          title: this.$t('condition.warning'),
+          size: 'md',
+          buttonSize: 'md',
+          okVariant: 'primary'
+        });
       }
     }
   }

@@ -65,7 +65,12 @@
       "tags": "Tags",
       "add_tag": "Add Tag",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "add_version": "Add Version",
+      "properties": "Properties",
+      "delete": "Delete",
+      "project_properties": "Project Properties",
+      "create_property": "Create Property"
     },
     "admin": {
       "configuration": "Configuration",
@@ -96,6 +101,10 @@
       "managed_users": "Managed Users",
       "teams": "Teams",
       "permissions": "Permissions"
+    },
+    "condition": {
+      "warning": "Warning",
+      "http_status_code": "HTTP Status Code"
     },
     "severity": {
       "critical": "Critical",
