@@ -49,11 +49,18 @@
           this.$router.replace({ name: "Login" });
         });
 
-      // Intercept all HTTP Responses (from Axios). On error status codes (4xx - 5xx),
-      //display a modal with the HTTP status code text.
+      // Intercept all HTTP requests
+      this.axios.interceptors.request.use(request => {
+        //console.log('Request', request);
+        return request;
+      });
+
+      // Intercept all HTTP responses
       this.axios.interceptors.response.use(response => {
+        //console.log('Response', response);
         return response;
       }, error => {
+        // On error status codes (4xx - 5xx), display a modal with the HTTP status code and text.
         this.displayUnsuccessfulResponseModal(error.response.status, error.response.statusText);
         return Promise.reject(error);
       });
