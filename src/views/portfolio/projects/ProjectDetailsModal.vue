@@ -90,7 +90,7 @@
             active: this.active
           }
         ).then((response) => {
-          this.$toastr.s("Project updated");
+          this.$toastr.s(this.$t('message.project_updated'));
         });
       },
       deleteProject: function() {
@@ -98,7 +98,7 @@
         let url = `${api.BASE_URL}/${api.URL_PROJECT}/` + this.project.uuid;
         this.axios.delete(url)
         .then((response) => {
-          this.$toastr.s("Project deleted");
+          this.$toastr.s(this.$t('message.project_deleted'));
           this.$router.replace({ name: "Projects" });
         });
       }

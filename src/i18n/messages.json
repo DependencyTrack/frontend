@@ -72,7 +72,9 @@
       "project_properties": "Project Properties",
       "create_property": "Create Property",
       "value": "Value",
-      "type": "Type"
+      "type": "Type",
+      "project_updated": "Project updated",
+      "project_deleted": "Project deleted"
     },
     "admin": {
       "configuration": "Configuration",
