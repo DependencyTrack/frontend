@@ -60,8 +60,12 @@
         //console.log('Response', response);
         return response;
       }, error => {
-        // On error status codes (4xx - 5xx), display a modal with the HTTP status code and text.
-        this.displayUnsuccessfulResponseModal(error.response.status, error.response.statusText);
+        // On error status codes (4xx - 5xx), display a toast with the HTTP status code and text.
+        if (error.response.status >= 400 && error.response.status < 500) {
+          this.$toastr.e(error.response.statusText + " (" + error.response.status + ")", this.$t('condition.http_request_error'));
+        } else {
+          this.$toastr.e(error.response.statusText + " (" + error.response.status + ")", this.$t('condition.server_error'));
+        }
         return Promise.reject(error);
       });
 
@@ -112,29 +116,6 @@
       },
       logout() {
         this.authenticated = false;
-      },
-      displayUnsuccessfulResponseModal(statusCode, statusText) {
-        const h = this.$createElement;
-        const messageVNode =
-          h('div', {}, [
-            h('div', {class: ['pull-left'], style: ['width:70px; min-width:70px; max-width:70px;']}, [
-              h('i', {class: ['fa fa-exclamation-triangle fa-4x'], ariaHidden: ['true']})
-            ]),
-            h('div', {style: 'margin-left: 5em'}, [
-              h('p', {}, [
-                this.$t('condition.http_status_code') + ': ' + statusCode
-              ]),
-              h('p', {}, [
-                statusText
-              ])
-            ])
-        ]);
-        this.$bvModal.msgBoxOk([messageVNode], {
-          title: this.$t('condition.warning'),
-          size: 'md',
-          buttonSize: 'md',
-          okVariant: 'primary'
-        });
       }
     }
   }
