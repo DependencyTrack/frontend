@@ -88,18 +88,20 @@
             description: this.project.description,
             tags: tagsNode,
             active: this.active
-          }
-        ).then((response) => {
-          this.$toastr.s(this.$t('message.project_updated'));
+          }).then((response) => {
+            this.$toastr.s(this.$t('message.project_updated'));
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       },
       deleteProject: function() {
         this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
         let url = `${api.BASE_URL}/${api.URL_PROJECT}/` + this.project.uuid;
-        this.axios.delete(url)
-        .then((response) => {
+        this.axios.delete(url).then((response) => {
           this.$toastr.s(this.$t('message.project_deleted'));
           this.$router.replace({ name: "Projects" });
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       }
     }
