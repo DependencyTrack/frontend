@@ -70,7 +70,9 @@
       "properties": "Properties",
       "delete": "Delete",
       "project_properties": "Project Properties",
-      "create_property": "Create Property"
+      "create_property": "Create Property",
+      "value": "Value",
+      "type": "Type"
     },
     "admin": {
       "configuration": "Configuration",
