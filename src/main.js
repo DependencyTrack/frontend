@@ -14,10 +14,18 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLodash from 'vue-lodash'
 import '@/directives/VuePermission'
+import VueToastr from "vue-toastr";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
 Vue.use(VueLodash, { name: 'lodash' });
+Vue.use(VueToastr, {
+  defaultTimeout: 5000,
+  defaultProgressBar: false,
+  defaultProgressBarValue: 0,
+  defaultPosition: "toast-top-right",
+  defaultCloseOnHover: false
+});
 
 new Vue({
   el: '#app',

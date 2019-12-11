@@ -44,6 +44,7 @@
     "vue-lodash": "^2.0.2",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.0.6",
+    "vue-toastr": "^2.1.2",
     "xss-filters": "^1.2.7"
   },
   "devDependencies": {
