@@ -1,0 +1,101 @@
+<template>
+  <b-modal id="projectPropertiesModal" size="lg" hide-header-close no-stacking :title="$t('message.project_properties')">
+
+    <bootstrap-table
+      ref="table"
+      :columns="columns"
+      :data="data"
+      :options="options">
+    </bootstrap-table>
+
+    <template v-slot:modal-footer="{ cancel }">
+      <b-button size="md" variant="outline-danger" @click="deleteProperty">{{ $t('message.delete') }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
+      <b-button size="md" variant="primary" @click="createProperty()">{{ $t('message.create_property') }}</b-button>
+    </template>
+  </b-modal>
+</template>
+
+<script>
+  import api from "../../../shared/api";
+
+  export default {
+    name: "ProjectPropertiesModal",
+    props: {
+      uuid: String
+    },
+    data() {
+      return {
+        columns: [
+          {
+            field: "state",
+            checkbox: true
+          },
+          {
+            title: this.$t('message.group'),
+            field: "groupName",
+            sortable: false
+          },
+          {
+            title: this.$t('message.name'),
+            field: "propertyName",
+            sortable: false
+          },
+          {
+            title: this.$t('message.value'),
+            field: "propertyValue",
+            sortable: false,
+            editable: true
+          },
+          {
+            title: this.$t('message.type'),
+            field: "propertyType",
+            sortable: false
+          },
+          {
+            title: this.$t('message.description'),
+            field: "description",
+            sortable: false,
+            visible: false
+          }
+        ],
+        data: [],
+        options: {
+          search: true,
+          showColumns: true,
+          showRefresh: true,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+            return res;
+          },
+          url: this.apiUrl()
+        }
+      }
+    },
+    methods: {
+      apiUrl: function () {
+        return `${api.BASE_URL}/${api.URL_PROJECT}/` + this.uuid + "/property";
+      },
+      createProperty: function() {
+        console.log("Create property");
+        //return getStyle(style);
+      },
+      deleteProperty: function () {
+        console.log("Delete property");
+      }
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../../../assets/scss/vendors/vue-tags-input/vue-tags-input";
+</style>
