@@ -80,6 +80,7 @@
       "configuration": "Configuration",
       "general": "General",
       "bom_formats": "BOM Formats",
+      "internal_components": "Internal Components",
       "email": "Email",
       "analyzers": "Analyzers",
       "internal_analyzer": "Internal",

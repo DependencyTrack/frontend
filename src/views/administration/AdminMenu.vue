@@ -9,6 +9,7 @@
           <b-list-group-item href="#">{{ $t('admin.general') }}</b-list-group-item>
           <b-list-group-item href="#">{{ $t('admin.bom_formats') }}</b-list-group-item>
           <b-list-group-item href="#">{{ $t('admin.email') }}</b-list-group-item>
+          <b-list-group-item href="#">{{ $t('admin.internal_components') }}</b-list-group-item>
         </b-list-group>
       </b-collapse>
     </b-card>
