@@ -22,5 +22,8 @@ export default {
     isPermitted (permission) {
       return permissions.hasPermission(permission, this.decodedToken);
     },
+    isNotPermitted (permission) {
+      return !permissions.hasPermission(permission, this.decodedToken);
+    },
   }
 };
