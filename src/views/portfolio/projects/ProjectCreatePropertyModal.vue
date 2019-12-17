@@ -70,7 +70,6 @@
     },
     methods: {
       createProperty: function() {
-        console.log("Create property");
         let url = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}/property`;
         this.axios.put(url, {
           groupName: this.groupName,
