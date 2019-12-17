@@ -4,8 +4,8 @@
       <!-- left side here -->
     </div>
     <div class="ml-auto">
-      <a href="https://dependencytrack.org/">Dependency-Track</a>&nbsp;
-      <span class="mr-1">v3.7.0-SNAPSHOT</span>
+      <a href="https://dependencytrack.org/">{{ $dtrack.application }}</a>&nbsp;
+      <span class="mr-1">v{{ $dtrack.version }}</span>
     </div>
   </TheFooter>
 </template>

@@ -15,6 +15,7 @@ import VueAxios from 'vue-axios'
 import VueLodash from 'vue-lodash'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
+import api from "./shared/api";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -26,6 +27,18 @@ Vue.use(VueToastr, {
   defaultPosition: "toast-top-right",
   defaultCloseOnHover: false
 });
+
+/*
+Register global $dtrack variable which will be the response body from /api/version.
+$dtrack can then be used anywhere in the app to get information about the server,
+the version of dtrack, timestamp, uuid, Alpine version, etc.
+ */
+Vue.prototype.$dtrack = {};
+axios.get(`${api.BASE_URL}/${api.URL_ABOUT}`)
+  .then((result) => {
+    Vue.prototype.$dtrack = result.data;
+  }
+);
 
 new Vue({
   el: '#app',
