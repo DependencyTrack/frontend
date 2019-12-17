@@ -10,6 +10,7 @@
 <script>
   import Vue from 'vue'
   import api from "../../../shared/api";
+  import common from "../../../shared/common";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
   import xssFilters from "xss-filters";
 
@@ -25,24 +26,33 @@
             field: "component.name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
-              return `<a href="${url}">${value}</a>`;
+              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
           {
             title: this.$t('message.version'),
             field: "component.version",
-            sortable: true
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.group'),
             field: "component.group",
-            sortable: true
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.license'),
             field: "component.license",
-            sortable: false
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.risk_score'),

@@ -12,6 +12,7 @@
 
 <script>
   import api from "../../../shared/api";
+  import common from "../../../shared/common";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import xssFilters from "xss-filters";
 
@@ -25,15 +26,18 @@
           {
             title: this.$t('message.name'),
             field: "name",
-            sortable: true
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.spdx_license_id'),
             field: "licenseId",
             sortable: true,
             formatter: function (value, row, index) {
-              let licenseurl = xssFilters.uriInUnQuotedAttr("../license/?licenseId=" + value);
-              return `<a href="${licenseurl}">${value}</a>`;
+              let url = xssFilters.uriInUnQuotedAttr("../license/?licenseId=" + value);
+              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             },
           },
           {

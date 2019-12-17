@@ -16,6 +16,8 @@
 
 <script>
   import api from "../../../shared/api";
+  import common from "../../../shared/common";
+  import xssFilters from "xss-filters";
 
   export default {
     name: "ProjectPropertiesModal",
@@ -32,29 +34,44 @@
           {
             title: this.$t('message.group'),
             field: "groupName",
-            sortable: false
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.name'),
             field: "propertyName",
-            sortable: false
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.value'),
             field: "propertyValue",
             sortable: false,
-            editable: true
+            editable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.type'),
             field: "propertyType",
-            sortable: false
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           },
           {
             title: this.$t('message.description'),
             field: "description",
             sortable: false,
-            visible: false
+            visible: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           }
         ],
         data: [],
