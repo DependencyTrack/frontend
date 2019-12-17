@@ -8,7 +8,7 @@
     </bootstrap-table>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProperty">{{ $t('message.delete') }}</b-button>
-      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
       <b-button size="md" variant="primary" v-b-modal.projectCreatePropertyModal>{{ $t('message.create_property') }}</b-button>
     </template>
   </b-modal>
@@ -81,10 +81,23 @@
     },
     methods: {
       apiUrl: function () {
-        return `${api.BASE_URL}/${api.URL_PROJECT}/` + this.uuid + "/property";
+        return `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}/property`;
       },
-      deleteProperty: function () {
-        console.log("Delete property");
+      deleteProperty: function() {
+        let selections = this.$refs.table.getSelections();
+        for (let i=0; i<selections.length; i++) {
+          this.axios.delete(this.apiUrl(), { data: {
+              groupName: selections[i].groupName,
+              propertyName: selections[i].propertyName
+            }
+          }).then((response) => {
+            this.$refs.table.refresh({ silent: true });
+            this.$toastr.s(this.$t('message.property_deleted'));
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          });
+        }
+        this.$refs.table.uncheckAll();
       }
     }
   }

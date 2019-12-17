@@ -76,6 +76,7 @@
       "project_updated": "Project updated",
       "project_deleted": "Project deleted",
       "property_created": "Property created",
+      "property_deleted": "Property deleted",
       "create_project_property": "Create Project Property",
       "group_name": "Group Name",
       "property_name": "Property Name",
