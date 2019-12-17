@@ -1,12 +1,24 @@
 <template>
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row />
+    <div id="projectsToolbar">
+      <div class="form-inline" role="form">
+        <b-button size="md" variant="outline-primary" v-b-modal.projectCreateProjectModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+          <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
+        </b-button>
+        &nbsp;&nbsp;
+        <b-form-checkbox id="showInactiveProjects" @change="refreshTable" v-model="showInactiveProjects" switch
+                         name="showInactiveProjects" value="true" unchecked-value="false"> {{ $t('message.show_inactive_projects') }}
+        </b-form-checkbox>
+      </div>
+    </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
       :options="options">
     </bootstrap-table>
+    <project-create-project-modal v-on:refreshTable="refreshTable"/>
   </div>
 </template>
 
@@ -15,33 +27,46 @@ import Vue from 'vue'
 import api from "../../../shared/api";
 import common from "../../../shared/common";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
 import xssFilters from "xss-filters";
+import permissionsMixin from "../../../mixins/permissionsMixin";
 
 export default {
+  mixins: [permissionsMixin],
   components: {
+    ProjectCreateProjectModal,
     PortfolioWidgetRow
   },
   methods: {
     apiUrl: function () {
+      let url = api.BASE_URL + "/" + api.URL_PROJECT;
       let tag = this.$route.query.tag;
       if (tag) {
-        return `${api.BASE_URL}/${api.URL_PROJECT}/tag/` + encodeURIComponent(tag);
-      } else {
-        return `${api.BASE_URL}/${api.URL_PROJECT}`;
+        url += "/tag/" + encodeURIComponent(tag);
       }
-    }
-  },
-  watch:{
-    $route (to, from) {
+      if (this.showInactiveProjects === undefined) {
+        url += "?excludeInactive=true";
+      } else {
+        url += "?excludeInactive=" + this.showInactiveProjects;
+      }
+      return url;
+    },
+    refreshTable: function() {
       this.$refs.table.refresh({
         url: this.apiUrl(),
         silent: true
       });
     }
   },
+  watch:{
+    $route (to, from) {
+      this.refreshTable();
+    }
+  },
   data() {
     return {
+      showInactiveProjects: false,
       columns: [
         {
           title: this.$t('message.project_name'),
@@ -128,6 +153,7 @@ export default {
         icons: {
           refresh: 'fa-refresh'
         },
+        toolbar: '#projectsToolbar',
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
           return res;
