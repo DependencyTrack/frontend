@@ -1,17 +1,15 @@
 <template>
   <b-modal id="projectPropertiesModal" size="lg" hide-header-close no-stacking :title="$t('message.project_properties')">
-
     <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
       :options="options">
     </bootstrap-table>
-
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProperty">{{ $t('message.delete') }}</b-button>
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
-      <b-button size="md" variant="primary" @click="createProperty()">{{ $t('message.create_property') }}</b-button>
+      <b-button size="md" variant="primary" v-b-modal.projectCreatePropertyModal>{{ $t('message.create_property') }}</b-button>
     </template>
   </b-modal>
 </template>
@@ -84,10 +82,6 @@
     methods: {
       apiUrl: function () {
         return `${api.BASE_URL}/${api.URL_PROJECT}/` + this.uuid + "/property";
-      },
-      createProperty: function() {
-        console.log("Create property");
-        //return getStyle(style);
       },
       deleteProperty: function () {
         console.log("Delete property");

@@ -93,6 +93,7 @@
     </b-tabs>
     <project-details-modal :project="this.lodash.cloneDeep(project)" />
     <project-properties-modal :uuid="this.uuid" />
+    <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :project="this.lodash.cloneDeep(project)" />
   </div>
 </template>
@@ -110,12 +111,14 @@
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import ProjectDetailsModal from "./ProjectDetailsModal";
   import ProjectPropertiesModal from "./ProjectPropertiesModal";
+  import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
       ProjectAddVersionModal,
+      ProjectCreatePropertyModal,
       ProjectPropertiesModal,
       ProjectDetailsModal,
       ProjectDependencies,
