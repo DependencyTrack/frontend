@@ -35,13 +35,15 @@
       <b-form-textarea id="input-5" v-model="description" trim />
     </b-form-group>
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
-      <b-button size="md" variant="primary" @click="createVersion()">{{ $t('message.create') }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
+      <b-button size="md" variant="primary" @click="createProperty()">{{ $t('message.create') }}</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+  import api from "../../../shared/api";
+
   export default {
     name: "ProjectCreatePropertyModal",
     props: {
@@ -67,9 +69,22 @@
       }
     },
     methods: {
-      createVersion: function() {
-        console.log("Create version");
-        //return getStyle(style);
+      createProperty: function() {
+        console.log("Create property");
+        let url = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}/property`;
+        this.axios.put(url, {
+          groupName: this.groupName,
+          propertyName: this.propertyName,
+          propertyValue: this.propertyValue,
+          propertyType: this.propertyType,
+          description: this.description
+        }).then((response) => {
+          this.$root.$emit('bv::hide::modal', 'projectCreatePropertyModal');
+          this.$root.$emit('bv::show::modal', 'projectPropertiesModal');
+          this.$toastr.s(this.$t('message.property_created'));
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
       }
     }
   }
