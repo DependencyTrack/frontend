@@ -5,19 +5,19 @@
       :label="this.$t('message.project_name')"
       label-for="input-1"
       label-class="required">
-      <b-form-input id="input-1" v-model="project.name" class="required" trim />
+      <b-form-input id="input-1" v-model="project.name" class="required" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
     </b-form-group>
     <b-form-group
       id="fieldset-2"
       :label="this.$t('message.version')"
       label-for="input-2">
-      <b-form-input id="input-2" v-model="project.version" trim />
+      <b-form-input id="input-2" v-model="project.version" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
     </b-form-group>
     <b-form-group
       id="fieldset-3"
       :label="this.$t('message.description')"
       label-for="input-3">
-      <b-form-textarea id="input-3" v-model="project.description" trim />
+      <b-form-textarea id="input-3" v-model="project.description" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
     </b-form-group>
     <b-form-group
       id="fieldset-4"
@@ -25,20 +25,21 @@
       label-for="input-4">
       <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
                       :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
+                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
                       style="max-width:none; background-color:transparent;"/>
     </b-form-group>
     <b-form-group
       id="fieldset-5"
       :label="this.$t('message.active')"
       label-for="input-5">
-      <c-switch id="input-5" class="mx-1" color="primary" checked label variant="pill" v-bind="labelIcon" />
+      <c-switch id="input-5" class="mx-1" color="primary" checked label variant="pill" :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" />
     </b-form-group>
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="outline-danger" @click="deleteProject()">{{ $t('message.delete') }}</b-button>
-      <b-button size="md" variant="outline-primary" v-b-modal.projectPropertiesModal>{{ $t('message.properties') }}</b-button>
-      <b-button size="md" variant="outline-primary" v-b-modal.projectAddVersionModal>{{ $t('message.add_version') }}</b-button>
-      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
-      <b-button size="md" variant="primary" @click="updateProject()">{{ $t('message.update') }}</b-button>
+      <b-button size="md" variant="outline-danger" @click="deleteProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
+      <b-button size="md" variant="outline-primary" v-b-modal.projectPropertiesModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.properties') }}</b-button>
+      <b-button size="md" variant="outline-primary" v-b-modal.projectAddVersionModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.add_version') }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
+      <b-button size="md" variant="primary" @click="updateProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.update') }}</b-button>
     </template>
   </b-modal>
 </template>
@@ -46,11 +47,12 @@
 <script>
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
-  import EventBus from "../../../shared/eventbus";
   import api from "../../../shared/api";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
     name: "ProjectDetailsModal",
+    mixins: [permissionsMixin],
     components: {
       VueTagsInput,
       cSwitch
