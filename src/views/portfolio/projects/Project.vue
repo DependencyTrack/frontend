@@ -94,7 +94,7 @@
     <project-details-modal :project="this.lodash.cloneDeep(project)" />
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
-    <project-add-version-modal :project="this.lodash.cloneDeep(project)" />
+    <project-add-version-modal :uuid="this.uuid" />
   </div>
 </template>
 

@@ -83,7 +83,12 @@
       "property_value": "Property Value",
       "property_type": "Property Type",
       "create": "Create",
-      "close": "Close"
+      "close": "Close",
+      "include_tags": "Include tags",
+      "include_properties": "Include properties",
+      "include_dependencies": "Include dependencies",
+      "include_audit_history": "Include audit history",
+      "project_cloning_in_progress": "The project is being created with the cloning options specified"
     },
     "admin": {
       "configuration": "Configuration",
