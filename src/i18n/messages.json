@@ -75,12 +75,14 @@
       "type": "Type",
       "project_updated": "Project updated",
       "project_deleted": "Project deleted",
+      "property_created": "Property created",
       "create_project_property": "Create Project Property",
       "group_name": "Group Name",
       "property_name": "Property Name",
       "property_value": "Property Value",
       "property_type": "Property Type",
-      "create": "Create"
+      "create": "Create",
+      "close": "Close"
     },
     "admin": {
       "configuration": "Configuration",
