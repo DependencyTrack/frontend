@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="projectCreatePropertyModal" size="md" hide-header-close no-stacking :title="$t('message.create_project_property')">
+  <b-modal id="projectCreatePropertyModal" @hide="resetValues()" size="md" hide-header-close no-stacking :title="$t('message.create_project_property')">
     <b-form-group
       id="fieldset-1"
       :label="this.$t('message.group_name')"
@@ -84,6 +84,13 @@
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+      },
+      resetValues: function () {
+        this.groupName = null;
+        this.propertyName = null;
+        this.propertyValue = null;
+        this.propertyType = null;
+        this.description = null;
       }
     }
   }
