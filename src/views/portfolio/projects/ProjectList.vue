@@ -13,6 +13,7 @@
 <script>
 import Vue from 'vue'
 import api from "../../../shared/api";
+import common from "../../../shared/common";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
 import xssFilters from "xss-filters";
@@ -48,13 +49,16 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
-            return `<a href="${url}">${value}</a>`;
+            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
         {
           title: this.$t('message.version'),
           field: "version",
-          sortable: true
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+          }
         },
         {
           title: this.$t('message.last_bom_import'),
