@@ -88,7 +88,7 @@
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }}</template>
-        Audit table here
+        <project-findings :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
     <project-details-modal :project="this.lodash.cloneDeep(project)" />
@@ -113,10 +113,12 @@
   import ProjectPropertiesModal from "./ProjectPropertiesModal";
   import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
+  import ProjectFindings from "./ProjectFindings";
 
   export default {
     mixins: [permissionsMixin],
     components: {
+      ProjectFindings,
       ProjectAddVersionModal,
       ProjectCreatePropertyModal,
       ProjectPropertiesModal,

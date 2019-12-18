@@ -50,6 +50,14 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
      </div>`;
 };
 
+$common.formatCweLabel = function formatCweLabel(cweId, cweName) {
+  if (cweId && cweName) {
+    return "<div class='truncate-ellipsis'><span>CWE-" + cweId + " " + cweName + "</span></div>"
+  } else {
+    return "";
+  }
+};
+
 /**
  * Given a UNIX timestamp, this function will return a formatted date.
  * i.e. 15 Jan 2017
@@ -101,6 +109,7 @@ module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
+  formatCweLabel: $common.formatCweLabel,
   formatTimestamp: $common.formatTimestamp,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent

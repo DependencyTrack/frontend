@@ -91,7 +91,9 @@
       "include_properties": "Include properties",
       "include_dependencies": "Include dependencies",
       "include_audit_history": "Include audit history",
-      "project_cloning_in_progress": "The project is being created with the cloning options specified"
+      "project_cloning_in_progress": "The project is being created with the cloning options specified",
+      "vulnerability": "Vulnerability",
+      "analysis": "Analysis"
     },
     "admin": {
       "configuration": "Configuration",
