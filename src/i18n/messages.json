@@ -93,7 +93,11 @@
       "include_audit_history": "Include audit history",
       "project_cloning_in_progress": "The project is being created with the cloning options specified",
       "vulnerability": "Vulnerability",
-      "analysis": "Analysis"
+      "analysis": "Analysis",
+      "title": "Title",
+      "recommendation": "Recommendation",
+      "audit_trail": "Audit Trail",
+      "comment": "Comment"
     },
     "admin": {
       "configuration": "Configuration",

@@ -12,6 +12,8 @@
   import api from "../../../shared/api";
   import common from "../../../shared/common";
   import xssFilters from "xss-filters";
+  import ProjectFindingAudit from "./ProjectFindingAudit";
+  import i18n from "../../../i18n";
 
   export default {
     props: {
@@ -107,6 +109,21 @@
           pageSize: 10,
           icons: {
             refresh: 'fa-refresh'
+          },
+          detailView: true,
+          detailViewIcon: false,
+          detailViewByClick: true,
+          detailFormatter: function (index, row) {
+            // Programmatically instantiate ProjectFindingAudit Vue component
+            let ComponentClass = Vue.extend(ProjectFindingAudit);
+            let auditDetail = new ComponentClass({
+              propsData: {
+                finding: row
+              }
+              ,i18n
+            });
+            auditDetail.$mount();
+            return auditDetail.$el.outerHTML;
           },
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
