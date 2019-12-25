@@ -210,6 +210,8 @@
                     }
                     if (analysis.hasOwnProperty("isSuppressed")) {
                       this.isSuppressed = analysis.isSuppressed;
+                    } else {
+                      this.isSuppressed = false;
                     }
                   });
                 },
