@@ -135,3 +135,23 @@ input.required, select.required, textarea.required {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
+
+.expanded-row {
+  margin-top:-12px;
+  margin-bottom:-12px;
+  padding-top:20px;
+  padding-bottom: 20px;
+  background-color: $grey-800;
+}
+
+/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+.toggle-off {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+  border-color: rgba(0, 0, 0, .25);
+}
+.toggle-handle {
+  background-color: $grey-600;
+  border: thin rgba(0, 0, 0, .25) solid;
+}

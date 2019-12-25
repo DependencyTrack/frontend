@@ -105,6 +105,17 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
   return 0; // the absence of work does not imply progress.
 };
 
+/**
+ * Simulates a native thread sleep function for the specific number of milliseconds.
+ */
+$common.sleep = function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+};
+
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   capitalize: $common.capitalize,
@@ -112,5 +123,6 @@ module.exports = {
   formatCweLabel: $common.formatCweLabel,
   formatTimestamp: $common.formatTimestamp,
   valueWithDefault: $common.valueWithDefault,
-  calcProgressPercent: $common.calcProgressPercent
+  calcProgressPercent: $common.calcProgressPercent,
+  sleep: $common.sleep
 };

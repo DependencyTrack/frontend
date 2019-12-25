@@ -97,7 +97,15 @@
       "title": "Title",
       "recommendation": "Recommendation",
       "audit_trail": "Audit Trail",
-      "comment": "Comment"
+      "comment": "Comment",
+      "cvss_v2_vector": "CVSSv2 Vector",
+      "cvss_v3_vector": "CVSSv3 Vector",
+      "not_set": "Not Set",
+      "exploitable": "Exploitable",
+      "in_triage": "In Triage",
+      "false_positive": "False Positive",
+      "not_affected": "Not Affected",
+      "updated": "Updated"
     },
     "admin": {
       "configuration": "Configuration",
