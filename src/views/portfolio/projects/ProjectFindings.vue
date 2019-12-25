@@ -8,14 +8,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import api from "../../../shared/api";
   import common from "../../../shared/common";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import xssFilters from "xss-filters";
   import i18n from "../../../i18n";
   import BootstrapToggle from 'vue-bootstrap-toggle'
-  import EventBus from "../../../shared/eventbus";
 
   export default {
     props: {
@@ -167,7 +165,7 @@
                 return {
                   auditTrail: null,
                   comment: null,
-                  isSuppressed: false,
+                  isSuppressed: null,
                   finding: row,
                   analysisChoices: [
                     { value: 'NOT_SET', text: this.$t('message.not_set') },
@@ -181,7 +179,9 @@
               },
               watch: {
                 isSuppressed: function (currentValue, oldValue) {
-                  this.callRestEndpoint(null, null, currentValue);
+                  if (oldValue != null) {
+                    this.callRestEndpoint(null, null, currentValue);
+                  }
                 }
               },
               methods: {
@@ -220,10 +220,6 @@
                   if (this.comment != null) {
                     this.callRestEndpoint(null, this.comment, null);
                   }
-                },
-                toggleSuppression: function() {
-                  console.log("event triggered");
-                  this.callRestEndpoint(null, null, this.isSuppressed);
                 },
                 callRestEndpoint: function(analysisState, comment, isSuppressed) {
                   // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
