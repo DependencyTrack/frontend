@@ -1,10 +1,31 @@
 <template>
-  <bootstrap-table
-    ref="table"
-    :columns="columns"
-    :data="data"
-    :options="options">
-  </bootstrap-table>
+  <div>
+    <div id="toolbar">
+      <div class="form-inline btn-spaced-group" role="form">
+        <b-button size="md" variant="outline-primary"
+                  v-b-modal.projectAddDependencyModal
+                  v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+          <span class="fa fa-plus"></span> {{ $t('message.add_dependency') }}
+        </b-button>
+        <b-button size="md" variant="outline-primary"
+                  @click="removeDependencies"
+                  v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+          <span class="fa fa-minus"></span> {{ $t('message.remove_dependency') }}
+        </b-button>
+        <b-button size="md" variant="outline-primary"
+                  v-b-modal.projectUploadBomModal
+                  v-permission="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.BOM_UPLOAD]">
+          <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
+        </b-button>
+      </div>
+    </div>
+    <bootstrap-table
+      ref="table"
+      :columns="columns"
+      :data="data"
+      :options="options">
+    </bootstrap-table>
+  </div>
 </template>
 
 <script>
@@ -13,14 +34,21 @@
   import common from "../../../shared/common";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
   import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
+    mixins: [permissionsMixin],
     props: {
       uuid: String
     },
     data() {
       return {
         columns: [
+          {
+            field: "state",
+            checkbox: true,
+            align: "center"
+          },
           {
             title: this.$t('message.component'),
             field: "component.name",
@@ -92,6 +120,7 @@
           pagination: true,
           silentSort: false,
           sidePagination: 'server',
+          toolbar: '#toolbar',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,
@@ -105,6 +134,11 @@
           url: `${api.BASE_URL}/${api.URL_DEPENDENCY}/project/${this.uuid}`
         }
       };
+    },
+    methods: {
+      removeDependencies: function () {
+        console.log('todo');
+      }
     }
   };
 </script>

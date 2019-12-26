@@ -95,6 +95,8 @@
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
+    <project-upload-bom-modal :uuid="this.uuid" />
+    <project-add-dependency-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -114,10 +116,14 @@
   import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
+  import ProjectUploadBomModal from "./ProjectUploadBomModal";
+  import ProjectAddDependencyModal from "./ProjectAddDependencyModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
+      ProjectAddDependencyModal,
+      ProjectUploadBomModal,
       ProjectFindings,
       ProjectAddVersionModal,
       ProjectCreatePropertyModal,

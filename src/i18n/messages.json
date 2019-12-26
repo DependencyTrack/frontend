@@ -105,7 +105,13 @@
       "in_triage": "In Triage",
       "false_positive": "False Positive",
       "not_affected": "Not Affected",
-      "updated": "Updated"
+      "updated": "Updated",
+      "add_dependency": "Add Dependency",
+      "remove_dependency": "Remove Dependency",
+      "upload_bom": "Upload BOM",
+      "upload": "Upload",
+      "reset": "Reset",
+      "bom_uploaded": "BOM uploaded"
     },
     "admin": {
       "configuration": "Configuration",
