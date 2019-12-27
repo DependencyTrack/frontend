@@ -137,7 +137,23 @@
     },
     methods: {
       removeDependencies: function () {
-        console.log('todo');
+        let selections = this.$refs.table.getSelections();
+        let componentUuids = [];
+        for (let i=0; i<selections.length; i++) {
+          componentUuids[i] = selections[i].component.uuid;
+        }
+        let url = `${api.BASE_URL}/${api.URL_DEPENDENCY}`;
+        this.axios.delete(url, { data: {
+            projectUuid: this.uuid,
+            componentUuids: componentUuids
+          }
+        }).then((response) => {
+          this.$refs.table.refresh({ silent: true });
+          this.$toastr.s(this.$t('message.dependency_removed'));
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+        this.$refs.table.uncheckAll();
       }
     }
   };
