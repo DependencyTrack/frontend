@@ -36,7 +36,7 @@
             field: "licenseId",
             sortable: true,
             formatter: function (value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../license/?licenseId=" + value);
+              let url = xssFilters.uriInUnQuotedAttr("../licenses/" + encodeURIComponent(value));
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             },
           },

@@ -15,6 +15,7 @@ const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
 const Project = () => import('@/views/portfolio/projects/Project');
 const Component = () => import('@/views/portfolio/components/Component');
+const License = () => import('@/views/portfolio/licenses/License');
 
 // Pages
 const Login = () => import('@/views/pages/Login');
@@ -96,6 +97,16 @@ function configRoutes() {
           }
         },
         {
+          path: 'licenses/:licenseId',
+          name: 'License',
+          props: (route) => ( { licenseId: route.params.licenseId } ),
+          component: License,
+          meta: {
+            i18n: 'message.licenses',
+            sectionPath: '/licenses'
+          }
+        },
+        {
           path: 'policy',
           name: 'Policy Management',
           component: PolicyManagement,
@@ -137,6 +148,19 @@ function configRoutes() {
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/components/' + uuid, query: null }
+            }
+          }
+        },
+        {
+          // Old: http://host/license/?licenseId=AFL-2.0
+          // New: http://host/licenses/AFL-2.0
+          path: 'license',
+          props: (route) => ( { licenseId: route.query.licenseId } ),
+          redirect: to => {
+            let { hash, params, query } = to;
+            if (query.licenseId) {
+              let licenseId = query.licenseId;
+              return { path: '/licenses/' + licenseId, query: null }
             }
           }
         },

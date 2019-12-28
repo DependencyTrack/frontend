@@ -111,7 +111,16 @@
       "upload_bom": "Upload BOM",
       "upload": "Upload",
       "reset": "Reset",
-      "bom_uploaded": "BOM uploaded"
+      "bom_uploaded": "BOM uploaded",
+      "license_text": "License Text",
+      "template": "Template",
+      "source_header": "Source Header",
+      "license_name": "License Name",
+      "spdx_license_id": "SPDX License ID",
+      "osi_approved": "OSI Approved",
+      "fsf_libre": "FSF Libre",
+      "deprecated": "Deprecated",
+      "comments": "Comments"
     },
     "admin": {
       "configuration": "Configuration",
