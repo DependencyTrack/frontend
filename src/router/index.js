@@ -15,6 +15,7 @@ const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
 const Project = () => import('@/views/portfolio/projects/Project');
 const Component = () => import('@/views/portfolio/components/Component');
+const Vulnerability = () => import('@/views/portfolio/vulnerabilities/Vulnerability');
 const License = () => import('@/views/portfolio/licenses/License');
 
 // Pages
@@ -88,6 +89,19 @@ function configRoutes() {
           }
         },
         {
+          path: 'vulnerabilities/:source/:vulnId',
+          name: 'Vulnerability',
+          props: (route) => ( {
+            source: route.params.source,
+            vulnId: route.params.vulnId
+          } ),
+          component: Vulnerability,
+          meta: {
+            i18n: 'message.vulnerabilities',
+            sectionPath: '/vulnerabilities'
+          }
+        },
+        {
           path: 'licenses',
           name: 'Licenses',
           component: LicenseList,
@@ -148,6 +162,21 @@ function configRoutes() {
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/components/' + uuid, query: null }
+            }
+          }
+        },
+        {
+          // Old: http://host/vulnerability/?source=NVD&vulnId=CVE-2019-10966
+          // New: http://host/vulnerabilities/NVD/CVE-2019-10966
+          path: 'vulnerability',
+          props: (route) => ( {
+            source: route.query.source,
+            vulnId: route.query.vulnId,
+          } ),
+          redirect: to => {
+            let { hash, params, query } = to;
+            if (query.source && query.vulnId) {
+              return { path: '/vulnerabilities/' + query.source + "/" + query.vulnId, query: null }
             }
           }
         },

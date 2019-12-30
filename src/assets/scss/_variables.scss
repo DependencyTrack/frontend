@@ -32,6 +32,7 @@ $severity-medium: $yellow;
 $severity-low: $green;
 $severity-info: $blue;
 $severity-unassigned: #777777;
+$severity-label-bg: $grey-900 !default;
 
 // Components
 //
@@ -104,6 +105,10 @@ $nav-tabs-link-active-bg:           $grey-750 !default;
 $nav-tabs-link-active-border-color: $border-color $border-color $border-color !default;
 
 $tab-content-bg:                    $grey-700 !default;
+
+$tags-input-bg:             $grey-650 !default;
+$tags-input-border-color:   $grey-800 !default;
+$toggle-handle-bg:          $grey-600 !default;
 
 // Navbar
 $navbar-bg:                $grey-700 !default;

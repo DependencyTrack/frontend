@@ -11,7 +11,7 @@
 }
 
 .vue-tags-input .ti-input {
-  background: $grey-650;
+  background: $tags-input-bg;
   padding: 4px 10px;
   transition: border-bottom 200ms ease;
   border: 1px solid $border-color;
@@ -27,7 +27,7 @@
 /* some stylings for the autocomplete layer */
 .vue-tags-input .ti-autocomplete {
   background: #283944;
-  border: 1px solid $grey-800;
+  border: 1px solid $tags-input-border-color;
   border-top: none;
   border-radius: 0.25rem;
 }

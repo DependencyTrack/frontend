@@ -1,0 +1,34 @@
+code,
+pre {
+  font-family: "Courier 10 Pitch", Courier, monospace;
+}
+
+// Inline code
+code {
+  padding: 2px 4px;
+  font-size: 1.1em;
+  color: #e83e8c;
+  background-color: $grey-750;
+}
+
+// Blocks of code
+pre {
+  display: block;
+  padding: 1em;
+  font-size: 1.1em;
+  line-height: 1;
+  color: $light-blue;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: $grey-750;
+  border: 1px solid $grey-900;
+  border-radius: 0.25rem;
+
+  code {
+    font-size: inherit;
+    color: inherit;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border-radius: 0;
+  }
+}

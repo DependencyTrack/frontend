@@ -13,6 +13,7 @@ import './plugins/table.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLodash from 'vue-lodash'
+import VueShowdown from 'vue-showdown'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
 import api from "./shared/api";
@@ -27,6 +28,7 @@ Vue.use(VueToastr, {
   defaultPosition: "toast-top-right",
   defaultCloseOnHover: false
 });
+Vue.use(VueShowdown, { flavor: 'github' });
 
 /*
 Register global $dtrack variable which will be the response body from /api/version.

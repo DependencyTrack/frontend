@@ -120,7 +120,11 @@
       "osi_approved": "OSI Approved",
       "fsf_libre": "FSF Libre",
       "deprecated": "Deprecated",
-      "comments": "Comments"
+      "comments": "Comments",
+      "affected_projects": "Affected Projects",
+      "weakness": "Weakness",
+      "references": "References",
+      "credits": "Credits"
     },
     "admin": {
       "configuration": "Configuration",
@@ -166,7 +170,13 @@
       "medium": "Medium",
       "low": "Low",
       "info": "Info",
-      "unassigned": "Unassigned"
+      "unassigned": "Unassigned",
+      "critical_severity": "Critical Severity",
+      "high_severity": "High Severity",
+      "medium_severity": "Medium Severity",
+      "low_severity": "Low Severity",
+      "info_severity": "Informational",
+      "unassigned_severity": "Unassigned Severity"
     },
     "validation": {
       "required": "{_field_} is required",
