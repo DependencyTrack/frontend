@@ -9,21 +9,27 @@ do
     case $opt in
         "Major")
             RELEASE_TYPE=major
+            break
             ;;
         "Minor")
             RELEASE_TYPE=minor
+            break
             ;;
         "Patch")
             RELEASE_TYPE=patch
+            break
             ;;
         "Major (pre-release)")
             RELEASE_TYPE=premajor
+            break
             ;;
         "Minor (pre-release)")
             RELEASE_TYPE=preminor
+            break
             ;;
         "Patch (pre-release)")
             RELEASE_TYPE=prepatch
+            break
             ;;
         "Quit")
             break
