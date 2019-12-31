@@ -1,0 +1,26 @@
+.DS_Store
+node_modules
+# Exclude /dist. We want this included in the package when it's published
+# /dist
+/coverage
+
+/tests/e2e/reports/
+selenium-debug.log
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*

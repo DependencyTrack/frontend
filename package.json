@@ -8,7 +8,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:DependencyTrack/front-end.git"
+    "url": "git@github.com:DependencyTrack/frontend.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
     "start": "npm run serve",
