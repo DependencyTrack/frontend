@@ -3,7 +3,7 @@
 clear
 RELEASE_TYPE=patch
 PS3='Select the type of release to perform: '
-releaseTypes=("Major" "Minor" "Patch" "Major (pre-release)" "Minor (pre-release)" "Patch (pre-release)" "Quit")
+releaseTypes=("Major" "Minor" "Patch" "Quit")
 select opt in "${releaseTypes[@]}"
 do
     case $opt in
@@ -17,18 +17,6 @@ do
             ;;
         "Patch")
             RELEASE_TYPE=patch
-            break
-            ;;
-        "Major (pre-release)")
-            RELEASE_TYPE=premajor
-            break
-            ;;
-        "Minor (pre-release)")
-            RELEASE_TYPE=preminor
-            break
-            ;;
-        "Patch (pre-release)")
-            RELEASE_TYPE=prepatch
             break
             ;;
         "Quit")
