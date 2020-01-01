@@ -3,8 +3,19 @@
  * All API calls to the Dependency-Track server should make use of these constants in order to
  * avoid typographical errors.
  */
-const BASE_URL = ""; // TODO
-  // process.env.NODE_ENV === "production" ? process.env.VUE_APP_SERVER_URL : "";
+
+//const BASE_URL = process.env.NODE_ENV === "production" ? process.env.VUE_APP_SERVER_URL : "";
+
+let contextPath = function contextPath() {
+  if (process.env.NODE_ENV === "production") {
+    let path = document.head.querySelector("[name=context-path]").content;
+    return (path.substr(-1) === '/') ? path : path + "/";
+  } else {
+    return "";
+  }
+};
+
+const BASE_URL = contextPath();
 
 // API Behavior
 const CONTENT_TYPE_JSON = "application/json";
