@@ -4,7 +4,7 @@
  * avoid typographical errors.
  */
 const BASE_URL =
-  process.env.NODE_ENV === "production" ? process.env.VUE_APP_SERVER_URL : "";
+  process.env.NODE_ENV === "production" ? window.location.href : "";
 
 // API Behavior
 const CONTENT_TYPE_JSON = "application/json";
