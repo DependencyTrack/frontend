@@ -34,19 +34,20 @@ Vue.use(VueShowdown, { flavor: 'github' });
 Vue.prototype.$api = api;
 axios.get("static/config.json").then(response => {
   Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+
+  /*
+  Register global $dtrack variable which will be the response body from /api/version.
+  $dtrack can then be used anywhere in the app to get information about the server,
+  the version of dtrack, timestamp, uuid, Alpine version, etc.
+  */
+  Vue.prototype.$dtrack = {};
+  axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
+    .then((result) => {
+        Vue.prototype.$dtrack = result.data;
+      }
+    );
 });
 
-/*
-Register global $dtrack variable which will be the response body from /api/version.
-$dtrack can then be used anywhere in the app to get information about the server,
-the version of dtrack, timestamp, uuid, Alpine version, etc.
-*/
-Vue.prototype.$dtrack = {};
-axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
-  .then((result) => {
-      Vue.prototype.$dtrack = result.data;
-    }
-  );
 
 new Vue({
   el: '#app',
