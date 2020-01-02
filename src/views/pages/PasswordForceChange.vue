@@ -77,7 +77,6 @@
 <script>
   import axios from 'axios'
   import { ValidationObserver } from 'vee-validate';
-  import api from '../../shared/api';
   import InformationalModal from '../modals/InformationalModal'
   import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
   const qs = require('querystring');
@@ -102,7 +101,7 @@
     },
     methods: {
       changePassword() {
-        const url = `${api.BASE_URL}/${api.URL_FORCE_PW_CHANGE}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_FORCE_PW_CHANGE}`;
         const requestBody = {
           username: this.input.username,
           password: this.input.password,

@@ -60,7 +60,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common"
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import EventBus from '../../../shared/eventbus';
@@ -94,7 +93,7 @@
       this.licenseId = this.$route.params.licenseId;
     },
     mounted() {
-      let url = `${api.BASE_URL}/${api.URL_LICENSE}/${this.licenseId}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
       this.axios.get(url).then((response) => {
         this.license = response.data;
         EventBus.$emit('addCrumb', this.licenseLabel);

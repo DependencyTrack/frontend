@@ -16,7 +16,7 @@ import VueLodash from 'vue-lodash'
 import VueShowdown from 'vue-showdown'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
-import api from "./shared/api";
+import api from "./shared/api.json";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -30,17 +30,24 @@ Vue.use(VueToastr, {
 });
 Vue.use(VueShowdown, { flavor: 'github' });
 
-/*
-Register global $dtrack variable which will be the response body from /api/version.
-$dtrack can then be used anywhere in the app to get information about the server,
-the version of dtrack, timestamp, uuid, Alpine version, etc.
- */
-Vue.prototype.$dtrack = {};
-axios.get(`${api.BASE_URL}/${api.URL_ABOUT}`)
-  .then((result) => {
-    Vue.prototype.$dtrack = result.data;
-  }
-);
+
+Vue.prototype.$api = api;
+axios.get("static/config.json").then(response => {
+  Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+
+  /*
+  Register global $dtrack variable which will be the response body from /api/version.
+  $dtrack can then be used anywhere in the app to get information about the server,
+  the version of dtrack, timestamp, uuid, Alpine version, etc.
+  */
+  Vue.prototype.$dtrack = {};
+  axios.get(`${api.BASE_URL}/${api.URL_ABOUT}`)
+    .then((result) => {
+        Vue.prototype.$dtrack = result.data;
+      }
+    );
+});
+
 
 new Vue({
   el: '#app',

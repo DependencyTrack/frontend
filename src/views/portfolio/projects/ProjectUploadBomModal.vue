@@ -12,7 +12,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
 
   export default {
     name: "ProjectUploadBomModal",
@@ -37,7 +36,7 @@
             'Content-Type': 'multipart/form-data'
           }
         };
-        let url = `${api.BASE_URL}/${api.URL_BOM}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
         this.axios.post(url, data, config)
           .then((response) => {
             this.$root.$emit('bv::hide::modal', 'projectUploadBomModal');

@@ -42,7 +42,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
 
   export default {
     name: "ProjectCreatePropertyModal",
@@ -70,7 +69,7 @@
     },
     methods: {
       createProperty: function() {
-        let url = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}/property`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
         this.axios.put(url, {
           groupName: this.groupName,
           propertyName: this.propertyName,

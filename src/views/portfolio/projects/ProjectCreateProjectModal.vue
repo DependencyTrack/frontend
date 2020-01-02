@@ -37,7 +37,6 @@
 <script>
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
-  import api from "../../../shared/api";
   import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
@@ -69,7 +68,7 @@
     methods: {
       createProject: function() {
         this.$root.$emit('bv::hide::modal', 'projectCreateProjectModal');
-        let url = `${api.BASE_URL}/${api.URL_PROJECT}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.put(url, {

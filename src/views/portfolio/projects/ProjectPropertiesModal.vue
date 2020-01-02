@@ -15,7 +15,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common";
   import xssFilters from "xss-filters";
 
@@ -89,7 +88,7 @@
             refresh: 'fa-refresh'
           },
           responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+            res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
           url: this.apiUrl()
@@ -98,7 +97,7 @@
     },
     methods: {
       apiUrl: function () {
-        return `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}/property`;
+        return `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
       },
       deleteProperty: function() {
         let selections = this.$refs.table.getSelections();

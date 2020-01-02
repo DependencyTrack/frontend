@@ -101,7 +101,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common"
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
@@ -172,13 +171,13 @@
       this.uuid = this.$route.params.uuid;
     },
     mounted() {
-      let projectUrl = `${api.BASE_URL}/${api.URL_PROJECT}/${this.uuid}`;
+      let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
       this.axios.get(projectUrl).then((response) => {
         this.project = response.data;
         EventBus.$emit('addCrumb', this.projectLabel);
       });
 
-      let metricsUrl = `${api.BASE_URL}/${api.URL_METRICS}/project/${this.uuid}/current`;
+      let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/current`;
       this.axios.get(metricsUrl).then((response) => {
         this.currentCritical = common.valueWithDefault(response.data.critical, 0);
         this.currentHigh = common.valueWithDefault(response.data.high, 0);

@@ -59,7 +59,6 @@
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery'
   import { ValidationObserver } from 'vee-validate'
-  import api from '../../shared/api'
   import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput'
   import InformationalModal from '../modals/InformationalModal'
   const qs = require('querystring');
@@ -82,8 +81,8 @@
     },
     methods: {
       login() {
-        const url = api.BASE_URL + "/" + api.URL_LOGIN;
-        console.log(url);
+        const url = this.$api.BASE_URL + "/" + this.$api.URL_LOGIN;
+        console.log(url); //TODO remove this
         const requestBody = {
           username: this.input.username,
           password: this.input.password
@@ -109,7 +108,7 @@
           })
           .catch((err) => {
             if (err.response.status === 401) {
-              if (err.response.data === api.FORCE_PASSWORD_CHANGE) {
+              if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
                 this.$router.replace({ name: "PasswordForceChange" });
                 return;
               }

@@ -28,7 +28,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
 
   export default {
     name: "ProjectAddVersionModal",
@@ -46,7 +45,7 @@
     },
     methods: {
       createVersion: function() {
-        let url = `${api.BASE_URL}/${api.URL_PROJECT}/clone`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
         this.axios.put(url, {
           project: this.uuid,
           version: this.version,

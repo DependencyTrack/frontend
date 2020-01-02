@@ -23,7 +23,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import xssFilters from "xss-filters";
   import common from "../../../shared/common";
   import Vue from "vue";
@@ -82,10 +81,10 @@
             refresh: 'fa-refresh'
           },
           responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+            res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${api.BASE_URL}/${api.URL_COMPONENT}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`
         }
       };
     },
@@ -99,7 +98,7 @@
         for (let i=0; i<selections.length; i++) {
           componentUuids[i] = selections[i].uuid;
         }
-        let url = `${api.BASE_URL}/${api.URL_DEPENDENCY}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_DEPENDENCY}`;
         this.axios.put(url,  {
             projectUuid: this.uuid,
             componentUuids: componentUuids,

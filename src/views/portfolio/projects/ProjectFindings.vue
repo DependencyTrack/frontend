@@ -8,7 +8,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import xssFilters from "xss-filters";
@@ -189,7 +188,7 @@
                   // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
                   let projectUuid = this.finding.matrix.split(":", 1)[0];
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
-                  let url = `${api.BASE_URL}/${api.URL_ANALYSIS}` + queryString;
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
                   this.axios.get(url).then((response) => {
                     let analysis = response.data;
                     if (analysis.hasOwnProperty("analysisComments")) {
@@ -226,7 +225,7 @@
                 callRestEndpoint: function(analysisState, comment, isSuppressed) {
                   // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
                   let projectUuid = this.finding.matrix.split(":", 1)[0];
-                  let url = `${api.BASE_URL}/${api.URL_ANALYSIS}`;
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
                   this.axios.put(url, {
                     project: projectUuid,
                     component: this.finding.component.uuid,
@@ -251,10 +250,10 @@
           },
           onExpandRow: this.vueFormatterInit,
           responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+            res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${api.BASE_URL}/${api.URL_FINDING}/project/${this.uuid}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`
         }
       };
     }

@@ -92,7 +92,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common"
   import { Callout } from '@coreui/vue'
   import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
@@ -160,7 +159,7 @@
     mounted() {
       const daysBack = 90;
       let uuid = this.$route.params.uuid;
-      let url = `${api.BASE_URL}/${api.URL_METRICS}/project/${uuid}/days/${daysBack}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartAuditedProgress.render(response.data);

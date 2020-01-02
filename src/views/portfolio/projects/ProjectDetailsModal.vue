@@ -47,7 +47,6 @@
 <script>
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
-  import api from "../../../shared/api";
   import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
@@ -80,7 +79,7 @@
     methods: {
       updateProject: function() {
         this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-        let url = `${api.BASE_URL}/${api.URL_PROJECT}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.post(url, {
@@ -98,7 +97,7 @@
       },
       deleteProject: function() {
         this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-        let url = `${api.BASE_URL}/${api.URL_PROJECT}/` + this.project.uuid;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
         this.axios.delete(url).then((response) => {
           this.$toastr.s(this.$t('message.project_deleted'));
           this.$router.replace({ name: "Projects" });

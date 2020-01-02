@@ -6,7 +6,6 @@
 
 <script>
   import Vue from 'vue'
-  import api from "../../../shared/api";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
   import xssFilters from "xss-filters";

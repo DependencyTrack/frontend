@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import api from "../../../shared/api";
   import common from "../../../shared/common";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import xssFilters from "xss-filters";
@@ -76,10 +75,10 @@
             refresh: 'fa-refresh'
           },
           responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+            res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${api.BASE_URL}/${api.URL_LICENSE}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`
         }
       };
     }

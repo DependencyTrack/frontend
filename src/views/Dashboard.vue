@@ -135,7 +135,6 @@
 </template>
 
 <script>
-  import api from "../shared/api";
   import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
@@ -208,7 +207,7 @@
     },
     mounted () {
       const daysBack = 90;
-      let url = `${api.BASE_URL}/${api.URL_METRICS}/portfolio/${daysBack}/days`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
         this.$refs.chartPortfolioVulnerabilities.render(response.data);
         this.$refs.chartProjectVulnerabilities.render(response.data);

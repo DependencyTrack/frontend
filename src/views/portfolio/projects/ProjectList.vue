@@ -24,7 +24,6 @@
 
 <script>
 import Vue from 'vue'
-import api from "../../../shared/api";
 import common from "../../../shared/common";
 import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
@@ -38,9 +37,13 @@ export default {
     ProjectCreateProjectModal,
     PortfolioWidgetRow
   },
+  mounted() {
+    console.log(this.$api);
+    console.log(this.$api.BASE_URL);
+  },
   methods: {
     apiUrl: function () {
-      let url = api.BASE_URL + "/" + api.URL_PROJECT;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tag = this.$route.query.tag;
       if (tag) {
         url += "/tag/" + encodeURIComponent(tag);
@@ -155,7 +158,7 @@ export default {
         },
         toolbar: '#projectsToolbar',
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader(`${api.TOTAL_COUNT_HEADER}`);
+          res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
         url: this.apiUrl()

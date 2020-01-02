@@ -5,7 +5,6 @@
 <script>
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
-  import api from './shared/api';
   import common from './shared/common';
   export default {
     name: 'app',
@@ -23,7 +22,7 @@
         return;
       }
 
-      const url = `${api.BASE_URL}/${api.URL_USER_SELF}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
       const config = {
         headers: {
           Authorization: `Bearer ${jwt}`
