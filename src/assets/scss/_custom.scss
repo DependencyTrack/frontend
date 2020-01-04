@@ -6,22 +6,22 @@
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
 }
-.severity-critical-bg {
+.severity-critical-bg, .bg-severity-critical, .bg-CRITICAL {
   background: $severity-critical none;
 }
-.severity-high-bg {
+.severity-high-bg, .bg-severity.high, .bg-HIGH {
   background: $severity-high none;
 }
-.severity-medium-bg {
+.severity-medium-bg, .bg-severity-medium, .bg-MEDIUM {
   background: $severity-medium none;
 }
-.severity-low-bg {
+.severity-low-bg, .bg-severity-low, .bg-LOW {
   background: $severity-low none;
 }
-.severity-info-bg {
+.severity-info-bg, .bg-severity-info, .bg-INFO {
   background: $severity-info none;
 }
-.severity-unassigned-bg, .severity-unknown-bg {
+.severity-unassigned-bg, .bg-severity-unassigned, .bg-UNASSIGNED {
   background: $severity-unassigned none;
 }
 .severity-bug-icon {
