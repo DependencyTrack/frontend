@@ -34,7 +34,9 @@ Vue.use(VueShowdown, { flavor: 'github' });
 Vue.prototype.$api = api;
 axios.get("static/config.json").then(response => {
   Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
-
+}).catch(function (error) {
+  console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.")
+}).finally(function () {
   /*
   Register global $dtrack variable which will be the response body from /api/version.
   $dtrack can then be used anywhere in the app to get information about the server,
