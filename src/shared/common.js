@@ -13,6 +13,9 @@ const $common = function() {
  * Formats and returns a specialized label for a vulnerability source (NVD, NSP, VulnDB, OSSIndex etc).
  */
 $common.formatSourceLabel = function formatSourceLabel(source) {
+  if (! source) {
+    return null;
+  }
   let sourceClass = "label-source-" + source.toLowerCase();
   return `<span class="label label-source ${sourceClass}">${source}</span>`;
 };
