@@ -21,6 +21,7 @@ const License = () => import('@/views/portfolio/licenses/License');
 // Pages
 const Login = () => import('@/views/pages/Login');
 const PasswordForceChange = () => import('@/views/pages/PasswordForceChange');
+const Page404 = () => import('@/views/pages/Page404');
 
 Vue.use(Router);
 
@@ -204,6 +205,10 @@ function configRoutes() {
       path: '/change-password',
       name: 'PasswordForceChange',
       component: PasswordForceChange
+    },
+    {
+      path: '*',
+      component: Page404
     }
   ]
 }

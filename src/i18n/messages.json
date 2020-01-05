@@ -184,6 +184,11 @@
     "validation": {
       "required": "{_field_} is required",
       "confirmed": "{_field_} doesn't match"
+    },
+    "404": {
+      "heading": "Oops! This is awkward",
+      "message": "The page you're looking for could not be found",
+      "action": "Go Back"
     }
   }
 }
