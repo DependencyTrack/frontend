@@ -5,6 +5,7 @@
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">{{ $t('message.portfolio_vulnerabilities') }}</h4>
+          <div class="small text-muted">{{$t('message.last_measurement')}}: {{lastMeasurement}}</div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
         </b-col>

@@ -4,6 +4,7 @@
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">{{ $t('message.component_vulnerabilities') }}</h4>
+          <div class="small text-muted">{{$t('message.last_measurement')}}: {{lastMeasurement}}</div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
@@ -123,11 +124,10 @@
         this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
         this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
         this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
-        /*
+
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
-        */
       }
     },
     mounted() {
