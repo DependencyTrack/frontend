@@ -1,6 +1,7 @@
 {
   "en": {
     "message": {
+      "about": "About",
       "login": "Login",
       "login_desc": "Sign In to your account",
       "login_unauthorized": "Invalid username or password",
