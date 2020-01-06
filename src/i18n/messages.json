@@ -127,7 +127,9 @@
       "affected_projects": "Affected Projects",
       "weakness": "Weakness",
       "references": "References",
-      "credits": "Credits"
+      "credits": "Credits",
+      "component_vulnerabilities": "Component Vulnerabilities",
+      "component_details": "Component Details"
     },
     "admin": {
       "configuration": "Configuration",
