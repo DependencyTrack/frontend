@@ -39,7 +39,7 @@ if [[ "$?" -ne 0 ]] ; then
   echo 'Aborting release due to build failure'; exit $rc
 fi
 
-npm publish
+npm publish --access=public
 if [[ "$?" -ne 0 ]] ; then
   echo 'Failed to publish package'; exit $rc
 fi
