@@ -10,9 +10,6 @@
     "type": "git",
     "url": "git@github.com:DependencyTrack/frontend.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "scripts": {
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
