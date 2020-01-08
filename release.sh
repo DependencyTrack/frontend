@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 clear
+: '
 RELEASE_TYPE=patch
 PS3='Select the type of release to perform: '
 releaseTypes=("Major" "Minor" "Patch" "Quit")
@@ -25,8 +26,10 @@ do
         *) echo "invalid option $REPLY";;
     esac
 done
+'
+npm version prerelease --preid=alpha
 
-npm version $RELEASE_TYPE
+#npm version $RELEASE_TYPE
 if [[ "$?" -ne 0 ]] ; then
   echo 'Aborting release due to version incremental failure. Ensure there are no modified/uncommitted files in the repo'; exit $rc
 fi
