@@ -98,7 +98,7 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
       return 0;
     } else {
       let percentage = (completed / total) * 100;
-      return Math.round(percentage * 10) / 10;
+      return Math.round(percentage);
     }
   } else if (completed > total) {
     // In something has already been completed (e.g. suppressed) and the completed value
