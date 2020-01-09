@@ -94,7 +94,7 @@
         };
         axios.post(url, qs.stringify(requestBody), config)
           .then((result) => {
-            if(result.statusText === 'OK') {
+            if(result.status === 200) {
               sessionStorage.setItem('token', result.data); // store the JWT in session storage
               // Set authorization headers for axios and jQuery
               axios.defaults.headers.common['Authorization'] = `Bearer ${result.data}`;
