@@ -120,7 +120,7 @@ export default {
         {
           title: this.$t('message.vulnerabilities'),
           field: "metrics",
-          sortable: true,
+          sortable: false,
           formatter(metrics, row, index) {
             if (typeof metrics === "undefined") {
               return "-"; // No vulnerability info available
