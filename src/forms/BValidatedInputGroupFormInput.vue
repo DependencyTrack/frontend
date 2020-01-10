@@ -11,6 +11,7 @@
           :placeholder="label"
           :state="errors[0] ? false : (valid ? true : null)"
           :autocomplete="autocomplete"
+          :autofocus=isFocused
           v-on="inputListeners"
         />
       </b-input-group>
@@ -37,11 +38,18 @@
       icon: String,
       rules: String,
       type: String,
-      autocomplete: String
+      autocomplete: String,
+      autofocus: String
     },
     data() {
       return {
-        innerValue: this.value
+        innerValue: this.value,
+        isFocused: false
+      }
+    },
+    beforeMount() {
+      if (this.autofocus === true || this.autofocus === "true") {
+        this.isFocused = true;
       }
     },
     computed: {

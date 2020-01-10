@@ -19,6 +19,7 @@
                       type="text"
                       autocomplete="username email"
                       v-model="input.username"
+                      autofocus="true"
                     />
                     <b-validated-input-group-form-input
                       name="password"
