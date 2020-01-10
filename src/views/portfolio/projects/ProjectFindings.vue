@@ -223,8 +223,6 @@
                   }
                 },
                 callRestEndpoint: function(analysisState, comment, isSuppressed) {
-                  // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
-                  let projectUuid = this.finding.matrix.split(":", 1)[0];
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
                   this.axios.put(url, {
                     project: projectUuid,
