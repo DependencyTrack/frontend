@@ -14,7 +14,7 @@
         </b-button>
         <b-button size="md" variant="outline-primary"
                   v-b-modal.projectUploadBomModal
-                  v-permission="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.BOM_UPLOAD]">
+                  v-permission:or="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.BOM_UPLOAD]">
           <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
         </b-button>
       </div>
