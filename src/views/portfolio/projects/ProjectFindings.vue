@@ -117,6 +117,7 @@
           detailViewIcon: false,
           detailViewByClick: true,
           detailFormatter: (index, row) => {
+            let projectUuid = this.uuid;
             return this.vueFormatter({
               i18n,
               template: `
@@ -173,7 +174,8 @@
                     { value: 'FALSE_POSITIVE', text: this.$t('message.false_positive') },
                     { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') }
                   ],
-                  analysisState: null
+                  analysisState: null,
+                  projectUuid: projectUuid
                 }
               },
               watch: {
@@ -185,8 +187,6 @@
               },
               methods: {
                 getAnalysis: function() {
-                  // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
-                  let projectUuid = this.finding.matrix.split(":", 1)[0];
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
                   this.axios.get(url).then((response) => {
