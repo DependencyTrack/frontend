@@ -219,7 +219,7 @@
                 },
                 addComment: function() {
                   if (this.comment != null) {
-                    this.callRestEndpoint(null, this.comment, null);
+                    this.callRestEndpoint(this.analysisState, this.comment, null);
                   }
                 },
                 callRestEndpoint: function(analysisState, comment, isSuppressed) {
