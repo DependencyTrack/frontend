@@ -105,7 +105,7 @@ export default {
         },
         {
           title: this.$t('message.risk_score'),
-          field: "metrics.inheritedRiskScore",
+          field: "lastInheritedRiskScore",
           sortable: true
         },
         {
