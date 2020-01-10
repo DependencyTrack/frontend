@@ -1,10 +1,17 @@
 <template>
-  <bootstrap-table
-    ref="table"
-    :columns="columns"
-    :data="data"
-    :options="options">
-  </bootstrap-table>
+  <div>
+    <div id="componentToolbar">
+      <span v-permission:and="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.VULNERABILITY_ANALYSIS]">
+        <bootstrap-toggle v-model="isAuditModeEnabled" :options="{ size: 'small', width: 150, on: 'Audit Mode', off: 'Audit Mode', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false"/>
+      </span>
+    </div>
+    <bootstrap-table
+      ref="table"
+      :columns="columns"
+      :data="data"
+      :options="options">
+    </bootstrap-table>
+  </div>
 </template>
 
 <script>
@@ -13,17 +20,31 @@
   import xssFilters from "xss-filters";
   import i18n from "../../../i18n";
   import BootstrapToggle from 'vue-bootstrap-toggle'
+  import permissionsMixin from "../../../mixins/permissionsMixin";
 
   export default {
     props: {
       uuid: String
     },
-    mixins: [bootstrapTableMixin],
+    mixins: [bootstrapTableMixin, permissionsMixin],
     components: {
       BootstrapToggle
     },
+    watch: {
+      isAuditModeEnabled: function(value) {
+        if (value) {
+          this.$refs.table.showColumn("analysis.state");
+          this.$refs.table.showColumn("analysis.isSuppressed");
+        } else {
+          this.$refs.table.hideColumn("analysis.state");
+          this.$refs.table.hideColumn("analysis.isSuppressed");
+        }
+
+      }
+    },
     data() {
       return {
+        isAuditModeEnabled: false,
         columns: [
           {
             title: this.$t('message.name'),
@@ -71,7 +92,8 @@
           {
             title: this.$t('message.analysis'),
             field: "analysis.state",
-            sortable: true,
+            sortable: false,
+            class: "tight",
             visible: false,
             formatter(value, row, index) {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
@@ -80,7 +102,7 @@
           {
             title: this.$t('message.suppressed'),
             field: "analysis.isSuppressed",
-            sortable: true,
+            sortable: false,
             class: "tight",
             visible: false,
             formatter(value, row, index) {
@@ -106,28 +128,30 @@
           detailViewIcon: false,
           detailViewByClick: true,
           detailFormatter: (index, row) => {
+            if (! this.isAuditModeEnabled) return null;
+            let componentUuid = this.uuid;
             return this.vueFormatter({
               i18n,
               template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
-                    <b-form-group v-if="finding.vulnerability.title" id="fieldset-1" :label="this.$t('message.title')" label-for="input-1">
-                      <b-form-input id="input-1" v-model="finding.vulnerability.title" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.title" id="fieldset-1" :label="this.$t('message.title')" label-for="input-1">
+                      <b-form-input id="input-1" v-model="vulnerability.title" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.subtitle" id="fieldset-2" :label="this.$t('message.subtitle')" label-for="input-2">
-                      <b-form-input id="input-2" v-model="finding.vulnerability.subtitle" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.subtitle" id="fieldset-2" :label="this.$t('message.subtitle')" label-for="input-2">
+                      <b-form-input id="input-2" v-model="vulnerability.subtitle" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.description" id="fieldset-3" :label="this.$t('message.description')" label-for="input-3">
-                      <b-form-textarea id="input-3" v-model="finding.vulnerability.description" rows="7" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.description" id="fieldset-3" :label="this.$t('message.description')" label-for="input-3">
+                      <b-form-textarea id="input-3" v-model="vulnerability.description" rows="7" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.recommendation" id="fieldset-4" :label="this.$t('message.recommendation')" label-for="input-4">
-                      <b-form-textarea id="input-4" v-model="finding.vulnerability.recommendation" rows="7" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.recommendation" id="fieldset-4" :label="this.$t('message.recommendation')" label-for="input-4">
+                      <b-form-textarea id="input-4" v-model="vulnerability.recommendation" rows="7" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.cvssV2Vector" id="fieldset-5" :label="this.$t('message.cvss_v2_vector')" label-for="input-5">
-                      <b-form-input id="input-5" v-model="finding.vulnerability.cvssV2Vector" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.cvssV2Vector" id="fieldset-5" :label="this.$t('message.cvss_v2_vector')" label-for="input-5">
+                      <b-form-input id="input-5" v-model="vulnerability.cvssV2Vector" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.cvssV3Vector" id="fieldset-6" :label="this.$t('message.cvss_v3_vector')" label-for="input-6">
-                      <b-form-input id="input-6" v-model="finding.vulnerability.cvssV3Vector" class="form-control disabled" readonly trim />
+                    <b-form-group v-if="vulnerability.cvssV3Vector" id="fieldset-6" :label="this.$t('message.cvss_v3_vector')" label-for="input-6">
+                      <b-form-input id="input-6" v-model="vulnerability.cvssV3Vector" class="form-control disabled" readonly trim />
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
@@ -154,7 +178,7 @@
                   auditTrail: null,
                   comment: null,
                   isSuppressed: null,
-                  finding: row,
+                  vulnerability: row,
                   analysisChoices: [
                     { value: 'NOT_SET', text: this.$t('message.not_set') },
                     { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
@@ -162,21 +186,20 @@
                     { value: 'FALSE_POSITIVE', text: this.$t('message.false_positive') },
                     { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') }
                   ],
-                  analysisState: null
+                  analysisState: null,
+                  componentUuid: componentUuid
                 }
               },
               watch: {
                 isSuppressed: function (currentValue, oldValue) {
                   if (oldValue != null) {
-                    this.callRestEndpoint(null, null, currentValue);
+                    this.callRestEndpoint(this.analysisState, null, currentValue);
                   }
                 }
               },
               methods: {
                 getAnalysis: function() {
-                  // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
-                  let projectUuid = this.finding.matrix.split(":", 1)[0];
-                  let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
+                  let queryString = "?component=" + componentUuid + "&vulnerability=" + this.vulnerability.uuid;
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
                   this.axios.get(url).then((response) => {
                     let analysis = response.data;
@@ -208,17 +231,14 @@
                 },
                 addComment: function() {
                   if (this.comment != null) {
-                    this.callRestEndpoint(null, this.comment, null);
+                    this.callRestEndpoint(this.analysisState, this.comment, null);
                   }
                 },
                 callRestEndpoint: function(analysisState, comment, isSuppressed) {
-                  // this.uuid is not available to this function, so strip out the project UUID from the finding matrix
-                  let projectUuid = this.finding.matrix.split(":", 1)[0];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}/global`;
                   this.axios.put(url, {
-                    project: projectUuid,
-                    component: this.finding.component.uuid,
-                    vulnerability: this.finding.vulnerability.uuid,
+                    component: componentUuid,
+                    vulnerability: this.vulnerability.uuid,
                     analysisState: analysisState,
                     comment: comment,
                     isSuppressed: isSuppressed
@@ -238,6 +258,7 @@
             })
           },
           onExpandRow: this.vueFormatterInit,
+          toolbar: '#componentToolbar',
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
