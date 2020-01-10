@@ -23,7 +23,7 @@
             field: "project.name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../../projects/" + row.uuid);
+              let url = xssFilters.uriInUnQuotedAttr("../../projects/" + row.project.uuid);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
