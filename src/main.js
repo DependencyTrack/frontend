@@ -17,6 +17,7 @@ import VueShowdown from 'vue-showdown'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
 import api from "./shared/api.json";
+import version from "./version";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -50,6 +51,7 @@ axios.get("static/config.json").then(response => {
     );
 });
 
+Vue.prototype.$version = version.version;
 
 new Vue({
   el: '#app',
