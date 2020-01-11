@@ -17,6 +17,7 @@
       </main>
     </div>
     <DefaultFooter/>
+    <snapshot-modal/>
   </div>
 </template>
 
@@ -26,11 +27,13 @@
   import DefaultHeader from './DefaultHeader'
   import DefaultFooter from './DefaultFooter'
   import EventBus from '../shared/eventbus';
+  import SnapshotModal from "../views/components/SnapshotModal";
   import * as permissions from '../shared/permissions';
 
   export default {
     name: 'DefaultContainer',
     components: {
+      SnapshotModal,
       AppSidebar,
       AppAside,
       Breadcrumb,
@@ -128,6 +131,11 @@
             { path: sectionPath, name: sectionLabel }
           ];
         }
+      }
+    },
+    mounted() {
+      if (this.$dtrack.version.includes("SNAPSHOT")) {
+        this.$root.$emit('bv::show::modal', 'snapshotModal');
       }
     },
     computed: {

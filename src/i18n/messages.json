@@ -131,7 +131,8 @@
       "credits": "Credits",
       "last_measurement": "Last measurement",
       "component_vulnerabilities": "Component Vulnerabilities",
-      "component_details": "Component Details"
+      "component_details": "Component Details",
+      "snapshot_notification": "Snapshot Notification"
     },
     "admin": {
       "configuration": "Configuration",
