@@ -175,3 +175,8 @@ input.required, select.required, textarea.required {
   background-color: $toggle-handle-bg;
   border: thin rgba(0, 0, 0, .25) solid;
 }
+h6 {
+  font-size: 1.0em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
