@@ -37,10 +37,6 @@ export default {
     ProjectCreateProjectModal,
     PortfolioWidgetRow
   },
-  mounted() {
-    console.log(this.$api);
-    console.log(this.$api.BASE_URL);
-  },
   methods: {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
