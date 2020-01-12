@@ -11,8 +11,8 @@
     </p>
     <b-row>
       <b-col>
-        {{ this.$dtrack.application }} v{{ this.$dtrack.version }}<br/>
-        Build ID: {{ this.$dtrack.uuid }}<br/>
+        {{ this.dtrack.application }} v{{ this.dtrack.version }}<br/>
+        Build ID: {{ this.dtrack.uuid }}<br/>
         Built On: {{ timestamp }}
       </b-col>
       <b-col>
@@ -51,12 +51,14 @@
 
 <script>
   import common from "../../shared/common";
+  import globalVarsMixin from "../../mixins/globalVarsMixin";
 
   export default {
     name: "AboutModal",
+    mixins: [globalVarsMixin],
     computed: {
       timestamp: function() {
-        return common.formatTimestamp(this.$dtrack.timestamp, true);
+        return common.formatTimestamp(this.dtrack.timestamp, true);
       }
     }
   }

@@ -4,17 +4,20 @@
       <!-- left side here -->
     </div>
     <div class="ml-auto">
-      <a href="#" v-b-modal.aboutModal >{{ $dtrack.application }}</a>&nbsp;
-      <span class="mr-1">v{{ $dtrack.version }}</span>
+      <a href="#" v-b-modal.aboutModal >{{ dtrack.application }}</a>&nbsp;
+      <span class="mr-1">v{{ dtrack.version }}</span>
     </div>
     <about-modal />
   </TheFooter>
 </template>
 <script>
   import AboutModal from "../views/components/AboutModal";
-  import { Footer as TheFooter } from '@coreui/vue'
+  import { Footer as TheFooter } from "@coreui/vue";
+  import globalVarsMixin from "../mixins/globalVarsMixin";
+
   export default {
     name: 'DefaultFooter',
+    mixins: [globalVarsMixin],
     components: {
       AboutModal,
       TheFooter

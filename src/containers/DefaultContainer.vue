@@ -134,7 +134,7 @@
       }
     },
     mounted() {
-      if (this.$dtrack.version.includes("SNAPSHOT")) {
+      if (this.$dtrack && this.$dtrack.version.includes("SNAPSHOT")) {
         this.$root.$emit('bv::show::modal', 'snapshotModal');
       }
     },

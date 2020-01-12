@@ -43,7 +43,6 @@ axios.get("static/config.json").then(response => {
   $dtrack can then be used anywhere in the app to get information about the server,
   the version of dtrack, timestamp, uuid, Alpine version, etc.
   */
-  Vue.prototype.$dtrack = {};
   axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
     .then((result) => {
         Vue.prototype.$dtrack = result.data;
