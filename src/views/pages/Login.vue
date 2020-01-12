@@ -83,7 +83,6 @@
     methods: {
       login() {
         const url = this.$api.BASE_URL + "/" + this.$api.URL_LOGIN;
-        console.log(url); //TODO remove this
         const requestBody = {
           username: this.input.username,
           password: this.input.password
