@@ -1,110 +1,15 @@
 <template>
   <div class="animated fadeIn" v-permission="'SYSTEM_CONFIGURATION'">
-
     <b-row>
       <b-col xs="6" sm="4" md="2">
         <admin-menu />
       </b-col>
       <b-col xs="6" sm="8" md="10">
         <div class="tab-content">
-          <!-- CONFIGURATION -->
-          <b-card :header="$t('admin.general')" class="tab-pane active" id="generalConfigTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+          <b-card :header="header" class="tab-pane active" id="adminPlugin" role="tabpanel">
+            <!-- Dynamically loads the selected admin plugin -->
+            <component :is="selectedComponent" />
           </b-card>
-
-          <b-card :header="$t('admin.bom_formats')" class="tab-pane" id="artifactsTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.email')" class="tab-pane" id="emailTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.internal_components')" class="tab-pane" id="internalComponentsTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <!-- ANALYZERS -->
-          <b-card :header="$t('admin.internal_analyzer') " class="tab-pane" id="scannerInternalTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.npm_audit')" class="tab-pane" id="scannerNpmAuditTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.oss_index')" class="tab-pane" id="scannerOssIndexTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.vulndb')" class="tab-pane" id="scannerVulnDbTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <!-- REPOSITORIES -->
-          <b-card :header="$t('admin.gem') " class="tab-pane" id="repositoryGemTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.hex')" class="tab-pane" id="repositoryHexTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.maven')" class="tab-pane" id="repositoryMavenTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.npm')" class="tab-pane" id="repositoryNpmTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.nuget')" class="tab-pane" id="repositoryNugetTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.python')" class="tab-pane" id="repositoryPythonTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <!-- NOTIFICATIONS -->
-          <b-card :header="$t('admin.alerts') " class="tab-pane" id="notificationAlertTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.templates')" class="tab-pane" id="notificationTemplateTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <!-- INTEGRATIONS -->
-          <b-card :header="$t('admin.fortify_ssc')" class="tab-pane" id="integrationsFortifySscTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.kenna_security')" class="tab-pane" id="integrationsKennaSecurityTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.threadfix')" class="tab-pane" id="integrationsThreadFixTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <!-- ACCESS MANAGEMENT -->
-          <b-card :header="$t('admin.ldap_users')" class="tab-pane" id="ldapUsersTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.managed_users')" class="tab-pane" id="managedUsersTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.teams')" class="tab-pane" id="teamsTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
-          <b-card :header="$t('admin.permissions')" class="tab-pane" id="permissionsTab" role="tabpanel">
-            <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-          </b-card>
-
         </div>
       </b-col>
     </b-row>
@@ -113,9 +18,59 @@
 
 <script>
   import AdminMenu from './AdminMenu'
+  import EventBus from "../../shared/eventbus";
+
+  // Configuration plugins
+  import General from "./configuration/General";
+  import BomFormats from "./configuration/BomFormats";
+  import Email from "./configuration/Email";
+  import InternalComponents from "./configuration/InternalComponents";
+  // Analyzer plugins
+  import InternalAnalyzer from "./analyzers/InternalAnalyzer";
+  import NpmAuditAnalyzer from "./analyzers/NpmAuditAnalyzer";
+  import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
+  import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
+  // Repositories
+  import Repositories from "./repositories/Repositories";
+  // Notification plugins
+  import Alerts from "./notifications/Alerts";
+  import Templates from "./notifications/Templates";
+  // Integration plugins
+  import FortifySsc from "./integrations/FortifySsc";
+  import KennaSecurity from "./integrations/KennaSecurity";
+  import ThreadFix from "./integrations/ThreadFix";
+  // Access Management plugins
+  import LdapUsers from "./accessmanagement/LdapUsers";
+  import ManagedUsers from "./accessmanagement/ManagedUsers";
+  import Teams from "./accessmanagement/Teams";
+  import Permissions from "./accessmanagement/Permissions";
+
   export default {
     components: {
-      AdminMenu
+      EventBus,
+      AdminMenu,
+      General, BomFormats, Email, InternalComponents,
+      InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
+      Repositories,
+      Alerts, Templates,
+      FortifySsc, KennaSecurity, ThreadFix,
+      LdapUsers, ManagedUsers, Teams, Permissions
+    },
+    created() {
+      // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
+      EventBus.$on('admin:plugin', (plugin) => {
+        this.selectedComponent = plugin.component;
+        this.header = plugin.name;
+        this.href = plugin.href;
+      });
+    },
+    data() {
+      // Default to loading the General plugin first
+      return {
+        selectedComponent: 'General',
+        header: this.$t('admin.general'),
+        href: '#generalConfigTab'
+      }
     }
   }
 </script>
