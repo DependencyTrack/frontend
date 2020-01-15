@@ -4,10 +4,11 @@
 [![Latest](
 https://img.shields.io/npm/v/@dependencytrack/frontend)](https://www.npmjs.com/package/@dependencytrack/frontend)
 
-Dependency-Track Front End
+Dependency-Track Front-End
 =========
 
-This repo contains a 2nd experimental front-end web client for OWASP Dependency-Track. The project is built with:
+The Front-End is a Single Page Application (SPA) used in Dependency-Track, an open source Supply Chain Component Analysis platform. 
+The project is built with:
 
 * Vue 2.x / CLI 3.x
 * Bootstrap Vue
@@ -36,6 +37,23 @@ npm run bom
 
 In order to test with a Dependency-Track instance, the `.env.development` file needs to be modified and the `VUE_APP_SERVER_URL` property updated to 
 reflect the base URL of a Dependency-Track server.
+
+## Deployment Options
+
+![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.png)
+
+#### Default Deployment
+By default, the front-end is deployed to and accessible from the Dependency-Track server.
+
+#### n-Tier Deployment
+The front-end may optionally be deployed to a general purpose web server (e.g. NGINX or Apache). To configure the front-end 
+for this scenario, simply change the value of API_BASE_URL in static/config.json.
+
+```json
+{
+  "API_BASE_URL": "https://drack-server.example.com"
+}
+```
 
 ## Internationalization (i18n)
 
