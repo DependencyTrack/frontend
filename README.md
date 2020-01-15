@@ -1,8 +1,7 @@
 [![Build Status](https://github.com/DependencyTrack/frontend/workflows/Node%20CI/badge.svg)](https://github.com/DependencyTrack/frontend/actions?workflow=Node+CI)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d481daa38134900abe88e9e064e05c7)](https://www.codacy.com/manual/DependencyTrack/frontend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DependencyTrack/frontend&amp;utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
-[![Latest](
-https://img.shields.io/npm/v/@dependencytrack/frontend)](https://www.npmjs.com/package/@dependencytrack/frontend)
+[![Latest (including pre-releases)](https://img.shields.io/github/v/release/dependencytrack/frontend?include_prereleases)](https://github.com/DependencyTrack/frontend/releases)
 
 Dependency-Track Front-End
 =========

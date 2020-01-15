@@ -39,7 +39,16 @@ if [[ "$?" -ne 0 ]] ; then
   echo 'Aborting release due to build failure'; exit $rc
 fi
 
-npm publish --access=public
+npm run bom
 if [[ "$?" -ne 0 ]] ; then
-  echo 'Failed to publish package'; exit $rc
+  echo 'Aborting release due to BOM creation failure'; exit $rc
 fi
+
+PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+zip -r frontend-dist.zip dist/*
+echo Publishing $PACKAGE_VERSION to GitHub Releases
+# pip install githubrelease
+# https://github.com/j0057/github-release
+githubrelease release dependencytrack/frontend create $PACKAGE_VERSION \
+  --name $PACKAGE_VERSION --body "Dependency-Track Frontend" \
+  --publish --prerelease bom.xml frontend-dist.zip
