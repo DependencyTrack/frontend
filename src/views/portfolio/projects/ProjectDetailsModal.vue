@@ -28,12 +28,9 @@
                       :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
                       style="max-width:none; background-color:transparent;"/>
     </b-form-group>
-    <b-form-group
-      id="fieldset-5"
-      :label="this.$t('message.active')"
-      label-for="input-5">
-      <c-switch id="input-5" class="mx-1" color="primary" checked label variant="pill" :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" />
-    </b-form-group>
+
+    <c-switch id="input-5" class="mx-1" color="primary" checked label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
+
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
       <b-button size="md" variant="outline-primary" v-b-modal.projectPropertiesModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.properties') }}</b-button>

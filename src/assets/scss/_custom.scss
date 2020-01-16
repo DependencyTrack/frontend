@@ -180,3 +180,12 @@ h6 {
   font-weight: 600;
   text-transform: uppercase;
 }
+.switch {
+  vertical-align: middle;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+.switch-slider {
+  background-color: $switch-bg;
+}
