@@ -2,7 +2,7 @@
   <validation-provider :vid="id" :name="label" :rules="rules" v-slot="{ errors, valid }">
     <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
       <b-input-group :class="inputGroupSize">
-        <b-input-group-prepend><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
+        <b-input-group-prepend v-if="icon"><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
         <b-form-input
           :id="`${id}-input`"
           :type="type"
