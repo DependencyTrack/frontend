@@ -6,10 +6,8 @@
       </b-col>
       <b-col xs="6" sm="8" md="10">
         <div class="tab-content">
-          <b-card :header="header" class="tab-pane active" id="adminPlugin" role="tabpanel">
-            <!-- Dynamically loads the selected admin plugin -->
-            <component :is="selectedComponent" />
-          </b-card>
+          <!-- Dynamically loads the selected admin plugin -->
+          <component :is="selectedComponent" :header="header" />
         </div>
       </b-col>
     </b-row>

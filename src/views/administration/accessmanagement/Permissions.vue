@@ -1,9 +1,15 @@
 <template>
-  <b-card-text>Permissions</b-card-text>
+  <b-card no-body :header="header">
+    <b-card-body>
+      {{ header }}
+    </b-card-body>
+  </b-card>
 </template>
 
 <script>
   export default {
-    name: "Permissions"
+    props: {
+      header: String
+    }
   }
 </script>

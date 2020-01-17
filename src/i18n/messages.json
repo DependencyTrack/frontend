@@ -163,7 +163,11 @@
       "ldap_users": "LDAP Users",
       "managed_users": "Managed Users",
       "teams": "Teams",
-      "permissions": "Permissions"
+      "permissions": "Permissions",
+      "base_url": "Base URL",
+      "enable_svg_badge": "Enable SVG badge support (unauthenticated)",
+      "enable_bom_cyclonedx": "Enable CycloneDX",
+      "enable_bom_spdx": "Enable SPDX"
     },
     "condition": {
       "warning": "Warning",

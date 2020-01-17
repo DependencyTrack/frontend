@@ -119,6 +119,17 @@ $common.sleep = function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 };
 
+/**
+ * Converts a string representation of common boolean values and returns a boolean value.
+ */
+$common.toBoolean = function(string) {
+  switch(string.toLowerCase().trim()) {
+    case "true": case "yes": case "1": return true;
+    case "false": case "no": case "0": case null: return false;
+    default: return Boolean(string);
+  }
+};
+
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   capitalize: $common.capitalize,
@@ -127,5 +138,6 @@ module.exports = {
   formatTimestamp: $common.formatTimestamp,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,
-  sleep: $common.sleep
+  sleep: $common.sleep,
+  toBoolean: $common.toBoolean
 };
