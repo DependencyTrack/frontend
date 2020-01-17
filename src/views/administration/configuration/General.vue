@@ -19,7 +19,6 @@
   import configPropertyMixin from "../mixins/configPropertyMixin";
 
   export default {
-    name: "General",
     mixins: [configPropertyMixin],
     props: {
       header: String

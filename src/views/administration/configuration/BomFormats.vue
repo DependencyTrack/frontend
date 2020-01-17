@@ -21,7 +21,6 @@
   import configPropertyMixin from "../mixins/configPropertyMixin";
 
   export default {
-    name: "BomFormats",
     mixins: [configPropertyMixin],
     props: {
       header: String
