@@ -123,6 +123,9 @@ $common.sleep = function sleep(milliseconds) {
  * Converts a string representation of common boolean values and returns a boolean value.
  */
 $common.toBoolean = function(string) {
+  if (!string) {
+    return false;
+  }
   switch(string.toLowerCase().trim()) {
     case "true": case "yes": case "1": return true;
     case "false": case "no": case "0": case null: return false;
