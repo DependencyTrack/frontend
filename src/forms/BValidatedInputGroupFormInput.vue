@@ -78,7 +78,7 @@
       },
       inputClasses: function() {
         let classes = "form-control";
-        if (! common.toBoolean(this.lazy) && this.rules.includes("required")) {
+        if (! common.toBoolean(this.lazy) && this.rules && this.rules.includes("required")) {
           classes += " required";
         }
         return classes;
@@ -86,6 +86,9 @@
     },
     methods: {
       errorHandlingMethod: function(errors, valid) {
+        if (! this.rules) {
+          return null;
+        }
         if (common.toBoolean(this.lazy)) {
           return errors[0] ? false : (valid ? true : null);
         } else {
