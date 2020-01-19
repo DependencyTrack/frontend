@@ -13,8 +13,16 @@ export default {
   },
   methods: {
     updateConfigProperties: function(configProperties) {
+      let props = [];
+      for (let i=0; i<configProperties.length; i++) {
+        let prop = configProperties[i];
+        if (prop.propertyValue.trim() === "") {
+          prop.propertyValue = null;
+        }
+        props.push(prop);
+      }
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
-      this.axios.post(url, configProperties).then((response) => {
+      this.axios.post(url, props).then((response) => {
         this.$toastr.s(this.$t('admin.configuration_saved'));
       }).catch((error) => {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -43,6 +51,9 @@ export default {
     },
      */
     updateConfigProperty: function(groupName, propertyName, propertyValue) {
+      if (propertyValue.trim() === "") {
+        propertyValue = null;
+      }
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`;
       this.axios.post(url, {
         groupName: groupName,
