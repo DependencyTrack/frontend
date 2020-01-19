@@ -13,6 +13,15 @@ export default {
   },
   methods: {
     updateConfigProperties: function(configProperties) {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
+      this.axios.post(url, configProperties).then((response) => {
+        this.$toastr.s(this.$t('admin.configuration_saved'));
+      }).catch((error) => {
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+      });
+    },
+    /*
+    updateConfigProperties: function(configProperties) {
       let promises = [];
       for (let i=0; i<configProperties.length; i++) {
         let prop = configProperties[i];
@@ -32,6 +41,7 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
       });
     },
+     */
     updateConfigProperty: function(groupName, propertyName, propertyValue) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`;
       this.axios.post(url, {
@@ -39,7 +49,7 @@ export default {
         propertyName: propertyName,
         propertyValue: propertyValue
       }).then((response) => {
-        this.$toastr.s(this.$t('condition.successful'));
+        this.$toastr.s(this.$t('admin.configuration_saved'));
       }).catch((error) => {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       });
