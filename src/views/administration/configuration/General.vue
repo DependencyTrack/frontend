@@ -1,9 +1,16 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <p>This URL is used to construct links back to Dependency-Track from external systems.</p>
-      <b-form-input class="mb-3 required" v-model="baseUrl" :placeholder="$t('admin.base_url')" type="url" required trim />
-      <c-switch id="input-5" color="primary" v-model="isBadgesEnabled" label v-bind="labelIcon" />{{$t('admin.enable_svg_badge')}}
+      <b-validated-input-group-form-input
+        id="base_url"
+        :label="$t('admin.base_url')"
+        input-group-size="mb-3"
+        rules="required"
+        type="url"
+        v-model="baseUrl"
+        tooltip="This URL is used to construct links back to Dependency-Track from external systems."
+      />
+      <c-switch id="isBadgesEnabled" color="primary" v-model="isBadgesEnabled" label v-bind="labelIcon" />{{$t('admin.enable_svg_badge')}}
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>

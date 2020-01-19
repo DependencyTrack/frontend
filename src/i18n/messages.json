@@ -167,7 +167,20 @@
       "base_url": "Base URL",
       "enable_svg_badge": "Enable SVG badge support (unauthenticated)",
       "enable_bom_cyclonedx": "Enable CycloneDX",
-      "enable_bom_spdx": "Enable SPDX"
+      "enable_bom_spdx": "Enable SPDX",
+      "enable_email": "Enable email",
+      "email_from_address": "From email address",
+      "email_smtp_server": "SMTP server",
+      "email_smtp_port": "SMTP server port",
+      "email_smtp_username": "SMTP username",
+      "email_smtp_password": "SMTP password",
+      "email_enable_ssltls": "Enable SSL/TLS encryption",
+      "email_trust_cert": "Trust the certificate provided by the SMTP server",
+      "configuration_test": "Configuration Test",
+      "perform_test": "Perform Test",
+      "configuration_saved": "Configuration saved",
+      "email_address": "Email address",
+      "test_notification_queued": "A test notification has been queued"
     },
     "condition": {
       "warning": "Warning",
