@@ -16,7 +16,7 @@ export default {
       let props = [];
       for (let i=0; i<configProperties.length; i++) {
         let prop = configProperties[i];
-        if (prop.propertyValue.trim() === "") {
+        if (prop.propertyValue && prop.propertyValue.trim() === "") {
           prop.propertyValue = null;
         }
         props.push(prop);
@@ -51,7 +51,7 @@ export default {
     },
      */
     updateConfigProperty: function(groupName, propertyName, propertyValue) {
-      if (propertyValue.trim() === "") {
+      if (propertyValue && propertyValue.trim() === "") {
         propertyValue = null;
       }
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`;
