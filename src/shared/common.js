@@ -133,6 +133,15 @@ $common.toBoolean = function(string) {
   }
 };
 
+$common.trimToNull = function(value) {
+  if (typeof value === 'undefined') {
+    return null;
+  } else if (typeof value === 'string' && value.trim() === "") {
+    return null;
+  }
+  return value;
+};
+
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   capitalize: $common.capitalize,
@@ -142,5 +151,6 @@ module.exports = {
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,
   sleep: $common.sleep,
-  toBoolean: $common.toBoolean
+  toBoolean: $common.toBoolean,
+  trimToNull: $common.trimToNull
 };
