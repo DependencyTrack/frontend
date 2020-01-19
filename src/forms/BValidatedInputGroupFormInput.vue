@@ -6,16 +6,17 @@
         <b-form-input
           :id="`${id}-input`"
           :type="type"
-          class="form-control"
+          :class="inputClasses"
           v-model="innerValue"
           :placeholder="label"
-          :state="errors[0] ? false : (valid ? true : null)"
+          :state="errorHandlingMethod(errors, valid)"
           :autocomplete="autocomplete"
           :autofocus=isFocused
           v-on="inputListeners"
         />
+        <b-input-group-append v-if="tooltip"><b-input-group-text v-b-tooltip.hover :title="tooltip"><i class="cui-info font-lg"></i></b-input-group-text></b-input-group-append>
       </b-input-group>
-      <b-form-invalid-feedback :state="errors[0] ? false : (valid ? true : null)">
+      <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
         {{ errors[0] }}
       </b-form-invalid-feedback>
     </b-form-group>
@@ -24,6 +25,7 @@
 
 <script>
   import { ValidationProvider } from "vee-validate";
+  import common from "../shared/common";
 
   export default {
     name: 'BValidatedInputGroupFormInput',
@@ -39,11 +41,12 @@
       rules: String,
       type: String,
       autocomplete: String,
-      autofocus: String
+      autofocus: String,
+      tooltip: String,
+      lazy: String
     },
     data() {
       return {
-        innerValue: this.value,
         isFocused: false
       }
     },
@@ -53,6 +56,14 @@
       }
     },
     computed: {
+      innerValue: {
+        get: function() {
+          return this.value;
+        },
+        set: function(newValue) {
+          return newValue;
+        }
+      },
       inputListeners: function() {
         const vm = this;
 
@@ -64,6 +75,22 @@
             }
           }
         )
+      },
+      inputClasses: function() {
+        let classes = "form-control";
+        if (! common.toBoolean(this.lazy) && this.rules.includes("required")) {
+          classes += " required";
+        }
+        return classes;
+      }
+    },
+    methods: {
+      errorHandlingMethod: function(errors, valid) {
+        if (common.toBoolean(this.lazy)) {
+          return errors[0] ? false : (valid ? true : null);
+        } else {
+          return errors[0] ? false : (valid ? true : false);
+        }
       }
     }
   }
