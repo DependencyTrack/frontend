@@ -180,7 +180,15 @@
       "perform_test": "Perform Test",
       "configuration_saved": "Configuration saved",
       "email_address": "Email address",
-      "test_notification_queued": "A test notification has been queued"
+      "test_notification_queued": "A test notification has been queued",
+      "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.",
+      "namespace_regex": "Component namespace regex",
+      "name_regex": "Component name regex",
+      "namespace_regex_desc": "Specifies a regular expression that identifies internal components by namespace. The namespace is often referred to as 'group', 'organization', or 'vendor' in various ecosystems.",
+      "name_regex_desc": "Specifies a regular expression that identifies internal components by the components name.",
+      "perform_identification": "Perform Identification",
+      "internal_identification_queued": "Internal component identification queued",
+      "internal_identification_error": "An error occurred queueing internal component identification. Check server logs for details"
     },
     "condition": {
       "warning": "Warning",
