@@ -8,6 +8,8 @@
       <br/>
       <c-switch id="scannerCpeFuzzyExcludePurlInput" color="primary" v-model="scannerCpeFuzzyExcludePurlInput" label v-bind="labelIcon" />{{$t('admin.analyzer_internal_fuzzy_exclude_purl')}}
       -->
+      <hr/>
+      {{ $t('admin.analyzer_internal_desc') }}
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
