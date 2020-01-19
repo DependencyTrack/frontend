@@ -188,7 +188,8 @@
       "name_regex_desc": "Specifies a regular expression that identifies internal components by the components name.",
       "perform_identification": "Perform Identification",
       "internal_identification_queued": "Internal component identification queued",
-      "internal_identification_error": "An error occurred queueing internal component identification. Check server logs for details"
+      "internal_identification_error": "An error occurred queueing internal component identification. Check server logs for details",
+      "analyzer_internal_enable": "Enable internal analyzer"
     },
     "condition": {
       "warning": "Warning",
