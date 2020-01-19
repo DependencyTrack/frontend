@@ -189,3 +189,9 @@ h6 {
 .switch-slider {
   background-color: $switch-bg;
 }
+.card-footer > :not(:last-child) {
+  margin-right: .25rem;
+}
+.card-footer > :not(:first-child) {
+  margin-left: .25rem;
+}
