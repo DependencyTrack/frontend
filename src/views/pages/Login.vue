@@ -20,6 +20,7 @@
                       autocomplete="username email"
                       v-model="input.username"
                       autofocus="true"
+                      lazy="true"
                     />
                     <b-validated-input-group-form-input
                       name="password"
@@ -30,6 +31,7 @@
                       type="password"
                       autcomplete="currentpassword"
                       v-model="input.password"
+                      lazy="true"
                     />
                     <b-row>
                       <b-col cols="6">
