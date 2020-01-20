@@ -53,6 +53,7 @@
           {
             title: this.$t('admin.enabled'),
             field: "enabled",
+            class: "tight",
             sortable: true,
             formatter(value, row, index) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
