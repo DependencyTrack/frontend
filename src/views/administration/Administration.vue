@@ -41,7 +41,6 @@
   // Integration plugins
   import FortifySsc from "./integrations/FortifySsc";
   import KennaSecurity from "./integrations/KennaSecurity";
-  import ThreadFix from "./integrations/ThreadFix";
   // Access Management plugins
   import LdapUsers from "./accessmanagement/LdapUsers";
   import ManagedUsers from "./accessmanagement/ManagedUsers";
@@ -56,7 +55,7 @@
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
-      FortifySsc, KennaSecurity, ThreadFix,
+      FortifySsc, KennaSecurity,
       LdapUsers, ManagedUsers, Teams, Permissions
     },
     created() {

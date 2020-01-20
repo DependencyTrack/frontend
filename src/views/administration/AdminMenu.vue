@@ -148,11 +148,6 @@
                 component: "KennaSecurity",
                 name: this.$t('admin.kenna_security'),
                 href: "#integrationsKennaSecurityTab"
-              },
-              {
-                component: "ThreadFix",
-                name: this.$t('admin.threadfix'),
-                href: "#integrationsThreadFixTab"
               }
             ]
           },

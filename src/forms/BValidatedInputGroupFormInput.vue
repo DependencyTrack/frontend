@@ -10,7 +10,7 @@
           v-model="innerValue"
           :placeholder="label"
           :state="errorHandlingMethod(errors, valid)"
-          :autocomplete="autocomplete"
+          autocomplete=false
           :autofocus=isFocused
           v-on="inputListeners"
         />
