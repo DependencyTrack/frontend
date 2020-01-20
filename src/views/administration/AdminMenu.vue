@@ -2,7 +2,7 @@
   <div>
 
     <b-card no-body class="admin-menu" v-for="section in menu" v-bind:key="section.id">
-      <div slot="header" v-b-toggle="section.id">
+      <div slot="header" v-b-toggle="section.id" style="cursor:pointer;">
         <i class="fa fa-align-justify"></i><strong>&nbsp;&nbsp;{{ section.name }}</strong>
       </div>
       <b-collapse :id="section.id" visible accordion="admin-accordion" role="tabpanel">
