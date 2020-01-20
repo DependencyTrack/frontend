@@ -200,7 +200,10 @@
       "registered_email_address": "Registered email address",
       "api_token": "API token",
       "consumer_key": "Consumer key",
-      "consumer_secret": "Consumer secret"
+      "consumer_secret": "Consumer secret",
+      "identifier": "Identifier",
+      "url": "URL",
+      "enabled": "Enabled"
     },
     "condition": {
       "warning": "Warning",

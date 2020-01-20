@@ -29,7 +29,12 @@
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
   import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
   // Repositories
-  import Repositories from "./repositories/Repositories";
+  import Gem from "./repositories/Gem";
+  import Hex from "./repositories/Hex";
+  import Maven from "./repositories/Maven";
+  import Npm from "./repositories/Npm";
+  import Nuget from "./repositories/Nuget";
+  import Python from "./repositories/Python";
   // Notification plugins
   import Alerts from "./notifications/Alerts";
   import Templates from "./notifications/Templates";
@@ -49,7 +54,7 @@
       AdminMenu,
       General, BomFormats, Email, InternalComponents,
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
-      Repositories,
+      Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, KennaSecurity, ThreadFix,
       LdapUsers, ManagedUsers, Teams, Permissions

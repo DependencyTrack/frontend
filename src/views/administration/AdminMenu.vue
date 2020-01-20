@@ -88,32 +88,32 @@
             id: "repositoriesMenu",
             children: [
               {
-                component: "Repositories",
+                component: "Gem",
                 name: this.$t('admin.gem'),
                 href: "#repositoryGemTab"
               },
               {
-                component: "Repositories",
+                component: "Hex",
                 name: this.$t('admin.hex'),
                 href: "#repositoryHexTab"
               },
               {
-                component: "Repositories",
+                component: "Maven",
                 name: this.$t('admin.maven'),
                 href: "#repositoryMavenTab"
               },
               {
-                component: "Repositories",
+                component: "Npm",
                 name: this.$t('admin.npm'),
                 href: "#repositoryNpmTab"
               },
               {
-                component: "Repositories",
+                component: "Nuget",
                 name: this.$t('admin.nuget'),
                 href: "#repositoryNugetTab"
               },
               {
-                component: "Repositories",
+                component: "Python",
                 name: this.$t('admin.python'),
                 href: "#repositoryPythonTab"
               }
