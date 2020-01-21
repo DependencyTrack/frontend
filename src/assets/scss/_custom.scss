@@ -192,9 +192,18 @@ h6 {
 .switch-slider {
   background-color: $switch-bg;
 }
+.switch-slider:before {
+  background-color: $grey-200;
+}
 .card-footer > :not(:last-child) {
   margin-right: .25rem;
 }
 .card-footer > :not(:first-child) {
+  margin-left: .25rem;
+}
+.bs-table-custom-toolbar > :not(:last-child) {
+  margin-right: .25rem;
+}
+.bs-table-custom-toolbar > :not(:first-child) {
   margin-left: .25rem;
 }

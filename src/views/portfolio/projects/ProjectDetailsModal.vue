@@ -29,7 +29,7 @@
                       style="max-width:none; background-color:transparent;"/>
     </b-form-group>
 
-    <c-switch id="input-5" class="mx-1" color="primary" checked label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
+    <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
 
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
@@ -45,6 +45,7 @@
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
 
   export default {
     name: "ProjectDetailsModal",
@@ -58,7 +59,6 @@
     },
     data() {
       return {
-        active: true,
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -85,7 +85,7 @@
             version: this.project.version,
             description: this.project.description,
             tags: tagsNode,
-            active: this.active
+            active: this.project.active
           }).then((response) => {
             this.$toastr.s(this.$t('message.project_updated'));
           }).catch((error) => {
