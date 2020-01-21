@@ -1,5 +1,4 @@
 import 'bootstrap-table/dist/bootstrap-table.min.css'
-import './table.css'
 
 import './jquery.js'
 import Vue from 'vue'
