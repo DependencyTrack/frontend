@@ -55,7 +55,7 @@
             field: "vulnerability.vulnId",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../vulnerability/?source=" + row.vulnerability.source + "&vulnId=" + value);
+              let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
               return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
