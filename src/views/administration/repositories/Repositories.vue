@@ -74,7 +74,6 @@
           icons: {
             refresh: 'fa-refresh'
           },
-          toolbar: '#projectsToolbar',
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
