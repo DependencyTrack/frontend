@@ -209,7 +209,11 @@
       "synchronization_cadence_restart_required": "Restarting Dependency-Track is required for cadence changes to take effect",
       "integration_kenna_enable": "Enable Kenna Security integration",
       "integration_kenna_connector_id": "Connector ID",
-      "token": "Token"
+      "token": "Token",
+      "publisher_class": "Publisher class",
+      "mime_type": "Mime type",
+      "template": "Template",
+      "default": "Default"
     },
     "condition": {
       "warning": "Warning",
