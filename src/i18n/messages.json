@@ -213,7 +213,12 @@
       "publisher_class": "Publisher class",
       "mime_type": "Mime type",
       "template": "Template",
-      "default": "Default"
+      "create_alert": "Create Alert",
+      "default": "Default",
+      "publisher": "Publisher",
+      "scope": "Scope",
+      "notification_level": "Notification Level",
+      "destination": "Destination"
     },
     "condition": {
       "warning": "Warning",
