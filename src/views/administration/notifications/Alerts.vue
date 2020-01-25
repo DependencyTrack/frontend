@@ -38,9 +38,13 @@
         this.$refs.table.updateRow( {index: index, row: row});
         this.$refs.table.expandRow(index);
       });
+      EventBus.$on('admin:alerts:rowDeleted', (index, row) => {
+        this.refreshTable();
+      });
     },
     beforeDestroy() {
-      EventBus.$off('admin:alerts:rowUpdate')
+      EventBus.$off('admin:alerts:rowUpdate');
+      EventBus.$off('admin:alerts:rowDeleted');
     },
     data() {
       return {
@@ -138,6 +142,10 @@
                         </b-form-checkbox-group>
                       </div>
                     </b-form-group>
+                    <div style="text-align:right">
+                      <b-button variant="outline-primary" v-if="this.scope === 'PORTFOLIO'"><i class="fa fa-chevron-down"></i> {{ $t('admin.limit_to') }}</b-button>
+                      <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                    </div>
                   </b-col>
                 </b-row>
               `,
@@ -190,6 +198,18 @@
                     this.destination = this.parseDestination(this.alert);
                     EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
                     this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                deleteNotificationRule: function() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+                  this.axios.delete(url, { data: {
+                      uuid: this.alert.uuid
+                    }
+                  }).then((response) => {
+                    EventBus.$emit('admin:alerts:rowDeleted', index);
+                    this.$toastr.s(this.$t('admin.alert_deleted'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
