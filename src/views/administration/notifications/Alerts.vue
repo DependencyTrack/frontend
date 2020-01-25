@@ -22,8 +22,8 @@
   import common from "../../../shared/common";
   import i18n from "../../../i18n";
   import CreateAlertModal from "./CreateAlertModal";
-  import BootstrapToggle from "vue-bootstrap-toggle";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+  import EventBus from "../../../shared/eventbus";
 
   export default {
     props: {
@@ -32,6 +32,15 @@
     mixins: [bootstrapTableMixin],
     components: {
       CreateAlertModal
+    },
+    mounted() {
+      EventBus.$on('admin:alerts:rowUpdate', (index, row) => {
+        this.$refs.table.updateRow( {index: index, row: row});
+        this.$refs.table.expandRow(index);
+      });
+    },
+    beforeDestroy() {
+      EventBus.$off('admin:alerts:rowUpdate')
     },
     data() {
       return {
@@ -87,63 +96,103 @@
           detailViewIcon: false,
           detailViewByClick: true,
           detailFormatter: (index, row) => {
-            console.log(row);
             return this.vueFormatter({
               i18n,
               template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-form-group id="fieldset-1" :label="this.$t('message.name')" label-for="input-1">
-                      <b-form-input id="input-1" v-model="alert.name" required class="form-control required" trim />
+                      <b-form-input id="input-1" v-model="name" required class="form-control required" debounce="750" trim />
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
-                      <b-form-input id="input-2" v-model="alert.publisher.publisherClass" disabled class="form-control disabled" readonly trim />
+                      <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-3" :label="this.$t('admin.notification_level')" label-for="input-3">
-                      <b-form-input id="input-3" v-model="alert.notificationLevel" disabled class="form-control disabled" readonly trim />
+                      <b-form-input id="input-3" v-model="notificationLevel" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-4" :label="this.$t('admin.destination')" label-for="input-4">
-                      <b-form-input id="input-4" v-model="alert.destination" required class="form-control required" trim />
+                      <b-form-input id="input-4" v-model="destination" required class="form-control required" debounce="750" trim />
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
-                      <b-form-input id="input-5" v-model="alert.scope" disabled class="form-control disabled" readonly trim />
+                      <b-form-input id="input-5" v-model="scope" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-6" :label="this.$t('admin.scope')" label-for="input-6">
-                      <b-list-group>
-                        <b-list-group-item v-for="option in notifyOnOptions" v-bind:key="option">
-                          <b-form-checkbox :name="option">{{ option }}</b-form-checkbox>
-                        </b-list-group-item>
-                      </b-list-group>
+                      <div class="list-group" v-if="this.scope === 'PORTFOLIO'">
+                        <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
+                          <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABILITY">NEW_VULNERABILITY</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABLE_DEPENDENCY">NEW_VULNERABLE_DEPENDENCY</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="GLOBAL_AUDIT_CHANGE">GLOBAL_AUDIT_CHANGE</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="PROJECT_AUDIT_CHANGE">PROJECT_AUDIT_CHANGE</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="BOM_CONSUMED">BOM_CONSUMED</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSED">BOM_PROCESSED</b-form-checkbox></div>
+                        </b-form-checkbox-group>
+                      </div>
+                      <div class="list-group" v-if="this.scope === 'SYSTEM'">
+                        <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
+                          <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="REPOSITORY">REPOSITORY</b-form-checkbox></div>
+                        </b-form-checkbox-group>
+                      </div>
                     </b-form-group>
                   </b-col>
                 </b-row>
               `,
               data() {
                 return {
-                  alert: row
+                  alert: row,
+                  uuid: row.uuid,
+                  name: row.name,
+                  publisherClass: row.publisher.publisherClass,
+                  notificationLevel: row.notificationLevel,
+                  destination: this.parseDestination(row),
+                  scope: row.scope,
+                  notifyOn: row.notifyOn
                 }
               },
-              computed: {
-                notifyOnOptions () {
-                  if (this.alert.scope === "PORTFOLIO") {
-                    return [
-                      'NEW_VULNERABILITY',
-                      'NEW_VULNERABLE_DEPENDENCY',
-                      'GLOBAL_AUDIT_CHANGE',
-                      'PROJECT_AUDIT_CHANGE',
-                      'BOM_CONSUMED',
-                      'BOM_PROCESSED'
-                    ]
-                  } else if (this.alert.scope === "SYSTEM") {
-                    return [
-                      'DATASOURCE_MIRRORING',
-                      'FILE_SYSTEM',
-                      'INDEXING_SERVICE',
-                      'REPOSITORY'
-                    ]
+              created() {
+                this.parseDestination(this.alert);
+              },
+              watch: {
+                name() {
+                  this.updateNotificationRule();
+                },
+                destination() {
+                  this.updateNotificationRule();
+                },
+                notifyOn() {
+                  this.updateNotificationRule();
+                }
+              },
+              methods: {
+                parseDestination: function(alert) {
+                  if (alert.publisherConfig) {
+                    let value = JSON.parse(alert.publisherConfig);
+                    if (value) {
+                      return value.destination;
+                    }
+                    return null;
                   }
+                },
+                updateNotificationRule: function () {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+                  this.axios.post(url, {
+                    uuid: this.uuid,
+                    name: this.name,
+                    notificationLevel: this.notificationLevel,
+                    publisherConfig: JSON.stringify({ destination: this.destination }),
+                    notifyOn: this.notifyOn
+                  }).then((response) => {
+                    this.alert = response.data;
+                    this.destination = this.parseDestination(this.alert);
+                    EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
                 }
               }
             })
