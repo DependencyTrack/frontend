@@ -26,6 +26,8 @@
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
   import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
 
   export default {
     props: {
@@ -119,7 +121,7 @@
                     <b-form-group id="fieldset-4" :label="this.$t('admin.destination')" label-for="input-4">
                       <b-form-input id="input-4" v-model="destination" required class="form-control required" debounce="750" trim />
                     </b-form-group>
-                    <b-form-group id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
+                    <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
                           <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
@@ -153,16 +155,20 @@
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
-                      <b-button variant="outline-primary" v-if="this.scope === 'PORTFOLIO'"><i class="fa fa-chevron-down"></i> {{ $t('admin.limit_to') }}</b-button>
-                      <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                      <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
+                                v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
+                                v-if="this.scope === 'PORTFOLIO'" />
+                       <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
                     </div>
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>
                 </b-row>
               `,
+              mixins: [permissionsMixin],
               components: {
                 ActionableListGroupItem,
-                SelectProjectModal
+                SelectProjectModal,
+                BToggleableDisplayButton
               },
               data() {
                 return {
@@ -174,7 +180,8 @@
                   destination: this.parseDestination(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
-                  projects: row.projects
+                  projects: row.projects,
+                  limitToVisible: false
                 }
               },
               created() {
