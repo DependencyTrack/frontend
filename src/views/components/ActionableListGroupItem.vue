@@ -36,4 +36,7 @@
   .action-icon .fa-trash-o {
     color: var(--danger);
   }
+  .list-group-item:last-child {
+    margin-bottom: -1px;
+  }
 </style>
