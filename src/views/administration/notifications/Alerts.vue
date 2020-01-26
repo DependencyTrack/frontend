@@ -24,6 +24,8 @@
   import CreateAlertModal from "./CreateAlertModal";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import EventBus from "../../../shared/eventbus";
+  import ActionableListGroupItem from "../../components/ActionableListGroupItem";
+  import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
 
   export default {
     props: {
@@ -117,6 +119,14 @@
                     <b-form-group id="fieldset-4" :label="this.$t('admin.destination')" label-for="input-4">
                       <b-form-input id="input-4" v-model="destination" required class="form-control required" debounce="750" trim />
                     </b-form-group>
+                    <b-form-group id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
+                      <div class="list-group">
+                        <span v-for="project in projects">
+                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
+                      </div>
+                    </b-form-group>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
@@ -147,8 +157,13 @@
                       <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
                     </div>
                   </b-col>
+                  <select-project-modal v-on:selection="updateProjectSelection"/>
                 </b-row>
               `,
+              components: {
+                ActionableListGroupItem,
+                SelectProjectModal
+              },
               data() {
                 return {
                   alert: row,
@@ -158,7 +173,8 @@
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
                   scope: row.scope,
-                  notifyOn: row.notifyOn
+                  notifyOn: row.notifyOn,
+                  projects: row.projects
                 }
               },
               created() {
@@ -176,6 +192,13 @@
                 }
               },
               methods: {
+                formatProjectLabel: function(projectName, projectVersion) {
+                  if (projectName && projectVersion) {
+                    return projectName + " " + projectVersion;
+                  } else {
+                    return projectName;
+                  }
+                },
                 parseDestination: function(alert) {
                   if (alert.publisherConfig) {
                     let value = JSON.parse(alert.publisherConfig);
@@ -213,6 +236,38 @@
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
+                },
+                deleteLimiter: function(projectUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${projectUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let p = [];
+                    for (let i=0; i<this.projects.length; i++) {
+                      if (this.projects[i].uuid !== projectUuid) {
+                        p.push(this.projects[i]);
+                      }
+                    }
+                    this.projects = p;
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                updateProjectSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
+                    this.axios.post(url).then((response) => {
+                      this.projects.push(selection);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
                 }
               }
             })

@@ -132,7 +132,9 @@
       "last_measurement": "Last measurement",
       "component_vulnerabilities": "Component Vulnerabilities",
       "component_details": "Component Details",
-      "snapshot_notification": "Snapshot Notification"
+      "snapshot_notification": "Snapshot Notification",
+      "select_project": "Select Project",
+      "select": "Select"
     },
     "admin": {
       "configuration": "Configuration",
@@ -217,8 +219,12 @@
       "default": "Default",
       "publisher": "Publisher",
       "scope": "Scope",
-      "notification_level": "Notification Level",
-      "destination": "Destination"
+      "notification_level": "Notification level",
+      "destination": "Destination",
+      "delete_alert": "Delete Alert",
+      "limit_to": "Limit To",
+      "limit_to_projects": "Limit to projects",
+      "alert_deleted": "Alert deleted"
     },
     "condition": {
       "warning": "Warning",
