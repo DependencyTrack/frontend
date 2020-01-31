@@ -244,7 +244,9 @@
       "required_fullname": "Fullname is required",
       "required_email": "Email address is required",
       "required_password": "Password is required",
-      "required_confirmPassword": "Password confirmation is required and passwords must match"
+      "required_confirmPassword": "Password confirmation is required and passwords must match",
+      "distinguished_name": "Distinguished name",
+      "create_ldap_user": "Create LDAP User"
     },
     "condition": {
       "warning": "Warning",
