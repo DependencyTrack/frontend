@@ -246,7 +246,14 @@
       "required_password": "Password is required",
       "required_confirmPassword": "Password confirmation is required and passwords must match",
       "distinguished_name": "Distinguished name",
-      "create_ldap_user": "Create LDAP User"
+      "create_ldap_user": "Create LDAP User",
+      "api_keys": "API Keys",
+      "members": "Members",
+      "create_team": "Create Team",
+      "delete_team": "Delete Team",
+      "required_team_name": "Team name is required",
+      "select_ldap_group": "Select LDAP Group",
+      "mapped_ldap_groups": "Mapped LDAP groups"
     },
     "condition": {
       "warning": "Warning",

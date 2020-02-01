@@ -1,18 +1,323 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      {{ header }}
+      <div id="customToolbar">
+        <b-button size="md" variant="outline-primary" v-b-modal.createTeamModal>
+          <span class="fa fa-plus"></span> {{ $t('admin.create_team') }}
+        </b-button>
+      </div>
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options">
+      </bootstrap-table>
     </b-card-body>
-    <b-card-footer>
-      <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
-    </b-card-footer>
+    <create-team-modal v-on:refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
+  import xssFilters from "xss-filters";
+  import common from "../../../shared/common";
+  import i18n from "../../../i18n";
+  import CreateTeamModal from "./CreateTeamModal";
+  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+  import EventBus from "../../../shared/eventbus";
+  import ActionableListGroupItem from "../../components/ActionableListGroupItem";
+  import SelectLdapGroupModal from "./SelectLdapGroupModal";
+  import SelectPermissionModal from "./SelectPermissionModal";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import {Switch as cSwitch} from "@coreui/vue";
+
   export default {
     props: {
       header: String
+    },
+    mixins: [bootstrapTableMixin],
+    components: {
+      CreateTeamModal
+    },
+    mounted() {
+      EventBus.$on('admin:teams:rowUpdate', (index, row) => {
+        this.$refs.table.updateRow( {index: index, row: row});
+        this.$refs.table.expandRow(index);
+      });
+      EventBus.$on('admin:teams:rowDeleted', (index, row) => {
+        this.refreshTable();
+      });
+    },
+    beforeDestroy() {
+      EventBus.$off('admin:teams:rowUpdate');
+      EventBus.$off('admin:teams:rowDeleted');
+    },
+    data() {
+      return {
+        columns: [
+          {
+            title: this.$t('admin.team_name'),
+            field: "name",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('admin.api_keys'),
+            field: "apiKeys",
+            sortable: false,
+            formatter(value, row, index) {
+              return (value) ? xssFilters.inHTMLData(common.valueWithDefault(value.length, "0")) : 0;
+            }
+          },
+          {
+            title: this.$t('admin.members'),
+            field: "members",
+            sortable: false,
+            formatter(value, row, index) {
+              let count = 0;
+              if (row.managedUsers) {
+                count += row.managedUsers.length;
+              }
+              if (row.ldapUsers) {
+                count += row.ldapUsers.length;
+              }
+              return count;
+            }
+          },
+        ],
+        data: [],
+        options: {
+          search: true,
+          showColumns: true,
+          showRefresh: true,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'server',
+          queryParamsType: 'pageSize',
+          pageList: '[10, 25, 50, 100]',
+          pageSize: 10,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          detailView: true,
+          detailViewIcon: false,
+          detailViewByClick: true,
+          detailFormatter: (index, row) => {
+            console.log(row);
+            return this.vueFormatter({
+              i18n,
+              template: `
+                <b-row class="expanded-row">
+                  <b-col sm="6">
+                    <b-form-group :label="this.$t('admin.team_name')" label-for="name">
+                      <b-form-input id="name" v-model="name" required class="form-control required" debounce="750" trim />
+                    </b-form-group>
+                    <b-form-group :label="this.$t('admin.api_keys')">
+                      <div class="list-group">
+                        <span v-for="apiKey in apiKeys">
+                          <actionable-list-group-item :value="apiKey.key" delete-icon="true" v-on:actionClicked="removeApiKey(apiKey)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="createApiKey()"/>
+                      </div>
+                    </b-form-group>
+                    <b-form-group :label="this.$t('admin.permissions')">
+                      <div class="list-group">
+                        <span v-for="permission in permissions">
+                          <actionable-list-group-item :value="permission.name" delete-icon="true" v-on:actionClicked="removePermission(permission)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectPermissionModal')"/>
+                      </div>
+                    </b-form-group>
+                    <b-form-group :label="this.$t('admin.mapped_ldap_groups')">
+                      <div class="list-group">
+                        <span v-for="ldapGroup in ldapGroups">
+                          <actionable-list-group-item :value="permission.name" delete-icon="true" v-on:actionClicked="removePermission(permission)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLdapGroupModal')"/>
+                      </div>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="6">
+
+
+
+                    <div style="text-align:right">
+                       <b-button variant="outline-danger" @click="deleteTeam">{{ $t('admin.delete_team') }}</b-button>
+                    </div>
+                  </b-col>
+                  <select-permission-modal v-on:selection="updatePermissionSelection" />
+                  <select-ldap-group-modal v-on:selection="updateLdapGroupSelection" />
+                </b-row>
+              `,
+              mixins: [permissionsMixin],
+              components: {
+                cSwitch,
+                ActionableListGroupItem,
+                SelectLdapGroupModal,
+                SelectPermissionModal
+              },
+              data() {
+                return {
+                  team: row,
+                  name: row.name,
+                  apiKeys: row.apiKeys,
+                  permissions: row.permissions,
+                  ldapGroups: row.ldapGroups,
+                  labelIcon: {
+                    dataOn: '\u2713',
+                    dataOff: '\u2715'
+                  }
+                }
+              },
+              watch: {
+                name() {
+                  this.updateTeam();
+                }
+              },
+              methods: {
+                updateTeam: function () {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
+                  this.axios.post(url, {
+                    uuid: this.team.uuid,
+                    name: this.name,
+                  }).then((response) => {
+                    this.team = response.data;
+                    EventBus.$emit('admin:teams:rowUpdate', index, this.team);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                deleteTeam: function() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
+                  this.axios.delete(url, { data: {
+                      uuid: this.team.uuid
+                    }
+                  }).then((response) => {
+                    EventBus.$emit('admin:teams:rowDeleted', index);
+                    this.$toastr.s(this.$t('admin.team_deleted'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                createApiKey() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
+                  this.axios.put(url).then((response) => {
+                    this.apiKeys.push(response.data);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                removeApiKey: function(apiKey) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.key}`;
+                  this.axios.delete(url).then((response) => {
+                    let k = [];
+                    for (let i=0; i<this.apiKeys.length; i++) {
+                      if (this.apiKeys[i].key !== apiKey.key) {
+                        k.push(this.apiKeys[i]);
+                      }
+                    }
+                    this.apiKeys = k;
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+
+
+
+
+
+                updateLdapGroupSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                    this.axios.post(url, {
+                      uuid: selection.uuid
+                    }).then((response) => {
+                      this.syncVariables(response.data);
+                      EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
+                },
+                removeLdapGroupMapping: function(teamUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                  this.axios.delete(url, { data: { uuid: teamUuid }
+                  }).then((response) => {
+                    this.syncVariables(response.data);
+                    EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+
+
+
+
+
+                updatePermissionSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/team/${this.team.uuid}`;
+                    this.axios.post(url
+                    ).then((response) => {
+                      this.syncVariables(response.data);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
+                },
+                removePermission: function(permission) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/team/${this.team.uuid}`;
+                  this.axios.delete(url).then((response) => {
+                    this.syncVariables(response.data);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                syncVariables: function(team) {
+                  this.team = team;
+                  this.apiKeys = team.apiKeys;
+                  this.permissions = team.permissions;
+                }
+              }
+            })
+          },
+          onExpandRow: this.vueFormatterInit,
+          toolbar: '#customToolbar',
+          responseHandler: function (res, xhr) {
+            console.log(res);
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          },
+          url: `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`
+        }
+      };
+    },
+    methods: {
+      refreshTable: function() {
+        this.$refs.table.refresh({
+          silent: true
+        });
+      }
     }
   }
 </script>
