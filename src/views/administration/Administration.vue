@@ -7,7 +7,7 @@
       <b-col xs="6" sm="8" md="10">
         <div class="tab-content">
           <!-- Dynamically loads the selected admin plugin -->
-          <component :is="selectedComponent" :header="header" />
+          <component class="animated fadeIn" :is="selectedComponent" :header="header" />
         </div>
       </b-col>
     </b-row>
