@@ -2,7 +2,7 @@
   <b-modal id="aboutModal" size="lg" hide-header-close no-stacking :title="$t('message.about')">
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/logo-greyscale.svg">
+        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200">
       </b-col>
     </b-row>
     <hr/>

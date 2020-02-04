@@ -1,5 +1,11 @@
 <template>
   <b-modal id="snapshotModal" size="md" hide-header-close no-stacking :title="$t('message.snapshot_notification')">
+    <b-row>
+      <b-col>
+        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200">
+      </b-col>
+    </b-row>
+    <hr/>
     <p>
       This version of Dependency-Track is a snapshot release that is dynamically
       generated from continuous integration or from manually compiling from a branch.
@@ -12,8 +18,8 @@
     </p>
     <p>
       Please consider contributing feedback and pull requests to help improve
-      Dependency-Track. All contributions are appreciated.
-      <a href="https://github.com/DependencyTrack/dependency-track">https://github.com/DependencyTrack/dependency-track</a>
+      the project. All contributions are appreciated. Visit Dependency-Track on
+      <a href="https://github.com/DependencyTrack">GitHub</a>&nbsp;<i class="fa fa-github" aria-hidden="true"></i>
     </p>
     <p><strong>Do not use snapshot releases on production data.</strong></p>
     <template v-slot:modal-footer="{ cancel }">
