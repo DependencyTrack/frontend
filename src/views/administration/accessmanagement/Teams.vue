@@ -104,7 +104,6 @@
           detailViewIcon: false,
           detailViewByClick: true,
           detailFormatter: (index, row) => {
-            console.log(row);
             return this.vueFormatter({
               i18n,
               template: `
@@ -139,9 +138,20 @@
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
-
-
-
+                    <b-form-group v-if="managedUsers && managedUsers.length > 0" :label="this.$t('admin.managed_users')">
+                      <div class="list-group">
+                        <span v-for="managedUser in managedUsers">
+                          <actionable-list-group-item :value="managedUser.username" delete-icon="true" v-on:actionClicked="removeUser(managedUser)"/>
+                        </span>
+                      </div>
+                    </b-form-group>
+                    <b-form-group v-if="ldapUsers && ldapUsers.length > 0"  :label="this.$t('admin.ldap_users')">
+                      <div class="list-group">
+                        <span v-for="ldapUser in ldapUsers">
+                          <actionable-list-group-item :value="ldapUser.username" delete-icon="true" v-on:actionClicked="removeUser(ldapUser)"/>
+                        </span>
+                      </div>
+                    </b-form-group>
                     <div style="text-align:right">
                        <b-button variant="outline-danger" @click="deleteTeam">{{ $t('admin.delete_team') }}</b-button>
                     </div>
@@ -164,6 +174,8 @@
                   apiKeys: row.apiKeys,
                   permissions: row.permissions,
                   ldapGroups: row.ldapGroups,
+                  managedUsers: row.managedUsers,
+                  ldapUsers: row.ldapUsers,
                   labelIcon: {
                     dataOn: '\u2713',
                     dataOff: '\u2715'
@@ -225,11 +237,6 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
-
-
-
-
-
                 updateLdapGroupSelection: function(selections) {
                   this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                   for (let i=0; i<selections.length; i++) {
@@ -261,11 +268,6 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
-
-
-
-
-
                 updatePermissionSelection: function(selections) {
                   this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                   for (let i=0; i<selections.length; i++) {
@@ -293,6 +295,35 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
+                removeUser: function(user) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${user.username}/membership`;
+                  this.axios.delete(url, { data: {
+                      uuid: this.team.uuid
+                    }
+                  }).then((response) => {
+                    if (this.managedUsers) {
+                      let k = [];
+                      for (let i=0; i<this.managedUsers.length; i++) {
+                        if (this.managedUsers[i].username !== user.username) {
+                          k.push(this.managedUsers[i]);
+                        }
+                      }
+                      this.managedUsers = k;
+                    }
+                    if (this.ldapUsers) {
+                      let k = [];
+                      for (let i=0; i<this.ldapUsers.length; i++) {
+                        if (this.ldapUsers[i].username !== user.username) {
+                          k.push(this.ldapUsers[i]);
+                        }
+                      }
+                      this.ldapUsers = k;
+                    }
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
                 syncVariables: function(team) {
                   this.team = team;
                   this.apiKeys = team.apiKeys;
@@ -304,7 +335,6 @@
           onExpandRow: this.vueFormatterInit,
           toolbar: '#customToolbar',
           responseHandler: function (res, xhr) {
-            console.log(res);
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
