@@ -12,7 +12,7 @@
       <b-dropdown-item><i class="fa fa-user" /> Profile</b-dropdown-item>
       <b-dropdown-item><i class="fa fa-wrench" /> Settings</b-dropdown-item>
       <b-dropdown-divider />
-      <b-dropdown-item><i class="fa fa-lock" /> Logout</b-dropdown-item>
+      <b-dropdown-item @click="logout"><i class="fa fa-lock" /> Logout</b-dropdown-item>
     </template>
   </AppHeaderDropdown>
 </template>
@@ -26,6 +26,12 @@
     },
     data: () => {
       return { itemsCount: 42 }
+    },
+    methods: {
+      logout: function () {
+        sessionStorage.removeItem('token');
+        this.$router.replace({ name: "Login" });
+      }
     }
   }
 </script>
