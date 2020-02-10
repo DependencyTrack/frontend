@@ -62,7 +62,7 @@
             <b-card no-body class="text-white bg-grey-900 py-5 d-md-down-none" style="width:44%">
               <b-card-body class="text-center">
                 <div>
-                  <img src="img/brand/dt-logo-vertical-white-text.svg" width="100%"/>
+                  <img src="@/assets/img/brand/dt-logo-vertical-white-text.svg" width="100%"/>
                 </div>
               </b-card-body>
             </b-card>
