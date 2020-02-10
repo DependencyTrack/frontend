@@ -131,7 +131,7 @@
                     <b-form-group :label="this.$t('admin.mapped_ldap_groups')">
                       <div class="list-group">
                         <span v-for="ldapGroup in ldapGroups">
-                          <actionable-list-group-item :value="permission.name" delete-icon="true" v-on:actionClicked="removePermission(permission)"/>
+                          <actionable-list-group-item :value="ldapGroup.dn" delete-icon="true" v-on:actionClicked="removeLdapGroupMapping(ldapGroup.uuid)"/>
                         </span>
                         <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLdapGroupModal')"/>
                       </div>
@@ -173,7 +173,7 @@
                   name: row.name,
                   apiKeys: row.apiKeys,
                   permissions: row.permissions,
-                  ldapGroups: row.ldapGroups,
+                  ldapGroups: row.mappedLdapGroups,
                   managedUsers: row.managedUsers,
                   ldapUsers: row.ldapUsers,
                   labelIcon: {
@@ -238,15 +238,16 @@
                   });
                 },
                 updateLdapGroupSelection: function(selections) {
-                  this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+                  this.$root.$emit('bv::hide::modal', 'selectLdapGroupModal');
                   for (let i=0; i<selections.length; i++) {
                     let selection = selections[i];
-                    let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
-                    this.axios.post(url, {
-                      uuid: selection.uuid
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}`;
+                    this.axios.put(url, {
+                      team: this.team.uuid,
+                      dn: selection.dn
                     }).then((response) => {
-                      this.syncVariables(response.data);
-                      EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
+                      this.ldapGroups.push(response.data);
+                      this.ldapGroups.sort();
                       this.$toastr.s(this.$t('message.updated'));
                     }).catch((error) => {
                       if (error.response.status === 304) {
@@ -257,12 +258,17 @@
                     });
                   }
                 },
-                removeLdapGroupMapping: function(teamUuid) {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
-                  this.axios.delete(url, { data: { uuid: teamUuid }
-                  }).then((response) => {
-                    this.syncVariables(response.data);
-                    EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
+                removeLdapGroupMapping: function(mappingUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}/${mappingUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let k = [];
+                    for (let i=0; i<this.ldapGroups.length; i++) {
+                      if (this.ldapGroups[i].uuid !== mappingUuid) {
+                        k.push(this.ldapGroups[i]);
+                      }
+                    }
+                    this.ldapGroups = k;
+                    this.team.mappedLdapGroups = this.ldapGroups;
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -328,6 +334,7 @@
                   this.team = team;
                   this.apiKeys = team.apiKeys;
                   this.permissions = team.permissions;
+                  //this.ldapGroups = team.mappedLdapGroups;
                 }
               }
             })
