@@ -246,6 +246,9 @@
                       team: this.team.uuid,
                       dn: selection.dn
                     }).then((response) => {
+                      if (this.ldapGroups === undefined || this.ldapGroups === null) {
+                        this.ldapGroups = [];
+                      }
                       this.ldapGroups.push(response.data);
                       this.ldapGroups.sort();
                       this.$toastr.s(this.$t('message.updated'));
