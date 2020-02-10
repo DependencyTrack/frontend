@@ -48,7 +48,7 @@
           showRefresh: true,
           pagination: true,
           silentSort: false,
-          sidePagination: 'client',
+          sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,
@@ -56,8 +56,18 @@
             refresh: 'fa-refresh'
           },
           responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader("X-Total-Count");
-            return res;
+            if (res) {
+              let resObj = []; // res is an array of strings. We need to return an array of simple objects with a 'dn' property.
+              for (let i = 0; i < res.length; i++) {
+                resObj[i] = {dn: res[i]};
+              }
+              resObj.total = xhr.getResponseHeader("X-Total-Count");
+              return resObj;
+            } else {
+              res = {};
+              res.total = 0;
+              return res;
+            }
           },
           url: `${this.$api.BASE_URL}/${this.$api.URL_LDAP_GROUPS}`
         }
