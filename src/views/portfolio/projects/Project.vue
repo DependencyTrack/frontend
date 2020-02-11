@@ -167,7 +167,6 @@
         return getStyle(style);
       },
       syncProjectFields: function(project) {
-        console.log(project);
         this.project.name = project.name;
         this.project.version = project.version;
         this.project.description = project.description;
