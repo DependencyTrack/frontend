@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<svg width="100%" height="100%" version="1.1" viewBox="284 46 469.9031 465.3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" height="100%" version="1.1" viewBox="284 46 469.9031 466.38" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
   <defs />
   <marker id="marker1" markerUnits="strokeWidth" orient="auto" refX="11.17254" refY="0" markerWidth="13.27247" markerHeight="10.22955" viewBox="-1 -5.114774 13.27247 10.22955">
-    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="#FC6665" fill-opacity="1" stroke="#FC6665" stroke-opacity="1" />
+    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="none" stroke="#FC6665" stroke-opacity="1" />
   </marker>
   <marker id="marker2" markerUnits="strokeWidth" orient="auto" refX="11.17254" refY="0" markerWidth="13.27247" markerHeight="10.22955" viewBox="-1 -5.114774 13.27247 10.22955">
-    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="#FC6665" fill-opacity="1" stroke="#FC6665" stroke-opacity="1" />
+    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="none" stroke="#FC6665" stroke-opacity="1" />
   </marker>
   <marker id="marker3" markerUnits="strokeWidth" orient="auto" refX="11.17254" refY="0" markerWidth="13.27247" markerHeight="10.22955" viewBox="-1 -5.114774 13.27247 10.22955">
-    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="#FC6665" fill-opacity="1" stroke="#FC6665" stroke-opacity="1" />
+    <path d="M11.27247 4.114773 L0 0 L11.27247 -4.114774 Z " fill="none" stroke="#FC6665" stroke-opacity="1" />
   </marker>
   <g id="layer1">
     <rect x="288" y="90" width="71.9999" height="180" rx="9" ry="9" opacity="1" stroke="#073F80" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" fill-opacity="0" />
@@ -16,8 +16,8 @@
     <text x="308.54" y="219" font-size="10" fill="#073F80" fill-opacity="1" font-family="LG Smart" font-weight="normal" font-style="normal">Front End</text>
     <rect x="288" y="315" width="72" height="180" rx="9" ry="9" opacity="1" stroke="#227DC1" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" fill-opacity="0" />
     <rect x="504" y="315" width="72" height="180" rx="9" ry="9" opacity="1" stroke="#227DC1" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" fill-opacity="0" />
-    <g transform="rotate(270 488.5002 400.3)">
-      <text x="465.3901" y="403.9" font-size="12" fill="#227DC1" fill-opacity="1" font-family="LG Smart" font-weight="normal" font-style="normal">Web Server</text>
+    <g transform="rotate(270 488.5002 401.38)">
+      <text x="464.1901" y="404.98" font-size="12" fill="#227DC1" fill-opacity="1" font-family="LG Smart" font-weight="normal" font-style="normal">Web  Server</text>
     </g>
     <line x1="372.1724" y1="180" x2="712" y2="180" marker-start="url(#marker1)" opacity="1" stroke="#FC6665" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" />
     <line x1="372.1725" y1="405" x2="504" y2="405" marker-start="url(#marker2)" opacity="1" stroke="#FC6665" stroke-opacity="1" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-dasharray="none" />
