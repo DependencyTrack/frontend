@@ -91,7 +91,7 @@
         <project-findings :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
-    <project-details-modal :project="this.lodash.cloneDeep(project)" />
+    <project-details-modal :project="this.lodash.cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
@@ -165,6 +165,15 @@
     methods: {
       getStyle: function(style) {
         return getStyle(style);
+      },
+      syncProjectFields: function(project) {
+        console.log(project);
+        this.project.name = project.name;
+        this.project.version = project.version;
+        this.project.description = project.description;
+        this.project.tags = project.tags;
+        this.project.active = project.active;
+        EventBus.$emit('addCrumb', this.projectLabel);
       }
     },
     beforeMount() {

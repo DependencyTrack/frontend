@@ -87,6 +87,7 @@
             tags: tagsNode,
             active: this.project.active
           }).then((response) => {
+            this.$emit('projectUpdated', response.data);
             this.$toastr.s(this.$t('message.project_updated'));
           }).catch((error) => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
