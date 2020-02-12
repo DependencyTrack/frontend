@@ -253,7 +253,9 @@
       "delete_team": "Delete Team",
       "required_team_name": "Team name is required",
       "select_ldap_group": "Select LDAP Group",
-      "mapped_ldap_groups": "Mapped LDAP groups"
+      "mapped_ldap_groups": "Mapped LDAP groups",
+      "change_password": "Change Password",
+      "password_updated": "Password updated"
     },
     "condition": {
       "warning": "Warning",

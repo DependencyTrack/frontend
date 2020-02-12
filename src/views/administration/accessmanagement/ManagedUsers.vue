@@ -25,6 +25,7 @@
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
+  import ChangePasswordModal from "./ChangePasswordModal";
   import SelectTeamModal from "./SelectTeamModal";
   import SelectPermissionModal from "./SelectPermissionModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
@@ -140,11 +141,13 @@
                     <br/>
                     <c-switch id="suspended" color="primary" v-model="suspended" label v-bind="labelIcon" />{{$t('admin.suspended')}}
                     <div style="text-align:right">
+                       <b-button variant="outline-primary" @click="$root.$emit('bv::show::modal', 'changePasswordModal')">{{ $t('admin.change_password') }}</b-button>
                        <b-button variant="outline-danger" @click="deleteUser">{{ $t('admin.delete_user') }}</b-button>
                     </div>
                   </b-col>
                   <select-team-modal v-on:selection="updateTeamSelection" />
                   <select-permission-modal v-on:selection="updatePermissionSelection" />
+                  <change-password-modal :managed-user="managedUser" />
                 </b-row>
               `,
               mixins: [permissionsMixin],
@@ -152,7 +155,8 @@
                 cSwitch,
                 ActionableListGroupItem,
                 SelectTeamModal,
-                SelectPermissionModal
+                SelectPermissionModal,
+                ChangePasswordModal
               },
               data() {
                 return {
