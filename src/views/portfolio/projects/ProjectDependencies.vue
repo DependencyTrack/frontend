@@ -137,6 +137,7 @@
     methods: {
       removeDependencies: function () {
         let selections = this.$refs.table.getSelections();
+        if (selections.length === 0) return;
         let componentUuids = [];
         for (let i=0; i<selections.length; i++) {
           componentUuids[i] = selections[i].component.uuid;
