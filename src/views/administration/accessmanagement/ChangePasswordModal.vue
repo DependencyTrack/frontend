@@ -64,7 +64,7 @@
         }
       },
       resetValues: function () {
-        this.password = null;
+        this.newPassword = null;
         this.confirmPassword = null;
       }
     }
