@@ -4,7 +4,7 @@
       <b-card-body class="p-3 clearfix">
         <b-row>
           <b-col>
-            <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
+            <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
             <div class="h5 text-primary mb-0 mt-2">{{ componentLabel }}</div>
           </b-col>
           <b-col>
