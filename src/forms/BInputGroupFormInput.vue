@@ -81,10 +81,10 @@
         )
       },
       inputClasses: function() {
-        return "form-control" + (common.toBoolean(this.required)) ? " required" : null;
+        return (this.isRequired) ? "required" : null;
       },
       labelClasses: function() {
-        return (common.toBoolean(this.required)) ? "required" : null;
+        return (this.isRequired) ? "required" : null;
       }
     },
     methods: {
