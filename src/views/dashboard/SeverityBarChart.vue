@@ -17,6 +17,8 @@
       return {
         dataset: [
           {
+            categoryPercentage: 1,
+            barPercentage: 0.5,
             backgroundColor: ['#f86c6b', '#fd8c00', '#ffc107', '#4dbd74', '#777777'],
             data: [40, 10, 12, 39, 50]  //TODO
           }
@@ -47,9 +49,7 @@
             },
             scales: {
               xAxes: [{
-                display: false,
-                categoryPercentage: 1,
-                barPercentage: 0.5
+                display: false
               }],
               yAxes: [{
                 display: false,
