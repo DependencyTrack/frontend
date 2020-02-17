@@ -99,14 +99,14 @@
               <b-row>
                 <b-col sm="6">
                   <Callout variant="info">
-                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
-                    <strong class="h4">{{vulnerabilities}}</strong>
+                    <small class="text-muted">{{ $t('message.projects') }}</small><br>
+                    <strong class="h4">{{totalProjects}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="danger">
-                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
-                    <strong class="h4">{{suppressed}}</strong>
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('message.dependencies') }}</small><br>
+                    <strong class="h4">{{totalDependencies}}</strong>
                   </Callout>
                 </b-col>
               </b-row>
@@ -114,15 +114,15 @@
             <b-col sm="12" lg="6">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="warning">
-                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
-                    <strong class="h4">{{suppressed}}</strong>
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
+                    <strong class="h4">{{vulnerabilities}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="success">
-                    <small class="text-muted">{{ $t('message.last_measurement') }}</small><br>
-                    <strong class="h5">{{lastMeasurement}}</strong>
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
+                    <strong class="h4">{{suppressed}}</strong>
                   </Callout>
                 </b-col>
               </b-row>
