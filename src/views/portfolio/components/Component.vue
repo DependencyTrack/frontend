@@ -86,7 +86,7 @@
         <component-projects :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
-    <component-details-modal :component="this.lodash.cloneDeep(component)" />
+    <component-details-modal :component="this.lodash.cloneDeep(component)" v-on:componentUpdated="syncComponentFields" />
   </div>
 </template>
 
@@ -145,6 +145,27 @@
     methods: {
       getStyle: function(style) {
         return getStyle(style);
+      },
+      syncComponentFields: function(component) {
+        console.log(component);
+        this.component.name = component.name;
+        this.component.version = component.version;
+        this.component.group = component.group;
+        this.component.description = component.description;
+        this.component.license = component.license;
+        this.component.resolvedLicense = component.resolvedLicense;
+        this.component.filename = component.filename;
+        this.component.classifier = component.classifier;
+        this.component.purl = component.purl;
+        this.component.cpe = component.cpe;
+        this.component.copyright = component.copyright;
+        this.component.md5 = component.md5;
+        this.component.sha1 = component.sha1;
+        this.component.sha256 = component.sha256;
+        this.component.sha512 = component.sha512;
+        this.component.sha3_256 = component.sha3_256;
+        this.component.sha3_512 = component.sha3_512;
+        EventBus.$emit('addCrumb', this.componentLabel);
       }
     },
     beforeMount() {
