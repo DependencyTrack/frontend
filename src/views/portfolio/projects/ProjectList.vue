@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row />
+    <portfolio-widget-row :fetch="true" />
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button size="md" variant="outline-primary" v-b-modal.projectCreateProjectModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}

@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row/>
+    <portfolio-widget-row ref="portfolioWidgetRow" />
     <b-card>
       <b-row>
         <b-col sm="5">
@@ -210,6 +210,7 @@
       const daysBack = 90;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
+        this.$refs.portfolioWidgetRow.render(response.data)
         this.$refs.chartPortfolioVulnerabilities.render(response.data);
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartAuditedProgress.render(response.data);

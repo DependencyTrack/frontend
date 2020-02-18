@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row />
+    <portfolio-widget-row :fetch="true" />
     <bootstrap-table
       ref="table"
       :columns="columns"
