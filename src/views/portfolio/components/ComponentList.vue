@@ -1,12 +1,18 @@
 <template>
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row :fetch="true" />
+    <div id="componentsToolbar" class="bs-table-custom-toolbar">
+      <b-button size="md" variant="outline-primary" v-b-modal.componentCreateComponentModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+        <span class="fa fa-plus"></span> {{ $t('message.create_component') }}
+      </b-button>
+    </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
       :options="options">
     </bootstrap-table>
+    <component-create-component-modal v-on:refreshTable="refreshTable" />
   </div>
 </template>
 
@@ -16,10 +22,14 @@
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
   import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import ComponentCreateComponentModal from "./ComponentCreateComponentModal";
 
   export default {
+    mixins: [permissionsMixin],
     components: {
-      PortfolioWidgetRow
+      PortfolioWidgetRow,
+      ComponentCreateComponentModal
     },
     data() {
       return {
@@ -102,6 +112,7 @@
           icons: {
             refresh: 'fa-refresh'
           },
+          toolbar: '#componentsToolbar',
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
@@ -109,6 +120,14 @@
           url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`
         }
       };
+    },
+    methods: {
+      refreshTable: function() {
+        this.$refs.table.refresh({
+          url: this.apiUrl(),
+          silent: true
+        });
+      }
     }
   };
 </script>

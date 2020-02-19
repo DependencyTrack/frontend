@@ -165,7 +165,9 @@
     "required_component_name": "The component name is required",
     "required_component_version": "The component version is required",
     "component_updated": "Component updated",
-    "component_deleted": "Component deleted"
+    "component_deleted": "Component deleted",
+    "component_created": "Component created",
+    "create_component": "Create Component"
   },
   "admin": {
     "configuration": "Configuration",
