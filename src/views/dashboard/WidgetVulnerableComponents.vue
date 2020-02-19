@@ -70,10 +70,10 @@ export default {
           elements: {
             line: {
               tension: 0.00001,
-              borderWidth: 1
+              borderWidth: 2
             },
             point: {
-              radius: 4,
+              radius: 0,
               hitRadius: 10,
               hoverRadius: 4
             }
