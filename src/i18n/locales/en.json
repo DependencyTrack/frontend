@@ -167,7 +167,8 @@
     "component_updated": "Component updated",
     "component_deleted": "Component deleted",
     "component_created": "Component created",
-    "create_component": "Create Component"
+    "create_component": "Create Component",
+    "dependency_added": "Dependency added"
   },
   "admin": {
     "configuration": "Configuration",

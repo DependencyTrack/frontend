@@ -1,20 +1,11 @@
 <template>
   <b-modal id="projectAddDependencyModal" @hide="resetValues()" size="md" hide-header-close no-stacking :title="$t('message.add_dependency')">
-    <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
-      <b-tab class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 " active>
-        <template v-slot:title>{{ $t('message.from_existing_component') }}</template>
-        <bootstrap-table
-          ref="table"
-          :columns="columns"
-          :data="data"
-          :options="options">
-        </bootstrap-table>
-      </b-tab>
-      <b-tab>
-        <template v-slot:title>{{ $t('message.from_new_component') }}</template>
-        <project-dependencies :uuid="this.uuid"/>
-      </b-tab>
-    </b-tabs>
+    <bootstrap-table
+      ref="table"
+      :columns="columns"
+      :data="data"
+      :options="options">
+    </bootstrap-table>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
       <b-button size="md" variant="primary" @click="addDependency()">{{ $t('message.add_dependency') }}</b-button>
@@ -25,8 +16,6 @@
 <script>
   import xssFilters from "xss-filters";
   import common from "../../../shared/common";
-  import Vue from "vue";
-  import SeverityProgressBar from "../../components/SeverityProgressBar";
 
   export default {
     name: "ProjectAddDependencyModal",
