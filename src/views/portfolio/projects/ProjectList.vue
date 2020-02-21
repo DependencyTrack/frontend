@@ -94,7 +94,7 @@
             sortable: true,
             formatter(timestamp, row, index) {
               return typeof timestamp === "number"
-                ? new Date(timestamp).toDateString()
+                ? common.formatTimestamp(timestamp, true)
                 : "-";
             }
           },
