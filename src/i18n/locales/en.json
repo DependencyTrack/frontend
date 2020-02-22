@@ -5,7 +5,7 @@
     "login_desc": "Sign In to your account",
     "login_unauthorized": "Invalid username or password",
     "login_forbidden": "This account is inactive or has been suspended",
-    "password_force_change": "Password change required",
+    "password_force_change": "Update Password",
     "password_force_change_desc": "You need to change your password",
     "password_change": "Change password",
     "password_change_success": "Password changed successfully",
@@ -168,7 +168,12 @@
     "component_deleted": "Component deleted",
     "component_created": "Component created",
     "create_component": "Create Component",
-    "dependency_added": "Dependency added"
+    "dependency_added": "Dependency added",
+    "profile": "Profile",
+    "profile_update": "Update Profile",
+    "profile_updated": "Profile updated",
+    "logout": "Logout",
+    "change_password": "Change Password"
   },
   "admin": {
     "configuration": "Configuration",
