@@ -12,7 +12,6 @@ import './validation'
 import './plugins/table.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import VueLodash from 'vue-lodash'
 import VueShowdown from 'vue-showdown'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
@@ -21,7 +20,6 @@ import version from "./version";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
-Vue.use(VueLodash, { name: 'lodash' });
 Vue.use(VueToastr, {
   defaultTimeout: 5000,
   defaultProgressBar: false,

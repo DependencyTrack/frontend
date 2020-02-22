@@ -91,7 +91,7 @@
         <project-findings :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
-    <project-details-modal :project="this.lodash.cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
+    <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
@@ -102,6 +102,7 @@
 
 <script>
   import common from "../../../shared/common"
+  import { cloneDeep } from 'lodash-es';
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
   import ProjectDependencies from "./ProjectDependencies";
@@ -163,6 +164,9 @@
       }
     },
     methods: {
+      cloneDeep: function(component) {
+        return cloneDeep(component);
+      },
       getStyle: function(style) {
         return getStyle(style);
       },

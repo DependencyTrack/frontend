@@ -86,12 +86,13 @@
         <component-projects :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
-    <component-details-modal :component="this.lodash.cloneDeep(component)" v-on:componentUpdated="syncComponentFields" />
+    <component-details-modal :component="cloneDeep(component)" v-on:componentUpdated="syncComponentFields" />
   </div>
 </template>
 
 <script>
   import common from "../../../shared/common"
+  import { cloneDeep } from 'lodash-es';
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
@@ -143,11 +144,13 @@
       }
     },
     methods: {
+      cloneDeep: function(component) {
+        return cloneDeep(component);
+      },
       getStyle: function(style) {
         return getStyle(style);
       },
       syncComponentFields: function(component) {
-        console.log(component);
         this.component.name = component.name;
         this.component.version = component.version;
         this.component.group = component.group;
