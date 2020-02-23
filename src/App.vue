@@ -14,7 +14,7 @@
         user: null,
       }
     },
-    mounted() {
+    created() {
       const jwt = sessionStorage.getItem('token');
 
       if (jwt === null) {
@@ -22,27 +22,30 @@
         return;
       }
 
-      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${jwt}`
+      // If JWT was found, assume it is valid and set the authorization headers.
+      this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+      $.ajaxSetup({
+        beforeSend: function(xhr) {
+          if (jwt !== null) {
+            xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
+          }
         }
-      };
+      });
 
-      this.axios.get(url, config)
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
+      this.axios.get(url)
         .then((result) => {
           this.authenticated = true;
           this.user = result.data;
-          this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-          $.ajaxSetup({
-            beforeSend: function(xhr) {
-              if (jwt !== null) {
-                xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
-              }
-            }
-          });
         })
         .catch(() => {
+          // The JWT is stale. Unset default headers
+          this.axios.defaults.headers.common['Authorization'] = null;
+          $.ajaxSetup({
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader("Authorization", null);
+            }
+          });
           // Token is stale, clear stored token and redirect to login view
           sessionStorage.removeItem('token');
           this.$router.replace({ name: "Login" });
