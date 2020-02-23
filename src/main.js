@@ -48,7 +48,7 @@ axios.get("static/config.json").then(response => {
     );
 });
 
-Vue.prototype.$version = version.version;
+Vue.prototype.$version = version;
 
 new Vue({
   el: '#app',

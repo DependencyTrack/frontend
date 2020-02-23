@@ -13,10 +13,12 @@
       <b-col>
         {{ this.dtrack.application }} v{{ this.dtrack.version }}<br/>
         Build ID: {{ this.dtrack.uuid }}<br/>
-        Built On: {{ timestamp }}
+        Built On: {{ serverTimestamp }}
       </b-col>
       <b-col>
-        Frontend v{{ this.$version }}<br/>
+        Frontend v{{ this.$version.version }}<br/>
+        Build ID: {{ this.$version.uuid }}<br/>
+        Built On: {{ frontendTimestamp }}
       </b-col>
     </b-row>
     <hr/>
@@ -57,8 +59,11 @@
     name: "AboutModal",
     mixins: [globalVarsMixin],
     computed: {
-      timestamp: function() {
+      serverTimestamp: function() {
         return common.formatTimestamp(this.dtrack.timestamp, true);
+      },
+      frontendTimestamp: function() {
+        return common.formatTimestamp(this.$version.timestamp, true);
       }
     }
   }

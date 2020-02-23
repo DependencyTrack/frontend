@@ -13,7 +13,7 @@
   "scripts": {
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
-    "prebuild": "cross-var echo { \\\"\"version\\\"\": \\\"\"$npm_package_version\\\"\" } > src/version.json\n",
+    "prebuild": "node update-embedded-version.js",
     "build": "npm run prebuild && vue-cli-service build && npm run bom",
     "lint": "vue-cli-service lint",
     "bom": "cyclonedx-bom -o bom.xml"
@@ -61,6 +61,7 @@
     "https-proxy-agent": "^2.2.4",
     "node-sass": "^4.13.0",
     "sass-loader": "^7.3.1",
+    "uuid": "^3.4.0",
     "vue-template-compiler": "^2.6.10"
   },
   "browserslist": [
