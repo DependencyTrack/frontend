@@ -12,6 +12,7 @@
         :autocomplete=autocomplete
         :autofocus=isFocused
         :required=isRequired
+        :disabled=isDisabled
         v-on="inputListeners"
         v-on:blur="hadFocus = true"
         trim />
@@ -41,6 +42,7 @@
       feedback: String,
       lazy: String,
       required: String,
+      disabled: String,
       state: {
         default: undefined,
         type: Boolean
@@ -50,12 +52,14 @@
       return {
         isFocused: false,
         isRequired: false,
+        isDisabled: false,
         hadFocus: false
       }
     },
     beforeMount() {
       this.isFocused = common.toBoolean(this.autofocus);
       this.isRequired = common.toBoolean(this.required);
+      this.isDisabled = common.toBoolean(this.disabled);
     },
     computed: {
       innerValue: {
@@ -89,6 +93,9 @@
     },
     methods: {
       feedbackState: function() {
+        if (this.isDisabled && !this.isRequired) {
+          return undefined;
+        }
         if (this.state !== undefined) {
           return this.state;
         }
