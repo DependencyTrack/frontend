@@ -1,7 +1,7 @@
 <template>
   <b-row>
     <b-col sm="6" lg="3">
-      <b-card no-body class="bg-primary">
+      <b-card no-body class="bg-widget-1">
         <b-card-body class="pb-0">
           <h4 class="mb-0">{{ portfolioVulnerabilities }}</h4>
           <p>{{ $t('message.portfolio_vulnerabilities') }}</p>
@@ -10,7 +10,7 @@
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
-      <b-card no-body class="bg-info">
+      <b-card no-body class="bg-widget-2">
         <b-card-body class="pb-0">
           <h4 class="mb-0">{{ vulnerableProjects }}</h4>
           <p>{{ $t('message.projects_at_risk') }}</p>
@@ -19,7 +19,7 @@
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
-      <b-card no-body class="bg-warning">
+      <b-card no-body class="bg-widget-3">
         <b-card-body class="pb-0">
           <h4 class="mb-0">{{ vulnerableDependencies }}</h4>
           <p>{{ $t('message.vulnerable_dependencies') }}</p>
@@ -28,7 +28,7 @@
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
-      <b-card no-body class="bg-danger">
+      <b-card no-body class="bg-widget-4">
         <b-card-body class="pb-0">
           <h4 class="mb-0">{{ inheritedRiskScore }}</h4>
           <p>{{ $t('message.inherited_risk_score') }}</p>

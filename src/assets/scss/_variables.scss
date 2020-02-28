@@ -204,6 +204,10 @@ $popover-bg:           $grey-900 !default;
 $popover-border-color: rgba($white, .2) !default;
 $popover-header-bg:    lighten($popover-bg, 3%) !default;
 
+$widget-1: #21A8D9;
+$widget-2: #A66BF8;
+$widget-3: #6D6BF8;
+$widget-4: #F86D6B;
 
 :root {
   --severity-critical: #{$severity-critical};
@@ -214,6 +218,11 @@ $popover-header-bg:    lighten($popover-bg, 3%) !default;
   --severity-unassigned: #{$severity-unassigned};
 
   --component-active-color: #{$component-active-color};
+
+  --widget-1: #{$widget-1};
+  --widget-2: #{$widget-2};
+  --widget-3: #{$widget-3};
+  --widget-4: #{$widget-4};
 }
 
 // Modal override

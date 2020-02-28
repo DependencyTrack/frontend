@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     render: function(metrics) {
-      const brandPrimary = getStyle('--primary');
+      const widgetColor = getStyle('--widget-1');
       let chartLabels = [];
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
@@ -23,7 +23,7 @@ export default {
       const datasets = [
         {
           label: this.$t('message.vulnerabilities'),
-          backgroundColor: brandPrimary,
+          backgroundColor: widgetColor,
           borderColor: 'rgba(255,255,255,.70)',
           data: chartData
         }

@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     render: function (metrics) {
-      const brandDanger = getStyle('--danger');
+      const widgetColor = getStyle('--widget-4');
       let chartLabels = [];
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
@@ -23,7 +23,7 @@ export default {
       const datasets = [
         {
           label: this.$t('message.risk_score'),
-          backgroundColor: brandDanger,
+          backgroundColor: widgetColor,
           borderColor: 'rgba(255,255,255,.70)',
           data: chartData
         }
