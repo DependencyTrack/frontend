@@ -22,7 +22,7 @@ export default {
 
       const datasets = [
         {
-          label: this.$t('message.components'),
+          label: this.$t('message.dependencies'),
           backgroundColor: brandWarning,
           borderColor: 'rgba(255,255,255,.55)',
           data: chartData
