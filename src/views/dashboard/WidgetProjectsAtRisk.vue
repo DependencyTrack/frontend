@@ -24,7 +24,7 @@ export default {
         {
           label: this.$t('message.projects'),
           backgroundColor: brandInfo,
-          borderColor: 'rgba(255,255,255,.55)',
+          borderColor: 'rgba(255,255,255,.70)',
           data: chartData
         }
       ];
@@ -74,7 +74,7 @@ export default {
             },
             point: {
               radius: 0,
-              hitRadius: 10,
+              hitRadius: 50,
               hoverRadius: 4
             }
           }
