@@ -88,7 +88,7 @@
             },
             point: {
               radius: 0,
-              hitRadius: 20,
+              hitRadius: 100,
               hoverRadius: 4,
               hoverBorderWidth: 3
             }
