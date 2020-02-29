@@ -1,7 +1,7 @@
 <script>
 import { Line } from 'vue-chartjs'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import {getStyle} from "@coreui/coreui/dist/js/coreui-utilities";
+import {getStyle, hexToRgba} from "@coreui/coreui/dist/js/coreui-utilities";
 import common from "../../shared/common";
 
 export default {
@@ -23,8 +23,9 @@ export default {
       const datasets = [
         {
           label: this.$t('message.dependencies'),
-          backgroundColor: widgetColor,
-          borderColor: 'rgba(255,255,255,.70)',
+          backgroundColor: hexToRgba(widgetColor, 10),
+          borderColor: widgetColor,
+          pointHoverBackgroundColor: '#fff',
           data: chartData
         }
       ];
@@ -61,7 +62,7 @@ export default {
                 display: false,
                 ticks: {
                   display: false,
-                  min: Math.min.apply(Math, datasets[0].data) - 5,
+                  min: 0,
                   max: Math.max.apply(Math, datasets[0].data) + 5
                 }
               }
