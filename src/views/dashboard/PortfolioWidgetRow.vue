@@ -6,7 +6,7 @@
           <h4 class="mb-0">{{ portfolioVulnerabilities }}</h4>
           <p>{{ $t('message.portfolio_vulnerabilities') }}</p>
         </b-card-body>
-        <widget-portfolio-vulnerabilities ref="widgetPortfolioVulnerabilities" chartId="card-chart-01" class="chart-wrapper px-3" :height="70"/>
+        <widget-portfolio-vulnerabilities ref="widgetPortfolioVulnerabilities" chartId="card-chart-01" class="chart-wrapper px-3" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
@@ -15,7 +15,7 @@
           <h4 class="mb-0">{{ vulnerableProjects }}</h4>
           <p>{{ $t('message.projects_at_risk') }}</p>
         </b-card-body>
-        <widget-projects-at-risk ref="widgetPortfolioVulnerableProjects" chartId="card-chart-02" class="chart-wrapper px-3" :height="70"/>
+        <widget-projects-at-risk ref="widgetPortfolioVulnerableProjects" chartId="card-chart-02" class="chart-wrapper px-3" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
@@ -24,7 +24,7 @@
           <h4 class="mb-0">{{ vulnerableDependencies }}</h4>
           <p>{{ $t('message.vulnerable_dependencies') }}</p>
         </b-card-body>
-        <widget-vulnerable-dependencies ref="widgetPortfolioVulnerableDependencies" chartId="card-chart-03" class="chart-wrapper px-3" :height="70"/>
+        <widget-vulnerable-dependencies ref="widgetPortfolioVulnerableDependencies" chartId="card-chart-03" class="chart-wrapper px-3" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
     <b-col sm="6" lg="3">
@@ -33,7 +33,7 @@
           <h4 class="mb-0">{{ inheritedRiskScore }}</h4>
           <p>{{ $t('message.inherited_risk_score') }}</p>
         </b-card-body>
-        <widget-inherited-risk-score ref="widgetPortfolioInheritedRisk" chartId="card-chart-04" class="chart-wrapper px-3" :height="70"/>
+        <widget-inherited-risk-score ref="widgetPortfolioInheritedRisk" chartId="card-chart-04" class="chart-wrapper px-3" style="height:70px;" :height="70"/>
       </b-card>
     </b-col>
   </b-row>
