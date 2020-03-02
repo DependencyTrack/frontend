@@ -239,3 +239,6 @@ h6 {
 .bg-widget {
   background-color: $grey-750;
 }
+button:focus {
+  outline: 0;
+}
