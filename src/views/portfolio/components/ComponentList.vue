@@ -60,6 +60,16 @@
             }
           },
           {
+            title: this.$t('message.internal'),
+            field: "isInternal",
+            sortable: false,
+            align: "center",
+            class: "tight",
+            formatter: function (value, row, index) {
+              return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            },
+          },
+          {
             title: this.$t('message.license'),
             field: "license",
             sortable: false,
