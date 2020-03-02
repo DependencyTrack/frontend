@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import $ from 'jquery';
   import Vue from 'vue'
   import common from "../../../shared/common";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
@@ -62,6 +63,24 @@
             field: "component.version",
             sortable: true,
             formatter(value, row, index) {
+              if (row.component.hasOwnProperty("repositoryMeta") && row.component.repositoryMeta.hasOwnProperty("latestVersion")) {
+                row.component.latestVersion = row.component.repositoryMeta.latestVersion;
+                if (row.component.repositoryMeta.latestVersion !== row.component.version) {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                } else {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                }
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              }
+            }
+          },
+          {
+            title: this.$t('message.latest_version'),
+            field: "component.latestVersion",
+            sortable: false,
+            visible: false,
+            formatter(value, row, index) {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
             }
           },
@@ -74,6 +93,16 @@
             }
           },
           {
+            title: this.$t('message.internal'),
+            field: "component.isInternal",
+            sortable: false,
+            align: "center",
+            class: "tight",
+            formatter: function (value, row, index) {
+              return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            },
+          },
+          {
             title: this.$t('message.license'),
             field: "component.license",
             sortable: false,
@@ -83,8 +112,9 @@
           },
           {
             title: this.$t('message.risk_score'),
-            field: "metrics.inheritedRiskScore",
-            sortable: true
+            field: "component.lastInheritedRiskScore",
+            sortable: true,
+            class: "tight",
           },
           {
             title: this.$t('message.vulnerabilities'),
@@ -113,6 +143,7 @@
         ],
         data: [],
         options: {
+          onPostBody: this.initializeTooltips,
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -135,6 +166,9 @@
       };
     },
     methods: {
+      initializeTooltips: function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      },
       removeDependencies: function () {
         let selections = this.$refs.table.getSelections();
         if (selections.length === 0) return;

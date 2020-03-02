@@ -6,6 +6,24 @@
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
 }
+.severity-critical, .status-failed {
+  color: $severity-critical;
+}
+.severity-high {
+  color:$severity-high;
+}
+.severity-medium, .status-warning {
+  color: $severity-medium;
+}
+.severity-low, .status-passed {
+  color: $severity-low;
+}
+.severity-info {
+  color: $severity-info;
+}
+.severity-unassigned {
+  color: $severity-unassigned;
+}
 .severity-critical-bg, .bg-severity-critical, .bg-CRITICAL {
   background: $severity-critical none;
 }

@@ -187,7 +187,9 @@
     "vulnerability_title": "Title",
     "vulnerability_title_desc": "The optional title of the vulnerability",
     "vulnerability_subtitle": "Subtitle",
-    "vulnerability_subtitle_desc": "The optional sub-title of the vulnerability"
+    "vulnerability_subtitle_desc": "The optional sub-title of the vulnerability",
+    "internal": "Internal",
+    "latest_version": "Latest Version"
   },
   "admin": {
     "configuration": "Configuration",
