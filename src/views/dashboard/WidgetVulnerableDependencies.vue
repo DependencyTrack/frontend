@@ -17,7 +17,7 @@ export default {
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
         chartLabels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-        chartData.push(metrics[i].vulnerableProjects);
+        chartData.push(metrics[i].vulnerableDependencies);
       }
 
       const datasets = [
