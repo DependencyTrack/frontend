@@ -107,7 +107,12 @@
             field: "component.license",
             sortable: false,
             formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              if (row.component.hasOwnProperty("resolvedLicense")) {
+                let licenseurl = "../licenses/" + row.component.resolvedLicense.licenseId;
+                return "<a href=\"" + licenseurl + "\">" + xssFilters.inHTMLData(row.component.resolvedLicense.licenseId) + "</a>";
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              }
             }
           },
           {
