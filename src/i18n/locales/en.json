@@ -97,6 +97,7 @@
     "vulnerability": "Vulnerability",
     "analysis": "Analysis",
     "title": "Title",
+    "subtitle": "Subtitle",
     "recommendation": "Recommendation",
     "audit_trail": "Audit Trail",
     "comment": "Comment",
