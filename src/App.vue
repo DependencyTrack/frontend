@@ -5,7 +5,6 @@
 <script>
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
-  import common from './shared/common';
   export default {
     name: 'app',
     data() {
