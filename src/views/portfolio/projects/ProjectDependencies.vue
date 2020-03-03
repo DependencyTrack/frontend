@@ -63,7 +63,7 @@
             field: "component.version",
             sortable: true,
             formatter(value, row, index) {
-              if (row.component.hasOwnProperty("repositoryMeta") && row.component.repositoryMeta.hasOwnProperty("latestVersion")) {
+              if (Object.prototype.hasOwnProperty.call(row.component, "repositoryMeta") && Object.prototype.hasOwnProperty.call(row.component.repositoryMeta, "latestVersion")) {
                 row.component.latestVersion = row.component.repositoryMeta.latestVersion;
                 if (row.component.repositoryMeta.latestVersion !== row.component.version) {
                   return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
@@ -107,7 +107,7 @@
             field: "component.license",
             sortable: false,
             formatter(value, row, index) {
-              if (row.component.hasOwnProperty("resolvedLicense")) {
+              if (Object.prototype.hasOwnProperty.call(row.component, "resolvedLicense")) {
                 let licenseurl = "../licenses/" + row.component.resolvedLicense.licenseId;
                 return "<a href=\"" + licenseurl + "\">" + xssFilters.inHTMLData(row.component.resolvedLicense.licenseId) + "</a>";
               } else {

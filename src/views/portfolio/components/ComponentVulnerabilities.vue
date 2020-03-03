@@ -203,10 +203,10 @@
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
                   this.axios.get(url).then((response) => {
                     let analysis = response.data;
-                    if (analysis.hasOwnProperty("analysisComments")) {
+                    if (Object.prototype.hasOwnProperty.call(analysis, "analysisComments")) {
                       let trail = "";
                       for (let i = 0; i < analysis.analysisComments.length; i++) {
-                        if (analysis.analysisComments[i].hasOwnProperty("commenter")) {
+                        if (Object.prototype.hasOwnProperty.call(analysis.analysisComments[i], "commenter")) {
                           trail += analysis.analysisComments[i].commenter + " - ";
                         }
                         trail += common.formatTimestamp(analysis.analysisComments[i].timestamp, true);
@@ -216,10 +216,10 @@
                       }
                       this.auditTrail = trail;
                     }
-                    if (analysis.hasOwnProperty("analysisState")) {
+                    if (Object.prototype.hasOwnProperty.call(analysis, "analysisState")) {
                       this.analysisState = analysis.analysisState;
                     }
-                    if (analysis.hasOwnProperty("isSuppressed")) {
+                    if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
                       this.isSuppressed = analysis.isSuppressed;
                     } else {
                       this.isSuppressed = false;
