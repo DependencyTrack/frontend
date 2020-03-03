@@ -124,8 +124,6 @@
     "template": "Template",
     "source_header": "Source Header",
     "license_name": "License Name",
-    "osi_approved": "OSI Approved",
-    "fsf_libre": "FSF Libre",
     "deprecated": "Deprecated",
     "comments": "Comments",
     "affected_projects": "Affected Projects",
