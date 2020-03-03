@@ -146,9 +146,11 @@
   import ChartDependencyVulnerabilities from "./dashboard/ChartDependencyVulnerabilities";
   import ChartComponentVulnerabilities from "./dashboard/ChartComponentVulnerabilities";
   import { Callout } from '@coreui/vue'
+  import permissionsMixin from "../mixins/permissionsMixin";
 
   export default {
     name: 'dashboard',
+    mixins: [permissionsMixin],
     components: {
       Callout,
       PortfolioWidgetRow,
@@ -215,17 +217,19 @@
       }
     },
     mounted () {
-      const daysBack = 90;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
-      this.axios.get(url).then((response) => {
-        this.$refs.portfolioWidgetRow.render(response.data)
-        this.$refs.chartPortfolioVulnerabilities.render(response.data);
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartAuditedProgress.render(response.data);
-        this.$refs.chartDependencyVulnerabilities.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.extractStats(response.data);
-      });
+      if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
+        const daysBack = 90;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
+        this.axios.get(url).then((response) => {
+          this.$refs.portfolioWidgetRow.render(response.data)
+          this.$refs.chartPortfolioVulnerabilities.render(response.data);
+          this.$refs.chartProjectVulnerabilities.render(response.data);
+          this.$refs.chartAuditedProgress.render(response.data);
+          this.$refs.chartDependencyVulnerabilities.render(response.data);
+          this.$refs.chartComponentVulnerabilities.render(response.data);
+          this.extractStats(response.data);
+        });
+      }
     }
   }
 </script>

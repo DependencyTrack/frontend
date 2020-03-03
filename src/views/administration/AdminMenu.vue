@@ -2,10 +2,10 @@
   <div>
 
     <b-card no-body class="admin-menu" v-for="section in menu" v-bind:key="section.id">
-      <div slot="header" v-b-toggle="section.id" style="cursor:pointer;">
+      <div slot="header" v-if="isPermitted(section.permission)" v-b-toggle="section.id" style="cursor:pointer;">
         <i class="fa fa-align-justify"></i><strong>&nbsp;&nbsp;{{ section.name }}</strong>
       </div>
-      <b-collapse :id="section.id" visible accordion="admin-accordion" role="tabpanel">
+      <b-collapse v-if="isPermitted(section.permission)" :id="section.id" visible accordion="admin-accordion" role="tabpanel">
         <div class="list-group" id="list-tab" role="tablist">
           <a v-for="item in section.children" class="list-group-item list-group-item-action" data-toggle="list" role="tab"
              :href="item.href" @click="emitEvent(item)">{{ item.name }}</a>
@@ -18,8 +18,11 @@
 
 <script>
   import EventBus from "../../shared/eventbus";
+  import {ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION} from "../../shared/permissions";
+  import permissionsMixin from "../../mixins/permissionsMixin";
 
   export default {
+    mixins: [permissionsMixin],
     components: {
       EventBus
     },
@@ -34,6 +37,7 @@
           {
             name: this.$t('admin.configuration'),
             id: "configurationMenu",
+            permission: SYSTEM_CONFIGURATION,
             children: [
               {
                 component: 'General',
@@ -60,6 +64,7 @@
           {
             name: this.$t('admin.analyzers'),
             id: "analyzersMenu",
+            permission: SYSTEM_CONFIGURATION,
             children: [
               {
                 component: "InternalAnalyzer",
@@ -86,6 +91,7 @@
           {
             name: this.$t('admin.repositories'),
             id: "repositoriesMenu",
+            permission: SYSTEM_CONFIGURATION,
             children: [
               {
                 component: "Gem",
@@ -122,6 +128,7 @@
           {
             name: this.$t('admin.notifications'),
             id: "notificationsMenu",
+            permission: SYSTEM_CONFIGURATION,
             children: [
               {
                 component: "Alerts",
@@ -138,6 +145,7 @@
           {
             name: this.$t('admin.integrations'),
             id: "integrationsMenu",
+            permission: SYSTEM_CONFIGURATION,
             children: [
               {
                 component: "FortifySsc",
@@ -154,6 +162,7 @@
           {
             name: this.$t('admin.access_management'),
             id: "accessmanagementMenu",
+            permission: ACCESS_MANAGEMENT,
             children: [
               {
                 component: "LdapUsers",
