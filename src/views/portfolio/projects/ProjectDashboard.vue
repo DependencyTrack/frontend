@@ -5,7 +5,7 @@
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">{{ $t('message.project_vulnerabilities') }}</h4>
           <div class="small text-muted">
-            {{$t('message.last_measurement')}}: {{lastMeasurement}}<b-link class="font-weight-bold" style="margin-left:6px" v-on:click="refreshMetrics"><i class="fa fa-refresh"></i></b-link>
+            {{$t('message.last_measurement')}}: {{lastMeasurement}}<b-link v-permission="'PORTFOLIO_MANAGEMENT'" class="font-weight-bold" style="margin-left:6px" v-on:click="refreshMetrics"><i class="fa fa-refresh"></i></b-link>
           </div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
