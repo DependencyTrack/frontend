@@ -20,7 +20,7 @@
                                   lazy="true" required="true" feedback="true" autofocus="false"
                                   :label="$t('message.password')"
                                   :feedback-text="$t('admin.required_password')" />
-        <b-input-group-form-input id="confirmPassword-input" input-group-size="mb-3" type="text" v-model="confirmPassword"
+        <b-input-group-form-input id="confirmPassword-input" input-group-size="mb-3" type="password" v-model="confirmPassword"
                                   lazy="true" required="true" feedback="true" autofocus="false"
                                   :state="verifyPasswordState()"
                                   :label="$t('admin.password_confirm')"
