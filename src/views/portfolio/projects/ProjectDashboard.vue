@@ -4,7 +4,9 @@
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">{{ $t('message.project_vulnerabilities') }}</h4>
-          <div class="small text-muted">{{$t('message.last_measurement')}}: {{lastMeasurement}}</div>
+          <div class="small text-muted">
+            {{$t('message.last_measurement')}}: {{lastMeasurement}}<b-link class="font-weight-bold" style="margin-left:6px" v-on:click="refreshMetrics"><i class="fa fa-refresh"></i></b-link>
+          </div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
@@ -154,6 +156,13 @@
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
+      },
+      refreshMetrics() {
+        let uuid = this.$route.params.uuid;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/refresh`;
+        this.axios.get(url).then((response) => {
+          this.$toastr.s(this.$t('message.metric_refresh_requested'));
+        });
       }
     },
     mounted() {

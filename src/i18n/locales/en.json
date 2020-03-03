@@ -190,7 +190,8 @@
     "vulnerability_subtitle": "Subtitle",
     "vulnerability_subtitle_desc": "The optional sub-title of the vulnerability",
     "internal": "Internal",
-    "latest_version": "Latest Version"
+    "latest_version": "Latest Version",
+    "metric_refresh_requested": "A refresh has been requested. Metrics will be updated when the refresh task has completed."
   },
   "admin": {
     "configuration": "Configuration",
