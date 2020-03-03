@@ -16,7 +16,7 @@ export const hasPermission = function hasPermission(permission, decodedToken) {
   if (!decodedToken) {
     token = decodeToken(getToken());
   }
-  if (token !== null && token.hasOwnProperty("permissions")) {
+  if (token !== null && Object.prototype.hasOwnProperty.call(token, "permissions")) {
     let permissions = token.permissions.split(",");
     for (let i = 0; i < permissions.length; i++) {
       if (permissions[i] === permission) {
