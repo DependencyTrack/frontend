@@ -12,6 +12,7 @@
         :autocomplete=autocomplete
         :autofocus=isFocused
         :required=isRequired
+        :readonly=readonly
         :disabled=isDisabled
         v-on="inputListeners"
         v-on:blur="hadFocus = true"
@@ -42,6 +43,7 @@
       feedback: String,
       lazy: String,
       required: String,
+      readonly: Boolean,
       disabled: String,
       state: {
         default: undefined,

@@ -4,7 +4,7 @@
       <b-input-group-prepend v-if="icon"><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
 
       <b-form-select :id="`${id}-input`" v-model="value" :options="options" :autofocus=isFocused
-                     :required=isRequired :state="feedbackState()" :class="inputClasses"
+                     :disabled=disabled :required=isRequired :state="feedbackState()" :class="inputClasses"
                      v-on="inputListeners" v-on:blur="hadFocus = true"/>
 
       <b-input-group-append v-if="tooltip"><b-input-group-text v-b-tooltip.hover :title="tooltip"><i class="cui-info font-lg"></i></b-input-group-text></b-input-group-append>
@@ -34,6 +34,7 @@
       feedback: String,
       lazy: String,
       required: String,
+      disabled: Boolean,
       state: {
         default: undefined,
         type: Boolean
