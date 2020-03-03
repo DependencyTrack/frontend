@@ -124,7 +124,6 @@
     "template": "Template",
     "source_header": "Source Header",
     "license_name": "License Name",
-    "spdx_license_id": "SPDX License ID",
     "osi_approved": "OSI Approved",
     "fsf_libre": "FSF Libre",
     "deprecated": "Deprecated",
