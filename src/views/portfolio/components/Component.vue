@@ -19,6 +19,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
+                                  v-b-tooltip.hover :title="$t('severity.critical')"
               >{{ currentCritical }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityHigh"
@@ -30,6 +31,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
+                                  v-b-tooltip.hover :title="$t('severity.high')"
               >{{ currentHigh }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityMedium"
@@ -41,6 +43,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
+                                  v-b-tooltip.hover :title="$t('severity.medium')"
               >{{ currentMedium }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityLow"
@@ -52,6 +55,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
+                                  v-b-tooltip.hover :title="$t('severity.low')"
               >{{ currentLow }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityUnassigned"
@@ -63,6 +67,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
+                                  v-b-tooltip.hover :title="$t('severity.unassigned')"
               >{{ currentUnassigned }}</vue-easy-pie-chart>
             </b-row>
           </b-col>
