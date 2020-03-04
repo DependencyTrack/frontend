@@ -89,7 +89,10 @@ $custom-control-indicator-bg:           $grey-300 !default;
 $custom-control-indicator-disabled-bg:          $grey-200 !default;
 $custom-control-label-disabled-color:           $grey-600 !default;
 
-// Modals
+$custom-select-disabled-bg: $input-disabled-bg !default;
+$custom-select-disabled-color: $input-color !default;
+
+  // Modals
 
 $modal-content-bg:                  $grey-700 !default;
 $modal-content-border-color:        $border-color !default;
