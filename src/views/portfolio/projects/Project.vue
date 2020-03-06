@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
-            <div class="h5 text-primary mb-0 mt-2">{{ projectLabel }}</div>
+            <div class="h5 mb-0 mt-2">{{ projectLabel }}</div>
             <div class="text-muted text-uppercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
                 <b-badge :href="'../projects/?tag='+tag.name" variant="secondary">{{ tag.name }}</b-badge>

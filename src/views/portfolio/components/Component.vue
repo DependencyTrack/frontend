@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
-            <div class="h5 text-primary mb-0 mt-2">{{ componentLabel }}</div>
+            <div class="h5 mb-0 mt-2">{{ componentLabel }}</div>
           </b-col>
           <b-col>
             <b-row class="d-none d-md-flex float-right">
