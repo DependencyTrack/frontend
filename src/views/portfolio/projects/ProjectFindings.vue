@@ -1,10 +1,18 @@
 <template>
-  <bootstrap-table
-    ref="table"
-    :columns="columns"
-    :data="data"
-    :options="options">
-  </bootstrap-table>
+  <div>
+    <!--
+    For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
+    dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
+    -->
+    <div id="findingsToolbar">
+    </div>
+    <bootstrap-table
+      ref="table"
+      :columns="columns"
+      :data="data"
+      :options="options">
+    </bootstrap-table>
+  </div>
 </template>
 
 <script>
@@ -107,6 +115,7 @@
           pagination: true,
           silentSort: false,
           sidePagination: 'client',
+          toolbar: '#findingsToolbar',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,
