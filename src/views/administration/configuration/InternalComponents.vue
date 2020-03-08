@@ -57,7 +57,7 @@
       },
       identifyInternalComponents: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/internal/identify`;
-        this.axios.get(this.configUrl).then((response) => {
+        this.axios.get(url).then((response) => {
           this.$toastr.s(this.$t('admin.internal_identification_queued'));
         }).catch((error) => {
           this.$toastr.s(this.$t('admin.internal_identification_error'));
