@@ -27,7 +27,7 @@ do
     esac
 done
 '
-npm version prerelease --preid=beta
+npm version prerelease --preid=rc
 
 #npm version $RELEASE_TYPE
 if [[ "$?" -ne 0 ]] ; then
