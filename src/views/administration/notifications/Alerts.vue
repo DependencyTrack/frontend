@@ -147,6 +147,7 @@
                       </div>
                       <div class="list-group" v-if="this.scope === 'SYSTEM'">
                         <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
+                          <div class="list-group-item"><b-form-checkbox value="ANALYZER">ANALYZER</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div>
