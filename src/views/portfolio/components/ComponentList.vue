@@ -83,6 +83,12 @@
             }
           },
           {
+            title: this.$t('message.used_by'),
+            field: "usedBy",
+            sortable: false,
+            class: "tight",
+          },
+          {
             title: this.$t('message.risk_score'),
             field: "lastInheritedRiskScore",
             sortable: true,
