@@ -3,7 +3,8 @@
     ref="table"
     :columns="columns"
     :data="data"
-    :options="options">
+    :options="options"
+    v-on:onLoadSuccess="tableLoaded">
   </bootstrap-table>
 </template>
 
@@ -57,6 +58,15 @@
           url: `${this.$api.BASE_URL}/${this.$api.URL_DEPENDENCY}/component/${this.uuid}`
         }
       };
+    },
+    methods: {
+      tableLoaded: function(data) {
+        if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
+          this.$emit('total', data.total);
+        } else {
+          this.$emit('total', '?');
+        }
+      }
     }
   };
 </script>

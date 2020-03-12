@@ -101,12 +101,12 @@
         <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }}</template>
-        <project-dependencies :key="this.uuid" :uuid="this.uuid"/>
+        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }} <b-badge variant="tab-total">{{ totalDependencies }}</b-badge></template>
+        <project-dependencies :key="this.uuid" :uuid="this.uuid" v-on:total="totalDependencies = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }}</template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" />
+        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
+        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
       </b-tab>
     </b-tabs>
     <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
@@ -179,7 +179,9 @@
         currentLow: 0,
         currentUnassigned: 0,
         currentRiskScore: 0,
-        availableProjectVersions: []
+        availableProjectVersions: [],
+        totalDependencies: 0,
+        totalFindings: 0
       }
     },
     methods: {
@@ -201,7 +203,7 @@
         let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
         this.axios.get(projectUrl).then((response) => {
           this.project = response.data;
-          let projectVersionsUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?excludeInactive=true&name=` + encodeURIComponent(this.project.name);
+          let projectVersionsUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?offset=0&limit=10&excludeInactive=true&name=` + encodeURIComponent(this.project.name);
           this.axios.get(projectVersionsUrl).then((response) => {
             this.availableProjectVersions = response.data;
           });

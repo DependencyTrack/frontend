@@ -83,12 +83,12 @@
         <component-dashboard style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.vulnerabilities') }}</template>
-        <component-vulnerabilities :uuid="this.uuid"/>
+        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
+        <component-vulnerabilities :key="this.uuid" :uuid="this.uuid" v-on:total="totalVulnerabilities = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.projects') }}</template>
-        <component-projects :uuid="this.uuid" />
+        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.projects') }} <b-badge variant="tab-total">{{ totalProjects }}</b-badge></template>
+        <component-projects :key="this.uuid" :uuid="this.uuid" v-on:total="totalProjects = $event" />
       </b-tab>
     </b-tabs>
     <component-details-modal :component="cloneDeep(component)" v-on:componentUpdated="syncComponentFields" />
@@ -146,6 +146,8 @@
         currentLow: 0,
         currentUnassigned: 0,
         currentRiskScore: 0,
+        totalVulnerabilities: 0,
+        totalProjects: 0
       }
     },
     methods: {

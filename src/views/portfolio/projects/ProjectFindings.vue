@@ -10,7 +10,8 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      v-on:onLoadSuccess="tableLoaded">
     </bootstrap-table>
   </div>
 </template>
@@ -263,6 +264,11 @@
           url: `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`
         }
       };
+    },
+    methods: {
+      tableLoaded: function(data) {
+        this.$emit('total', data.total);
+      }
     }
   };
 </script>

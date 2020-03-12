@@ -3,7 +3,8 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      v-on:onLoadSuccess="tableLoaded">
     </bootstrap-table>
 </template>
 
@@ -52,6 +53,11 @@
           url: `${this.$api.BASE_URL}/${this.$api.URL_VULNERABILITY}/source/${this.source}/vuln/${this.vulnId}/projects`
         }
       };
+    },
+    methods: {
+      tableLoaded: function(array) {
+        this.$emit('total', array.length);
+      }
     }
   };
 </script>

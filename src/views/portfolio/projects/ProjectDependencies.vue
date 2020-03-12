@@ -23,7 +23,8 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      v-on:onLoadSuccess="tableLoaded">
     </bootstrap-table>
   </div>
 </template>
@@ -193,6 +194,13 @@
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
         this.$refs.table.uncheckAll();
+      },
+      tableLoaded: function(data) {
+        if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
+          this.$emit('total', data.total);
+        } else {
+          this.$emit('total', '?');
+        }
       }
     }
   };

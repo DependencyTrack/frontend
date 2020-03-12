@@ -242,3 +242,9 @@ h6 {
 button:focus {
   outline: 0;
 }
+.badge-tab-total {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  margin-left: 0.6em !important;
+  color: #21D983 !important;
+}
