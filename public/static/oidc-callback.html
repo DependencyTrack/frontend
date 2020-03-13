@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Waiting...</title>
+</head>
+<body>
+    <script src="js/oidc-client.min.js"></script>
+    <script>
+        new UserManager({
+            response_mode: 'query',
+            userStore: new WebStorageStateStore()
+        }).signinRedirectCallback().then(function (user) {
+            window.location.href = '../';
+        }).catch(function (err) {
+            console.log(err);
+        });
+    </script>
+</body>
+</html>

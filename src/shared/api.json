@@ -17,6 +17,8 @@
   "URL_TEAM": "api/v1/team",
   "URL_USER": "api/v1/user",
   "URL_USER_LDAP": "api/v1/user/ldap",
+  "URL_USER_OIDC": "api/v1/user/oidc",
+  "URL_USER_OIDC_LOGIN": "api/v1/user/oidc/login",
   "URL_USER_MANAGED": "api/v1/user/managed",
   "URL_USER_SELF": "api/v1/user/self",
   "URL_PERMISSION": "api/v1/permission",
@@ -38,5 +40,7 @@
   "URL_NOTIFICATION_RULE": "api/v1/notification/rule",
   "URL_LDAP_GROUPS": "api/v1/ldap/groups",
   "URL_LDAP_MAPPING": "api/v1/ldap/mapping",
+  "URL_OIDC_GROUPS": "api/v1/oidc/groups",
+  "URL_OIDC_MAPPING": "api/v1/oidc/mapping",
   "URL_BOM": "api/v1/bom"
 }

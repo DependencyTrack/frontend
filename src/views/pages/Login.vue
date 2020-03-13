@@ -37,6 +37,7 @@
                       <b-col cols="6">
                         <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
                       </b-col>
+                      <b-button v-on:click="oidcLogin()">Login with OpenID Connect</b-button>
                     </b-row>
                   </b-form>
                 </validation-observer>
@@ -59,6 +60,7 @@
 
 <script>
   import axios from 'axios'
+  import Oidc from 'oidc-client'
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery'
   import { ValidationObserver } from 'vee-validate'
@@ -79,7 +81,18 @@
         input: {
           username: "",
           password: ""
-        }
+        },
+        oidcUserManager: new Oidc.UserManager({
+          userStore: new Oidc.WebStorageStateStore(),
+          authority: "http://localhost:8081/auth/realms/master",
+          metadataUrl: "http://localhost:8081/auth/realms/master/.well-known/openid-configuration",
+          client_id: "dependency-track",
+          redirect_uri: this.$api.BASE_URL + "/static/oidc-callback.html",
+          response_type: "code",
+          scope: "openid",
+          post_logout_redirect_uri: this.$api.BASE_URL + "/login",
+          loadUserInfo: false
+        })
       }
     },
     methods: {
@@ -121,7 +134,55 @@
               this.loginError = this.$t('message.login_forbidden');
             }
           })
+      },
+      oidcLogin() {
+        this.oidcUserManager.signinRedirect().catch(function(err) {
+          console.log(err);
+        })
       }
+    },
+    mounted() {
+      this.oidcUserManager.getUser().then((oidcUser) => {
+        if (oidcUser == null) {
+          return;
+        }
+
+        const url = this.$api.BASE_URL + "/" + this.$api.URL_USER_OIDC_LOGIN;
+        const requestBody = {
+          accessToken: oidcUser.access_token
+        };
+        const config = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        };
+
+        axios.post(url, qs.stringify(requestBody), config)
+          .then((result) => {
+            if(result.status === 200) {
+              sessionStorage.setItem('token', result.data);
+              axios.defaults.headers.common['Authorization'] = `Bearer ${result.data}`;
+              $.ajaxSetup({
+                beforeSend: function(xhr) {
+                  xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
+                }
+              });
+              this.$router.replace({ name: "Dashboard" });
+            }
+
+            // OIDC session data is no longer needed
+            this.oidcUserManager.removeUser()
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              this.$bvModal.show('modal-informational');
+              this.loginError = this.$t('message.login_unauthorized');
+            } else if (err.response.status === 403) {
+              this.$bvModal.show('modal-informational');
+              this.loginError = this.$t('message.login_forbidden');
+            }
+          })
+      })
     }
   }
 </script>
