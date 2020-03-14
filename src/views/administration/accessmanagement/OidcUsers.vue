@@ -2,7 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button size="md" variant="outline-primary" v-b-modal.createLdapUserModal>
+        <b-button size="md" variant="outline-primary" v-b-modal.createOidcUserModal>
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
       </div>
@@ -13,7 +13,7 @@
         :options="options">
       </bootstrap-table>
     </b-card-body>
-    <create-ldap-user-modal v-on:refreshTable="refreshTable" />
+    <create-oidc-user-modal v-on:refreshTable="refreshTable" />
   </b-card>
 </template>
 
@@ -21,7 +21,7 @@
   import xssFilters from "xss-filters";
   import common from "../../../shared/common";
   import i18n from "../../../i18n";
-  import CreateLdapUserModal from "./CreateLdapUserModal";
+  import CreateOidcUserModal from "./CreateOidcUserModal";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
@@ -35,7 +35,7 @@
     },
     mixins: [bootstrapTableMixin],
     components: {
-      CreateLdapUserModal
+      CreateOidcUserModal
     },
     mounted() {
       EventBus.$on('admin:oidcusers:rowUpdate', (index, row) => {
@@ -62,8 +62,16 @@
             }
           },
           {
-            title: this.$t('admin.distinguished_name'),
-            field: "dn",
+            title: this.$t('admin.subject_identifier'),
+            field: "subjectIdentifier",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.email'),
+            field: "email",
             sortable: false,
             formatter(value, row, index) {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
@@ -135,7 +143,7 @@
               },
               data() {
                 return {
-                  ldapUser: row,
+                  oidcUser: row,
                   username: row.username,
                   teams: row.teams,
                   permissions: row.permissions
@@ -143,12 +151,12 @@
               },
               methods: {
                 deleteUser: function() {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_OIDC}`;
                   this.axios.delete(url, { data: {
                       username: this.username
                     }
                   }).then((response) => {
-                    EventBus.$emit('admin:ldapusers:rowDeleted', index);
+                    EventBus.$emit('admin:oidcusers:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.user_deleted'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -163,7 +171,7 @@
                       uuid: selection.uuid
                     }).then((response) => {
                       this.syncVariables(response.data);
-                      EventBus.$emit('admin:ldapusers:rowUpdate', index, this.ldapUser);
+                      EventBus.$emit('admin:oidcusers:rowUpdate', index, this.oidcUser);
                       this.$toastr.s(this.$t('message.updated'));
                     }).catch((error) => {
                       if (error.response.status === 304) {
@@ -179,7 +187,7 @@
                   this.axios.delete(url, { data: { uuid: teamUuid }
                   }).then((response) => {
                     this.syncVariables(response.data);
-                    EventBus.$emit('admin:ldapusers:rowUpdate', index, this.ldapUser);
+                    EventBus.$emit('admin:oidcusers:rowUpdate', index, this.oidcUser);
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -213,11 +221,11 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
-                syncVariables: function(ldapUser) {
-                  this.ldapUser = ldapUser;
-                  this.username = ldapUser.username;
-                  this.teams = ldapUser.teams;
-                  this.permissions = ldapUser.permissions;
+                syncVariables: function(oidcUser) {
+                  this.oidcUser = oidcUser;
+                  this.username = oidcUser.username;
+                  this.teams = oidcUser.teams;
+                  this.permissions = oidcUser.permissions;
                 }
               }
             })
@@ -228,7 +236,7 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_USER_OIDC}`
         }
       };
     },

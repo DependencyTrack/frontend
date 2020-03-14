@@ -175,6 +175,11 @@
                 href: "#managedUsersTab"
               },
               {
+                component: "OidcUsers",
+                name: this.$t('admin.oidc_users'),
+                href: "#oidcUsersTab"
+              },
+              {
                 component: "Teams",
                 name: this.$t('admin.teams'),
                 href: "#teamsTab"

@@ -37,7 +37,9 @@
                       <b-col cols="6">
                         <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
                       </b-col>
-                      <b-button v-on:click="oidcLogin()">Login with OpenID Connect</b-button>
+                      <b-col cols="6" v-if="isOidcAvailable()">
+                        <b-button style="float: right" v-on:click="oidcLogin()"><img src="@/assets/img/openid-logo.svg" width="65px"/></b-button>
+                      </b-col>
                     </b-row>
                   </b-form>
                 </validation-observer>
@@ -84,13 +86,11 @@
         },
         oidcUserManager: new Oidc.UserManager({
           userStore: new Oidc.WebStorageStateStore(),
-          authority: "http://localhost:8081/auth/realms/master",
-          metadataUrl: "http://localhost:8081/auth/realms/master/.well-known/openid-configuration",
-          client_id: "dependency-track",
-          redirect_uri: this.$api.BASE_URL + "/static/oidc-callback.html",
+          authority: this.$oidc.AUTHORITY,
+          client_id: this.$oidc.CLIENT_ID,
+          redirect_uri: window.location.origin + "/static/oidc-callback.html",
           response_type: "code",
           scope: "openid",
-          post_logout_redirect_uri: this.$api.BASE_URL + "/login",
           loadUserInfo: false
         })
       }
@@ -135,6 +135,10 @@
             }
           })
       },
+      isOidcAvailable() {
+        // TODO
+        return true;
+      },
       oidcLogin() {
         this.oidcUserManager.signinRedirect().catch(function(err) {
           console.log(err);
@@ -147,6 +151,7 @@
           return;
         }
 
+        // Exchange OAuth2 Access Token for a JWT issued by Dependency-Track
         const url = this.$api.BASE_URL + "/" + this.$api.URL_USER_OIDC_LOGIN;
         const requestBody = {
           accessToken: oidcUser.access_token
@@ -169,9 +174,6 @@
               });
               this.$router.replace({ name: "Dashboard" });
             }
-
-            // OIDC session data is no longer needed
-            this.oidcUserManager.removeUser()
           })
           .catch((err) => {
             if (err.response.status === 401) {
@@ -182,6 +184,9 @@
               this.loginError = this.$t('message.login_forbidden');
             }
           })
+
+          // OIDC session data is no longer needed
+          this.oidcUserManager.removeUser()
       })
     }
   }

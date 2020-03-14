@@ -40,6 +40,7 @@
   "URL_NOTIFICATION_RULE": "api/v1/notification/rule",
   "URL_LDAP_GROUPS": "api/v1/ldap/groups",
   "URL_LDAP_MAPPING": "api/v1/ldap/mapping",
+  "URL_OIDC_AVAILABLE": "api/v1/oidc/available",
   "URL_OIDC_GROUPS": "api/v1/oidc/groups",
   "URL_OIDC_MAPPING": "api/v1/oidc/mapping",
   "URL_BOM": "api/v1/bom"

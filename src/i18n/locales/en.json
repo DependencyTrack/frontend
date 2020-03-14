@@ -300,6 +300,7 @@
     "required_confirmPassword": "Password confirmation is required and passwords must match",
     "distinguished_name": "Distinguished name",
     "create_ldap_user": "Create LDAP User",
+    "subject_identifier": "Subject Identifier",
     "create_oidc_user": "Create OpenID Connect User",
     "api_keys": "API Keys",
     "members": "Members",
