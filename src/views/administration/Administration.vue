@@ -42,9 +42,10 @@
   import FortifySsc from "./integrations/FortifySsc";
   import KennaSecurity from "./integrations/KennaSecurity";
   // Access Management plugins
-  import OidcUsers from "./accessmanagement/OidcUsers";
   import LdapUsers from "./accessmanagement/LdapUsers";
   import ManagedUsers from "./accessmanagement/ManagedUsers";
+  import OidcUsers from "./accessmanagement/OidcUsers";
+  import OidcGroups from "./accessmanagement/OidcGroups";
   import Teams from "./accessmanagement/Teams";
   import Permissions from "./accessmanagement/Permissions";
 
@@ -57,7 +58,7 @@
       Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, KennaSecurity,
-      OidcUsers, LdapUsers, ManagedUsers, Teams, Permissions
+      LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions
     },
     created() {
       // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load

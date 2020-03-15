@@ -180,6 +180,11 @@
                 href: "#oidcUsersTab"
               },
               {
+                component: "OidcGroups",
+                name: this.$t('admin.oidc_groups'),
+                href: "#oidcGroupsTab"
+              },
+              {
                 component: "Teams",
                 name: this.$t('admin.teams'),
                 href: "#teamsTab"
