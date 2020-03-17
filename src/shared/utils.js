@@ -15,3 +15,24 @@ export const shuffleArray = (array) => {
   }
   return array;
 };
+
+/**
+ * Retrieves the querystring, parses it.
+ */
+export function getUrlVars() {
+  let vars = [], hash;
+  let hashes = window.location.href.replace("#", "").slice(window.location.href.indexOf("?") + 1).split("&");
+  for(let i = 0; i < hashes.length; i++) {
+    hash = hashes[i].split("=");
+    vars.push(hash[0]);
+    vars[hash[0]] = hash[1];
+  }
+  return vars;
+}
+
+/**
+ * Provides a function to extract a param from the querystring.
+ */
+export function getUrlVar(name) {
+  return getUrlVars()[name];
+}

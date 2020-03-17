@@ -83,11 +83,11 @@
         <component-dashboard style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
+        <template v-slot:title><i class="fa fa-shield"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
         <component-vulnerabilities :key="this.uuid" :uuid="this.uuid" v-on:total="totalVulnerabilities = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.projects') }} <b-badge variant="tab-total">{{ totalProjects }}</b-badge></template>
+        <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.projects') }} <b-badge variant="tab-total">{{ totalProjects }}</b-badge></template>
         <component-projects :key="this.uuid" :uuid="this.uuid" v-on:total="totalProjects = $event" />
       </b-tab>
     </b-tabs>

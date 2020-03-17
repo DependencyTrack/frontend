@@ -5,6 +5,8 @@
 <script>
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
+  import { getUrlVar }  from './shared/utils';
+
   export default {
     name: 'app',
     data() {
@@ -28,6 +30,12 @@
           if (jwt !== null) {
             xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
           }
+        },
+        complete: function(xhr, textStatus) {
+          if (getUrlVar("debug")) {
+            console.log("Status: " + xhr.status);
+            (xhr.responseJSON) ? console.log(xhr.responseJSON) : console.log(xhr.responseText);
+          }
         }
       });
 
@@ -43,6 +51,12 @@
           $.ajaxSetup({
             beforeSend: function (xhr) {
               xhr.setRequestHeader("Authorization", null);
+            },
+            complete: function(xhr, textStatus) {
+              if (getUrlVar("debug")) {
+                console.log("Status: " + xhr.status);
+                (xhr.responseJSON) ? console.log(xhr.responseJSON) : console.log(xhr.responseText);
+              }
             }
           });
           // Token is stale, clear stored token and redirect to login view
@@ -52,13 +66,17 @@
 
       // Intercept all HTTP requests
       this.axios.interceptors.request.use(request => {
-        //console.log('Request', request);
+        if (this.$route.query.debug) {
+          console.log('Request', request);
+        }
         return request;
       });
 
       // Intercept all HTTP responses
       this.axios.interceptors.response.use(response => {
-        //console.log('Response', response);
+        if (this.$route.query.debug) {
+          console.log('Response', response);
+        }
         return response;
       }, error => {
         // On error status codes (4xx - 5xx), display a toast with the HTTP status code and text.

@@ -75,7 +75,7 @@ export default {
             },
             point: {
               radius: 0,
-              hitRadius: 50,
+              hitRadius: 10,
               hoverRadius: 4
             }
           }
