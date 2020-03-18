@@ -37,7 +37,7 @@
                       <b-col cols="6">
                         <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
                       </b-col>
-                      <b-col cols="6" v-if="isOidcAvailable()">
+                      <b-col cols="6" v-show="oidcAvailable">
                         <b-button style="float: right" v-on:click="oidcLogin()"><img src="@/assets/img/openid-logo.svg" width="65px"/></b-button>
                       </b-col>
                     </b-row>
@@ -84,6 +84,7 @@
           username: "",
           password: ""
         },
+        oidcAvailable: false,
         oidcUserManager: new Oidc.UserManager({
           userStore: new Oidc.WebStorageStateStore(),
           authority: this.$oidc.AUTHORITY,
@@ -135,9 +136,19 @@
             }
           })
       },
-      isOidcAvailable() {
-        // TODO
-        return true;
+      checkOidcAvailability() {
+        const url = this.$api.BASE_URL + "/" + this.$api.URL_OIDC_AVAILABLE;
+
+        axios.get(url)
+          .then((result) => {
+            if(result.status === 200) {
+              this.oidcAvailable = result.data === true;
+            }
+          })
+          .catch((err) => {
+            this.$bvModal.show("modal-informational");
+            this.loginError = "Failed to determine availability of OpenID Connect";
+          })
       },
       oidcLogin() {
         this.oidcUserManager.signinRedirect().catch(function(err) {
@@ -146,6 +157,8 @@
       }
     },
     mounted() {
+      this.checkOidcAvailability()
+
       this.oidcUserManager.getUser().then((oidcUser) => {
         if (oidcUser == null) {
           return;
