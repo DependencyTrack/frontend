@@ -307,7 +307,13 @@
     "select_ldap_group": "Select LDAP Group",
     "mapped_ldap_groups": "Mapped LDAP groups",
     "change_password": "Change Password",
-    "password_updated": "Password updated"
+    "password_updated": "Password updated",
+    "create_repository": "Create Repository",
+    "repository_type": "Repository Type",
+    "internal": "Internal",
+    "delete_repository": "Delete Repository",
+    "repository_created": "Repository created",
+    "repository_deleted": "Repository deleted"
   },
   "condition": {
     "warning": "Warning",
