@@ -13,6 +13,7 @@ import './plugins/table.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueShowdown from 'vue-showdown'
+import vueDebounce from 'vue-debounce'
 import '@/directives/VuePermission'
 import VueToastr from "vue-toastr";
 import api from "./shared/api.json";
@@ -28,7 +29,7 @@ Vue.use(VueToastr, {
   defaultCloseOnHover: false
 });
 Vue.use(VueShowdown, { flavor: 'github' });
-
+Vue.use(vueDebounce, { defaultTime: '750ms' });
 
 Vue.prototype.$api = api;
 axios.get("static/config.json").then(response => {
