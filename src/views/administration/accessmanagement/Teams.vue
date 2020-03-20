@@ -29,6 +29,7 @@
   import SelectPermissionModal from "./SelectPermissionModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import {Switch as cSwitch} from "@coreui/vue";
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
 
   export default {
     props: {
@@ -109,9 +110,9 @@
               template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
-                    <b-form-group :label="this.$t('admin.team_name')" label-for="name">
-                      <b-form-input id="name" v-model="name" required class="form-control required" debounce="750" trim />
-                    </b-form-group>
+                    <b-input-group-form-input id="input-team-name" :label="$t('admin.team_name')" input-group-size="mb-3"
+                                              required="true" type="text" v-model="name" lazy="true"
+                                              v-debounce:750ms="updateTeam" :debounce-events="'keyup'" />
                     <b-form-group :label="this.$t('admin.api_keys')">
                       <div class="list-group">
                         <span v-for="apiKey in apiKeys">
@@ -165,7 +166,8 @@
                 cSwitch,
                 ActionableListGroupItem,
                 SelectLdapGroupModal,
-                SelectPermissionModal
+                SelectPermissionModal,
+                BInputGroupFormInput
               },
               data() {
                 return {
@@ -180,11 +182,6 @@
                     dataOn: '\u2713',
                     dataOff: '\u2715'
                   }
-                }
-              },
-              watch: {
-                name() {
-                  this.updateTeam();
                 }
               },
               methods: {

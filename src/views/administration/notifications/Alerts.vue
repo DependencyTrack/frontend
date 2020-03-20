@@ -28,6 +28,8 @@
   import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
+  import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
 
   export default {
     props: {
@@ -109,18 +111,18 @@
               template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
-                    <b-form-group id="fieldset-1" :label="this.$t('message.name')" label-for="input-1">
-                      <b-form-input id="input-1" v-model="name" required class="form-control required" debounce="750" trim />
-                    </b-form-group>
+                    <b-input-group-form-input id="input-name" :label="$t('message.name')" input-group-size="mb-3"
+                                              required="true" type="text" v-model="name" lazy="true"
+                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-3" :label="this.$t('admin.notification_level')" label-for="input-3">
                       <b-form-input id="input-3" v-model="notificationLevel" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group id="fieldset-4" :label="this.$t('admin.destination')" label-for="input-4">
-                      <b-form-input id="input-4" v-model="destination" required class="form-control required" debounce="750" trim />
-                    </b-form-group>
+                    <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
+                                              required="true" type="text" v-model="destination" lazy="true"
+                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
@@ -169,7 +171,8 @@
               components: {
                 ActionableListGroupItem,
                 SelectProjectModal,
-                BToggleableDisplayButton
+                BToggleableDisplayButton,
+                BInputGroupFormInput
               },
               data() {
                 return {
@@ -189,12 +192,6 @@
                 this.parseDestination(this.alert);
               },
               watch: {
-                name() {
-                  this.updateNotificationRule();
-                },
-                destination() {
-                  this.updateNotificationRule();
-                },
                 notifyOn() {
                   this.updateNotificationRule();
                 }
