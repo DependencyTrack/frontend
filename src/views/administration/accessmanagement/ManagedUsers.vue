@@ -30,6 +30,7 @@
   import SelectPermissionModal from "./SelectPermissionModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import {Switch as cSwitch} from "@coreui/vue";
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
 
   export default {
     props: {
@@ -129,12 +130,12 @@
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
-                    <b-form-group :label="this.$t('message.fullname')" label-for="fullname">
-                      <b-form-input id="fullname" v-model="fullname" required class="form-control required" debounce="750" trim />
-                    </b-form-group>
-                    <b-form-group :label="this.$t('message.email')" label-for="email">
-                      <b-form-input id="email" v-model="email" required class="form-control required" debounce="750" trim />
-                    </b-form-group>
+                    <b-input-group-form-input id="input-managed-user-fullname" :label="$t('message.fullname')" input-group-size="mb-3"
+                                              required="true" type="text" v-model="fullname" lazy="true"
+                                              v-debounce:750ms="updateUser" :debounce-events="'keyup'" />
+                    <b-input-group-form-input id="input-managed-user-email" :label="$t('message.email')" input-group-size="mb-3"
+                                              required="true" type="text" v-model="email" lazy="true"
+                                              v-debounce:750ms="updateUser" :debounce-events="'keyup'" />
                     <c-switch id="forcePasswordChange" color="primary" v-model="forcePasswordChange" label v-bind="labelIcon" />{{$t('admin.change_password_next_login')}}
                     <br/>
                     <c-switch id="nonExpiryPassword" color="primary" v-model="nonExpiryPassword" label v-bind="labelIcon" />{{$t('admin.password_never_expires')}}
@@ -156,7 +157,8 @@
                 ActionableListGroupItem,
                 SelectTeamModal,
                 SelectPermissionModal,
-                ChangePasswordModal
+                ChangePasswordModal,
+                BInputGroupFormInput
               },
               data() {
                 return {
@@ -176,12 +178,6 @@
                 }
               },
               watch: {
-                fullname() {
-                  this.updateUser();
-                },
-                email() {
-                  this.updateUser();
-                },
                 forcePasswordChange() {
                   this.updateUser();
                 },

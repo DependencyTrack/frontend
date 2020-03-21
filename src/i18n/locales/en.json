@@ -168,6 +168,7 @@
     "component_created": "Component created",
     "create_component": "Create Component",
     "dependency_added": "Dependency added",
+    "dependency_removed": "Dependency removed",
     "profile": "Profile",
     "profile_update": "Update Profile",
     "profile_updated": "Profile updated",
