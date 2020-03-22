@@ -86,7 +86,7 @@
         <template v-slot:title><i class="fa fa-shield"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
         <component-vulnerabilities :key="this.uuid" :uuid="this.uuid" v-on:total="totalVulnerabilities = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_PORTFOLIO)">
+      <b-tab>
         <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.projects') }} <b-badge variant="tab-total">{{ totalProjects }}</b-badge></template>
         <component-projects :key="this.uuid" :uuid="this.uuid" v-on:total="totalProjects = $event" />
       </b-tab>
