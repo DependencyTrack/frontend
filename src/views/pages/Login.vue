@@ -38,7 +38,7 @@
                         <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
                       </b-col>
                       <b-col cols="6" v-show="oidcAvailable">
-                        <b-button style="float: right" v-on:click="oidcLogin()"><img src="@/assets/img/openid-logo.svg" width="65px"/></b-button>
+                        <b-button style="float: right" v-on:click="oidcLogin()"><img alt="OpenID Logo" src="@/assets/img/openid-logo.svg" width="60px"/></b-button>
                       </b-col>
                     </b-row>
                   </b-form>
