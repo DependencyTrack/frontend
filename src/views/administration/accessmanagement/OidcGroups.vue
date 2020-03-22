@@ -115,7 +115,7 @@ export default {
             },
             methods: {
               updateOidcGroup: function() {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUPS}`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.oidcGroup.uuid,
@@ -135,7 +135,7 @@ export default {
                   });
               },
               deleteOidcGroup: function() {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUPS}/${this.oidcGroup.uuid}`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
                 this.axios
                   .delete(url)
                   .then(response => {
@@ -147,7 +147,7 @@ export default {
                   });
               },
               getMappedTeams: function() {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUPS}/${this.oidcGroup.uuid}/team`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
                 this.axios
                   .get(url)
                   .then(response => {
@@ -168,7 +168,7 @@ export default {
                       team: selection.uuid
                     })
                     .then(response => {
-                      this.mappedTeams.push(response.data);
+                      this.mappedTeams.push(selection);
                       this.mappedTeams.sort();
                       this.$toastr.s(this.$t("message.updated"));
                     })
@@ -178,14 +178,9 @@ export default {
                 }
               },
               removeOidcGroupMapping: function(team) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
                 this.axios
-                  .delete(url, {
-                    data: {
-                      group: this.oidcGroup.uuid,
-                      team: team.uuid
-                    }
-                  })
+                  .delete(url)
                   .then(response => {
                     let remainingTeams = [];
                     for (let i=0; i<this.mappedTeams.length; i++) {
@@ -212,7 +207,7 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUPS}`
+        url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`
       }
     };
   },

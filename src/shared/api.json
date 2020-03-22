@@ -41,7 +41,7 @@
   "URL_LDAP_GROUPS": "api/v1/ldap/groups",
   "URL_LDAP_MAPPING": "api/v1/ldap/mapping",
   "URL_OIDC_AVAILABLE": "api/v1/oidc/available",
-  "URL_OIDC_GROUPS": "api/v1/oidc/group",
+  "URL_OIDC_GROUP": "api/v1/oidc/group",
   "URL_OIDC_MAPPING": "api/v1/oidc/mapping",
   "URL_BOM": "api/v1/bom"
 }

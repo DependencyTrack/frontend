@@ -65,7 +65,7 @@
               return res;
             }
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUPS}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`
         }
       };
     }
