@@ -1,5 +1,6 @@
 {
   "API_BASE_URL": "",
   "OIDC_ISSUER": "",
-  "OIDC_CLIENT_ID": ""
+  "OIDC_CLIENT_ID": "",
+  "OIDC_FLOW": "code"
 }

@@ -96,7 +96,7 @@ export default {
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
         redirect_uri: window.location.origin + "/static/oidc-callback.html",
-        response_type: "code",
+        response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: "openid",
         loadUserInfo: false
       })
@@ -182,7 +182,7 @@ export default {
 
         this.oidcUserManager.getUser().then(oidcUser => {
           // oidcUser will only be set when coming from oidc-callback.html
-          if (oidcUser == null) {
+          if (oidcUser === null) {
             return;
           }
 
