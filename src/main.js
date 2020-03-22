@@ -53,16 +53,16 @@ axios.get("static/config.json").then(response => {
         Vue.prototype.$dtrack = result.data;
       }
     );
-});
 
-Vue.prototype.$version = version;
+  Vue.prototype.$version = version;
 
-new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: {
-    App,
-  }
-  ,i18n
+  new Vue({
+    el: '#app',
+    router,
+    template: '<App/>',
+    components: {
+      App,
+    }
+    ,i18n
+  });
 });
