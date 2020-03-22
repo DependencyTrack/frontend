@@ -7,12 +7,12 @@
 <body>
     <script src="js/oidc-client.min.js"></script>
     <script>
-        new UserManager({
+        new Oidc.UserManager({
             response_mode: 'query',
-            userStore: new WebStorageStateStore()
-        }).signinRedirectCallback().then(function (user) {
+            userStore: new Oidc.WebStorageStateStore()
+        }).signinRedirectCallback().then((user) => {
             window.location.href = '../';
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err);
         });
     </script>
