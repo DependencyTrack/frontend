@@ -1,5 +1,5 @@
 {
-  "API_BASE_URL": "http://localhost:8080",
-  "OIDC_AUTHORITY": "http://localhost:8081/auth/realms/master",
-  "OIDC_CLIENT_ID": "dependency-track"
+  "API_BASE_URL": "",
+  "OIDC_AUTHORITY": "",
+  "OIDC_CLIENT_ID": ""
 }
