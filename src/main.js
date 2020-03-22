@@ -38,7 +38,7 @@ axios.get("static/config.json").then(response => {
   Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
 
   // OpenID Connect
-  Vue.prototype.$oidc.AUTHORITY = response.data.OIDC_AUTHORITY;
+  Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
   Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
 }).catch(function (error) {
   console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.")

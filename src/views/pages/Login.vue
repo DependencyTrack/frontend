@@ -93,7 +93,7 @@ export default {
       oidcAvailable: false,
       oidcUserManager: new Oidc.UserManager({
         userStore: new Oidc.WebStorageStateStore(),
-        authority: this.$oidc.AUTHORITY,
+        authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
         redirect_uri: window.location.origin + "/static/oidc-callback.html",
         response_type: "code",
