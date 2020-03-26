@@ -103,14 +103,12 @@
           },
           permission: permissions.SYSTEM_CONFIGURATION
         },
-          /* TODO
         {
           name: this.$t('message.policy_management'),
           url: '/policy',
           icon: 'fa fa-list-alt',
-          permission: permissions.SYSTEM_CONFIGURATION
+          permission: permissions.VIEW_POLICY
         },
-           */
         {
           name: this.$t('message.administration'),
           url: '/admin',
