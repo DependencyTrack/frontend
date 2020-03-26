@@ -1,7 +1,7 @@
 const fs = require("fs");
 const filePath = "./package.json";
 const versionPath = "./src/version.json";
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 const packageJson = JSON.parse(fs.readFileSync(filePath).toString());
 
