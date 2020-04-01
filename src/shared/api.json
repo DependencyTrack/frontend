@@ -38,5 +38,7 @@
   "URL_NOTIFICATION_RULE": "api/v1/notification/rule",
   "URL_LDAP_GROUPS": "api/v1/ldap/groups",
   "URL_LDAP_MAPPING": "api/v1/ldap/mapping",
-  "URL_BOM": "api/v1/bom"
+  "URL_BOM": "api/v1/bom",
+  "URL_POLICY": "api/v1/policy",
+  "URL_LICENSE_GROUP": "api/v1/licenseGroup"
 }

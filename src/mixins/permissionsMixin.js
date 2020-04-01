@@ -10,7 +10,6 @@ export default {
         ACCESS_MANAGEMENT: permissions.ACCESS_MANAGEMENT,
         VULNERABILITY_ANALYSIS: permissions.VULNERABILITY_ANALYSIS,
         SYSTEM_CONFIGURATION: permissions.SYSTEM_CONFIGURATION,
-        VIEW_POLICY: permissions.VIEW_POLICY,
         POLICY_MANAGEMENT: permissions.POLICY_MANAGEMENT
       }
     }

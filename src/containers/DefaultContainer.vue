@@ -107,7 +107,7 @@
           name: this.$t('message.policy_management'),
           url: '/policy',
           icon: 'fa fa-list-alt',
-          permission: permissions.VIEW_POLICY
+          permission: permissions.POLICY_MANAGEMENT
         },
         {
           name: this.$t('message.administration'),

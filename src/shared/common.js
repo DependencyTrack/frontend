@@ -21,6 +21,17 @@ $common.formatSourceLabel = function formatSourceLabel(source) {
 };
 
 /**
+ * Formats and returns a specialized label for notifications (fail, warn, info)
+ */
+$common.formatNotificationLabel = function formatNotificationLabel(violationState) {
+  if (! violationState) {
+    return null;
+  }
+  let violationStateClass = "label-notification-" + violationState.toLowerCase();
+  return `<span class="label label-notification ${violationStateClass}">${violationState}</span>`;
+};
+
+/**
  * Changes the first letter to uppercase and the remaining letters to lowercase.
  *
  * @param {string} string the String to capitalize
@@ -144,6 +155,7 @@ $common.trimToNull = function(value) {
 
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
+  formatNotificationLabel: $common.formatNotificationLabel,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatCweLabel: $common.formatCweLabel,
