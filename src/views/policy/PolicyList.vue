@@ -22,7 +22,7 @@
   import permissionsMixin from "../../mixins/permissionsMixin";
   import i18n from "../../i18n";
   import ActionableListGroupItem from "../components/ActionableListGroupItem";
-  import BValidatedInputGroupFormInput from "../../forms/BValidatedInputGroupFormInput";
+  import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
   import EventBus from "../../shared/eventbus";
   import bootstrapTableMixin from "../../mixins/bootstrapTableMixin";
   import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
@@ -97,11 +97,9 @@
                 <div>
                 <b-row class="expanded-row">
                   <b-col sm="6">
-                    <b-validated-input-group-form-input id="identifier"
-                                                        :label="this.$t('message.name')"
-                                                        input-group-size="mb-3"
-                                                        rules="required"
-                                                        v-model="name" />
+                    <b-input-group-form-input id="identifier" :label="this.$t('message.name')" input-group-size="mb-3"
+                        required="true" type="text" v-model="name" lazy="true"
+                        v-debounce:750ms="updatePolicy" :debounce-events="'keyup'" />
                   </b-col>
                   <b-col sm="3">
                     <b-input-group-form-select id="input-repository-type" required="true"
@@ -132,7 +130,7 @@
               mixins: [permissionsMixin],
               components: {
                 ActionableListGroupItem,
-                BValidatedInputGroupFormInput,
+                BInputGroupFormInput,
                 BInputGroupFormSelect
               },
               data() {
@@ -141,19 +139,33 @@
                   name: row.name,
                   operator: row.operator,
                   violationState: row.violationState,
-                  selected: 'radio1',
                   operators: [
                     { value: 'ANY', text: 'Any' },
                     { value: 'ALL', text: 'All' }
                   ],
                   violationStates: [
-                    { value: 'INFO', text: 'Informational'},
-                    { value: 'WARN', text: 'Warning' },
-                    { value: 'FAIL', text: 'Fail' }
+                    { value: 'INFO', text: this.$t('violation.info') },
+                    { value: 'WARN', text: this.$t('violation.warn') },
+                    { value: 'FAIL', text: this.$t('violation.fail') }
                   ]
                 }
               },
               methods: {
+                updatePolicy: function () {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+                  this.axios.post(url, {
+                    uuid: this.policy.uuid,
+                    name: this.name,
+                    operator: this.operator,
+                    violationState: this.violationState
+                  }).then((response) => {
+                    this.policy = response.data;
+                    EventBus.$emit('policyManagement:policies:rowUpdate', index, this.policy);
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
                 deletePolicy: function() {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                   this.axios.delete(url).then((response) => {
@@ -168,6 +180,14 @@
                   this.name = policy.name;
                   this.operator = policy.operator;
                   this.violationState = policy.violationState;
+                }
+              },
+              watch: {
+                operator() {
+                  this.updatePolicy();
+                },
+                violationState() {
+                  this.updatePolicy();
                 }
               }
             })
