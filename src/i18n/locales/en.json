@@ -336,6 +336,11 @@
     "http_request_error": "HTTP Request Error",
     "server_error": "Server Error"
   },
+  "violation": {
+    "info": "Inform",
+    "warn": "Warn",
+    "fail": "Fail"
+  },
   "severity": {
     "critical": "Critical",
     "high": "High",
