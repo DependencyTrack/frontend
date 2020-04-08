@@ -136,7 +136,7 @@
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
                       <b-form-input id="input-5" v-model="scope" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group id="fieldset-6" :label="this.$t('admin.scope')" label-for="input-6">
+                    <b-form-group id="fieldset-6" :label="this.$t('admin.group')" label-for="input-6">
                       <div class="list-group" v-if="this.scope === 'PORTFOLIO'">
                         <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
                           <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABILITY">NEW_VULNERABILITY</b-form-checkbox></div>

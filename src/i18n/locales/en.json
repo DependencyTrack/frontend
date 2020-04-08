@@ -287,6 +287,7 @@
     "default": "Default",
     "publisher": "Publisher",
     "scope": "Scope",
+    "group": "Group",
     "notification_level": "Notification level",
     "destination": "Destination",
     "delete_alert": "Delete Alert",
