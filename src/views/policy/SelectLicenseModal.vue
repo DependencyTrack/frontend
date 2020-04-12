@@ -39,6 +39,15 @@
             formatter(value, row, index) {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
             }
+          },
+          {
+            title: this.$t('message.spdx_license_id'),
+            field: "licenseId",
+            sortable: true,
+            formatter: function (value, row, index) {
+              let url = xssFilters.uriInUnQuotedAttr("../licenses/" + encodeURIComponent(value));
+              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            },
           }
         ],
         data: [],
