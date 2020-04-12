@@ -202,7 +202,17 @@
     "create_license_group": "Create License Group",
     "license_group_created": "License group created",
     "delete_license_group": "Delete License Group",
-    "license_group_deleted": "License group deleted"
+    "license_group_deleted": "License group deleted",
+    "subject": "Subject",
+    "age": "Age",
+    "analyzer": "Analyzer",
+    "bom": "BOM",
+    "component_group": "Component group",
+    "component_version": "Component version",
+    "license_group": "License group",
+    "package_url": "Package URL (PURL)",
+    "conditions": "Conditions",
+    "condition_deleted": "Condition deleted"
   },
   "admin": {
     "configuration": "Configuration",
@@ -341,6 +351,12 @@
     "info": "Inform",
     "warn": "Warn",
     "fail": "Fail"
+  },
+  "operator" : {
+    "is": "is",
+    "is_not": "is not",
+    "matches": "matches",
+    "no_match": "does not match"
   },
   "severity": {
     "critical": "Critical",

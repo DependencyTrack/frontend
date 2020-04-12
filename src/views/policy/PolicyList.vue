@@ -26,6 +26,7 @@
   import EventBus from "../../shared/eventbus";
   import bootstrapTableMixin from "../../mixins/bootstrapTableMixin";
   import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
+  import PolicyCondition from "./PolicyCondition";
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
@@ -113,13 +114,15 @@
                   </b-col>
                 </b-row>
                 <b-row class="expanded-row">
-                  <b-col sm="6">
-                  </b-col>
-
-                  <b-col sm="6">
-
-
-
+                  <b-col sm="12">
+                    <b-form-group :label="this.$t('message.conditions')">
+                      <div class="list-group">
+                        <span v-for="(condition, conditionIndex) in conditions">
+                          <policy-condition :policy="policy" :condition="condition" v-on:conditionRemoved="removeCondition(condition, conditionIndex, index)" />
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="addCondition" />
+                      </div>
+                    </b-form-group>
                     <div style="text-align:right">
                        <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
                     </div>
@@ -131,7 +134,8 @@
               components: {
                 ActionableListGroupItem,
                 BInputGroupFormInput,
-                BInputGroupFormSelect
+                BInputGroupFormSelect,
+                PolicyCondition
               },
               data() {
                 return {
@@ -139,6 +143,7 @@
                   name: row.name,
                   operator: row.operator,
                   violationState: row.violationState,
+                  conditions: row.policyConditions,
                   operators: [
                     { value: 'ANY', text: 'Any' },
                     { value: 'ALL', text: 'All' }
@@ -151,6 +156,24 @@
                 }
               },
               methods: {
+                addCondition: function() {
+                  if (! this.conditions) {
+                    this.conditions = [];
+                  }
+                  this.conditions.push({});
+                },
+                removeCondition: function(condition, conditionIndex, index) {
+                  this.conditions = [];
+                  this.refreshPolicy();
+                  //this.conditions.splice(conditionIndex, 1);
+                },
+                refreshPolicy: function() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
+                  this.axios.get(url).then((response) => {
+                    this.policy = response.data;
+                    EventBus.$emit('policyManagement:policies:rowUpdate', index, this.policy);
+                  });
+                },
                 updatePolicy: function () {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
                   this.axios.post(url, {
@@ -180,6 +203,7 @@
                   this.name = policy.name;
                   this.operator = policy.operator;
                   this.violationState = policy.violationState;
+                  this.conditions = policy.policyConditions;
                 }
               },
               watch: {
