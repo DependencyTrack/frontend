@@ -261,7 +261,7 @@
     "configuration_saved": "Configuration saved",
     "email_address": "Email address",
     "test_notification_queued": "A test notification has been queued",
-    "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.",
+    "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.\nThe regex must match the whole string. To match all namespaces with 'example' in it, write '.*example.*'.",
     "namespace_regex": "Component namespace regex",
     "name_regex": "Component name regex",
     "namespace_regex_desc": "Specifies a regular expression that identifies internal components by namespace. The namespace is often referred to as 'group', 'organization', or 'vendor' in various ecosystems.",
