@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');
 
@@ -22,8 +19,6 @@ const License = () => import('@/views/portfolio/licenses/License');
 const Login = () => import('@/views/pages/Login');
 const PasswordForceChange = () => import('@/views/pages/PasswordForceChange');
 const Page404 = () => import('@/views/pages/Page404');
-
-Vue.use(Router);
 
 function configRoutes() {
   return [
@@ -213,9 +208,9 @@ function configRoutes() {
   ]
 }
 
-export default new Router({
+export default {
   mode: 'history', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: configRoutes()
-});
+}
