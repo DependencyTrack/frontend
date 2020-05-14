@@ -6,11 +6,12 @@ import 'core-js/es7/array'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
-import router from './router'
+import props from './routes'
 import i18n from './i18n'
 import './validation'
 import './plugins/table.js'
 import axios from 'axios'
+import Router from 'vue-router'
 import VueAxios from 'vue-axios'
 import VueShowdown from 'vue-showdown'
 import vueDebounce from 'vue-debounce'
@@ -30,13 +31,31 @@ Vue.use(VueToastr, {
 });
 Vue.use(VueShowdown, { flavor: 'github' });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
+Vue.use(Router);
 
 Vue.prototype.$api = api;
+
 axios.get("static/config.json").then(response => {
   Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+  if('UI_BASE_PATH' in response.data) {
+    props.base = response.data.UI_BASE_PATH;
+  }
 }).catch(function (error) {
   console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.")
 }).finally(function () {
+
+  Vue.prototype.$version = version;
+
+  new Vue({
+    el: '#app',
+    router: new Router(props),
+    template: '<App/>',
+    components: {
+      App,
+    }
+    ,i18n
+  });
+
   /*
   Register global $dtrack variable which will be the response body from /api/version.
   $dtrack can then be used anywhere in the app to get information about the server,
@@ -47,16 +66,4 @@ axios.get("static/config.json").then(response => {
         Vue.prototype.$dtrack = result.data;
       }
     );
-});
-
-Vue.prototype.$version = version;
-
-new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: {
-    App,
-  }
-  ,i18n
 });
