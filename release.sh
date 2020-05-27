@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 clear
-: '
 RELEASE_TYPE=patch
 PS3='Select the type of release to perform: '
 releaseTypes=("Major" "Minor" "Patch" "Quit")
@@ -26,10 +25,8 @@ do
         *) echo "invalid option $REPLY";;
     esac
 done
-'
-npm version prerelease --preid=rc
 
-#npm version $RELEASE_TYPE
+npm version $RELEASE_TYPE
 if [[ "$?" -ne 0 ]] ; then
   echo 'Aborting release due to version incremental failure. Ensure there are no modified/uncommitted files in the repo'; exit $rc
 fi
@@ -39,11 +36,6 @@ if [[ "$?" -ne 0 ]] ; then
   echo 'Aborting release due to build failure'; exit $rc
 fi
 
-npm run bom
-if [[ "$?" -ne 0 ]] ; then
-  echo 'Aborting release due to BOM creation failure'; exit $rc
-fi
-
 PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
 zip -r frontend-dist.zip dist/*
 echo Publishing $PACKAGE_VERSION to GitHub Releases
@@ -51,4 +43,4 @@ echo Publishing $PACKAGE_VERSION to GitHub Releases
 # https://github.com/j0057/github-release
 githubrelease release dependencytrack/frontend create $PACKAGE_VERSION \
   --name $PACKAGE_VERSION --body "Dependency-Track Frontend" \
-  --publish --prerelease bom.xml frontend-dist.zip
+  --publish bom.xml frontend-dist.zip

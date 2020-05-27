@@ -82,6 +82,24 @@
   background-color: #EBE5A8;
   border: 1px solid #DCD167;
 }
+.label-notification {
+  color: #222222;
+  padding: .2em .6em .3em;
+  font-weight: normal;
+  font-size: 75%;
+}
+.label-notification-fail {
+  background-color: lighten($notification-fail, 15% );
+  border: 1px solid $notification-fail;
+}
+.label-notification-warn {
+  background-color: lighten($notification-warn, 15% );
+  border: 1px solid $notification-warn;
+}
+.label-notification-info {
+  background-color: lighten($notification-info, 15% );
+  border: 1px solid $notification-info;
+}
 .table {
   background-color: $grey-750;
 }

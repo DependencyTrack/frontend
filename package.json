@@ -1,6 +1,6 @@
 {
   "name": "@dependencytrack/frontend",
-  "version": "1.0.0-rc.3",
+  "version": "1.1.0-SNAPSHOT",
   "description": "Single Page Application for OWASP Dependency-Track",
   "author": "Steve Springett",
   "homepage": "https://dependencytrack.org/",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "serve": "vue-cli-service serve",
+    "serve": "npm run prebuild && vue-cli-service serve",
     "prebuild": "node update-embedded-version.js",
     "build": "npm run prebuild && vue-cli-service build && npm run bom",
     "lint": "vue-cli-service lint",

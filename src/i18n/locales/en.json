@@ -192,6 +192,29 @@
     "used_by": "Used By",
     "oidc_availability_check_failed": "Failed to determine availability of OpenID Connect",
     "oidc_redirect_failed": "An error occurred while redirecting to the OpenID Connect identity provider"
+    "policies": "Policies",
+    "license_groups": "License Groups",
+    "create_policy": "Create Policy",
+    "policy_created": "Policy created",
+    "delete_policy": "Delete Policy",
+    "policy_deleted": "Policy deleted",
+    "operator": "Operator",
+    "violation_state": "Violation State",
+    "select_license": "Select License",
+    "create_license_group": "Create License Group",
+    "license_group_created": "License group created",
+    "delete_license_group": "Delete License Group",
+    "license_group_deleted": "License group deleted",
+    "subject": "Subject",
+    "age": "Age",
+    "analyzer": "Analyzer",
+    "bom": "BOM",
+    "component_group": "Component group",
+    "component_version": "Component version",
+    "license_group": "License group",
+    "package_url": "Package URL (PURL)",
+    "conditions": "Conditions",
+    "condition_deleted": "Condition deleted"
   },
   "admin": {
     "configuration": "Configuration",
@@ -241,7 +264,7 @@
     "configuration_saved": "Configuration saved",
     "email_address": "Email address",
     "test_notification_queued": "A test notification has been queued",
-    "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.",
+    "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.\nThe regex must match the whole string. To match all namespaces with 'example' in it, write '.*example.*'.",
     "namespace_regex": "Component namespace regex",
     "name_regex": "Component name regex",
     "namespace_regex_desc": "Specifies a regular expression that identifies internal components by namespace. The namespace is often referred to as 'group', 'organization', or 'vendor' in various ecosystems.",
@@ -277,6 +300,7 @@
     "default": "Default",
     "publisher": "Publisher",
     "scope": "Scope",
+    "group": "Group",
     "notification_level": "Notification level",
     "destination": "Destination",
     "delete_alert": "Delete Alert",
@@ -336,6 +360,17 @@
     "unsuccessful_action": "Could not perform the requested action",
     "http_request_error": "HTTP Request Error",
     "server_error": "Server Error"
+  },
+  "violation": {
+    "info": "Inform",
+    "warn": "Warn",
+    "fail": "Fail"
+  },
+  "operator" : {
+    "is": "is",
+    "is_not": "is not",
+    "matches": "matches",
+    "no_match": "does not match"
   },
   "severity": {
     "critical": "Critical",

@@ -5,6 +5,7 @@ export const PORTFOLIO_MANAGEMENT = "PORTFOLIO_MANAGEMENT";
 export const ACCESS_MANAGEMENT = "ACCESS_MANAGEMENT";
 export const VULNERABILITY_ANALYSIS = "VULNERABILITY_ANALYSIS";
 export const SYSTEM_CONFIGURATION = "SYSTEM_CONFIGURATION";
+export const POLICY_MANAGEMENT = "POLICY_MANAGEMENT";
 
 /**
  * Determines if the current logged in user has a specific permission.
