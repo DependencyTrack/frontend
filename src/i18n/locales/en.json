@@ -191,7 +191,7 @@
     "metric_refresh_requested": "A refresh has been requested. Metrics will be updated when the refresh task has completed.",
     "used_by": "Used By",
     "oidc_availability_check_failed": "Failed to determine availability of OpenID Connect",
-    "oidc_redirect_failed": "An error occurred while redirecting to the OpenID Connect identity provider"
+    "oidc_redirect_failed": "An error occurred while redirecting to the OpenID Connect identity provider",
     "policies": "Policies",
     "license_groups": "License Groups",
     "create_policy": "Create Policy",
