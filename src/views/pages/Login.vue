@@ -35,7 +35,16 @@
                     />
                     <b-row>
                       <b-col cols="6">
-                        <b-button variant="primary" type="submit" class="px-4">{{ $t('message.login') }}</b-button>
+                        <b-button
+                          variant="primary"
+                          type="submit"
+                          class="px-4"
+                        >{{ $t('message.login') }}</b-button>
+                      </b-col>
+                      <b-col cols="6" v-show="oidcAvailable">
+                        <b-button style="float: right" v-on:click="oidcLogin()">
+                          <img alt="OpenID Logo" src="@/assets/img/openid-logo.svg" width="60px" />
+                        </b-button>
                       </b-col>
                     </b-row>
                   </b-form>
@@ -45,7 +54,7 @@
             <b-card no-body class="text-white bg-grey-900 py-5 d-md-down-none" style="width:44%">
               <b-card-body class="text-center">
                 <div>
-                  <img src="@/assets/img/brand/dt-logo-vertical-white-text.svg" width="100%"/>
+                  <img src="@/assets/img/brand/dt-logo-vertical-white-text.svg" width="100%" />
                 </div>
               </b-card-body>
             </b-card>
@@ -53,75 +62,177 @@
         </b-col>
       </b-row>
     </div>
-    <informational-modal v-bind:message="loginError"/>
+    <informational-modal v-bind:message="loginError" />
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-  import $ from 'jquery'
-  import { ValidationObserver } from 'vee-validate'
-  import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput'
-  import InformationalModal from '../modals/InformationalModal'
-  const qs = require('querystring');
+import axios from "axios";
+import Oidc from "oidc-client";
+// bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
+import $ from "jquery";
+import { ValidationObserver } from "vee-validate";
+import BValidatedInputGroupFormInput from "../../forms/BValidatedInputGroupFormInput";
+import InformationalModal from "../modals/InformationalModal";
+const qs = require("querystring");
 
-  export default {
-    name: 'Login',
-    components: {
-      InformationalModal,
-      BValidatedInputGroupFormInput,
-      ValidationObserver
-    },
-    data() {
-      return {
-        loginError: "",
-        input: {
-          username: "",
-          password: ""
+export default {
+  name: "Login",
+  components: {
+    InformationalModal,
+    BValidatedInputGroupFormInput,
+    ValidationObserver
+  },
+  data() {
+    return {
+      loginError: "",
+      input: {
+        username: "",
+        password: ""
+      },
+      oidcAvailable: false,
+      oidcUserManager: new Oidc.UserManager({
+        userStore: new Oidc.WebStorageStateStore(),
+        authority: this.$oidc.ISSUER,
+        client_id: this.$oidc.CLIENT_ID,
+        redirect_uri: window.location.origin + "/static/oidc-callback.html",
+        response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
+        scope: "openid profile email",
+        loadUserInfo: false
+      })
+    };
+  },
+  methods: {
+    login() {
+      const url = this.$api.BASE_URL + "/" + this.$api.URL_LOGIN;
+      const requestBody = {
+        username: this.input.username,
+        password: this.input.password
+      };
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
         }
-      }
-    },
-    methods: {
-      login() {
-        const url = this.$api.BASE_URL + "/" + this.$api.URL_LOGIN;
-        const requestBody = {
-          username: this.input.username,
-          password: this.input.password
-        };
-        const config = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        };
-        axios.post(url, qs.stringify(requestBody), config)
-          .then((result) => {
-            if(result.status === 200) {
-              sessionStorage.setItem('token', result.data); // store the JWT in session storage
-              // Set authorization headers for axios and jQuery
-              axios.defaults.headers.common['Authorization'] = `Bearer ${result.data}`;
-              $.ajaxSetup({
-                beforeSend: function(xhr) {
-                  xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
-                }
-              });
-              this.$router.replace({ name: "Dashboard" });
-            }
-          })
-          .catch((err) => {
-            if (err.response.status === 401) {
-              if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
-                this.$router.replace({ name: "PasswordForceChange" });
-                return;
+      };
+      axios
+        .post(url, qs.stringify(requestBody), config)
+        .then(result => {
+          if (result.status === 200) {
+            sessionStorage.setItem("token", result.data); // store the JWT in session storage
+            // Set authorization headers for axios and jQuery
+            axios.defaults.headers.common[
+              "Authorization"
+            ] = `Bearer ${result.data}`;
+            $.ajaxSetup({
+              beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
               }
-              this.$bvModal.show('modal-informational');
-              this.loginError = this.$t('message.login_unauthorized');
-            } else if (err.response.status === 403) {
-              this.$bvModal.show('modal-informational');
-              this.loginError = this.$t('message.login_forbidden');
+            });
+            this.$router.replace({ name: "Dashboard" });
+          }
+        })
+        .catch(err => {
+          if (err.response.status === 401) {
+            if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
+              this.$router.replace({ name: "PasswordForceChange" });
+              return;
             }
-          })
-      }
+            this.$bvModal.show("modal-informational");
+            this.loginError = this.$t("message.login_unauthorized");
+          } else if (err.response.status === 403) {
+            this.$bvModal.show("modal-informational");
+            this.loginError = this.$t("message.login_forbidden");
+          }
+        });
+    },
+    checkOidcAvailability() {
+      const url = this.$api.BASE_URL + "/" + this.$api.URL_OIDC_AVAILABLE;
+
+      return axios
+        .get(url)
+        .then(result => {
+          var oidcAvailableInBackend = false;
+          if (result.status === 200) {
+            oidcAvailableInBackend = result.data === true;
+          }
+          var oidcAvailableInFrontend =
+            this.oidcUserManager.settings.authority &&
+            this.oidcUserManager.settings.client_id;
+          return oidcAvailableInBackend && oidcAvailableInFrontend;
+        })
+        .catch(err => {
+          return Promise.reject(err);
+        });
+    },
+    oidcLogin() {
+      this.oidcUserManager.signinRedirect().catch(err => {
+        console.log(err);
+        this.$toastr.e(this.$t("message.oidc_redirect_failed"));
+      });
     }
+  },
+  mounted() {
+    this.checkOidcAvailability()
+      .then(oidcAvailable => {
+        this.oidcAvailable = oidcAvailable;
+
+        if (!oidcAvailable) {
+          return;
+        }
+
+        this.oidcUserManager.getUser().then(oidcUser => {
+          // oidcUser will only be set when coming from oidc-callback.html
+          if (oidcUser === null) {
+            return;
+          }
+
+          // Exchange OAuth2 Access Token for a JWT issued by Dependency-Track
+          const url = this.$api.BASE_URL + "/" + this.$api.URL_USER_OIDC_LOGIN;
+          const requestBody = {
+            accessToken: oidcUser.access_token
+          };
+          const config = {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          };
+
+          this.axios
+            .post(url, qs.stringify(requestBody), config)
+            .then(result => {
+              if (result.status === 200) {
+                sessionStorage.setItem("token", result.data);
+                axios.defaults.headers.common[
+                  "Authorization"
+                ] = `Bearer ${result.data}`;
+                $.ajaxSetup({
+                  beforeSend: function(xhr) {
+                    xhr.setRequestHeader(
+                      "Authorization",
+                      `Bearer ${result.data}`
+                    );
+                  }
+                });
+                this.$router.replace({ name: "Dashboard" });
+              }
+            })
+            .catch(err => {
+              if (err.response.status === 401) {
+                this.$bvModal.show("modal-informational");
+                this.loginError = this.$t("message.login_unauthorized");
+              } else if (err.response.status === 403) {
+                this.$bvModal.show("modal-informational");
+                this.loginError = this.$t("message.login_forbidden");
+              }
+            })
+            .finally(() => {
+              this.oidcUserManager.removeUser();
+            });
+        });
+      })
+      .catch(err => {
+        this.$toastr.e(this.$t("message.oidc_availability_check_failed"));
+      });
   }
+};
 </script>

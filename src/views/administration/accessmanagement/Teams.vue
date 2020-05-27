@@ -26,6 +26,7 @@
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
   import SelectLdapGroupModal from "./SelectLdapGroupModal";
+  import SelectOidcGroupModal from "./SelectOidcGroupModal";
   import SelectPermissionModal from "./SelectPermissionModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import {Switch as cSwitch} from "@coreui/vue";
@@ -137,6 +138,14 @@
                         <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLdapGroupModal')"/>
                       </div>
                     </b-form-group>
+                    <b-form-group :label="this.$t('admin.mapped_oidc_groups')">
+                      <div class="list-group">
+                        <span v-for="mappedOidcGroup in mappedOidcGroups">
+                          <actionable-list-group-item :value="mappedOidcGroup.group.name" delete-icon="true" v-on:actionClicked="removeOidcGroupMapping(mappedOidcGroup.uuid)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectOidcGroupModal')"/>
+                      </div>
+                    </b-form-group>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group v-if="managedUsers && managedUsers.length > 0" :label="this.$t('admin.managed_users')">
@@ -159,6 +168,7 @@
                   </b-col>
                   <select-permission-modal v-on:selection="updatePermissionSelection" />
                   <select-ldap-group-modal v-on:selection="updateLdapGroupSelection" />
+                  <select-oidc-group-modal v-on:selection="updateOidcGroupSelection" />
                 </b-row>
               `,
               mixins: [permissionsMixin],
@@ -166,6 +176,7 @@
                 cSwitch,
                 ActionableListGroupItem,
                 SelectLdapGroupModal,
+                SelectOidcGroupModal,
                 SelectPermissionModal,
                 BInputGroupFormInput
               },
@@ -176,6 +187,7 @@
                   apiKeys: row.apiKeys,
                   permissions: row.permissions,
                   ldapGroups: row.mappedLdapGroups,
+                  mappedOidcGroups: row.mappedOidcGroups,
                   managedUsers: row.managedUsers,
                   ldapUsers: row.ldapUsers,
                   labelIcon: {
@@ -269,6 +281,46 @@
                     }
                     this.ldapGroups = k;
                     this.team.mappedLdapGroups = this.ldapGroups;
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                updateOidcGroupSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectOidcGroupModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
+                    this.axios.put(url, {
+                      team: this.team.uuid,
+                      group: selection.uuid
+                    }).then((response) => {
+                      if (this.mappedOidcGroups === undefined || this.mappedOidcGroups === null) {
+                        this.mappedOidcGroups = [];
+                      }
+                      this.mappedOidcGroups.push(response.data);
+                      this.mappedOidcGroups.sort();
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
+                },
+                removeOidcGroupMapping: function(mappingUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}/${mappingUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let k = [];
+                    for (let i=0; i<this.mappedOidcGroups.length; i++) {
+                      if (this.mappedOidcGroups[i].uuid !== mappingUuid) {
+                        k.push(this.mappedOidcGroups[i]);
+                      }
+                    }
+                    this.mappedOidcGroups = k;
+                    this.team.mappedOidcGroups = this.mappedOidcGroups;
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));

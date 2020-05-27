@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Waiting...</title>
+</head>
+<body>
+    <script src="js/axios.min.js"></script>
+    <script src="js/oidc-client.min.js"></script>
+    <script>
+        axios.get("/static/config.json")
+            .then((response) => {
+                let config = response.data;
+
+                return new Oidc.UserManager({
+                    response_mode: config.OIDC_FLOW === "implicit" ? "fragment" : "query",
+                    userStore: new Oidc.WebStorageStateStore(),
+                    loadUserInfo: false
+                });
+            })
+            .then((oidcUserManager) => {
+                oidcUserManager.getUser()
+                    .then((user) => {
+                        if (user !== null) {
+                            // Implicit flow: Token is already present in URL
+                            window.location.href = "../";
+                            return Promise.resolve()
+                        } else {
+                            // Code flow: Token must be acquired in exchange for auth code
+                            return oidcUserManager.signinRedirectCallback();
+                        }
+                    })
+                    .then((user) => {
+                        window.location.href = "../";
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    </script>
+</body>
+</html>
