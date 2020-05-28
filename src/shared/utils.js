@@ -36,3 +36,10 @@ export function getUrlVars() {
 export function getUrlVar(name) {
   return getUrlVars()[name];
 }
+
+/**
+ * Returns the context from which the webapp is running.
+ */
+export function getContextPath() {
+  return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+}

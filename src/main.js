@@ -19,6 +19,7 @@ import VueToastr from "vue-toastr";
 import api from "./shared/api.json";
 import oidc from "./shared/oidc.json";
 import version from "./version";
+import { getContextPath } from "./shared/utils";
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -35,8 +36,11 @@ Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
 axios.get("static/config.json").then(response => {
-  Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
-
+  if (response.data.API_BASE_URL && response.data.API_BASE_URL !== "") {
+    Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+  } else {
+    Vue.prototype.$api.BASE_URL = getContextPath();
+  }
   // OpenID Connect
   Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
   Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;

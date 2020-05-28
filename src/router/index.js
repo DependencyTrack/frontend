@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { getContextPath } from "../shared/utils"
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');
@@ -215,6 +216,7 @@ function configRoutes() {
 
 export default new Router({
   mode: 'history', // https://router.vuejs.org/api/#mode
+  base: getContextPath(),
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: configRoutes()
