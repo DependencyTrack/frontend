@@ -41,5 +41,15 @@ export function getUrlVar(name) {
  * Returns the context from which the webapp is running.
  */
 export function getContextPath() {
+  // An array of acceptable root context paths defined in the UI.
+  let root = ['/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
+    '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'];
+  for (let i = 0; i < root.length; i++) {
+    if (window.location.pathname.startsWith(root[i])) {
+      // App is deployed in the root context. Return an empty string.
+      return "";
+    }
+  }
+  // App is deployed in a non-root context. Return the context.
   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
