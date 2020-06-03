@@ -80,7 +80,7 @@
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             },
             events: {
-              'click a': (e,value,row,index) => {
+              'click a': (e,value,row) => {
                 e.preventDefault();
                 this.$router.push({ name: "Project", params: { uuid: row.uuid }})
               }            
