@@ -199,29 +199,31 @@
                   let queryString = "?component=" + componentUuid + "&vulnerability=" + this.vulnerability.uuid;
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
                   this.axios.get(url).then((response) => {
-                    let analysis = response.data;
-                    if (Object.prototype.hasOwnProperty.call(analysis, "analysisComments")) {
-                      let trail = "";
-                      for (let i = 0; i < analysis.analysisComments.length; i++) {
-                        if (Object.prototype.hasOwnProperty.call(analysis.analysisComments[i], "commenter")) {
-                          trail += analysis.analysisComments[i].commenter + " - ";
-                        }
-                        trail += common.formatTimestamp(analysis.analysisComments[i].timestamp, true);
-                        trail += "\n";
-                        trail += analysis.analysisComments[i].comment;
-                        trail += "\n\n";
-                      }
-                      this.auditTrail = trail;
-                    }
-                    if (Object.prototype.hasOwnProperty.call(analysis, "analysisState")) {
-                      this.analysisState = analysis.analysisState;
-                    }
-                    if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
-                      this.isSuppressed = analysis.isSuppressed;
-                    } else {
-                      this.isSuppressed = false;
-                    }
+                    this.updateAnalysisData(response.data);
                   });
+                },
+                updateAnalysisData: function(analysis) {
+                  if (Object.prototype.hasOwnProperty.call(analysis, "analysisComments")) {
+                    let trail = "";
+                    for (let i = 0; i < analysis.analysisComments.length; i++) {
+                      if (Object.prototype.hasOwnProperty.call(analysis.analysisComments[i], "commenter")) {
+                        trail += analysis.analysisComments[i].commenter + " - ";
+                      }
+                      trail += common.formatTimestamp(analysis.analysisComments[i].timestamp, true);
+                      trail += "\n";
+                      trail += analysis.analysisComments[i].comment;
+                      trail += "\n\n";
+                    }
+                    this.auditTrail = trail;
+                  }
+                  if (Object.prototype.hasOwnProperty.call(analysis, "analysisState")) {
+                    this.analysisState = analysis.analysisState;
+                  }
+                  if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
+                    this.isSuppressed = analysis.isSuppressed;
+                  } else {
+                    this.isSuppressed = false;
+                  }
                 },
                 makeAnalysis: function() {
                   this.callRestEndpoint(this.analysisState, null, null);
@@ -241,6 +243,7 @@
                     isSuppressed: isSuppressed
                   }).then((response) => {
                     this.$toastr.s(this.$t('message.updated'));
+                    this.updateAnalysisData(response.data);
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
