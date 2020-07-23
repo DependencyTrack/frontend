@@ -1,0 +1,12 @@
+.git/
+.github/
+dist/
+docs/
+node_modules/
+.editorconfig
+CODE_OF_CONDUCT.md
+LICENSE
+README.md
+release.sh
+SECURITY.md
+snapshot.sh
