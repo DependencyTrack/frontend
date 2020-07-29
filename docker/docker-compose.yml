@@ -11,7 +11,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
-    image: owasp/dependency-track-frontend:latest
+    image: owasp/dependency-track-frontend:snapshot
     depends_on:
       - dependency-track
     environment:
