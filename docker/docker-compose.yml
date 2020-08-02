@@ -19,6 +19,8 @@ services:
       #- "OIDC_ISSUER="
       #- "OIDC_CLIENT_ID="
       #- "OIDC_FLOW=code"
+    # volumes:
+    #   - "/host/path/to/config.json:/app/static/config.json"
     ports:
       - "8080:80"
     restart: unless-stopped
