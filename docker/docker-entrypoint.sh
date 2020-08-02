@@ -6,11 +6,6 @@ set -e
 if mount | grep '/static/config.json'; then
     echo "config.json is mounted from host - ENV configuration will be ignored"
 else
-    if [ -z "$API_BASE_URL" ]; then
-        echo "Mandatory environment variable \$API_BASE_URL is not set"
-        exit 1
-    fi
-
     # Apply ENV vars to temporary config.json
     jq  --arg apiBaseUrl        "$API_BASE_URL" \
         --arg oidcIssuer        "$OIDC_ISSUER" \
