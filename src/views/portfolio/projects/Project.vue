@@ -101,8 +101,8 @@
         <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
-        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.dependencies') }} <b-badge variant="tab-total">{{ totalDependencies }}</b-badge></template>
-        <project-dependencies :key="this.uuid" :uuid="this.uuid" v-on:total="totalDependencies = $event" />
+        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
+        <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
@@ -114,7 +114,7 @@
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
     <project-upload-bom-modal :uuid="this.uuid" />
-    <project-add-dependency-modal :uuid="this.uuid" />
+    <project-add-component-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -123,7 +123,7 @@
   import { cloneDeep } from 'lodash-es';
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
-  import ProjectDependencies from "./ProjectDependencies";
+  import ProjectComponents from "./ProjectComponents";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ProjectDashboard from "./ProjectDashboard";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
@@ -135,19 +135,19 @@
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
   import ProjectUploadBomModal from "./ProjectUploadBomModal";
-  import ProjectAddDependencyModal from "./ProjectAddDependencyModal";
+  import ProjectAddComponentModal from "./ProjectAddComponentModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
-      ProjectAddDependencyModal,
+      ProjectAddComponentModal,
       ProjectUploadBomModal,
       ProjectFindings,
       ProjectAddVersionModal,
       ProjectCreatePropertyModal,
       ProjectPropertiesModal,
       ProjectDetailsModal,
-      ProjectDependencies,
+      ProjectComponents,
       SeverityBarChart,
       ProjectDashboard,
       PortfolioWidgetRow,
@@ -180,7 +180,7 @@
         currentUnassigned: 0,
         currentRiskScore: 0,
         availableProjectVersions: [],
-        totalDependencies: 0,
+        totalComponents: 0,
         totalFindings: 0
       }
     },

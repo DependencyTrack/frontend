@@ -119,10 +119,17 @@
       }
     },
     methods: {
-      generateBreadcrumbs: function generateBreadcrumbs(crumbName) {
+      generateBreadcrumbs: function generateBreadcrumbs(crumbName, subSectionName, subSectionUuid, subSectionLabel) {
         let sectionLabel = this.$t(this.$route.meta.i18n);
         let sectionPath = this.$route.meta.sectionPath;
-        if (crumbName) {
+        if (crumbName && subSectionName && subSectionUuid && subSectionLabel) {
+          return [
+            { path: '', name: this.$t('message.home') },
+            { path: sectionPath, name: sectionLabel },
+            { name: subSectionName, params: {uuid: subSectionUuid }, meta: {label: subSectionLabel}},
+            { name: crumbName, active: true }
+          ];
+        } else if (crumbName) {
           return [
             { path: '', name: this.$t('message.home') },
             { path: sectionPath, name: sectionLabel },
@@ -167,9 +174,9 @@
       EventBus.$on('crumble', () => {
         this.breadcrumbs = [];
       });
-      EventBus.$on('addCrumb', (crumb) => {
+      EventBus.$on('addCrumb', (crumb, subSectionName, subSectionUuid, subsectionLabel) => {
         if (crumb) {
-          this.breadcrumbs = this.generateBreadcrumbs(crumb);
+          this.breadcrumbs = this.generateBreadcrumbs(crumb, subSectionName, subSectionUuid, subsectionLabel);
         } else {
           this.breadcrumbs = [];
         }
