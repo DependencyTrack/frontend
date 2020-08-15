@@ -1,10 +1,15 @@
 version: "3"
 
+volumes:
+  dependency-track-data:
+
 services:
   dependency-track:
     image: owasp/dependency-track:snapshot
     ports:
       - "8081:8080"
+    volumes:
+      - "dependency-track-data:/data"
     restart: unless-stopped
 
   frontend:
@@ -16,11 +21,12 @@ services:
       - dependency-track
     environment:
       - "API_BASE_URL=http://localhost:8081"
-      #- "OIDC_ISSUER="
-      #- "OIDC_CLIENT_ID="
-      #- "OIDC_FLOW=code"
+      # - "OIDC_ISSUER="
+      # - "OIDC_CLIENT_ID="
+      # - "OIDC_FLOW="
     # volumes:
-    #   - "/host/path/to/config.json:/app/static/config.json"
+      # - "/host/path/to/config.json:/app/static/config.json"
     ports:
       - "8080:80"
     restart: unless-stopped
+
