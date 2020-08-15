@@ -1,7 +1,10 @@
 ###############################
 #         Build image         #
 ###############################
-FROM node:lts as build
+FROM node:lts-slim as build
+
+# git is required for dependency installation
+RUN apt update && apt install -y git
 
 WORKDIR /app
 
