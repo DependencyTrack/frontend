@@ -45,9 +45,17 @@ axios.get("static/config.json").then(response => {
   Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
   Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
   Vue.prototype.$oidc.FLOW = response.data.OIDC_FLOW;
+  createVueApp();
 }).catch(function (error) {
-  console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.")
-}).finally(function () {
+  console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.");
+  createVueApp();
+});
+
+/**
+ * Removed finally block due to:
+ * https://github.com/DependencyTrack/frontend/issues/34
+ */
+function createVueApp() {
   /*
   Register global $dtrack variable which will be the response body from /api/version.
   $dtrack can then be used anywhere in the app to get information about the server,
@@ -70,4 +78,4 @@ axios.get("static/config.json").then(response => {
     }
     ,i18n
   });
-});
+}
