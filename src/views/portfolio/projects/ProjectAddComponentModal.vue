@@ -114,8 +114,8 @@
     },
     methods: {
       createComponent: function() {
-        this.$root.$emit('bv::hide::modal', 'componentCreateComponentModal');
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
+        this.$root.$emit('bv::hide::modal', 'projectAddComponentModal');
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
         this.axios.put(url, {
           name: this.component.name,
           version: this.component.version,

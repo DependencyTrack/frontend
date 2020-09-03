@@ -113,8 +113,6 @@
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
-    <project-upload-bom-modal :uuid="this.uuid" />
-    <project-add-component-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -134,14 +132,10 @@
   import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
-  import ProjectUploadBomModal from "./ProjectUploadBomModal";
-  import ProjectAddComponentModal from "./ProjectAddComponentModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
-      ProjectAddComponentModal,
-      ProjectUploadBomModal,
       ProjectFindings,
       ProjectAddVersionModal,
       ProjectCreatePropertyModal,

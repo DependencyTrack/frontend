@@ -26,6 +26,8 @@
       :options="options"
       v-on:onLoadSuccess="tableLoaded">
     </bootstrap-table>
+    <project-upload-bom-modal :uuid="this.uuid" />
+    <project-add-component-modal :uuid="this.uuid" v-on:refreshTable="refreshTable" />
   </div>
 </template>
 
@@ -36,9 +38,16 @@
   import SeverityProgressBar from "../../components/SeverityProgressBar";
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
+  import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
 
   export default {
+    components: {ProjectUploadBomModal, ProjectAddComponentModal},
     mixins: [permissionsMixin],
+    comments: {
+      ProjectAddComponentModal,
+      ProjectUploadBomModal,
+    },
     props: {
       uuid: String
     },
@@ -178,21 +187,15 @@
       removeDependencies: function () {
         let selections = this.$refs.table.getSelections();
         if (selections.length === 0) return;
-        let componentUuids = [];
         for (let i=0; i<selections.length; i++) {
-          componentUuids[i] = selections[i].component.uuid;
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
+          this.axios.delete(url).then((response) => {
+            this.$refs.table.refresh({ silent: true });
+            this.$toastr.s(this.$t('message.component_deleted'));
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          });
         }
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_DEPENDENCY}`;
-        this.axios.delete(url, { data: {
-            projectUuid: this.uuid,
-            componentUuids: componentUuids
-          }
-        }).then((response) => {
-          this.$refs.table.refresh({ silent: true });
-          this.$toastr.s(this.$t('message.dependency_removed'));
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
         this.$refs.table.uncheckAll();
       },
       tableLoaded: function(data) {
@@ -201,6 +204,11 @@
         } else {
           this.$emit('total', '?');
         }
+      },
+      refreshTable: function() {
+        this.$refs.table.refresh({
+          silent: true
+        });
       }
     }
   };
