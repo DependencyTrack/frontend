@@ -86,10 +86,6 @@
         <template v-slot:title><i class="fa fa-shield"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
         <component-vulnerabilities :key="this.uuid" :uuid="this.uuid" v-on:total="totalVulnerabilities = $event" />
       </b-tab>
-      <b-tab>
-        <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.projects') }} <b-badge variant="tab-total">{{ totalProjects }}</b-badge></template>
-        <component-projects :key="this.uuid" :uuid="this.uuid" v-on:total="totalProjects = $event" />
-      </b-tab>
     </b-tabs>
     <component-details-modal :component="cloneDeep(component)" v-on:componentUpdated="syncComponentFields" />
   </div>
@@ -102,7 +98,6 @@
   import VueEasyPieChart from 'vue-easy-pie-chart'
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ComponentDashboard from "./ComponentDashboard";
-  import ComponentProjects from "./ComponentProjects";
   import ComponentVulnerabilities from "./ComponentVulnerabilities";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
   import EventBus from '../../../shared/eventbus';
@@ -114,13 +109,21 @@
     components: {
       SeverityBarChart,
       ComponentDashboard,
-      ComponentProjects,
       ComponentVulnerabilities,
       PortfolioWidgetRow,
       VueEasyPieChart,
       ComponentDetailsModal
     },
     computed: {
+      projectLabel () {
+        if (this.component.hasOwnProperty("project")) {
+          if (this.component.project.name && this.component.project.version) {
+            return this.component.project.name + ' ▸ ' + this.component.project.version;
+          } else {
+            return this.component.project.name;
+          }
+        }
+      },
       componentLabel () {
         if (this.component.name && this.component.version) {
           return this.component.name + ' ▸ ' + this.component.version;
@@ -185,7 +188,7 @@
       let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
       this.axios.get(componentUrl).then((response) => {
         this.component = response.data;
-        EventBus.$emit('addCrumb', this.componentLabel);
+        EventBus.$emit('addCrumb', this.componentLabel, 'Project', this.component.project.uuid, this.projectLabel);
       });
 
       let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;

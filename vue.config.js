@@ -1,4 +1,5 @@
 const CopyPlugin = require('copy-webpack-plugin')
+//const { CycloneDxWebpackPlugin } = require('../../CycloneDX/cyclonedx-webpack-plugin');
 
 module.exports = {
   lintOnSave: false,
@@ -13,7 +14,11 @@ module.exports = {
       new CopyPlugin([
         { from: "node_modules/axios/dist/axios.min.js", to: "static/js", force: true },
         { from: "node_modules/oidc-client/dist/oidc-client.min.js", to: "static/js", force: true }
-      ])
+      ]),
+      //new CycloneDxWebpackPlugin({
+      //  context: '../',
+      //  manifestLocation: './artifacts/metadata'
+      //})
     ]
   }
 };

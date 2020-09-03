@@ -39,7 +39,7 @@
             field: "component.name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.component.project + "/" + row.component.uuid);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -88,6 +88,22 @@
               if (typeof value !== 'undefined') {
                 return common.formatSeverityLabel(value);
               }
+            }
+          },
+          {
+            title: this.$t('message.analyzer'),
+            field: "attribution.analyzerIdentity",
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.attributedOn'),
+            field: "attribution.attributedOn",
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.formatTimestamp(value));
             }
           },
           {
