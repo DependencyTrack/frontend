@@ -91,6 +91,22 @@
             }
           },
           {
+            title: this.$t('message.analyzer'),
+            field: "attribution.analyzerIdentity",
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.attributedOn'),
+            field: "attribution.attributedOn",
+            sortable: true,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.formatTimestamp(value));
+            }
+          },
+          {
             title: this.$t('message.analysis'),
             field: "analysis.state",
             sortable: true,
