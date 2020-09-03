@@ -8,14 +8,14 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 // Views
 const Dashboard = () => import('@/views/Dashboard');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
-const ComponentList = () => import('@/views/portfolio/components/ComponentList');
+const ComponentSearch = () => import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');
 const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const Administration = () => import('@/views/administration/Administration');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
 const Project = () => import('@/views/portfolio/projects/Project');
-const Component = () => import('@/views/portfolio/components/Component');
+const Component = () => import('@/views/portfolio/projects/Component');
 const Vulnerability = () => import('@/views/portfolio/vulnerabilities/Vulnerability');
 const License = () => import('@/views/portfolio/licenses/License');
 
@@ -64,21 +64,21 @@ function configRoutes() {
         },
         {
           path: 'components',
-          name: 'Components',
-          component: ComponentList,
+          name: 'Component Lookup',
+          component: ComponentSearch,
           meta: {
-            i18n: 'message.components',
+            i18n: 'message.component_search',
             sectionPath: '/components'
           }
         },
         {
-          path: 'components/:uuid',
+          path: '/projects/:projectuuid/:uuid',
           name: 'Component',
           props: (route) => ( { uuid: route.params.uuid } ),
           component: Component,
           meta: {
-            i18n: 'message.components',
-            sectionPath: '/components'
+            i18n: 'message.projects',
+            sectionPath: '/projects'
           }
         },
         {
