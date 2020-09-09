@@ -9,14 +9,21 @@
         <b-input-group-form-select id="input-operator" required="true"
                                    v-model="operator" :options="operators" />
       </b-col>
-      <b-col md="4" lg="3">
-        <b-input-group-form-select v-if="isSubjectSelectable" id="input-value" required="true"
+      <b-col md="5" lg="5">
+        <b-input-group-form-select v-if="subject !== 'COORDINATES' && isSubjectSelectable" id="input-value" required="true"
                                    v-on:change="saveCondition" v-model="value" :options="possibleValues" />
 
-        <b-input-group-form-input v-else id="input-value" required="true" type="text" v-model="value" lazy="true"
+        <b-input-group-form-input v-else-if="subject !== 'COORDINATES' && !isSubjectSelectable" id="input-value" required="true" type="text" v-model="value" lazy="true"
                                   v-debounce:750ms="saveCondition" :debounce-events="'keyup'" />
+
+        <b-input-group v-else-if="subject === 'COORDINATES'">
+          <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" required="false" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" required="false" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" required="false" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+        </b-input-group>
+
       </b-col>
-      <b-col md="1" lg="4">
+      <b-col md="0" lg="2">
       </b-col>
     </b-row>
   </actionable-list-group-item>
@@ -26,6 +33,7 @@
   import ActionableListGroupItem from "../components/ActionableListGroupItem";
   import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
   import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
+  import common from "../../shared/common";
 
   export default {
     props: {
@@ -51,16 +59,19 @@
         subject: null,
         operator: null,
         value: null,
+        coordinatesGroup: null,
+        coordinatesName: null,
+        coordinatesVersion: null,
         subjects: [
-          {value: 'AGE', text: this.$t('message.age')},
-          {value: 'ANALYZER', text: this.$t('message.analyzer')},
-          {value: 'BOM', text: this.$t('message.bom')},
-          {value: 'COMPONENT_GROUP', text: this.$t('message.component_group')},
-          {value: 'COMPONENT_NAME', text: this.$t('message.component_name')},
-          {value: 'COMPONENT_VERSION', text: this.$t('message.component_version')},
+          //{value: 'AGE', text: this.$t('message.age')},
+          //{value: 'ANALYZER', text: this.$t('message.analyzer')},
+          //{value: 'BOM', text: this.$t('message.bom')},
+          {value: 'COORDINATES', text: this.$t('message.coordinates')},
           {value: 'LICENSE', text: this.$t('message.license')},
           {value: 'LICENSE_GROUP', text: this.$t('message.license_group')},
-          {value: 'PACKAGE_URL', text: this.$t('message.package_url')}
+          {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
+          {value: 'CPE', text: this.$t('message.cpe_full')},
+          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -91,11 +102,7 @@
             return true;
           case 'BOM':
             return true;
-          case 'COMPONENT_GROUP':
-            return false;
-          case 'COMPONENT_NAME':
-            return false;
-          case 'COMPONENT_VERSION':
+          case 'COORDINATES':
             return false;
           case 'LICENSE':
             return true;
@@ -103,8 +110,22 @@
             return true;
           case 'PACKAGE_URL':
             return false;
+          case 'CPE':
+            return false;
+          case 'SWID_TAGID':
+            return false;
           default:
             return false;
+        }
+      }
+    },
+    beforeMount() {
+      if (this.subject === "COORDINATES") {
+        let v = JSON.parse(this.value);
+        if (v) {
+          this.coordinatesGroup = v.group;
+          this.coordinatesName = v.name;
+          this.coordinatesVersion = v.version;
         }
       }
     },
@@ -120,13 +141,7 @@
           case 'BOM':
             this.operators = this.objectOperators;
             break;
-          case 'COMPONENT_GROUP':
-            this.operators = this.regexOperators;
-            break;
-          case 'COMPONENT_NAME':
-            this.operators = this.regexOperators;
-            break;
-          case 'COMPONENT_VERSION':
+          case 'COORDINATES':
             this.operators = this.regexOperators;
             break;
           case 'LICENSE':
@@ -140,13 +155,31 @@
           case 'PACKAGE_URL':
             this.operators = this.regexOperators;
             break;
+          case 'CPE':
+            this.operators = this.regexOperators;
+            break;
+          case 'SWID_TAGID':
+            this.operators = this.regexOperators;
+            break;
           default:
             this.operators = [];
         }
         this.saveCondition();
       },
+      createDynamicValue: function() {
+        if (this.subject === "COORDINATES") {
+          return JSON.stringify({
+            group: common.trimToNull(this.coordinatesGroup),
+            name: common.trimToNull(this.coordinatesName),
+            version: common.trimToNull(this.coordinatesVersion)
+          });
+        } else {
+          return this.value;
+        }
+      },
       saveCondition: function() {
-        if (!this.subject || !this.operator || !this.value) {
+        let dynamicValue = this.createDynamicValue();
+        if (!this.subject || !this.operator || !dynamicValue) {
           return;
         }
         if (this.condition.uuid) {
@@ -155,7 +188,7 @@
             uuid: this.condition.uuid,
             subject: this.subject,
             operator: this.operator,
-            value: this.value
+            value: dynamicValue
           }).then((response) => {
             this.condition = response.data;
             this.$toastr.s(this.$t('message.updated'));
@@ -167,7 +200,7 @@
           this.axios.put(url, {
             subject: this.subject,
             operator: this.operator,
-            value: this.value
+            value: dynamicValue
           }).then((response) => {
             this.condition = response.data;
             this.$toastr.s(this.$t('message.updated'));

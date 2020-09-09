@@ -35,13 +35,14 @@
         this.axios.put(url, {
           name: this.name
         }).then((response) => {
+          this.$root.$emit('bv::hide::modal', 'createPolicyModal');
           this.$emit('refreshTable');
-          this.$root.$emit('bv::hide::modal', 'policyCreatePolicyModal');
           this.$toastr.s(this.$t('message.project_created'));
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        }).finally(() => {
+          this.resetValues();
         });
-        this.resetValues();
       },
       resetValues: function () {
         this.name = null;
