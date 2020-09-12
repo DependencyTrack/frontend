@@ -1,0 +1,15 @@
+.editorconfig
+.git/
+.github/
+CODE_OF_CONDUCT.md
+LICENSE
+README.md
+SECURITY.md
+dist/
+docker/
+docs/
+node_modules/
+release.sh
+snapshot.sh
+!docker/etc/nginx/nginx.conf
+!docker/docker-entrypoint.sh

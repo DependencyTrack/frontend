@@ -11,6 +11,10 @@ jobs:
       matrix:
         node-version: [8.x, 10.x, 12.x]
 
+    env:
+      DOCKER_REPO: owasp/dependency-track-frontend
+      DOCKER_TAG: snapshot
+
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -24,3 +28,27 @@ jobs:
         npm test
       env:
         CI: true
+    - name: Building Docker container
+      run: |
+        docker build -f docker/Dockerfile -t $DOCKER_REPO:$DOCKER_TAG .
+    - name: Installing Docker analysis tools
+      run: |
+        sudo apt install jq
+        export DOCKLE_VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+        wget -O ~/dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${DOCKLE_VERSION}/dockle_${DOCKLE_VERSION}_Linux-64bit.tar.gz
+        tar zxvf ~/dockle.tar.gz -C ~/
+        export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+        wget -O ~/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+        tar zxvf ~/trivy.tar.gz -C ~/
+    - name: Analyzing Docker container
+      run: |
+        ~/dockle $DOCKER_REPO:$DOCKER_TAG
+        ~/trivy --exit-code 0 --quiet --auto-refresh $DOCKER_REPO:$DOCKER_TAG
+    - name: Publishing container to Docker Hub
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && startsWith(matrix.node-version, '12.')
+      env:
+        HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
+        HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
+      run: |
+        docker login -u "$HUB_USER" -p "$HUB_ACCESS_TOKEN"
+        docker push "$DOCKER_REPO:$DOCKER_TAG"
