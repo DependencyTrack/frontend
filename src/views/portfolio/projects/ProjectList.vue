@@ -78,6 +78,12 @@
             formatter(value, row, index) {
               let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            },
+            events: {
+              'click a': (e,value,row) => {
+                e.preventDefault();
+                this.$router.push({ name: "Project", params: { uuid: row.uuid }})
+              }            
             }
           },
           {
