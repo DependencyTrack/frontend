@@ -70,6 +70,38 @@
         <b-card>
           <b-row>
             <b-col sm="5">
+              <h4 id="chart-policy-violations" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <div class="small text-muted">
+                {{$t('message.policy_violations_by_state')}}
+              </div>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+        </b-card>
+      </b-col>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-policy-violation-breakdown" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <div class="small text-muted">
+                {{$t('message.policy_violations_by_classification')}}
+              </div>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-policy-violation-breakdown ref="chartPolicyViolationBreakdown" chartId="chartPolicyViolationBreakdown" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violation-breakdown>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
               <h4 id="chart-components" class="card-title mb-0">{{ $t('message.components') }}</h4>
             </b-col>
             <b-col sm="7" class="d-none d-md-block">
@@ -100,10 +132,14 @@
   import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
   import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
   import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities'
+  import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+  import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
   export default {
     name: 'project-dashboard',
     components: {
+      ChartPolicyViolations,
+      ChartPolicyViolationBreakdown,
       ChartAuditingProgress,
       ChartComponentVulnerabilities,
       ChartPortfolioVulnerabilities,
@@ -171,6 +207,8 @@
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
+        this.$refs.chartPolicyViolations.render(response.data);
+        this.$refs.chartPolicyViolationBreakdown.render(response.data);
         this.$refs.chartAuditedProgress.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);
         this.extractStats(response.data);

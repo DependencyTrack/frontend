@@ -73,6 +73,38 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
 };
 
 /**
+ * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
+ */
+$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId) {
+  if (! analyzer) {
+    return null;
+  }
+  let analyzerLabel = "";
+  let analyzerUrl = null;
+  switch (analyzer) {
+    case 'INTERNAL_ANALYZER':
+      analyzerLabel = "Internal";
+      break;
+    case 'OSSINDEX_ANALYZER':
+      analyzerLabel = "OSS Index";
+      analyzerUrl = "https://ossindex.sonatype.org/vuln/" + vulnId;
+      break;
+    case 'VULNDB_ANALYZER':
+      analyzerLabel = "VulnDB";
+      analyzerUrl = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
+      break;
+    case 'NPM_AUDIT_ANALYZER':
+      analyzerLabel = "NPM Audit";
+      analyzerUrl = "https://www.npmjs.com/advisories/" + vulnId;
+      break;
+  }
+  if (analyzerUrl) {
+    analyzerLabel = `<a href="${analyzerUrl}">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
+  }
+  return `<span class="label label-source label-analyzer" style="white-space:nowrap;">${analyzerLabel}</span>`;
+};
+
+/**
  * Given a UNIX timestamp, this function will return a formatted date.
  * i.e. 15 Jan 2017
  */
@@ -159,6 +191,7 @@ module.exports = {
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatCweLabel: $common.formatCweLabel,
+  formatAnalyzerLabel: $common.formatAnalyzerLabel,
   formatTimestamp: $common.formatTimestamp,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,

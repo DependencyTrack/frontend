@@ -39,6 +39,9 @@
 .severity-info-bg, .bg-severity-info, .bg-INFO {
   background: $severity-info none;
 }
+.bg-violation-type {
+  background: $widget-3;
+}
 .severity-unassigned-bg, .bg-severity-unassigned, .bg-UNASSIGNED {
   background: $severity-unassigned none;
 }
@@ -51,6 +54,12 @@
   height:40px;
   color:#ffffff;
   background-color: $severity-label-bg;
+}
+.pointer:hover {
+  cursor: pointer;
+}
+.label-analyzer {
+  border: 1px solid #5C9CCB;
 }
 .label-source {
   color: #222222;
@@ -265,4 +274,12 @@ button:focus {
   background-color: $grey-900 !important;
   margin-left: 0.6em !important;
   color: #21D983 !important;
+}
+
+td a.detail-icon {
+  font-size: 150%;
+  line-height: 1.0;
+  padding: 50% 50%;
+  margin: -50% -50%;
+  color: $grey-600;
 }

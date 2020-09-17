@@ -105,8 +105,12 @@
         <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
+        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
         <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
+      </b-tab>
+      <b-tab v-if="isPermitted(PERMISSIONS.POLICY_VIOLATION_ANALYSIS)">
+        <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
+        <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
     </b-tabs>
     <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
@@ -132,10 +136,12 @@
   import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
+  import ProjectPolicyViolations from "./ProjectPolicyViolations";
 
   export default {
     mixins: [permissionsMixin],
     components: {
+      ProjectPolicyViolations,
       ProjectFindings,
       ProjectAddVersionModal,
       ProjectCreatePropertyModal,
@@ -175,7 +181,8 @@
         currentRiskScore: 0,
         availableProjectVersions: [],
         totalComponents: 0,
-        totalFindings: 0
+        totalFindings: 0,
+        totalViolations: 0
       }
     },
     methods: {

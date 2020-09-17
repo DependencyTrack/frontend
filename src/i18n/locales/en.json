@@ -43,6 +43,7 @@
     "total_findings": "Total Findings",
     "findings_audited": "Findings Audited",
     "auditing_progress": "Auditing Progress",
+    "show_suppressed_findings": "Show suppressed findings",
     "project_name": "Project Name",
     "version": "Version",
     "last_bom_import": "Last BOM Import",
@@ -62,6 +63,12 @@
     "last_measurement": "Last Measurement",
     "overview": "Overview",
     "audit": "Audit",
+    "audit_vulnerabilities": "Audit Vulnerabilities",
+    "policy_violations": "Policy Violations",
+    "policy_violations_by_classification": "Policy Violations by Classification",
+    "policy_violations_by_state": "Policy Violations by State",
+    "violations_audited": "Violations Audited",
+    "attributed_on": "Attributed On",
     "view_details": "View Details",
     "project_details": "Project Details",
     "description": "Description",
@@ -373,6 +380,11 @@
     "is_not": "is not",
     "matches": "matches",
     "no_match": "does not match"
+  },
+  "policy_violation": {
+    "fails": "Violation Failures",
+    "warns": "Violation Warnings",
+    "infos": "Informational Violations"
   },
   "severity": {
     "critical": "Critical",

@@ -17,12 +17,12 @@ export default {
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
         chartLabels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-        chartData.push(metrics[i].vulnerableDependencies);
+        chartData.push(metrics[i].vulnerableComponents);
       }
 
       const datasets = [
         {
-          label: this.$t('message.dependencies'),
+          label: this.$t('message.components'),
           backgroundColor: hexToRgba(widgetColor, 10),
           borderColor: widgetColor,
           pointHoverBackgroundColor: '#fff',
