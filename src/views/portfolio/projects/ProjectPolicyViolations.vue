@@ -4,8 +4,10 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="violationsToolbar">
+    <div id="violationsToolbar" class="bs-table-custom-toolbar">
+      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedViolations" color="primary" v-model="showSuppressedViolations" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_suppressed_violations') }}</span>
     </div>
+
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+import { Switch as cSwitch } from '@coreui/vue';
 import common from "../../../shared/common";
 import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
 import xssFilters from "xss-filters";
@@ -29,10 +32,16 @@ export default {
   },
   mixins: [bootstrapTableMixin],
   components: {
+    cSwitch,
     BootstrapToggle
   },
   data() {
     return {
+      showSuppressedViolations: false,
+      labelIcon: {
+        dataOn: '\u2713',
+        dataOff: '\u2715'
+      },
       columns: [
         {
           title: this.$t('message.component'),
@@ -73,6 +82,7 @@ export default {
           field: "vulnerability.cweId",
           sortable: true,
           class: "expand-20",
+          visible: false,
           formatter(value, row, index) {
             if (typeof value !== 'undefined') {
               return common.formatCweLabel(value, row.vulnerability.cweName);
@@ -95,11 +105,11 @@ export default {
           field: "attribution.analyzerIdentity",
           sortable: true,
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId);
           }
         },
         {
-          title: this.$t('message.attributedOn'),
+          title: this.$t('message.attributed_on'),
           field: "attribution.attributedOn",
           sortable: true,
           formatter(value, row, index) {
@@ -137,11 +147,13 @@ export default {
         pageList: '[10, 25, 50, 100]',
         pageSize: 10,
         icons: {
+          detailOpen: 'fa-fw fa-angle-right',
+          detailClose: 'fa-fw fa-angle-down',
           refresh: 'fa-refresh'
         },
         detailView: true,
-        detailViewIcon: false,
-        detailViewByClick: true,
+        detailViewIcon: true,
+        detailViewByClick: false,
         detailFormatter: (index, row) => {
           let projectUuid = this.uuid;
           return this.vueFormatter({
@@ -277,14 +289,34 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`
+        url: this.apiUrl()
       }
     };
   },
   methods: {
+    apiUrl: function () {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`
+      if (this.showSuppressedViolations === undefined) {
+        url += "?suppressed=false";
+      } else {
+        url += "?suppressed=" + this.showSuppressedViolations;
+      }
+      return url;
+    },
+    refreshTable: function() {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        silent: true
+      });
+    },
     tableLoaded: function(data) {
       this.$emit('total', data.total);
     }
-  }
+  },
+  watch:{
+    showSuppressedViolations() {
+      this.refreshTable();
+    }
+  },
 };
 </script>

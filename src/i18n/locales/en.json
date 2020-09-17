@@ -44,6 +44,7 @@
     "findings_audited": "Findings Audited",
     "auditing_progress": "Auditing Progress",
     "show_suppressed_findings": "Show suppressed findings",
+    "show_suppressed_violations": "Show suppressed violations",
     "project_name": "Project Name",
     "version": "Version",
     "last_bom_import": "Last BOM Import",
