@@ -12,7 +12,7 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     env:
-      DOCKER_REPO: owasp/dependency-track-frontend
+      DOCKER_REPO: dependencytrack/frontend
       DOCKER_TAG: snapshot
 
     steps:
