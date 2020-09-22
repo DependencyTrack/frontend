@@ -158,6 +158,15 @@ input.required, select.required, textarea.required {
 .tab-content {
   background: $body-bg;
 }
+.nav-tabs .nav-link {
+  border-top-color: $grey-900;
+  border-left-color: $grey-900;
+  border-right-color: $grey-900;
+  border-bottom-color: transparent;
+}
+.nav-tabs .nav-link:hover {
+  background-color: $grey-750;
+}
 .nav-tabs .nav-link.active {
   background: $grey-700;
   border-bottom-color: $grey-700;
