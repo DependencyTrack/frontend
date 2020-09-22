@@ -64,6 +64,17 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
      </div>`;
 };
 
+/**
+ * Formats and returns a specialized label for the state of policy violations.
+ */
+$common.formatViolationStateLabel = function formatViolationStateLabel(violationState) {
+  if (! violationState) {
+    return null;
+  }
+  let sourceClass = "label-notification-" + violationState.toLowerCase();
+  return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
+};
+
 $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   if (cweId && cweName) {
     return "<div class='truncate-ellipsis'><span>CWE-" + cweId + " " + cweName + "</span></div>"
@@ -190,6 +201,7 @@ module.exports = {
   formatNotificationLabel: $common.formatNotificationLabel,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
+  formatViolationStateLabel: $common.formatViolationStateLabel,
   formatCweLabel: $common.formatCweLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   formatTimestamp: $common.formatTimestamp,

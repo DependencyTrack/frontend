@@ -44,73 +44,49 @@ export default {
       },
       columns: [
         {
+          title: this.$t('message.state'),
+          field: "policyCondition.policy.violationState",
+          sortable: true,
+          class: "tight",
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return common.formatViolationStateLabel(value);
+            }
+          }
+        },
+        {
+          title: this.$t('message.risk_type'),
+          field: "type",
+          sortable: true,
+          class: "tight",
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.capitalize(common.valueWithDefault(value, "")));
+          }
+        },
+        {
+          title: this.$t('message.policy_name'),
+          field: "policyCondition.policy.name",
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+          }
+        },
+        {
           title: this.$t('message.component'),
           field: "component.name",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.component.project + "/" + row.component.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
-          }
-        },
-        {
-          title: this.$t('message.version'),
-          field: "component.version",
-          sortable: true,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-          }
-        },
-        {
-          title: this.$t('message.group'),
-          field: "component.group",
-          sortable: true,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-          }
-        },
-        {
-          title: this.$t('message.vulnerability'),
-          field: "vulnerability.vulnId",
-          sortable: true,
-          formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
-            return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
-          }
-        },
-        {
-          title: this.$t('message.cwe'),
-          field: "vulnerability.cweId",
-          sortable: true,
-          class: "expand-20",
-          visible: false,
-          formatter(value, row, index) {
-            if (typeof value !== 'undefined') {
-              return common.formatCweLabel(value, row.vulnerability.cweName);
+            let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.component.project.uuid + "/" + row.component.uuid);
+            let versionString = "";
+            if (row.component.version) {
+              versionString = " " + row.component.version;
             }
+            return `<a href="${url}">${xssFilters.inHTMLData(value + versionString)}</a>`;
           }
         },
         {
-          title: this.$t('message.severity'),
-          field: "vulnerability.severity",
-          sortName: "vulnerability.severityRank",
-          sortable: true,
-          formatter(value, row, index) {
-            if (typeof value !== 'undefined') {
-              return common.formatSeverityLabel(value);
-            }
-          }
-        },
-        {
-          title: this.$t('message.analyzer'),
-          field: "attribution.analyzerIdentity",
-          sortable: true,
-          formatter(value, row, index) {
-            return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId);
-          }
-        },
-        {
-          title: this.$t('message.attributed_on'),
-          field: "attribution.attributedOn",
+          title: this.$t('message.occurred_on'),
+          field: "timestamp",
           sortable: true,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
@@ -141,7 +117,7 @@ export default {
         showRefresh: true,
         pagination: true,
         silentSort: false,
-        sidePagination: 'client',
+        sidePagination: 'server',
         toolbar: '#violationsToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
@@ -161,24 +137,43 @@ export default {
             template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
-                    <b-form-group v-if="finding.vulnerability.title" id="fieldset-1" :label="this.$t('message.title')" label-for="input-1">
-                      <b-form-input id="input-1" v-model="finding.vulnerability.title" class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.subtitle" id="fieldset-2" :label="this.$t('message.subtitle')" label-for="input-2">
-                      <b-form-input id="input-2" v-model="finding.vulnerability.subtitle" class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.description" id="fieldset-3" :label="this.$t('message.description')" label-for="input-3">
-                      <b-form-textarea id="input-3" v-model="finding.vulnerability.description" rows="7" class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.recommendation" id="fieldset-4" :label="this.$t('message.recommendation')" label-for="input-4">
-                      <b-form-textarea id="input-4" v-model="finding.vulnerability.recommendation" rows="7" class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.cvssV2Vector" id="fieldset-5" :label="this.$t('message.cvss_v2_vector')" label-for="input-5">
-                      <b-form-input id="input-5" v-model="finding.vulnerability.cvssV2Vector" class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group v-if="finding.vulnerability.cvssV3Vector" id="fieldset-6" :label="this.$t('message.cvss_v3_vector')" label-for="input-6">
-                      <b-form-input id="input-6" v-model="finding.vulnerability.cvssV3Vector" class="form-control disabled" readonly trim />
-                    </b-form-group>
+
+                    <div v-if="violation.policyCondition.subject === 'COORDINATES' ">
+                      <b-form-group id="fieldset-1" :label="this.$t('message.group')" label-for="input-1">
+                        <b-form-input id="input-1" v-model="violation.component.group" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                      <b-form-group id="fieldset-2" :label="this.$t('message.name')" label-for="input-2">
+                        <b-form-input id="input-2" v-model="violation.component.name" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                      <b-form-group id="fieldset-3" :label="this.$t('message.version')" label-for="input-3">
+                        <b-form-input id="input-3" v-model="violation.component.version" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                    </div>
+
+                    <div v-else-if="violation.policyCondition.subject === 'CPE' ">
+                      <b-form-group v-if="violation.component.cpe" id="fieldset-1" :label="this.$t('message.cpe')" label-for="input-1">
+                        <b-form-input id="input-1" v-model="violation.component.cpe" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                    </div>
+
+                    <div v-else-if="violation.policyCondition.subject === 'PACKAGE_URL' ">
+                      <b-form-group v-if="violation.component.purl" id="fieldset-1" :label="this.$t('message.purl')" label-for="input-1">
+                        <b-form-input id="input-1" v-model="violation.component.purl" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                    </div>
+
+                    <div v-else-if="violation.policyCondition.subject === 'SWID_TAGID' ">
+                      <b-form-group v-if="violation.component.swid" id="fieldset-1" :label="this.$t('message.swid')" label-for="input-1">
+                        <b-form-input id="input-1" v-model="violation.component.swid" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                    </div>
+
+                    <div v-else-if="violation.policyCondition.subject === 'LICENSE' || violation.policyCondition.subject === 'LICENSE_GROUP' ">
+                      <b-form-group v-if="violation.component.resolvedLicense" id="fieldset-1" :label="this.$t('message.license')" label-for="input-1">
+                        <b-form-input id="input-1" v-model="violation.component.resolvedLicense.licenseId" class="form-control disabled" readonly trim />
+                      </b-form-group>
+                    </div>
+
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-7" :label="this.$t('message.audit_trail')" label-for="auditTrailField">
@@ -204,13 +199,11 @@ export default {
                 auditTrail: null,
                 comment: null,
                 isSuppressed: null,
-                finding: row,
+                violation: row,
                 analysisChoices: [
                   { value: 'NOT_SET', text: this.$t('message.not_set') },
-                  { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
-                  { value: 'IN_TRIAGE', text: this.$t('message.in_triage') },
-                  { value: 'FALSE_POSITIVE', text: this.$t('message.false_positive') },
-                  { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') }
+                  { value: 'APPROVED', text: this.$t('message.approved') },
+                  { value: 'REJECTED', text: this.$t('message.rejected') },
                 ],
                 analysisState: null,
                 projectUuid: projectUuid
@@ -225,8 +218,8 @@ export default {
             },
             methods: {
               getAnalysis: function() {
-                let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
+                let queryString = "?policyViolation=" + this.violation.uuid + "&component=" + this.violation.component.uuid;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}` + queryString;
                 this.axios.get(url).then((response) => {
                   let analysis = response.data;
                   if (Object.prototype.hasOwnProperty.call(analysis, "analysisComments")) {
@@ -261,11 +254,10 @@ export default {
                 }
               },
               callRestEndpoint: function(analysisState, comment, isSuppressed) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}`;
                 this.axios.put(url, {
-                  project: projectUuid,
-                  component: this.finding.component.uuid,
-                  vulnerability: this.finding.vulnerability.uuid,
+                  policyViolation: this.violation.uuid,
+                  component: this.violation.component.uuid,
                   analysisState: analysisState,
                   comment: comment,
                   isSuppressed: isSuppressed
