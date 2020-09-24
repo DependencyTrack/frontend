@@ -76,7 +76,7 @@ export default {
           field: "component.name",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.component.project.uuid + "/" + row.component.uuid);
+            let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
             let versionString = "";
             if (row.component.version) {
               versionString = " " + row.component.version;
@@ -174,6 +174,10 @@ export default {
                       </b-form-group>
                     </div>
 
+                    <b-form-group id="failedCondition" :label="this.$t('message.condition')" label-for="failedCondition-input">
+                      <b-form-textarea id="failedCondition-input" v-model="conditionString" rows="3" class="form-control disabled" readonly trim />
+                    </b-form-group>
+
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-7" :label="this.$t('message.audit_trail')" label-for="auditTrailField">
@@ -207,6 +211,11 @@ export default {
                 ],
                 analysisState: null,
                 projectUuid: projectUuid
+              }
+            },
+            computed: {
+              conditionString: function() {
+                return "subject == " + this.violation.policyCondition.subject + " && value " + this.violation.policyCondition.operator + " " + this.violation.policyCondition.value;
               }
             },
             watch: {
