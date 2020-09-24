@@ -72,7 +72,7 @@ function configRoutes() {
           }
         },
         {
-          path: '/projects/:projectuuid/:uuid',
+          path: '/components/:uuid',
           name: 'Component',
           props: (route) => ( { uuid: route.params.uuid } ),
           component: Component,

@@ -64,7 +64,7 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.project.uuid + "/" + row.uuid);
+              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
