@@ -110,7 +110,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId) {
       break;
   }
   if (analyzerUrl) {
-    analyzerLabel = `<a href="${analyzerUrl}">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
+    analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
   }
   return `<span class="label label-source label-analyzer" style="white-space:nowrap;">${analyzerLabel}</span>`;
 };
