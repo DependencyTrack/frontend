@@ -21,6 +21,9 @@
           <b-input-group-form-input id="component-cpe-input" input-group-size="mb-3" type="text" v-model="component.cpe"
                                     required="false" :label="$t('message.cpe_full')"
                                     :tooltip="$t('message.component_cpe_desc')" />
+          <b-input-group-form-input id="component-swidTagId-input" input-group-size="mb-3" type="text" v-model="component.swidTagId"
+                                    required="false" :label="$t('message.swid_tagid')"
+                                    :tooltip="$t('message.component_swid_tagid_desc')" />
         </b-card>
       </b-tab>
       <b-tab>
@@ -126,6 +129,7 @@
           classifier: this.component.classifier,
           purl: this.component.purl,
           cpe: this.component.cpe,
+          swidTagId: this.component.swidTagId,
           copyright: this.component.copyright,
           md5: this.component.md5,
           sha1: this.component.sha1,
@@ -152,6 +156,7 @@
           classifier: null,
           purl: null,
           cpe: null,
+          swidTagId: null,
           copyright: null,
           md5: null,
           sha1: null,

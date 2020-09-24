@@ -177,6 +177,7 @@
     "component_group_desc": "The suppliers higher-level namespace, group, or vendor identifier",
     "component_package_url_desc": "A Valid Package URL is required for libraries and frameworks. PURL syntax: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_cpe_desc": "The CPE v2.2 or v2.3 URI as provided by MITRE or NIST. All assets (applications, operating systems, and hardware) should have a CPE specified",
+    "component_swid_tagid_desc": "The ISO/IEC 19770-2:2015 (SWID) tag ID provided by the software vendor",
     "component_classifier_desc": "Specifies the type of component: Assets (applications, operating systems, and hardware) and non-assets (libraries, frameworks, and files)",
     "component_spdx_license_desc": "Specifies the SPDX license ID of the component",
     "component_filename_desc": "Specifies the observed filename of the component",
@@ -230,6 +231,7 @@
     "license_group": "License group",
     "package_url": "Package URL (PURL)",
     "conditions": "Conditions",
+    "condition": "Condition",
     "condition_deleted": "Condition deleted"
   },
   "admin": {

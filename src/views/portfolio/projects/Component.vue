@@ -171,6 +171,7 @@
         this.component.classifier = component.classifier;
         this.component.purl = component.purl;
         this.component.cpe = component.cpe;
+        this.component.swidTagId = component.swidTagId;
         this.component.copyright = component.copyright;
         this.component.md5 = component.md5;
         this.component.sha1 = component.sha1;
