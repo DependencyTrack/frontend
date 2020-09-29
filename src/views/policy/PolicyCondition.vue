@@ -17,9 +17,9 @@
                                   v-debounce:750ms="saveCondition" :debounce-events="'keyup'" />
 
         <b-input-group v-else-if="subject === 'COORDINATES'">
-          <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" required="false" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
-          <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" required="false" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
-          <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" required="false" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
         </b-input-group>
 
       </b-col>
