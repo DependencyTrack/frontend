@@ -47,7 +47,6 @@
     },
     created() {
       if (this.condition) {
-        console.log(this.condition);
         this.subject = this.condition.subject;
         this.subjectChanged();
         this.operator = this.condition.operator;
