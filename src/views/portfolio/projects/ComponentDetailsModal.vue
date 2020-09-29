@@ -134,7 +134,7 @@
       this.retrieveLicenses();
     },
     beforeUpdate() {
-      console.log(this.component);
+      //console.log(this.component);
     },
     methods: {
       updateComponent: function() {

@@ -27,6 +27,8 @@
   import bootstrapTableMixin from "../../mixins/bootstrapTableMixin";
   import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
   import PolicyCondition from "./PolicyCondition";
+  import BToggleableDisplayButton from "@/views/components/BToggleableDisplayButton";
+  import SelectProjectModal from "@/views/portfolio/projects/SelectProjectModal";
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
@@ -124,17 +126,34 @@
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
+                      <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
+                          v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible" />
                        <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
                     </div>
                   </b-col>
                 </b-row>
-                </div>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
+                      <div class="list-group">
+                        <span v-for="project in projects">
+                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
+                        </span>
+                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
+                      </div>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <select-project-modal v-on:selection="updateProjectSelection"/>
+              </div>
               `,
               mixins: [permissionsMixin],
               components: {
                 ActionableListGroupItem,
                 BInputGroupFormInput,
                 BInputGroupFormSelect,
+                BToggleableDisplayButton,
+                SelectProjectModal,
                 PolicyCondition
               },
               data() {
@@ -152,10 +171,19 @@
                     { value: 'INFO', text: this.$t('violation.info') },
                     { value: 'WARN', text: this.$t('violation.warn') },
                     { value: 'FAIL', text: this.$t('violation.fail') }
-                  ]
+                  ],
+                  projects: row.projects,
+                  limitToVisible: false
                 }
               },
               methods: {
+                formatProjectLabel: function(projectName, projectVersion) {
+                  if (projectName && projectVersion) {
+                    return projectName + " " + projectVersion;
+                  } else {
+                    return projectName;
+                  }
+                },
                 addCondition: function() {
                   if (! this.conditions) {
                     this.conditions = [];
@@ -204,6 +232,38 @@
                   this.operator = policy.operator;
                   this.violationState = policy.violationState;
                   this.conditions = policy.policyConditions;
+                },
+                deleteLimiter: function(projectUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let p = [];
+                    for (let i=0; i<this.projects.length; i++) {
+                      if (this.projects[i].uuid !== projectUuid) {
+                        p.push(this.projects[i]);
+                      }
+                    }
+                    this.projects = p;
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
+                updateProjectSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
+                    this.axios.post(url).then((response) => {
+                      this.projects.push(selection);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
                 }
               },
               watch: {

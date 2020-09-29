@@ -180,7 +180,6 @@
                   });
                 },
                 updateRepository: function() {
-                  console.log("update");
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
                   this.axios.post(url, {
                     identifier: this.identifier,
