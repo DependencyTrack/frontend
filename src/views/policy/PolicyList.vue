@@ -125,15 +125,6 @@
                         <actionable-list-group-item add-icon="true" v-on:actionClicked="addCondition" />
                       </div>
                     </b-form-group>
-                    <div style="text-align:right">
-                      <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
-                          v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible" />
-                       <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col md="6">
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
@@ -142,6 +133,11 @@
                         <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
+                    <div style="text-align:right">
+                      <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
+                          v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible" />
+                       <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
+                    </div>
                   </b-col>
                 </b-row>
                 <select-project-modal v-on:selection="updateProjectSelection"/>
