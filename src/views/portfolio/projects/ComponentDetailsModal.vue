@@ -120,8 +120,10 @@
           { value: 'APPLICATION', text: 'Application' },
           { value: 'FRAMEWORK', text: 'Framework' },
           { value: 'LIBRARY', text: 'Library' },
+          { value: 'CONTAINER', text: 'Container' },
           { value: 'OPERATING_SYSTEM', text: 'Operating System' },
           { value: 'DEVICE', text: 'Device' },
+          { value: 'FIRMWARE', text: 'Firmware' },
           { value: 'FILE', text: 'File' }
         ],
         selectableLicenses: [],
