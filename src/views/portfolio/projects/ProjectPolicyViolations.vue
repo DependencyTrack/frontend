@@ -77,11 +77,8 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-            let versionString = "";
-            if (row.component.version) {
-              versionString = " " + row.component.version;
-            }
-            return `<a href="${url}">${xssFilters.inHTMLData(value + versionString)}</a>`;
+            let name = common.concatenateComponentName(null, row.component.name, row.component.version);
+            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
           }
         },
         {

@@ -130,6 +130,16 @@ $common.formatTimestamp = function formatTimestamp(timestamp, includeTime) {
   }
 };
 
+/*
+ * Concatenates the group, name, and version of a component.
+ */
+$common.concatenateComponentName = function concatenateComponentName(group, name, version) {
+  let g = $common.trimToNull(group);
+  let n = $common.trimToNull(name);
+  let v = $common.trimToNull(version);
+  return (g != null? g + " " : "") + (n != null? n : "") + (v != null? " " + v: "");
+}
+
 /**
  * Helper function that returns the variable if it is not null, undefined, NaN,
  * an empty string (""), 0, or false. Otherwise, returns the default value.
@@ -205,6 +215,7 @@ module.exports = {
   formatCweLabel: $common.formatCweLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   formatTimestamp: $common.formatTimestamp,
+  concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,
   sleep: $common.sleep,
