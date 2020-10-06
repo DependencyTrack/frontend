@@ -3,11 +3,10 @@
     <portfolio-widget-row :fetch="true" />
     <b-row>
       <b-col md="4" lg="3">
-        <b-input-group-form-select id="input-subject" required="true"
-                                   v-model="subject" :options="subjects" v-on:keyup.enter="performSearch" />
+        <b-input-group-form-select id="input-subject" required="true" v-model="subject" :options="subjects"/>
       </b-col>
       <b-col md="7" lg="6">
-        <b-input-group-form-input v-if="subject !== 'COORDINATES'" id="input-value" required="true" type="text" v-model="value" lazy="true" />
+        <b-input-group-form-input v-if="subject !== 'COORDINATES'" id="input-value" required="true" type="text" v-model="value" lazy="true" v-on:keyup.enter="performSearch" />
         <b-input-group v-else-if="subject === 'COORDINATES'">
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-on:keyup.enter="performSearch"></b-form-input>
           <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-on:keyup.enter="performSearch"></b-form-input>
