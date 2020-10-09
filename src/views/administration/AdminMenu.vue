@@ -153,6 +153,11 @@
                 href: "#integrationsFortifySscTab"
               },
               {
+                component: "DefectDojo",
+                name: this.$t('admin.defectdojo'),
+                href: "#integrationsDefectDojoTab"
+              },
+              {
                 component: "KennaSecurity",
                 name: this.$t('admin.kenna_security'),
                 href: "#integrationsKennaSecurityTab"

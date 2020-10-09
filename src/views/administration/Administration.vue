@@ -40,6 +40,7 @@
   import Templates from "./notifications/Templates";
   // Integration plugins
   import FortifySsc from "./integrations/FortifySsc";
+  import DefectDojo from "./integrations/DefectDojo";
   import KennaSecurity from "./integrations/KennaSecurity";
   // Access Management plugins
   import LdapUsers from "./accessmanagement/LdapUsers";
@@ -95,4 +96,3 @@
     }
   }
 </style>
-
