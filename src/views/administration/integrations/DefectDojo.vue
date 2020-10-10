@@ -86,7 +86,7 @@
               this.cadence = item.propertyValue; break;
             case "defectdojo.url":
               this.url = item.propertyValue; break;
-            case "defectdojo.username":
+            case "defectdojo.apiKey":
               this.apiKey = item.propertyValue; break;
           }
         }
