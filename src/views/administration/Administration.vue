@@ -58,7 +58,7 @@
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
-      FortifySsc, KennaSecurity,
+      FortifySsc, DefectDojo, KennaSecurity,
       LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions
     },
     created() {

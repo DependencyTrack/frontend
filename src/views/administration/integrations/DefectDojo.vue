@@ -23,7 +23,7 @@
       />
       <b-validated-input-group-form-input
         id="defectdojo-apiKey"
-        :label="$t('message.password')"
+        :label="$t('message.api_token')"
         input-group-size="mb-3"
         rules="required"
         type="password"
