@@ -94,6 +94,11 @@
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
+                component: "Composer",
+                name: this.$t('admin.composer'),
+                href: "#repositoryComposerTab"
+              },
+              {
                 component: "Gem",
                 name: this.$t('admin.gem'),
                 href: "#repositoryGemTab"
