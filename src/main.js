@@ -44,6 +44,7 @@ axios.get("static/config.json").then(response => {
   // OpenID Connect
   Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
   Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
+  Vue.prototype.$oidc.SCOPE = response.data.OIDC_SCOPE;
   Vue.prototype.$oidc.FLOW = response.data.OIDC_FLOW;
   createVueApp();
 }).catch(function (error) {

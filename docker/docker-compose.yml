@@ -23,6 +23,7 @@ services:
       - "API_BASE_URL=http://localhost:8081"
       # - "OIDC_ISSUER="
       # - "OIDC_CLIENT_ID="
+      # - "OIDC_SCOPE="
       # - "OIDC_FLOW="
     # volumes:
       # - "/host/path/to/config.json:/app/static/config.json"
