@@ -96,7 +96,7 @@ export default {
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
         redirect_uri: window.location.origin + "/static/oidc-callback.html",
-        response_type: this.$oidc.FLOW === "implicit" ? "token" : "code",
+        response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: this.$oidc.SCOPE,
         loadUserInfo: false
       })
@@ -157,7 +157,8 @@ export default {
           }
           var oidcAvailableInFrontend =
             this.oidcUserManager.settings.authority &&
-            this.oidcUserManager.settings.client_id;
+            this.oidcUserManager.settings.client_id &&
+            this.oidcUserManager.settings.scope;
           return oidcAvailableInBackend && oidcAvailableInFrontend;
         })
         .catch(err => {
