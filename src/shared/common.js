@@ -86,7 +86,7 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
 /**
  * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
  */
-$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId) {
+$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alternateIdentifier, referenceUrl) {
   if (! analyzer) {
     return null;
   }
@@ -98,7 +98,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId) {
       break;
     case 'OSSINDEX_ANALYZER':
       analyzerLabel = "OSS Index";
-      analyzerUrl = "https://ossindex.sonatype.org/vuln/" + vulnId;
+      analyzerUrl = (referenceUrl) ? referenceUrl : "https://ossindex.sonatype.org/vuln/" + vulnId;
       break;
     case 'VULNDB_ANALYZER':
       analyzerLabel = "VulnDB";

@@ -105,7 +105,9 @@
             field: "attribution.analyzerIdentity",
             sortable: true,
             formatter(value, row, index) {
-              return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId);
+              console.log(row);
+              return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId,
+                row.attribution.alternateIdentifier, row.attribution.referenceUrl);
             }
           },
           {
