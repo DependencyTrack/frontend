@@ -2,5 +2,6 @@
   "API_BASE_URL": "",
   "OIDC_ISSUER": "",
   "OIDC_CLIENT_ID": "",
+  "OIDC_SCOPE": "openid email profile",
   "OIDC_FLOW": "code"
 }

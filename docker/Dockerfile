@@ -23,10 +23,14 @@ FROM nginx:stable-alpine
 
 # jq is required for entrypoint script
 RUN apk --no-cache add jq
- 
+
 COPY ./docker/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /app/dist /app
+
+# Set default settings that may get overridden to empty values by
+# the entrypoint script, if not explicitly provided by the user
+ENV OIDC_SCOPE "openid profile email"
 
 # Setup entrypoint
 WORKDIR /app
