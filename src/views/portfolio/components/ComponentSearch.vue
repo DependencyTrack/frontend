@@ -47,10 +47,16 @@
     methods: {
       createQueryParams: function() {
         if (this.subject === "COORDINATES") {
-          let g = common.trimToNull(this.coordinatesGroup);
-          let n = common.trimToNull(this.coordinatesName);
-          let v = common.trimToNull(this.coordinatesVersion);
-          return (g != null)? "group="+encodeURIComponent(g): "" + (n != null)? "name="+encodeURIComponent(n): "" + (v != null)? "version="+encodeURIComponent(v): "";
+          let params = {
+            group: common.trimToNull(this.coordinatesGroup),
+            name: common.trimToNull(this.coordinatesName),
+            version: common.trimToNull(this.coordinatesVersion)
+          };
+          let esc = encodeURIComponent;
+          return Object.keys(params)
+            .filter(k => params[k])
+            .map(k => esc(k) + '=' + esc(params[k]))
+            .join('&');
         } else if (this.subject === "PACKAGE_URL") {
           let v = common.trimToNull(this.value);
           return (v != null)? "purl="+encodeURIComponent(v): "";
