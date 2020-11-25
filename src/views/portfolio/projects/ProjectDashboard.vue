@@ -146,6 +146,9 @@
       Callout,
 
     },
+    props: {
+      uuid: String
+    },
     data() {
       return {
         currentCritical: 0,
@@ -194,8 +197,7 @@
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
       },
       refreshMetrics() {
-        let uuid = this.$route.params.uuid;
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/refresh`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/refresh`;
         this.axios.get(url).then((response) => {
           this.$toastr.s(this.$t('message.metric_refresh_requested'));
         });
@@ -203,8 +205,7 @@
     },
     mounted() {
       const daysBack = 90;
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/days/${daysBack}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartPolicyViolations.render(response.data);

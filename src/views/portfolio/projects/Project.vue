@@ -12,7 +12,7 @@
                   <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
                   <ul class="dropdown-menu">
                     <span v-for="p in availableProjectVersions">
-                      <b-dropdown-item :to="p.uuid">{{ p.version }}</b-dropdown-item>
+                      <b-dropdown-item :to="{name: 'Project', params: {uuid: p.uuid}}">{{ p.version }}</b-dropdown-item>
                       </span>
                   </ul>
                 </li>
@@ -21,7 +21,7 @@
             </div>
             <div class="text-muted text-uppercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
-                <b-badge :href="'../projects/?tag='+tag.name" variant="secondary">{{ tag.name }}</b-badge>
+                <b-badge :to="{name: 'Projects', query: {tag: tag.name}}" variant="secondary">{{ tag.name }}</b-badge>
               </span>
             </div>
           </b-col>
@@ -98,25 +98,25 @@
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
       <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
-        <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
+        <project-dashboard :uuid="this.project.uuid" style="border-left: 0; border-right:0; border-top:0" v-if="this.project.uuid" />
       </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
-        <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
+        <project-components :key="this.project.uuid" :uuid="this.project.uuid" v-on:total="totalComponents = $event" v-if="this.project.uuid" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
+        <project-findings :key="this.project.uuid" :uuid="this.project.uuid" v-on:total="totalFindings = $event" v-if="this.project.uuid" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.POLICY_VIOLATION_ANALYSIS)">
         <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
-        <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
+        <project-policy-violations :key="this.project.uuid" :uuid="this.project.uuid" v-on:total="totalViolations = $event" v-if="this.project.uuid" />
       </b-tab>
     </b-tabs>
     <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
-    <project-properties-modal :uuid="this.uuid" />
-    <project-create-property-modal :uuid="this.uuid" />
-    <project-add-version-modal :uuid="this.uuid" />
+    <project-properties-modal :uuid="this.project.uuid" v-if="this.project.uuid" />
+    <project-create-property-modal :uuid="this.project.uuid" v-if="this.project.uuid" />
+    <project-add-version-modal :uuid="this.project.uuid" v-if="this.project.uuid" />
   </div>
 </template>
 
@@ -193,6 +193,7 @@
         return getStyle(style);
       },
       syncProjectFields: function(project) {
+        this.project.uuid = project.uuid;
         this.project.name = project.name;
         this.project.version = project.version;
         this.project.description = project.description;
@@ -201,29 +202,38 @@
         EventBus.$emit('addCrumb', this.projectLabel);
       },
       initialize: function() {
-        let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
-        this.axios.get(projectUrl).then((response) => {
+        const projectUrl = this.name && this.version ? `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/lookup` : `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
+        const params = this.name && this.version ? {name: this.name, version: this.version} : {};
+        this.axios.get(projectUrl, {params}).then(response => {
           this.project = response.data;
-          let projectVersionsUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?offset=0&limit=10&excludeInactive=true&name=` + encodeURIComponent(this.project.name);
-          this.axios.get(projectVersionsUrl).then((response) => {
+          this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`, {
+            params: {
+              offset: 0,
+              limit: 10,
+              excludeInactive: true,
+              name: response.data.name
+            }
+          }).then(response => {
             this.availableProjectVersions = response.data;
           });
-          EventBus.$emit('addCrumb', this.projectLabel);
-        });
 
-        let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/current`;
-        this.axios.get(metricsUrl).then((response) => {
-          this.currentCritical = common.valueWithDefault(response.data.critical, 0);
-          this.currentHigh = common.valueWithDefault(response.data.high, 0);
-          this.currentMedium = common.valueWithDefault(response.data.medium, 0);
-          this.currentLow = common.valueWithDefault(response.data.low, 0);
-          this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
-          this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
+          this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${response.data.uuid}/current`).then(response => {
+            this.currentCritical = common.valueWithDefault(response.data.critical, 0);
+            this.currentHigh = common.valueWithDefault(response.data.high, 0);
+            this.currentMedium = common.valueWithDefault(response.data.medium, 0);
+            this.currentLow = common.valueWithDefault(response.data.low, 0);
+            this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
+            this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
+          });
+
+          EventBus.$emit('addCrumb', this.projectLabel);
         });
       }
     },
     beforeMount() {
       this.uuid = this.$route.params.uuid;
+      this.name = this.$route.params.name;
+      this.version = this.$route.params.version;
     },
     mounted() {
       this.initialize();
@@ -231,6 +241,8 @@
     watch:{
       $route (to, from){
         this.uuid = this.$route.params.uuid;
+        this.name = this.$route.params.name;
+        this.version = this.$route.params.version;
         this.initialize();
       }
     },

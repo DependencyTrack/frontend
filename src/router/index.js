@@ -63,6 +63,16 @@ function configRoutes() {
           }
         },
         {
+          path: 'projects/:name/:version',
+          name: 'Project',
+          props: (route) => ( { name: route.params.name, version: route.params.version } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects'
+          }
+        },
+        {
           path: 'components',
           name: 'Component Lookup',
           component: ComponentSearch,
