@@ -333,6 +333,7 @@
     "delete_alert": "Delete Alert",
     "limit_to": "Limit To",
     "limit_to_projects": "Limit to projects",
+    "alert_created": "Alert created",
     "alert_deleted": "Alert deleted",
     "change_password_next_login": "User must change password at next login",
     "password_never_expires": "Password never expires",
