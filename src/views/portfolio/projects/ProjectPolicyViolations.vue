@@ -230,8 +230,8 @@ export default {
                   params: {
                     policyViolation: this.violation.uuid,
                     component: this.violation.component.uuid
-				  }
-				}).then((response) => {
+                  }
+                }).then((response) => {
                   this.updateAnalysisData(response.data);
                 });
               },

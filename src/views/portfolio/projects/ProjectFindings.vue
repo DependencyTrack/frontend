@@ -231,11 +231,11 @@
                   const url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
                   this.axios.get(url, {
                     params: {
-					  project: projectUuid,
-					  component: this.finding.component.uuid,
-					  vulnerability: this.finding.vulnerability.uuid,
-					}
-				  }).then((response) => {
+                      project: projectUuid,
+                      component: this.finding.component.uuid,
+                      vulnerability: this.finding.vulnerability.uuid,
+                    }
+                  }).then((response) => {
                     this.updateAnalysisData(response.data);
                   });
                 },
