@@ -81,6 +81,7 @@
       }
     },
     data() {
+      const router = this.$router;
       return {
         subject: 'COORDINATES',
         value: null,
@@ -100,7 +101,7 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.uuid}}).href);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -149,7 +150,7 @@
             field: "project.name",
             sortable: false,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.project.uuid);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Project', params: {uuid: row.project.uuid}}).href);
               let name = common.concatenateComponentName(null, row.project.name, row.project.version);
               return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
             }

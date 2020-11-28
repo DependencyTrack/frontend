@@ -160,7 +160,7 @@ function configRoutes() {
             let { hash, params, query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
-              return { path: '/projects/' + uuid, query: null }
+              return { name: 'Project', params: { uuid }, query: null }
             }
           }
         },
@@ -173,7 +173,7 @@ function configRoutes() {
             let { hash, params, query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
-              return { path: '/components/' + uuid, query: null }
+              return { name: 'Component', params: { uuid }, query: null }
             }
           }
         },
@@ -188,7 +188,7 @@ function configRoutes() {
           redirect: to => {
             let { hash, params, query } = to;
             if (query.source && query.vulnId) {
-              return { path: '/vulnerabilities/' + query.source + "/" + query.vulnId, query: null }
+              return { name: 'Vulnerability', params: { source: query.source, vulnId: query.vulnId }, query: null }
             }
           }
         },
@@ -201,7 +201,7 @@ function configRoutes() {
             let { hash, params, query } = to;
             if (query.licenseId) {
               let licenseId = query.licenseId;
-              return { path: '/licenses/' + licenseId, query: null }
+              return { name: 'License', params: { licenseId: licenseId }, query: null }
             }
           }
         },

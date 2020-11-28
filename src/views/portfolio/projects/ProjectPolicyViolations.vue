@@ -36,6 +36,7 @@ export default {
     BootstrapToggle
   },
   data() {
+    const router = this.$router;
     return {
       showSuppressedViolations: false,
       labelIcon: {
@@ -76,7 +77,7 @@ export default {
           field: "component.name",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+            const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.component.uuid}}).href);
             let name = common.concatenateComponentName(null, row.component.name, row.component.version);
             return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
           }
@@ -224,9 +225,13 @@ export default {
             },
             methods: {
               getAnalysis: function() {
-                let queryString = "?policyViolation=" + this.violation.uuid + "&component=" + this.violation.component.uuid;
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}` + queryString;
-                this.axios.get(url).then((response) => {
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}`;
+                this.axios.get(url, {
+                  params: {
+                    policyViolation: this.violation.uuid,
+                    component: this.violation.component.uuid
+				  }
+				}).then((response) => {
                   this.updateAnalysisData(response.data);
                 });
               },
