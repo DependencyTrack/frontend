@@ -20,6 +20,7 @@
 
 <script>
   import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
+  import EventBus from '../shared/eventbus';
 
   export default {
     name: 'DefaultHeaderProfileDropdown',
@@ -35,7 +36,7 @@
         localStorage.setItem("sessionInvalidate", Date.now().toLocaleString());
         localStorage.removeItem("sessionInvalidate");
         // Removes the token from session storage and reload
-        sessionStorage.removeItem('token');
+        EventBus.$emit('authenticated', null);
         this.$router.replace({ name: "Login" });
       }
     }

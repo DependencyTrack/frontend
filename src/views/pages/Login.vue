@@ -74,6 +74,7 @@ import $ from "jquery";
 import { ValidationObserver } from "vee-validate";
 import BValidatedInputGroupFormInput from "../../forms/BValidatedInputGroupFormInput";
 import InformationalModal from "../modals/InformationalModal";
+import EventBus from '../../shared/eventbus';
 const qs = require("querystring");
 
 export default {
@@ -118,17 +119,10 @@ export default {
         .post(url, qs.stringify(requestBody), config)
         .then(result => {
           if (result.status === 200) {
-            sessionStorage.setItem("token", result.data); // store the JWT in session storage
-            // Set authorization headers for axios and jQuery
-            axios.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${result.data}`;
-            $.ajaxSetup({
-              beforeSend: function(xhr) {
-                xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
-              }
-            });
-            this.$router.replace({ name: "Dashboard" });
+            EventBus.$emit('authenticated', result.data);
+            // redirect to url from query param but only if it starts with / so we do not redirect to external sites
+            const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+            redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
           }
         })
         .catch(err => {
@@ -202,19 +196,10 @@ export default {
             .post(url, qs.stringify(requestBody), config)
             .then(result => {
               if (result.status === 200) {
-                sessionStorage.setItem("token", result.data);
-                axios.defaults.headers.common[
-                  "Authorization"
-                ] = `Bearer ${result.data}`;
-                $.ajaxSetup({
-                  beforeSend: function(xhr) {
-                    xhr.setRequestHeader(
-                      "Authorization",
-                      `Bearer ${result.data}`
-                    );
-                  }
-                });
-                this.$router.replace({ name: "Dashboard" });
+                EventBus.$emit('authenticated', result.data);
+                // redirect to url from query param but only if it starts with / so we do not redirect to external sites
+                const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+                redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
               }
             })
             .catch(err => {

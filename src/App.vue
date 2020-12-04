@@ -1,84 +1,61 @@
 <template>
-  <router-view @authenticated="setAuthenticated"></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
   // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
   import $ from 'jquery';
   import { getUrlVar }  from './shared/utils';
+  import { getToken }  from './shared/permissions';
+  import EventBus from './shared/eventbus';
+  import VueRouter from 'vue-router';
 
   export default {
     name: 'app',
-    data() {
-      return {
-        authenticated: false,
-        user: null,
-      }
-    },
     created() {
-      const jwt = sessionStorage.getItem('token');
+      const setJwtForAjax = (jwt) => {
+        if (jwt) {
+          $.ajaxSettings.headers['Authorization'] = this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+        } else {
+          delete this.axios.defaults.headers.common['Authorization'];
+          delete $.ajaxSettings.headers['Authorization'];
+        }
+      };
 
-      if (jwt === null) {
-        this.$router.replace({ name: "Login" });
-        return;
+      EventBus.$on('authenticated', jwt => {
+        if (jwt) {
+          sessionStorage.setItem("token", jwt);
+        } else {
+          sessionStorage.removeItem('token');
+        }
+        setJwtForAjax(jwt);
+      });
+
+      // ensure $.ajaxSettings.headers exists
+      $.ajaxSetup({
+        headers: {}
+      });
+	  
+      setJwtForAjax(getToken());
+
+      // debug logging of ajax requests/responses
+      if (getUrlVar('debug')) {
+        $(document).ajaxComplete((event, xhr, settings) => {
+          console.debug('jQuery-Status:', xhr.status, 'jQuery-Response', xhr.responseJSON || xhr.responseText);
+        });
+        // Intercept all HTTP requests
+        this.axios.interceptors.request.use(request => {
+          console.debug('Request', request);
+          return request;
+        });
+        // Intercept all HTTP responses
+        this.axios.interceptors.response.use(response => {
+          console.debug('Response', response);
+          return response;
+        });
       }
 
-      // If JWT was found, assume it is valid and set the authorization headers.
-      this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-      $.ajaxSetup({
-        beforeSend: function(xhr) {
-          if (jwt !== null) {
-            xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
-          }
-        },
-        complete: function(xhr, textStatus) {
-          if (getUrlVar("debug")) {
-            console.log("Status: " + xhr.status);
-            (xhr.responseJSON) ? console.log(xhr.responseJSON) : console.log(xhr.responseText);
-          }
-        }
-      });
-
-      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
-      this.axios.get(url)
-        .then((result) => {
-          this.authenticated = true;
-          this.user = result.data;
-        })
-        .catch(() => {
-          // The JWT is stale. Unset default headers
-          this.axios.defaults.headers.common['Authorization'] = null;
-          $.ajaxSetup({
-            beforeSend: function (xhr) {
-              xhr.setRequestHeader("Authorization", null);
-            },
-            complete: function(xhr, textStatus) {
-              if (getUrlVar("debug")) {
-                console.log("Status: " + xhr.status);
-                (xhr.responseJSON) ? console.log(xhr.responseJSON) : console.log(xhr.responseText);
-              }
-            }
-          });
-          // Token is stale, clear stored token and redirect to login view
-          sessionStorage.removeItem('token');
-          this.$router.replace({ name: "Login" });
-        });
-
-      // Intercept all HTTP requests
-      this.axios.interceptors.request.use(request => {
-        if (this.$route.query.debug) {
-          console.log('Request', request);
-        }
-        return request;
-      });
-
-      // Intercept all HTTP responses
-      this.axios.interceptors.response.use(response => {
-        if (this.$route.query.debug) {
-          console.log('Response', response);
-        }
-        return response;
-      }, error => {
+      this.axios.interceptors.response.use(null, error => {
         // On error status codes (4xx - 5xx), display a toast with the HTTP status code and text.
         if (error.response.status >= 400 && error.response.status < 500) {
           this.$toastr.e(error.response.statusText + " (" + error.response.status + ")", this.$t('condition.http_request_error'));
@@ -123,19 +100,18 @@
           const to = url.pathname;
           if (window.location.pathname !== to && event.preventDefault) {
             event.preventDefault();
-            this.$router.push(to + url.search);
+            this.$router.push(to + url.search).catch(e => {
+              const { isNavigationFailure, NavigationFailureType } = VueRouter;
+              // inform about navigation errors but ignore redirect errors that may be caused by the navigation guard when redirecting to the login page
+              if (!isNavigationFailure(e, NavigationFailureType.redirected)) {
+                this.$toastr.e(this.$t("404.message"), this.$t("404.heading"));
+                console.error(e);
+              }
+            });
           }
         }
-      })
+      });
 
-    },
-    methods: {
-      setAuthenticated(status) {
-        this.authenticated = status;
-      },
-      logout() {
-        this.authenticated = false;
-      }
     }
   }
 </script>
