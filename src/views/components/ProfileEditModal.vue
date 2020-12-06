@@ -27,9 +27,9 @@
     },
     data: () => {
       return {
-        username: String,
-        fullname: String,
-        email: String
+        username: null,
+        fullname: null,
+        email: null
       }
     },
     methods: {
