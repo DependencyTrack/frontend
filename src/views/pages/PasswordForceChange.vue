@@ -119,7 +119,8 @@
               this.$toastr.s(this.$t('message.password_change_success'));
               // We don't get the JWT token on a successful password change,
               // reroute users back to login
-              this.$router.replace({ name: "Login" });
+              const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+              this.$router.replace({ name: "Login", query: { redirect: redirectTo } });
             }
           })
           .catch((err) => {

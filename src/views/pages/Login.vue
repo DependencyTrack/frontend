@@ -115,20 +115,20 @@ export default {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       };
+      // redirect to url from query param but only if it starts with / so we do not redirect to external sites
+      const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
       axios
         .post(url, qs.stringify(requestBody), config)
         .then(result => {
           if (result.status === 200) {
             EventBus.$emit('authenticated', result.data);
-            // redirect to url from query param but only if it starts with / so we do not redirect to external sites
-            const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
             redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
           }
         })
         .catch(err => {
           if (err.response.status === 401) {
             if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
-              this.$router.replace({ name: "PasswordForceChange" });
+              this.$router.replace({ name: "PasswordForceChange", query: { redirect: redirectTo } });
               return;
             }
             this.$bvModal.show("modal-informational");
