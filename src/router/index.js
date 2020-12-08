@@ -227,7 +227,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const jwt = getToken();
-  const publicRoutes = ['Login', '404'];
+  const publicRoutes = ['Login', '404', 'PasswordForceChange'];
   if (!publicRoutes.includes(to.name)) {
     const redirectTo = to.fullPath;
     if (jwt) {
