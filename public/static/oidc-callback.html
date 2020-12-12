@@ -19,11 +19,16 @@
                 });
             })
             .then((oidcUserManager) => {
+                let redirectTo = (new URLSearchParams(window.location.search)).get("redirect");
+                if (!redirectTo || !redirectTo.startsWith('/')) {
+                    redirectTo = "../";
+                }
+
                 oidcUserManager.getUser()
                     .then((user) => {
                         if (user !== null) {
                             // Implicit flow: Token is already present in URL
-                            window.location.href = "../";
+                            window.location.href = redirectTo;
                             return Promise.resolve()
                         } else {
                             // Code flow: Token must be acquired in exchange for auth code
@@ -31,7 +36,7 @@
                         }
                     })
                     .then((user) => {
-                        window.location.href = "../";
+                        window.location.href = redirectTo;
                     })
                     .catch((err) => {
                         console.log(err);

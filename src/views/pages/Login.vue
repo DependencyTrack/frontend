@@ -85,6 +85,13 @@ export default {
     ValidationObserver
   },
   data() {
+    let redirectUri = `${ window.location.origin } /static/oidc-callback.html`;
+    // redirect to url from query param but only if it starts with / so we do not redirect to external sites
+    const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+    if (redirectTo) {
+      redirectUri += `?redirect=${ encodeURIComponent(redirectTo) }`;
+    }
+
     return {
       loginError: "",
       input: {
@@ -96,7 +103,7 @@ export default {
         userStore: new Oidc.WebStorageStateStore(),
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
-        redirect_uri: window.location.origin + "/static/oidc-callback.html",
+        redirect_uri: redirectUri,
         response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: this.$oidc.SCOPE,
         loadUserInfo: false
