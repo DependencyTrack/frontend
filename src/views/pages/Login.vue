@@ -75,6 +75,7 @@ import { ValidationObserver } from "vee-validate";
 import BValidatedInputGroupFormInput from "../../forms/BValidatedInputGroupFormInput";
 import InformationalModal from "../modals/InformationalModal";
 import EventBus from '../../shared/eventbus';
+import { getRedirectUrl } from '../../shared/utils';
 const qs = require("querystring");
 
 export default {
@@ -86,8 +87,8 @@ export default {
   },
   data() {
     let redirectUri = `${ window.location.origin }/static/oidc-callback.html`;
-    // redirect to url from query param but only if it starts with / so we do not redirect to external sites
-    const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+    // redirect to url from query param but only if it is save for redirection
+    const redirectTo = getRedirectUrl(this.$router);
     if (redirectTo) {
       redirectUri += `?redirect=${ encodeURIComponent(redirectTo) }`;
     }
@@ -122,8 +123,8 @@ export default {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       };
-      // redirect to url from query param but only if it starts with / so we do not redirect to external sites
-      const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+      // redirect to url from query param but only if it is save for redirection
+      const redirectTo = getRedirectUrl(this.$router);
       axios
         .post(url, qs.stringify(requestBody), config)
         .then(result => {
@@ -204,8 +205,8 @@ export default {
             .then(result => {
               if (result.status === 200) {
                 EventBus.$emit('authenticated', result.data);
-                // redirect to url from query param but only if it starts with / so we do not redirect to external sites
-                const redirectTo = this.$router.currentRoute.query.redirect && this.$router.currentRoute.query.redirect.startsWith('/') ? this.$router.currentRoute.query.redirect : undefined;
+                // redirect to url from query param but only if it is save for redirection
+                const redirectTo = getRedirectUrl(this.$router);
                 redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
               }
             })

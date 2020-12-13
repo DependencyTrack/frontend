@@ -8,6 +8,31 @@
     <script src="js/axios.min.js"></script>
     <script src="js/oidc-client.min.js"></script>
     <script>
+        const acceptableRootContextPaths = [
+            '/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
+            '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'
+        ];
+        function getContextPath() {
+          if (window.location.pathname === '/static/oidc-callback.html') {
+            // App is deployed in the root context. Return an empty string.
+            return "";
+          } else {
+            // App is deployed in a non-root context. Return the context.
+            return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+          }
+        }
+        function isUrlSaveForRedirect(redirectUrl) {
+          const contextRoot = getContextPath();
+          try {
+            const resultingUrl = new URL(redirectUrl, window.location.origin);
+            return resultingUrl.origin === window.location.origin 
+                    && /^https?:$/.test(resultingUrl.protocol) 
+                    && acceptableRootContextPaths.map(r => contextRoot + r).some(p => redirectUrl.startsWith(p));
+          } catch(invalidUrl) {
+            return false;
+          }
+        }
+
         axios.get("/static/config.json")
             .then((response) => {
                 let config = response.data;
@@ -19,16 +44,13 @@
                 });
             })
             .then((oidcUserManager) => {
-                let redirectTo = (new URLSearchParams(window.location.search)).get("redirect");
-                if (!redirectTo || !redirectTo.startsWith('/')) {
-                    redirectTo = "../";
-                }
+                const redirectTo = (new URLSearchParams(window.location.search)).get("redirect");
 
                 oidcUserManager.getUser()
                     .then((user) => {
                         if (user !== null) {
                             // Implicit flow: Token is already present in URL
-                            window.location.href = redirectTo;
+                            window.location.href = redirectTo && isUrlSaveForRedirect(redirectTo) ? redirectTo : "../";
                             return Promise.resolve()
                         } else {
                             // Code flow: Token must be acquired in exchange for auth code
@@ -36,7 +58,7 @@
                         }
                     })
                     .then((user) => {
-                        window.location.href = redirectTo;
+                        window.location.href = redirectTo && isUrlSaveForRedirect(redirectTo) ? redirectTo : "../";
                     })
                     .catch((err) => {
                         console.log(err);
