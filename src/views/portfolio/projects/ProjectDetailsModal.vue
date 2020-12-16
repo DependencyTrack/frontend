@@ -1,36 +1,71 @@
 <template>
   <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')">
-    <b-form-group
-      id="fieldset-1"
-      :label="this.$t('message.project_name')"
-      label-for="input-1"
-      label-class="required">
-      <b-form-input id="input-1" v-model="project.name" class="required" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-2"
-      :label="this.$t('message.version')"
-      label-for="input-2">
-      <b-form-input id="input-2" v-model="project.version" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-3"
-      :label="this.$t('message.description')"
-      label-for="input-3">
-      <b-form-textarea id="input-3" v-model="project.description" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" trim />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-4"
-      :label="this.$t('message.tags')"
-      label-for="input-4">
-      <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
-                      :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
-                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-                      style="max-width:none; background-color:transparent;"/>
-    </b-form-group>
-
-    <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
-
+    <b-tabs class="body-bg-color" style="border:0;padding:0">
+      <b-tab class="body-bg-color" style="border:0;padding:0" active>
+        <template v-slot:title><i class="fa fa-edit"></i> {{ $t('message.general') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-name-input" input-group-size="mb-3" type="text" v-model="project.name"
+                                    lazy="true" required="true" feedback="true" autofocus="false"
+                                    :label="$t('message.project_name')" :tooltip="this.$t('message.project_name_desc')"
+                                    :feedback-text="$t('message.required_project_name')" v-on:change="syncReadOnlyNameField"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="project-version-input" input-group-size="mb-3" type="text" v-model="project.version"
+                                    lazy="true" required="false" feedback="false" autofocus="false" v-on:change="syncReadOnlyVersionField"
+                                    :label="$t('message.version')" :tooltip="this.$t('message.component_version_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-select id="v-classifier-input" required="true"
+                                     v-model="project.classifier" :options="availableClassifiers"
+                                     :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')"
+                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-form-group
+            id="project-description-form-group"
+            :label="this.$t('message.description')"
+            label-for="project-description-input">
+            <b-form-textarea id="project-description-description" v-model="project.description" rows="3"
+                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          </b-form-group>
+          <b-form-group
+            id="project-classifier-form-group"
+            :label="this.$t('message.tags')"
+            label-for="input-4">
+            <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
+                            :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
+                            style="max-width:none; background-color:transparent;"
+                            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          </b-form-group>
+          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
+        </b-card>
+      </b-tab>
+      <b-tab class="body-bg-color" style="border:0;padding:0">
+        <template v-slot:title><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-name-input-identify" input-group-size="mb-3" type="text" v-model="readOnlyProjectName"
+                                    lazy="true" required="false" feedback="true" autofocus="false" disabled="true"
+                                    :label="$t('message.project_name')" :tooltip="this.$t('message.project_name_desc')"
+                                    :readonly="true" />
+          <b-input-group-form-input id="project-version-input-identify" input-group-size="mb-3" type="text" v-model="readOnlyProjectVersion"
+                                    lazy="true" required="false" feedback="true" autofocus="false" disabled="true"
+                                    :label="$t('message.version')" :tooltip="this.$t('message.component_version_desc')"
+                                    :readonly="true" />
+          <b-input-group-form-input id="project-group-input" input-group-size="mb-3" type="text" v-model="project.group"
+                                    required="false" :label="$t('message.component_namespace_group_vendor')"
+                                    :tooltip="this.$t('message.component_group_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="project-purl-input" input-group-size="mb-3" type="text" v-model="project.purl"
+                                    required="false" :label="$t('message.package_url_full')"
+                                    :tooltip="this.$t('message.component_package_url_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="project-cpe-input" input-group-size="mb-3" type="text" v-model="project.cpe"
+                                    required="false" :label="$t('message.cpe_full')"
+                                    :tooltip="$t('message.component_cpe_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="project-swidTagId-input" input-group-size="mb-3" type="text" v-model="project.swidTagId"
+                                    required="false" :label="$t('message.swid_tagid')"
+                                    :tooltip="$t('message.component_swid_tagid_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+        </b-card>
+      </b-tab>
+    </b-tabs>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
       <b-button size="md" variant="outline-primary" v-b-modal.projectPropertiesModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.properties') }}</b-button>
@@ -42,6 +77,8 @@
 </template>
 
 <script>
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
+  import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
@@ -51,6 +88,8 @@
     name: "ProjectDetailsModal",
     mixins: [permissionsMixin],
     components: {
+      BInputGroupFormInput,
+      BInputGroupFormSelect,
       VueTagsInput,
       cSwitch
     },
@@ -59,6 +98,18 @@
     },
     data() {
       return {
+        readOnlyProjectName: '',
+        readOnlyProjectVersion: '',
+        availableClassifiers: [
+          { value: 'APPLICATION', text: 'Application' },
+          { value: 'FRAMEWORK', text: 'Framework' },
+          { value: 'LIBRARY', text: 'Library' },
+          { value: 'CONTAINER', text: 'Container' },
+          { value: 'OPERATING_SYSTEM', text: 'Operating System' },
+          { value: 'DEVICE', text: 'Device' },
+          { value: 'FIRMWARE', text: 'Firmware' },
+          { value: 'FILE', text: 'File' }
+        ],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -72,25 +123,41 @@
       if (this.tags.length === 0 && this.project && this.project.tags)  { // Prevents line from being executed when entering new tags
         this.project.tags.forEach((tag) => this.tags.push({text: tag.name}));
       }
+      this.readOnlyProjectName = this.project.name;
+      this.readOnlyProjectVersion = this.project.version;
     },
     methods: {
+      syncReadOnlyNameField: function(value) {
+        this.readOnlyProjectName = value;
+      },
+      syncReadOnlyVersionField: function(value) {
+        this.readOnlyProjectVersion = value;
+      },
       updateProject: function() {
-        this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.post(url, {
-            uuid: this.project.uuid,
-            name: this.project.name,
-            version: this.project.version,
-            description: this.project.description,
-            tags: tagsNode,
-            active: this.project.active
-          }).then((response) => {
-            this.$emit('projectUpdated', response.data);
-            this.$toastr.s(this.$t('message.project_updated'));
-          }).catch((error) => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          uuid: this.project.uuid,
+          author: this.project.author,
+          publisher: this.project.publisher,
+          group: this.project.group,
+          name: this.project.name,
+          version: this.project.version,
+          description: this.project.description,
+          classifier: this.project.classifier,
+          cpe: this.project.cpe,
+          purl: this.project.purl,
+          swidTagId: this.project.swidTagId,
+          tags: tagsNode,
+          active: this.project.active
+        }).then((response) => {
+          this.$emit('projectUpdated', response.data);
+          this.$toastr.s(this.$t('message.project_updated'));
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        }).finally(() => {
+          this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
         });
       },
       deleteProject: function() {

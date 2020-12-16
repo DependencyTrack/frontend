@@ -195,6 +195,8 @@
     "required_component_version": "The component version is required",
     "component_added": "Component added",
     "component_removed": "Component removed",
+    "required_project_name": "The project name is required",
+    "project_name_desc": "The name of the project or component as provided by the supplier",
     "profile": "Profile",
     "profile_update": "Update Profile",
     "profile_updated": "Profile updated",
