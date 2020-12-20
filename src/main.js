@@ -35,11 +35,12 @@ Vue.use(vueDebounce, { defaultTime: '750ms' });
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
-axios.get("static/config.json").then(response => {
+const contextPath = getContextPath();
+axios.get(contextPath + "/static/config.json").then(response => {
   if (response.data.API_BASE_URL && response.data.API_BASE_URL !== "") {
     Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
   } else {
-    Vue.prototype.$api.BASE_URL = getContextPath();
+    Vue.prototype.$api.BASE_URL = contextPath;
   }
   // OpenID Connect
   Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
