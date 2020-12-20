@@ -4,7 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  // Non-root paths cannot be supported. Research by @nscur0 - https://owasp.slack.com/archives/CTC03GX9S/p1608400149085400
+  // Relative paths cannot be supported. Research by @nscur0 - https://owasp.slack.com/archives/CTC03GX9S/p1608400149085400
   publicPath: "/",
   devServer: {
     proxy: { "/api": { target: "http://localhost:8080" } }
