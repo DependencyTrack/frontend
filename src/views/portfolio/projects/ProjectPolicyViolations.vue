@@ -91,8 +91,8 @@ export default {
         },
         {
           title: this.$t('message.analysis'),
-          field: "analysis.state",
-          sortable: true,
+          field: "analysis.analysisState",
+          sortable: false,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
           }
@@ -100,7 +100,7 @@ export default {
         {
           title: this.$t('message.suppressed'),
           field: "analysis.isSuppressed",
-          sortable: true,
+          sortable: false,
           class: "tight",
           formatter(value, row, index) {
             return value === true ? '<i class="fa fa-check-square-o" />' : "";
