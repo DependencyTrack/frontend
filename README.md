@@ -6,12 +6,37 @@
 Dependency-Track Front-End
 =========
 
-The Front-End is a Single Page Application (SPA) used in Dependency-Track, an open source Supply Chain Component Analysis platform. 
+The Front-End is a Single Page Application (SPA) used in Dependency-Track, an open source Component Analysis platform 
+that allows organizations to identify and reduce risk in the software supply chain.
+
 The project is built with:
 
-* Vue 2.x / CLI 3.x
+* Vue.js
 * Bootstrap Vue
 * CoreUI
+
+<hr>
+
+![alt text](https://raw.githubusercontent.com/DependencyTrack/dependency-track/master/docs/images/screenshots/dashboard.png)
+
+## Compatibility Matrix
+
+Always use the Front-End version that is compatible with the Dependency-Track API Server in use.
+
+| Dependency-Track API Server | Front-End |
+|:-----|:-----|
+| v4.0 | v1.1 |
+| v3.8 | v1.0 |
+| v1.0 - v3.7.1 | Not supported |
+
+## Binary Distributions
+
+Pre-compiled distributions are available in two variants:
+* [Docker container running NGINX](https://hub.docker.com/r/dependencytrack/frontend)
+* [GitHub Release (zip archive)](https://github.com/DependencyTrack/frontend/releases)
+
+The Docker container provides the fastest, most consistent deployment option and is recommended. 
+The Docker container includes NGINX and a pre-deployed Front-End release.
 
 ## Build Setup
 
