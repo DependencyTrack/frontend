@@ -44,3 +44,11 @@ echo Publishing $PACKAGE_VERSION to GitHub Releases
 githubrelease release dependencytrack/frontend create $PACKAGE_VERSION \
   --name $PACKAGE_VERSION --body "Dependency-Track Frontend" \
   --publish bom.xml frontend-dist.zip
+
+REPO=dependencytrack/frontend
+docker rmi $REPO:latest
+docker rmi $REPO:$PACKAGE_VERSION
+docker build -f docker/Dockerfile -t $REPO:$PACKAGE_VERSION -t $REPO:latest .
+docker login
+docker push $REPO:latest
+docker push $REPO:$PACKAGE_VERSION
