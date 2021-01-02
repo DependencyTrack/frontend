@@ -64,7 +64,7 @@ reflect the base URL of a Dependency-Track server.
 
 ## Deployment Options
 
-![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.svg?sanitize=true)
+![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.png)
 
 #### Default Deployment
 By default, the front-end is deployed to and accessible from the Dependency-Track server.
