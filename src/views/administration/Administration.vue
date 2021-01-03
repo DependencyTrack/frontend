@@ -41,6 +41,7 @@
   import Templates from "./notifications/Templates";
   // Integration plugins
   import FortifySsc from "./integrations/FortifySsc";
+  import DefectDojo from "./integrations/DefectDojo";
   import KennaSecurity from "./integrations/KennaSecurity";
   // Access Management plugins
   import LdapUsers from "./accessmanagement/LdapUsers";
@@ -58,7 +59,7 @@
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       Composer, Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
-      FortifySsc, KennaSecurity,
+      FortifySsc, DefectDojo, KennaSecurity,
       LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions
     },
     created() {
@@ -96,4 +97,3 @@
     }
   }
 </style>
-
