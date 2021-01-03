@@ -29,6 +29,7 @@
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
   import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
   // Repositories
+  import Composer from "./repositories/Composer";
   import Gem from "./repositories/Gem";
   import Hex from "./repositories/Hex";
   import Maven from "./repositories/Maven";
@@ -55,7 +56,7 @@
       AdminMenu,
       General, BomFormats, Email, InternalComponents,
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
-      Gem, Hex, Maven, Npm, Nuget, Python,
+      Composer, Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, KennaSecurity,
       LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions
