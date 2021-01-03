@@ -7,7 +7,7 @@
     </b-row>
     <hr/>
     <p>
-      Dependency-Track is an intelligent software supply-chain component analysis platform that allows organizations to identify and reduce risk from the use of third-party and open source components.
+      Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain.
     </p>
     <b-row>
       <b-col>
