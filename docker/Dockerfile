@@ -19,14 +19,20 @@ RUN npm run build
 ###############################
 #       Production image      #
 ###############################
-FROM nginx:stable-alpine
+FROM nginxinc/nginx-unprivileged:stable-alpine
 
 # jq is required for entrypoint script
+USER root
 RUN apk --no-cache add jq
 
-COPY ./docker/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /app/dist /app
+COPY --chown=101:101 --from=build /app/dist /app
+
+# Specify the user to run as (in numeric format for compatibility with Kubernetes/OpenShift's SCC)
+# Inherited from parent image
+# See https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/Dockerfile#L139
+USER 101
 
 # Set default settings that may get overridden to empty values by
 # the entrypoint script, if not explicitly provided by the user
@@ -34,9 +40,4 @@ ENV OIDC_SCOPE "openid profile email"
 
 # Setup entrypoint
 WORKDIR /app
-COPY ./docker/docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
-ENTRYPOINT [ "/usr/bin/docker-entrypoint.sh" ]
-
-# Inherited from parent image
-# See https://github.com/nginxinc/docker-nginx/blob/1.18.0/stable/alpine/Dockerfile#L115
-CMD ["nginx", "-g", "daemon off;"]
+COPY ./docker/docker-entrypoint.sh /docker-entrypoint.d/30-oidc-configuration.sh
