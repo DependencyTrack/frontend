@@ -94,6 +94,11 @@
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
+                component: "Cargo",
+                name: this.$t('admin.cargo'),
+                href: "#repositoryCargoTab"
+              },
+              {
                 component: "Composer",
                 name: this.$t('admin.composer'),
                 href: "#repositoryComposerTab"

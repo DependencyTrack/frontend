@@ -257,6 +257,7 @@
     "oss_index": "Sonatype OSS Index",
     "vulndb": "VulnDB",
     "repositories": "Repositories",
+    "cargo": "Cargo",
     "composer": "Composer",
     "gem": "Gem",
     "hex": "Hex",
