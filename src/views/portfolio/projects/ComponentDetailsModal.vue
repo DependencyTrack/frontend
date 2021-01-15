@@ -90,6 +90,18 @@
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
         </b-card>
       </b-tab>
+      <b-tab>
+        <template v-slot:title><i class="fa fa-file-text-o"></i> {{ $t('message.notes') }}</template>
+        <b-card>
+          <b-form-group
+            id="component-notes-form-group"
+            :label="this.$t('message.notes')"
+            label-for="component-notes-input">
+            <b-form-textarea id="component-notes-description" v-model="component.notes" rows="3"
+                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          </b-form-group>
+        </b-card>
+      </b-tab>
     </b-tabs>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteComponent()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
@@ -158,7 +170,8 @@
           sha256: this.component.sha256,
           sha512: this.component.sha512,
           sha3_256: this.component.sha3_256,
-          sha3_512: this.component.sha3_512
+          sha3_512: this.component.sha3_512,
+          notes: this.component.notes
         }).then((response) => {
           this.$emit('componentUpdated', response.data);
           this.$toastr.s(this.$t('message.component_updated'));

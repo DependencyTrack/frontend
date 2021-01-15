@@ -243,7 +243,8 @@
     "package_url": "Package URL (PURL)",
     "conditions": "Conditions",
     "condition": "Condition",
-    "condition_deleted": "Condition deleted"
+    "condition_deleted": "Condition deleted",
+    "notes": "Notes"
   },
   "admin": {
     "configuration": "Configuration",
