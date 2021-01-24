@@ -35,12 +35,12 @@
       $.ajaxSetup({
         headers: {}
       });
-	  
+
       setJwtForAjax(getToken());
 
       // debug logging of ajax requests/responses
       if (getUrlVar('debug')) {
-        $(document).ajaxComplete((event, xhr, settings) => {
+        $(document).ajaxComplete((event, xhr) => {
           console.debug('jQuery-Status:', xhr.status, 'jQuery-Response', xhr.responseJSON || xhr.responseText);
         });
         // Intercept all HTTP requests
