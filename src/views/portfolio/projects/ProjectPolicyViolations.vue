@@ -76,9 +76,13 @@ export default {
           field: "component.name",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-            let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            if (row.component) {
+              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+              let name = common.concatenateComponentName(null, row.component.name, row.component.version);
+              return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            } else {
+              return "";
+            }
           }
         },
         {
