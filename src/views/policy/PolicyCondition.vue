@@ -65,6 +65,7 @@
           //{value: 'AGE', text: this.$t('message.age')},
           //{value: 'ANALYZER', text: this.$t('message.analyzer')},
           //{value: 'BOM', text: this.$t('message.bom')},
+          {value: 'SEVERITY', text: this.$t('message.severity')},
           {value: 'COORDINATES', text: this.$t('message.coordinates')},
           {value: 'LICENSE', text: this.$t('message.license')},
           {value: 'LICENSE_GROUP', text: this.$t('message.license_group')},
@@ -100,6 +101,8 @@
           case 'ANALYZER':
             return true;
           case 'BOM':
+            return true;
+          case 'SEVERITY':
             return true;
           case 'COORDINATES':
             return false;
@@ -139,6 +142,10 @@
             break;
           case 'BOM':
             this.operators = this.objectOperators;
+            break;
+          case 'SEVERITY':
+            this.operators = this.objectOperators;
+            this.populateSeverity()
             break;
           case 'COORDINATES':
             this.operators = this.regexOperators;
@@ -255,6 +262,16 @@
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           }
         });
+      },
+      populateSeverity: function () {
+        this.possibleValues = [
+          {value: "CRITICAL", text: this.$t('severity.critical')},
+          {value: "HIGH", text: this.$t('severity.high')},
+          {value: "MEDIUM", text: this.$t('severity.medium')},
+          {value: "LOW", text: this.$t('severity.low')},
+          {value: "INFO", text: this.$t('severity.info')},
+          {value: "UNASSIGNED", text: this.$t('severity.unassigned')}
+        ];
       }
     }
   }
