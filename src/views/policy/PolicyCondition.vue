@@ -71,7 +71,8 @@
           {value: 'LICENSE_GROUP', text: this.$t('message.license_group')},
           {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
           {value: 'CPE', text: this.$t('message.cpe_full')},
-          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')}
+          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
+          {value: 'VERSION', text: this.$t('message.version')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -115,6 +116,8 @@
           case 'CPE':
             return false;
           case 'SWID_TAGID':
+            return false;
+          case 'VERSION':
             return false;
           default:
             return false;
@@ -166,6 +169,9 @@
             break;
           case 'SWID_TAGID':
             this.operators = this.regexOperators;
+            break;
+          case 'VERSION':
+            this.operators = this.numericOperators;
             break;
           default:
             this.operators = [];
