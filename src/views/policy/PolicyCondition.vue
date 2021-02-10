@@ -20,6 +20,7 @@
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-tooltip target="input-value-coordinates-version" triggers="hover focus">{{ $t('message.coordinates_version_tooltip') }}</b-tooltip>
         </b-input-group>
 
       </b-col>

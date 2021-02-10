@@ -161,6 +161,7 @@
     "component_name": "Component name",
     "component_namespace_group_vendor": "Namespace / group / vendor",
     "coordinates": "Coordinates",
+    "coordinates_version_tooltip": "You can use the comparison operators >, <, >=, <=, == and != to match specific versions or version ranges",
     "package_url_full": "Package URL (PURL)",
     "swid_tagid": "SWID Tag ID",
     "cpe": "CPE",
