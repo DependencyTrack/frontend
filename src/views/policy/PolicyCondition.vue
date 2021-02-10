@@ -20,6 +20,7 @@
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-tooltip target="input-value-coordinates-version" triggers="hover focus">{{ $t('message.coordinates_version_tooltip') }}</b-tooltip>
         </b-input-group>
 
       </b-col>
@@ -71,7 +72,8 @@
           {value: 'LICENSE_GROUP', text: this.$t('message.license_group')},
           {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
           {value: 'CPE', text: this.$t('message.cpe_full')},
-          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')}
+          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
+          {value: 'VERSION', text: this.$t('message.version')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -115,6 +117,8 @@
           case 'CPE':
             return false;
           case 'SWID_TAGID':
+            return false;
+          case 'VERSION':
             return false;
           default:
             return false;
@@ -166,6 +170,9 @@
             break;
           case 'SWID_TAGID':
             this.operators = this.regexOperators;
+            break;
+          case 'VERSION':
+            this.operators = this.numericOperators;
             break;
           default:
             this.operators = [];
