@@ -25,6 +25,7 @@ Always use the Front-End version that is compatible with the Dependency-Track AP
 
 | Dependency-Track API Server | Front-End |
 |:-----|:-----|
+| v4.1 | v1.2 |
 | v4.0 | v1.1 |
 | v3.8 | v1.0 |
 | v1.0 - v3.7.1 | Not supported |
@@ -65,7 +66,7 @@ reflect the base URL of a Dependency-Track server.
 ## Deployment
 
 ![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.svg?sanitize=true)
-toch
+
 The front-end is deployed to a general purpose web server (e.g. NGINX or Apache). To configure the front-end 
 for this scenario, simply change the value of API_BASE_URL in static/config.json.
 
@@ -77,7 +78,7 @@ for this scenario, simply change the value of API_BASE_URL in static/config.json
 
 ## Internationalization (i18n)
 
-This project supports internationalization. Currently on English language is supported. Pull requests to support additional languages are encouraged.
+This project supports internationalization. Currently, only English language is supported. Pull requests to support additional languages are encouraged.
 
 Note to developers: Textual labels are defined in `src/i18n/messages.json`. Ensure that all labels are defined here and that components use i18n, not textual labels directly.
 
