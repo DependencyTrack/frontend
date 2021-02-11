@@ -74,6 +74,8 @@ import $ from "jquery";
 import { ValidationObserver } from "vee-validate";
 import BValidatedInputGroupFormInput from "../../forms/BValidatedInputGroupFormInput";
 import InformationalModal from "../modals/InformationalModal";
+import EventBus from '../../shared/eventbus';
+import { getRedirectUrl } from '../../shared/utils';
 const qs = require("querystring");
 
 export default {
@@ -84,6 +86,13 @@ export default {
     ValidationObserver
   },
   data() {
+    let redirectUri = `${ window.location.origin }/static/oidc-callback.html`;
+    // redirect to url from query param but only if it is save for redirection
+    const redirectTo = getRedirectUrl(this.$router);
+    if (redirectTo) {
+      redirectUri += `?redirect=${ encodeURIComponent(redirectTo) }`;
+    }
+
     return {
       loginError: "",
       input: {
@@ -95,7 +104,7 @@ export default {
         userStore: new Oidc.WebStorageStateStore(),
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
-        redirect_uri: window.location.origin + "/static/oidc-callback.html",
+        redirect_uri: redirectUri,
         response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: this.$oidc.SCOPE,
         loadUserInfo: false
@@ -114,27 +123,20 @@ export default {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       };
+      // redirect to url from query param but only if it is save for redirection
+      const redirectTo = getRedirectUrl(this.$router);
       axios
         .post(url, qs.stringify(requestBody), config)
         .then(result => {
           if (result.status === 200) {
-            sessionStorage.setItem("token", result.data); // store the JWT in session storage
-            // Set authorization headers for axios and jQuery
-            axios.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${result.data}`;
-            $.ajaxSetup({
-              beforeSend: function(xhr) {
-                xhr.setRequestHeader("Authorization", `Bearer ${result.data}`);
-              }
-            });
-            this.$router.replace({ name: "Dashboard" });
+            EventBus.$emit('authenticated', result.data);
+            redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
           }
         })
         .catch(err => {
           if (err.response.status === 401) {
             if (err.response.data === this.$api.FORCE_PASSWORD_CHANGE) {
-              this.$router.replace({ name: "PasswordForceChange" });
+              this.$router.replace({ name: "PasswordForceChange", query: { redirect: redirectTo } });
               return;
             }
             this.$bvModal.show("modal-informational");
@@ -202,19 +204,10 @@ export default {
             .post(url, qs.stringify(requestBody), config)
             .then(result => {
               if (result.status === 200) {
-                sessionStorage.setItem("token", result.data);
-                axios.defaults.headers.common[
-                  "Authorization"
-                ] = `Bearer ${result.data}`;
-                $.ajaxSetup({
-                  beforeSend: function(xhr) {
-                    xhr.setRequestHeader(
-                      "Authorization",
-                      `Bearer ${result.data}`
-                    );
-                  }
-                });
-                this.$router.replace({ name: "Dashboard" });
+                EventBus.$emit('authenticated', result.data);
+                // redirect to url from query param but only if it is save for redirection
+                const redirectTo = getRedirectUrl(this.$router);
+                redirectTo ? this.$router.replace(redirectTo) : this.$router.replace({ name: "Dashboard" });
               }
             })
             .catch(err => {

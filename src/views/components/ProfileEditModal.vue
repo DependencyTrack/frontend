@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="profileEditModal" size="md" @shown="getSelf" @hide="resetValues" hide-header-close no-stacking :title="$t('message.profile_update')">
+  <b-modal id="profileEditModal" size="md" @show="getSelf" @hidden="resetValues" hide-header-close no-stacking :title="$t('message.profile_update')">
 
     <b-input-group-form-input id="fullname-input" input-group-size="mb-3" type="text" v-model="fullname"
                               lazy="true" required="true" feedback="true" autofocus="false"
@@ -27,9 +27,9 @@
     },
     data: () => {
       return {
-        username: String,
-        fullname: String,
-        email: String
+        username: null,
+        fullname: null,
+        email: null
       }
     },
     methods: {

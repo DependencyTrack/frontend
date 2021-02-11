@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { getContextPath } from "../shared/utils"
+import { getToken }  from '../shared/permissions';
+import EventBus from '../shared/eventbus';
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');
@@ -209,15 +211,47 @@ function configRoutes() {
     },
     {
       path: '*',
+      name: '404',
       component: Page404
     }
   ]
 }
 
-export default new Router({
+const router = new Router({
   mode: 'history', // https://router.vuejs.org/api/#mode
   base: getContextPath(),
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: configRoutes()
 });
+
+router.beforeEach((to, from, next) => {
+  const jwt = getToken();
+  const publicRoutes = ['Login', '404', 'PasswordForceChange'];
+  if (!publicRoutes.includes(to.name)) {
+    const redirectTo = to.fullPath;
+    if (jwt) {
+      // let backend verify the token
+      router.app.axios.get(`${router.app.$api.BASE_URL}/${router.app.$api.URL_USER_SELF}`, {
+        headers: { 'Authorization': `Bearer ${jwt}` }
+      }).then(() => {
+        // allowed to proceed
+        next();
+      }).catch(() => {
+        // token is stale
+        // notify app about this
+        EventBus.$emit('authenticated', null);
+        // redirect to login page
+        next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+      });
+    } else {
+      // no token at all, redirect to login page
+      next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+    }
+  } else {
+    // allowed to proceed
+    next();
+  }
+});
+
+export default router;

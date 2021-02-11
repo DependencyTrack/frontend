@@ -8,7 +8,7 @@
             <h4 class="pt-3">{{ $t('404.heading') }}</h4>
             <p class="text-muted">{{ $t('404.message') }}</p>
           </div>
-          <b-button block variant="outline-primary" href="/">{{ $t('404.action') }}</b-button>
+          <b-button block variant="outline-primary" @click="$router.back()">{{ $t('404.action') }}</b-button>
         </b-col>
       </b-row>
     </div>
