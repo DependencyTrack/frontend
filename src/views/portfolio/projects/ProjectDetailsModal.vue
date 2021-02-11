@@ -177,3 +177,17 @@
 <style lang="scss">
   @import "../../../assets/scss/vendors/vue-tags-input/vue-tags-input";
 </style>
+
+<style scoped>
+.tab-content .tab-pane{
+  padding: 0 !important;
+}
+.tab-content {
+  border: 0 !important;
+}
+.card {
+  border:0;
+  padding:0;
+  margin-bottom:0;
+}
+</style>
