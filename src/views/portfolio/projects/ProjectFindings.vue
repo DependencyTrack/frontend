@@ -106,7 +106,6 @@
             field: "attribution.analyzerIdentity",
             sortable: true,
             formatter(value, row, index) {
-              console.log(row);
               return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId,
                 row.attribution.alternateIdentifier, row.attribution.referenceUrl);
             }

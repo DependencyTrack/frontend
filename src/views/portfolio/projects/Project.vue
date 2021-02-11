@@ -21,7 +21,7 @@
             </div>
             <div class="text-muted text-uppercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
-                <b-badge :to="{name: 'Projects', query: {tag: tag.name}}" variant="secondary">{{ tag.name }}</b-badge>
+                <b-badge :to="{name: 'Projects', query: {tag: tag.name}}" variant="tag">{{ tag.name }}</b-badge>
               </span>
             </div>
           </b-col>
@@ -193,12 +193,7 @@
         return getStyle(style);
       },
       syncProjectFields: function(project) {
-        this.project.uuid = project.uuid;
-        this.project.name = project.name;
-        this.project.version = project.version;
-        this.project.description = project.description;
-        this.project.tags = project.tags;
-        this.project.active = project.active;
+        this.project = project;
         EventBus.$emit('addCrumb', this.projectLabel);
       },
       initialize: function() {

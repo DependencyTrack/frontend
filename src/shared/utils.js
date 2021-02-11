@@ -17,39 +17,53 @@ export const shuffleArray = (array) => {
 };
 
 /**
- * Retrieves the querystring, parses it.
- */
-export function getUrlVars() {
-  let vars = [], hash;
-  let hashes = window.location.href.replace("#", "").slice(window.location.href.indexOf("?") + 1).split("&");
-  for(let i = 0; i < hashes.length; i++) {
-    hash = hashes[i].split("=");
-    vars.push(hash[0]);
-    vars[hash[0]] = hash[1];
-  }
-  return vars;
-}
-
-/**
  * Provides a function to extract a param from the querystring.
  */
 export function getUrlVar(name) {
-  return getUrlVars()[name];
+  return (new URLSearchParams(window.location.search)).get(name);
+}
+
+/**
+ * retrieves the redirect to url from query param but only if it save for redirection
+ * @param {Router} router
+ * @returns {string} redirect to url if it save for redirection
+ */
+export function getRedirectUrl(router) {
+  return router.currentRoute.query.redirect && isUrlSaveForRedirect(router.currentRoute.query.redirect) ? router.currentRoute.query.redirect : undefined;
+}
+
+// An array of acceptable root context paths defined in the UI.
+const acceptableRootContextPaths = [
+    '/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
+    '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'
+];
+
+/**
+ * checks if the given url is save for redirecting.
+ * @param {string} redirectUrl the url to check.
+ * @returns {Boolean}
+ */
+export function isUrlSaveForRedirect(redirectUrl) {
+  const contextRoot = getContextPath();
+  try {
+    const resultingUrl = new URL(redirectUrl, window.location.origin);
+    return resultingUrl.origin === window.location.origin // catches redirectUrls like //foo.bar
+            && /^https?:$/.test(resultingUrl.protocol) // catches file and blob protocol because for "blob:https://mozilla.org" origin will be returned as "https://mozilla.org".
+            && acceptableRootContextPaths.map(r => contextRoot + r).some(p => redirectUrl.startsWith(p));
+  } catch(invalidUrl) {
+    return false;
+  }
 }
 
 /**
  * Returns the context from which the webapp is running.
  */
 export function getContextPath() {
-  // An array of acceptable root context paths defined in the UI.
-  let root = ['/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
-    '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'];
-  for (let i = 0; i < root.length; i++) {
-    if (window.location.pathname.startsWith(root[i])) {
-      // App is deployed in the root context. Return an empty string.
-      return "";
-    }
+  if (acceptableRootContextPaths.some(p => window.location.pathname.startsWith(p))) {
+    // App is deployed in the root context. Return an empty string.
+    return "";
+  } else {
+    // App is deployed in a non-root context. Return the context.
+    return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
   }
-  // App is deployed in a non-root context. Return the context.
-  return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }

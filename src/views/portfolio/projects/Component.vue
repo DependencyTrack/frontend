@@ -161,24 +161,7 @@
         return getStyle(style);
       },
       syncComponentFields: function(component) {
-        this.component.name = component.name;
-        this.component.version = component.version;
-        this.component.group = component.group;
-        this.component.description = component.description;
-        this.component.license = component.license;
-        this.component.resolvedLicense = component.resolvedLicense;
-        this.component.filename = component.filename;
-        this.component.classifier = component.classifier;
-        this.component.purl = component.purl;
-        this.component.cpe = component.cpe;
-        this.component.swidTagId = component.swidTagId;
-        this.component.copyright = component.copyright;
-        this.component.md5 = component.md5;
-        this.component.sha1 = component.sha1;
-        this.component.sha256 = component.sha256;
-        this.component.sha512 = component.sha512;
-        this.component.sha3_256 = component.sha3_256;
-        this.component.sha3_512 = component.sha3_512;
+        this.component = component;
         EventBus.$emit('addCrumb', this.componentLabel);
       }
     },

@@ -77,9 +77,13 @@ export default {
           field: "component.name",
           sortable: true,
           formatter(value, row, index) {
-            const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.component.uuid}}).href);
-            let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            if (row.component) {
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.component.uuid}}).href);
+              let name = common.concatenateComponentName(null, row.component.name, row.component.version);
+              return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            } else {
+              return "";
+            }
           }
         },
         {
@@ -92,8 +96,8 @@ export default {
         },
         {
           title: this.$t('message.analysis'),
-          field: "analysis.state",
-          sortable: true,
+          field: "analysis.analysisState",
+          sortable: false,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
           }
@@ -101,7 +105,7 @@ export default {
         {
           title: this.$t('message.suppressed'),
           field: "analysis.isSuppressed",
-          sortable: true,
+          sortable: false,
           class: "tight",
           formatter(value, row, index) {
             return value === true ? '<i class="fa fa-check-square-o" />' : "";

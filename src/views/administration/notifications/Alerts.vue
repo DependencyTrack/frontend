@@ -95,7 +95,7 @@
           showRefresh: true,
           pagination: true,
           silentSort: false,
-          sidePagination: 'client',
+          sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,

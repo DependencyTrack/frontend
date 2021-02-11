@@ -4,21 +4,21 @@ volumes:
   dependency-track-data:
 
 services:
-  dependency-track:
-    image: owasp/dependency-track:snapshot
+  dtrack-apiserver:
+    image: dependencytrack/apiserver:snapshot
     ports:
       - "8081:8080"
     volumes:
       - "dependency-track-data:/data"
     restart: unless-stopped
 
-  frontend:
+  dtrack-frontend:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
-    image: owasp/dependency-track-frontend:snapshot
+    image: dependencytrack/frontend:snapshot
     depends_on:
-      - dependency-track
+      - dtrack-apiserver
     environment:
       - "API_BASE_URL=http://localhost:8081"
       # - "OIDC_ISSUER="

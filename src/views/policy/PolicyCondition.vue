@@ -20,6 +20,7 @@
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-tooltip target="input-value-coordinates-version" triggers="hover focus">{{ $t('message.coordinates_version_tooltip') }}</b-tooltip>
         </b-input-group>
 
       </b-col>
@@ -65,12 +66,14 @@
           //{value: 'AGE', text: this.$t('message.age')},
           //{value: 'ANALYZER', text: this.$t('message.analyzer')},
           //{value: 'BOM', text: this.$t('message.bom')},
+          {value: 'SEVERITY', text: this.$t('message.severity')},
           {value: 'COORDINATES', text: this.$t('message.coordinates')},
           {value: 'LICENSE', text: this.$t('message.license')},
           {value: 'LICENSE_GROUP', text: this.$t('message.license_group')},
           {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
           {value: 'CPE', text: this.$t('message.cpe_full')},
-          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')}
+          {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
+          {value: 'VERSION', text: this.$t('message.version')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -101,6 +104,8 @@
             return true;
           case 'BOM':
             return true;
+          case 'SEVERITY':
+            return true;
           case 'COORDINATES':
             return false;
           case 'LICENSE':
@@ -112,6 +117,8 @@
           case 'CPE':
             return false;
           case 'SWID_TAGID':
+            return false;
+          case 'VERSION':
             return false;
           default:
             return false;
@@ -140,6 +147,10 @@
           case 'BOM':
             this.operators = this.objectOperators;
             break;
+          case 'SEVERITY':
+            this.operators = this.objectOperators;
+            this.populateSeverity()
+            break;
           case 'COORDINATES':
             this.operators = this.regexOperators;
             break;
@@ -159,6 +170,9 @@
             break;
           case 'SWID_TAGID':
             this.operators = this.regexOperators;
+            break;
+          case 'VERSION':
+            this.operators = this.numericOperators;
             break;
           default:
             this.operators = [];
@@ -255,6 +269,16 @@
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           }
         });
+      },
+      populateSeverity: function () {
+        this.possibleValues = [
+          {value: "CRITICAL", text: this.$t('severity.critical')},
+          {value: "HIGH", text: this.$t('severity.high')},
+          {value: "MEDIUM", text: this.$t('severity.medium')},
+          {value: "LOW", text: this.$t('severity.low')},
+          {value: "INFO", text: this.$t('severity.info')},
+          {value: "UNASSIGNED", text: this.$t('severity.unassigned')}
+        ];
       }
     }
   }

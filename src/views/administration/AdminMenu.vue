@@ -94,6 +94,16 @@
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
+                component: "Cargo",
+                name: this.$t('admin.cargo'),
+                href: "#repositoryCargoTab"
+              },
+              {
+                component: "Composer",
+                name: this.$t('admin.composer'),
+                href: "#repositoryComposerTab"
+              },
+              {
                 component: "Gem",
                 name: this.$t('admin.gem'),
                 href: "#repositoryGemTab"
@@ -151,6 +161,11 @@
                 component: "FortifySsc",
                 name: this.$t('admin.fortify_ssc'),
                 href: "#integrationsFortifySscTab"
+              },
+              {
+                component: "DefectDojo",
+                name: this.$t('admin.defectdojo'),
+                href: "#integrationsDefectDojoTab"
               },
               {
                 component: "KennaSecurity",

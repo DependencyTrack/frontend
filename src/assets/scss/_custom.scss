@@ -287,7 +287,16 @@ button:focus {
   margin-left: 0.6em !important;
   color: #21D983 !important;
 }
-
+.badge-tag {
+  color: $primary;
+  background-color: transparent;
+  border: 1px solid $primary;
+}
+.badge-tag:hover {
+  color: $light-blue;
+  background-color: transparent;
+  border: 1px solid $primary;
+}
 td a.detail-icon {
   font-size: 150%;
   line-height: 1.0;

@@ -79,6 +79,7 @@
   import { ValidationObserver } from 'vee-validate';
   import InformationalModal from '../modals/InformationalModal'
   import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+  import { getRedirectUrl } from '../../shared/utils';
   const qs = require('querystring');
 
   export default {
@@ -119,7 +120,8 @@
               this.$toastr.s(this.$t('message.password_change_success'));
               // We don't get the JWT token on a successful password change,
               // reroute users back to login
-              this.$router.replace({ name: "Login" });
+              const redirectTo = getRedirectUrl(this.$router);
+              this.$router.replace({ name: "Login", query: { redirect: redirectTo } });
             }
           })
           .catch((err) => {

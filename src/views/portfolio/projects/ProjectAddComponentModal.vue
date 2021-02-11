@@ -73,6 +73,17 @@
                                     required="false" :label="$t('message.sha3_512')" :tooltip="$t('message.component_hash_desc')" />
         </b-card>
       </b-tab>
+      <b-tab>
+        <template v-slot:title><i class="fa fa-file-text-o"></i> {{ $t('message.notes') }}</template>
+        <b-card>
+          <b-form-group
+            id="component-notes-form-group"
+            :label="this.$t('message.notes')"
+            label-for="component-notes-input">
+            <b-form-textarea id="component-notes-description" v-model="component.notes" rows="3" />
+          </b-form-group>
+        </b-card>
+      </b-tab>
     </b-tabs>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
@@ -138,7 +149,8 @@
           sha256: this.component.sha256,
           sha512: this.component.sha512,
           sha3_256: this.component.sha3_256,
-          sha3_512: this.component.sha3_512
+          sha3_512: this.component.sha3_512,
+          notes: this.component.notes
         }).then((response) => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.component_created'));
@@ -165,7 +177,8 @@
           sha256: null,
           sha512: null,
           sha3_256: null,
-          sha3_512: null
+          sha3_512: null,
+          notes: null
         }
       },
       retrieveLicenses: function() {

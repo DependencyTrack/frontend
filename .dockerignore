@@ -5,7 +5,6 @@ CODE_OF_CONDUCT.md
 LICENSE
 README.md
 SECURITY.md
-dist/
 docker/
 docs/
 node_modules/
