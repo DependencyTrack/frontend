@@ -153,6 +153,7 @@
       PortfolioWidgetRow,
       VueEasyPieChart
     },
+    title: '',
     computed: {
       projectLabel () {
         if (this.project.name && this.project.version) {
@@ -195,6 +196,7 @@
       syncProjectFields: function(project) {
         this.project = project;
         EventBus.$emit('addCrumb', this.projectLabel);
+        this.$title = this.projectLabel;
       },
       initialize: function() {
         let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
@@ -205,6 +207,7 @@
             this.availableProjectVersions = response.data;
           });
           EventBus.$emit('addCrumb', this.projectLabel);
+          this.$title = this.projectLabel;
         });
 
         let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/current`;
