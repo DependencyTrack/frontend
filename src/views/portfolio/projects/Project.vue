@@ -104,6 +104,10 @@
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
         <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
       </b-tab>
+      <b-tab>
+        <template v-slot:title><i class="fa fa-exchange"></i> {{ $t('message.services') }} <b-badge variant="tab-total">{{ totalServices }}</b-badge></template>
+        <project-services :key="this.uuid" :uuid="this.uuid" v-on:total="totalServices = $event" />
+      </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
         <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
@@ -126,6 +130,7 @@
   import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
   import VueEasyPieChart from 'vue-easy-pie-chart'
   import ProjectComponents from "./ProjectComponents";
+  import ProjectServices from "./ProjectServices";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ProjectDashboard from "./ProjectDashboard";
   import SeverityBarChart from "../../dashboard/SeverityBarChart";
@@ -148,6 +153,7 @@
       ProjectPropertiesModal,
       ProjectDetailsModal,
       ProjectComponents,
+      ProjectServices,
       SeverityBarChart,
       ProjectDashboard,
       PortfolioWidgetRow,
@@ -181,6 +187,7 @@
         currentRiskScore: 0,
         availableProjectVersions: [],
         totalComponents: 0,
+        totalServices: 0,
         totalFindings: 0,
         totalViolations: 0
       }

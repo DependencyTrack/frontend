@@ -184,7 +184,7 @@
         let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` + this.component.uuid;
         this.axios.delete(url).then((response) => {
           this.$toastr.s(this.$t('message.component_deleted'));
-          this.$router.replace({ name: "Components" });
+          this.$router.replace({ path: "/projects/" + this.component.project.uuid });
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });

@@ -9,7 +9,7 @@
     <script src="js/oidc-client.min.js"></script>
     <script>
         const acceptableRootContextPaths = [
-            '/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
+            '/dashboard', '/projects', '/components', '/services', '/vulnerabilities', '/licenses', '/policy', '/admin',
             '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'
         ];
         function getContextPath() {
@@ -25,8 +25,8 @@
           const contextRoot = getContextPath();
           try {
             const resultingUrl = new URL(redirectUrl, window.location.origin);
-            return resultingUrl.origin === window.location.origin 
-                    && /^https?:$/.test(resultingUrl.protocol) 
+            return resultingUrl.origin === window.location.origin
+                    && /^https?:$/.test(resultingUrl.protocol)
                     && acceptableRootContextPaths.map(r => contextRoot + r).some(p => redirectUrl.startsWith(p));
           } catch(invalidUrl) {
             return false;

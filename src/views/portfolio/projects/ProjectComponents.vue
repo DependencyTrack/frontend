@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="toolbar">
+    <div id="componentsToolbar">
       <div class="form-inline btn-spaced-group" role="form">
         <b-button size="md" variant="outline-primary"
                   v-b-modal.projectAddComponentModal
@@ -165,7 +165,7 @@
           pagination: true,
           silentSort: false,
           sidePagination: 'server',
-          toolbar: '#toolbar',
+          toolbar: '#componentsToolbar',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,

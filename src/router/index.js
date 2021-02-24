@@ -18,6 +18,7 @@ const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 
 const Project = () => import('@/views/portfolio/projects/Project');
 const Component = () => import('@/views/portfolio/projects/Component');
+const Service = () => import('@/views/portfolio/projects/Service');
 const Vulnerability = () => import('@/views/portfolio/vulnerabilities/Vulnerability');
 const License = () => import('@/views/portfolio/licenses/License');
 
@@ -78,6 +79,16 @@ function configRoutes() {
           name: 'Component',
           props: (route) => ( { uuid: route.params.uuid } ),
           component: Component,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects'
+          }
+        },
+        {
+          path: '/services/:uuid',
+          name: 'Service',
+          props: (route) => ( { uuid: route.params.uuid } ),
+          component: Service,
           meta: {
             i18n: 'message.projects',
             sectionPath: '/projects'

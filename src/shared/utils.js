@@ -34,7 +34,7 @@ export function getRedirectUrl(router) {
 
 // An array of acceptable root context paths defined in the UI.
 const acceptableRootContextPaths = [
-    '/dashboard', '/projects', '/components', '/vulnerabilities', '/licenses', '/policy', '/admin',
+    '/dashboard', '/projects', '/components', '/services', '/vulnerabilities', '/licenses', '/policy', '/admin',
     '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'
 ];
 
