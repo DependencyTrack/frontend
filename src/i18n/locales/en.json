@@ -270,7 +270,9 @@
     "contacts": "Contacts",
     "phone": "Phone",
     "external_references": "External References",
-    "service_updated": "Service updated"
+    "service_updated": "Service updated",
+    "object_identifier": "Object Identifier",
+    "object_identifier_desc": "A unique identifier (UUID) that Dependency-Track automatically assigns to every object"
   },
   "admin": {
     "configuration": "Configuration",

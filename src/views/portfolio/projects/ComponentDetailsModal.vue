@@ -30,6 +30,10 @@
                                     required="false" :label="$t('message.swid_tagid')"
                                     :tooltip="$t('message.component_swid_tagid_desc')"
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="component-uuid" input-group-size="mb-3" type="text" v-model="component.uuid"
+                                    lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
+                                    :label="$t('message.object_identifier')" :tooltip="this.$t('message.object_identifier_desc')"
+                                    :readonly="true" />
         </b-card>
       </b-tab>
       <b-tab>
