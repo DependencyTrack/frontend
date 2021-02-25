@@ -1,11 +1,12 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
+  <div class="componentSearch animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row :fetch="true" />
-    <b-row>
-      <b-col md="4" lg="3">
+    <div id="componentSearchToolbar">
+      <b-row>
+      <b-col md="4" lg="4">
         <b-input-group-form-select id="input-subject" required="true" v-model="subject" :options="subjects"/>
       </b-col>
-      <b-col md="7" lg="6">
+      <b-col md="7" lg="7">
         <b-input-group-form-input v-if="subject !== 'COORDINATES'" id="input-value" required="true" type="text" v-model="value" lazy="true" v-on:keyup.enter="performSearch" />
         <b-input-group v-else-if="subject === 'COORDINATES'">
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-on:keyup.enter="performSearch"></b-form-input>
@@ -16,7 +17,8 @@
       <b-col md="1" lg="1">
         <b-button variant="outline-primary" v-on:click="performSearch">{{ $t('message.search') }}</b-button>
       </b-col>
-    </b-row>
+      </b-row>
+    </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -27,12 +29,13 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+  import common from "../../../shared/common";
   import { Switch as cSwitch } from '@coreui/vue';
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
-  import common from "../../../shared/common";
   import xssFilters from "xss-filters";
   import SeverityProgressBar from "@/views/components/SeverityProgressBar";
 
@@ -191,10 +194,11 @@
         options: {
           onPostBody: this.initializeTooltips,
           search: false,
-          showColumns: false,
-          showRefresh: false,
+          showColumns: true,
+          showRefresh: true,
           pagination: true,
           silentSort: false,
+          toolbar: '#componentSearchToolbar',
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
@@ -213,3 +217,9 @@
     }
   };
 </script>
+
+<style>
+.componentSearch .bootstrap-table .fixed-table-toolbar .bs-bars {
+  width:80%;
+}
+</style>
