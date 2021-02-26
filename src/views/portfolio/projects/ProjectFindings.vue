@@ -36,6 +36,7 @@
       BootstrapToggle
     },
     data() {
+      const router = this.$router;
       return {
         showSuppressedFindings: false,
         labelIcon: {
@@ -48,7 +49,7 @@
             field: "component.name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.component.uuid}}).href);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -73,7 +74,7 @@
             field: "vulnerability.vulnId",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Vulnerability', params: {source: row.vulnerability.source, vulnId: value}}).href);
               return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -226,9 +227,14 @@
               },
               methods: {
                 getAnalysis: function() {
-                  let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
-                  this.axios.get(url).then((response) => {
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+                  this.axios.get(url, {
+                    params: {
+                      project: projectUuid,
+                      component: this.finding.component.uuid,
+                      vulnerability: this.finding.vulnerability.uuid,
+                    }
+                  }).then((response) => {
                     this.updateAnalysisData(response.data);
                   });
                 },

@@ -52,6 +52,7 @@
       uuid: String
     },
     data() {
+      const router = this.$router;
       return {
         columns: [
           {
@@ -64,7 +65,7 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Component', params: {uuid: row.uuid}}).href);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -118,7 +119,7 @@
             sortable: false,
             formatter(value, row, index) {
               if (Object.prototype.hasOwnProperty.call(row, "resolvedLicense")) {
-                let licenseurl = "../licenses/" + row.resolvedLicense.licenseId;
+                const licenseurl = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'License', params: {licenseId: row.resolvedLicense.licenseId}}).href);
                 return "<a href=\"" + licenseurl + "\">" + xssFilters.inHTMLData(row.resolvedLicense.licenseId) + "</a>";
               } else {
                 return xssFilters.inHTMLData(common.valueWithDefault(value, ""));

@@ -26,6 +26,7 @@
       BootstrapToggle
     },
     data() {
+      const router = this.$router;
       return {
         columns: [
           {
@@ -33,7 +34,7 @@
             field: "vulnId",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../../vulnerabilities/" + row.source + "/" + value);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Vulnerability', params: {source: row.source, vulnId: value}}).href);
               return common.formatSourceLabel(row.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },

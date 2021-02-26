@@ -21,6 +21,7 @@
   export default {
     mixins: [permissionsMixin],
     data() {
+      const router = this.$router;
       return {
         labelIcon: {
           dataOn: '\u2713',
@@ -45,7 +46,7 @@
             field: "licenseId",
             sortable: true,
             formatter: function (value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../licenses/" + encodeURIComponent(value));
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'License', params: {licenseId: value}}).href);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             },
           }

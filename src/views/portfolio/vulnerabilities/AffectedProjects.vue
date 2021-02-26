@@ -19,6 +19,7 @@
       vulnId: String
     },
     data() {
+      const router = this.$router;
       return {
         columns: [
           {
@@ -26,7 +27,7 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../../projects/" + row.uuid);
+              const url = xssFilters.uriInUnQuotedAttr(router.resolve({name: 'Project', params: {uuid: row.uuid}}).href);
               return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },

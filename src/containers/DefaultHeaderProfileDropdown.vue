@@ -11,7 +11,7 @@
         <strong>{{ $t('message.profile') }}</strong>
       </b-dropdown-header>
       <b-dropdown-item v-b-modal.profileEditModal><i class="fa fa-user text-primary" /> {{ $t('message.profile_update') }}</b-dropdown-item>
-      <b-dropdown-item to="/change-password"><i class="fa fa-key text-primary" /> {{ $t('message.change_password') }}</b-dropdown-item>
+      <b-dropdown-item :to="{name: 'PasswordForceChange'}"><i class="fa fa-key text-primary" /> {{ $t('message.change_password') }}</b-dropdown-item>
       <b-dropdown-divider />
       <b-dropdown-item @click="logout"><i class="fa fa-sign-out text-primary" /> {{ $t('message.logout') }}</b-dropdown-item>
     </template>
