@@ -147,7 +147,16 @@ export default {
           }
         });
     },
+    isOidcAvailableInFrontend() {
+      return this.oidcUserManager.settings.authority &&
+        this.oidcUserManager.settings.client_id &&
+        this.oidcUserManager.settings.scope
+    },
     checkOidcAvailability() {
+      if (!this.isOidcAvailableInFrontend()) {
+        return Promise.resolve(false);
+      }
+
       const url = this.$api.BASE_URL + "/" + this.$api.URL_OIDC_AVAILABLE;
 
       return axios
@@ -157,11 +166,7 @@ export default {
           if (result.status === 200) {
             oidcAvailableInBackend = result.data === true;
           }
-          var oidcAvailableInFrontend =
-            this.oidcUserManager.settings.authority &&
-            this.oidcUserManager.settings.client_id &&
-            this.oidcUserManager.settings.scope;
-          return oidcAvailableInBackend && oidcAvailableInFrontend;
+          return oidcAvailableInBackend;
         })
         .catch(err => {
           return Promise.reject(err);
