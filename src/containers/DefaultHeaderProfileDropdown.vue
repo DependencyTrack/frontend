@@ -10,9 +10,9 @@
         class="text-center">
         <strong>{{ $t('message.profile') }}</strong>
       </b-dropdown-header>
-      <b-dropdown-item v-b-modal.profileEditModal><i class="fa fa-user text-primary" /> {{ $t('message.profile_update') }}</b-dropdown-item>
-      <b-dropdown-item to="/change-password"><i class="fa fa-key text-primary" /> {{ $t('message.change_password') }}</b-dropdown-item>
-      <b-dropdown-divider />
+      <b-dropdown-item v-if="canUpdateProfile()" v-b-modal.profileEditModal><i class="fa fa-user text-primary" /> {{ $t('message.profile_update') }}</b-dropdown-item>
+      <b-dropdown-item v-if="canChangePassword()" to="/change-password"><i class="fa fa-key text-primary" /> {{ $t('message.change_password') }}</b-dropdown-item>
+      <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
       <b-dropdown-item @click="logout"><i class="fa fa-sign-out text-primary" /> {{ $t('message.logout') }}</b-dropdown-item>
     </template>
   </AppHeaderDropdown>
@@ -21,6 +21,7 @@
 <script>
   import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
   import EventBus from '../shared/eventbus';
+  import { decodeToken, getToken } from '../shared/permissions'
 
   export default {
     name: 'DefaultHeaderProfileDropdown',
@@ -28,7 +29,10 @@
       AppHeaderDropdown
     },
     data: () => {
-      return { itemsCount: 42 }
+      return { 
+        itemsCount: 42,
+        identityProvider: decodeToken(getToken()).idp
+      }
     },
     methods: {
       logout: function () {
@@ -38,6 +42,12 @@
         // Removes the token from session storage and reload
         EventBus.$emit('authenticated', null);
         this.$router.replace({ name: "Login" });
+      },
+      canChangePassword: function() {
+        return this.identityProvider == "LOCAL";
+      },
+      canUpdateProfile: function() {
+        return this.identityProvider == "LOCAL";
       }
     }
   }
