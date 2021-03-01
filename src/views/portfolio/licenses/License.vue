@@ -69,6 +69,7 @@
     mixins: [permissionsMixin],
     components: {
     },
+    title: '',
     computed: {
       licenseLabel () {
         if (this.license.name) {
@@ -97,6 +98,7 @@
       this.axios.get(url).then((response) => {
         this.license = response.data;
         EventBus.$emit('addCrumb', this.licenseLabel);
+        this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
       });
     },
     destroyed() {

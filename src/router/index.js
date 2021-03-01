@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import i18n from '../i18n'
 import { getContextPath } from "../shared/utils"
 import { getToken }  from '../shared/permissions';
 import EventBus from '../shared/eventbus';
@@ -42,6 +43,7 @@ function configRoutes() {
           name: 'Dashboard',
           component: Dashboard,
           meta: {
+            title: i18n.t('message.dashboard'),
             i18n: 'message.dashboard',
             sectionPath: '/dashboard'
           }
@@ -51,6 +53,7 @@ function configRoutes() {
           name: 'Projects',
           component: ProjectList,
           meta: {
+            title: i18n.t('message.projects'),
             i18n: 'message.projects',
             sectionPath: '/projects'
           }
@@ -70,6 +73,7 @@ function configRoutes() {
           name: 'Component Lookup',
           component: ComponentSearch,
           meta: {
+            title: i18n.t('message.component_search'),
             i18n: 'message.component_search',
             sectionPath: '/components'
           }
@@ -99,6 +103,7 @@ function configRoutes() {
           name: 'Vulnerabilities',
           component: VulnerabilityList,
           meta: {
+            title: i18n.t('message.vulnerabilities'),
             i18n: 'message.vulnerabilities',
             sectionPath: '/vulnerabilities'
           }
@@ -121,6 +126,7 @@ function configRoutes() {
           name: 'Licenses',
           component: LicenseList,
           meta: {
+            title: i18n.t('message.licenses'),
             i18n: 'message.licenses',
             sectionPath: '/licenses'
           }
@@ -140,6 +146,7 @@ function configRoutes() {
           name: 'Policy Management',
           component: PolicyManagement,
           meta: {
+            title: i18n.t('message.policy_management'),
             i18n: 'message.policy_management',
             sectionPath: '/policy'
           }
@@ -149,6 +156,7 @@ function configRoutes() {
           name: 'Administration',
           component: Administration,
           meta: {
+            title: i18n.t('message.administration'),
             i18n: 'message.administration',
             sectionPath: '/admin'
           }
@@ -213,17 +221,26 @@ function configRoutes() {
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        title: i18n.t('message.login'),
+      }
     },
     {
       path: '/change-password',
       name: 'PasswordForceChange',
-      component: PasswordForceChange
+      component: PasswordForceChange,
+      meta: {
+        title: i18n.t('message.change_password'),
+      }
     },
     {
       path: '*',
       name: '404',
-      component: Page404
+      component: Page404,
+      meta: {
+        title: i18n.t('404.heading'),
+      }
     }
   ]
 }

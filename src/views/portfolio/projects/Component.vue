@@ -114,6 +114,7 @@
       VueEasyPieChart,
       ComponentDetailsModal
     },
+    title: '',
     computed: {
       projectLabel () {
         if (this.component.hasOwnProperty("project")) {
@@ -173,6 +174,7 @@
       this.axios.get(componentUrl).then((response) => {
         this.component = response.data;
         EventBus.$emit('addCrumb', this.componentLabel, 'Project', this.component.project.uuid, this.projectLabel);
+        this.$title = this.componentLabel;
       });
 
       let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
