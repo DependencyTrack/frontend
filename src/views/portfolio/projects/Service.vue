@@ -157,6 +157,7 @@ export default {
     syncServiceFields: function(service) {
       this.service = service;
       EventBus.$emit('addCrumb', this.serviceLabel);
+      this.$title = this.serviceLabel;
     }
   },
   beforeMount() {
@@ -167,6 +168,7 @@ export default {
     this.axios.get(serviceUrl).then((response) => {
       this.service = response.data;
       EventBus.$emit('addCrumb', this.serviceLabel, 'Project', this.service.project.uuid, this.projectLabel);
+      this.$title = this.serviceLabel;
     });
 /* TODO: Add when server supports service metrics
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${this.uuid}/current`;
