@@ -272,7 +272,8 @@
     "external_references": "External References",
     "service_updated": "Service updated",
     "object_identifier": "Object Identifier",
-    "object_identifier_desc": "A unique identifier (UUID) that Dependency-Track automatically assigns to every object"
+    "object_identifier_desc": "A unique identifier (UUID) that Dependency-Track automatically assigns to every object",
+    "dependency_graph": "Dependency Graph"
   },
   "admin": {
     "configuration": "Configuration",
