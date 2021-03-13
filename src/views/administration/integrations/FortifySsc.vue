@@ -22,21 +22,12 @@
         lazy="true"
       />
       <b-validated-input-group-form-input
-        id="fortify-ssc-username"
-        :label="$t('message.username')"
-        input-group-size="mb-3"
-        rules="required"
-        type="text"
-        v-model="username"
-        lazy="true"
-      />
-      <b-validated-input-group-form-input
-        id="fortify-ssc-password"
-        :label="$t('message.password')"
+        id="fortify-ssc-token"
+        :label="$t('admin.token')"
         input-group-size="mb-3"
         rules="required"
         type="password"
-        v-model="password"
+        v-model="token"
         lazy="true"
       />
     </b-card-body>
@@ -66,8 +57,7 @@
         enabled: false,
         cadence: '60',
         url: '',
-        username: '',
-        password: '',
+        token: '',
         labelIcon: {
           dataOn: '\u2713',
           dataOff: '\u2715'
@@ -80,8 +70,7 @@
           {groupName: 'integrations', propertyName: 'fortify.ssc.enabled', propertyValue: this.enabled},
           {groupName: 'integrations', propertyName: 'fortify.ssc.sync.cadence', propertyValue: this.cadence},
           {groupName: 'integrations', propertyName: 'fortify.ssc.url', propertyValue: this.url},
-          {groupName: 'integrations', propertyName: 'fortify.ssc.username', propertyValue: this.username},
-          {groupName: 'integrations', propertyName: 'fortify.ssc.password', propertyValue: this.password}
+          {groupName: 'integrations', propertyName: 'fortify.ssc.token', propertyValue: this.token}
         ]);
       }
     },
@@ -97,10 +86,8 @@
               this.cadence = item.propertyValue; break;
             case "fortify.ssc.url":
               this.url = item.propertyValue; break;
-            case "fortify.ssc.username":
-              this.username = item.propertyValue; break;
-            case "fortify.ssc.password":
-              this.password = item.propertyValue; break;
+            case "fortify.ssc.token":
+              this.token = item.propertyValue; break;
           }
         }
       });
