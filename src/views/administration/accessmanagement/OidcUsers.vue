@@ -70,14 +70,6 @@
             }
           },
           {
-            title: this.$t('message.email'),
-            field: "email",
-            sortable: false,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
-          },
-          {
             title: this.$t('admin.teams'),
             field: "teams",
             sortable: false,
