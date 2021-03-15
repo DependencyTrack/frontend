@@ -14,10 +14,13 @@
     <b-form-checkbox id="checkbox-2" v-model="includeProperties" name="checkbox-2" switch
                      value="true" unchecked-value="false"> {{ $t('message.include_properties') }}</b-form-checkbox>
 
-    <b-form-checkbox id="checkbox-3" v-model="includeDependencies" name="checkbox-3" switch
-                     value="true" unchecked-value="false"> {{ $t('message.include_dependencies') }}</b-form-checkbox>
+    <b-form-checkbox id="checkbox-3" v-model="includeComponents" name="checkbox-3" switch
+                     value="true" unchecked-value="false"> {{ $t('message.include_components') }}</b-form-checkbox>
 
-    <b-form-checkbox id="checkbox-4" v-model="includeAuditHistory" name="checkbox-4" switch
+    <b-form-checkbox id="checkbox-4" v-model="includeServices" name="checkbox-4" switch
+                     value="true" unchecked-value="false"> {{ $t('message.include_services') }}</b-form-checkbox>
+
+    <b-form-checkbox id="checkbox-5" v-model="includeAuditHistory" name="checkbox-5" switch
                      value="true" unchecked-value="false"> {{ $t('message.include_audit_history') }}</b-form-checkbox>
 
     <template v-slot:modal-footer="{ cancel }">
@@ -39,7 +42,8 @@
         version: null,
         includeTags: true,
         includeProperties: true,
-        includeDependencies: true,
+        includeComponents: true,
+        includeServices: true,
         includeAuditHistory: true
       }
     },
@@ -51,7 +55,8 @@
           version: this.version,
           includeTags: this.includeTags,
           includeProperties: this.includeProperties,
-          includeDependencies: this.includeDependencies,
+          includeComponents: this.includeComponents,
+          includeServices: this.includeServices,
           includeAuditHistory: this.includeAuditHistory
         }).then((response) => {
           this.$root.$emit('bv::hide::modal', 'projectAddVersionModal');
@@ -64,13 +69,17 @@
         this.version = null;
         this.includeTags = true;
         this.includeProperties = true;
-        this.includeDependencies = true;
+        this.includeComponents = true;
+        this.includeServices = true;
         this.includeAuditHistory = true;
       }
     }
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import "../../../assets/scss/vendors/vue-tags-input/vue-tags-input";
+  .custom-control {
+    padding-bottom: 0.3rem;
+  }
 </style>
