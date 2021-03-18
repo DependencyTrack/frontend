@@ -13,9 +13,6 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
     image: dependencytrack/frontend:snapshot
     depends_on:
       - dtrack-apiserver
