@@ -25,10 +25,13 @@ Always use the Front-End version that is compatible with the Dependency-Track AP
 
 | Dependency-Track API Server | Front-End |
 |:-----|:-----|
+| v4.2 | v4.2 |
 | v4.1 | v1.2 |
 | v4.0 | v1.1 |
 | v3.8 | v1.0 |
 | v1.0 - v3.7.1 | Not supported |
+
+Starting with Dependency-Track v4.2, the API Server and the Frontend now have the same major and minor (semantic) version. Patch versions however, may continue to be unique.
 
 ## Binary Distributions
 
