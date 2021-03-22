@@ -97,9 +97,7 @@ export default {
           title: this.$t('message.analysis'),
           field: "analysis.analysisState",
           sortable: false,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-          }
+          formatter: common.makeAnalysisStateLabelFormatter(this),
         },
         {
           title: this.$t('message.suppressed'),
