@@ -45,7 +45,7 @@ jobs:
         ~/dockle $DOCKER_REPO:$DOCKER_TAG
         ~/trivy --exit-code 0 --quiet --auto-refresh $DOCKER_REPO:$DOCKER_TAG
     - name: Publishing container to Docker Hub
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && startsWith(matrix.node-version, '12.')
+      if: ((github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch') && startsWith(matrix.node-version, '12.')
       env:
         HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
         HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
