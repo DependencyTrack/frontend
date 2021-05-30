@@ -5,9 +5,6 @@
       <div>
         <c-switch color="primary" v-model="isCycloneDXEnabled" label v-bind="labelIcon" />{{$t('admin.enable_bom_cyclonedx')}}
       </div>
-      <div>
-        <c-switch color="primary" v-model="isSPDXEnabled" label v-bind="labelIcon" />{{$t('admin.enable_bom_spdx')}}
-      </div>
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
@@ -30,15 +27,13 @@
     },
     data() {
       return {
-        isCycloneDXEnabled: false,
-        isSPDXEnabled: false
+        isCycloneDXEnabled: false
       }
     },
     methods: {
       saveChanges: function() {
         this.updateConfigProperties([
-          {groupName: 'artifact', propertyName: 'cyclonedx.enabled', propertyValue: this.isCycloneDXEnabled},
-          {groupName: 'artifact', propertyName: 'spdx.enabled', propertyValue: this.isSPDXEnabled}
+          {groupName: 'artifact', propertyName: 'cyclonedx.enabled', propertyValue: this.isCycloneDXEnabled}
         ]);
       }
     },
@@ -51,8 +46,6 @@
           switch (item.propertyName) {
             case "cyclonedx.enabled":
               this.isCycloneDXEnabled = enabled; break;
-            case "spdx.enabled":
-              this.isSPDXEnabled = enabled; break;
           }
         }
       });
