@@ -208,7 +208,12 @@
                 component: "Permissions",
                 name: this.$t('admin.permissions'),
                 href: "#permissionsTab"
-              }
+              },
+              {
+                component: "PortfolioAccessControl",
+                name: this.$t('admin.portfolio_access_control'),
+                href: "#portfolioAclTab"
+              },
             ]
           }
         ]

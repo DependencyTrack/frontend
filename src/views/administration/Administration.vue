@@ -51,6 +51,7 @@
   import OidcGroups from "./accessmanagement/OidcGroups";
   import Teams from "./accessmanagement/Teams";
   import Permissions from "./accessmanagement/Permissions";
+  import PortfolioAccessControl from "./accessmanagement/PortfolioAccessControl";
 
   export default {
     components: {
@@ -61,7 +62,7 @@
       Cargo, Composer, Gem, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, DefectDojo, KennaSecurity,
-      LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions
+      LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions, PortfolioAccessControl
     },
     created() {
       // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
