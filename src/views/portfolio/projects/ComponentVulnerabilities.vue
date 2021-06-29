@@ -73,9 +73,7 @@
             sortable: false,
             class: "tight",
             visible: false,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
+            formatter: common.makeAnalysisStateLabelFormatter(this),
           },
           {
             title: this.$t('message.suppressed'),
