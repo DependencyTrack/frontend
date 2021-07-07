@@ -3,5 +3,6 @@
   "OIDC_ISSUER": "",
   "OIDC_CLIENT_ID": "",
   "OIDC_SCOPE": "openid email profile",
-  "OIDC_FLOW": "code"
+  "OIDC_FLOW": "code",
+  "OIDC_LOGIN_BUTTON_TEXT" : ""
 }
