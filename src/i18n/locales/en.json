@@ -291,6 +291,7 @@
     "cargo": "Cargo",
     "composer": "Composer",
     "gem": "Gem",
+    "go_modules": "Go Modules",
     "hex": "Hex",
     "maven": "Maven",
     "npm": "NPM",

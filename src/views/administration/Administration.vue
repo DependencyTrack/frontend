@@ -32,6 +32,7 @@
   import Cargo from "./repositories/Cargo";
   import Composer from "./repositories/Composer";
   import Gem from "./repositories/Gem";
+  import GoModules from "./repositories/GoModules";
   import Hex from "./repositories/Hex";
   import Maven from "./repositories/Maven";
   import Npm from "./repositories/Npm";
@@ -59,7 +60,7 @@
       AdminMenu,
       General, BomFormats, Email, InternalComponents,
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
-      Cargo, Composer, Gem, Hex, Maven, Npm, Nuget, Python,
+      Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, DefectDojo, KennaSecurity,
       LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions, PortfolioAccessControl
