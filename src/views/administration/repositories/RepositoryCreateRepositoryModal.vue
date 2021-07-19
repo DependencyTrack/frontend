@@ -65,6 +65,7 @@
         repositoryTypes: [
           { value: 'COMPOSER', text: 'PHP (Composer)' },
           { value: 'GEM', text: 'Ruby (Gem)' },
+          { value: 'GO_MODULES', text: 'Go Modules'},
           { value: 'CARGO', text: 'Rust (Cargo)' },
           { value: 'HEX', text: 'Erlang/Elixir (Hex)' },
           { value: 'MAVEN', text: 'Java (Maven)' },

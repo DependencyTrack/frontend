@@ -109,6 +109,11 @@
                 href: "#repositoryGemTab"
               },
               {
+                component: "GoModules",
+                name: this.$t('admin.go_modules'),
+                href: "#repositoryGoModulesTab"
+              },
+              {
                 component: "Hex",
                 name: this.$t('admin.hex'),
                 href: "#repositoryHexTab"
