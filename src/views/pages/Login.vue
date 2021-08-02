@@ -43,7 +43,8 @@
                       </b-col>
                       <b-col cols="6" v-show="oidcAvailable">
                         <b-button style="float: right" v-on:click="oidcLogin()">
-                          <img alt="OpenID Logo" src="@/assets/img/openid-logo.svg" width="60px" />
+                          <span v-if="oidcCheckLoginButtonTextSetted()">{{ oidcLoginButtonText() }}</span>
+                          <img alt="OpenID Logo" src="@/assets/img/openid-logo.svg" width="60px" v-else />
                         </b-button>
                       </b-col>
                     </b-row>
@@ -177,6 +178,12 @@ export default {
         console.log(err);
         this.$toastr.e(this.$t("message.oidc_redirect_failed"));
       });
+    },
+    oidcCheckLoginButtonTextSetted() {
+        return this.$oidc.LOGIN_BUTTON_TEXT.length > 0;
+    },
+    oidcLoginButtonText() {
+        return this.$oidc.LOGIN_BUTTON_TEXT;
     }
   },
   mounted() {

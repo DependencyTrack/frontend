@@ -49,6 +49,11 @@ axios.get(contextPath + "/static/config.json").then(response => {
   Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
   Vue.prototype.$oidc.SCOPE = response.data.OIDC_SCOPE;
   Vue.prototype.$oidc.FLOW = response.data.OIDC_FLOW;
+  if (response.data.OIDC_LOGIN_BUTTON_TEXT) {
+    Vue.prototype.$oidc.LOGIN_BUTTON_TEXT = response.data.OIDC_LOGIN_BUTTON_TEXT;
+  } else {
+    Vue.prototype.$oidc.LOGIN_BUTTON_TEXT = "";
+  }
   createVueApp();
 }).catch(function (error) {
   console.log("Cannot retrieve static/config.json from host. This is expected behavior in development environments.");
