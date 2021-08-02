@@ -24,7 +24,7 @@
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import xssFilters from "xss-filters";
   import i18n from "../../../i18n";
-  import BootstrapToggle from 'vue-bootstrap-toggle'
+  import BootstrapToggle from 'vue-bootstrap-toggle';
 
   export default {
     props: {
@@ -121,9 +121,7 @@
             title: this.$t('message.analysis'),
             field: "analysis.state",
             sortable: true,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
+            formatter: common.makeAnalysisStateLabelFormatter(this),
           },
           {
             title: this.$t('message.suppressed'),
