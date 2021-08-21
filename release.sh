@@ -48,7 +48,7 @@ githubrelease release dependencytrack/frontend create $PACKAGE_VERSION \
 REPO=dependencytrack/frontend
 docker rmi $REPO:latest
 docker rmi $REPO:$PACKAGE_VERSION
-docker build -f docker/Dockerfile -t $REPO:$PACKAGE_VERSION -t $REPO:latest .
+docker build --no-cache --pull -f docker/Dockerfile -t $REPO:$PACKAGE_VERSION -t $REPO:latest .
 docker login
 docker push $REPO:latest
 docker push $REPO:$PACKAGE_VERSION
