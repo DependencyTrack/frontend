@@ -45,6 +45,8 @@
   import FortifySsc from "./integrations/FortifySsc";
   import DefectDojo from "./integrations/DefectDojo";
   import KennaSecurity from "./integrations/KennaSecurity";
+  import Jira from "./integrations/Jira";
+
   // Access Management plugins
   import LdapUsers from "./accessmanagement/LdapUsers";
   import ManagedUsers from "./accessmanagement/ManagedUsers";
@@ -62,7 +64,7 @@
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
-      FortifySsc, DefectDojo, KennaSecurity,
+      FortifySsc, DefectDojo, KennaSecurity, Jira,
       LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions, PortfolioAccessControl
     },
     created() {

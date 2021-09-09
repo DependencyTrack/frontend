@@ -303,6 +303,7 @@
     "integrations": "Integrations",
     "fortify_ssc": "Fortify SSC",
     "defectdojo": "DefectDojo",
+    "jira": "Jira",
     "kenna_security": "Kenna Security",
     "threadfix": "ThreadFix",
     "access_management": "Access Management",
@@ -422,7 +423,13 @@
     "repository_deleted": "Repository deleted",
     "portfolio_access_control": "Portfolio Access Control",
     "project_access": "Project access",
-    "select_project": "Select Project"
+    "select_project": "Select Project",
+    "integration_jira_enable": "Enable Atlassian Jira integration",
+    "jira_url" : "Jira base URL",
+    "jira_username": "Jira Username",
+    "jira_password": "Jira Password",
+    "jira_project": "Default project key",
+    "jira_issuetype": "Default issue type"
   },
   "condition": {
     "warning": "Warning",
