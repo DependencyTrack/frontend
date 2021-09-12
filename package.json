@@ -14,9 +14,8 @@
     "start": "npm run serve",
     "serve": "npm run prebuild && vue-cli-service serve",
     "prebuild": "node update-embedded-version.js",
-    "build": "npm run prebuild && vue-cli-service build && npm run bom",
-    "lint": "vue-cli-service lint",
-    "bom": "cyclonedx-bom -t application -o bom.xml && cyclonedx-bom -t application -o bom.json"
+    "build": "npm run prebuild && vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -55,7 +54,7 @@
     "xss-filters": "^1.2.7"
   },
   "devDependencies": {
-    "@cyclonedx/bom": "^2.0.2",
+    "@cyclonedx/webpack-plugin": "^1.0.0",
     "@vue/cli-plugin-babel": "^3.12.1",
     "@vue/cli-plugin-eslint": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
