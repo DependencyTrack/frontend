@@ -258,7 +258,8 @@ export default {
           field: "url",
           sortable: false,
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            let url = xssFilters.uriInUnQuotedAttr(common.valueWithDefault(value, ""));
+            return `<a href="${url}">${xssFilters.inHTMLData(common.valueWithDefault(value, ""))}</a>`;
           }
         },
         {

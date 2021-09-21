@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="componentDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.component_details')">
+  <b-modal id="componentDetailsModal" size="lg" hide-header-close no-stacking :title="$t('message.component_details')">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template>
@@ -95,6 +95,17 @@
         </b-card>
       </b-tab>
       <b-tab>
+        <template v-slot:title><i class="fa fa-external-link"></i> {{ $t('message.external_references') }}</template>
+        <b-card>
+          <bootstrap-table
+            ref="referencesTable"
+            :columns="referencesTableColumns"
+            :data="component.externalReferences"
+            :options="referencesTableOptions">
+          </bootstrap-table>
+        </b-card>
+      </b-tab>
+      <b-tab>
         <template v-slot:title><i class="fa fa-file-text-o"></i> {{ $t('message.notes') }}</template>
         <b-card>
           <b-form-group
@@ -119,6 +130,8 @@
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import xssFilters from "xss-filters";
+  import common from "@/shared/common";
 
   export default {
     name: "ComponentDetailsModal",
@@ -143,7 +156,44 @@
           { value: 'FILE', text: 'File' }
         ],
         selectableLicenses: [],
-        selectedLicense: ''
+        selectedLicense: '',
+        referencesTableColumns: [
+          {
+            title: this.$t('message.url'),
+            field: "url",
+            sortable: false,
+            formatter(value, row, index) {
+              let url = xssFilters.uriInUnQuotedAttr(common.valueWithDefault(value, ""));
+              return `<a href="${url}">${xssFilters.inHTMLData(common.valueWithDefault(value, ""))}</a>`;
+            }
+          },
+          {
+            title: this.$t('message.type'),
+            field: "type",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          }
+        ],
+        referencesTableOptions: {
+          search: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        }
       }
     },
     beforeMount() {
