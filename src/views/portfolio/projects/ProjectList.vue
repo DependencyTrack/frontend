@@ -89,6 +89,11 @@
             }
           },
           {
+            title: this.$t('message.classifier'),
+            field: "classifier",
+            sortable: true
+          },
+          {
             title: this.$t('message.last_bom_import'),
             field: "lastBomImport",
             sortable: true,
