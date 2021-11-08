@@ -6,7 +6,7 @@
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
       <b-button size="md" variant="secondary" @click="file = null">{{ $t('message.reset') }}</b-button>
-      <b-button size="md" variant="primary" @click="upload()">{{ $t('message.upload') }}</b-button>
+      <b-button size="md" variant="primary" @click="upload()" :disabled="file === null">{{ $t('message.upload') }}</b-button>
     </template>
   </b-modal>
 </template>
