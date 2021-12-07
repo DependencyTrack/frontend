@@ -4,10 +4,13 @@
       <b-col>
         <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200">
       </b-col>
+      <b-col align="right">
+        <img src="@/assets/img/brand/owasp-logo-white.svg" width="120">
+      </b-col>
     </b-row>
     <hr/>
     <p>
-      Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain.
+      OWASP Dependency-Track is an intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain.
     </p>
     <b-row>
       <b-col>
@@ -38,7 +41,7 @@
         <h6>Datasource Providers</h6>
         <ul class="fa-ul">
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://nvd.nist.gov/">National Vulnerability Database</a></li>
-          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://www.npmjs.com/advisories">NPM Public Advisories</a></li>
+          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://github.com/advisories">GitHub Advisories</a></li>
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://ossindex.sonatype.org/">Sonatype OSS Index</a></li>
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://vulndb.cyberriskanalytics.com">VulnDB</a></li>
         </ul>
