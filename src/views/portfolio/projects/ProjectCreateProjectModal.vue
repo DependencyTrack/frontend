@@ -133,9 +133,10 @@
     },
     computed: {
       sortAvailableClassifiers: function() {
-        return this.availableClassifiers.sort(function(a, b) {
+        this.availableClassifiers.sort(function(a, b) {
           return a.text.localeCompare(b.text);
-        });        
+        });      
+        return this.availableClassifiers;  
       }
     },
     methods: {
