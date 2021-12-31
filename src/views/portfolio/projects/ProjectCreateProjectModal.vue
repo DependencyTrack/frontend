@@ -12,7 +12,7 @@
                                     lazy="true" required="false" feedback="false" autofocus="false"
                                     :label="$t('message.version')" :tooltip="this.$t('message.component_version_desc')"/>
           <b-input-group-form-select id="v-classifier-input" required="true"
-                                     v-model="project.classifier" :options="availableClassifiers"
+                                     v-model="project.classifier" :options="sortAvailableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')" />
           <b-form-group
             id="project-description-form-group"
@@ -100,14 +100,14 @@
         readOnlyProjectName: '',
         readOnlyProjectVersion: '',
         availableClassifiers: [
-          { value: 'APPLICATION', text: 'Application' },
-          { value: 'FRAMEWORK', text: 'Framework' },
-          { value: 'LIBRARY', text: 'Library' },
-          { value: 'CONTAINER', text: 'Container' },
-          { value: 'OPERATING_SYSTEM', text: 'Operating System' },
-          { value: 'DEVICE', text: 'Device' },
-          { value: 'FIRMWARE', text: 'Firmware' },
-          { value: 'FILE', text: 'File' }
+          { value: 'APPLICATION', text: this.$i18n.t('message.component_application') },
+          { value: 'FRAMEWORK', text: this.$i18n.t('message.component_framework') },
+          { value: 'LIBRARY', text: this.$i18n.t('message.component_library') },
+          { value: 'CONTAINER', text: this.$i18n.t('message.component_container') },
+          { value: 'OPERATING_SYSTEM', text: this.$i18n.t('message.component_os') },
+          { value: 'DEVICE', text: this.$i18n.t('message.component_device') },
+          { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
+          { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
         selectableLicenses: [],
         selectedLicense: '',
@@ -130,6 +130,13 @@
     },
     beforeMount() {
       this.retrieveLicenses();
+    },
+    computed: {
+      sortAvailableClassifiers: function() {
+        return this.availableClassifiers.sort(function(a, b) {
+          return a.text.localeCompare(b.text);
+        });        
+      }
     },
     methods: {
       syncReadOnlyNameField: function(value) {

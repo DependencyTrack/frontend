@@ -83,7 +83,7 @@ for this scenario, simply change the value of API_BASE_URL in static/config.json
 
 This project supports internationalization. Currently, only English language is supported. Pull requests to support additional languages are encouraged.
 
-Note to developers: Textual labels are defined in `src/i18n/messages.json`. Ensure that all labels are defined here and that components use i18n, not textual labels directly.
+Note to developers: Textual labels are defined in `src/i18n/locales/{lang}.json`. Ensure that all labels are defined here and that components use i18n, not textual labels directly.
 
 Copyright & License
 -------------------
