@@ -118,6 +118,10 @@
             sortable: true
           },
           {
+            title: this.$t('message.policy_violations'),
+            field: "metrics.policyViolationsTotal"
+          },
+          {
             title: this.$t('message.vulnerabilities'),
             field: "metrics",
             sortable: false,

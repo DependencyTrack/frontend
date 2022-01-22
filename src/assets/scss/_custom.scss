@@ -24,6 +24,10 @@
 .severity-unassigned {
   color: $severity-unassigned;
 }
+// Fixes the width for the bootstrap progress bar in tables
+.table-progress {
+  width: 100%;
+}
 .severity-critical-bg, .bg-severity-critical, .bg-CRITICAL {
   background: $severity-critical none;
 }
