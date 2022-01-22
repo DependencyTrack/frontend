@@ -125,7 +125,6 @@
               if (typeof metrics === "undefined") {
                 return "-"; // No vulnerability info available
               }
-              console.log(metrics);
 
               let ComponentClass = Vue.extend(PolicyViolationProgressBar);
               let progressBar = new ComponentClass({
@@ -133,7 +132,7 @@
                   total: metrics.policyViolationsTotal,
                   warn: metrics.policyViolationsWarn,
                   fail: metrics.policyViolationsFail,
-                  info: metrics.policyViolationsInfo
+                  info: metrics.policyViolationsInfo,
                 }
               });
               progressBar.$mount();
