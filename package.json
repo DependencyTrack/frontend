@@ -27,7 +27,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "bootstrap-table": "1.19.1",
-    "bootstrap-vue": "2.5.0",
+    "bootstrap-vue": "2.21.2",
     "chart.js": "^2.9.4",
     "core-js": "^2.6.12",
     "css-vars-ponyfill": "^2.4.3",
