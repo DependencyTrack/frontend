@@ -24,6 +24,7 @@
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
   import SeverityProgressBar from "../../components/SeverityProgressBar";
+  import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
 
@@ -119,7 +120,25 @@
           },
           {
             title: this.$t('message.policy_violations'),
-            field: "metrics.policyViolationsTotal"
+            field: "metrics",
+            formatter(metrics, row, index) {
+              if (typeof metrics === "undefined") {
+                return "-"; // No vulnerability info available
+              }
+              console.log(metrics);
+
+              let ComponentClass = Vue.extend(PolicyViolationProgressBar);
+              let progressBar = new ComponentClass({
+                propsData: {
+                  total: metrics.policyViolationsTotal,
+                  warn: metrics.policyViolationsWarn,
+                  fail: metrics.policyViolationsFail,
+                  info: metrics.policyViolationsInfo
+                }
+              });
+              progressBar.$mount();
+              return progressBar.$el.outerHTML;
+            }
           },
           {
             title: this.$t('message.vulnerabilities'),
