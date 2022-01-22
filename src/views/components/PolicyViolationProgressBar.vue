@@ -13,10 +13,12 @@
       </b-progress>
     </span>
   <b-tooltip :target="'progressbar' + hoverId" placement="left" noninteractive>
-    Info: {{ info }}<br>
-    Warn: {{ warn }}<br>
-    Fail: {{ fail }}<br>
-    Total: {{ total }}<br>
+    <div style="text-align: left;">
+    {{$t('policy_violation.infos')}}: {{ info }}<br>
+    {{$t('policy_violation.warns')}}: {{ warn }}<br>
+    {{$t('policy_violation.fails')}}: {{ fail }}<br>
+    {{$t('message.total')}}: {{ total }}<br>
+    </div>
   </b-tooltip>
   </span>
 </template>
@@ -28,6 +30,7 @@ export default {
     info: Number,
     warn: Number,
     fail: Number,
+    $t: Function,
   },
   data() {
     return {

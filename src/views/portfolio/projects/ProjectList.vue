@@ -121,11 +121,10 @@
           {
             title: this.$t('message.policy_violations'),
             field: "metrics",
-            formatter(metrics, row, index) {
+            formatter: function (metrics) {
               if (typeof metrics === "undefined") {
                 return "-"; // No vulnerability info available
               }
-
               let ComponentClass = Vue.extend(PolicyViolationProgressBar);
               let progressBar = new ComponentClass({
                 propsData: {
@@ -133,11 +132,12 @@
                   warn: metrics.policyViolationsWarn,
                   fail: metrics.policyViolationsFail,
                   info: metrics.policyViolationsInfo,
+                  $t: this.$t.bind(this),
                 }
               });
               progressBar.$mount();
               return progressBar.$el.outerHTML;
-            }
+            }.bind(this)
           },
           {
             title: this.$t('message.vulnerabilities'),
