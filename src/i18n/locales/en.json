@@ -445,7 +445,10 @@
   "policy_violation": {
     "fails": "Violation Failures",
     "warns": "Violation Warnings",
-    "infos": "Informational Violations"
+    "infos": "Informational Violations",
+    "license": "License Violations",
+    "operational": "Operational Violations",
+    "security": "Security Violations"
   },
   "severity": {
     "critical": "Critical",

@@ -128,10 +128,7 @@
               let ComponentClass = Vue.extend(PolicyViolationProgressBar);
               let progressBar = new ComponentClass({
                 propsData: {
-                  total: metrics.policyViolationsTotal,
-                  warn: metrics.policyViolationsWarn,
-                  fail: metrics.policyViolationsFail,
-                  info: metrics.policyViolationsInfo,
+                  metrics,
                   $t: this.$t.bind(this),
                 }
               });
