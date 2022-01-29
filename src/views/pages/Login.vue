@@ -87,13 +87,6 @@ export default {
     ValidationObserver
   },
   data() {
-    let redirectUri = `${ window.location.origin }/static/oidc-callback.html`;
-    // redirect to url from query param but only if it is save for redirection
-    const redirectTo = getRedirectUrl(this.$router);
-    if (redirectTo) {
-      redirectUri += `?redirect=${ encodeURIComponent(redirectTo) }`;
-    }
-
     return {
       loginError: "",
       input: {
@@ -105,7 +98,7 @@ export default {
         userStore: new Oidc.WebStorageStateStore(),
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
-        redirect_uri: redirectUri,
+        redirect_uri: `${ window.location.origin }/static/oidc-callback.html`,
         response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: this.$oidc.SCOPE,
         loadUserInfo: false
@@ -174,10 +167,14 @@ export default {
         });
     },
     oidcLogin() {
-      this.oidcUserManager.signinRedirect().catch(err => {
-        console.log(err);
-        this.$toastr.e(this.$t("message.oidc_redirect_failed"));
-      });
+      this.oidcUserManager
+        .signinRedirect({
+          state: getRedirectUrl(this.$router)}
+        )
+        .catch(err => {
+          console.log(err);
+          this.$toastr.e(this.$t("message.oidc_redirect_failed"));
+        });
     },
     oidcCheckLoginButtonTextSetted() {
         return this.$oidc.LOGIN_BUTTON_TEXT.length > 0;
