@@ -195,6 +195,26 @@
                       <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
                     </b-input-group>
                     </b-form-group>
+                    <b-row>
+                      <b-col sm="6">
+                        <b-form-group id="fieldset-10" :label="this.$t('message.justification')" label-for="input-10">
+                          <b-input-group id="input-10">
+                            <b-form-select v-model="analysisJustification" :options="justificationChoices" @change="makeAnalysis" :disabled="analysisState !== 'NOT_AFFECTED'"/>
+                          </b-input-group>
+                        </b-form-group>
+                      </b-col>
+                      <b-col sm="6">
+                        <b-form-group id="fieldset-11" :label="this.$t('message.response')" label-for="input-11">
+                          <b-input-group id="input-11">
+                            <b-form-select v-model="analysisResponse" :options="responseChoices" @change="makeAnalysis"/>
+                          </b-input-group>
+                        </b-form-group>
+                      </b-col>
+                    </b-row>
+                    <b-form-group id="fieldset-12" :label="this.$t('message.details')" label-for="analysisDetailsField">
+                      <b-form-textarea id="analysisDetailsField" v-model="analysisDetails" rows="7" class="form-control"
+                          v-debounce:750ms="makeAnalysis" :debounce-events="'keyup'"/>
+                    </b-form-group>
                   </b-col>
                 </b-row>
               `,
@@ -208,17 +228,41 @@
                     { value: 'NOT_SET', text: this.$t('message.not_set') },
                     { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
                     { value: 'IN_TRIAGE', text: this.$t('message.in_triage') },
+                    { value: 'RESOLVED', text: this.$t('message.resolved') },
                     { value: 'FALSE_POSITIVE', text: this.$t('message.false_positive') },
-                    { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') }
+                    { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') },
+                  ],
+                  justificationChoices: [
+                    { value: 'NOT_SET', text: this.$t('message.not_set') },
+                    { value: 'CODE_NOT_PRESENT', text: this.$t('message.code_not_present') },
+                    { value: 'CODE_NOT_REACHABLE', text: this.$t('message.code_not_reachable') },
+                    { value: 'REQUIRES_CONFIGURATION', text: this.$t('message.requires_configuration') },
+                    { value: 'REQUIRES_DEPENDENCY', text: this.$t('message.requires_dependency') },
+                    { value: 'REQUIRES_ENVIRONMENT', text: this.$t('message.requires_environment') },
+                    { value: 'PROTECTED_BY_COMPILER', text: this.$t('message.protected_by_compiler') },
+                    { value: 'PROTECTED_AT_RUNTIME', text: this.$t('message.protected_at_runtime') },
+                    { value: 'PROTECTED_AT_PERIMETER', text: this.$t('message.protected_at_perimeter') },
+                    { value: 'PROTECTED_BY_MITIGATING_CONTROL', text: this.$t('message.protected_by_mitigating_control') }
+                  ],
+                  responseChoices: [
+                    { value: 'NOT_SET', text: this.$t('message.not_set') },
+                    { value: 'CAN_NOT_FIX', text: this.$t('message.can_not_fix') },
+                    { value: 'WILL_NOT_FIX', text: this.$t('message.will_not_fix') },
+                    { value: 'UPDATE', text: this.$t('message.update') },
+                    { value: 'ROLLBACK', text: this.$t('message.rollback') },
+                    { value: 'WORKAROUND_AVAILABLE', text: this.$t('message.workaround_available') }
                   ],
                   analysisState: null,
+                  analysisJustification: null,
+                  analysisResponse: null,
+                  analysisDetails: null,
                   projectUuid: projectUuid
                 }
               },
               watch: {
                 isSuppressed: function (currentValue, oldValue) {
                   if (oldValue != null) {
-                    this.callRestEndpoint(this.analysisState, null, currentValue);
+                    this.callRestEndpoint(this.analysisState, null, null, null, null, currentValue);
                   }
                 }
               },
@@ -247,6 +291,15 @@
                   if (Object.prototype.hasOwnProperty.call(analysis, "analysisState")) {
                     this.analysisState = analysis.analysisState;
                   }
+                  if (Object.prototype.hasOwnProperty.call(analysis, "analysisJustification")) {
+                    this.analysisJustification = analysis.analysisJustification;
+                  }
+                  if (Object.prototype.hasOwnProperty.call(analysis, "analysisResponse")) {
+                    this.analysisResponse = analysis.analysisResponse;
+                  }
+                  if (Object.prototype.hasOwnProperty.call(analysis, "analysisDetails")) {
+                    this.analysisDetails = analysis.analysisDetails;
+                  }
                   if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
                     this.isSuppressed = analysis.isSuppressed;
                   } else {
@@ -254,20 +307,23 @@
                   }
                 },
                 makeAnalysis: function() {
-                  this.callRestEndpoint(this.analysisState, null, null);
+                  this.callRestEndpoint(this.analysisState,  this.analysisJustification, this.analysisResponse, this.analysisDetails, null, null);
                 },
                 addComment: function() {
                   if (this.comment != null) {
-                    this.callRestEndpoint(this.analysisState, this.comment, null);
+                    this.callRestEndpoint(this.analysisState, this.analysisJustification, this.analysisResponse, this.analysisDetails, this.comment, null);
                   }
                 },
-                callRestEndpoint: function(analysisState, comment, isSuppressed) {
+                callRestEndpoint: function(analysisState, analysisJustification, analysisResponse, analysisDetails, comment, isSuppressed) {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
                   this.axios.put(url, {
                     project: projectUuid,
                     component: this.finding.component.uuid,
                     vulnerability: this.finding.vulnerability.uuid,
                     analysisState: analysisState,
+                    analysisJustification: analysisJustification,
+                    analysisResponse: analysisResponse,
+                    analysisDetails: analysisDetails,
                     comment: comment,
                     isSuppressed: isSuppressed
                   }).then((response) => {

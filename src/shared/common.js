@@ -118,22 +118,71 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alt
 };
 
 /**
- * 
+ *
  * @param {*} i18n - VueI18n instance with $t translate function available
- * @returns a specialized label for an analysis state (NOT_SET, APPROVED, REJECTED, etc). 
- * It must have a corresponding entry in the locales files (e.g. src/locales/en.json) 
+ * @returns a specialized label for an analysis state (NOT_SET, APPROVED, REJECTED, etc).
+ * It must have a corresponding entry in the locales files (e.g. src/locales/en.json)
  * (not_set, approved, rejected, etc.)
  */
 $common.makeAnalysisStateLabelFormatter = (i18n) => {
   return function (value) {
     switch (value) {
       case 'NOT_SET':
-      case 'APPROVED':
-      case 'REJECTED':
       case 'EXPLOITABLE':
       case 'IN_TRIAGE':
       case 'FALSE_POSITIVE':
       case 'NOT_AFFECTED':
+      case 'RESOLVED':
+        return i18n.$t(`message.${value.toLowerCase()}`)
+      default:
+        return null;
+    }
+  }
+};
+
+/**
+ *
+ * @param {*} i18n - VueI18n instance with $t translate function available
+ * @returns a specialized label for an analysis justification (CODE_NOT_REACHABLE, etc).
+ * It must have a corresponding entry in the locales files (e.g. src/locales/en.json)
+ * (code_not_reachable, etc.)
+ */
+$common.makeAnalysisJustificationLabelFormatter = (i18n) => {
+  return function (value) {
+    switch (value) {
+      case 'NOT_SET':
+      case 'CODE_NOT_PRESENT':
+      case 'CODE_NOT_REACHABLE':
+      case 'REQUIRES_CONFIGURATION':
+      case 'REQUIRES_DEPENDENCY':
+      case 'REQUIRES_ENVIRONMENT':
+      case 'PROTECTED_BY_COMPILER':
+      case 'PROTECTED_AT_RUNTIME':
+      case 'PROTECTED_AT_PERIMETER':
+      case 'PROTECTED_BY_MITIGATING_CONTROL':
+        return i18n.$t(`message.${value.toLowerCase()}`)
+      default:
+        return null;
+    }
+  }
+};
+
+/**
+ *
+ * @param {*} i18n - VueI18n instance with $t translate function available
+ * @returns a specialized label for an analysis response (WILL_NOT_FIX, etc).
+ * It must have a corresponding entry in the locales files (e.g. src/locales/en.json)
+ * (will_not_fix, etc.)
+ */
+$common.makeAnalysisResponseLabelFormatter = (i18n) => {
+  return function (value) {
+    switch (value) {
+      case 'NOT_SET':
+      case 'CAN_NOT_FIX':
+      case 'WILL_NOT_FIX':
+      case 'UPDATE':
+      case 'ROLLBACK':
+      case 'WORKAROUND_AVAILABLE':
         return i18n.$t(`message.${value.toLowerCase()}`)
       default:
         return null;
@@ -241,6 +290,7 @@ module.exports = {
   formatCweLabel: $common.formatCweLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
+  makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
   formatTimestamp: $common.formatTimestamp,
   concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,
