@@ -42,8 +42,8 @@ jobs:
         tar zxvf ~/trivy.tar.gz -C ~/
     - name: Analyzing Docker container
       run: |
-        # ~/dockle $DOCKER_REPO:$DOCKER_TAG
-        ~/trivy --quiet $DOCKER_REPO:$DOCKER_TAG
+        ~/dockle $DOCKER_REPO:$DOCKER_TAG
+        ~/trivy --quiet image $DOCKER_REPO:$DOCKER_TAG
     - name: Publishing container to Docker Hub
       if: ((github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch') && startsWith(matrix.node-version, '12.')
       env:
