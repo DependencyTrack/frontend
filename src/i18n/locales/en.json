@@ -296,7 +296,15 @@
     "service_updated": "Service updated",
     "object_identifier": "Object Identifier",
     "object_identifier_desc": "A unique identifier (UUID) that Dependency-Track automatically assigns to every object",
-    "dependency_graph": "Dependency Graph"
+    "dependency_graph": "Dependency Graph",
+    "component_application": "Application",
+    "component_framework": "Framework",
+    "component_library": "Library",
+    "component_container": "Container",
+    "component_os": "Operation system",
+    "component_device": "Device",
+    "component_firmware": "Firmware",
+    "component_file": "File"
   },
   "admin": {
     "configuration": "Configuration",
