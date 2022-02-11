@@ -1,13 +1,17 @@
 <template>
   <span v-if="vulnerabilities === 0" class="progress">
-    <div class="progress-bar" style="width: 100%">0</div>
+    <b-progress class="table-progress" :max="'0'" show-value>
+      <b-progress-bar class="table-progress" value="0"></b-progress-bar>
+    </b-progress>
   </span>
   <span v-else class="progress">
-    <div v-if="critical > 0" class="progress-bar severity-critical-bg" v-bind:style="criticalWidth">{{critical}}</div>
-    <div v-if="high > 0" class="progress-bar severity-high-bg" v-bind:style="highWidth">{{high}}</div>
-    <div v-if="medium > 0" class="progress-bar severity-medium-bg" v-bind:style="mediumWidth">{{medium}}</div>
-    <div v-if="low > 0" class="progress-bar severity-low-bg" v-bind:style="lowWidth">{{low}}</div>
-    <div v-if="unassigned > 0" class="progress-bar severity-unassigned-bg" v-bind:style="unassignedWidth">{{unassigned}}</div>
+    <b-progress class="table-progress" :max="vulnerabilities" show-value>
+      <b-progress-bar :value="critical" class="severity-critical-bg"></b-progress-bar>
+      <b-progress-bar :value="high" class="severity-high-bg"></b-progress-bar>
+      <b-progress-bar :value="medium" class="severity-medium-bg"></b-progress-bar>
+      <b-progress-bar :value="low" class="severity-low-bg"></b-progress-bar>
+      <b-progress-bar :value="unassigned" class="severity-unassigned-bg"></b-progress-bar>
+    </b-progress>
   </span>
 </template>
 
@@ -20,23 +24,6 @@
       medium: Number,
       low: Number,
       unassigned: Number
-    },
-    computed: {
-      criticalWidth: function () {
-        return "width:" + (100 * this.critical) / this.vulnerabilities + "%";
-      },
-      highWidth: function () {
-        return "width:" + (100 * this.high) / this.vulnerabilities + "%";
-      },
-      mediumWidth: function () {
-        return "width:" + (100 * this.medium) / this.vulnerabilities + "%";
-      },
-      lowWidth: function () {
-        return "width:" + (100 * this.low) / this.vulnerabilities + "%";
-      },
-      unassignedWidth: function () {
-        return "width:" + (100 * this.unassigned) / this.vulnerabilities + "%";
-      }
     }
   }
 </script>
