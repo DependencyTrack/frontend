@@ -62,7 +62,7 @@
     "copy-webpack-plugin": "5.1.2",
     "growl": "1.10.5",
     "https-proxy-agent": "2.2.4",
-    "node-sass": "4.14.1",
+    "node-sass": "7.0.0",
     "sass-loader": "8.0.2",
     "uuid": "7.0.3",
     "vue-template-compiler": "2.6.14"
