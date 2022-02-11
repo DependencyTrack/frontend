@@ -28,6 +28,9 @@
   import NpmAuditAnalyzer from "./analyzers/NpmAuditAnalyzer";
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
   import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
+  // Vulnerability sources
+  import VulnSourceNvd from "./vuln-sources/VulnSourceNvd";
+  import VulnSourceGitHubAdvisories from "./vuln-sources/VulnSourceGitHubAdvisories";
   // Repositories
   import Cargo from "./repositories/Cargo";
   import Composer from "./repositories/Composer";
@@ -60,6 +63,7 @@
       AdminMenu,
       General, BomFormats, Email, InternalComponents,
       InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
+      VulnSourceNvd, VulnSourceGitHubAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, DefectDojo, KennaSecurity,

@@ -99,7 +99,7 @@ export default {
           },
           point: {
             radius: 0,
-            hitRadius: 100,
+            hitRadius: 20,
             hoverRadius: 4,
             hoverBorderWidth: 3
           }

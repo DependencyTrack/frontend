@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [10.x, 12.x, 14.x, 16.x]
 
     env:
       DOCKER_REPO: dependencytrack/frontend
@@ -21,11 +21,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm install and build
       run: |
         npm ci
         npm run build --if-present
-        npm test
       env:
         CI: true
     - name: Building Docker container
@@ -43,7 +42,7 @@ jobs:
     - name: Analyzing Docker container
       run: |
         ~/dockle $DOCKER_REPO:$DOCKER_TAG
-        ~/trivy --exit-code 0 --quiet $DOCKER_REPO:$DOCKER_TAG
+        ~/trivy --quiet image $DOCKER_REPO:$DOCKER_TAG
     - name: Publishing container to Docker Hub
       if: ((github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch') && startsWith(matrix.node-version, '12.')
       env:

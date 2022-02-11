@@ -112,7 +112,7 @@
         <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }} <b-badge variant="tab-total">{{ totalDependencyGraphs }}</b-badge></template>
         <project-dependency-graph :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalDependencyGraphs = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.VULNERABILITY_ANALYSIS)">
+      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
         <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
       </b-tab>

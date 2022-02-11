@@ -89,6 +89,23 @@
             ]
           },
           {
+            name: this.$t('admin.vuln_sources'),
+            id: "vulnSourceMenu",
+            permission: SYSTEM_CONFIGURATION,
+            children: [
+              {
+                component: "VulnSourceNvd",
+                name: this.$t('admin.national_vulnerability_database'),
+                href: "#vulnsourceNvdTab"
+              },
+              {
+                component: "VulnSourceGitHubAdvisories",
+                name: this.$t('admin.github_advisories'),
+                href: "#vulnsourceGitHubAdvisoriesTab"
+              }
+            ]
+          },
+          {
             name: this.$t('admin.repositories'),
             id: "repositoriesMenu",
             permission: SYSTEM_CONFIGURATION,

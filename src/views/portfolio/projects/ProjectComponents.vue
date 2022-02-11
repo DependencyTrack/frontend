@@ -17,6 +17,14 @@
                   v-permission:or="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.BOM_UPLOAD]">
           <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
         </b-button>
+        <b-dropdown variant="outline-primary" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+          <template #button-content>
+            <span class="fa fa-download"></span> {{ $t('message.download_bom') }}
+          </template>
+          <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
+          <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
+          <b-dropdown-item @click="downloadBom('vex')" href="#">{{ $t('message.vex_long_desc') }}</b-dropdown-item>
+        </b-dropdown>
       </div>
     </div>
     <bootstrap-table
@@ -197,6 +205,35 @@
           });
         }
         this.$refs.table.uncheckAll();
+      },
+      downloadBom: function (data) {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
+        this.axios.request({
+          responseType: 'blob',
+          url: url,
+          method: 'get',
+          params: {
+            format: 'json',
+            variant: data,
+            download: 'true'
+          }
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          let filename = "bom.json";
+          let disposition = response.headers["content-disposition"]
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            let matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
+          }
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+        });
       },
       tableLoaded: function(data) {
         if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
