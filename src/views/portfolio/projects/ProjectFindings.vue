@@ -24,6 +24,7 @@
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
   import xssFilters from "xss-filters";
   import i18n from "../../../i18n";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
   import BootstrapToggle from 'vue-bootstrap-toggle';
 
   export default {
@@ -183,19 +184,19 @@
                     <b-form-group id="fieldset-7" :label="this.$t('message.audit_trail')" label-for="auditTrailField">
                       <b-form-textarea id="auditTrailField" v-model="auditTrail" rows="7" class="form-control disabled" readonly trim />
                     </b-form-group>
-                    <b-form-group id="fieldset-8" :label="this.$t('message.comment')" label-for="input-8">
+                    <b-form-group id="fieldset-8" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.comment')" label-for="input-8">
                       <b-form-textarea id="input-8" v-model="comment" rows="4" class="form-control" trim />
                       <div class="pull-right">
                         <b-button size="sm" variant="outline-primary" @click="addComment"><span class="fa fa-comment-o"></span> Add Comment</b-button>
                       </div>
                     </b-form-group>
-                    <b-form-group id="fieldset-9" :label="this.$t('message.analysis')" label-for="input-9">
-                    <b-input-group id="input-9">
-                      <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;"/>
-                      <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
-                    </b-input-group>
+                    <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
+                      <b-input-group id="input-9">
+                        <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;"/>
+                        <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
+                      </b-input-group>
                     </b-form-group>
-                    <b-row>
+                    <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
                       <b-col sm="6">
                         <b-form-group id="fieldset-10" :label="this.$t('message.justification')" label-for="input-10">
                           <b-input-group id="input-10">
@@ -211,7 +212,7 @@
                         </b-form-group>
                       </b-col>
                     </b-row>
-                    <b-form-group id="fieldset-12" :label="this.$t('message.details')" label-for="analysisDetailsField">
+                    <b-form-group id="fieldset-12" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.details')" label-for="analysisDetailsField">
                       <b-form-textarea id="analysisDetailsField" v-model="analysisDetails" rows="7" class="form-control"
                           v-debounce:750ms="makeAnalysis" :debounce-events="'keyup'"/>
                     </b-form-group>
@@ -266,6 +267,7 @@
                   }
                 }
               },
+              mixins: [permissionsMixin],
               methods: {
                 getAnalysis: function() {
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
