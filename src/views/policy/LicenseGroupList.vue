@@ -10,7 +10,7 @@
       :columns="columns"
       :data="data"
       :options="options"
-      v-on:onLoadSuccess="tableLoaded" />
+      @on-load-success="tableLoaded"/>
     <create-license-group-modal v-on:refreshTable="refreshTable" />
   </div>
 </template>

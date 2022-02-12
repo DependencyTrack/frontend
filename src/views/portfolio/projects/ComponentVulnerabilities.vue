@@ -5,7 +5,7 @@
       :columns="columns"
       :data="data"
       :options="options"
-      v-on:onLoadSuccess="tableLoaded">
+      @on-load-success="tableLoaded">
     </bootstrap-table>
   </div>
 </template>

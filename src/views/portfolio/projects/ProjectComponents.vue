@@ -32,7 +32,7 @@
       :columns="columns"
       :data="data"
       :options="options"
-      v-on:onLoadSuccess="tableLoaded">
+      @on-load-success="tableLoaded">
     </bootstrap-table>
     <project-upload-bom-modal :uuid="this.uuid" />
     <project-add-component-modal :uuid="this.uuid" v-on:refreshTable="refreshTable" />
