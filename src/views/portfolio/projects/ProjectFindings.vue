@@ -192,7 +192,7 @@
                     </b-form-group>
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
                       <b-input-group id="input-9">
-                        <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;"/>
+                        <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;" v-b-tooltip.hover :title="this.$t('message.analysis_tooltip')"/>
                         <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
                       </b-input-group>
                     </b-form-group>
@@ -200,21 +200,23 @@
                       <b-col sm="6">
                         <b-form-group id="fieldset-10" :label="this.$t('message.justification')" label-for="input-10">
                           <b-input-group id="input-10">
-                            <b-form-select v-model="analysisJustification" :options="justificationChoices" @change="makeAnalysis" :disabled="analysisState !== 'NOT_AFFECTED'"/>
+                            <b-form-select v-model="analysisJustification" :options="justificationChoices" @change="makeAnalysis" :disabled="analysisState !== 'NOT_AFFECTED'" v-b-tooltip.hover :title="$t('message.justification_tooltip')" />
                           </b-input-group>
                         </b-form-group>
                       </b-col>
                       <b-col sm="6">
                         <b-form-group id="fieldset-11" :label="this.$t('message.response')" label-for="input-11">
                           <b-input-group id="input-11">
-                            <b-form-select v-model="analysisResponse" :options="responseChoices" @change="makeAnalysis"/>
+                            <b-form-select v-model="analysisResponse" :options="responseChoices" @change="makeAnalysis" v-b-tooltip.hover :title="this.$t('message.response_tooltip')" />
                           </b-input-group>
                         </b-form-group>
                       </b-col>
                     </b-row>
-                    <b-form-group id="fieldset-12" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.details')" label-for="analysisDetailsField">
-                      <b-form-textarea id="analysisDetailsField" v-model="analysisDetails" rows="7" class="form-control"
-                          v-debounce:750ms="makeAnalysis" :debounce-events="'keyup'"/>
+                    <b-form-group id="fieldset-12" v-if="this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)" :label="this.$t('message.details')" label-for="analysisDetailsField">
+                      <b-form-textarea id="analysisDetailsField" v-model="analysisDetails" rows="7" class="form-control" :disabled="!this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" v-b-tooltip.hover :title="this.$t('message.analysis_details_tooltip')" />
+                      <div class="pull-right">
+                        <b-button v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" size="sm" variant="outline-primary" @click="makeAnalysis"><span class="fa fa-comment-o"></span> Update Details</b-button>
+                      </div>
                     </b-form-group>
                   </b-col>
                 </b-row>
