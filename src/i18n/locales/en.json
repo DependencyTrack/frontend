@@ -304,7 +304,7 @@
     "component_framework": "Framework",
     "component_library": "Library",
     "component_container": "Container",
-    "component_os": "Operation system",
+    "component_operating_system": "Operation system",
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File"

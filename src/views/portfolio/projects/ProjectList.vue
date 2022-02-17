@@ -92,7 +92,8 @@
           {
             title: this.$t('message.classifier'),
             field: "classifier",
-            sortable: true
+            sortable: true,
+            formatter: common.componentClassifierLabelFormatter(this),
           },
           {
             title: this.$t('message.last_bom_import'),

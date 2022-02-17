@@ -106,14 +106,14 @@
         readOnlyProjectName: '',
         readOnlyProjectVersion: '',
         availableClassifiers: [
-          { value: 'APPLICATION', text: 'Application' },
-          { value: 'FRAMEWORK', text: 'Framework' },
-          { value: 'LIBRARY', text: 'Library' },
-          { value: 'CONTAINER', text: 'Container' },
-          { value: 'OPERATING_SYSTEM', text: 'Operating System' },
-          { value: 'DEVICE', text: 'Device' },
-          { value: 'FIRMWARE', text: 'Firmware' },
-          { value: 'FILE', text: 'File' }
+          { value: 'APPLICATION', text: this.$i18n.t('message.component_application') },
+          { value: 'FRAMEWORK', text: this.$i18n.t('message.component_framework') },
+          { value: 'LIBRARY', text: this.$i18n.t('message.component_library') },
+          { value: 'CONTAINER', text: this.$i18n.t('message.component_container') },
+          { value: 'OPERATING_SYSTEM', text: this.$i18n.t('message.component_operating_system') },
+          { value: 'DEVICE', text: this.$i18n.t('message.component_device') },
+          { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
+          { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
