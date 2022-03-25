@@ -127,6 +127,8 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alt
 $common.makeAnalysisStateLabelFormatter = (i18n) => {
   return function (value) {
     switch (value) {
+      case 'APPROVED':
+      case 'REJECTED':
       case 'NOT_SET':
       case 'EXPLOITABLE':
       case 'IN_TRIAGE':
