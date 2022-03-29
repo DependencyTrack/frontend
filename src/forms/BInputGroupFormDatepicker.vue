@@ -41,7 +41,7 @@ export default {
     lazy: String,
     required: String,
     readonly: Boolean,
-    disabled: String,
+    disabled: Boolean,
     state: {
       default: undefined,
       type: Boolean
@@ -59,6 +59,7 @@ export default {
     this.isFocused = common.toBoolean(this.autofocus);
     this.isRequired = common.toBoolean(this.required);
     this.isDisabled = common.toBoolean(this.disabled);
+    this.readonly = common.toBoolean(this.readonly);
   },
   computed: {
     innerValue: {

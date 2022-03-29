@@ -117,33 +117,33 @@
                     <b-form-group :label="this.$t('admin.api_keys')">
                       <div class="list-group">
                         <span v-for="apiKey in apiKeys">
-                          <actionable-list-group-item :value="apiKey.key" delete-icon="true" v-on:actionClicked="removeApiKey(apiKey)"/>
+                          <actionable-list-group-item :value="apiKey.key" :delete-icon="true" v-on:actionClicked="removeApiKey(apiKey)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="createApiKey()"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="createApiKey()"/>
                       </div>
                     </b-form-group>
                     <b-form-group :label="this.$t('admin.permissions')">
                       <div class="list-group">
                         <span v-for="permission in permissions">
-                          <actionable-list-group-item :value="permission.name" delete-icon="true" v-on:actionClicked="removePermission(permission)"/>
+                          <actionable-list-group-item :value="permission.name" :delete-icon="true" v-on:actionClicked="removePermission(permission)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectPermissionModal')"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectPermissionModal')"/>
                       </div>
                     </b-form-group>
                     <b-form-group :label="this.$t('admin.mapped_ldap_groups')">
                       <div class="list-group">
                         <span v-for="ldapGroup in ldapGroups">
-                          <actionable-list-group-item :value="ldapGroup.dn" delete-icon="true" v-on:actionClicked="removeLdapGroupMapping(ldapGroup.uuid)"/>
+                          <actionable-list-group-item :value="ldapGroup.dn" :delete-icon="true" v-on:actionClicked="removeLdapGroupMapping(ldapGroup.uuid)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLdapGroupModal')"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLdapGroupModal')"/>
                       </div>
                     </b-form-group>
                     <b-form-group :label="this.$t('admin.mapped_oidc_groups')">
                       <div class="list-group">
                         <span v-for="mappedOidcGroup in mappedOidcGroups">
-                          <actionable-list-group-item :value="mappedOidcGroup.group.name" delete-icon="true" v-on:actionClicked="removeOidcGroupMapping(mappedOidcGroup.uuid)"/>
+                          <actionable-list-group-item :value="mappedOidcGroup.group.name" :delete-icon="true" v-on:actionClicked="removeOidcGroupMapping(mappedOidcGroup.uuid)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectOidcGroupModal')"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectOidcGroupModal')"/>
                       </div>
                     </b-form-group>
                   </b-col>
@@ -151,14 +151,14 @@
                     <b-form-group v-if="managedUsers && managedUsers.length > 0" :label="this.$t('admin.managed_users')">
                       <div class="list-group">
                         <span v-for="managedUser in managedUsers">
-                          <actionable-list-group-item :value="managedUser.username" delete-icon="true" v-on:actionClicked="removeUser(managedUser)"/>
+                          <actionable-list-group-item :value="managedUser.username" :delete-icon="true" v-on:actionClicked="removeUser(managedUser)"/>
                         </span>
                       </div>
                     </b-form-group>
                     <b-form-group v-if="ldapUsers && ldapUsers.length > 0"  :label="this.$t('admin.ldap_users')">
                       <div class="list-group">
                         <span v-for="ldapUser in ldapUsers">
-                          <actionable-list-group-item :value="ldapUser.username" delete-icon="true" v-on:actionClicked="removeUser(ldapUser)"/>
+                          <actionable-list-group-item :value="ldapUser.username" :delete-icon="true" v-on:actionClicked="removeUser(ldapUser)"/>
                         </span>
                       </div>
                     </b-form-group>
