@@ -236,6 +236,12 @@ input.required, select.required, textarea.required {
   box-shadow: 0 0 0 0;
 }
 
+.btn-outline-primary.disabled.active, .btn-outline-primary:disabled.active {
+  background-color: darken($blue, 20);
+  color: $white;
+  opacity: 1.0;
+}
+
 .formattedLicenseContent {
   font-size: 1.25em;
   font-family: monospace;
