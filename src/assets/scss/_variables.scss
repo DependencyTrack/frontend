@@ -13,6 +13,7 @@ $grey-650:   lighten($grey-base, 25%);
 $grey-700:   lighten($grey-base, 15%);
 $grey-750:   lighten($grey-base, 12.5%);
 $grey-800:   lighten($grey-base, 10%);
+$grey-850:   lighten($grey-base, 7.5%);
 $grey-900:   lighten($grey-base, 5%);
 
 $secondary:  $grey-600 !default;
@@ -24,7 +25,7 @@ $red:        #f86c6b !default;
 $orange:     #fd8c00 !default;
 $yellow:     #ffc107 !default;
 $green:      #4dbd74 !default;
-$light-blue: #63c2de !default;
+$light-blue: #6DD9FF !default;
 
 $body-bg:       $grey-800 !default;
 $body-color:    $grey-200 !default;
@@ -217,6 +218,8 @@ $widget-2: #A66BF8;
 $widget-3: #6D6BF8;
 $widget-4: #F86D6B;
 
+$recessed: $grey-850;
+
 :root {
   --severity-critical: #{$severity-critical};
   --severity-high: #{$severity-high};
@@ -235,6 +238,10 @@ $widget-4: #F86D6B;
   --widget-2: #{$widget-2};
   --widget-3: #{$widget-3};
   --widget-4: #{$widget-4};
+
+  --primary: #{$blue};
+  --primary-lighter: #{$light-blue};
+  --recessed: #{$recessed};
 }
 
 // Modal override

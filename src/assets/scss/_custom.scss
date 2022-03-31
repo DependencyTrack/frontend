@@ -232,6 +232,16 @@ input.required, select.required, textarea.required {
   margin-right: 0.5rem;
 }
 
+.btn-outline-primary.focus {
+  box-shadow: 0 0 0 0;
+}
+
+.btn-outline-primary.disabled.active, .btn-outline-primary:disabled.active {
+  background-color: darken($blue, 20);
+  color: $white;
+  opacity: 1.0;
+}
+
 .formattedLicenseContent {
   font-size: 1.25em;
   font-family: monospace;
@@ -315,4 +325,7 @@ td a.detail-icon {
   font-size: 150%;
   line-height: 1.0;
   color: $grey-600;
+}
+.b-calendar-grid-body .text-dark {
+  color: #ffffff !important;
 }

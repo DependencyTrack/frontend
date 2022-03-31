@@ -72,11 +72,6 @@
                 href: "#scannerInternalTab"
               },
               {
-                component: "NpmAuditAnalyzer",
-                name: this.$t('admin.npm_audit'),
-                href: "#scannerNpmAuditTab"
-              },
-              {
                 component: "OssIndexAnalyzer",
                 name: this.$t('admin.oss_index'),
                 href: "#scannerOssIndexTab"

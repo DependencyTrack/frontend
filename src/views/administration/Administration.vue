@@ -25,7 +25,6 @@
   import InternalComponents from "./configuration/InternalComponents";
   // Analyzer plugins
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";
-  import NpmAuditAnalyzer from "./analyzers/NpmAuditAnalyzer";
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
   import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
   // Vulnerability sources
@@ -62,7 +61,7 @@
       EventBus,
       AdminMenu,
       General, BomFormats, Email, InternalComponents,
-      InternalAnalyzer, NpmAuditAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
+      InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       VulnSourceNvd, VulnSourceGitHubAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,

@@ -14,8 +14,8 @@
     props: {
       value: String,
       tooltip: String,
-      addIcon: String,
-      deleteIcon: String,
+      addIcon: Boolean,
+      deleteIcon: Boolean,
       variant: String
     }
   }

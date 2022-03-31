@@ -87,9 +87,9 @@ export default {
                     <b-form-group :label="this.$t('admin.mapped_teams')">
                       <div class="list-group">
                         <span v-for="mappedTeam in mappedTeams">
-                          <actionable-list-group-item :value="mappedTeam.name" delete-icon="true" v-on:actionClicked="removeOidcGroupMapping(mappedTeam)"/>
+                          <actionable-list-group-item :value="mappedTeam.name" :delete-icon="true" v-on:actionClicked="removeOidcGroupMapping(mappedTeam)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTeamModal')"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTeamModal')"/>
                       </div>
                     </b-form-group>
                   </b-col>
