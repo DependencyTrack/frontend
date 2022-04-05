@@ -151,6 +151,7 @@
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
   import ProjectPolicyViolations from "./ProjectPolicyViolations";
+  import ProjectEpss from "./ProjectEpss";
 
   export default {
     mixins: [permissionsMixin],
@@ -167,7 +168,8 @@
       SeverityBarChart,
       ProjectDashboard,
       PortfolioWidgetRow,
-      VueEasyPieChart
+      VueEasyPieChart,
+      ProjectEpss
     },
     title: '',
     computed: {
@@ -201,6 +203,7 @@
         totalServices: 0,
         totalDependencyGraphs: 0,
         totalFindings: 0,
+        totalEpss: 0,
         totalViolations: 0
       }
     },
