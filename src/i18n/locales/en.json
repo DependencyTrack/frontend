@@ -438,7 +438,7 @@
     "vulnsource_nvd_desc": "The National Vulnerability Database (NVD) is the largest publicly available source of vulnerability intelligence. It is maintained by a group within the National Institute of Standards and Technology (NIST) and builds upon the work of MITRE and others. Vulnerabilities in the NVD are called Common Vulnerabilities and Exposures (CVE). There are over 100,000 CVEs documented in the NVD spanning from the 1990’s to the present.",
     "vulnsource_nvd_feeds_url": "NVD Feeds URL",
     "vulnsource_github_advisories_enable": "Enable GitHub Advisory mirroring",
-    "vulnsource_github_advisories_desc": "GitHub Advisories is a centralized source of vulnerability intelligence specific to GitHub projects. GitHub advisories may \nor may not be documented in the National Vulnerability Database. Restarting the Dependency-Track server is required to force the system to mirror the contents of GitHub Advisories.",
+    "vulnsource_github_advisories_desc": "GitHub Advisories is a centralized source of vulnerability intelligence specific to GitHub projects. GitHub advisories may \nor may not be documented in the National Vulnerability Database. Restarting the Dependency-Track server is required to force the system to mirror the contents of GitHub Advisories. A Personal Access Token is needed, but it doesn't require any scope.",
     "registered_email_address": "Registered email address",
     "api_token": "API token",
     "consumer_key": "Consumer key",
