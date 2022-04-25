@@ -4,25 +4,15 @@ set -e
 
 # Check if config.json is mounted
 if mount | grep '/static/config.json'; then
-    echo "config.json is mounted from host - ENV configuration will be ignored"
+  echo "config.json is mounted from host - ENV configuration will be ignored"
 else
-    # Apply ENV vars to temporary config.json
-    jq  --arg apiBaseUrl          "$API_BASE_URL" \
-        --arg oidcIssuer          "$OIDC_ISSUER" \
-        --arg oidcClientId        "$OIDC_CLIENT_ID" \
-        --arg oidcScope           "$OIDC_SCOPE" \
-        --arg oidcFlow            "$OIDC_FLOW" \
-        --arg oidcLoginButtonText "$OIDC_LOGIN_BUTTON_TEXT" \
-        '.API_BASE_URL                = $apiBaseUrl 
-            | .OIDC_ISSUER            = $oidcIssuer 
-            | .OIDC_CLIENT_ID         = $oidcClientId 
-            | .OIDC_SCOPE             = $oidcScope 
-            | .OIDC_FLOW              = $oidcFlow 
-            | .OIDC_LOGIN_BUTTON_TEXT = $oidcLoginButtonText' \
-        ./static/config.json > /tmp/config.json
-
-    # Override default config file
-    mv -f /tmp/config.json ./static/config.json
+  sed -i ./static/config.json \
+    -e "s;\"API_BASE_URL\": \"\";\"API_BASE_URL\": \"${API_BASE_URL}\";" \
+    -e "s;\"OIDC_ISSUER\": \"\";\"OIDC_ISSUER\": \"${OIDC_ISSUER}\";" \
+    -e "s;\"OIDC_CLIENT_ID\": \"\";\"OIDC_CLIENT_ID\": \"${OIDC_CLIENT_ID}\";" \
+    -e "s;\"OIDC_SCOPE\": \"openid email profile\";\"OIDC_SCOPE\": \"${OIDC_SCOPE}\";" \
+    -e "s;\"OIDC_FLOW\": \"code\";\"OIDC_FLOW\": \"${OIDC_FLOW}\";" \
+    -e "s;\"OIDC_LOGIN_BUTTON_TEXT\" : \"\";\"OIDC_LOGIN_BUTTON_TEXT\" : \"${OIDC_LOGIN_BUTTON_TEXT}\";"
 fi
 
 exec "$@"
