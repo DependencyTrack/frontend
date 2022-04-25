@@ -54,7 +54,7 @@
     "xss-filters": "1.2.7"
   },
   "devDependencies": {
-    "@cyclonedx/webpack-plugin": "1.0.0",
+    "@cyclonedx/webpack-plugin": "2.0.0",
     "@vue/cli-plugin-babel": "3.12.1",
     "@vue/cli-plugin-eslint": "3.12.1",
     "@vue/cli-service": "3.12.1",
