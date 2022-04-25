@@ -1,0 +1,47 @@
+FROM nginxinc/nginx-unprivileged:1.20.2
+
+# Arguments that can be passed at build time
+ARG COMMIT_SHA=unknown
+ARG APP_VERSION=0.0.0
+ARG APP_DIR=/opt/owasp/dependency-track-frontend/
+
+ENV TZ=Etc/UTC \
+    LANG=C.UTF-8 \
+    # Set default settings that may get overridden to empty values by
+    # the entrypoint script, if not explicitly provided by the user
+    OIDC_SCOPE="openid profile email"
+
+USER root
+
+# Copy the static HTML and JS files to the application directory
+COPY ./dist ${APP_DIR}
+
+# Create the directorie where the frontend files will be deployed to (${APP_DIR})
+# Ensure UID 101 & GID 0 own all the needed directories
+# Applying these changes allows the container to run via the OpenShift default SCC "Restricted" whereby arbitrary an UID and GID=0 are assigned
+RUN chown -R 101:0 ${APP_DIR} \
+    && chmod -R g=u ${APP_DIR}
+
+# Specify the user to run as (in numeric format for compatibility with Kubernetes/OpenShift's SCC)
+# Inherited from parent image
+# See https://github.com/nginxinc/docker-nginx-unprivileged/blob/main/stable/alpine/Dockerfile#L139
+USER 101
+
+# Setup entrypoint
+COPY ./docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/docker-entrypoint.sh /docker-entrypoint.d/30-oidc-configuration.sh
+
+# Specify the container working directory
+WORKDIR ${APP_DIR}
+
+# metadata labels
+LABEL \
+    org.opencontainers.image.vendor="OWASP" \
+    org.opencontainers.image.title="Official Dependency-Track Container image" \
+    org.opencontainers.image.description="Dependency-Track is an intelligent Component Analysis platform" \
+    org.opencontainers.image.version="${APP_VERSION}" \
+    org.opencontainers.image.url="https://dependencytrack.org/" \
+    org.opencontainers.image.source="https://github.com/DependencyTrack/frontend" \
+    org.opencontainers.image.revision="${COMMIT_SHA}" \
+    org.opencontainers.image.licenses="Apache-2.0" \
+    maintainer="steve.springett@owasp.org"
