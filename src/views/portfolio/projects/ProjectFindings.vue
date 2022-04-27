@@ -265,7 +265,7 @@
               watch: {
                 isSuppressed: function (currentValue, oldValue) {
                   if (oldValue != null) {
-                    this.callRestEndpoint(this.analysisState, null, null, null, null, currentValue);
+                    this.callRestEndpoint(this.analysisState, this.analysisJustification, this.analysisResponse, null, null, currentValue);
                   }
                 }
               },
