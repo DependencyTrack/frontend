@@ -34,8 +34,8 @@ jobs:
       - name: Setup Environment
         id: variables
         run: |-
-          git config user.name "dependency-track-bot"
-          git config user.email "dependency-track-bot@owasp.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
 

@@ -7,7 +7,6 @@
     ":pinAllExceptPeerDependencies",
     ":semanticCommits",
     ":semanticCommitScope(deps)",
-    "docker:disableMajor",
     "docker:pinDigests",
     "group:monorepos"
   ],

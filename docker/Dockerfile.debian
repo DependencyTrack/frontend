@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1.20.2
+FROM nginxinc/nginx-unprivileged:1.21.6@sha256:93bf6dcd6b4acbaf8b07a8b2fcdad73eeed54b74566ce5b4fc73b541445fb4e2
 
 # Arguments that can be passed at build time
 ARG COMMIT_SHA=unknown
@@ -20,7 +20,11 @@ COPY ./dist ${APP_DIR}
 # Ensure UID 101 & GID 0 own all the needed directories
 # Applying these changes allows the container to run via the OpenShift default SCC "Restricted" whereby arbitrary an UID and GID=0 are assigned
 RUN chown -R 101:0 ${APP_DIR} \
-    && chmod -R g=u ${APP_DIR}
+    && chmod -R g=u ${APP_DIR} \
+    # add jq to easily manipulate config.json in entrypoint script
+    && apt-get update -yqq \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yqq --no-install-recommends jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Specify the user to run as (in numeric format for compatibility with Kubernetes/OpenShift's SCC)
 # Inherited from parent image
@@ -37,7 +41,7 @@ WORKDIR ${APP_DIR}
 # metadata labels
 LABEL \
     org.opencontainers.image.vendor="OWASP" \
-    org.opencontainers.image.title="Official Dependency-Track Container image" \
+    org.opencontainers.image.title="Official Dependency-Track Frontend Container image" \
     org.opencontainers.image.description="Dependency-Track is an intelligent Component Analysis platform" \
     org.opencontainers.image.version="${APP_VERSION}" \
     org.opencontainers.image.url="https://dependencytrack.org/" \
