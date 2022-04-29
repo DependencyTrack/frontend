@@ -48,8 +48,8 @@ export default {
   methods: {
     saveChanges: function() {
       this.updateConfigProperties([
-        {groupName: 'vuln-source', propertyName: 'nvd.enabled', propertyValue: this.scannerEnabled},
-        {groupName: 'vuln-source', propertyName: 'nvd.feeds.url', propertyValue: this.username}
+        {groupName: 'vuln-source', propertyName: 'nvd.enabled', propertyValue: this.vulnsourceEnabled},
+        {groupName: 'vuln-source', propertyName: 'nvd.feeds.url', propertyValue: this.nvdFeedsUrl}
       ]);
     }
   },
