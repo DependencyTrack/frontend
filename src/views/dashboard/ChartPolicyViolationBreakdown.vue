@@ -1,6 +1,5 @@
 <template>
   <div>
-<!-- TODO
     <div class="progress-group">
       <div class="progress-group-header">
         <i class="fa fa-shield fa-fw progress-group-icon"></i>
@@ -11,7 +10,6 @@
         <b-progress height={} class="progress-xs" :value="securityPercent" variant="violation-type"></b-progress>
       </div>
     </div>
--->
     <div class="progress-group">
       <div class="progress-group-header">
         <i class="fa fa-balance-scale fa-fw progress-group-icon"></i>
