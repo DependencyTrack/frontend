@@ -348,6 +348,7 @@
                   if (this.comment != null) {
                     this.callRestEndpoint(this.analysisState, this.analysisJustification, this.analysisResponse, this.analysisDetails, this.comment, null);
                   }
+                  this.comment = null;
                 },
                 callRestEndpoint: function(analysisState, analysisJustification, analysisResponse, analysisDetails, comment, isSuppressed) {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
