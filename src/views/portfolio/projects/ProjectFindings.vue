@@ -5,6 +5,27 @@
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
     <div id="findingsToolbar" class="bs-table-custom-toolbar">
+      <b-button size="md" variant="outline-primary"
+                v-b-modal.projectUploadVexModal
+                v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
+        <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
+      </b-button>
+
+      <b-button size="md" variant="outline-primary"
+                @click="downloadVex()"
+                v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
+        <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
+      </b-button>
+
+      <!-- Future use when CSAF support is added
+      <b-dropdown variant="outline-primary" v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
+        <template #button-content>
+          <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
+        </template>
+        <b-dropdown-item @click="downloadVex('cyclonedx')" href="#">CycloneDX</b-dropdown-item>
+        <b-dropdown-item @click="downloadVex('csaf')" href="#">CSAF</b-dropdown-item>
+      </b-dropdown>
+      -->
       <c-switch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedFindings" color="primary" v-model="showSuppressedFindings" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_suppressed_findings') }}</span>
     </div>
 
@@ -15,6 +36,8 @@
       :options="options"
       @on-load-success="tableLoaded">
     </bootstrap-table>
+
+    <project-upload-vex-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -26,15 +49,20 @@
   import i18n from "../../../i18n";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BootstrapToggle from 'vue-bootstrap-toggle';
+  import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
 
   export default {
     props: {
       uuid: String
     },
-    mixins: [bootstrapTableMixin],
+    mixins: [
+      bootstrapTableMixin,
+      permissionsMixin
+    ],
     components: {
       cSwitch,
-      BootstrapToggle
+      BootstrapToggle,
+      ProjectUploadVexModal
     },
     data() {
       return {
@@ -156,6 +184,7 @@
           detailViewByClick: false,
           detailFormatter: (index, row) => {
             let projectUuid = this.uuid;
+            console.log(row);
             return this.vueFormatter({
               i18n,
               template: `
@@ -225,7 +254,7 @@
                 return {
                   auditTrail: null,
                   comment: null,
-                  isSuppressed: null,
+                  isSuppressed: !!(row && row.analysis && row.analysis.isSuppressed),
                   finding: row,
                   analysisChoices: [
                     { value: 'NOT_SET', text: this.$t('message.not_set') },
@@ -306,8 +335,10 @@
                   }
                   if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
                     this.isSuppressed = analysis.isSuppressed;
+                    console.log("Setting isSuppressed to " + analysis.isSuppressed);
                   } else {
                     this.isSuppressed = false;
+                    console.log("Setting isSuppressed to false");
                   }
                 },
                 makeAnalysis: function() {
@@ -364,6 +395,33 @@
           url += "?suppressed=" + this.showSuppressedFindings;
         }
         return url;
+      },
+      downloadVex: function (data) {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
+        this.axios.request({
+          responseType: 'blob',
+          url: url,
+          method: 'get',
+          params: {
+            download: 'true'
+          }
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          let filename = "vex.json";
+          let disposition = response.headers["content-disposition"]
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            let matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
+          }
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+        });
       },
       refreshTable: function() {
         this.$refs.table.refresh({

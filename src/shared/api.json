@@ -49,5 +49,6 @@
   "URL_POLICY_VIOLATION_ANALYSIS": "api/v1/violation/analysis",
   "URL_LICENSE_GROUP": "api/v1/licenseGroup",
   "URL_ACL_MAPPING": "api/v1/acl/mapping",
-  "URL_ACL_TEAM": "api/v1/acl/team"
+  "URL_ACL_TEAM": "api/v1/acl/team",
+  "URL_VEX": "api/v1/vex"
 }
