@@ -184,7 +184,6 @@
           detailViewByClick: false,
           detailFormatter: (index, row) => {
             let projectUuid = this.uuid;
-            console.log(row);
             return this.vueFormatter({
               i18n,
               template: `
@@ -335,10 +334,8 @@
                   }
                   if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
                     this.isSuppressed = analysis.isSuppressed;
-                    console.log("Setting isSuppressed to " + analysis.isSuppressed);
                   } else {
                     this.isSuppressed = false;
-                    console.log("Setting isSuppressed to false");
                   }
                 },
                 makeAnalysis: function() {
