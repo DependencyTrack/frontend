@@ -42,6 +42,10 @@
         if (tag) {
           url += "/tag/" + encodeURIComponent(tag);
         }
+        let classifier = this.$route.query.classifier;
+        if (classifier) {
+          url += "/classifier/" + encodeURIComponent(classifier);
+        }
         if (this.showInactiveProjects === undefined) {
           url += "?excludeInactive=true";
         } else {
