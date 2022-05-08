@@ -97,7 +97,7 @@
             title: this.$t('message.classifier'),
             field: "classifier",
             sortable: true,
-            formatter: common.componentClassifierLabelFormatter(this),
+            formatter: common.componentClassifierLabelProjectUrlFormatter(this),
           },
           {
             title: this.$t('message.last_bom_import'),

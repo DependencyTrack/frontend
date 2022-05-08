@@ -6,6 +6,7 @@
 
 "use strict";
 
+const xssFilters = require("xss-filters");
 const $common = function() {
 };
 
@@ -214,6 +215,32 @@ $common.componentClassifierLabelFormatter = (i18n) => {
 };
 
 /**
+ *
+ * @param {*} i18n - VueI18n instance with $t translate function available
+ * @returns a specialized label for component and project classifiers (APPLICATION, LIBRARY, etc).
+ * It must have a corresponding entry in the locales files (e.g. src/locales/en.json)
+ * (application, library, etc.)
+ */
+$common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
+  return function (value) {
+    let url = "../projects/?classifier=" + value;
+    switch (value) {
+      case 'APPLICATION':
+      case 'FRAMEWORK':
+      case 'LIBRARY':
+      case 'CONTAINER':
+      case 'OPERATING_SYSTEM':
+      case 'DEVICE':
+      case 'FIRMWARE':
+      case 'FILE':
+        return `<a href="${url}">${i18n.$t(`message.component_${value.toLowerCase()}`)}</a>`
+      default:
+        return null;
+    }
+  }
+};
+
+/**
  * Given a UNIX timestamp, this function will return a formatted date.
  * i.e. 15 Jan 2017
  */
@@ -315,6 +342,7 @@ module.exports = {
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
   makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
   componentClassifierLabelFormatter: $common.componentClassifierLabelFormatter,
+  componentClassifierLabelProjectUrlFormatter: $common.componentClassifierLabelProjectUrlFormatter,
   formatTimestamp: $common.formatTimestamp,
   concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,
