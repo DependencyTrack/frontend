@@ -50,6 +50,7 @@
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BootstrapToggle from 'vue-bootstrap-toggle';
   import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
+  import $ from "jquery";
 
   export default {
     props: {
@@ -108,13 +109,18 @@
           },
           {
             title: this.$t('message.cwe'),
-            field: "vulnerability.cweId",
+            field: "vulnerability.cwe",
             sortable: true,
             class: "expand-20",
             visible: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
-                return common.formatCweLabel(value, row.vulnerability.cweName);
+                let label = "";
+                for (let i=0; i<value.length; i++) {
+                  label += common.formatCweShortLabel(value[i].cweId, value[i].name);
+                  if (i < value.length-1) label += ", "
+                }
+                return label;
               }
             }
           },
@@ -164,6 +170,7 @@
         ],
         data: [],
         options: {
+          onPostBody: this.initializeTooltips,
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -429,7 +436,10 @@
       },
       tableLoaded: function(data) {
         this.$emit('total', data.total);
-      }
+      },
+      initializeTooltips: function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      },
     },
     watch:{
       showSuppressedFindings() {

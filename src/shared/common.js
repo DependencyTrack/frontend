@@ -84,6 +84,14 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   }
 };
 
+$common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
+  if (cweId && cweName) {
+    return "<span data-toggle='tooltip' data-placement='bottom' title='" + cweName + "'>CWE-" + cweId + "</span>";
+  } else {
+    return "";
+  }
+};
+
 /**
  * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
  */
@@ -338,6 +346,7 @@ module.exports = {
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
   formatCweLabel: $common.formatCweLabel,
+  formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
   makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
