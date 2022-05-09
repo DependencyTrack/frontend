@@ -111,7 +111,6 @@
             title: this.$t('message.cwe'),
             field: "vulnerability.cwe",
             sortable: true,
-            class: "expand-20",
             visible: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
