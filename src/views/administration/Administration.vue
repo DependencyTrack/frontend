@@ -22,6 +22,7 @@
   import General from "./configuration/General";
   import BomFormats from "./configuration/BomFormats";
   import Email from "./configuration/Email";
+  import Jira from "./configuration/Jira";
   import InternalComponents from "./configuration/InternalComponents";
   // Analyzer plugins
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";
@@ -60,7 +61,7 @@
     components: {
       EventBus,
       AdminMenu,
-      General, BomFormats, Email, InternalComponents,
+      General, BomFormats, Email, Jira, InternalComponents,
       InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
       VulnSourceNvd, VulnSourceGitHubAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
