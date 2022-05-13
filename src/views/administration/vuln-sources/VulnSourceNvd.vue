@@ -1,7 +1,15 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="vulnsourceEnabled" color="primary" v-model="vulnsourceEnabled" label v-bind="labelIcon" />{{$t('admin.vulnsource_nvd_enable')}}
+      <c-switch
+        :disabled="!this.vulnsourceEnabled && !this.nvdFeedsUrl"
+        id="vulnsourceEnabled"
+        color="primary"
+        v-model="vulnsourceEnabled"
+        label
+        v-bind="labelIcon"
+      />
+      {{$t('admin.vulnsource_nvd_enable')}}
       <b-validated-input-group-form-input
         id="nvd-feeds-url"
         :label="$t('admin.vulnsource_nvd_feeds_url')"
@@ -15,7 +23,13 @@
       {{ $t('admin.vulnsource_nvd_desc') }}
     </b-card-body>
     <b-card-footer>
-      <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
+      <b-button
+        :disabled="this.vulnsourceEnabled && !this.nvdFeedsUrl"
+        variant="outline-primary"
+        class="px-4"
+        @click="saveChanges">
+          {{ $t('message.update') }}
+      </b-button>
     </b-card-footer>
   </b-card>
 </template>
