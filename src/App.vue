@@ -38,7 +38,7 @@
 
       setJwtForAjax(getToken());
 
-      // Enable credentialed cross-site Access-Control requests
+      // Send XHR cross-site cookie credentials
       if (this.$api.WITH_CREDENTIALS){
         this.axios.interceptors.request.use(
           function(config) {
