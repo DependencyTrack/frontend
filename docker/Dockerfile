@@ -4,7 +4,7 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 USER root
 RUN apk --no-cache add jq
 
-COPY ./docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/etc/nginx/conf.d/default.conf /etc/nginx/templates/default.conf.template
 
 COPY --chown=101:101 ./dist /app
 
@@ -25,4 +25,9 @@ ENV OIDC_SCOPE "openid profile email"
 
 # Setup entrypoint
 WORKDIR /app
+COPY ./docker/docker-defaults.sh /docker-defaults.sh
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.d/30-oidc-configuration.sh
+
+ENTRYPOINT ["/docker-defaults.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]
