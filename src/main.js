@@ -46,7 +46,7 @@ axios.get(contextPath + "/static/config.json").then(response => {
   }
 
   // Send XHR cross-site cookie credentials
-  Vue.prototype.$api.WITH_CREDENTIALS = response.data.API_WITH_CREDENTIALS;
+  Vue.prototype.$api.WITH_CREDENTIALS = response.data.API_WITH_CREDENTIALS && response.data.API_WITH_CREDENTIALS.toLowerCase() === "true";
 
   // OpenID Connect
   Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
