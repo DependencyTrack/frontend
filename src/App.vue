@@ -38,6 +38,16 @@
 
       setJwtForAjax(getToken());
 
+      // Enable credentialed cross-site Access-Control requests
+      if (this.$api.WITH_CREDENTIALS){
+        this.axios.interceptors.request.use(
+          function(config) {
+            config.withCredentials = true;
+            return config;
+          }
+        );
+      }
+
       // debug logging of ajax requests/responses
       if (getUrlVar('debug')) {
         $(document).ajaxComplete((event, xhr) => {
