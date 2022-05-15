@@ -46,6 +46,7 @@
             return config;
           }
         );
+        $.ajaxSettings.xhrFields = { withCredentials: true };
       }
 
       // debug logging of ajax requests/responses
