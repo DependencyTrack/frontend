@@ -1,0 +1,112 @@
+name: Release CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-to-bump:
+        type: choice
+        required: true
+        description: "Select which part of the version to bump and release"
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.variables.outputs.version }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Setup Environment
+        id: variables
+        run: |-
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
+
+          git push --tags origin "HEAD:refs/heads/master"
+          APP_VERSION=`jq -r '.version' package.json`
+          echo "::set-output name=version::${APP_VERSION}"
+
+  call-build:
+    needs:
+      - prepare-release
+    uses: ./.github/workflows/_meta-build.yaml
+    with:
+      app-version: ${{ needs.prepare-release.outputs.version }}
+    secrets:
+      registry-0-usr: ${{ secrets.HUB_USERNAME }}
+      registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare-release
+      - call-build
+
+    env:
+      VERSION: ${{ needs.prepare-release.outputs.version }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: assembled-frontend-node16
+
+      - name: Create Checksums
+        run: |-
+          zip -qr frontend-dist.zip dist/*
+
+          echo "# SHA1" >> checksums.txt
+          sha1sum frontend-dist.zip >> checksums.txt
+          echo "# SHA256" >> checksums.txt
+          sha256sum frontend-dist.zip >> checksums.txt
+          echo "# SHA512" >> checksums.txt
+          sha512sum frontend-dist.zip >> checksums.txt
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_OPTS: ""
+        run: |-
+          cat << EOF >> .github/default-release-notes.md
+          \`\`\`text
+          $(cat checksums.txt)
+          \`\`\`
+          EOF
+
+          if [[ "${{ contains(github.event.inputs.version-to-bump, 'pre') }}" == "true" ]]; then
+            GH_OPTS="--prerelease "
+          fi
+
+          gh release create "${{ needs.prepare-release.outputs.version }}" \
+            --title "${{ needs.prepare-release.outputs.version }}" \
+            --notes-file ".github/default-release-notes.md" \
+            --generate-notes ${GH_OPTS}\
+            frontend-dist.zip \
+            checksums.txt \
+            bom.xml bom.json
