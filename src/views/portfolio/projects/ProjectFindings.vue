@@ -109,7 +109,7 @@
           },
           {
             title: this.$t('message.cwe'),
-            field: "vulnerability.cwe",
+            field: "vulnerability.cwes",
             sortable: true,
             visible: false,
             formatter(value, row, index) {
