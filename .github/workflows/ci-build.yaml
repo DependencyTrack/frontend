@@ -1,0 +1,21 @@
+name: Build CI
+
+on:
+  push:
+    branches:
+      - 'master' # Default branch
+  pull_request:
+    branches:
+      - 'master' # Default branch
+  workflow_dispatch:
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/_meta-build.yaml
+    with:
+      node-versions: '["14", "16"]'
+      node-version-package: '16'
+      app-version: 'snapshot'
+    secrets:
+      registry-0-usr: ${{ secrets.HUB_USERNAME }}
+      registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}
