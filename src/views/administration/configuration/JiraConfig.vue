@@ -32,14 +32,12 @@
   import { ValidationObserver } from 'vee-validate';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput'
   import configPropertyMixin from "../mixins/configPropertyMixin";
-  import common from "../../../shared/common";
   export default {
     mixins: [configPropertyMixin],
     props: {
       header: String
     },
     components: {
-      ValidationObserver,
       BValidatedInputGroupFormInput
     },
     data() {

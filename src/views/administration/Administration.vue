@@ -22,7 +22,7 @@
   import General from "./configuration/General";
   import BomFormats from "./configuration/BomFormats";
   import Email from "./configuration/Email";
-  import Jira from "./configuration/Jira";
+  import Jira from "./configuration/JiraConfig";
   import InternalComponents from "./configuration/InternalComponents";
   // Analyzer plugins
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";

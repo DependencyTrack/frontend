@@ -427,7 +427,7 @@
     "email_address": "Email address",
     "test_notification_queued": "A test notification has been queued",
     "internal_component_desc": "Internal components will be excluded from vulnerability scans and version checks that rely on external systems.\n Note that the regular expressions below must be compliant with Java's regex syntax.\nThe regex must match the whole string. To match all namespaces with 'example' in it, write '.*example.*'.",
-    "jira_desc": "Jira service uuthentication",
+    "jira_desc": "Jira service authentication",
     "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",
     "jira_password": "Jira password",
     "namespace_regex": "Component namespace regex",
