@@ -24,6 +24,7 @@
   "URL_USER_SELF": "api/v1/user/self",
   "URL_PERMISSION": "api/v1/permission",
   "URL_PROJECT": "api/v1/project",
+  "URL_TAG": "api/v1/tag",
   "URL_FINDING": "api/v1/finding",
   "URL_LICENSE": "api/v1/license",
   "URL_LICENSE_CONCISE": "api/v1/license/concise",

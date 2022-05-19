@@ -29,6 +29,7 @@
   import PolicyCondition from "./PolicyCondition";
   import BToggleableDisplayButton from "@/views/components/BToggleableDisplayButton";
   import SelectProjectModal from "@/views/portfolio/projects/SelectProjectModal";
+  import SelectTagModal from "@/views/portfolio/projects/SelectTagModal";
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
@@ -128,9 +129,17 @@
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
-                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
+                          <actionable-list-group-item :value="formatLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="deleteProjectLimiter(project.uuid)"/>
                         </span>
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
+                      </div>
+                    </b-form-group>
+                    <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
+                      <div class="list-group">
+                        <span v-for="tag in tags">
+                          <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.uuid)"/>
+                        </span>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTagModal')"/>
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
@@ -141,6 +150,7 @@
                   </b-col>
                 </b-row>
                 <select-project-modal v-on:selection="updateProjectSelection"/>
+                <select-tag-modal v-on:selection="updateTagSelection"/>
               </div>
               `,
               mixins: [permissionsMixin],
@@ -150,6 +160,7 @@
                 BInputGroupFormSelect,
                 BToggleableDisplayButton,
                 SelectProjectModal,
+                SelectTagModal,
                 PolicyCondition
               },
               data() {
@@ -173,11 +184,11 @@
                 }
               },
               methods: {
-                formatProjectLabel: function(projectName, projectVersion) {
-                  if (projectName && projectVersion) {
-                    return projectName + " " + projectVersion;
+                formatLabel: function(labelName, labelProperty) {
+                  if (labelName && labelProperty) {
+                    return labelName + " " + labelProperty;
                   } else {
-                    return projectName;
+                    return labelName;
                   }
                 },
                 addCondition: function() {
@@ -229,7 +240,7 @@
                   this.violationState = policy.violationState;
                   this.conditions = policy.policyConditions;
                 },
-                deleteLimiter: function(projectUuid) {
+                deleteProjectLimiter: function(projectUuid) {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
                   this.axios.delete(url).then((response) => {
                     let p = [];
@@ -244,6 +255,21 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
+                deleteTagLimiter: function(tagUuid) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${tagUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let p = [];
+                    for (let i=0; i<this.tags.length; i++) {
+                      if (this.tags[i].uuid !== tagUuid) {
+                        p.push(this.tags[i]);
+                      }
+                    }
+                    this.tags = p;
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+                },
                 updateProjectSelection: function(selections) {
                   this.$root.$emit('bv::hide::modal', 'selectProjectModal');
                   for (let i=0; i<selections.length; i++) {
@@ -251,6 +277,23 @@
                     let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
                     this.axios.post(url).then((response) => {
                       this.projects.push(selection);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
+                },
+                updateTagSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectTagModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${selection.uuid}`;
+                    this.axios.post(url).then((response) => {
+                      this.tags.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
                     }).catch((error) => {
                       if (error.response.status === 304) {
