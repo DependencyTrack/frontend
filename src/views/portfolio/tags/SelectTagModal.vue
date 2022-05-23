@@ -58,16 +58,6 @@
             formatter(value, row, index) {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
             }
-          },
-          {
-            title: this.$t('message.active'),
-            field: "active",
-            formatter(value, row, index) {
-              return value === true ? '<i class="fa fa-check-square-o" />' : "";
-            },
-            align: "center",
-            class: "tight",
-            sortable: true
           }
         ],
         data: [],
