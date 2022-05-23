@@ -23,7 +23,7 @@
     mixins: [permissionsMixin],
     methods: {
       apiUrl: function () {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?policyId=${this.policy.id}`;
         return url;
       },
       refreshTable: function() {
@@ -70,7 +70,7 @@
             sortable: true
           }
         ],
-        data: this.policy.projects ?? [],
+        data: [],
         options: {
           search: true,
           showColumns: true,
