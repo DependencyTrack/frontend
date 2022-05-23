@@ -29,7 +29,7 @@
   import PolicyCondition from "./PolicyCondition";
   import BToggleableDisplayButton from "@/views/components/BToggleableDisplayButton";
   import SelectProjectModal from "@/views/portfolio/projects/SelectProjectModal";
-  import SelectTagModal from "@/views/portfolio/projects/SelectTagModal";
+  import SelectTagModal from "@/views/portfolio/tags/SelectTagModal";
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
