@@ -95,10 +95,10 @@ jobs:
       - name: Set Container Tags
         id: tags
         run: |-
-          TAGS="${TAGS},docker.io/dependencytrack/frontend:${{ inputs.app-version }}"
+          TAGS="${TAGS},docker.io/sahibamittal/frontend:${{ inputs.app-version }}"
 
           if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
-            TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
+            TAGS="${TAGS},docker.io/sahibamittal/frontend:latest"
           fi
           echo "::set-output name=tags::${TAGS}"
 
@@ -118,7 +118,7 @@ jobs:
         if: ${{ inputs.publish-container }}
         uses: aquasecurity/trivy-action@0.2.5
         with:
-          image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
+          image-ref: docker.io/sahibamittal/frontend:${{ inputs.app-version }}
           format: 'sarif'
           output: 'trivy-results.sarif'
           ignore-unfixed: true
