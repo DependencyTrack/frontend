@@ -16,6 +16,7 @@ jobs:
       node-versions: '["14", "16"]'
       node-version-package: '16'
       app-version: 'snapshot'
+      publish-container: ${{ github.ref == 'refs/heads/master' }}
     secrets:
       registry-0-usr: ${{ secrets.HUB_USERNAME }}
       registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}

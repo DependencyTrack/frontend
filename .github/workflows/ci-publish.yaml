@@ -1,0 +1,85 @@
+name: Publish CI
+
+on:
+  release:
+    types:
+      - released
+  workflow_dispatch:
+
+jobs:
+  read-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parse.outputs.version }}
+    steps:
+      - name: Assert ref type
+        run: |-
+          if [[ "$GITHUB_REF_TYPE" != "tag" ]]; then
+            echo "::error::Publishing is only supported for tags!"
+            exit 1
+          fi
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.2
+
+      - name: Parse Version from package.json
+        id: parse
+        run: |-
+          VERSION=`jq -r '.version' package.json`
+          echo "::set-output name=version::${VERSION}"
+
+  call-build:
+    needs:
+      - read-version
+    uses: ./.github/workflows/_meta-build.yaml
+    with:
+      app-version: ${{ needs.read-version.outputs.version }}
+      publish-container: true
+    secrets:
+      registry-0-usr: ${{ secrets.HUB_USERNAME }}
+      registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}
+
+  update-github-release:
+    runs-on: ubuntu-latest
+    needs:
+      - read-version
+      - call-build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.2
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: assembled-frontend-node16
+
+      - name: Create Checksums
+        run: |-
+          zip -qr frontend-dist.zip dist/*
+
+          echo "# SHA1" >> checksums.txt
+          sha1sum frontend-dist.zip >> checksums.txt
+          echo "# SHA256" >> checksums.txt
+          sha256sum frontend-dist.zip >> checksums.txt
+          echo "# SHA512" >> checksums.txt
+          sha512sum frontend-dist.zip >> checksums.txt
+
+      - name: Update Release
+        env:
+          # or change it to a custom PAT that should be credited for the release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          cat << EOF >> .github/default-release-notes.md
+          \`\`\`text
+          $(cat checksums.txt)
+          \`\`\`
+          EOF
+
+          gh release edit ${{ needs.read-version.outputs.version }} \
+            --notes-file ".github/default-release-notes.md"
+
+          gh release upload ${{ needs.read-version.outputs.version }} \
+            --clobber \
+            frontend-dist.zip \
+            checksums.txt \
+            bom.xml bom.json
