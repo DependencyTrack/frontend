@@ -129,3 +129,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+          push: ${{ github.ref == 'refs/heads/policy-tag-feature' }}
+          context: .
+          file: docker/Dockerfile.alpine
