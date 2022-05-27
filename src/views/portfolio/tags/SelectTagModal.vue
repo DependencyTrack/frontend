@@ -20,10 +20,13 @@
   import common from "../../../shared/common";
 
   export default {
+    props: {
+        policy: Object
+    },
     mixins: [permissionsMixin],
     methods: {
       apiUrl: function () {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?policyId=${this.policy.id}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
         return url;
       },
       refreshTable: function() {

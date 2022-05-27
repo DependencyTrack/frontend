@@ -150,7 +150,7 @@
                   </b-col>
                 </b-row>
                 <select-project-modal v-on:selection="updateProjectSelection"/>
-                <select-tag-modal v-on:selection="updateTagSelection"/>
+                <select-tag-modal :policy="policy" v-on:selection="updateTagSelection"/>
               </div>
               `,
               mixins: [permissionsMixin],
@@ -180,7 +180,8 @@
                     { value: 'FAIL', text: this.$t('violation.fail') }
                   ],
                   projects: row.projects,
-                  limitToVisible: false
+                  limitToVisible: false,
+                  tags: row.tags
                 }
               },
               methods: {
