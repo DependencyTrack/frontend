@@ -19,8 +19,6 @@ on:
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.environment.outputs.version }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
