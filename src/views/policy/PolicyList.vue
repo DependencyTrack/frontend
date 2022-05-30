@@ -292,7 +292,7 @@
                   this.$root.$emit('bv::hide::modal', 'selectTagModal');
                   for (let i=0; i<selections.length; i++) {
                     let selection = selections[i];
-                    let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${selection.uuid}`;
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${selection.name}`;
                     this.axios.post(url).then((response) => {
                       this.tags.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
