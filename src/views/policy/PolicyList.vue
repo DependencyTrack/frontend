@@ -137,7 +137,7 @@
                     <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
                       <div class="list-group">
                         <span v-for="tag in tags">
-                          <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.uuid)"/>
+                          <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.name)"/>
                         </span>
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTagModal')"/>
                       </div>
@@ -256,12 +256,12 @@
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
                 },
-                deleteTagLimiter: function(tagUuid) {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${tagUuid}`;
+                deleteTagLimiter: function(tagName) {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/tag/${tagName}`;
                   this.axios.delete(url).then((response) => {
                     let p = [];
                     for (let i=0; i<this.tags.length; i++) {
-                      if (this.tags[i].uuid !== tagUuid) {
+                      if (this.tags[i].name !== tagName) {
                         p.push(this.tags[i]);
                       }
                     }
