@@ -296,12 +296,8 @@
                     this.axios.post(url).then((response) => {
                       this.tags.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
-                    }).catch((error) => {
-                      if (error.response.status === 304) {
-                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                      } else {
-                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                      }
+                    }).catch(() => {
+                      this.$toastr.w(this.$t('condition.unsuccessful_action'));
                     });
                   }
                 }
