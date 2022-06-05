@@ -393,6 +393,8 @@
     "consumer_secret": "Consumer secret",
     "identifier": "Identifier",
     "url": "URL",
+    "username": "Username",
+    "password": "Password (or access token)",
     "enabled": "Enabled",
     "integration_fortify_ssc_enable": "Enable Fortify SSC integration",
     "integration_defectdojo_enable": "Enable DefectDojo integration",
