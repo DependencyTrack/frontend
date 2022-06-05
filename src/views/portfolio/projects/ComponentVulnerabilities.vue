@@ -49,11 +49,19 @@
           },
           {
             title: this.$t('message.cwe'),
-            field: "cwe",
+            field: "cwes",
             sortable: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
-                return `CWE-${value.cweId} ${value.name}`;
+                let s = '';
+                for(let i = 0; i < value.length; i++) {
+                  let cwe = value[i];
+                  if (i > 0) {
+                    s += ',&nbsp;&nbsp;&nbsp;'
+                  }
+                  s += `CWE-${cwe.cweId}`
+                }
+                return s;
               }
             }
           },

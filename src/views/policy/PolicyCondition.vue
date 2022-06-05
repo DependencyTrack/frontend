@@ -1,5 +1,5 @@
 <template>
-  <actionable-list-group-item delete-icon="true" v-on:actionClicked="removeCondition()">
+  <actionable-list-group-item :delete-icon="true" v-on:actionClicked="removeCondition()">
     <b-row>
       <b-col md="4" lg="3">
         <b-input-group-form-select id="input-subject" required="true"

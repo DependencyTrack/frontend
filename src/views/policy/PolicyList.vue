@@ -122,15 +122,15 @@
                         <span v-for="(condition, conditionIndex) in conditions">
                           <policy-condition :policy="policy" :condition="condition" v-on:conditionRemoved="removeCondition(condition, conditionIndex, index)" />
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="addCondition" />
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="addCondition" />
                       </div>
                     </b-form-group>
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
-                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
+                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
                         </span>
-                        <actionable-list-group-item add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
+                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
                     <div style="text-align:right">

@@ -42,6 +42,10 @@
         if (tag) {
           url += "/tag/" + encodeURIComponent(tag);
         }
+        let classifier = this.$route.query.classifier;
+        if (classifier) {
+          url += "/classifier/" + encodeURIComponent(classifier);
+        }
         if (this.showInactiveProjects === undefined) {
           url += "?excludeInactive=true";
         } else {
@@ -93,7 +97,7 @@
             title: this.$t('message.classifier'),
             field: "classifier",
             sortable: true,
-            formatter: common.componentClassifierLabelFormatter(this),
+            formatter: common.componentClassifierLabelProjectUrlFormatter(this),
           },
           {
             title: this.$t('message.last_bom_import'),

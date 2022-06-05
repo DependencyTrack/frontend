@@ -1,10 +1,20 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="vulnsourceEnabled" color="primary" v-model="vulnsourceEnabled" label v-bind="labelIcon" />{{$t('admin.vulnsource_github_advisories_enable')}}
+      <img alt="GitHub logo" src="@/assets/img/github-logo.svg" width="65"/>
+      <hr/>
+      <c-switch
+        :disabled="!this.vulnsourceEnabled && !this.apitoken"
+        color="primary"
+        id="vulnsourceEnabled"
+        label
+        v-bind="labelIcon"
+        v-model="vulnsourceEnabled"
+      />
+      {{$t('admin.vulnsource_github_advisories_enable')}}
       <b-validated-input-group-form-input
         id="github-advisories-apitoken"
-        :label="$t('admin.api_token')"
+        :label="$t('admin.personal_access_token')"
         input-group-size="mb-3"
         rules="required"
         type="password"
@@ -15,7 +25,13 @@
       {{ $t('admin.vulnsource_github_advisories_desc') }}
     </b-card-body>
     <b-card-footer>
-      <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
+      <b-button
+        :disabled="this.vulnsourceEnabled && !this.apitoken"
+        @click="saveChanges"
+        class="px-4"
+        variant="outline-primary">
+          {{ $t('message.update') }}
+      </b-button>
     </b-card-footer>
   </b-card>
 </template>

@@ -1,0 +1,131 @@
+on:
+  workflow_call:
+    inputs:
+      node-versions:
+        type: string
+        required: false
+        default: '["16"]'
+        description: 'Stringified JSON Array of node versions to build against'
+      node-version-package:
+        type: string
+        required: false
+        default: '16'
+        description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
+      app-version:
+        type: string
+        required: false
+        default: "snapshot"
+        description: "Set the version that should be set/used as tag for the container image"
+      publish-container:
+        type: boolean
+        required: false
+        default: false
+        description: "Set if the container image gets publish and scan once its build"
+    secrets:
+      registry-0-usr:
+        required: true
+      registry-0-psw:
+        required: true
+
+jobs:
+  build-node:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: ${{ fromJson(inputs.node-versions) }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Run Npm Build
+        env:
+          CI: true
+        run: |-
+          npm ci
+          npm run build --if-present
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: assembled-frontend-node${{ matrix.node-version }}
+          path: |-
+            dist/
+            bom.*
+
+  build-container:
+    runs-on: ubuntu-latest
+    needs:
+      - build-node
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: assembled-frontend-node${{ inputs.node-version-package }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.6.0
+        id: buildx
+        with:
+          install: true
+
+      - name: Login to Docker.io
+        uses: docker/login-action@v1.13.0
+        if: ${{ inputs.publish-container }}
+        with:
+          registry: docker.io
+          username: ${{ secrets.registry-0-usr }}
+          password: ${{ secrets.registry-0-psw }}
+
+      - name: Set Container Tags
+        id: tags
+        run: |-
+          TAGS="${TAGS},docker.io/dependencytrack/frontend:${{ inputs.app-version }}"
+
+          if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
+            TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
+          fi
+          echo "::set-output name=tags::${TAGS}"
+
+      - name: Build multi-arch Container Image
+        uses: docker/build-push-action@v2.9.0
+        with:
+          tags: ${{ steps.tags.outputs.tags }}
+          build-args: |-
+            APP_VERSION=${{ inputs.app-version }}
+            COMMIT_SHA=${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          push: ${{ inputs.publish-container }}
+          context: .
+          file: docker/Dockerfile.alpine
+
+      - name: Run Trivy Vulnerability Scanner
+        if: ${{ inputs.publish-container }}
+        uses: aquasecurity/trivy-action@0.2.5
+        with:
+          image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          vuln-type: 'os'
+
+      - name: Upload Trivy Scan Results to GitHub Security Tab
+        if: ${{ inputs.publish-container }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'

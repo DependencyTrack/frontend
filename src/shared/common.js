@@ -6,6 +6,7 @@
 
 "use strict";
 
+const xssFilters = require("xss-filters");
 const $common = function() {
 };
 
@@ -83,6 +84,14 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   }
 };
 
+$common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
+  if (cweId && cweName) {
+    return "<span data-toggle='tooltip' data-placement='bottom' title='" + cweName + "'>CWE-" + cweId + "</span>";
+  } else {
+    return "";
+  }
+};
+
 /**
  * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
  */
@@ -104,10 +113,6 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alt
       analyzerLabel = "VulnDB";
       analyzerUrl = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
       break;
-    case 'NPM_AUDIT_ANALYZER':
-      analyzerLabel = "NPM Audit";
-      analyzerUrl = "https://www.npmjs.com/advisories/" + vulnId;
-      break;
   }
   if (analyzerUrl) {
     analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
@@ -127,6 +132,8 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alt
 $common.makeAnalysisStateLabelFormatter = (i18n) => {
   return function (value) {
     switch (value) {
+      case 'APPROVED':
+      case 'REJECTED':
       case 'NOT_SET':
       case 'EXPLOITABLE':
       case 'IN_TRIAGE':
@@ -209,6 +216,32 @@ $common.componentClassifierLabelFormatter = (i18n) => {
       case 'FIRMWARE':
       case 'FILE':
         return i18n.$t(`message.component_${value.toLowerCase()}`)
+      default:
+        return null;
+    }
+  }
+};
+
+/**
+ *
+ * @param {*} i18n - VueI18n instance with $t translate function available
+ * @returns a specialized label for component and project classifiers (APPLICATION, LIBRARY, etc).
+ * It must have a corresponding entry in the locales files (e.g. src/locales/en.json)
+ * (application, library, etc.)
+ */
+$common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
+  return function (value) {
+    let url = "../projects/?classifier=" + value;
+    switch (value) {
+      case 'APPLICATION':
+      case 'FRAMEWORK':
+      case 'LIBRARY':
+      case 'CONTAINER':
+      case 'OPERATING_SYSTEM':
+      case 'DEVICE':
+      case 'FIRMWARE':
+      case 'FILE':
+        return `<a href="${url}">${i18n.$t(`message.component_${value.toLowerCase()}`)}</a>`
       default:
         return null;
     }
@@ -313,10 +346,12 @@ module.exports = {
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
   formatCweLabel: $common.formatCweLabel,
+  formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
   makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
   componentClassifierLabelFormatter: $common.componentClassifierLabelFormatter,
+  componentClassifierLabelProjectUrlFormatter: $common.componentClassifierLabelProjectUrlFormatter,
   formatTimestamp: $common.formatTimestamp,
   concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,

@@ -1,0 +1,57 @@
+name: Release CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-to-bump:
+        type: choice
+        required: true
+        description: "Select which part of the version to bump and release"
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.0
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Bump version and tag via NodeJS
+        # if you use a bot-user to create the release in the next step
+        # then it might be a solid idea to change the git config values below to the bot-user's name + email
+        run: |-
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
+
+          git push origin "HEAD:refs/heads/master"
+
+      - name: Create GitHub Release
+        env:
+          # or change it to a custom PAT that should be credited for the release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_OPTS: ""
+        run: |-
+          VERSION=`jq -r '.version' package.json`
+
+          if [[ "${{ contains(github.event.inputs.version-to-bump, 'pre') }}" == "true" ]]; then
+            GH_OPTS="--prerelease"
+          fi
+
+          gh release create "${VERSION}" ${GH_OPTS} \
+            --title "${VERSION}" \
+            --notes-file ".github/default-release-notes.md"

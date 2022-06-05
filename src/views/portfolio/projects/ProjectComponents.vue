@@ -23,7 +23,6 @@
           </template>
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
-          <b-dropdown-item @click="downloadBom('vex')" href="#">{{ $t('message.vex_long_desc') }}</b-dropdown-item>
         </b-dropdown>
       </div>
     </div>

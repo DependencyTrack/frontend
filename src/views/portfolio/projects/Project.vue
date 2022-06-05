@@ -116,7 +116,11 @@
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
         <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.POLICY_VIOLATION_ANALYSIS)">
+      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
+        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }} <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template>
+        <project-epss :key="this.uuid" :uuid="this.uuid" v-on:total="totalEpss = $event" />
+      </b-tab>
+      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)">
         <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
@@ -147,6 +151,7 @@
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
   import ProjectFindings from "./ProjectFindings";
   import ProjectPolicyViolations from "./ProjectPolicyViolations";
+  import ProjectEpss from "./ProjectEpss";
 
   export default {
     mixins: [permissionsMixin],
@@ -163,7 +168,8 @@
       SeverityBarChart,
       ProjectDashboard,
       PortfolioWidgetRow,
-      VueEasyPieChart
+      VueEasyPieChart,
+      ProjectEpss
     },
     title: '',
     computed: {
@@ -197,6 +203,7 @@
         totalServices: 0,
         totalDependencyGraphs: 0,
         totalFindings: 0,
+        totalEpss: 0,
         totalViolations: 0
       }
     },
