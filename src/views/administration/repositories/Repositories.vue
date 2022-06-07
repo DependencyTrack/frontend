@@ -134,6 +134,24 @@
                     </div>
 
                     <div>
+                      <b-validated-input-group-form-input
+                        id="username" :label="$t('admin.username')"
+                        input-group-size="mb-3"
+                        v-model="username"
+                        v-show="internal"
+                        v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+                    </div>
+
+                    <div>
+                      <b-validated-input-group-form-input
+                        id="password" :label="$t('admin.password')"
+                        input-group-size="mb-3"
+                        v-model="password"
+                        v-show="internal"
+                        v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+                    </div>
+
+                    <div>
                       <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
                     </div>
 
@@ -153,6 +171,8 @@
                   identifier: row.identifier,
                   url: row.url,
                   internal: row.internal,
+                  username: row.username,
+                  password: row.password || null,
                   enabled: row.enabled,
                   uuid: row.uuid,
                   labelIcon: {
@@ -185,6 +205,8 @@
                     identifier: this.identifier,
                     url: this.url,
                     internal: this.internal,
+                    username: this.username,
+                    password: this.password || null,
                     enabled: this.enabled,
                     uuid: this.uuid
                   }).then((response) => {
