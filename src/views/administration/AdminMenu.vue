@@ -188,6 +188,11 @@
                 component: "KennaSecurity",
                 name: this.$t('admin.kenna_security'),
                 href: "#integrationsKennaSecurityTab"
+              },
+              {
+                component: "Jira",
+                name: this.$t('admin.jira'),
+                href: "#integrationsJiraTab"
               }
             ]
           },
