@@ -97,6 +97,11 @@
                 component: "VulnSourceGitHubAdvisories",
                 name: this.$t('admin.github_advisories'),
                 href: "#vulnsourceGitHubAdvisoriesTab"
+              },
+              {
+                component: "VulnSourceOSVAdvisories",
+                name: this.$t('admin.osv_advisories'),
+                href: "#vulnsourceOSVAdvisoriesTab"
               }
             ]
           },
