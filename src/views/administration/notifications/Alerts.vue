@@ -28,8 +28,8 @@
   import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
-  import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
+  import { Switch as cSwitch } from '@coreui/vue';
 
   export default {
     props: {
@@ -87,6 +87,15 @@
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
             }
           },
+          {
+            title: this.$t('admin.enabled'),
+            field: 'enabled',
+            sortable: false,
+            align: 'center',
+            formatter: function (value, row, index) {
+              return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            },
+          },
         ],
         data: [],
         options: {
@@ -114,6 +123,10 @@
                     <b-input-group-form-input id="input-name" :label="$t('message.name')" input-group-size="mb-3"
                                               required="true" type="text" v-model="name" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                    <b-form-group>
+                      <c-switch id="notificationEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>
+                      {{ $t('admin.enabled') }}
+                    </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
@@ -174,26 +187,35 @@
                 ActionableListGroupItem,
                 SelectProjectModal,
                 BToggleableDisplayButton,
-                BInputGroupFormInput
+                BInputGroupFormInput,
+                cSwitch
               },
               data() {
                 return {
                   alert: row,
                   uuid: row.uuid,
                   name: row.name,
+                  enabled: row.enabled,
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
                   projects: row.projects,
-                  limitToVisible: false
+                  limitToVisible: false,
+                  labelIcon: {
+                    dataOn: '\u2713',
+                    dataOff: '\u2715'
+                  },
                 }
               },
               created() {
                 this.parseDestination(this.alert);
               },
               watch: {
+                enabled() {
+                  this.updateNotificationRule();
+                },
                 notifyOn() {
                   this.updateNotificationRule();
                 }
@@ -220,6 +242,7 @@
                   this.axios.post(url, {
                     uuid: this.uuid,
                     name: this.name,
+                    enabled: this.enabled,
                     notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({ destination: this.destination }),
                     notifyOn: this.notifyOn
