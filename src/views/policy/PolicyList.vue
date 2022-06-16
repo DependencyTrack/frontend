@@ -102,7 +102,7 @@
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-input-group-form-input id="identifier" :label="this.$t('message.name')" input-group-size="mb-3"
-                        required="true" type="text" v-model="name" lazy="true"
+                        required="true" type="text" v-model="name" lazy="true" autofocus="true"
                         v-debounce:750ms="updatePolicy" :debounce-events="'keyup'" />
                   </b-col>
                   <b-col sm="3">
