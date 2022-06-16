@@ -275,7 +275,7 @@
     "component_removed": "Component removed",
     "required_project_name": "The project name is required",
     "project_name_desc": "The name of the project or component as provided by the supplier",
-    "profile": "Profile",
+    "connected_as": "Connected as",
     "profile_update": "Update Profile",
     "profile_updated": "Profile updated",
     "logout": "Logout",

@@ -19,9 +19,12 @@
 
 <script>
   import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
+  import globalVarsMixin from "@/mixins/globalVarsMixin";
+  import EventBus from "@/shared/eventbus";
 
   export default {
     name: "ProfileEditModal",
+    mixins: [globalVarsMixin],
     components: {
       BInputGroupFormInput
     },
@@ -34,12 +37,9 @@
     },
     methods: {
       getSelf: function() {
-        const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
-        this.axios.get(url).then((result) => {
-          this.username = result.data.username;
-          this.fullname = result.data.fullname;
-          this.email = result.data.email;
-        });
+        this.username = this.currentUser.username;
+        this.fullname = this.currentUser.fullname;
+        this.email = this.currentUser.email;
       },
       updateUser: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
@@ -48,6 +48,7 @@
           fullname: this.fullname,
           email: this.email
         }).then((response) => {
+          EventBus.$emit('profileUpdated');
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.profile_updated'));
         }).catch((error) => {
