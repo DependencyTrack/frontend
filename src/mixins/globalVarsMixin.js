@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import axios from "axios";
+import EventBus from "@/shared/eventbus";
 
 export default {
   data () {
     return {
-      dtrack: Object
+      dtrack: Object,
+      currentUser: Object
     }
   },
   created() {
@@ -17,5 +19,19 @@ export default {
           }
         );
     }
+    if (this.$currentUser) {
+      this.currentUser = this.$currentUser;
+    } else {
+      EventBus.$emit('profileUpdated');
+    }
+  },
+  mounted() {
+    EventBus.$on('profileUpdated', () => {
+      axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`)
+        .then((result) => {
+            this.currentUser = result.data;
+          }
+        );
+    });
   }
 }

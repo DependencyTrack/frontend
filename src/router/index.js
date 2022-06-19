@@ -262,7 +262,8 @@ router.beforeEach((to, from, next) => {
       // let backend verify the token
       router.app.axios.get(`${router.app.$api.BASE_URL}/${router.app.$api.URL_USER_SELF}`, {
         headers: { 'Authorization': `Bearer ${jwt}` }
-      }).then(() => {
+      }).then((result) => {
+        Vue.prototype.$currentUser = result.data
         // allowed to proceed
         next();
       }).catch(() => {
