@@ -179,7 +179,7 @@
                     { value: 'WARN', text: this.$t('violation.warn') },
                     { value: 'FAIL', text: this.$t('violation.fail') }
                   ],
-                  projects: row.projects,
+                  projects: row.projects || [],
                   limitToVisible: false,
                   tags: row.tags
                 }
