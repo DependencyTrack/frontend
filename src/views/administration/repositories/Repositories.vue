@@ -125,6 +125,7 @@
                       id="url" :label="$t('admin.url')"
                       input-group-size="mb-3" rules="required"
                       type="url" v-model="url"
+                      autofocus="true"
                       v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                   </b-col>
                   <b-col sm="6">
