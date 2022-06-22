@@ -457,6 +457,7 @@
     "enabled": "Enabled",
     "integration_fortify_ssc_enable": "Enable Fortify SSC integration",
     "integration_defectdojo_enable": "Enable DefectDojo integration",
+    "integration_defectdojo_reimport_enable": "Enable reimport",
     "synchronization_cadence_minutes": "Synchronization cadence (in minutes)",
     "synchronization_cadence_restart_required": "Restarting Dependency-Track is required for cadence changes to take effect",
     "integration_kenna_enable": "Enable Kenna Security integration",
