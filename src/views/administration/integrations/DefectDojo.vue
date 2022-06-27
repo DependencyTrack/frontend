@@ -2,6 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <c-switch id="enabled" color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.integration_defectdojo_enable')}}
+      <c-switch id="reimport-enabled" color="primary" v-model="reimportEnabled" label v-bind="labelIcon" />{{$t('admin.integration_defectdojo_reimport_enable')}}
       <b-validated-input-group-form-input
         id="defectdojo-cadence"
         :label="$t('admin.synchronization_cadence_minutes')"
@@ -55,6 +56,7 @@
     data() {
       return {
         enabled: false,
+        reimportEnabled: false,
         cadence: '60',
         url: '',
         apiKey: '',
@@ -68,6 +70,7 @@
       saveChanges: function() {
         this.updateConfigProperties([
           {groupName: 'integrations', propertyName: 'defectdojo.enabled', propertyValue: this.enabled},
+          {groupName: 'integrations', propertyName: 'defectdojo.reimport.enabled', propertyValue: this.reimportEnabled},
           {groupName: 'integrations', propertyName: 'defectdojo.sync.cadence', propertyValue: this.cadence},
           {groupName: 'integrations', propertyName: 'defectdojo.url', propertyValue: this.url},
           {groupName: 'integrations', propertyName: 'defectdojo.apiKey', propertyValue: this.apiKey},
@@ -82,6 +85,8 @@
           switch (item.propertyName) {
             case "defectdojo.enabled":
               this.enabled = common.toBoolean(item.propertyValue); break;
+            case "defectdojo.reimport.enabled":
+              this.reimportEnabled = common.toBoolean(item.propertyValue); break;
             case "defectdojo.sync.cadence":
               this.cadence = item.propertyValue; break;
             case "defectdojo.url":
