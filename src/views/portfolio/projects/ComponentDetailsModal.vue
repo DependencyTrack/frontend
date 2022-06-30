@@ -18,6 +18,10 @@
                                     required="false" :label="$t('message.component_namespace_group_vendor')"
                                     :tooltip="this.$t('message.component_group_desc')"
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="component-group-input" input-group-size="mb-3" type="text" v-model="component.author"
+                                    required="false" :label="$t('message.component_author')"
+                                    :tooltip="this.$t('message.component_author_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           <b-input-group-form-input id="component-purl-input" input-group-size="mb-3" type="text" v-model="component.purl"
                                     required="false" :label="$t('message.package_url_full')"
                                     :tooltip="this.$t('message.component_package_url_desc')"
@@ -211,6 +215,7 @@
           name: this.component.name,
           version: this.component.version,
           group: this.component.group,
+          author: this.component.author,
           description: this.component.description,
           license: this.selectedLicense,
           filename: this.component.filename,
