@@ -18,7 +18,7 @@
                                     required="false" :label="$t('message.component_namespace_group_vendor')"
                                     :tooltip="this.$t('message.component_group_desc')"
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
-          <b-input-group-form-input id="component-group-input" input-group-size="mb-3" type="text" v-model="component.author"
+          <b-input-group-form-input id="component-author-input" input-group-size="mb-3" type="text" v-model="component.author"
                                     required="false" :label="$t('message.component_author')"
                                     :tooltip="this.$t('message.component_author_desc')"
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
