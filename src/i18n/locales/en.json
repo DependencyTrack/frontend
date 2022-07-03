@@ -527,7 +527,16 @@
     "repository_deleted": "Repository deleted",
     "portfolio_access_control": "Portfolio Access Control",
     "project_access": "Project access",
-    "select_project": "Select Project"
+    "select_project": "Select Project",
+    "create_template": "Create Template",
+    "template_created": "Template created",
+    "delete_template": "Delete Template",
+    "template_deleted": "Template deleted",
+    "template_basedir": "Template base directory",
+    "general_template_configuration": "General template configuration",
+    "enable_default_template_override": "Enable default template override",
+    "restore_default_template": "Restore default templates",
+    "default_template_restored": "Default templates restored"
   },
   "condition": {
     "warning": "Warning",
