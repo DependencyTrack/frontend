@@ -50,6 +50,9 @@
       EventBus.$on('admin:templates:rowDeleted', () => {
         this.refreshTable();
       });
+      EventBus.$on('admin:templates:cloneTemplate', () => {
+        this.$bvModal.show("createTemplateModal");
+      });
     },
     beforeDestroy() {
       EventBus.$off('admin:templates:rowUpdate');
@@ -126,6 +129,7 @@
                       <b-form-textarea v-else id="input-5" v-model="template.template" rows="10" class="form-control" required trim />
                     </b-form-group>
                     <div style="text-align:right">
+                      <b-button variant="outline-primary" @click="cloneNotificationPublisher">{{ $t('admin.clone_template') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-primary" @click="updateNotificationPublisher">{{ $t('message.update') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-danger" @click="deleteNotificationPublisher">{{ $t('admin.delete_template') }}</b-button>
                     </div>    
@@ -168,6 +172,9 @@
                   }).catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
+                },
+                cloneNotificationPublisher: function() {
+                  EventBus.$emit('admin:templates:cloneTemplate', this.template);
                 }
               }
             })

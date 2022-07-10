@@ -1,5 +1,9 @@
 <template>
-  <b-modal id="generalTemplateConfigurationModal" size="md" hide-header-close no-stacking :title="$t('admin.general_template_configuration')" @show="loadConfigProperties">
+  <b-modal id="generalTemplateConfigurationModal" size="lg" hide-header-close no-stacking :title="$t('admin.general_template_configuration')" @show="loadConfigProperties">
+    <p>{{ $t('admin.template_override_description') }}</p>
+    <p>{{ $t('admin.template_override_file_hierarchy') }}</p>
+    <p>{{ $t('admin.template_override_security_warning') }}</p>
+    <p>{{ $t('admin.template_override_restart_needed') }}</p>
     <b-form-group>
         <c-switch id="template_override" color="primary" v-model="enableDefaultTemplatesOverride" label v-bind="labelIcon"/>
         {{ $t('admin.enable_default_template_override') }}
@@ -11,12 +15,12 @@
         rules="required"
         type="text"
         v-model="templateBasedir"
-        tooltip="This property is used as base directory for notification templates search."
+        :tooltip="$t('admin.template_basedir_tooltip')"
     />
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
       <b-button size="md" variant="primary" @click="updateConfiguration()">{{ $t('message.update') }}</b-button>
-      <b-button size="md" variant="primary" @click="restoreDefaultTemplates()">{{ $t('admin.restore_default_template') }}</b-button>
+      <b-button size="md" variant="warning" @click="restoreDefaultTemplates()">{{ $t('admin.restore_default_template') }}</b-button>
     </template>
   </b-modal>
 </template>

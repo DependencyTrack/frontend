@@ -44,9 +44,24 @@
 
 <script>
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import EventBus from "../../../shared/eventbus";
 
   export default {
     mixins: [permissionsMixin],
+    mounted() {
+      EventBus.$on('admin:templates:cloneTemplate', (template) => {
+        this.name = `${template.name} - clone`;
+        this.publisherClass = template.publisherClass;
+        this.description = template.description;
+        this.mimeType = template.templateMimeType;
+        this.template = template.template;
+      });
+      this.$root.$on('bv::modal::hide', (_, modalId) => {
+        if(modalId == 'createTemplateModal') {
+          this.resetValues();
+        }
+      });
+    },
     data() {
       return {
         name: null,
@@ -58,7 +73,6 @@
     },
     methods: {
       createTemplate: function() {
-        this.$root.$emit('bv::hide::modal', 'createTemplateModal');
         let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
         this.axios.put(url, {
           name: this.name,
@@ -73,7 +87,7 @@
         }).catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-        this.resetValues();
+        this.$root.$emit('bv::hide::modal', 'createTemplateModal');
       },
       resetValues: function () {
         this.name = null;
