@@ -73,7 +73,8 @@
           {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
           {value: 'CPE', text: this.$t('message.cpe_full')},
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
-          {value: 'VERSION', text: this.$t('message.version')}
+          {value: 'VERSION', text: this.$t('message.version')},
+          {value: 'CWE', text: this.$t('message.cwe')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -90,6 +91,10 @@
           {value: 'NUMERIC_NOT_EQUAL', text: '≠'},
           {value: 'NUMERIC_GREATER_THAN_OR_EQUAL', text: '≥'},
           {value: 'NUMERIC_LESSER_THAN_OR_EQUAL', text: '≤'}
+        ],
+        listOperators: [
+          {value: 'CONTAINS_ANY', text: this.$t('operator.contains_any')},
+          {value: 'CONTAINS_ALL', text: this.$t('operator.contains_all')}
         ],
         operators: [],
         possibleValues: []
@@ -119,6 +124,8 @@
           case 'SWID_TAGID':
             return false;
           case 'VERSION':
+            return false;
+          case 'CWE':
             return false;
           default:
             return false;
@@ -173,6 +180,9 @@
             break;
           case 'VERSION':
             this.operators = this.numericOperators;
+            break;
+          case 'CWE':
+            this.operators = [...this.listOperators, ...this.objectOperators];
             break;
           default:
             this.operators = [];
