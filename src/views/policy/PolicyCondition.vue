@@ -183,6 +183,7 @@
             break;
           case 'CWE':
             this.operators = [...this.listOperators, ...this.objectOperators];
+            this.operators.splice(this.operators.findIndex(a => a.value === 'IS_NOT'), 1);
             break;
           default:
             this.operators = [];
