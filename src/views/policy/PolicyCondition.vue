@@ -74,7 +74,7 @@
           {value: 'CPE', text: this.$t('message.cpe_full')},
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
           {value: 'VERSION', text: this.$t('message.version')},
-          {value: 'CWE', text: this.$t('message.cwe')}
+          {value: 'CWE', text: this.$t('message.cwe_full')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},

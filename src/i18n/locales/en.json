@@ -59,6 +59,7 @@
     "name": "Name",
     "published": "Published",
     "cwe": "CWE",
+    "cwe_full": "Common Weakness Enumeration (CWE)",
     "cwe_id": "CWE ID",
     "cwe_desc": "Common Weakness Enumeration (CWE) is a taxonomy of software and hardware weakness types",
     "select_cwe": "Select CWE",
