@@ -73,7 +73,8 @@
           {value: 'PACKAGE_URL', text: this.$t('message.package_url')},
           {value: 'CPE', text: this.$t('message.cpe_full')},
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
-          {value: 'VERSION', text: this.$t('message.version')}
+          {value: 'VERSION', text: this.$t('message.version')},
+          {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -90,6 +91,20 @@
           {value: 'NUMERIC_NOT_EQUAL', text: '≠'},
           {value: 'NUMERIC_GREATER_THAN_OR_EQUAL', text: '≥'},
           {value: 'NUMERIC_LESSER_THAN_OR_EQUAL', text: '≤'}
+        ],
+        hashAlgorithms: [
+          {value: 'MD5', text: this.$t('hashes.md5')},
+          {value: 'SHA-1', text: this.$t('hashes.sha_1')},
+          {value: 'SHA-256', text: this.$t('hashes.sha_256')},
+          {value: 'SHA-384', text: this.$t('hashes.sha_384')},
+          {value: 'SHA-512', text: this.$t('hashes.sha_512')},
+          {value: 'SHA3-256', text: this.$t('hashes.sha3_256')},
+          {value: 'SHA3-384', text: this.$t('hashes.sha3_384')},
+          {value: 'SHA3-512', text: this.$t('hashes.sha3_512')},
+          {value: 'BLAKE2b-256', text: this.$t('hashes.blake_256')},
+          {value: 'BLAKE2b-384', text: this.$t('hashes.blake_384')},
+          {value: 'BLAKE2b-512', text: this.$t('hashes.blake_512')},
+          {value: 'BLAKE3', text: this.$t('hashes.blake3')},
         ],
         operators: [],
         possibleValues: []
@@ -120,6 +135,8 @@
             return false;
           case 'VERSION':
             return false;
+          case 'COMPONENT_HASH':
+            return false;
           default:
             return false;
         }
@@ -149,7 +166,7 @@
             break;
           case 'SEVERITY':
             this.operators = this.objectOperators;
-            this.populateSeverity()
+            this.populateSeverity();
             break;
           case 'COORDINATES':
             this.operators = this.regexOperators;
@@ -173,6 +190,9 @@
             break;
           case 'VERSION':
             this.operators = this.numericOperators;
+            break;
+          case 'COMPONENT_HASH':
+            this.operators = this.hashAlgorithms;
             break;
           default:
             this.operators = [];
