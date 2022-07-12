@@ -206,6 +206,11 @@
             name: common.trimToNull(this.coordinatesName),
             version: common.trimToNull(this.coordinatesVersion)
           });
+        } else if (this.subject === "COMPONENT_HASH") {
+          return JSON.stringify({
+            algorithm: common.trimToNull(this.operator),
+            value: common.trimToNull(this.value)
+          });
         } else {
           return this.value;
         }
@@ -220,7 +225,7 @@
           this.axios.post(url, {
             uuid: this.condition.uuid,
             subject: this.subject,
-            operator: this.operator,
+            operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
             this.condition = response.data;
