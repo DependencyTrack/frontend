@@ -237,7 +237,7 @@
           let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
           this.axios.put(url, {
             subject: this.subject,
-            operator: this.operator,
+            operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
             this.condition = response.data;
