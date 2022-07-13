@@ -74,7 +74,8 @@
           {value: 'CPE', text: this.$t('message.cpe_full')},
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
           {value: 'VERSION', text: this.$t('message.version')},
-          {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')}
+          {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')},
+          {value: 'CWE', text: this.$t('message.cwe_full')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -104,7 +105,11 @@
           {value: 'BLAKE2b-256', text: this.$t('hashes.blake_256')},
           {value: 'BLAKE2b-384', text: this.$t('hashes.blake_384')},
           {value: 'BLAKE2b-512', text: this.$t('hashes.blake_512')},
-          {value: 'BLAKE3', text: this.$t('hashes.blake3')},
+          {value: 'BLAKE3', text: this.$t('hashes.blake3')}
+        ],
+        listOperators: [
+          {value: 'CONTAINS_ANY', text: this.$t('operator.contains_any')},
+          {value: 'CONTAINS_ALL', text: this.$t('operator.contains_all')}
         ],
         operators: [],
         possibleValues: []
@@ -136,6 +141,8 @@
           case 'VERSION':
             return false;
           case 'COMPONENT_HASH':
+            return false;
+          case 'CWE':
             return false;
           default:
             return false;
@@ -193,6 +200,9 @@
             break;
           case 'COMPONENT_HASH':
             this.operators = this.hashAlgorithms;
+            break;
+          case 'CWE':
+            this.operators = this.listOperators;
             break;
           default:
             this.operators = [];
