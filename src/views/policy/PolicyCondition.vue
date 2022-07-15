@@ -74,6 +74,7 @@
           {value: 'CPE', text: this.$t('message.cpe_full')},
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
           {value: 'VERSION', text: this.$t('message.version')},
+          {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')},
           {value: 'CWE', text: this.$t('message.cwe_full')}
         ],
         objectOperators: [
@@ -91,6 +92,20 @@
           {value: 'NUMERIC_NOT_EQUAL', text: '≠'},
           {value: 'NUMERIC_GREATER_THAN_OR_EQUAL', text: '≥'},
           {value: 'NUMERIC_LESSER_THAN_OR_EQUAL', text: '≤'}
+        ],
+        hashAlgorithms: [
+          {value: 'MD5', text: this.$t('hashes.md5')},
+          {value: 'SHA-1', text: this.$t('hashes.sha_1')},
+          {value: 'SHA-256', text: this.$t('hashes.sha_256')},
+          {value: 'SHA-384', text: this.$t('hashes.sha_384')},
+          {value: 'SHA-512', text: this.$t('hashes.sha_512')},
+          {value: 'SHA3-256', text: this.$t('hashes.sha3_256')},
+          {value: 'SHA3-384', text: this.$t('hashes.sha3_384')},
+          {value: 'SHA3-512', text: this.$t('hashes.sha3_512')},
+          {value: 'BLAKE2b-256', text: this.$t('hashes.blake_256')},
+          {value: 'BLAKE2b-384', text: this.$t('hashes.blake_384')},
+          {value: 'BLAKE2b-512', text: this.$t('hashes.blake_512')},
+          {value: 'BLAKE3', text: this.$t('hashes.blake3')}
         ],
         listOperators: [
           {value: 'CONTAINS_ANY', text: this.$t('operator.contains_any')},
@@ -125,6 +140,8 @@
             return false;
           case 'VERSION':
             return false;
+          case 'COMPONENT_HASH':
+            return false;
           case 'CWE':
             return false;
           default:
@@ -156,7 +173,7 @@
             break;
           case 'SEVERITY':
             this.operators = this.objectOperators;
-            this.populateSeverity()
+            this.populateSeverity();
             break;
           case 'COORDINATES':
             this.operators = this.regexOperators;
@@ -181,6 +198,9 @@
           case 'VERSION':
             this.operators = this.numericOperators;
             break;
+          case 'COMPONENT_HASH':
+            this.operators = this.hashAlgorithms;
+            break;
           case 'CWE':
             this.operators = this.listOperators;
             break;
@@ -196,6 +216,11 @@
             name: common.trimToNull(this.coordinatesName),
             version: common.trimToNull(this.coordinatesVersion)
           });
+        } else if (this.subject === "COMPONENT_HASH") {
+          return JSON.stringify({
+            algorithm: common.trimToNull(this.operator),
+            value: common.trimToNull(this.value)
+          });
         } else {
           return this.value;
         }
@@ -210,7 +235,7 @@
           this.axios.post(url, {
             uuid: this.condition.uuid,
             subject: this.subject,
-            operator: this.operator,
+            operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
             this.condition = response.data;
@@ -222,7 +247,7 @@
           let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
           this.axios.put(url, {
             subject: this.subject,
-            operator: this.operator,
+            operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
             this.condition = response.data;

@@ -100,6 +100,7 @@
     "component_created": "Component created",
     "component_updated": "Component updated",
     "component_deleted": "Component deleted",
+    "component_hash": "Component Hash",
     "property_created": "Property created",
     "property_deleted": "Property deleted",
     "create_project": "Create Project",
@@ -551,6 +552,20 @@
     "no_match": "does not match",
     "contains_any": "contains any",
     "contains_all": "contains all"
+  },
+  "hashes" : {
+    "md5": "MD5",
+    "sha_1": "SHA-1",
+    "sha_256": "SHA-256",
+    "sha_384": "SHA-384",
+    "sha_512": "SHA-512",
+    "sha3_256": "SHA3-256",
+    "sha3_384": "SHA3-384",
+    "sha3_512": "SHA3-512",
+    "blake_256": "BLAKE2b-256",
+    "blake_384": "BLAKE2b-384",
+    "blake_512": "BLAKE2b-512",
+    "blake3": "BLAKE3"
   },
   "policy_violation": {
     "fails": "Violation Failures",
