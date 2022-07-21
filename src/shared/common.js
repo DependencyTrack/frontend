@@ -103,7 +103,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
   let analyzerUrl = null;
   switch (analyzer) {
     case 'INTERNAL_ANALYZER':
-      analyzerLabel = vulnSource ?? "Internal";
+      analyzerLabel = vulnSource;
       if(vulnSource === "GITHUB") {
         analyzerUrl = "https://github.com/advisories/" + vulnId;
       } else if(vulnSource === "OSV") {
