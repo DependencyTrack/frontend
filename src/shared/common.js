@@ -95,7 +95,7 @@ $common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
 /**
  * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
  */
-$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alternateIdentifier, referenceUrl) {
+$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource, vulnId, alternateIdentifier, referenceUrl) {
   if (! analyzer) {
     return null;
   }
@@ -103,7 +103,12 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnId, alt
   let analyzerUrl = null;
   switch (analyzer) {
     case 'INTERNAL_ANALYZER':
-      analyzerLabel = "Internal";
+      analyzerLabel = vulnSource ?? "Internal";
+      if(vulnSource === "GITHUB") {
+        analyzerUrl = "https://github.com/advisories/" + vulnId;
+      } else if(vulnSource === "OSV") {
+        analyzerUrl = "https://osv.dev/vulnerability/" + vulnId;
+      }
       break;
     case 'OSSINDEX_ANALYZER':
       analyzerLabel = "OSS Index";
