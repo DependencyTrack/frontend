@@ -30,11 +30,9 @@ jobs:
           cache: 'npm'
 
       - name: Bump version and tag via NodeJS
-        # if you use a bot-user to create the release in the next step
-        # then it might be a solid idea to change the git config values below to the bot-user's name + email
         run: |-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "dependencytrack-bot"
+          git config user.email "106437498+dependencytrack-bot@users.noreply.github.com"
 
           npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
 
@@ -42,8 +40,7 @@ jobs:
 
       - name: Create GitHub Release
         env:
-          # or change it to a custom PAT that should be credited for the release
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_RELEASE_TOKEN }}
           GH_OPTS: ""
         run: |-
           VERSION=`jq -r '.version' package.json`

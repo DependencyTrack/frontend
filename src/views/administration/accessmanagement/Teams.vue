@@ -112,7 +112,7 @@
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-input-group-form-input id="input-team-name" :label="$t('admin.team_name')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="name" lazy="true"
+                                              required="true" type="text" v-model="name" lazy="true" autofocus="true"
                                               v-debounce:750ms="updateTeam" :debounce-events="'keyup'" />
                     <b-form-group :label="this.$t('admin.api_keys')">
                       <div class="list-group">
