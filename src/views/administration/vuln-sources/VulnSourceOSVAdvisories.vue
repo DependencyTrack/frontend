@@ -1,6 +1,7 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
+      <img alt="OSV logo" src="@/assets/img/osv-logo.png" width="65"/>
       <hr/>
       <c-switch
         color="primary"
