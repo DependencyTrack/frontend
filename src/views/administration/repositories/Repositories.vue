@@ -125,12 +125,31 @@
                       id="url" :label="$t('admin.url')"
                       input-group-size="mb-3" rules="required"
                       type="url" v-model="url"
+                      autofocus="true"
                       v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                   </b-col>
                   <b-col sm="6">
 
                     <div>
                       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                    </div>
+
+                    <div>
+                      <b-validated-input-group-form-input
+                        id="username" :label="$t('admin.username')"
+                        input-group-size="mb-3"
+                        v-model="username"
+                        v-show="internal"
+                        v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+                    </div>
+
+                    <div>
+                      <b-validated-input-group-form-input
+                        id="password" :label="$t('admin.password')"
+                        input-group-size="mb-3"
+                        v-model="password"
+                        v-show="internal"
+                        v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
 
                     <div>
@@ -153,6 +172,8 @@
                   identifier: row.identifier,
                   url: row.url,
                   internal: row.internal,
+                  username: row.username,
+                  password: row.password || null,
                   enabled: row.enabled,
                   uuid: row.uuid,
                   labelIcon: {
@@ -185,6 +206,8 @@
                     identifier: this.identifier,
                     url: this.url,
                     internal: this.internal,
+                    username: this.username,
+                    password: this.password || null,
                     enabled: this.enabled,
                     uuid: this.uuid
                   }).then((response) => {

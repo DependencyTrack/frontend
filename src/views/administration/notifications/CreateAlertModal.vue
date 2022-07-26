@@ -79,10 +79,10 @@
           scope: this.scope,
           notificationLevel: this.notificationLevel,
           publisher: { uuid: this.publisher }
-        }).then((response) => {
+        }).then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.alert_created'));
-        }).catch((error) => {
+        }).catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
         this.resetValues();

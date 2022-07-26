@@ -38,6 +38,17 @@
 
       setJwtForAjax(getToken());
 
+      // Send XHR cross-site cookie credentials
+      if (this.$api.WITH_CREDENTIALS){
+        this.axios.interceptors.request.use(
+          function(config) {
+            config.withCredentials = true;
+            return config;
+          }
+        );
+        $.ajaxSettings.xhrFields = { withCredentials: true };
+      }
+
       // debug logging of ajax requests/responses
       if (getUrlVar('debug')) {
         $(document).ajaxComplete((event, xhr) => {

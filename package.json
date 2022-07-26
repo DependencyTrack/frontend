@@ -1,6 +1,6 @@
 {
   "name": "@dependencytrack/frontend",
-  "version": "4.4.0",
+  "version": "4.5.1",
   "description": "Single Page Application for OWASP Dependency-Track",
   "author": "Steve Springett",
   "homepage": "https://dependencytrack.org/",
@@ -26,7 +26,7 @@
     "@johmun/vue-tags-input": "2.1.0",
     "axios": "0.21.4",
     "bootstrap": "4.6.1",
-    "bootstrap-table": "1.19.1",
+    "bootstrap-table": "1.20.2",
     "bootstrap-vue": "2.21.2",
     "chart.js": "2.9.4",
     "core-js": "2.6.12",

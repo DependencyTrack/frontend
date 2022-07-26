@@ -8,7 +8,8 @@
         boundary="viewport"
         tag="div"
         class="text-center">
-        <strong>{{ $t('message.profile') }}</strong>
+        {{ $t('message.connected_as') }}
+        <strong>{{ user }}</strong>
       </b-dropdown-header>
       <b-dropdown-item v-if="canUpdateProfile()" v-b-modal.profileEditModal><i class="fa fa-user text-primary" /> {{ $t('message.profile_update') }}</b-dropdown-item>
       <b-dropdown-item v-if="canChangePassword()" to="/change-password"><i class="fa fa-key text-primary" /> {{ $t('message.change_password') }}</b-dropdown-item>
@@ -22,16 +23,23 @@
   import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
   import EventBus from '../shared/eventbus';
   import { decodeToken, getToken } from '../shared/permissions'
+  import globalVarsMixin from "../mixins/globalVarsMixin";
 
   export default {
     name: 'DefaultHeaderProfileDropdown',
+    mixins: [globalVarsMixin],
     components: {
       AppHeaderDropdown
     },
     data: () => {
-      return { 
+      return {
         itemsCount: 42,
         identityProvider: decodeToken(getToken()).idp
+      }
+    },
+    computed: {
+      user() {
+        return this.currentUser.fullname || this.currentUser.username
       }
     },
     methods: {

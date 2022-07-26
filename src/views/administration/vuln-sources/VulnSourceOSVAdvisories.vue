@@ -1,33 +1,24 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
+      <img alt="OSV logo" src="@/assets/img/osv-logo.png" width="65"/>
+      <hr/>
       <c-switch
-        :disabled="!this.vulnsourceEnabled && !this.nvdFeedsUrl"
-        id="vulnsourceEnabled"
         color="primary"
-        v-model="vulnsourceEnabled"
+        id="vulnsourceEnabled"
         label
         v-bind="labelIcon"
+        v-model="vulnsourceEnabled"
       />
-      {{$t('admin.vulnsource_nvd_enable')}}
-      <b-validated-input-group-form-input
-        id="nvd-feeds-url"
-        :label="$t('admin.vulnsource_nvd_feeds_url')"
-        input-group-size="mb-3"
-        rules="required"
-        type="text"
-        v-model="nvdFeedsUrl"
-        lazy="true"
-      />
+      {{$t('admin.vulnsource_osv_advisories_enable')}}
       <hr/>
-      {{ $t('admin.vulnsource_nvd_desc') }}
+      {{ $t('admin.vulnsource_osv_advisories_desc') }}
     </b-card-body>
     <b-card-footer>
       <b-button
-        :disabled="this.vulnsourceEnabled && !this.nvdFeedsUrl"
-        variant="outline-primary"
+        @click="saveChanges"
         class="px-4"
-        @click="saveChanges">
+        variant="outline-primary">
           {{ $t('message.update') }}
       </b-button>
     </b-card-footer>
@@ -36,7 +27,6 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
 
@@ -46,13 +36,11 @@ export default {
     header: String
   },
   components: {
-    cSwitch,
-    BValidatedInputGroupFormInput
+    cSwitch
   },
   data() {
     return {
       vulnsourceEnabled: false,
-      nvdFeedsUrl: '',
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -62,8 +50,7 @@ export default {
   methods: {
     saveChanges: function() {
       this.updateConfigProperties([
-        {groupName: 'vuln-source', propertyName: 'nvd.enabled', propertyValue: this.vulnsourceEnabled},
-        {groupName: 'vuln-source', propertyName: 'nvd.feeds.url', propertyValue: this.nvdFeedsUrl}
+        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.vulnsourceEnabled}
       ]);
     }
   },
@@ -73,10 +60,8 @@ export default {
       for (let i=0; i<configItems.length; i++) {
         let item = configItems[i];
         switch (item.propertyName) {
-          case "nvd.enabled":
+          case "google.osv.enabled":
             this.vulnsourceEnabled = common.toBoolean(item.propertyValue); break;
-          case "nvd.feeds.url":
-            this.nvdFeedsUrl = item.propertyValue; break;
         }
       }
     });

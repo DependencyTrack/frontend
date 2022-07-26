@@ -109,7 +109,7 @@
           },
           {
             title: this.$t('message.cwe'),
-            field: "vulnerability.cwe",
+            field: "vulnerability.cwes",
             sortable: true,
             visible: false,
             formatter(value, row, index) {
@@ -139,7 +139,7 @@
             field: "attribution.analyzerIdentity",
             sortable: true,
             formatter(value, row, index) {
-              return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.vulnId,
+              return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.source, row.vulnerability.vulnId,
                 row.attribution.alternateIdentifier, row.attribution.referenceUrl);
             }
           },

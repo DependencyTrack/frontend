@@ -21,6 +21,23 @@
     <div>
       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
     </div>
+
+    <b-validated-input-group-form-input
+          id="username"
+          :label="$t('admin.username')"
+          input-group-size="mb-3"
+          v-model="username"
+          v-show="internal"
+      />
+
+      <b-validated-input-group-form-input
+          id="password"
+          :label="$t('admin.password')"
+          input-group-size="mb-3"
+          v-model="password"
+          v-show="internal"
+      />
+
     <div>
       <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
     </div>
@@ -57,6 +74,8 @@
         repositoryType: null,
         initialRepositoryType: null,
         internal: false,
+        username: null,
+        password: null,
         enabled: true,
         labelIcon: {
           dataOn: '\u2713',
@@ -83,6 +102,8 @@
           identifier: this.identifier,
           url: this.url,
           internal: this.internal,
+          username: this.username,
+          password: this.password || null,
           enabled: this.enabled
         }).then((response) => {
           this.$emit('refreshTable');
@@ -99,6 +120,8 @@
         this.identifier = null;
         this.url = null;
         this.internal = false;
+        this.username = null;
+        this.password = null;
         this.enabled = true;
       }
     }

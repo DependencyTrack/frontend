@@ -31,6 +31,7 @@
   // Vulnerability sources
   import VulnSourceNvd from "./vuln-sources/VulnSourceNvd";
   import VulnSourceGitHubAdvisories from "./vuln-sources/VulnSourceGitHubAdvisories";
+  import VulnSourceOSVAdvisories from "./vuln-sources/VulnSourceOSVAdvisories";
   // Repositories
   import Cargo from "./repositories/Cargo";
   import Composer from "./repositories/Composer";
@@ -63,7 +64,7 @@
       AdminMenu,
       General, BomFormats, Email, Jira, InternalComponents,
       InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
-      VulnSourceNvd, VulnSourceGitHubAdvisories,
+      VulnSourceNvd, VulnSourceGitHubAdvisories, VulnSourceOSVAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,
       FortifySsc, DefectDojo, KennaSecurity,

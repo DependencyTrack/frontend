@@ -82,7 +82,7 @@ export default {
               <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-input-group-form-input id="input-oidcgroup-name" :label="$t('admin.oidc_group_name')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="oidcGroup.name" lazy="true"
+                                              required="true" type="text" v-model="oidcGroup.name" lazy="true" autofocus="true"
                                               v-debounce:750ms="updateOidcGroup" :debounce-events="'keyup'" />
                     <b-form-group :label="this.$t('admin.mapped_teams')">
                       <div class="list-group">
