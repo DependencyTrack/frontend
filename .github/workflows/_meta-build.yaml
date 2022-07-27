@@ -103,7 +103,7 @@ jobs:
           echo "::set-output name=tags::${TAGS}"
 
       - name: Build multi-arch Container Image
-        uses: docker/build-push-action@v2.9.0
+        uses: docker/build-push-action@v3.1.0
         with:
           tags: ${{ steps.tags.outputs.tags }}
           build-args: |-
