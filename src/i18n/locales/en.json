@@ -555,7 +555,7 @@
     "clone_template": "Clone Template",
     "template_cloned": "Template cloned",
     "task_scheduler": "Task scheduler",
-    "task_scheduler_description": "Dependency Track task scheduler perform various background scans at a fixed interval. You can modify the fixed interval for each scans using the form below. A Dependency Track restart is needed to reschedule the tasks with the updated interval.",
+    "task_scheduler_description": "Dependency Track task scheduler perform various background tasks at a fixed interval. You can modify the fixed interval for each task using the form below. Each interval is expressed in hours. A Dependency Track restart is needed to reschedule the tasks with the updated cadence.",
     "task_scheduler_ldap_sync": "LDAP sync",
     "task_scheduler_portfolio_metrics_update": "Portfolio metrics",
     "task_scheduler_vulnerability_metrics_update": "Vulnerability metrics",
@@ -624,7 +624,8 @@
   },
   "validation": {
     "required": "{_field_} is required",
-    "confirmed": "{_field_} doesn't match"
+    "confirmed": "{_field_} doesn't match",
+    "min_value": "{_field_} value should be above {min}"
   },
   "404": {
     "heading": "Oops! This is awkward",

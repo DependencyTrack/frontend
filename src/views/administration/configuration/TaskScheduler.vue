@@ -8,7 +8,7 @@
         id="repository_metadata_fetch"
         :label="$t('admin.task_scheduler_repository_metadata_fetch')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="repositoryMetadataFetch.value"
         :tooltip="repositoryMetadataFetch.description"
@@ -17,7 +17,7 @@
         id="internal_component_identification"
         :label="$t('admin.task_scheduler_internal_component_identification')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="internalComponentIdentification.value"
         :tooltip="internalComponentIdentification.description"
@@ -28,7 +28,7 @@
         id="ghsa_mirror"
         :label="$t('admin.github_advisories')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="ghsaMirror.value"
         :tooltip="ghsaMirror.description"
@@ -37,7 +37,7 @@
         id="nist_mirror"
         :label="$t('admin.nvd')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="nistMirror.value"
         :tooltip="nistMirror.description"
@@ -46,7 +46,7 @@
         id="vulndb_mirror"
         :label="$t('admin.vulndb')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="vulndbMirror.value"
         :tooltip="vulndbMirror.description"
@@ -55,7 +55,7 @@
         id="osv_mirror"
         :label="$t('admin.osv_advisories')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="osvMirror.value"
         :tooltip="osvMirror.description"
@@ -66,7 +66,7 @@
         id="portfolio_vulnerability_analysis"
         :label="$t('admin.task_scheduler_portfolio_vulnerability_analysis')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="portfolioVulnerabilityAnalysis.value"
         :tooltip="portfolioVulnerabilityAnalysis.description"
@@ -75,7 +75,7 @@
         id="component_analysis_cache_clear"
         :label="$t('admin.task_scheduler_component_analysis_cache_clear')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="analysisCacheClear.value"
         :tooltip="analysisCacheClear.description"
@@ -86,7 +86,7 @@
         id="portfolio_metrics_update"
         :label="$t('admin.task_scheduler_portfolio_metrics_update')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="portfolioMetricsUpdate.value"
         :tooltip="portfolioMetricsUpdate.description"
@@ -95,7 +95,7 @@
         id="vulnerability_metrics_update"
         :label="$t('admin.task_scheduler_vulnerability_metrics_update')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="vulnerabilityMetricsUpdate.value"
         :tooltip="vulnerabilityMetricsUpdate.description"
@@ -106,7 +106,7 @@
         id="ldap_sync"
         :label="$t('admin.task_scheduler_ldap_sync')"
         input-group-size="mb-3"
-        rules="required"
+        rules="required|min_value:1"
         type="number"
         v-model="ldapSync.value"
         :tooltip="ldapSync.description"
@@ -148,17 +148,17 @@
     methods: {
       saveChanges: function() {
         this.updateConfigProperties([
-          {groupName: 'task-scheduler', propertyName: 'ldap.sync.period', propertyValue: this.ldapSync.value},
-          {groupName: 'task-scheduler', propertyName: 'ghsa.mirror.period', propertyValue: this.ghsaMirror.value},
-          {groupName: 'task-scheduler', propertyName: 'osv.mirror.period', propertyValue: this.osvMirror.value},
-          {groupName: 'task-scheduler', propertyName: 'nist.mirror.period', propertyValue: this.nistMirror.value},
-          {groupName: 'task-scheduler', propertyName: 'vulndb.mirror.period', propertyValue: this.vulndbMirror.value},
-          {groupName: 'task-scheduler', propertyName: 'portfolio.metrics.update.period', propertyValue: this.portfolioMetricsUpdate.value},
-          {groupName: 'task-scheduler', propertyName: 'vulnerability.metrics.update.period', propertyValue: this.vulnerabilityMetricsUpdate.value},
-          {groupName: 'task-scheduler', propertyName: 'portfolio.vulnerability.analysis.period', propertyValue: this.portfolioVulnerabilityAnalysis.value},
-          {groupName: 'task-scheduler', propertyName: 'repository.metadata.fetch.period', propertyValue: this.repositoryMetadataFetch.value},
-          {groupName: 'task-scheduler', propertyName: 'internal.components.identification.period', propertyValue: this.internalComponentIdentification.value},
-          {groupName: 'task-scheduler', propertyName: 'component.analysis.cache.clear.period', propertyValue: this.analysisCacheClear.value},
+          {groupName: 'task-scheduler', propertyName: 'ldap.sync.cadence', propertyValue: this.ldapSync.value},
+          {groupName: 'task-scheduler', propertyName: 'ghsa.mirror.cadence', propertyValue: this.ghsaMirror.value},
+          {groupName: 'task-scheduler', propertyName: 'osv.mirror.cadence', propertyValue: this.osvMirror.value},
+          {groupName: 'task-scheduler', propertyName: 'nist.mirror.cadence', propertyValue: this.nistMirror.value},
+          {groupName: 'task-scheduler', propertyName: 'vulndb.mirror.cadence', propertyValue: this.vulndbMirror.value},
+          {groupName: 'task-scheduler', propertyName: 'portfolio.metrics.update.cadence', propertyValue: this.portfolioMetricsUpdate.value},
+          {groupName: 'task-scheduler', propertyName: 'vulnerability.metrics.update.cadence', propertyValue: this.vulnerabilityMetricsUpdate.value},
+          {groupName: 'task-scheduler', propertyName: 'portfolio.vulnerability.analysis.cadence', propertyValue: this.portfolioVulnerabilityAnalysis.value},
+          {groupName: 'task-scheduler', propertyName: 'repository.metadata.fetch.cadence', propertyValue: this.repositoryMetadataFetch.value},
+          {groupName: 'task-scheduler', propertyName: 'internal.components.identification.cadence', propertyValue: this.internalComponentIdentification.value},
+          {groupName: 'task-scheduler', propertyName: 'component.analysis.cache.clear.cadence', propertyValue: this.analysisCacheClear.value},
         ]);
       }
     },
@@ -168,47 +168,47 @@
         for (let i=0; i<configItems.length; i++) {
           let item = configItems[i];
           switch (item.propertyName) {
-            case "ldap.sync.period":
+            case "ldap.sync.cadence":
               this.ldapSync.value = item.propertyValue; 
               this.ldapSync.description = item.description;
               break;
-            case "ghsa.mirror.period":
+            case "ghsa.mirror.cadence":
               this.ghsaMirror.value = item.propertyValue; 
               this.ghsaMirror.description = item.description;
               break;
-            case "osv.mirror.period":
+            case "osv.mirror.cadence":
               this.osvMirror.value = item.propertyValue;
               this.osvMirror.description = item.description;
               break;
-            case "nist.mirror.period":
+            case "nist.mirror.cadence":
               this.nistMirror.value = item.propertyValue; 
               this.nistMirror.description = item.description;
               break;
-            case "vulndb.mirror.period":
+            case "vulndb.mirror.cadence":
               this.vulndbMirror.value = item.propertyValue;
               this.vulndbMirror.description = item.description; 
               break;
-            case "portfolio.metrics.update.period":
+            case "portfolio.metrics.update.cadence":
               this.portfolioMetricsUpdate.value = item.propertyValue; 
               this.portfolioMetricsUpdate.description = item.description;
               break;
-            case "vulnerability.metrics.update.period":
+            case "vulnerability.metrics.update.cadence":
               this.vulnerabilityMetricsUpdate.value = item.propertyValue; 
               this.vulnerabilityMetricsUpdate.description = item.description;
               break;
-            case "portfolio.vulnerability.analysis.period":
+            case "portfolio.vulnerability.analysis.cadence":
               this.portfolioVulnerabilityAnalysis.value = item.propertyValue; 
               this.portfolioVulnerabilityAnalysis.description = item.description; 
               break;
-            case "repository.metadata.fetch.period":
+            case "repository.metadata.fetch.cadence":
               this.repositoryMetadataFetch.value = item.propertyValue; 
               this.repositoryMetadataFetch.description = item.description;
               break;
-            case "internal.components.identification.period":
+            case "internal.components.identification.cadence":
               this.internalComponentIdentification.value = item.propertyValue;
               this.internalComponentIdentification.description = item.description; 
               break;
-            case "component.analysis.cache.clear.period":
+            case "component.analysis.cache.clear.cadence":
               this.analysisCacheClear.value = item.propertyValue; 
               this.analysisCacheClear.description = item.description; 
               break;
