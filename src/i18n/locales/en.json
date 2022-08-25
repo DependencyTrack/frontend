@@ -225,6 +225,8 @@
     "comments": "Comments",
     "affected_projects": "Affected Projects",
     "weakness": "Weakness",
+    "alias": "Alias",
+    "aliases": "Aliases",
     "references": "References",
     "credits": "Credits",
     "component_vulnerabilities": "Component Vulnerabilities",

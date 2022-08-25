@@ -128,6 +128,82 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
 };
 
 /**
+ * Given the source of a vulnerability (vulnSource) and the vulnerabilities identifier, create
+ * a value object which also contains the proper name of the source and the URL to the vulnerability
+ * hosted by the source.
+ * @param vulnSource the source of a vulnerability
+ * @param vulnId the unique identifier
+ * @returns a SourceInfo object
+ */
+$common.resolveSourceVulnInfo = function resolveSourceVulnInfo(vulnSource, vulnId) {
+  let sourceInfo = {};
+  sourceInfo.source = vulnSource;
+  sourceInfo.vulnId = vulnId;
+  switch (vulnSource) {
+    case "INTERNAL":
+      // TODO
+      break;
+    case "NVD":
+      sourceInfo.name = "National Vulnerability Database";
+      sourceInfo.url = "https://nvd.nist.gov/vuln/detail/" + vulnId;
+      break;
+    case "GITHUB":
+      sourceInfo.name = "GitHub Advisories";
+      sourceInfo.url = "https://github.com/advisories/" + vulnId;
+      break;
+    case "OSSINDEX":
+      sourceInfo.name = "OSS Index";
+      sourceInfo.url = "https://ossindex.sonatype.org/vuln/" + vulnId;
+      break;
+    case "SNYK":
+      sourceInfo.name = "Snyk";
+      sourceInfo.url = "https://security.snyk.io/vuln/" + vulnId;
+      break;
+    case "OSV":
+      sourceInfo.name = "Open Source Vulnerability Database";
+      sourceInfo.url = "https://osv.dev/vulnerability/" + vulnId;
+      break;
+    case "GSD":
+      sourceInfo.name = "Global Security Database";
+      sourceInfo.url = "https://github.com/cloudsecurityalliance/gsd-database";
+      break;
+    case "VULNDB":
+      sourceInfo.name = "VulnDB";
+      sourceInfo.url = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
+      break;
+  }
+  return sourceInfo;
+}
+
+/**
+ * Given the source of a vulnerability (vulnSource) and an alias of the vulnerability, normalizes
+ * the return object.
+ * @param vulnSource the source of a Vulnerability object
+ * @param alias a VulnerabilityAlias response object for the given Vulnerability
+ * @returns A resolved and normalized object with metadata
+ */
+$common.resolveVulnAliasInfo = function resolveVulnAliasInfo(vulnSource, alias) {
+  if (!vulnSource || !alias) return;
+  if (vulnSource !== "INTERNAL" && alias.internalId) {
+    return $common.resolveSourceVulnInfo("INTERNAL", alias.internalId);
+  } else if (vulnSource !== "NVD" && alias.cveId) {
+    return $common.resolveSourceVulnInfo("NVD", alias.cveId);
+  } else if (vulnSource !== "GITHUB" && alias.ghsaId) {
+    return $common.resolveSourceVulnInfo("GITHUB", alias.ghsaId);
+  } else if (vulnSource !== "OSSINDEX" && alias.sonatypeId) {
+    return $common.resolveSourceVulnInfo("OSSINDEX", alias.sonatypeId);
+  } else if (vulnSource !== "SNYK" && alias.snykId) {
+    return $common.resolveSourceVulnInfo("SNYK", alias.snykId);
+  } else if (vulnSource !== "OSV" && alias.osvId) {
+    return $common.resolveSourceVulnInfo("OSV", alias.osvId);
+  } else if (vulnSource !== "GSD" && alias.gsdId) {
+    return $common.resolveSourceVulnInfo("GSD", alias.gsdId);
+  } else if (vulnSource !== "VULNDB" && alias.vulnDbId) {
+    return $common.resolveSourceVulnInfo("VULNDB", alias.vulnDbId);
+  }
+}
+
+/**
  *
  * @param {*} i18n - VueI18n instance with $t translate function available
  * @returns a specialized label for an analysis state (NOT_SET, APPROVED, REJECTED, etc).
@@ -328,6 +404,9 @@ $common.toBoolean = function(string) {
   if (!string) {
     return false;
   }
+  if (typeof string == "boolean") {
+    return string;
+  }
   switch(string.toLowerCase().trim()) {
     case "true": case "yes": case "1": return true;
     case "false": case "no": case "0": case null: return false;
@@ -353,6 +432,8 @@ module.exports = {
   formatCweLabel: $common.formatCweLabel,
   formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
+  resolveSourceVulnInfo: $common.resolveSourceVulnInfo,
+  resolveVulnAliasInfo: $common.resolveVulnAliasInfo,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
   makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
   componentClassifierLabelFormatter: $common.componentClassifierLabelFormatter,
