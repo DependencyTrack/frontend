@@ -390,7 +390,7 @@
     "nvd": "NVD",
     "national_vulnerability_database": "National Vulnerability Database",
     "github_advisories": "GitHub Advisories",
-    "osv_advisories": "Google OSV Advisories",
+    "osv_advisories": "Google OSV Advisories (Beta)",
     "repositories": "Repositories",
     "cargo": "Cargo",
     "composer": "Composer",
