@@ -17,7 +17,7 @@
     <b-card-body>
       <b-form-group label="Ecosystems">
         <div class="list-group" style="width: 40%">
-          <span v-for="ecosystem in listOfEcosystems" :key="ecosystem">
+          <span v-for="ecosystem in enabledEcosystems" :key="ecosystem">
             <actionable-list-group-item :value="ecosystem" :delete-icon="true" @actionClicked="removeEcosystem(ecosystem)"/>
           </span>
           <actionable-list-group-item :add-icon="true" @actionClicked="$root.$emit('bv::show::modal', 'ecosystemModal')"/>
