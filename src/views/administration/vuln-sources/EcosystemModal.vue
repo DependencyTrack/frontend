@@ -56,8 +56,9 @@
           },
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
-            console.log()
-            return res;
+            return res.map(ecosystem => ({
+                name: ecosystem
+            }));
           },
           url: `${this.$api.BASE_URL}/${this.$api.URL_OSV_ECOSYSTEM}`
         }

@@ -15,15 +15,15 @@
       {{ $t('admin.vulnsource_osv_advisories_desc') }}
     </b-card-body>
     <b-card-body>
-      <b-form-group label="Select Ecosystems">
-        <div class="list-group">
-          <span v-for="ecosystem in listOfEcosystems" :key="ecosystem.propertyName">
-            <actionable-list-group-item :value="ecosystem.propertyName" :delete-icon="true" v-on:actionClicked="removeEcosystem(ecosystem)"/>
+      <b-form-group label="Ecosystems">
+        <div class="list-group" style="width: 40%">
+          <span v-for="ecosystem in listOfEcosystems" :key="ecosystem">
+            <actionable-list-group-item :value="ecosystem" :delete-icon="true" @actionClicked="removeEcosystem(ecosystem)"/>
           </span>
-          <br/>
-          <b-button size="md" class="px-4" variant="outline-primary" v-b-modal.ecosystemModal>Add ecosystem</b-button>
+          <actionable-list-group-item :add-icon="true" @actionClicked="$root.$emit('bv::show::modal', 'ecosystemModal')"/>
         </div>
       </b-form-group>
+      <hr/>
     </b-card-body>
     <b-card-footer>
       <b-button
@@ -33,7 +33,7 @@
           {{ $t('message.update') }}
       </b-button>
     </b-card-footer>
-    <ecosystem-modal/>
+    <ecosystem-modal v-on:selection="updateEcosystem"/>
   </b-card>
 </template>
 
@@ -42,7 +42,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
-import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue'; // Import the modal component here
+import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
 
 export default {
   mixins: [configPropertyMixin],
@@ -73,15 +73,18 @@ export default {
     },
     removeEcosystem: function(ecosystem) {
       this.updateConfigProperties([
-        {groupName: 'osv-ecosystems', propertyName: ecosystem.propertyName, propertyValue: "false"}
+        {groupName: 'osv-ecosystems', propertyName: ecosystem, propertyValue: "false"}
       ]);
+      this.enabledEcosystems = this.enabledEcosystems.filter(e => e !== ecosystem);
     },
     updateEcosystem: function(ecosystems) {
+      this.$root.$emit('bv::hide::modal', 'ecosystemModal');
       for(let i=0; i<ecosystems.length; i++) {
         let ecosystem = ecosystems[i];
         this.updateConfigProperties([
-          {groupName: 'osv-ecosystems', propertyName: ecosystem.propertyName, propertyValue: "true"}
+          {groupName: 'osv-ecosystems', propertyName: ecosystem.name, propertyValue: "true"}
         ]);
+        this.enabledEcosystems.push(ecosystem.name);
       }
     }
   },
@@ -95,10 +98,14 @@ export default {
             this.vulnsourceEnabled = common.toBoolean(item.propertyValue); break;
         }
       }
-      let ecosystems = response.data.filter(function (item) { return item.groupName === "osv-ecosystems" });
-      for (let i=0; i<ecosystems.length; i++) {
-        let item = ecosystems[i];
+      let ecosystemConfigItems = response.data.filter(function (item) { return item.groupName === "osv-ecosystems" });
+      for (let i=0; i<ecosystemConfigItems.length; i++) {
+        let item = ecosystemConfigItems[i];
         this.listOfEcosystems.push(item);
+        switch (item.propertyValue) {
+          case "true":
+            this.enabledEcosystems.push(item.propertyName);
+        }
       }
     });
   }
