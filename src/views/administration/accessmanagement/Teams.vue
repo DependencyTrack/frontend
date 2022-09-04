@@ -225,7 +225,11 @@
                 createApiKey() {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
                   this.axios.put(url).then((response) => {
-                    this.apiKeys.push(response.data);
+                    if (this.apiKeys) {
+                      this.apiKeys.push(response.data);
+                    } else {
+                      this.apiKeys = [response.data];
+                    }
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -384,7 +388,11 @@
                 },
                 syncVariables: function(team) {
                   this.team = team;
-                  this.apiKeys = team.apiKeys;
+                  if (team.apiKeys) {
+                    // Some API server responses don't include API keys.
+                    // Take care to not wipe existing API keys from the UI in those cases.
+                    this.apiKeys = team.apiKeys;
+                  }
                   this.permissions = team.permissions;
                   //this.ldapGroups = team.mappedLdapGroups;
                 }
