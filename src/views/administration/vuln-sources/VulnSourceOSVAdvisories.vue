@@ -72,18 +72,14 @@ export default {
       ]);
     },
     removeEcosystem: function(ecosystem) {
-      this.updateConfigProperties([
-        {groupName: 'osv-ecosystems', propertyName: ecosystem, propertyValue: "false"}
-      ]);
+      this.upsertConfigProperty('osv-ecosystems', ecosystem.name, "false");
       this.enabledEcosystems = this.enabledEcosystems.filter(e => e !== ecosystem);
     },
     updateEcosystem: function(ecosystems) {
       this.$root.$emit('bv::hide::modal', 'ecosystemModal');
       for(let i=0; i<ecosystems.length; i++) {
         let ecosystem = ecosystems[i];
-        this.updateConfigProperties([
-          {groupName: 'osv-ecosystems', propertyName: ecosystem.name, propertyValue: "true"}
-        ]);
+        this.upsertConfigProperty('osv-ecosystems', ecosystem.name, "true");
         this.enabledEcosystems.push(ecosystem.name);
       }
     }
