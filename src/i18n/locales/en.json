@@ -437,6 +437,7 @@
     "jira_desc": "Jira service authentication",
     "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",
     "jira_password": "Jira password",
+    "jira_tickettype": "Jira ticket type",
     "namespace_regex": "Component namespace regex",
     "name_regex": "Component name regex",
     "namespace_regex_desc": "Specifies a regular expression that identifies internal components by namespace. The namespace is often referred to as 'group', 'organization', or 'vendor' in various ecosystems.",

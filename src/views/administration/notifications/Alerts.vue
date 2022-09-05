@@ -199,6 +199,7 @@
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
+                  jiraTicketType: this.parseJiraTicketType(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
                   projects: row.projects,
@@ -237,6 +238,15 @@
                     return null;
                   }
                 },
+                parseJiraTicketType: function(alert) {
+                  if (alert.publisherConfig) {
+                    let value = JSON.parse(alert.publisherConfig);
+                    if (value) {
+                      return value.jira_tickettype;
+                    }
+                    return null;
+                  }
+                },
                 updateNotificationRule: function () {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
                   this.axios.post(url, {
@@ -245,6 +255,7 @@
                     enabled: this.enabled,
                     notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({ destination: this.destination }),
+                    publisherConfig: JSON.stringify({ jira_tickettype: this.jiraTicketType }),
                     notifyOn: this.notifyOn
                   }).then((response) => {
                     this.alert = response.data;
