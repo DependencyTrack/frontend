@@ -226,6 +226,8 @@
     "comments": "Comments",
     "affected_projects": "Affected Projects",
     "weakness": "Weakness",
+    "alias": "Alias",
+    "aliases": "Aliases",
     "references": "References",
     "credits": "Credits",
     "component_vulnerabilities": "Component Vulnerabilities",
@@ -559,7 +561,16 @@
     "restore_default_template": "Restore default templates",
     "default_template_restored": "Default templates restored",
     "clone_template": "Clone Template",
-    "template_cloned": "Template cloned"
+    "template_cloned": "Template cloned",
+    "task_scheduler": "Task scheduler",
+    "task_scheduler_description": "Dependency Track task scheduler perform various background tasks at a fixed interval. You can modify the fixed interval for each task using the form below. Each interval is expressed in hours. A Dependency Track restart is needed to reschedule the tasks with the updated cadence.",
+    "task_scheduler_ldap_sync": "LDAP sync",
+    "task_scheduler_portfolio_metrics_update": "Portfolio metrics",
+    "task_scheduler_vulnerability_metrics_update": "Vulnerability metrics",
+    "task_scheduler_portfolio_vulnerability_analysis": "Portfolio vulnerability analysis",
+    "task_scheduler_repository_metadata_fetch": "Repository metadata fetch",
+    "task_scheduler_internal_component_identification": "Internal component identification",
+    "task_scheduler_component_analysis_cache_clear": "Component analysis cache clear"
   },
   "condition": {
     "warning": "Warning",
@@ -621,7 +632,8 @@
   },
   "validation": {
     "required": "{_field_} is required",
-    "confirmed": "{_field_} doesn't match"
+    "confirmed": "{_field_} doesn't match",
+    "min_value": "{_field_} value should be above {min}"
   },
   "404": {
     "heading": "Oops! This is awkward",

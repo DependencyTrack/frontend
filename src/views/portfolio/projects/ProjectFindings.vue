@@ -108,6 +108,24 @@
             }
           },
           {
+            title: this.$t('message.aliases'),
+            field: "vulnerability.aliases",
+            sortable: true,
+            visible: false,
+            formatter(value, row, index) {
+              if (typeof value !== 'undefined') {
+                let label = "";
+                for (let i=0; i<value.length; i++) {
+                  let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
+                  let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + alias.source + "/" + alias.vulnId);
+                  label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
+                  if (i < value.length-1) label += ", "
+                }
+                return label;
+              }
+            }
+          },
+          {
             title: this.$t('message.cwe'),
             field: "vulnerability.cwes",
             sortable: true,
@@ -195,6 +213,16 @@
               template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
+                    <div v-if="finding.vulnerability.aliases && finding.vulnerability.aliases.length > 0">
+                    <label>Aliases</label>
+                      <b-card class="font-weight-bold">
+                        <b-card-text>
+                          <span v-for="alias in finding.vulnerability.aliases">
+                          <b-link style="margin-right:1.0rem" :href="'/vulnerabilities/' + aliasLabel(finding.vulnerability.source, alias).source + '/' + aliasLabel(finding.vulnerability.source, alias).vulnId">{{aliasLabel(finding.vulnerability.source, alias).vulnId}}</b-link>
+                         </span>
+                        </b-card-text>
+                     </b-card>
+                    </div>
                     <b-form-group v-if="finding.vulnerability.title" id="fieldset-1" :label="this.$t('message.title')" label-for="input-1">
                       <b-form-input id="input-1" v-model="finding.vulnerability.title" class="form-control disabled" readonly trim />
                     </b-form-group>
@@ -305,6 +333,9 @@
               },
               mixins: [permissionsMixin],
               methods: {
+                aliasLabel: function(vulnSource, alias) {
+                  return common.resolveVulnAliasInfo(vulnSource, alias);
+                },
                 getAnalysis: function() {
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;

@@ -1,5 +1,5 @@
 import { extend, configure } from 'vee-validate'
-import { required, confirmed } from 'vee-validate/dist/rules'
+import { required, confirmed, min_value } from 'vee-validate/dist/rules'
 
 import i18n from '../i18n'
 
@@ -10,3 +10,4 @@ configure({
 
 extend('required', required);
 extend('confirmed', confirmed);
+extend('min_value', min_value);

@@ -24,6 +24,7 @@
   import Email from "./configuration/Email";
   import Jira from "./configuration/JiraConfig";
   import InternalComponents from "./configuration/InternalComponents";
+  import TaskScheduler from "./configuration/TaskScheduler.vue";
   // Analyzer plugins
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";

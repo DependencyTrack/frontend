@@ -63,6 +63,11 @@
                 component: 'InternalComponents',
                 name: this.$t('admin.internal_components'),
                 href: "#internalComponentsTab"
+              },
+              {
+                component: 'TaskScheduler',
+                name: this.$t('admin.task_scheduler'),
+                href: "#taskSchedulerTab"
               }
             ]
           },

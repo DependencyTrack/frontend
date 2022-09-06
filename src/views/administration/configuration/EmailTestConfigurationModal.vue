@@ -7,7 +7,7 @@
       rules="required"
       type="email"
       v-model="emailAddress"
-      tooltip="This URL is used to construct links back to Dependency-Track from external systems."
+      tooltip="Enter an email address you control to test your send configuration."
       lazy="true"
     />
     <template v-slot:modal-footer="{ cancel }">
