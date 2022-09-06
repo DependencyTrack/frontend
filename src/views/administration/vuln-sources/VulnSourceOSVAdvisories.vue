@@ -9,6 +9,8 @@
         label
         v-bind="labelIcon"
         v-model="vulnsourceEnabled"
+        @change="handleVulnsourceEnabled"
+        :disabled="enabledEcosystems.length === 0"
       />
       {{$t('admin.vulnsource_osv_advisories_enable')}}
       <hr/>
@@ -25,21 +27,12 @@
       </b-form-group>
       <hr/>
     </b-card-body>
-    <b-card-footer>
-      <b-button
-        @click="saveChanges"
-        class="px-4"
-        variant="outline-primary">
-          {{ $t('message.update') }}
-      </b-button>
-    </b-card-footer>
     <ecosystem-modal v-on:selection="updateEcosystem"/>
   </b-card>
 </template>
-
 <script>
+
 import { Switch as cSwitch } from '@coreui/vue';
-import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
 import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
@@ -57,7 +50,7 @@ export default {
   data() {
     return {
       vulnsourceEnabled: false,
-      listOfEcosystems: [],
+      ecosystemConfig: null,
       enabledEcosystems: [],
       labelIcon: {
         dataOn: '\u2713',
@@ -66,21 +59,27 @@ export default {
     }
   },
   methods: {
-    saveChanges: function() {
-      this.updateConfigProperties([
-        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.vulnsourceEnabled}
-      ]);
-    },
     removeEcosystem: function(ecosystem) {
-      this.upsertConfigProperty('osv-ecosystems', ecosystem.name, "false");
       this.enabledEcosystems = this.enabledEcosystems.filter(e => e !== ecosystem);
+      this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;
+      this.updateConfigProperties([
+        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
+      ]);
     },
     updateEcosystem: function(ecosystems) {
       this.$root.$emit('bv::hide::modal', 'ecosystemModal');
       for(let i=0; i<ecosystems.length; i++) {
         let ecosystem = ecosystems[i];
-        this.upsertConfigProperty('osv-ecosystems', ecosystem.name, "true");
         this.enabledEcosystems.push(ecosystem.name);
+      }
+      this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;
+      this.updateConfigProperties([
+        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
+      ]);
+    },
+    handleVulnsourceEnabled: function(vulnsourceEnabled) {
+      if (vulnsourceEnabled === false) {
+        this.enabledEcosystems = [];
       }
     }
   },
@@ -91,18 +90,12 @@ export default {
         let item = configItems[i];
         switch (item.propertyName) {
           case "google.osv.enabled":
-            this.vulnsourceEnabled = common.toBoolean(item.propertyValue); break;
+            this.ecosystemConfig = item.propertyValue;
+            this.vulnsourceEnabled = this.ecosystemConfig != null;
+            break;
         }
       }
-      let ecosystemConfigItems = response.data.filter(function (item) { return item.groupName === "osv-ecosystems" });
-      for (let i=0; i<ecosystemConfigItems.length; i++) {
-        let item = ecosystemConfigItems[i];
-        this.listOfEcosystems.push(item);
-        switch (item.propertyValue) {
-          case "true":
-            this.enabledEcosystems.push(item.propertyName);
-        }
-      }
+      this.enabledEcosystems = this.ecosystemConfig.split(';').map(ecosystem => ecosystem.trim());
     });
   }
 }

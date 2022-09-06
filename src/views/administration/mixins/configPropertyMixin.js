@@ -61,19 +61,6 @@ export default {
       }).catch((error) => {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       });
-    },
-    upsertConfigProperty: function(groupName, propertyName, propertyValue) {
-      propertyValue = common.trimToNull(propertyValue);
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/upsert`;
-      this.axios.post(url, {
-        groupName: groupName,
-        propertyName: propertyName,
-        propertyValue: propertyValue
-      }).then((response) => {
-        this.$toastr.s(this.$t('admin.configuration_saved'));
-      }).catch((error) => {
-        this.$toastr.w(this.$t('condition.unsuccessful_action'));
-      });
     }
   }
 }
