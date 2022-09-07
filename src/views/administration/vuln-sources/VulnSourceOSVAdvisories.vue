@@ -80,6 +80,9 @@ export default {
     handleVulnsourceEnabled: function(vulnsourceEnabled) {
       if (vulnsourceEnabled === false) {
         this.enabledEcosystems = [];
+        this.updateConfigProperties([
+          {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: null}
+        ]);
       }
     }
   },
