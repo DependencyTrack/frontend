@@ -67,6 +67,11 @@
     "uuid": "7.0.3",
     "vue-template-compiler": "2.6.14"
   },
+  "overrides": {
+    "vue-bootstrap-toggle": {
+      "merge": "2.1.1"
+    }
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
