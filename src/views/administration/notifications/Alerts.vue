@@ -26,12 +26,13 @@
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
   import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
+  import SelectTeamModal from "../../administration/accessmanagement/SelectTeamModal";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import { Switch as cSwitch } from '@coreui/vue';
 
-  export default {
+    export default {
     props: {
       header: String
     },
@@ -134,8 +135,17 @@
                       <b-form-input id="input-3" v-model="notificationLevel" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="destination" lazy="true"
+                                              :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
+                                              type="text" v-model="destination" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                     <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'" id="teamDestinationList" :label="this.$t('admin.select_team')">
+                       <div class="list group">
+                          <span v-for="team in teams">
+                            <actionable-list-group-item :value="team.name" :delete-icon="true" v-on:actionClicked="removeSelectedTeam(team.uuid)"></actionable-list-group-item>
+                          </span>
+                          <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTeamModal')"></actionable-list-group-item>
+                        </div>
+                      </b-form-group>
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
@@ -180,12 +190,14 @@
                     </div>
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>
+                  <select-team-modal v-on:selection="updateTeamSelection"></select-team-modal>
                 </b-row>
               `,
               mixins: [permissionsMixin],
               components: {
                 ActionableListGroupItem,
                 SelectProjectModal,
+                SelectTeamModal,
                 BToggleableDisplayButton,
                 BInputGroupFormInput,
                 cSwitch
@@ -202,6 +214,7 @@
                   scope: row.scope,
                   notifyOn: row.notifyOn,
                   projects: row.projects,
+                  teams: row.teams,
                   limitToVisible: false,
                   labelIcon: {
                     dataOn: '\u2713',
@@ -217,6 +230,9 @@
                   this.updateNotificationRule();
                 },
                 notifyOn() {
+                  this.updateNotificationRule();
+                },
+                teams() {
                   this.updateNotificationRule();
                 }
               },
@@ -288,7 +304,34 @@
                     let selection = selections[i];
                     let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
                     this.axios.post(url).then((response) => {
-                      this.projects.push(selection);
+                      if (this.projects){
+                        this.projects.push(selection);
+                      }else {
+                        this.projects = [];
+                        let project = {
+                          'author': selection.author,
+                          'publisher': selection.publisher,
+                          'group': selection.group,
+                          'name': selection.name,
+                          'description': selection.description,
+                          'version': selection.version,
+                          'classifier': selection.classifier,
+                          'cpe': selection.cpe,
+                          'purl': selection.purl,
+                          'swidTagId': selection.swidTagId,
+                          'directDependencies': selection.directDependencies,
+                          'uuid': selection.classifier,
+                          'children': selection.children,
+                          'properties': selection.properties,
+                          'tags': selection.tags,
+                          'lastBomImport': selection.lastBomImport,
+                          'lastBomImportFormat': selection.lastBomImportFormat,
+                          'lastInheritedRiskScore': selection.lastInheritedRiskScore,
+                          'active': selection.active,
+                          'metrics': selection.metrics
+                        }
+                        this.projects.push(project);
+                      }
                       this.$toastr.s(this.$t('message.updated'));
                     }).catch((error) => {
                       if (error.response.status === 304) {
@@ -298,6 +341,45 @@
                       }
                     });
                   }
+                },
+                updateTeamSelection: function(selections){
+                  this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+                  for (let i = 0; i<selections.length; i++){
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${selection.uuid}`;
+                    this.axios.post(url).then((response) => {
+                      if (this.teams){
+                        this.teams.push(selection);
+                      }  else {
+                        this.teams = [];
+                        let team = {
+                          'uuid': selection.uuid,
+                          'name': selection.name
+                        }
+                        this.teams.push(team);
+                      }
+                    }).catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      }
+                    });
+                  }
+                },
+                removeSelectedTeam: function (teamUuid){
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${teamUuid}`;
+                  this.axios.delete(url).then((response) => {
+                    let newTeams = [];
+                    for (let i=0; i<this.teams.length; i++) {
+                      if (this.teams[i].uuid !== teamUuid) {
+                        newTeams.push(this.teams[i]);
+                      }
+                    }
+                    this.teams = newTeams;
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
                 }
               }
             })
