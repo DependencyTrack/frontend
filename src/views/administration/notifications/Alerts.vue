@@ -32,7 +32,7 @@
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import { Switch as cSwitch } from '@coreui/vue';
 
-    export default {
+  export default {
     props: {
       header: String
     },
@@ -138,7 +138,8 @@
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
                                               type="text" v-model="destination" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
-                     <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'" id="teamDestinationList" :label="this.$t('admin.select_team')">
+                     <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
+                                   id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
                           <span v-for="team in teams">
                             <actionable-list-group-item :value="team.name" :delete-icon="true" v-on:actionClicked="removeSelectedTeam(team.uuid)"></actionable-list-group-item>
@@ -304,34 +305,7 @@
                     let selection = selections[i];
                     let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
                     this.axios.post(url).then((response) => {
-                      if (this.projects){
-                        this.projects.push(selection);
-                      }else {
-                        this.projects = [];
-                        let project = {
-                          'author': selection.author,
-                          'publisher': selection.publisher,
-                          'group': selection.group,
-                          'name': selection.name,
-                          'description': selection.description,
-                          'version': selection.version,
-                          'classifier': selection.classifier,
-                          'cpe': selection.cpe,
-                          'purl': selection.purl,
-                          'swidTagId': selection.swidTagId,
-                          'directDependencies': selection.directDependencies,
-                          'uuid': selection.classifier,
-                          'children': selection.children,
-                          'properties': selection.properties,
-                          'tags': selection.tags,
-                          'lastBomImport': selection.lastBomImport,
-                          'lastBomImportFormat': selection.lastBomImportFormat,
-                          'lastInheritedRiskScore': selection.lastInheritedRiskScore,
-                          'active': selection.active,
-                          'metrics': selection.metrics
-                        }
-                        this.projects.push(project);
-                      }
+                      this.projects.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
                     }).catch((error) => {
                       if (error.response.status === 304) {
