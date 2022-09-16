@@ -9,7 +9,6 @@
         label
         v-bind="labelIcon"
         v-model="vulnsourceEnabled"
-        @change="handleVulnsourceEnabled"
         :disabled="enabledEcosystems.length === 0"
       />
       {{$t('admin.vulnsource_osv_advisories_enable')}}
@@ -58,6 +57,16 @@ export default {
       },
     }
   },
+  watch: {
+    vulnsourceEnabled(toggleChange) {
+      if(toggleChange === false) {
+        this.enabledEcosystems = [];
+        this.updateConfigProperties([
+          {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: null}
+        ]);
+      }
+    }
+  },
   methods: {
     removeEcosystem: function(ecosystem) {
       this.enabledEcosystems = this.enabledEcosystems.filter(e => e !== ecosystem);
@@ -76,14 +85,6 @@ export default {
       this.updateConfigProperties([
         {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
       ]);
-    },
-    handleVulnsourceEnabled: function(vulnsourceEnabled) {
-      if (vulnsourceEnabled === false) {
-        this.enabledEcosystems = [];
-        this.updateConfigProperties([
-          {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: null}
-        ]);
-      }
     }
   },
   created () {
