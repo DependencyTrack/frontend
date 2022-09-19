@@ -17,6 +17,9 @@
                                      v-model="project.classifier" :options="availableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')"
                                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-select id="project-parent-input" required="false"
+                                     v-model="selectedParent" :options="availableParents"
+                                     :label="$t('message.parent')" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -77,6 +80,7 @@
       <b-button size="md" variant="outline-primary" v-b-modal.projectAddVersionModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.add_version') }}</b-button>
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
       <b-button size="md" variant="primary" @click="updateProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.update') }}</b-button>
+      <!-- <b-button size="md" variant="outline-secondary" @click="debugProject()"></b-button> --->
     </template>
   </b-modal>
 </template>
@@ -115,6 +119,10 @@
           { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
           { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
+        selectedParent: null,
+        availableParents: [
+          { value: null, text: ''}
+        ],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -130,6 +138,9 @@
       }
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
+    },
+    created() {
+      this.retrieveParents();
     },
     methods: {
       syncReadOnlyNameField: function(value) {
@@ -151,6 +162,7 @@
           version: this.project.version,
           description: this.project.description,
           classifier: this.project.classifier,
+          parent: this.selectedParent,
           cpe: this.project.cpe,
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
@@ -171,6 +183,26 @@
         this.axios.delete(url).then((response) => {
           this.$toastr.s(this.$t('message.project_deleted'));
           this.$router.replace({ name: "Projects" });
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+      },
+      debugProject: function (){
+        console.log('Selected Parent: ' + JSON.stringify(this.selectedParent))
+        console.log('this.project: ' + JSON.stringify(this.project));
+        console.log('this.project.parent: ' + JSON.stringify(this.project.parent));
+      },
+      retrieveParents: function() {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+        console.log('retrieveParents project:' + JSON.stringify(this.project))
+        this.axios.get(url).then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            let project = response.data[i];
+            this.availableParents.push({value: project, text: project.name + ' : ' + project.version});
+            if (this.project.parent && this.project.parent.uuid === project.uuid ) {
+              this.selectedParent = project;
+            }
+          }
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });

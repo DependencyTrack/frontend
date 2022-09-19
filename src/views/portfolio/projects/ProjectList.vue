@@ -190,7 +190,21 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl()
+          url: this.apiUrl(),
+          onClickRow: function (row){
+            console.log('The row ' + row.name + ' : ' + row.version + ' was clicked');
+            if (row.hasOwnProperty('parent') && row.parent){
+              console.log(row.name + ' : ' + row.version + ' has the following parent:');
+              console.log(row.parent.name + ' : ' + row.parent.version)
+            }
+            if (row.hasOwnProperty('children') && row.children){
+              console.log(row.name + ' : ' + row.version + ' has the following children:');
+              for (let child of row.children){
+                console.log(child.name + ' : ' + child.version);
+              }
+            }
+
+          }
         }
       };
     }
