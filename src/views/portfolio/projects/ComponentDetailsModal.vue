@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="componentDetailsModal" size="lg" hide-header-close no-stacking :title="$t('message.component_details')">
+  <b-modal id="componentDetailsModal" size="lg" hide-header-close no-stacking :title="$t('message.component_details')" @show="initializeSelectedLicense">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template>
@@ -253,14 +253,22 @@
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let license = response.data[i];
-            this.selectableLicenses.push({value: license.licenseId, text: license.name});
-            if (this.component.resolvedLicense && this.component.resolvedLicense.uuid === license.uuid ) {
-              this.selectedLicense = license.licenseId;
-            }
+            this.selectableLicenses.push({value: license.licenseId, text: license.name, uuid: license.uuid});
           }
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+      },
+      initializeSelectedLicense: function () {
+        const resolvedLicense = this.component.resolvedLicense;
+        if (!resolvedLicense) {
+          this.selectedLicense = null;
+          return;
+        }
+        this.selectedLicense = this.selectableLicenses
+          .filter(license => license.uuid == resolvedLicense.uuid)
+          .map(license => license.value)
+          .find(() => true) || null;
       }
     }
   }
