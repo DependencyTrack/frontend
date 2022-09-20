@@ -244,8 +244,6 @@
     },
     beforeMount() {
       this.uuid = this.$route.params.uuid;
-    },
-    mounted() {
       this.initialize();
     },
     watch:{

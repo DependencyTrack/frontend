@@ -139,7 +139,7 @@
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
     },
-    created() {
+    mounted() {
       this.retrieveParents();
     },
     methods: {
@@ -162,7 +162,7 @@
           version: this.project.version,
           description: this.project.description,
           classifier: this.project.classifier,
-          parent: this.selectedParent,
+          parent: {uuid: this.selectedParent},
           cpe: this.project.cpe,
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
@@ -187,20 +187,16 @@
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       },
-      debugProject: function (){
-        console.log('Selected Parent: ' + JSON.stringify(this.selectedParent))
-        console.log('this.project: ' + JSON.stringify(this.project));
-        console.log('this.project.parent: ' + JSON.stringify(this.project.parent));
-      },
       retrieveParents: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-        console.log('retrieveParents project:' + JSON.stringify(this.project))
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            this.availableParents.push({value: project, text: project.name + ' : ' + project.version});
+            if (project.uuid !== this.project.uuid){
+              this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+            }
             if (this.project.parent && this.project.parent.uuid === project.uuid ) {
-              this.selectedParent = project;
+              this.selectedParent = project.uuid;
             }
           }
         }).catch((error) => {

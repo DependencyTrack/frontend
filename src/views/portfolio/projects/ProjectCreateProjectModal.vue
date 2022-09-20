@@ -164,7 +164,7 @@
           group: this.project.group,
           description: this.project.description,
           //license: this.selectedLicense,
-          parent: this.selectedParent,
+          parent: {uuid: this.selectedParent},
           classifier: this.project.classifier,
           purl: this.project.purl,
           cpe: this.project.cpe,
@@ -200,9 +200,9 @@
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            this.availableParents.push({value: project, text: project.name + ' : ' + project.version});
+            this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
             if (this.project.parent && this.project.parent.uuid === project.uuid ) {
-              this.selectedParent = project;
+              this.selectedParent = project.uuid;
             }
           }
         }).catch((error) => {
