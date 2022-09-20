@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')">
+  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-edit"></i> {{ $t('message.general') }}</template>
@@ -125,13 +125,13 @@
       }
     },
     beforeUpdate() {
-      if (this.tags.length === 0 && this.project && this.project.tags)  { // Prevents line from being executed when entering new tags
-        this.project.tags.forEach((tag) => this.tags.push({text: tag.name}));
-      }
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
     },
     methods: {
+      initializeTags: function() {
+        this.tags = (this.project.tags || []).map(tag => ({ text: tag.name }));
+      },
       syncReadOnlyNameField: function(value) {
         this.readOnlyProjectName = value;
       },
