@@ -212,6 +212,8 @@
     "remove_component": "Remove Component",
     "upload_bom": "Upload BOM",
     "upload": "Upload",
+    "browse": "Browse",
+    "no_file_chosen": "No file chosen",
     "download_bom": "Download BOM",
     "download": "Download",
     "inventory": "Inventory",
