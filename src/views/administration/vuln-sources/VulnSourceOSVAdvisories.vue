@@ -14,6 +14,23 @@
       {{$t('admin.vulnsource_osv_advisories_enable')}}
       <hr/>
       {{ $t('admin.vulnsource_osv_advisories_desc') }}
+      <hr/>
+      <b-validated-input-group-form-input
+        id="nvd-feeds-url"
+        :label="$t('admin.vulnsource_osv_base_url')"
+        input-group-size="mb-3"
+        rules="required"
+        type="text"
+        v-model="osvBaseUrl"
+        lazy="true"
+      />
+      <b-button
+        :disabled="this.vulnsourceEnabled && !this.osvBaseUrl"
+        variant="outline-primary"
+        class="px-4"
+        @click="saveUrl">
+          {{ $t('admin.updateUrl') }}
+      </b-button>
     </b-card-body>
     <b-card-body>
       <b-form-group label="Ecosystems">
@@ -35,6 +52,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
 import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 
 export default {
   mixins: [configPropertyMixin],
@@ -44,11 +62,13 @@ export default {
   components: {
     cSwitch,
     EcosystemModal,
-    ActionableListGroupItem
+    ActionableListGroupItem,
+    BValidatedInputGroupFormInput
 },
   data() {
     return {
       vulnsourceEnabled: false,
+      osvBaseUrl: '',
       ecosystemConfig: null,
       enabledEcosystems: [],
       labelIcon: {
@@ -85,6 +105,11 @@ export default {
       this.updateConfigProperties([
         {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
       ]);
+    },
+    saveUrl: function() {
+      this.updateConfigProperties([
+        {groupName: 'vuln-source', propertyName: 'google.osv.base.url', propertyValue: this.osvBaseUrl}
+      ]);
     }
   },
   created () {
@@ -96,6 +121,9 @@ export default {
           case "google.osv.enabled":
             this.ecosystemConfig = item.propertyValue;
             this.vulnsourceEnabled = this.ecosystemConfig != null;
+            break;
+          case "google.osv.base.url":
+            this.osvBaseUrl = item.propertyValue;
             break;
         }
       }
