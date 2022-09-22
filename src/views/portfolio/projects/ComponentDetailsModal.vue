@@ -66,6 +66,9 @@
                                      v-model="selectedLicense" :options="selectableLicenses"
                                      :label="$t('message.license')" :tooltip="$t('message.component_spdx_license_desc')"
                                      :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <b-input-group-form-input id="component-license-url-input" input-group-size="mb-3" type="text" v-model="component.licenseUrl"
+                                    required="false" :label="$t('message.license_url')" :tooltip="$t('message.component_license_url_desc')"
+                                    :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           <b-form-group
             id="component-copyright-form-group"
             :label="this.$t('message.copyright')"
@@ -218,6 +221,7 @@
           author: this.component.author,
           description: this.component.description,
           license: this.selectedLicense,
+          licenseUrl: this.component.licenseUrl,
           filename: this.component.filename,
           classifier: this.component.classifier,
           purl: this.component.purl,
