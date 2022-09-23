@@ -458,7 +458,6 @@
     "vulnsource_osv_advisories_enable": "Select ecosystem to enable Google OSV Advisory mirroring",
     "vulnsource_osv_advisories_desc": "Google OSV is a distributed vulnerability and triage infrastructure for open source projects aimed at helping both open source maintainers and consumers of open source. It serves as an aggregator of vulnerability databases that have adopted the OpenSSF Vulnerability format.",
     "vulnsource_osv_base_url": "OSV Base URL",
-    "updateUrl": "Update URL",
     "registered_email_address": "Registered email address",
     "api_token": "API token",
     "consumer_key": "Consumer key",
