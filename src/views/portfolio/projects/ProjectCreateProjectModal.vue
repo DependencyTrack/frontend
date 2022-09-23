@@ -157,6 +157,10 @@
       createProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
+        let parent = {uuid: this.selectedParent};
+        if (this.selectedParent == null){
+          parent = null;
+        }
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.put(url, {
           name: this.project.name,
@@ -164,7 +168,7 @@
           group: this.project.group,
           description: this.project.description,
           //license: this.selectedLicense,
-          parent: {uuid: this.selectedParent},
+          parent: parent,
           classifier: this.project.classifier,
           purl: this.project.purl,
           cpe: this.project.cpe,
@@ -213,6 +217,9 @@
         this.project = {};
         this.tag = "";
         this.tags = [];
+        this.selectedParent = null;
+        this.availableParents = [{ value: null, text: ''}]
+        this.retrieveParents();
       }
     }
   }

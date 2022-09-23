@@ -80,7 +80,6 @@
       <b-button size="md" variant="outline-primary" v-b-modal.projectAddVersionModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.add_version') }}</b-button>
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
       <b-button size="md" variant="primary" @click="updateProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.update') }}</b-button>
-      <!-- <b-button size="md" variant="outline-secondary" @click="debugProject()"></b-button> --->
     </template>
   </b-modal>
 </template>
@@ -188,22 +187,33 @@
         });
       },
       retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/parents`;
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            if (project.uuid !== this.project.uuid){
+            if (project.uuid !== this.project.uuid && !this.isChild(project, this.project.uuid)){
               this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
             }
-            if (this.project.parent && this.project.parent.uuid === project.uuid ) {
+            if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
               this.selectedParent = project.uuid;
             }
           }
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+      },
+      isChild: function (project, uuid) {
+        let bool = false;
+        if (project.parent) {
+          if (project.parent.uuid === uuid) {
+            return true;
+          } else {
+            bool = this.isChild(project.parent, uuid)
+          }
+        }
+          return bool;
+        }
       }
-    }
   }
 </script>
 

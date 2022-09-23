@@ -105,6 +105,7 @@
     "property_deleted": "Property deleted",
     "create_project": "Create Project",
     "show_inactive_projects": "Show inactive projects",
+    "hierarchical_view": "Hierarchical view",
     "create_project_property": "Create Project Property",
     "group_name": "Group Name",
     "property_name": "Property Name",
