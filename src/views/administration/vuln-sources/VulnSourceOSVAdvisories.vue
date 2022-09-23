@@ -14,8 +14,17 @@
       {{$t('admin.vulnsource_osv_advisories_enable')}}
       <hr/>
       {{ $t('admin.vulnsource_osv_advisories_desc') }}
-    </b-card-body>
-    <b-card-body>
+      <hr/>
+      <b-validated-input-group-form-input
+        id="nvd-feeds-url"
+        :label="$t('admin.vulnsource_osv_base_url')"
+        input-group-size="mb-3"
+        rules="required"
+        type="text"
+        v-model="osvBaseUrl"
+        lazy="true"
+      />
+      <hr/>
       <b-form-group label="Ecosystems">
         <div class="list-group" style="width: 40%">
           <span v-for="ecosystem in enabledEcosystems" :key="ecosystem">
@@ -24,8 +33,16 @@
           <actionable-list-group-item :add-icon="true" @actionClicked="$root.$emit('bv::show::modal', 'ecosystemModal')"/>
         </div>
       </b-form-group>
-      <hr/>
     </b-card-body>
+    <b-card-footer>
+      <b-button
+        :disabled="this.vulnsourceEnabled && !this.osvBaseUrl"
+        variant="outline-primary"
+        class="px-4"
+        @click="saveUrl">
+          {{ $t('message.update') }}
+      </b-button>
+    </b-card-footer>
     <ecosystem-modal v-on:selection="updateEcosystem"/>
   </b-card>
 </template>
@@ -35,6 +52,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
 import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 
 export default {
   mixins: [configPropertyMixin],
@@ -44,11 +62,13 @@ export default {
   components: {
     cSwitch,
     EcosystemModal,
-    ActionableListGroupItem
+    ActionableListGroupItem,
+    BValidatedInputGroupFormInput
 },
   data() {
     return {
       vulnsourceEnabled: false,
+      osvBaseUrl: '',
       ecosystemConfig: null,
       enabledEcosystems: [],
       labelIcon: {
@@ -71,9 +91,6 @@ export default {
     removeEcosystem: function(ecosystem) {
       this.enabledEcosystems = this.enabledEcosystems.filter(e => e !== ecosystem);
       this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;
-      this.updateConfigProperties([
-        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
-      ]);
     },
     updateEcosystem: function(ecosystems) {
       this.$root.$emit('bv::hide::modal', 'ecosystemModal');
@@ -82,7 +99,10 @@ export default {
         this.enabledEcosystems.push(ecosystem.name);
       }
       this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;
+    },
+    saveUrl: function() {
       this.updateConfigProperties([
+        {groupName: 'vuln-source', propertyName: 'google.osv.base.url', propertyValue: this.osvBaseUrl},
         {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
       ]);
     }
@@ -96,6 +116,9 @@ export default {
           case "google.osv.enabled":
             this.ecosystemConfig = item.propertyValue;
             this.vulnsourceEnabled = this.ecosystemConfig != null;
+            break;
+          case "google.osv.base.url":
+            this.osvBaseUrl = item.propertyValue;
             break;
         }
       }

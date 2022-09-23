@@ -466,6 +466,7 @@
     "vulnsource_github_advisories_desc": "GitHub Advisories (GHSA) is a database of CVEs and GitHub-originated security advisories affecting the open source world. Dependency-Track integrates with GHSA by mirroring advisories via GitHub's public GraphQL API. The mirror is refreshed daily, or upon restart of the Dependency-Track instance. A personal access token (PAT) is required in order to authenticate with GitHub, but no scopes need to be assigned to it.",
     "vulnsource_osv_advisories_enable": "Select ecosystem to enable Google OSV Advisory mirroring",
     "vulnsource_osv_advisories_desc": "Google OSV is a distributed vulnerability and triage infrastructure for open source projects aimed at helping both open source maintainers and consumers of open source. It serves as an aggregator of vulnerability databases that have adopted the OpenSSF Vulnerability format.",
+    "vulnsource_osv_base_url": "OSV Base URL",
     "registered_email_address": "Registered email address",
     "api_token": "API token",
     "consumer_key": "Consumer key",
