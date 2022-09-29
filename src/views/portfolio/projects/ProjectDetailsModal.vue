@@ -36,7 +36,9 @@
                             style="max-width:none; background-color:transparent;"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
+          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
+                    :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
+                    v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
                                     lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
@@ -212,8 +214,21 @@
           }
         }
           return bool;
+        },
+      hasActiveChild: function (project) {
+        let bool = false;
+        if (project.children){
+          for (const child of project.children){
+            if (child.active || bool){
+              return true;
+            } else {
+              bool = this.hasActiveChild(child);
+            }
+          }
         }
+        return bool;
       }
+    }
   }
 </script>
 

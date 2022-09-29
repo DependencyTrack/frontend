@@ -374,7 +374,8 @@
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File",
-    "dates": "Dates"
+    "dates": "Dates",
+    "inactive_active_children": "The project cannot be set to inactive if it has active children"
   },
   "admin": {
     "configuration": "Configuration",
