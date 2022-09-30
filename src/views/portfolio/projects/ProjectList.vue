@@ -100,14 +100,9 @@
     },
     methods: {
       apiUrl: function () {
-        let url;
         api = this.$api;
         route = this.$route;
-        if (this.showHierarchy){
-          url = `${api.BASE_URL}/${api.URL_PROJECT}/root`;
-        }else{
-          url = `${api.BASE_URL}/${api.URL_PROJECT}`;
-        }
+        let url = `${api.BASE_URL}/${api.URL_PROJECT}`;
         let tag = this.$route.query.tag;
         if (tag) {
           url += "/tag/" + encodeURIComponent(tag);
@@ -120,6 +115,11 @@
           url += "?excludeInactive=true";
         } else {
           url += "?excludeInactive=" + !this.showInactiveProjects;
+        }
+        if (this.showHierarchy === undefined) {
+          url += "&onlyRoot=false"
+        } else {
+          url += "&onlyRoot=" + this.showHierarchy
         }
         return url;
       },

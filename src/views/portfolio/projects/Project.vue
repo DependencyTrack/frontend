@@ -125,7 +125,7 @@
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
     </b-tabs>
-    <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
+    <project-details-modal :project="cloneDeep(project)" :uuid="this.uuid" v-on:projectUpdated="syncProjectFields"/>
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />

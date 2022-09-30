@@ -104,7 +104,8 @@
       cSwitch
     },
     props: {
-      project: Object
+      project: Object,
+      uuid: String
     },
     data() {
       return {
@@ -189,12 +190,16 @@
         });
       },
       retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/parents`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.$props.uuid}`;
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            if (project.uuid !== this.project.uuid && !this.isChild(project, this.project.uuid)){
-              this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+            if (project.uuid !== this.project.uuid){
+              if (project.version){
+                this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+              } else {
+                this.availableParents.push({value: project.uuid, text: project.name});
+              }
             }
             if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
               this.selectedParent = project.uuid;
@@ -204,17 +209,6 @@
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       },
-      isChild: function (project, uuid) {
-        let bool = false;
-        if (project.parent) {
-          if (project.parent.uuid === uuid) {
-            return true;
-          } else {
-            bool = this.isChild(project.parent, uuid)
-          }
-        }
-          return bool;
-        },
       hasActiveChild: function (project) {
         let bool = false;
         if (project.children){
