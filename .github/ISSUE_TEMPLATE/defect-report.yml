@@ -93,6 +93,18 @@ body:
     label: Browser Version
     description: >-
       What is the version of the browser you're using?
+- type: dropdown
+  id: environment-os
+  attributes:
+    label: Operating System
+    description: What OS are you running your browser on?
+    options:
+    - Windows
+    - macOS
+    - Linux
+    - Other
+  validations:
+    required: true
 - type: checkboxes
   id: checklist
   attributes:
