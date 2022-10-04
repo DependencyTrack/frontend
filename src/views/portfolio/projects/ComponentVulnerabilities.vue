@@ -92,7 +92,32 @@
             formatter(value, row, index) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
             },
-          }
+          },
+          {
+            title: this.$t('message.cvss'),
+            field: "cvssV3BaseScore",
+            sortable: true,
+            visible: false,
+            formatter(value, row, index) {
+              if (value && typeof value === 'number') {
+                return value.toFixed(1);
+              } else {
+                return null;
+              }
+            },
+          },
+          {
+            title: this.$t('message.epss'),
+            field: "epssScore",
+            sortable: true,
+            visible: false
+          },
+          {
+            title: this.$t('message.epss_percentile'),
+            field: "epssPercentile",
+            sortable: true,
+            visible: false
+          },
         ],
         data: [],
         options: {

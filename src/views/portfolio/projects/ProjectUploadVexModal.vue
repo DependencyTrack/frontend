@@ -1,7 +1,7 @@
 <template>
   <b-modal id="projectUploadVexModal" @hide="resetValues()" size="md" hide-header-close no-stacking :title="$t('message.upload_vex')">
 
-    <b-form-file v-model="file" class="mb-2"></b-form-file>
+    <b-form-file v-model="file" class="mb-2" :placeholder="$t('message.no_file_chosen')" :browseText="$t('message.browse')"></b-form-file>
 
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>

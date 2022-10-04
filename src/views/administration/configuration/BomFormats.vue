@@ -1,7 +1,7 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <p>Enables support for processing BOMs of various formats. Only BOM formats which are enabled will be processed.</p>
+      <p>{{ $t('admin.bom_formats_desc')}}</p>
       <div>
         <c-switch color="primary" v-model="isCycloneDXEnabled" label v-bind="labelIcon" />{{$t('admin.enable_bom_cyclonedx')}}
       </div>
