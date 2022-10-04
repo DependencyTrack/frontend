@@ -204,7 +204,11 @@
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+            if (project.version) {
+              this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+            } else {
+              this.availableParents.push({value: project.uuid, text: project.name});
+            }
             if (this.project.parent && this.project.parent.uuid === project.uuid ) {
               this.selectedParent = project.uuid;
             }

@@ -82,7 +82,7 @@
   }
 
   function detailFilter(index, row){
-    return (row.hasOwnProperty('children') && row.children)
+    return (Object.prototype.hasOwnProperty.call(row, 'children') && row.children)
   }
 
   export default {
