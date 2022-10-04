@@ -249,13 +249,13 @@
                     <b-form-group id="fieldset-8" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.comment')" label-for="input-8">
                       <b-form-textarea id="input-8" v-model="comment" rows="4" class="form-control" trim />
                       <div class="pull-right">
-                        <b-button size="sm" variant="outline-primary" @click="addComment"><span class="fa fa-comment-o"></span> Add Comment</b-button>
+                        <b-button size="sm" variant="outline-primary" @click="addComment"><span class="fa fa-comment-o"></span> {{ this.$t('message.add_comment') }}</b-button>
                       </div>
                     </b-form-group>
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
                       <b-input-group id="input-9">
                         <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;" v-b-tooltip.hover :title="this.$t('message.analysis_tooltip')"/>
-                        <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="analysisState === null" />
+                        <bootstrap-toggle v-model="isSuppressed" :options="{ on: this.$t('message.suppressed'), off: this.$t('message.suppress'), onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="analysisState === null" />
                       </b-input-group>
                     </b-form-group>
                     <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
@@ -277,7 +277,7 @@
                     <b-form-group id="fieldset-12" v-if="this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)" :label="this.$t('message.details')" label-for="analysisDetailsField">
                       <b-form-textarea id="analysisDetailsField" v-model="analysisDetails" rows="7" class="form-control" :disabled="analysisState === null || !this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" v-b-tooltip.hover :title="this.$t('message.analysis_details_tooltip')" />
                       <div class="pull-right">
-                        <b-button v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :disabled="analysisState === null" size="sm" variant="outline-primary" @click="makeAnalysis"><span class="fa fa-comment-o"></span> Update Details</b-button>
+                        <b-button v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :disabled="analysisState === null" size="sm" variant="outline-primary" @click="makeAnalysis"><span class="fa fa-comment-o"></span> {{ this.$t('message.update_details') }}</b-button>
                       </div>
                     </b-form-group>
                   </b-col>

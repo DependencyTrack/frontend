@@ -1,5 +1,6 @@
 <script>
 import common from "../../shared/common"
+import i18n from '../../i18n'
 import { Scatter } from 'vue-chartjs'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 
@@ -89,7 +90,14 @@ export default {
               let label = data.labels[tooltipItem.index];
               let vulnId = label.vulnId;
               let componentLabel = label.componentLabel;
-              return 'Component<br/>Vulnerability<br/>CVSS<br/>EPSS: ' + componentLabel.replace(":", "&#58;") + '<br/>' + vulnId + '<br/>' + tooltipItem.xLabel + '<br/>' + tooltipItem.yLabel;
+              return `${i18n.t('message.component')}<br>`
+                + `${i18n.t('message.vulnerability')}<br/>`
+                + `${i18n.t('message.cvss')}<br/>`
+                + `${i18n.t('message.epss')}: `
+                + `${componentLabel.replace(":", "&#58;")}<br/>`
+                + `${vulnId}<br/>`
+                + `${tooltipItem.xLabel}<br/>`
+                + tooltipItem.yLabel;
             }
           }
         },
