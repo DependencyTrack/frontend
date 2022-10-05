@@ -487,7 +487,7 @@
     "destination": "Destination",
     "delete_alert": "Delete Alert",
     "limit_to": "Limit To",
-    "limit_to_projects": "Limit to projects",
+    "limit_to_projects": "Limit to projects (including all of their active children)",
     "limit_to_tags": "Limit to Tags",
     "alert_created": "Alert created",
     "alert_deleted": "Alert deleted",
