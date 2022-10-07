@@ -86,7 +86,7 @@ export default {
         let response = await this.axios.get(url);
         let data = response.data;
         if (data && data.directDependencies) {
-          treeNode.children = this.transformDependenciesToOrgTree(JSON.parse(data.directDependencies), false);
+          this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(JSON.parse(data.directDependencies), true) )
         }
       }
       return dependencyFunc();
