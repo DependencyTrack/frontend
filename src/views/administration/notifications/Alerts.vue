@@ -138,9 +138,9 @@
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
                                               type="text" v-model="destination" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
-                    <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'"
-                                              id="input-jiratickettype" :label="$t('admin.jiratickettype')" type="text" v-model="jiratickettype" :value="Task"
-                                              lazy="true" v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                    <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jiratickettype" 
+                                              :label="$t('admin.jiratickettype')" :required="true" type="text" v-model="jiratickettype" lazy="true"
+                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
