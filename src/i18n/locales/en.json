@@ -2,7 +2,7 @@
   "message": {
     "about": "About",
     "login": "Login",
-    "login_desc": "Sign In to your account",
+    "login_desc": "Sign In to your account ELASTIC-PANGOLIN-TESTING",
     "login_unauthorized": "Invalid username or password",
     "login_forbidden": "This account is inactive or has been suspended",
     "password_force_change": "Update Password",
@@ -393,6 +393,7 @@
     "internal_components": "Internal Components",
     "email": "Email",
     "jira": "Jira",
+    "jiratickettype": "Jira ticket type",
     "analyzers": "Analyzers",
     "internal_analyzer": "Internal",
     "oss_index": "Sonatype OSS Index",
