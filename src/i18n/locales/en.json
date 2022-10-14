@@ -516,6 +516,7 @@
     "team_membership": "Team membership",
     "team_name": "Team Name",
     "select_team": "Select Team",
+    "select_team_as_recipient": "Select team as recipient",
     "select_permission": "Select permission",
     "password_confirm": "Confirm password",
     "user_created": "User created",
