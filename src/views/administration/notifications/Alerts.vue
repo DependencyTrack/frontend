@@ -212,6 +212,7 @@
               },
               created() {
                 this.parseDestination(this.alert);
+                this.parseJiraTicketType(this.alert);
               },
               watch: {
                 enabled() {
@@ -254,8 +255,7 @@
                     name: this.name,
                     enabled: this.enabled,
                     notificationLevel: this.notificationLevel,
-                    publisherConfig: JSON.stringify({ destination: this.destination }),
-                    publisherConfig: JSON.stringify({ jira_tickettype: this.jiraTicketType }),
+                    publisherConfig: JSON.stringify({ destination: this.destination, jira_tickettype: this.jiraTicketType }),
                     notifyOn: this.notifyOn
                   }).then((response) => {
                     this.alert = response.data;
