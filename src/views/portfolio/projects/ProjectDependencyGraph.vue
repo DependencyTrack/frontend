@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-height: 58.465vh; overflow: auto">
     <vue2-org-tree
       :data="data"
       :horizontal="true"
@@ -44,7 +44,8 @@ export default {
           id: this.nodeId,
           label: this.createNodeLabel(this.project),
           objectType: "PROJECT",
-          children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true)
+          children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+          fetchedChildren: true
         }
       } else {
         this.$emit('total', 0);
@@ -57,13 +58,17 @@ export default {
     }
   },
   methods: {
-    transformDependenciesToOrgTree: function(dependencies, getChildren) {
+    transformDependenciesToOrgTree: function(dependencies, getChildren, treeNode) {
       let children = null;
       if (dependencies && dependencies.length > 0) {
         children = [];
         for(let i = 0; i < dependencies.length; i++) {
           let dependency = dependencies[i]
           let childNode = this.transformDependencyToOrgTree(dependency);
+          for (const gatheredKey of treeNode.gatheredKeys){
+            childNode.gatheredKeys.push(gatheredKey)
+          }
+          childNode.gatheredKeys.push(childNode.label)
           if (getChildren === true) {
             this.getChildrenFromDependency(childNode, dependency);
           }
@@ -77,7 +82,10 @@ export default {
       return {
         id: this.nodeId,
         label: this.createNodeLabel(dependency),
-        objectType: dependency.objectType
+        objectType: dependency.objectType,
+        uuid: dependency.uuid,
+        fetchedChildren: false,
+        gatheredKeys: []
       }
     },
     getChildrenFromDependency: function(treeNode, dependency) {
@@ -86,7 +94,13 @@ export default {
         let response = await this.axios.get(url);
         let data = response.data;
         if (data && data.directDependencies) {
-          this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(JSON.parse(data.directDependencies), true) )
+          let jsonObject = JSON.parse(data.directDependencies)
+          for (let i = 0; i < jsonObject.length; i++){
+            if (treeNode.gatheredKeys.some(gatheredKey => gatheredKey === jsonObject[i].purl)){
+              jsonObject.splice(i, 1)
+            }
+          }
+          this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode) )
         }
       }
       return dependencyFunc();
@@ -130,6 +144,12 @@ export default {
           this.collapse(data.children)
         }
       } else {
+        if (!data.fetchedChildren){
+          for (const child of data.children){
+            this.getChildrenFromDependency(child, child)
+          }
+          data.fetchedChildren = true
+        }
         this.$set(data, 'expand', true)
       }
     },
