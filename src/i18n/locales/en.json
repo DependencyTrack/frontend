@@ -396,7 +396,7 @@
     "internal_analyzer": "Internal",
     "oss_index": "Sonatype OSS Index",
     "vulndb": "VulnDB",
-    "snyk": "Snyk",
+    "snyk": "Snyk (Beta)",
     "vuln_sources": "Vulnerability Sources",
     "nvd": "NVD",
     "national_vulnerability_database": "National Vulnerability Database",
