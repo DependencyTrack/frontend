@@ -14,6 +14,9 @@
           <b-input-group-form-select id="v-classifier-input" required="true"
                                      v-model="project.classifier" :options="sortAvailableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')" />
+          <b-input-group-form-select id="project-parent-input" required="false"
+                                     v-model="selectedParent" :options="availableParents"
+                                     :label="$t('message.parent')" />
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -111,6 +114,10 @@
         ],
         selectableLicenses: [],
         selectedLicense: '',
+        selectedParent: null,
+        availableParents: [
+          { value: null, text: ''}
+        ],
         project: {},
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
@@ -130,6 +137,7 @@
     },
     beforeMount() {
       this.retrieveLicenses();
+      this.retrieveParents();
     },
     computed: {
       sortAvailableClassifiers: function() {
@@ -149,6 +157,10 @@
       createProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
+        let parent = {uuid: this.selectedParent};
+        if (this.selectedParent == null){
+          parent = null;
+        }
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.put(url, {
           name: this.project.name,
@@ -156,6 +168,7 @@
           group: this.project.group,
           description: this.project.description,
           //license: this.selectedLicense,
+          parent: parent,
           classifier: this.project.classifier,
           purl: this.project.purl,
           cpe: this.project.cpe,
@@ -186,10 +199,31 @@
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       },
+      retrieveParents: function() {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+        this.axios.get(url).then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            let project = response.data[i];
+            if (project.version) {
+              this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+            } else {
+              this.availableParents.push({value: project.uuid, text: project.name});
+            }
+            if (this.project.parent && this.project.parent.uuid === project.uuid ) {
+              this.selectedParent = project.uuid;
+            }
+          }
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+      },
       resetValues: function () {
         this.project = {};
         this.tag = "";
         this.tags = [];
+        this.selectedParent = null;
+        this.availableParents = [{ value: null, text: ''}]
+        this.retrieveParents();
       }
     }
   }
