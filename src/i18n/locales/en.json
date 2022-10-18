@@ -109,7 +109,6 @@
     "property_deleted": "Property deleted",
     "create_project": "Create Project",
     "show_inactive_projects": "Show inactive projects",
-    "hierarchical_view": "Hierarchical view",
     "create_project_property": "Create Project Property",
     "group_name": "Group Name",
     "property_name": "Property Name",
@@ -243,7 +242,6 @@
     "snapshot_notification": "Snapshot Notification",
     "select_project": "Select Project",
     "select_tag": "Select Tag",
-    "parent": "Parent",
     "select": "Select",
     "identity": "Identity",
     "extended": "Extended",
@@ -384,8 +382,7 @@
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File",
-    "dates": "Dates",
-    "inactive_active_children": "The project cannot be set to inactive if it has active children"
+    "dates": "Dates"
   },
   "admin": {
     "configuration": "Configuration",

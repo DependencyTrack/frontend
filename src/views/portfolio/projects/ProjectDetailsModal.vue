@@ -17,9 +17,6 @@
                                      v-model="project.classifier" :options="availableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')"
                                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
-          <b-input-group-form-select id="project-parent-input" required="false"
-                                     v-model="selectedParent" :options="availableParents"
-                                     :label="$t('message.parent')" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -36,9 +33,7 @@
                             style="max-width:none; background-color:transparent;"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
-                    :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
-                    v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
+          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
                                     lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
@@ -104,8 +99,7 @@
       cSwitch
     },
     props: {
-      project: Object,
-      uuid: String
+      project: Object
     },
     data() {
       return {
@@ -121,10 +115,6 @@
           { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
           { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
-        selectedParent: null,
-        availableParents: [
-          { value: null, text: ''}
-        ],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -137,9 +127,6 @@
     beforeUpdate() {
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
-    },
-    mounted() {
-      this.retrieveParents();
     },
     methods: {
       initializeTags: function() {
@@ -164,7 +151,6 @@
           version: this.project.version,
           description: this.project.description,
           classifier: this.project.classifier,
-          parent: {uuid: this.selectedParent},
           cpe: this.project.cpe,
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
@@ -188,39 +174,6 @@
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      },
-      retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.$props.uuid}`;
-        this.axios.get(url).then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let project = response.data[i];
-            if (project.uuid !== this.project.uuid){
-              if (project.version){
-                this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
-              } else {
-                this.availableParents.push({value: project.uuid, text: project.name});
-              }
-            }
-            if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
-              this.selectedParent = project.uuid;
-            }
-          }
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
-      },
-      hasActiveChild: function (project) {
-        let bool = false;
-        if (project.children){
-          for (const child of project.children){
-            if (child.active || bool){
-              return true;
-            } else {
-              bool = this.hasActiveChild(child);
-            }
-          }
-        }
-        return bool;
       }
     }
   }
