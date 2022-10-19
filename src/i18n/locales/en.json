@@ -505,7 +505,6 @@
     "delete_alert": "Delete Alert",
     "limit_to": "Limit To",
     "limit_to_projects": "Limit to projects",
-    "include_children": "Include active children of projects",
     "limit_to_tags": "Limit to Tags",
     "alert_created": "Alert created",
     "alert_deleted": "Alert deleted",
