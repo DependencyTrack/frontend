@@ -108,6 +108,8 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
         analyzerUrl = "https://github.com/advisories/" + vulnId;
       } else if(vulnSource === "OSV") {
         analyzerUrl = "https://osv.dev/vulnerability/" + vulnId;
+      } else if(vulnSource === "SNYK") {
+        analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       }
       break;
     case 'OSSINDEX_ANALYZER':

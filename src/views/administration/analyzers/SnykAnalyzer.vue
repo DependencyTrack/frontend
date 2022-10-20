@@ -28,6 +28,14 @@
           v-model="apitoken"
           lazy="true"
         />
+        <b-validated-input-group-form-input
+          id="snyk-apiVersion"
+          :label="$t('admin.api_version')"
+          input-group-size="mb-3"
+          rules="required"
+          v-model="apiVersion"
+          lazy="true"
+        />
         <b-row style="margin-top:2rem;">
           <b-col sm="6">
             <b-form-group :label="$t('message.cvss_source')" v-slot="{ cvssSource }">
@@ -66,6 +74,7 @@
         return {
           scannerEnabled: false,
           apitoken: '',
+          apiVersion: '',
           baseUrl: '',
           orgId: '',
           cvssOptions: [
@@ -87,7 +96,8 @@
             {groupName: 'scanner', propertyName: 'snyk.api.token', propertyValue: this.apitoken},
             {groupName: 'scanner', propertyName: 'snyk.org.id', propertyValue: this.orgId},
             {groupName: 'scanner', propertyName: 'snyk.base.url', propertyValue: this.baseUrl},
-            {groupName: 'scanner', propertyName: 'snyk.cvss.source', propertyValue: this.cvssSourceSelected}
+            {groupName: 'scanner', propertyName: 'snyk.cvss.source', propertyValue: this.cvssSourceSelected},
+            {groupName: 'scanner', propertyName: 'snyk.api.version', propertyValue: this.apiVersion}
           ]);
         }
       },
@@ -106,7 +116,9 @@
               case "snyk.base.url":
                 this.baseUrl = item.propertyValue; break;
               case "snyk.cvss.source":
-              this.cvssSourceSelected = item.propertyValue; break;
+                this.cvssSourceSelected = item.propertyValue; break;
+              case "snyk.api.version":
+                this.apiVersion = item.propertyValue; break;
             }
           }
         });

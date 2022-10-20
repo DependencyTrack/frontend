@@ -476,6 +476,7 @@
     "registered_email_address": "Registered email address",
     "api_token": "API token",
     "org_id": "Organization ID",
+    "api_version": "API Version",
     "consumer_key": "Consumer key",
     "consumer_secret": "Consumer secret",
     "personal_access_token": "Personal Access Token",
