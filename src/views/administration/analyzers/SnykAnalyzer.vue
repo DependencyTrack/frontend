@@ -36,6 +36,7 @@
           v-model="apiVersion"
           lazy="true"
         />
+        <i>{{ $t('admin.api_version_warning') }}</i>
         <b-row style="margin-top:2rem;">
           <b-col sm="6">
             <b-form-group :label="$t('message.cvss_source')" v-slot="{ cvssSource }">

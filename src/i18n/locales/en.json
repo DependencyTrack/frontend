@@ -477,6 +477,7 @@
     "api_token": "API token",
     "org_id": "Organization ID",
     "api_version": "API Version",
+    "api_version_warning": "Warning: Changing default version may break the integration. Refer the documentation.",
     "consumer_key": "Consumer key",
     "consumer_secret": "Consumer secret",
     "personal_access_token": "Personal Access Token",
