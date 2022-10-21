@@ -28,6 +28,7 @@
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
   import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
+  import SnykAnalyzer from "./analyzers/SnykAnalyzer";
   // Vulnerability sources
   import VulnSourceNvd from "./vuln-sources/VulnSourceNvd";
   import VulnSourceGitHubAdvisories from "./vuln-sources/VulnSourceGitHubAdvisories";
@@ -63,7 +64,7 @@
       EventBus,
       AdminMenu,
       General, BomFormats, Email, InternalComponents, TaskScheduler,
-      InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer,
+      InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer,
       VulnSourceNvd, VulnSourceGitHubAdvisories, VulnSourceOSVAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,
       Alerts, Templates,

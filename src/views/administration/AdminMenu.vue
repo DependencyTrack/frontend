@@ -85,6 +85,11 @@
                 component: "VulnDbAnalyzer",
                 name: this.$t('admin.vulndb'),
                 href: "#scannerVulnDbTab"
+              },
+              {
+                component: "SnykAnalyzer",
+                name: this.$t('admin.snyk'),
+                href: "#scannerSnykTab"
               }
             ]
           },
