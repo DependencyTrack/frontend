@@ -36,7 +36,7 @@ jobs:
 
           npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
 
-          git push origin "HEAD:refs/heads/master"
+          git push origin "HEAD:${{ github.ref }}"
 
       - name: Create GitHub Release
         env:
