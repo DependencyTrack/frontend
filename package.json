@@ -29,7 +29,7 @@
     "bootstrap-table": "1.20.2",
     "bootstrap-vue": "2.21.2",
     "chart.js": "2.9.4",
-    "core-js": "2.6.12",
+    "core-js": "3.26.0",
     "css-vars-ponyfill": "2.4.7",
     "dompurify": "2.4.0",
     "font-awesome": "4.7.0",
