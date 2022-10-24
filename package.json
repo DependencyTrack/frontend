@@ -46,7 +46,7 @@
     "vue-bootstrap-toggle": "1.1.4",
     "vue-chartjs": "3.5.1",
     "vue-debounce": "2.6.0",
-    "vue-easy-pie-chart": "github:DependencyTrack/vue-easy-pie-chart#master",
+    "vue-easy-pie-chart": "git+https://git@github.com/DependencyTrack/vue-easy-pie-chart.git#master",
     "vue-i18n": "8.27.0",
     "vue-page-title": "1.2.5",
     "vue-perfect-scrollbar": "0.2.1",
