@@ -50,5 +50,6 @@ jobs:
           fi
 
           gh release create "${VERSION}" ${GH_OPTS} \
+            --target "${{ github.ref_name }}" \
             --title "${VERSION}" \
             --notes-file ".github/default-release-notes.md"
