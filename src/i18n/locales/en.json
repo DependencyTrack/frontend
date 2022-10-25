@@ -257,6 +257,8 @@
     "cpe": "CPE",
     "cpe_full": "Common Platform Enumeration (CPE)",
     "classifier": "Classifier",
+    "parent": "Parent",
+    "inactive_active_children" : "The project cannot be set to inactive if it has active children",
     "filename": "Filename",
     "copyright": "Copyright",
     "md5": "MD5",

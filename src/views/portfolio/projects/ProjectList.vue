@@ -11,7 +11,9 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      @on-load-success="initializeChildren"
+      @on-post-body="onPostBody">
     </bootstrap-table>
     <project-create-project-modal v-on:refreshTable="refreshTable"/>
   </div>
@@ -36,8 +38,11 @@
       PortfolioWidgetRow
     },
     methods: {
-      apiUrl: function () {
+      apiUrl: function (uuid) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+        if (uuid){
+          url += `/${uuid}/children`
+        }
         let tag = this.$route.query.tag;
         if (tag) {
           url += "/tag/" + encodeURIComponent(tag);
@@ -51,6 +56,9 @@
         } else {
           url += "?excludeInactive=" + !this.showInactiveProjects;
         }
+        if (!uuid){
+          url += "&onlyRoot=true"
+        }
         return url;
       },
       refreshTable: function() {
@@ -58,6 +66,43 @@
           url: this.apiUrl(),
           silent: true
         });
+      },
+      onPostBody: function() {
+        let columns = this.$refs.table.getOptions().columns
+
+        if (columns && columns[0][1].visible) {
+          this.$refs.table.$table.treegrid({
+            treeColumn: 0,
+            initialState: 'collapsed',
+          })
+        }
+        this.$refs.table.getData().forEach(row => {
+          if (Object.prototype.hasOwnProperty.call(row, "expanded") && row.expanded){
+            this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString() + '.treegrid-collapsed').treegrid('expand')
+          }
+        })
+      },
+      initializeChildren: async function (data) {
+        let children = []
+        for (const project of data) {
+          if (Object.prototype.hasOwnProperty.call(project, 'children')) {
+            let url = this.apiUrl(project.uuid)
+            await this.axios.get(url).then((response) => {
+              children.push(...response.data)
+            })
+          }
+        }
+        this.$refs.table.$table.bootstrapTable('append', children)
+      },
+      getGrandChildren: async function (children) {
+        let data = []
+        for (const child of children) {
+          let url = this.apiUrl(child.uuid)
+          await this.axios.get(url).then((response) => {
+            data.push(...response.data)
+          })
+        }
+        this.$refs.table.$table.bootstrapTable('append', data)
       }
     },
     watch:{
@@ -173,6 +218,9 @@
         ],
         data: [],
         options: {
+          idField: 'id',
+          parentIdField: 'pid',
+          treeShowField: 'name',
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -190,7 +238,19 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl()
+          url: this.apiUrl(),
+          // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children
+          onClickRow: ((row, $element, value) => {
+            if (!$element.treegrid('isLeaf') && $element.treegrid('isExpanded')){
+              if (Object.prototype.hasOwnProperty.call(row, 'children') && !Object.prototype.hasOwnProperty.call(row, 'expanded')){
+                $element.treegrid('collapse')
+                this.getGrandChildren(row.children)
+              }
+              row.expanded = true
+            } else if (!$element.treegrid('isLeaf') && $element.treegrid('isCollapsed')){
+              row.expanded = false
+            }
+          }),
         }
       };
     }
