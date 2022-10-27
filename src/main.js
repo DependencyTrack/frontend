@@ -12,7 +12,6 @@ import './validation'
 import './plugins/table.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import VueShowdown from 'vue-showdown'
 import vueDebounce from 'vue-debounce'
 import VuePageTitle from 'vue-page-title'
 import '@/directives/VuePermission'
@@ -31,7 +30,6 @@ Vue.use(VueToastr, {
   defaultPosition: "toast-top-right",
   defaultCloseOnHover: false
 });
-Vue.use(VueShowdown, { flavor: 'github' });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 

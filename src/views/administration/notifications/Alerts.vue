@@ -158,6 +158,10 @@
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
+                  <div v-if="limitToVisible === true">
+                      <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
+                      {{ $t('admin.include_children') }}
+                  </div>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
@@ -212,6 +216,7 @@
                   uuid: row.uuid,
                   name: row.name,
                   enabled: row.enabled,
+                  notifyChildren: row.notifyChildren,
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
@@ -233,6 +238,9 @@
               },
               watch: {
                 enabled() {
+                  this.updateNotificationRule();
+                },
+                notifyChildren() {
                   this.updateNotificationRule();
                 },
                 notifyOn() {
@@ -274,6 +282,7 @@
                     uuid: this.uuid,
                     name: this.name,
                     enabled: this.enabled,
+                    notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({ destination: this.destination, jiratickettype: this.jiratickettype }),
                     notifyOn: this.notifyOn

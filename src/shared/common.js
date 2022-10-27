@@ -108,6 +108,8 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
         analyzerUrl = "https://github.com/advisories/" + vulnId;
       } else if(vulnSource === "OSV") {
         analyzerUrl = "https://osv.dev/vulnerability/" + vulnId;
+      } else if(vulnSource === "SNYK") {
+        analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       }
       break;
     case 'OSSINDEX_ANALYZER':
@@ -117,6 +119,10 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
     case 'VULNDB_ANALYZER':
       analyzerLabel = "VulnDB";
       analyzerUrl = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
+      break;
+    case 'SNYK_ANALYZER':
+      analyzerLabel = "Snyk";
+      analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       break;
   }
   if (analyzerUrl) {
