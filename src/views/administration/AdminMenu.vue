@@ -55,6 +55,11 @@
                 href: "#emailTab"
               },
               {
+                component: 'Jira',
+                name: this.$t('admin.jira'),
+                href: "#jiraTab"
+              },
+              {
                 component: 'InternalComponents',
                 name: this.$t('admin.internal_components'),
                 href: "#internalComponentsTab"

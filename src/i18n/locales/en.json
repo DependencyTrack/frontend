@@ -585,7 +585,13 @@
     "task_scheduler_portfolio_vulnerability_analysis": "Portfolio vulnerability analysis",
     "task_scheduler_repository_metadata_fetch": "Repository metadata fetch",
     "task_scheduler_internal_component_identification": "Internal component identification",
-    "task_scheduler_component_analysis_cache_clear": "Component analysis cache clear"
+    "task_scheduler_component_analysis_cache_clear": "Component analysis cache clear",
+    "jira": "Jira",
+    "jira_desc": "Jira service authentication",
+    "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",
+    "jira_password": "Jira password",
+    "jira_ticket_type": "Jira ticket type",
+    "jira_project_key": "Jira project key"
   },
   "condition": {
     "warning": "Warning",
