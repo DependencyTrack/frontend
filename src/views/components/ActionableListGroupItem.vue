@@ -5,18 +5,19 @@
       <span class="fa fa-trash-o" v-if="this.deleteIcon"></span>
     </b-button>
     <slot v-if="$slots && $slots.default && !!$slots.default[0]"></slot>
-    <span v-else>{{ value }}&nbsp;</span>
+    <span v-else><a v-if="this.href" :href=href>{{ value }}</a><span v-else>{{ value }}</span>&nbsp;</span>
   </li>
 </template>
 
 <script>
-  export default {
+    export default {
     props: {
       value: String,
       tooltip: String,
       addIcon: Boolean,
       deleteIcon: Boolean,
-      variant: String
+      variant: String,
+      href: String
     }
   }
 </script>

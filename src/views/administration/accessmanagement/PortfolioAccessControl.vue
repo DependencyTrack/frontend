@@ -78,7 +78,7 @@ export default {
                     <b-form-group :label="this.$t('admin.project_access')">
                       <div class="list-group">
                         <span v-for="project in projects">
-                          <actionable-list-group-item :value="projectLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="removeProjectMapping(project.uuid)"/>
+                          <actionable-list-group-item :value="projectLabel(project.name, project.version)" :href=projectUri(project.uuid) :delete-icon="true" v-on:actionClicked="removeProjectMapping(project.uuid)"/>
                         </span>
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
@@ -114,6 +114,9 @@ export default {
                 } else {
                   return name;
                 }
+              },
+              projectUri: function(uuid) {
+                return xssFilters.uriInUnQuotedAttr("../projects/" + uuid);
               },
               updateProjectSelection: function(selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
