@@ -175,8 +175,23 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
-              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              let name_url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
+              let projectName = `<a href="${name_url}">${xssFilters.inHTMLData(value)}</a>`;
+
+              if (!row.tags) {
+                return projectName
+              } else {
+                let tagNames = ""
+                  for (let i=0; i<row.tags.length; i++) {
+                  let tag = row.tags[i].name
+                  let tag_url = xssFilters.uriInUnQuotedAttr("../projects/?tag=" + tag);
+                  // let tagName = `<a href="${tag_url}">${xssFilters.inHTMLData(tag)}</a>`;
+                  let tagName = `<a href="${tag_url}" target="_self" class="badge badge-tag">${tag}</a>`
+                  tagNames += tagName
+                  if (i < row.tags.length-1) tagNames += " "
+                }
+                return projectName + ' ' + tagNames
+              }
             }
           },
           {
