@@ -23,6 +23,9 @@
     <b-form-checkbox id="checkbox-5" v-model="includeAuditHistory" name="checkbox-5" switch
                      value="true" unchecked-value="false"> {{ $t('message.include_audit_history') }}</b-form-checkbox>
 
+    <b-form-checkbox v-show="aclEnabled" id="checkbox-6" v-model="includeACL" name="checkbox-6" switch
+                     value="true" unchecked-value="false"> {{ $t('message.include_acl') }}</b-form-checkbox>
+
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
       <b-button size="md" variant="primary" @click="createVersion()">{{ $t('message.create') }}</b-button>
@@ -31,7 +34,6 @@
 </template>
 
 <script>
-
   export default {
     name: "ProjectAddVersionModal",
     props: {
@@ -44,10 +46,31 @@
         includeProperties: true,
         includeComponents: true,
         includeServices: true,
-        includeAuditHistory: true
+        includeAuditHistory: true,
+        includeACL: true,
+        aclEnabled: false
       }
     },
     methods: {
+      checkACLEnabled() {
+        // alert('getting ACLEnabled from API')
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_ENABLED}`;
+        this.axios.get(url
+          ).then((response) => {
+            var aclEnabledinAPI = false;
+            if (response.status === 200) {
+              // alert(response.data)
+              aclEnabledinAPI = response.data === true;
+            }
+            this.aclEnabled = aclEnabledinAPI
+            //default to not copy the ACL if ACL is disabled
+            this.includeACL = this.aclEnabled
+            return aclEnabledinAPI
+          }).catch(err => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+            return Promise.reject(err);
+          });
+      },
       createVersion: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
         this.axios.put(url, {
@@ -57,7 +80,8 @@
           includeProperties: this.includeProperties,
           includeComponents: this.includeComponents,
           includeServices: this.includeServices,
-          includeAuditHistory: this.includeAuditHistory
+          includeAuditHistory: this.includeAuditHistory,
+          includeACL: this.includeACL
         }).then((response) => {
           this.$root.$emit('bv::hide::modal', 'projectAddVersionModal');
           this.$toastr.s(this.$t('message.project_cloning_in_progress'));
@@ -72,7 +96,11 @@
         this.includeComponents = true;
         this.includeServices = true;
         this.includeAuditHistory = true;
+        this.includeACL = true;
       }
+    },
+    mounted() {
+      this.checkACLEnabled()
     }
   }
 </script>
