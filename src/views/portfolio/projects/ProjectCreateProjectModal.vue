@@ -179,6 +179,9 @@
         }).then((response) => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.project_created'));
+          this.selectedParent = null;
+          this.availableParents = [{ value: null, text: ''}]
+          this.retrieveParents();
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
@@ -204,10 +207,12 @@
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            if (project.version) {
-              this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
-            } else {
-              this.availableParents.push({value: project.uuid, text: project.name});
+            if (project.active) {
+              if (project.version) {
+                this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+              } else {
+                this.availableParents.push({value: project.uuid, text: project.name});
+              }
             }
             if (this.project.parent && this.project.parent.uuid === project.uuid ) {
               this.selectedParent = project.uuid;
@@ -221,9 +226,6 @@
         this.project = {};
         this.tag = "";
         this.tags = [];
-        this.selectedParent = null;
-        this.availableParents = [{ value: null, text: ''}]
-        this.retrieveParents();
       }
     }
   }

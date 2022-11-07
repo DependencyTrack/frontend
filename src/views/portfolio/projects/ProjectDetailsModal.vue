@@ -190,11 +190,11 @@
         });
       },
       retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.$props.uuid}`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}`;
         this.axios.get(url).then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let project = response.data[i];
-            if (project.uuid !== this.project.uuid){
+            if (project.uuid !== this.uuid && project.active){
               if (project.version){
                 this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
               } else {
@@ -210,17 +210,9 @@
         });
       },
       hasActiveChild: function (project) {
-        let bool = false;
-        if (project.children){
-          for (const child of project.children){
-            if (child.active || bool){
-              return true;
-            } else {
-              bool = this.hasActiveChild(child);
-            }
-          }
-        }
-        return bool;
+        return project.children && project.children.some((child) => {
+          return child.active || this.hasActiveChild(child);
+        });
       }
     }
   }
