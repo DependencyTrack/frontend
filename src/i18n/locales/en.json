@@ -122,6 +122,7 @@
     "include_components": "Include components",
     "include_services": "Include services",
     "include_audit_history": "Include audit history",
+    "include_acl": "Include access control list",
     "project_cloning_in_progress": "The project is being created with the cloning options specified",
     "vulnerability": "Vulnerability",
     "analysis": "Analysis",
