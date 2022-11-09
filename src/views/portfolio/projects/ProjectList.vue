@@ -72,7 +72,7 @@
       onPostBody: function() {
         let columns = this.$refs.table.getOptions().columns
 
-        if (columns && columns[0][1].visible) {
+        if (columns && columns[0][0].visible) {
           this.$refs.table.$table.treegrid({
             treeColumn: 0,
             initialState: 'collapsed',
