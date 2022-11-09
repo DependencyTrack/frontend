@@ -136,8 +136,11 @@
       this.readOnlyProjectVersion = this.project.version;
     },
     beforeMount() {
-      this.retrieveLicenses();
-      this.retrieveParents();
+      this.$root.$on('initializeProjectCreateProjectModal', async () => {
+        await this.retrieveParents()
+        await this.retrieveLicenses()
+        this.$root.$emit("bv::show::modal", "projectCreateProjectModal")
+      })
     },
     computed: {
       sortAvailableClassifiers: function() {
@@ -181,7 +184,6 @@
           this.$toastr.s(this.$t('message.project_created'));
           this.selectedParent = null;
           this.availableParents = [{ value: null, text: ''}]
-          this.retrieveParents();
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
@@ -189,38 +191,46 @@
         });
       },
       retrieveLicenses: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
-        this.axios.get(url).then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let license = response.data[i];
-            this.selectableLicenses.push({value: license.licenseId, text: license.name});
-            if (this.project.resolvedLicense && this.project.resolvedLicense.uuid === license.uuid ) {
-              this.selectedLicense = license.licenseId;
-            }
-          }
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
-      },
-      retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-        this.axios.get(url).then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let project = response.data[i];
-            if (project.active) {
-              if (project.version) {
-                this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
-              } else {
-                this.availableParents.push({value: project.uuid, text: project.name});
+        return new Promise(resolve => {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
+          this.axios.get(url).then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              let license = response.data[i];
+              this.selectableLicenses.push({value: license.licenseId, text: license.name});
+              if (this.project.resolvedLicense && this.project.resolvedLicense.uuid === license.uuid ) {
+                this.selectedLicense = license.licenseId;
               }
             }
-            if (this.project.parent && this.project.parent.uuid === project.uuid ) {
-              this.selectedParent = project.uuid;
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          }).finally(() => {
+            resolve()
+          });
+        })
+      },
+      retrieveParents: function() {
+        return new Promise(resolve => {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+          this.axios.get(url).then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              let project = response.data[i];
+              if (project.active) {
+                if (project.version) {
+                  this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+                } else {
+                  this.availableParents.push({value: project.uuid, text: project.name});
+                }
+              }
+              if (this.project.parent && this.project.parent.uuid === project.uuid ) {
+                this.selectedParent = project.uuid;
+              }
             }
-          }
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          }).finally(() => {
+            resolve()
+          });
+        })
       },
       resetValues: function () {
         this.project = {};

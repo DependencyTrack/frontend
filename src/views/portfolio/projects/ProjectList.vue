@@ -2,7 +2,7 @@
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row :fetch="true" />
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <b-button size="md" variant="outline-primary" v-b-modal.projectCreateProjectModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+      <b-button size="md" variant="outline-primary" @click="initializeProjectCreateProjectModal" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
       <c-switch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" v-model="showInactiveProjects" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
@@ -37,6 +37,9 @@
       PortfolioWidgetRow
     },
     methods: {
+      initializeProjectCreateProjectModal: function () {
+        this.$root.$emit("initializeProjectCreateProjectModal")
+      },
       apiUrl: function (uuid) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         if (uuid){

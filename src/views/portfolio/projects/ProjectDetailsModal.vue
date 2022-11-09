@@ -138,8 +138,14 @@
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
     },
-    mounted() {
-      this.retrieveParents();
+    beforeMount() {
+      this.$root.$on('initializeProjectDetailsModal', async () => {
+        if (!this.retrievedParents) {
+          await this.retrieveParents()
+          this.retrievedParents = true
+        }
+        this.$root.$emit("bv::show::modal", "projectDetailsModal")
+      })
     },
     methods: {
       initializeTags: function() {
@@ -190,24 +196,28 @@
         });
       },
       retrieveParents: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}`;
-        this.axios.get(url).then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let project = response.data[i];
-            if (project.uuid !== this.uuid && project.active){
-              if (project.version){
-                this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
-              } else {
-                this.availableParents.push({value: project.uuid, text: project.name});
+        return new Promise(resolve => {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}`;
+          this.axios.get(url).then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              let project = response.data[i];
+              if (project.uuid !== this.uuid && project.active){
+                if (project.version){
+                  this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
+                } else {
+                  this.availableParents.push({value: project.uuid, text: project.name});
+                }
+              }
+              if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
+                this.selectedParent = project.uuid;
               }
             }
-            if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
-              this.selectedParent = project.uuid;
-            }
-          }
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          }).finally(() => {
+            resolve()
+          });
+        })
       },
       hasActiveChild: function (project) {
         return project.children && project.children.some((child) => {
