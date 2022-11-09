@@ -17,6 +17,14 @@
         <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
       </b-button>
 
+      <b-button id="reanalyze-button" size="md" variant="outline-primary"
+                @click="reAnalyze()"
+                v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY]">
+        <span class="fa fa-refresh"></span> {{ $t('message.project_reanalyze') }}
+      </b-button>
+      <b-tooltip target="reanalyze-button" triggers="hover focus">{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip>
+
+
       <!-- Future use when CSAF support is added
       <b-dropdown variant="outline-primary" v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
         <template #button-content>
@@ -456,6 +464,14 @@
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
+        });
+      },
+      reAnalyze: function (data) {
+        let analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`
+        this.axios.get(analyzeUrl).then((response) => {
+          this.$toastr.s(this.$t('message.project_reanalyze_requested'));
+          //ignore token from response, don't wait for completion
+          this.refreshTable();
         });
       },
       refreshTable: function() {
