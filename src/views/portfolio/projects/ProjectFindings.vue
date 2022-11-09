@@ -468,7 +468,7 @@
       },
       reAnalyze: function (data) {
         let analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`
-        this.axios.get(analyzeUrl).then((response) => {
+        this.axios.post(analyzeUrl).then((response) => {
           this.$toastr.s(this.$t('message.project_reanalyze_requested'));
           //ignore token from response, don't wait for completion
           this.refreshTable();
