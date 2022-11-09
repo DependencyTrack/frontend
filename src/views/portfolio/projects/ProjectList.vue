@@ -12,7 +12,6 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="initializeDummyChildren"
       @on-post-body="onPostBody">
     </bootstrap-table>
     <project-create-project-modal v-on:refreshTable="refreshTable"/>
@@ -76,34 +75,24 @@
             initialState: 'collapsed',
           })
         }
+        this.$refs.table.getData().forEach(project => {
+          if (project.children && !project.fetchedChildren && (this.showInactiveProjects || project.children.some(child => child.active))
+            && (!this.$route.query.classifier || project.children.some(child => child.classifier === this.$route.query.classifier))
+            && (!this.$route.query.tag || project.children.some(child => child.tag === this.$route.query.tag) )) {
+            this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).addClass('treegrid-collapsed')
+            this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).treegrid('renderExpander')
+          }
+        })
         this.$refs.table.getData().forEach(row => {
           if (row.expanded){
             this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString() + '.treegrid-collapsed').treegrid('expand')
           }
         })
       },
-      initializeDummyChildren: function (data, isSubLevel) {
-        let children = []
-        if (isSubLevel === true){
-          children = data
-        }
-        for (const project of data) {
-          if (project.children && !project.fetchedChildren && (this.showInactiveProjects || project.children.some(child => child.active))
-              && (!this.$route.query.classifier || project.children.some(child => child.classifier === this.$route.query.classifier))
-              && (!this.$route.query.tag || project.children.some(child => child.tag === this.$route.query.tag) )) {
-            children.push({'name' : "Dummy Child: " + project.name, "pid" : project.id, "id" : -1, "parentUuid" : project.uuid})
-          }
-        }
-        this.$refs.table.append(children)
-      },
       getChildren: async function (project) {
         let url = this.apiUrl(project.uuid)
         await this.axios.get(url).then((response) => {
-            this.initializeDummyChildren(response.data, true)
-          this.$refs.table.remove({
-            field: "parentUuid",
-            values: project.uuid
-          })
+            this.$refs.table.append(response.data)
         })
       }
     },
@@ -243,15 +232,18 @@
           url: this.apiUrl(),
           // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
           onClickRow: ((row, $element, value) => {
-            if (!$element.treegrid('isLeaf') && $element.treegrid('isExpanded')) {
-              if (row.children && !row.fetchedChildren) {
-                $element.treegrid('collapse')
-                this.getChildren(row)
+            if (event.target.className === "treegrid-expander treegrid-expander-expanded" || event.target.className === "treegrid-expander treegrid-expander-collapsed") {
+              if (row.children && !row.fetchedChildren && (this.showInactiveProjects || row.children.some(child => child.active))
+                && (!this.$route.query.classifier || row.children.some(child => child.classifier === this.$route.query.classifier))
+                && (!this.$route.query.tag || row.children.some(child => child.tag === this.$route.query.tag))) {
                 row.fetchedChildren = true
+                this.getChildren(row)
+                row.expanded = true
+              } else if (row.fetchedChildren && !$element.treegrid('isLeaf') && $element.treegrid('isExpanded')) {
+                row.expanded = true
+              } else if (row.fetchedChildren && !$element.treegrid('isLeaf') && $element.treegrid('isCollapsed')) {
+                row.expanded = false
               }
-              row.expanded = true
-            } else if (!$element.treegrid('isLeaf') && $element.treegrid('isCollapsed')) {
-              row.expanded = false
             }
           })
         }
