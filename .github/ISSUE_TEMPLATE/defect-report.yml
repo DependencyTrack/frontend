@@ -21,7 +21,7 @@ body:
     label: Current Behavior
     description: |-
       Describe the current faulty behavior that you observed.
-      Consider providing screenshots, log output, and other supplementary data.
+      Consider providing screenshots and other supplementary data.
 
       *Files and images can be included via drag and drop into this text field.*
   validations:
@@ -32,10 +32,9 @@ body:
     label: Steps to Reproduce
     description: |-
       Describe the exact steps of how the defect can be reproduced.
-      Consider providing screenshots, BOM files, and other supplementary data.
+      Consider providing screenshots and other supplementary data.
 
-      *Files and images can be included via drag and drop into this text field.
-      For BOM files, please redact any internal or otherwise confidential information.*
+      *Files and images can be included via drag and drop into this text field.*
     value: |-
       1.
   validations:
@@ -45,7 +44,7 @@ body:
   attributes:
     label: Expected Behavior
     description: >-
-      Describe how you expect the frontend to behave instead.
+      Describe how you expect the Frontend to behave instead.
   validations:
     required: true
 - type: markdown
@@ -58,17 +57,12 @@ body:
   attributes:
     label: Dependency-Track Frontend Version
     description: >-
-      What version of Dependency-Track are you using?
+      What version of the Dependency-Track Frontend are you using?
     options:
-    - 1.0.x
-    - 1.1.x
-    - 1.2.x
-    - 4.2.x
-    - 4.3.x
-    - 4.4.x
-    - 4.5.0
-    - 4.5.1
-    - 4.6.0-SNAPSHOT
+    - 4.5.x
+    - 4.6.0
+    - 4.6.1
+    - 4.7.0-SNAPSHOT
   validations:
     required: true
 - type: dropdown
@@ -77,8 +71,6 @@ body:
     label: Browser
     description: |-
       What browser are you using?
-
-      *If the defect is not UI-related, just select the N/A option.*
     options:
     - Google Chrome
     - Mozilla Firefox

@@ -31,7 +31,7 @@ body:
   attributes:
     label: Proposed Behavior
     description: >-
-      Describe how you expect the frontend to behave instead.
+      Describe how you expect the Frontend to behave instead.
       Please include *why* you want the new behavior.
   validations:
     required: true
