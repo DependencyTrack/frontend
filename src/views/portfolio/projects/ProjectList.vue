@@ -2,16 +2,18 @@
   <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
     <portfolio-widget-row :fetch="true" />
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <b-button size="md" variant="outline-primary" v-b-modal.projectCreateProjectModal v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+      <b-button size="md" variant="outline-primary" @click="initializeProjectCreateProjectModal" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
       <c-switch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" v-model="showInactiveProjects" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
+      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showFlatView" color="primary" v-model="showFlatView" label v-bind="labelIcon" :disabled="isSearching" v-b-tooltip.hover :title="$t('message.switch_view')" /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
     </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      @on-post-body="onPostBody">
     </bootstrap-table>
     <project-create-project-modal v-on:refreshTable="refreshTable"/>
   </div>
@@ -36,8 +38,14 @@
       PortfolioWidgetRow
     },
     methods: {
-      apiUrl: function () {
+      initializeProjectCreateProjectModal: function () {
+        this.$root.$emit("initializeProjectCreateProjectModal")
+      },
+      apiUrl: function (uuid) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+        if (uuid){
+          url += `/${uuid}/children`
+        }
         let tag = this.$route.query.tag;
         if (tag) {
           url += "/tag/" + encodeURIComponent(tag);
@@ -51,6 +59,15 @@
         } else {
           url += "?excludeInactive=" + !this.showInactiveProjects;
         }
+        if (this.isSearching){
+          url += "&onlyRoot=false";
+        } else {
+          if (this.showFlatView === undefined){
+            url += "&onlyRoot=true";
+          } else {
+            url += "&onlyRoot=" + !this.showFlatView;
+          }
+        }
         return url;
       },
       refreshTable: function() {
@@ -58,6 +75,40 @@
           url: this.apiUrl(),
           silent: true
         });
+      },
+      onPostBody: function() {
+        if (!this.showFlatView && !this.isSearching) {
+          let columns = this.$refs.table.getOptions().columns
+
+          if (columns && columns[0][0].visible) {
+            this.$refs.table.$table.treegrid({
+              treeColumn: 0,
+              initialState: 'collapsed',
+            })
+          }
+          this.$refs.table.getData().forEach(project => {
+            if (project.children && !project.fetchedChildren && (this.showInactiveProjects || project.children.some(child => child.active))
+              && (!this.$route.query.classifier || project.children.some(child => child.classifier === this.$route.query.classifier))
+              && (!this.$route.query.tag || project.children.some(child => child.tag === this.$route.query.tag))) {
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).addClass('treegrid-collapsed')
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).treegrid('renderExpander')
+            }
+          })
+          this.$refs.table.getData().forEach(row => {
+            if (row.expanded) {
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('expand')
+            } else if (row.expanded === false) {
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('collapse')
+            }
+          })
+        }
+        this.$refs.table.hideLoading()
+      },
+      getChildren: async function (project) {
+        let url = this.apiUrl(project.uuid)
+        await this.axios.get(url).then((response) => {
+            this.$refs.table.append(response.data)
+        })
       }
     },
     watch:{
@@ -65,12 +116,22 @@
         this.refreshTable();
       },
       showInactiveProjects() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
+      },
+      showFlatView() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
+      },
+      isSearching() {
         this.refreshTable();
       }
     },
     data() {
       return {
         showInactiveProjects: false,
+        showFlatView: false,
+        isSearching: false,
         labelIcon: {
           dataOn: '\u2713',
           dataOff: '\u2715'
@@ -173,6 +234,9 @@
         ],
         data: [],
         options: {
+          idField: 'id',
+          parentIdField: 'pid',
+          treeShowField: 'name',
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -190,7 +254,29 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl()
+          url: this.apiUrl(),
+          // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
+          onClickRow: ((row, $element, value) => {
+            if (!this.showFlatView && !this.isSearching) {
+              console.log("in onClickRow")
+              if (event.target.tagName.toLowerCase() !== 'a' && $element.treegrid('isLeaf') && row.children && !row.fetchedChildren && (this.showInactiveProjects || row.children.some(child => child.active))
+                && (!this.$route.query.classifier || row.children.some(child => child.classifier === this.$route.query.classifier))
+                && (!this.$route.query.tag || row.children.some(child => child.tag === this.$route.query.tag))) {
+                row.fetchedChildren = true
+                this.getChildren(row)
+                row.expanded = true
+              } else if (event.target.tagName.toLowerCase() !== 'a' && ((!$element.treegrid('isLeaf') && $element.treegrid('isCollapsed') && event.target.className !== "treegrid-expander treegrid-expander-collapsed") || event.target.className === "treegrid-expander treegrid-expander-expanded")) {
+                $element.treegrid('expand')
+                row.expanded = true
+              } else if (event.target.tagName.toLowerCase() !== 'a' && ((!$element.treegrid('isLeaf') && $element.treegrid('isExpanded') && event.target.className !== "treegrid-expander treegrid-expander-expanded") || event.target.className === "treegrid-expander treegrid-expander-collapsed")) {
+                $element.treegrid('collapse')
+                row.expanded = false
+              }
+            }
+          }),
+          onSearch: ((text) => {
+            this.isSearching = text.length !== 0
+          })
         }
       };
     }
