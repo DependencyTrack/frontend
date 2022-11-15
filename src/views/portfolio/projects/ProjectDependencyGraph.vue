@@ -1,5 +1,8 @@
 <template>
-  <div style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
+  <div style="text-align: center; font-size: xxx-large" v-if="loading">
+    Loading, please wait...
+  </div>
+  <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
     <vue2-org-tree
       :data="data"
       :horizontal="true"
@@ -18,8 +21,6 @@
 import Vue2OrgTree from 'vue2-org-tree'
 import permissionsMixin from "../../../mixins/permissionsMixin";
 
-let pos = { top: 0, left: 0, x: 0, y: 0};
-
 export default {
   mixins: [permissionsMixin],
   components: {
@@ -35,26 +36,60 @@ export default {
       nodeId: 0,
       expandAll: true,
       horizontal: false,
-      collapsable: true
+      collapsable: true,
+      pos: { top: 0, left: 0, x: 0, y: 0},
+      loading: false
     }
   },
   watch: {
-    project: function(newVal, oldVal) {
-      if (this.project && this.project.directDependencies) {
-        this.$emit('total', 1);
-        this.data = {
-          id: this.nodeId,
-          label: this.createNodeLabel(this.project),
-          objectType: "PROJECT",
-          children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
-          fetchedChildren: true
+    project: async function (newVal, oldVal) {
+      if (this.$route.query.dependencyGraph) {
+        if (this.project && this.project.directDependencies) {
+          this.$emit('total', 1);
+          this.loading = true
+          let response
+          if (this.$route.query.objectType === "COMPONENT") {
+            response = await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/dependencyGraph/${this.$route.query.dependencyGraph}`)
+          } else {
+            response = await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/dependencyGraph/${this.$route.query.dependencyGraph}`)
+          }
+          this.data = {
+            id: this.nodeId,
+            label: this.createNodeLabel(this.project),
+            objectType: "PROJECT",
+            children: this.transformDependenciesToOrgTreeWithSearchedDependency(response.data, {gatheredKeys: []}),
+            fetchedChildren: true,
+            expand: true
+          }
+          this.loading = false
+          await new Promise(resolve => setTimeout(resolve, 100));
+          document.getElementsByClassName("searched").item(0).scrollIntoView({behavior: "smooth", inline: "center", block: "center"})
+
+        } else {
+          this.$emit('total', 0);
+          this.data = {
+            id: this.nodeId,
+            label: this.createNodeLabel(this.project),
+            objectType: "PROJECT",
+          }
         }
       } else {
-        this.$emit('total', 0);
-        this.data = {
-          id: this.nodeId,
-          label: this.createNodeLabel(this.project),
-          objectType: "PROJECT",
+        if (this.project && this.project.directDependencies) {
+          this.$emit('total', 1);
+          this.data = {
+            id: this.nodeId,
+            label: this.createNodeLabel(this.project),
+            objectType: "PROJECT",
+            children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+            fetchedChildren: true
+          }
+        } else {
+          this.$emit('total', 0);
+          this.data = {
+            id: this.nodeId,
+            label: this.createNodeLabel(this.project),
+            objectType: "PROJECT",
+          }
         }
       }
     }
@@ -64,7 +99,7 @@ export default {
       if (event.button === 0 && !event.target.classList.contains("clickable-node") && !event.target.classList.contains("org-tree-node-btn")){
         this.$el.style.cursor = "grabbing";
         this.$el.style.userSelect = 'none';
-        pos = {
+        this.pos = {
           left: this.$el.scrollLeft,
           top: document.documentElement.scrollTop,
           x: event.clientX,
@@ -75,28 +110,27 @@ export default {
       } else if (event.button === 1) {
         this.$el.style.cursor = "default";
         this.$el.style.userSelect = 'none';
-        pos = {
+        this.pos = {
           left: this.$el.scrollLeft,
           top: document.documentElement.scrollTop,
           x: event.clientX,
           y: event.clientY,
         }
-        console.log("pos: %o", pos)
         document.addEventListener('mousemove', this.mouseMoveHandlerMiddleMouseButton)
         document.addEventListener("mouseup", this.mouseUpHandler)
       }
     },
     mouseMoveHandler: function (event) {
-      const dx = event.clientX - pos.x
-      const dy = event.clientY - pos.y
+      const dx = event.clientX - this.pos.x
+      const dy = event.clientY - this.pos.y
 
-      document.documentElement.scrollTop = pos.top - dy
-      this.$el.scrollLeft = pos.left - dx
+      document.documentElement.scrollTop = this.pos.top - dy
+      this.$el.scrollLeft = this.pos.left - dx
     },
     mouseMoveHandlerMiddleMouseButton: function (event) {
-      const dx = event.clientX - pos.x
+      const dx = event.clientX - this.pos.x
 
-      this.$el.scrollLeft = pos.left + dx
+      this.$el.scrollLeft = this.pos.left + dx
     },
     mouseUpHandler: function () {
       document.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -125,6 +159,22 @@ export default {
       }
       return children;
     },
+    transformDependenciesToOrgTreeWithSearchedDependency: function (dependencies, treeNode) {
+      let children
+      if (dependencies) {
+        children = []
+        for (const dependency of dependencies) {
+          let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
+          for (const gatheredKey of treeNode.gatheredKeys){
+            childNode.gatheredKeys.push(gatheredKey)
+          }
+          childNode.gatheredKeys.push(childNode.label)
+          children.push(childNode)
+          this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode))
+        }
+      }
+      return children
+    },
     transformDependencyToOrgTree: function(dependency) {
       this.nodeId++;
       return {
@@ -136,6 +186,18 @@ export default {
         gatheredKeys: []
       }
     },
+    transformDependencyToOrgTreeWithSearchedDependency: function(dependency) {
+      this.nodeId++;
+      return {
+        id: this.nodeId,
+        label: this.createNodeLabel(dependency),
+        objectType: "COMPONENT",
+        uuid: dependency.uuid,
+        fetchedChildren: dependency.expand,
+        gatheredKeys: [],
+        expand: dependency.expand
+      }
+    },
     getChildrenFromDependency: function(treeNode, dependency) {
       let dependencyFunc = async() => {
         let url = this.getDependencyUrl(dependency);
@@ -143,10 +205,14 @@ export default {
         let data = response.data;
         if (data && data.directDependencies) {
           let jsonObject = JSON.parse(data.directDependencies)
+          let indexes = []
           for (let i = 0; i < jsonObject.length; i++){
             if (treeNode.gatheredKeys.some(gatheredKey => gatheredKey === jsonObject[i].purl)){
-              jsonObject.splice(i, 1)
+              indexes.unshift(i)
             }
+          }
+          for (const index of indexes){
+            jsonObject.splice(index, 1)
           }
           this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode) )
         }
@@ -180,27 +246,33 @@ export default {
       }
     },
     labelClassName: function(data) {
-      return 'clickable-node'
+      if (this.$route.query.dependencyGraph && data.uuid === this.$route.query.dependencyGraph) {
+        return 'clickable-node searched'
+      } else {
+        return 'clickable-node'
+      }
     },
     renderContent: function(h, data) {
       return data.label
     },
     onExpand: async function (e, data) {
-      if ('expand' in data) {
-        data.expand = !data.expand
-        if (!data.expand && data.children) {
-          this.collapse(data.children)
+      if (!data.fetchedChildren) {
+        e.target.style.cursor = "wait"
+        for (const child of data.children) {
+          await this.getChildrenFromDependency(child, child)
         }
-      } else {
-        if (!data.fetchedChildren) {
-          e.target.style.cursor = "wait"
-          for (const child of data.children) {
-            await this.getChildrenFromDependency(child, child)
-          }
-          data.fetchedChildren = true
-        }
+        data.fetchedChildren = true
         e.target.style.cursor = "pointer"
         this.$set(data, 'expand', true)
+    } else {
+        if ('expand' in data) {
+          data.expand = !data.expand
+          if (!data.expand && data.children) {
+            this.collapse(data.children)
+          }
+        } else {
+          this.$set(data, 'expand', true)
+        }
       }
     },
     onNodeClick: function(e, data) {
@@ -333,5 +405,9 @@ export default {
   // Enable scrolling by dragging in empty space between nodes
   .org-tree-node-label {
     pointer-events: none;
+  }
+  .org-tree-node-label-inner.clickable-node.searched {
+    border: 2.5px solid #21D983;
+    font-weight: bold;
   }
 </style>

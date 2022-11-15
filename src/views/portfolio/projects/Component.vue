@@ -7,7 +7,7 @@
             <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
             <div class="h5 mb-0 mt-2">{{ componentLabel }}</div>
             <div v-if="Object.prototype.hasOwnProperty.call(this.component, 'project') && this.component.project.directDependencies">
-              <i class="fa fa-sitemap" style="cursor: pointer;" aria-hidden="true" onclick="console.log('hello')" v-b-tooltip.hover.bottom :title="$t('message.show_in_dependency_graph')"></i>
+              <i class="fa fa-sitemap" style="cursor: pointer;" aria-hidden="true" @click="this.redirectToDependencyGraph" v-b-tooltip.hover.bottom :title="$t('message.show_in_dependency_graph')"></i>
             </div>
           </b-col>
           <b-col>
@@ -167,7 +167,10 @@
       syncComponentFields: function(component) {
         this.component = component;
         EventBus.$emit('addCrumb', this.componentLabel);
-      }
+      },
+      redirectToDependencyGraph: function (){
+        this.$router.push({path: "/projects/" + this.component.project.uuid + "?dependencyGraph=" + this.component.uuid + "&objectType=COMPONENT"})
+      },
     },
     beforeMount() {
       this.uuid = this.$route.params.uuid;

@@ -108,7 +108,7 @@
         <template v-slot:title><i class="fa fa-exchange"></i> {{ $t('message.services') }} <b-badge variant="tab-total">{{ totalServices }}</b-badge></template>
         <project-services :key="this.uuid" :uuid="this.uuid" v-on:total="totalServices = $event" />
       </b-tab>
-      <b-tab>
+      <b-tab ref="tabDependencyGraph">
         <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }} <b-badge variant="tab-total">{{ totalDependencyGraphs }}</b-badge></template>
         <project-dependency-graph :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalDependencyGraphs = $event" />
       </b-tab>
@@ -247,6 +247,9 @@
     },
     mounted() {
       this.initialize();
+      if (this.$route.query.dependencyGraph){
+        this.$refs.tabDependencyGraph.active = true;
+      }
     },
     watch:{
       $route (to, from){
