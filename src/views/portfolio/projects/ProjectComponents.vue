@@ -73,7 +73,11 @@
             sortable: true,
             formatter(value, row, index) {
               let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
-              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              if (row.project.directDependencies){
+                return '<b-button onclick="console.log(\'hello\')" style="float:right; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"><i class="fa fa-sitemap" aria-hidden="true"></i></b-button> ' + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              } else {
+                return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              }
             }
           },
           {

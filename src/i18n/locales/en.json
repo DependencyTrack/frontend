@@ -391,7 +391,8 @@
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File",
-    "dates": "Dates"
+    "dates": "Dates",
+    "show_in_dependency_graph" : "Show in dependency graph"
   },
   "admin": {
     "configuration": "Configuration",

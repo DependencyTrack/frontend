@@ -80,7 +80,11 @@ export default {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
               let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-              return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+              if (row.component.project.directDependencies){
+                return '<b-button onclick="console.log(\'hello\')" style="float:right; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"><i class="fa fa-sitemap" aria-hidden="true"></i></b-button> ' + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`
+              } else {
+                return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+              }
             } else {
               return "";
             }
