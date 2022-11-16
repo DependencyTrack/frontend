@@ -98,7 +98,7 @@ export default {
 
       this.$el.scrollLeft = pos.left + dx
     },
-    mouseUpHandler: function (event) {
+    mouseUpHandler: function () {
       document.removeEventListener('mousemove', this.mouseMoveHandler);
       document.removeEventListener('mousemove', this.mouseMoveHandlerMiddleMouseButton)
       document.removeEventListener('mouseup', this.mouseUpHandler);
