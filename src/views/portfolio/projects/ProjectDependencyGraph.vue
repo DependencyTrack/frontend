@@ -303,9 +303,9 @@ export default {
   }
   // Button size and position
   .horizontal .org-tree-node-btn {
-    width: 14px;
-    height: 14px;
-    margin: -7px 0px 0px 2.85px;
+    width: 17px;
+    height: 17px;
+    margin: -9px 0px 0px 1.5px;
   }
   // Inner button vertical line
   .org-tree-node-btn:before {
