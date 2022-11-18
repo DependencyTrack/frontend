@@ -138,6 +138,9 @@
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
                                               type="text" v-model="destination" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                    <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jiratickettype" 
+                                              :label="$t('admin.jiratickettype')" :required="true" type="text" v-model="jiratickettype" lazy="true"
+                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
@@ -217,6 +220,7 @@
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
+                  jiratickettype: this.parseJiraTicketType(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
                   projects: row.projects,
@@ -230,6 +234,7 @@
               },
               created() {
                 this.parseDestination(this.alert);
+                this.parseJiraTicketType(this.alert);
               },
               watch: {
                 enabled() {
@@ -262,6 +267,15 @@
                     return null;
                   }
                 },
+                parseJiraTicketType: function(alert) {
+                  if (alert.publisherConfig) {
+                    let value = JSON.parse(alert.publisherConfig);
+                    if (value) {
+                      return value.jiratickettype;
+                    }
+                    return null;
+                  }
+                },
                 updateNotificationRule: function () {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
                   this.axios.post(url, {
@@ -270,11 +284,12 @@
                     enabled: this.enabled,
                     notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
-                    publisherConfig: JSON.stringify({ destination: this.destination }),
+                    publisherConfig: JSON.stringify({ destination: this.destination, jiratickettype: this.jiratickettype }),
                     notifyOn: this.notifyOn
                   }).then((response) => {
                     this.alert = response.data;
                     this.destination = this.parseDestination(this.alert);
+                    this.jiratickettype = this.parseJiraTicketType(this.alert);
                     EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
