@@ -12,11 +12,12 @@
                   v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
           <span class="fa fa-minus"></span> {{ $t('message.remove_component') }}
         </b-button>
-        <b-button size="md" variant="outline-primary"
+        <b-button id="upload-button" size="md" variant="outline-primary"
                   v-b-modal.projectUploadBomModal
                   v-permission:or="[PERMISSIONS.PORTFOLIO_MANAGEMENT, PERMISSIONS.BOM_UPLOAD]">
           <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
         </b-button>
+        <b-tooltip target="upload-button" triggers="hover focus">{{ $t('message.upload_bom_tooltip') }}</b-tooltip>
         <b-dropdown variant="outline-primary" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
           <template #button-content>
             <span class="fa fa-download"></span> {{ $t('message.download_bom') }}
