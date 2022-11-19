@@ -1,6 +1,7 @@
 {
   "API_BASE_URL": "",
   "API_WITH_CREDENTIALS": "",
+  "API_NO_LOGIN": "",
   "OIDC_ISSUER": "",
   "OIDC_CLIENT_ID": "",
   "OIDC_SCOPE": "openid email profile",

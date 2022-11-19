@@ -14,7 +14,7 @@
     name: 'app',
     created() {
       const setJwtForAjax = (jwt) => {
-        if (jwt) {
+        if (jwt && !this.$api.API_NO_LOGIN) {
           $.ajaxSettings.headers['Authorization'] = this.axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
         } else {
           delete this.axios.defaults.headers.common['Authorization'];
@@ -23,7 +23,7 @@
       };
 
       EventBus.$on('authenticated', jwt => {
-        if (jwt) {
+        if (jwt && !this.$api.API_NO_LOGIN) {
           sessionStorage.setItem("token", jwt);
         } else {
           sessionStorage.removeItem('token');

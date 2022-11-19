@@ -19,7 +19,18 @@ export default {
           }
         );
     }
-    if (this.$currentUser) {
+
+    if(Vue.prototype.$api.API_NO_LOGIN) {
+      this.currentUser = {
+        "username": "admin",
+        "lastPasswordChange": 1668810827129,
+        "fullname": "Administrator",
+        "email": "admin@localhost",
+        "suspended": false,
+        "forcePasswordChange": false,
+        "nonExpiryPassword": true
+      };
+    } else if (this.$currentUser) {
       this.currentUser = this.$currentUser;
     } else {
       EventBus.$emit('profileUpdated');
@@ -27,11 +38,13 @@ export default {
   },
   mounted() {
     EventBus.$on('profileUpdated', () => {
-      axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`)
-        .then((result) => {
-            this.currentUser = result.data;
-          }
-        );
+      if(!Vue.prototype.$api.API_NO_LOGIN) {
+        axios.get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`)
+          .then((result) => {
+              this.currentUser = result.data;
+            }
+          );
+      }
     });
   }
 }

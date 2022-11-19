@@ -8,7 +8,8 @@ if mount | grep '/static/config.json'; then
 else
   # Apply ENV vars to temporary config.json
   jq '.API_BASE_URL = env.API_BASE_URL
-        | .API_WITH_CREDENTIALS = env.API_WITH_CREDENTIALS 
+        | .API_WITH_CREDENTIALS = env.API_WITH_CREDENTIALS
+        | .API_NO_LOGIN = env.API_NO_LOGIN
         | .OIDC_ISSUER = env.OIDC_ISSUER
         | .OIDC_CLIENT_ID = env.OIDC_CLIENT_ID
         | .OIDC_SCOPE = env.OIDC_SCOPE

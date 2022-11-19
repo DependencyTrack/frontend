@@ -43,6 +43,9 @@ axios.get(contextPath + "/static/config.json").then(response => {
     Vue.prototype.$api.BASE_URL = contextPath;
   }
 
+  // Support for apiserver with disabled authentication and authorization
+  Vue.prototype.$api.API_NO_LOGIN = response.data.API_NO_LOGIN && response.data.API_NO_LOGIN.toLowerCase() === "true";
+
   // Send XHR cross-site cookie credentials
   Vue.prototype.$api.WITH_CREDENTIALS = response.data.API_WITH_CREDENTIALS && response.data.API_WITH_CREDENTIALS.toLowerCase() === "true";
 

@@ -256,7 +256,20 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const jwt = getToken();
   const publicRoutes = ['Login', '404', 'PasswordForceChange'];
-  if (!publicRoutes.includes(to.name)) {
+  // Force admin because we must choose some user
+  if (!Vue.prototype.$currentUser && Vue.prototype.$api.API_NO_LOGIN) {
+    Vue.prototype.$currentUser = {
+      "username": "admin",
+      "lastPasswordChange": 1668810827129,
+      "fullname": "Administrator",
+      "email": "admin@localhost",
+      "suspended": false,
+      "forcePasswordChange": false,
+      "nonExpiryPassword": true
+    };
+  }
+
+  if (!publicRoutes.includes(to.name) && !Vue.prototype.$api.API_NO_LOGIN) {
     const redirectTo = to.fullPath;
     if (jwt) {
       // let backend verify the token

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 // API Permissions
 export const BOM_UPLOAD = "BOM_UPLOAD";
 export const VIEW_PORTFOLIO = "VIEW_PORTFOLIO";
@@ -17,6 +19,9 @@ export const POLICY_MANAGEMENT = "POLICY_MANAGEMENT";
  * retrieve and decode it.
  */
 export const hasPermission = function hasPermission(permission, decodedToken) {
+  if (Vue.prototype.$api.API_NO_LOGIN) {
+    return true;
+  }
   let token = decodedToken;
   if (!decodedToken) {
     token = decodeToken(getToken());
@@ -36,6 +41,9 @@ export const hasPermission = function hasPermission(permission, decodedToken) {
  * Returns the decoded token as a JSON object.
  */
 export const decodeToken = function decodeToken(token) {
+  if (Vue.prototype.$api.API_NO_LOGIN) {
+    return '';
+  }
   let base64Url = token.split('.')[1];
   let base64 = base64Url.replace('-', '+').replace('_', '/');
   return JSON.parse(window.atob(base64));
@@ -45,5 +53,8 @@ export const decodeToken = function decodeToken(token) {
  * Retrieves the token from session storage.
  */
 export const getToken = function getToken() {
+  if (Vue.prototype.$api.API_NO_LOGIN) {
+    return '';
+  }
   return sessionStorage.getItem("token");
 };
