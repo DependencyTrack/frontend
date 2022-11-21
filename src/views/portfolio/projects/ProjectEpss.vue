@@ -32,7 +32,8 @@ import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
 
 export default {
   props: {
-    uuid: String
+    uuid: String,
+    directDependencies: String
   },
   mixins: [bootstrapTableMixin],
   components: {
@@ -52,9 +53,14 @@ export default {
           title: this.$t('message.component'),
           field: "component.name",
           sortable: true,
-          formatter(value, row, index) {
+          formatter: (value, row, index) => {
             let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            if (this.directDependencies){
+              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../projects/" + this.uuid + "?dependencyGraph=" + row.component.uuid + "&objectType=COMPONENT")
+              return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            } else {
+              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            }
           }
         },
         {

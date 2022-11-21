@@ -74,7 +74,8 @@
             formatter(value, row, index) {
               let url = xssFilters.uriInUnQuotedAttr("../components/" + row.uuid);
               if (row.project.directDependencies){
-                return '<b-button onclick="console.log(\'hello\')" style="float:right; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"><i class="fa fa-sitemap" aria-hidden="true"></i></b-button> ' + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+                let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../projects/" + row.project.uuid + "?dependencyGraph=" + row.uuid + "&objectType=COMPONENT")
+                return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
               } else {
                 return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
               }
