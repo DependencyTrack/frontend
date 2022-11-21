@@ -13,6 +13,7 @@
       :columns="columns"
       :data="data"
       :options="options"
+      @on-pre-body="onPreBody"
       @on-post-body="onPostBody">
     </bootstrap-table>
     <project-create-project-modal v-on:refreshTable="refreshTable"/>
@@ -29,6 +30,7 @@
   import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import MurmurHash2 from "imurmurhash"
 
   export default {
     mixins: [permissionsMixin],
@@ -76,6 +78,13 @@
           silent: true
         });
       },
+      onPreBody: function() {
+        if (!this.showFlatView && !this.isSearching) {
+          this.$refs.table.getData().forEach(project => {
+            project.id = MurmurHash2(project.uuid).result()
+          })
+        }
+      },
       onPostBody: function() {
         if (!this.showFlatView && !this.isSearching) {
           let columns = this.$refs.table.getOptions().columns
@@ -107,7 +116,10 @@
       getChildren: async function (project) {
         let url = this.apiUrl(project.uuid)
         await this.axios.get(url).then((response) => {
-            this.$refs.table.append(response.data)
+          for (let project of response.data) {
+            project.pid = MurmurHash2(project.parentUuid).result()
+          }
+          this.$refs.table.append(response.data)
         })
       },
       saveViewState: function () {
