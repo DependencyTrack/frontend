@@ -272,7 +272,7 @@
           },
           url: this.apiUrl(),
           // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
-          onClickRow: ((row, $element, value) => {
+          onClickRow: ((row, $element) => {
             if (!this.showFlatView && !this.isSearching) {
               if (event.target.tagName.toLowerCase() !== 'a' && $element.treegrid('isLeaf') && row.children && !row.fetchedChildren && (this.showInactiveProjects || row.children.some(child => child.active))
                 && (!this.$route.query.classifier || row.children.some(child => child.classifier === this.$route.query.classifier))
