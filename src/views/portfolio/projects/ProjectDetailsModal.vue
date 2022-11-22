@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags">
+  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags" @hide="resetValues()">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-edit"></i> {{ $t('message.general') }}</template>
@@ -17,9 +17,12 @@
                                      v-model="project.classifier" :options="availableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')"
                                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
-          <b-input-group-form-select id="project-parent-input" required="false"
-                                     v-model="selectedParent" :options="availableParents"
-                                     :label="$t('message.parent')" :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <div style="margin-bottom: 1rem">
+            <label>Parent</label>
+            <multiselect v-model="selectedParent" id="multiselect" :custom-label="createProjectLabel" :placeholder="this.$t('message.search_parent')" open-direction="bottom" :options="availableParents"
+                         :multiple="false" :searchable="true" track-by="uuid" :loading="isLoading" @search-change="asyncFind" :internal-search="false" :close-on-select="true"
+                         selectLabel="" deselectLabel="" ></multiselect>
+          </div>
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -93,6 +96,7 @@
   import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import common from "../../../shared/common";
+  import Multiselect from "vue-multiselect"
 
   export default {
     name: "ProjectDetailsModal",
@@ -101,7 +105,8 @@
       BInputGroupFormInput,
       BInputGroupFormSelect,
       VueTagsInput,
-      cSwitch
+      cSwitch,
+      Multiselect
     },
     props: {
       project: Object,
@@ -121,10 +126,9 @@
           { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
           { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
+        parent: null,
         selectedParent: null,
-        availableParents: [
-          { value: null, text: ''}
-        ],
+        availableParents: [],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -132,6 +136,7 @@
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
+        isLoading: false
       }
     },
     beforeUpdate() {
@@ -140,8 +145,9 @@
     },
     beforeMount() {
       this.$root.$on('initializeProjectDetailsModal', async () => {
-        if (!this.retrievedParents) {
-          await this.retrieveParents()
+        if (!this.retrievedParents && this.project.parent) {
+          this.parent = (await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.project.parent.uuid}`)).data
+          this.selectedParent = this.parent
           this.retrievedParents = true
         }
         this.$root.$emit("bv::show::modal", "projectDetailsModal")
@@ -160,6 +166,10 @@
       updateProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
+        let parent = null
+        if (this.selectedParent){
+          parent = {uuid: this.selectedParent.uuid};
+        }
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.post(url, {
           uuid: this.project.uuid,
@@ -170,7 +180,7 @@
           version: this.project.version,
           description: this.project.description,
           classifier: this.project.classifier,
-          parent: {uuid: this.selectedParent},
+          parent: parent,
           cpe: this.project.cpe,
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
@@ -179,6 +189,7 @@
         }).then((response) => {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));
+          this.parent = this.selectedParent
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
@@ -195,34 +206,35 @@
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       },
-      retrieveParents: function() {
-        return new Promise(resolve => {
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}`;
-          this.axios.get(url).then((response) => {
-            for (let i = 0; i < response.data.length; i++) {
-              let project = response.data[i];
-              if (project.uuid !== this.uuid && project.active){
-                if (project.version){
-                  this.availableParents.push({value: project.uuid, text: project.name + ' : ' + project.version});
-                } else {
-                  this.availableParents.push({value: project.uuid, text: project.name});
-                }
-              }
-              if (this.project.parent && this.project.parent.uuid === project.uuid  ) {
-                this.selectedParent = project.uuid;
-              }
-            }
-          }).catch((error) => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          }).finally(() => {
-            resolve()
-          });
-        })
-      },
       hasActiveChild: function (project) {
         return project.children && project.children.some((child) => {
           return child.active || this.hasActiveChild(child);
         });
+      },
+      createProjectLabel: function (project) {
+        if (project.version){
+          return project.name + " : " + project.version
+        } else {
+          return project.name
+        }
+      },
+      asyncFind: function (query) {
+        if (query) {
+          this.isLoading = true
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}?searchText=${query}&excludeInactive=true`
+          this.axios.get(url).then(response => {
+            if (response.data) {
+              this.availableParents = response.data
+            } else {
+              this.availableParents = []
+            }
+            this.isLoading = false
+          })
+        }
+      },
+      resetValues: function () {
+        this.selectedParent = this.parent
+        this.availableParents = []
       }
     }
   }

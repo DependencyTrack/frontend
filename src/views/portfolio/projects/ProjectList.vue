@@ -79,11 +79,9 @@
         });
       },
       onPreBody: function() {
-        if (!this.showFlatView && !this.isSearching) {
           this.$refs.table.getData().forEach(project => {
             project.id = MurmurHash2(project.uuid).result()
           })
-        }
       },
       onPostBody: function() {
         if (!this.showFlatView && !this.isSearching) {
