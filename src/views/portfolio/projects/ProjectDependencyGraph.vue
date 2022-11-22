@@ -1,8 +1,12 @@
 <template>
-  <div style="text-align: center; font-size: xxx-large" v-if="loading">
+  <div style="text-align: center; font-size: xxx-large" v-if="this.loading">
     Loading, please wait...
   </div>
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
+    <span v-if="this.$route.query.dependencyGraph && this.$route.query.dependencyGraph.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0">
+      <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showOnlySearched" color="primary" v-model="showOnlySearched" label v-bind="labelIcon" />
+      <span class="text-muted">{{ $t('message.hide_other_components') }}</span><br>
+    </span>
     <vue2-org-tree
       :data="data"
       :horizontal="true"
@@ -20,11 +24,13 @@
 <script>
 import Vue2OrgTree from 'vue2-org-tree'
 import permissionsMixin from "../../../mixins/permissionsMixin";
+import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
-    Vue2OrgTree
+    Vue2OrgTree,
+    cSwitch
   },
   props: {
     project: Object,
@@ -33,12 +39,18 @@ export default {
   data() {
     return {
       data: {},
+      response: Object,
       nodeId: 0,
       expandAll: true,
       horizontal: false,
       collapsable: true,
       pos: { top: 0, left: 0, x: 0, y: 0},
-      loading: false
+      loading: false,
+      showOnlySearched: false,
+      labelIcon: {
+        dataOn: '\u2713',
+        dataOff: '\u2715'
+      },
     }
   },
   watch: {
@@ -47,24 +59,46 @@ export default {
         if (this.project && this.project.directDependencies) {
           this.$emit('total', 1);
           this.loading = true
-          let response
+          let url
           if (this.$route.query.objectType === "COMPONENT") {
-            response = await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/dependencyGraph/${this.$route.query.dependencyGraph}`)
+            url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/dependencyGraph/${this.$route.query.dependencyGraph}/project/${this.project.uuid}`
           } else {
-            response = await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/dependencyGraph/${this.$route.query.dependencyGraph}`)
+            url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/dependencyGraph/${this.$route.query.dependencyGraph}/project/${this.project.uuid}`
           }
-          this.data = {
-            id: this.nodeId,
-            label: this.createNodeLabel(this.project),
-            objectType: "PROJECT",
-            children: this.transformDependenciesToOrgTreeWithSearchedDependency(response.data, {gatheredKeys: []}),
-            fetchedChildren: true,
-            expand: true
-          }
-          this.loading = false
-          await new Promise(resolve => setTimeout(resolve, 100));
-          document.getElementsByClassName("searched").item(0).scrollIntoView({behavior: "smooth", inline: "center", block: "center"})
-
+          this.axios.get(url).then(async response => {
+            this.response = response
+            this.data = {
+              id: this.nodeId,
+              label: this.createNodeLabel(this.project),
+              objectType: "PROJECT",
+              children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
+              fetchedChildren: true,
+              expand: true
+            }
+            this.loading = false
+            await new Promise(resolve => setTimeout(resolve, 50));
+            document.getElementsByClassName("searched").item(0).scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "center"
+            })
+          }).catch((error) => {
+            console.log(error)
+            if (error.response.status === 409) {
+              this.$toastr.w(this.$t('condition.not_found_in_dependency_graph'));
+            } else {
+              this.$toastr.w(this.$t('condition.unsuccessful_action'));
+            }
+            this.$route.query.dependencyGraph = null
+            this.data = {
+              id: this.nodeId,
+              label: this.createNodeLabel(this.project),
+              objectType: "PROJECT",
+              children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+              fetchedChildren: true
+            }
+            this.loading = false
+          })
         } else {
           this.$emit('total', 0);
           this.data = {
@@ -90,6 +124,27 @@ export default {
             label: this.createNodeLabel(this.project),
             objectType: "PROJECT",
           }
+        }
+      }
+    },
+    showOnlySearched: function () {
+      if (this.showOnlySearched) {
+        this.data = {
+          id: this.nodeId,
+          label: this.createNodeLabel(this.project),
+          objectType: "PROJECT",
+          children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
+          fetchedChildren: true,
+          expand: true
+        }
+      } else {
+        this.data = {
+          id: this.nodeId,
+          label: this.createNodeLabel(this.project),
+          objectType: "PROJECT",
+          children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
+          fetchedChildren: true,
+          expand: true
         }
       }
     }
@@ -159,18 +214,24 @@ export default {
       }
       return children;
     },
-    transformDependenciesToOrgTreeWithSearchedDependency: function (dependencies, treeNode) {
+    transformDependenciesToOrgTreeWithSearchedDependency: function (dependencies, treeNode, onlySearched) {
       let children
       if (dependencies) {
         children = []
         for (const dependency of dependencies) {
-          let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
-          for (const gatheredKey of treeNode.gatheredKeys){
-            childNode.gatheredKeys.push(gatheredKey)
+          if (!onlySearched || (onlySearched && (dependency.expand || dependency.uuid === this.$route.query.dependencyGraph))) {
+            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
+            for (const gatheredKey of treeNode.gatheredKeys) {
+              childNode.gatheredKeys.push(gatheredKey)
+            }
+            childNode.gatheredKeys.push(childNode.label)
+            children.push(childNode)
+            if (onlySearched && dependency.uuid === this.$route.query.dependencyGraph) {
+              this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, false))
+            } else {
+              this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, onlySearched))
+            }
           }
-          childNode.gatheredKeys.push(childNode.label)
-          children.push(childNode)
-          this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode))
         }
       }
       return children
@@ -407,7 +468,7 @@ export default {
     pointer-events: none;
   }
   .org-tree-node-label-inner.clickable-node.searched {
-    border: 2.5px solid #21D983;
+    border: 2.5px solid #4dbd74;
     font-weight: bold;
   }
 </style>

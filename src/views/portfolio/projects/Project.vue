@@ -114,11 +114,11 @@
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" :direct-dependencies="this.project.directDependencies" v-on:total="totalFindings = $event" />
+        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }} <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template>
-        <project-epss :key="this.uuid" :uuid="this.uuid" :direct-dependencies="this.project.directDependencies" v-on:total="totalEpss = $event" />
+        <project-epss :key="this.uuid" :uuid="this.uuid" v-on:total="totalEpss = $event" />
       </b-tab>
       <b-tab v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)">
         <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
