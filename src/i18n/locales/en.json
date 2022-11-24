@@ -393,7 +393,8 @@
     "component_file": "File",
     "dates": "Dates",
     "show_in_dependency_graph": "Show in dependency graph",
-    "hide_other_components": "Hide other components"
+    "hide_other_components": "Hide other components",
+    "not_found_in_dependency_graph": "Dependency could not be found in dependency graph"
   },
   "admin": {
     "configuration": "Configuration",
@@ -602,8 +603,7 @@
     "http_status_code": "HTTP Status Code",
     "unsuccessful_action": "Could not perform the requested action",
     "http_request_error": "HTTP Request Error",
-    "server_error": "Server Error",
-    "not_found_in_dependency_graph": "Dependency could not be found in dependency graph"
+    "server_error": "Server Error"
   },
   "violation": {
     "info": "Inform",

@@ -7,6 +7,9 @@
       <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showOnlySearched" color="primary" v-model="showOnlySearched" label v-bind="labelIcon" />
       <span class="text-muted">{{ $t('message.hide_other_components') }}</span><br>
     </span>
+    <span v-if="this.notFound">
+      <span class="text-muted">{{ $t('message.not_found_in_dependency_graph') }}</span><br>
+    </span>
     <vue2-org-tree
       :data="data"
       :horizontal="true"
@@ -47,6 +50,7 @@ export default {
       pos: { top: 0, left: 0, x: 0, y: 0},
       loading: false,
       showOnlySearched: false,
+      notFound: false,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -59,45 +63,38 @@ export default {
         if (this.project && this.project.directDependencies) {
           this.$emit('total', 1);
           this.loading = true
-          let url
-          if (this.$route.query.objectType === "COMPONENT") {
-            url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/dependencyGraph/${this.$route.query.dependencyGraph}/project/${this.project.uuid}`
-          } else {
-            url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/dependencyGraph/${this.$route.query.dependencyGraph}/project/${this.project.uuid}`
-          }
-          this.axios.get(url).then(async response => {
-            this.response = response
-            this.data = {
-              id: this.nodeId,
-              label: this.createNodeLabel(this.project),
-              objectType: "PROJECT",
-              children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
-              fetchedChildren: true,
-              expand: true
-            }
-            this.loading = false
-            await new Promise(resolve => setTimeout(resolve, 50));
-            document.getElementsByClassName("searched").item(0).scrollIntoView({
-              behavior: "smooth",
-              inline: "center",
-              block: "center"
-            })
-          }).catch((error) => {
-            console.log(error)
-            if (error.response.status === 409) {
-              this.$toastr.w(this.$t('condition.not_found_in_dependency_graph'));
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.query.dependencyGraph}`
+          this.axios.get(url).then(response => {
+            if (response.data && response.data.length > 0){
+              this.response = response
+              this.data = {
+                id: this.nodeId,
+                label: this.createNodeLabel(this.project),
+                objectType: "PROJECT",
+                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
+                fetchedChildren: true,
+                expand: true
+              }
+              this.loading = false
+              new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+                document.getElementsByClassName("searched").item(0).scrollIntoView({
+                  behavior: "smooth",
+                  inline: "center",
+                  block: "center"
+                })
+              })
             } else {
-              this.$toastr.w(this.$t('condition.unsuccessful_action'));
+              this.$route.query.dependencyGraph = null
+              this.notFound = true
+              this.data = {
+                id: this.nodeId,
+                label: this.createNodeLabel(this.project),
+                objectType: "PROJECT",
+                children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+                fetchedChildren: true
+              }
+              this.loading = false
             }
-            this.$route.query.dependencyGraph = null
-            this.data = {
-              id: this.nodeId,
-              label: this.createNodeLabel(this.project),
-              objectType: "PROJECT",
-              children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
-              fetchedChildren: true
-            }
-            this.loading = false
           })
         } else {
           this.$emit('total', 0);
