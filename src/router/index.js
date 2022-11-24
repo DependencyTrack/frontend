@@ -69,6 +69,19 @@ function configRoutes() {
           }
         },
         {
+          path: 'projects/:uuid/:componentUuid',
+          name: 'Dependency Graph Component Lookup',
+          props: (route) => ( {
+            uuid: route.params.uuid,
+            componentUuid: route.params.componentUuid
+          } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects'
+          }
+        },
+        {
           path: 'components',
           name: 'Component Lookup',
           component: ComponentSearch,

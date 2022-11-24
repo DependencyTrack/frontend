@@ -167,7 +167,7 @@
         EventBus.$emit('addCrumb', this.componentLabel);
       },
       redirectToDependencyGraph: function (){
-        this.$router.push({path: "/projects/" + this.component.project.uuid + "?dependencyGraph=" + this.component.uuid + "&objectType=COMPONENT"})
+        this.$router.push({path: "/projects/" + this.component.project.uuid + "/" + this.component.uuid})
       },
     },
     beforeMount() {

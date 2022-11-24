@@ -95,7 +95,7 @@
         <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.projectDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
       </div>
     </b-card>
-    <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
+    <b-tabs v-model="tabIndex" class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
       <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
         <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
@@ -204,7 +204,8 @@
         totalDependencyGraphs: 0,
         totalFindings: 0,
         totalEpss: 0,
-        totalViolations: 0
+        totalViolations: 0,
+        tabIndex: 0
       }
     },
     methods: {
@@ -247,14 +248,17 @@
     },
     mounted() {
       this.initialize();
-      if (this.$route.query.dependencyGraph){
-        this.$refs.tabDependencyGraph.active = true;
+      if (this.$route.params.componentUuid){
+        this.$refs.tabDependencyGraph.active = true
       }
     },
     watch:{
       $route (to, from){
         this.uuid = this.$route.params.uuid;
         this.initialize();
+        if (this.$route.params.componentUuid){
+          this.tabIndex = 3
+        }
       }
     },
     destroyed() {

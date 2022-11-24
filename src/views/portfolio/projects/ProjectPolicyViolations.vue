@@ -26,6 +26,7 @@ import permissionsMixin from "../../../mixins/permissionsMixin";
 import xssFilters from "xss-filters";
 import i18n from "../../../i18n";
 import BootstrapToggle from 'vue-bootstrap-toggle'
+import $ from "jquery";
 
 export default {
   props: {
@@ -78,10 +79,10 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             if (row.component) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
+              let url = xssFilters.uriInUnQuotedAttr("../../components/" + row.component.uuid);
               let name = common.concatenateComponentName(null, row.component.name, row.component.version);
               if (row.component.project.directDependencies) {
-                let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../projects/" + row.project.uuid + "?dependencyGraph=" + row.component.uuid + "&objectType=COMPONENT")
+                let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../projects/" + this.uuid + "/" + row.component.uuid)
                 return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
               }
             } else {
@@ -297,7 +298,8 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: this.apiUrl()
+        url: this.apiUrl(),
+        onPostBody: this.initializeTooltips,
       }
     };
   },
@@ -319,7 +321,12 @@ export default {
     },
     tableLoaded: function(data) {
       this.$emit('total', data.total);
-    }
+    },
+    initializeTooltips: function () {
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+      });
+    },
   },
   watch:{
     showSuppressedViolations() {

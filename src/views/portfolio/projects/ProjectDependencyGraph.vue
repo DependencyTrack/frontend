@@ -3,7 +3,7 @@
     Loading, please wait...
   </div>
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
-    <span v-if="this.$route.query.dependencyGraph && this.$route.query.dependencyGraph.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0">
+    <span v-if="this.$route.params.componentUuid && this.$route.params.componentUuid.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
       <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showOnlySearched" color="primary" v-model="showOnlySearched" label v-bind="labelIcon" />
       <span class="text-muted">{{ $t('message.hide_other_components') }}</span><br>
     </span>
@@ -59,13 +59,15 @@ export default {
   },
   watch: {
     project: async function (newVal, oldVal) {
-      if (this.$route.query.dependencyGraph) {
+      if (this.$route.params.componentUuid) {
         if (this.project && this.project.directDependencies) {
           this.$emit('total', 1);
           this.loading = true
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.query.dependencyGraph}`
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
           this.axios.get(url).then(response => {
             if (response.data && response.data.length > 0){
+              this.showOnlySearched = false
+              this.notFound = false
               this.response = response
               this.data = {
                 id: this.nodeId,
@@ -216,14 +218,14 @@ export default {
       if (dependencies) {
         children = []
         for (const dependency of dependencies) {
-          if (!onlySearched || (onlySearched && (dependency.expand || dependency.uuid === this.$route.query.dependencyGraph))) {
+          if (!onlySearched || (onlySearched && (dependency.expand || dependency.uuid === this.$route.params.componentUuid))) {
             let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
             for (const gatheredKey of treeNode.gatheredKeys) {
               childNode.gatheredKeys.push(gatheredKey)
             }
             childNode.gatheredKeys.push(childNode.label)
             children.push(childNode)
-            if (onlySearched && dependency.uuid === this.$route.query.dependencyGraph) {
+            if (onlySearched && dependency.uuid === this.$route.params.componentUuid) {
               this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, false))
             } else {
               this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, onlySearched))
@@ -304,7 +306,7 @@ export default {
       }
     },
     labelClassName: function(data) {
-      if (this.$route.query.dependencyGraph && data.uuid === this.$route.query.dependencyGraph) {
+      if (this.$route.params.componentUuid && data.uuid === this.$route.params.componentUuid) {
         return 'clickable-node searched'
       } else {
         return 'clickable-node'
