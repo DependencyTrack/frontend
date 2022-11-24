@@ -95,7 +95,7 @@
         <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.projectDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
       </div>
     </b-card>
-    <b-tabs v-model="tabIndex" class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
+    <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
       <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
         <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
@@ -257,7 +257,7 @@
         this.uuid = this.$route.params.uuid;
         this.initialize();
         if (this.$route.params.componentUuid){
-          this.tabIndex = 3
+          this.$refs.tabDependencyGraph.activate()
         }
       }
     },
