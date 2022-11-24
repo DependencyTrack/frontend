@@ -36,7 +36,7 @@ export default {
           field: "name",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../../services/" + row.uuid);
+            let url = xssFilters.uriInUnQuotedAttr("../../../services/" + row.uuid);
             return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
