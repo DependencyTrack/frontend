@@ -228,7 +228,7 @@
       asyncFind: function (query) {
         if (query){
           this.isLoading = true
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=false`
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=true`
           this.axios.get(url).then(response => {
             if (response.data) {
               this.availableParents = response.data
