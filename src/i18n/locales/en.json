@@ -260,7 +260,7 @@
     "cpe": "CPE",
     "cpe_full": "Common Platform Enumeration (CPE)",
     "classifier": "Classifier",
-    "parent": "Parent",
+    "search_parent": "Type to search parent",
     "inactive_active_children" : "The project cannot be set to inactive if it has active children",
     "filename": "Filename",
     "copyright": "Copyright",

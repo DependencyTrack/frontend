@@ -362,3 +362,103 @@ td a.detail-icon {
   cursor: pointer;
 }
 
+// Adjusts vue-multiselect style to dependency track
+
+.multiselect__spinner {
+  background: $grey-650;
+  z-index: 52;
+}
+
+.multiselect__spinner:before,
+.multiselect__spinner:after {
+  border-color: $primary transparent transparent;
+}
+
+.multiselect--active {
+  color: #bfcfdf;
+}
+
+.multiselect__input,
+.multiselect__single {
+  background: $grey-650;
+  color: #bfcfdf;
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding-left: 0;
+  margin-top: 0.15rem;
+}
+
+.multiselect__input::placeholder {
+  color: #bfcfdf;
+}
+
+.multiselect__input:hover,
+.multiselect__single:hover {
+  border-color: $grey-650;
+}
+
+.multiselect__input:focus,
+.multiselect__single:focus {
+  border-color: $grey-650;
+}
+
+.multiselect__select,
+.multiselect__select:before {
+  border-color: #2f353a transparent;
+  z-index: 51;
+}
+
+.multiselect__placeholder {
+  color: $grey-400;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__content-wrapper {
+  border: 1px solid $border-color;
+  background: $grey-650;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__content {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__option {
+  cursor: default;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__option--highlight {
+  background: #52525e;
+  color: #bfcfdf;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__option--selected {
+  background: $grey-650;
+  color: #bfcfdf;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.multiselect__tags {
+  border: 1px solid $border-color;
+  background: $grey-650;
+  color: #bfcfdf;
+  height: $input-height;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.multiselect__option--selected.multiselect__option--highlight {
+  background: #52525e;
+  color: #bfcfdf;
+  font-weight: 700;
+}
+
