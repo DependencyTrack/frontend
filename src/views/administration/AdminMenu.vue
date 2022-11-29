@@ -68,6 +68,11 @@
                 component: 'TaskScheduler',
                 name: this.$t('admin.task_scheduler'),
                 href: "#taskSchedulerTab"
+              },
+              {
+                component: 'Search',
+                name: this.$t('message.search'),
+                href: "#searchTab"
               }
             ]
           },

@@ -25,6 +25,7 @@
   import Jira from "./configuration/JiraConfig";
   import InternalComponents from "./configuration/InternalComponents";
   import TaskScheduler from "./configuration/TaskScheduler.vue";
+  import Search from "./configuration/Search.vue";
   // Analyzer plugins
   import InternalAnalyzer from "./analyzers/InternalAnalyzer";
   import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
@@ -64,7 +65,7 @@
     components: {
       EventBus,
       AdminMenu,
-      General, BomFormats, Email, Jira, InternalComponents, TaskScheduler,
+      General, BomFormats, Email, Jira, InternalComponents, TaskScheduler, Search,
       InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer,
       VulnSourceNvd, VulnSourceGitHubAdvisories, VulnSourceOSVAdvisories,
       Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Nuget, Python,

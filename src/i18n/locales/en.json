@@ -391,7 +391,8 @@
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File",
-    "dates": "Dates"
+    "dates": "Dates",
+    "reindex": "Rebuild indexe(s)"
   },
   "admin": {
     "configuration": "Configuration",
@@ -599,7 +600,17 @@
     "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",
     "jira_password": "Jira password",
     "jira_ticket_type": "Jira ticket type",
-    "jira_project_key": "Jira project key"
+    "jira_project_key": "Jira project key",
+    "reindex_projects": "Projects",
+    "reindex_components": "Components",
+    "reindex_service_components": "Service components",
+    "reindex_vulnerabilities": "Vulnerabilities",
+    "reindex_licenses": "Licenses",
+    "reindex_cpes": "CPE",
+    "reindex_vulnerable_software": "Vulnerable software",
+    "reindex_submitted": "Reindex request submitted",
+    "reindex_error": "Error encountered while submitting reindex request",
+    "reindex_description": "Rebuild the lucenes indexes used by Dependency Track to perform full text search or fuzzy match. TODO (Be more explicit)"
   },
   "condition": {
     "warning": "Warning",
