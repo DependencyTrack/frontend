@@ -292,6 +292,7 @@
         this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}?limit=9999`
         ).then((response) => {
           let vals = [];
+          vals.push( {value: "undefinedLicense", text: "undefined license"} )
           for (let i=0; i<response.data.length; i++) {
             let object = response.data[i];
             vals.push( {value: object.uuid, text: object.name} )
