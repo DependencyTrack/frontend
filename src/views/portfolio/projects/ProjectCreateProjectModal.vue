@@ -14,6 +14,12 @@
           <b-input-group-form-select id="v-classifier-input" required="true"
                                      v-model="project.classifier" :options="sortAvailableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')" />
+          <div style="margin-bottom: 1rem">
+          <label>Parent</label>
+          <multiselect v-model="selectedParent" id="multiselect" :custom-label="createProjectLabel" :placeholder="this.$t('message.search_parent')" open-direction="bottom" :options="availableParents"
+                       :multiple="false" :searchable="true" track-by="uuid" :loading="isLoading" @search-change="asyncFind" :internal-search="false" :close-on-select="true"
+                       selectLabel="" deselectLabel="" ></multiselect>
+          </div>
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -85,6 +91,7 @@
   import VueTagsInput from '@johmun/vue-tags-input';
   import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
+  import Multiselect from "vue-multiselect"
 
   export default {
     name: "ProjectCreateProjectModal",
@@ -93,7 +100,8 @@
       BInputGroupFormInput,
       BInputGroupFormSelect,
       VueTagsInput,
-      cSwitch
+      cSwitch,
+      Multiselect
     },
     data() {
       return {
@@ -111,6 +119,8 @@
         ],
         selectableLicenses: [],
         selectedLicense: '',
+        selectedParent: null,
+        availableParents: [],
         project: {},
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
@@ -119,6 +129,7 @@
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
+        isLoading: false
       }
     },
     beforeUpdate() {
@@ -129,7 +140,10 @@
       this.readOnlyProjectVersion = this.project.version;
     },
     beforeMount() {
-      this.retrieveLicenses();
+      this.$root.$on('initializeProjectCreateProjectModal', async () => {
+        await this.retrieveLicenses()
+        this.$root.$emit("bv::show::modal", "projectCreateProjectModal")
+      })
     },
     computed: {
       sortAvailableClassifiers: function() {
@@ -149,6 +163,10 @@
       createProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
+        let parent = null
+        if (this.selectedParent){
+          parent = {uuid: this.selectedParent.uuid};
+        }
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.put(url, {
           name: this.project.name,
@@ -156,6 +174,7 @@
           group: this.project.group,
           description: this.project.description,
           //license: this.selectedLicense,
+          parent: parent,
           classifier: this.project.classifier,
           purl: this.project.purl,
           cpe: this.project.cpe,
@@ -166,6 +185,8 @@
         }).then((response) => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.project_created'));
+          this.selectedParent = null;
+          this.availableParents = [{ value: null, text: ''}]
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
@@ -173,23 +194,50 @@
         });
       },
       retrieveLicenses: function() {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
-        this.axios.get(url).then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            let license = response.data[i];
-            this.selectableLicenses.push({value: license.licenseId, text: license.name});
-            if (this.project.resolvedLicense && this.project.resolvedLicense.uuid === license.uuid ) {
-              this.selectedLicense = license.licenseId;
+        return new Promise(resolve => {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
+          this.axios.get(url).then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              let license = response.data[i];
+              this.selectableLicenses.push({value: license.licenseId, text: license.name});
+              if (this.project.resolvedLicense && this.project.resolvedLicense.uuid === license.uuid ) {
+                this.selectedLicense = license.licenseId;
+              }
             }
-          }
-        }).catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+          }).catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          }).finally(() => {
+            resolve()
+          });
+        })
       },
       resetValues: function () {
         this.project = {};
         this.tag = "";
         this.tags = [];
+        this.selectedParent = null
+        this.availableParents = []
+      },
+      createProjectLabel: function (project) {
+        if (project.version){
+          return project.name + " : " + project.version
+        } else {
+          return project.name
+        }
+      },
+      asyncFind: function (query) {
+        if (query){
+          this.isLoading = true
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=true`
+          this.axios.get(url).then(response => {
+            if (response.data) {
+              this.availableParents = response.data
+            } else {
+              this.availableParents = []
+            }
+            this.isLoading = false
+          })
+        }
       }
     }
   }
