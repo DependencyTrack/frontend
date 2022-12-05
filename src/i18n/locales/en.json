@@ -392,7 +392,7 @@
     "component_firmware": "Firmware",
     "component_file": "File",
     "dates": "Dates",
-    "reindex": "Rebuild indexe(s)"
+    "reindex": "Rebuild index(es)"
   },
   "admin": {
     "configuration": "Configuration",
@@ -610,7 +610,14 @@
     "reindex_vulnerable_software": "Vulnerable software",
     "reindex_submitted": "Reindex request submitted",
     "reindex_error": "Error encountered while submitting reindex request",
-    "reindex_description": "Rebuild the lucenes indexes used by Dependency Track to perform full text search or fuzzy match. TODO (Be more explicit)"
+    "index_general_description": "Dependency Track uses Apache Lucene to enable full-text search on various entities like projects or vulnerabilities.",
+    "index_use_cases": "The full-text search feature is principally used for the search API (i.e. all the indexes) and internal analyzer fuzzy matching on CPE (i.e. the vulnerable software index).",
+    "index_issues_description": "The lucene indexes can degrade or drift from Dependency Track database over time. Even though DT does its best to minimize the drift, the administrative features below are provided to check or restore the indexes if need be. It must be used with caution.",
+    "index_consistency_check_description": "You can enable a periodic background task that will check that all indexes exists, are not corrupted and that their difference with Dependency Track database is under a defined threshold percentage. Any check failure will trigger a rebuild of the corresponding index. A restart is required to take cadence modification into account.",
+    "index_rebuild_description" : "You can selectively trigger an immediate rebuild of some or all indexes. The index rebuild will be perform by an asynchronous tasks. You can check the progress using Dependency Track logs.",
+    "enable_index_consistency_check": "Enable periodic consistency check",
+    "index_consistency_check_cadence": "Cadence (in minutes)",
+    "index_consistency_check_threshold": "Delta threshold (in percentage)"
   },
   "condition": {
     "warning": "Warning",
