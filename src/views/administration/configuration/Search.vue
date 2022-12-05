@@ -97,7 +97,7 @@
     },
     created () {
       this.axios.get(this.configUrl).then((response) => {
-        let configItems = response.data.filter(function (item) { return item.groupName === "indexes" });
+        let configItems = response.data.filter(function (item) { return item.groupName === "search-indexes" });
         for (let i=0; i<configItems.length; i++) {
           let item = configItems[i];
           switch (item.propertyName) {
@@ -116,9 +116,9 @@
     methods: {
       saveConsistencyCheckSettings: function() {
         this.updateConfigProperties([
-          {groupName: 'indexes', propertyName: 'consistency.check.enabled', propertyValue: this.consistencyCheck.enabled},
-          {groupName: 'indexes', propertyName: 'consistency.check.cadence', propertyValue: this.consistencyCheck.cadence},
-          {groupName: 'indexes', propertyName: 'consistency.check.delta.threshold', propertyValue: this.consistencyCheck.threshold}
+          {groupName: 'search-indexes', propertyName: 'consistency.check.enabled', propertyValue: this.consistencyCheck.enabled},
+          {groupName: 'search-indexes', propertyName: 'consistency.check.cadence', propertyValue: this.consistencyCheck.cadence},
+          {groupName: 'search-indexes', propertyName: 'consistency.check.delta.threshold', propertyValue: this.consistencyCheck.threshold}
         ]);
       },
       reindex: function() {
