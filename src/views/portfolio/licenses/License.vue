@@ -34,6 +34,13 @@
             </td>
           </tr>
           <tr>
+            <td class="heading">{{ $t('message.custom_license') }}:</td>
+            <td>
+              <span v-if="license.isCustomLicense"><i class="fa fa-check-square-o" /></span>
+              <span v-else><i class="fa fa-square-o" /></span>
+            </td>
+          </tr>
+          <tr>
             <td class="heading">{{ $t('message.comments') }}:</td>
             <td>{{ license.licenseComments }}</td>
           </tr>
@@ -56,7 +63,7 @@
         <div class="headerText formattedLicenseContent">{{ license.standardLicenseHeader }}</div>
       </b-tab>
     </b-tabs>
-    <b-button v-if="license.isCustomLicense" variant="outline-danger" @click="removeCustomLicense" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION">{{ $t('message.delete_custom_license') }}</b-button>
+    <b-button v-if="license.isCustomLicense" variant="outline-danger" @click="removeCustomLicense" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION">{{ $t('message.delete') }}</b-button>
   </div>
 </template>
 

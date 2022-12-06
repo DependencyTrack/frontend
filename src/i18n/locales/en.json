@@ -249,7 +249,7 @@
     "license_id_desc": "The SPDX defined ID of the license. The ID may only contain alpha, numeric, and specific symbols: _ - . +",
     "license_comments": "License Comments",
     "see_also": "See Also",
-    "delete_custom_license": "Delete Custom License",
+    "custom_license": "Custom License",
     "custom_license_deleted": "Custom License Deleted",
     "comments": "Comments",
     "affected_projects": "Affected Projects",

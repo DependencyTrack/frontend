@@ -76,6 +76,17 @@
             formatter: function (value, row, index) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
             },
+          },
+          {
+            title: this.$t('message.custom_license'),
+            field: "isCustomLicense",
+            sortable: false,
+            align: "center",
+            class: "tight",
+            visible: false,
+            formatter: function (value, row, index) {
+              return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            },
           }
         ],
         data: [],
