@@ -34,6 +34,13 @@
             </td>
           </tr>
           <tr>
+            <td class="heading">{{ $t('message.custom_license') }}:</td>
+            <td>
+              <span v-if="license.isCustomLicense"><i class="fa fa-check-square-o" /></span>
+              <span v-else><i class="fa fa-square-o" /></span>
+            </td>
+          </tr>
+          <tr>
             <td class="heading">{{ $t('message.comments') }}:</td>
             <td>{{ license.licenseComments }}</td>
           </tr>
@@ -56,6 +63,7 @@
         <div class="headerText formattedLicenseContent">{{ license.standardLicenseHeader }}</div>
       </b-tab>
     </b-tabs>
+    <b-button v-if="license.isCustomLicense" variant="outline-danger" @click="removeCustomLicense" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION">{{ $t('message.delete') }}</b-button>
   </div>
 </template>
 
@@ -88,6 +96,15 @@
     methods: {
       getStyle: function(style) {
         return getStyle(style);
+      },
+      removeCustomLicense: function () {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
+        this.axios.delete(url).then((response) => {
+          this.$toastr.s(this.$t('message.custom_license_deleted'));
+          this.$router.replace({ name: "Licenses" });
+        }).catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
       }
     },
     beforeMount() {
