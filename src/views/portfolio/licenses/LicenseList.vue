@@ -1,12 +1,18 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
+  <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
     <portfolio-widget-row :fetch="true" />
+    <div id="licensesToolbar" class="bs-table-custom-toolbar">
+      <b-button size="md" variant="outline-primary" v-b-modal.licenseAddLicenseModal v-permission="PERMISSIONS.SYSTEM_CONFIGURATION">
+        <span class="fa fa-plus"></span> {{ $t('message.add_license') }}
+      </b-button>
+    </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
       :data="data"
       :options="options">
     </bootstrap-table>
+    <license-add-license-modal v-on:refreshTable="refreshTable"/>
   </div>
 </template>
 
@@ -14,10 +20,22 @@
   import common from "../../../shared/common";
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import LicenseAddLicenseModal from "@/views/portfolio/licenses/LicenseAddLicenseModal";
 
   export default {
+    mixins: [permissionsMixin],
     components: {
+      LicenseAddLicenseModal,
       PortfolioWidgetRow
+    },
+    methods: {
+      refreshTable: function () {
+        this.$refs.table.refresh({
+          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
+          silent: true
+        })
+      }
     },
     data() {
       return {
@@ -74,6 +92,7 @@
           icons: {
             refresh: 'fa-refresh'
           },
+          toolbar: '#licensesToolbar',
           responseHandler: function (res, xhr) {
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
