@@ -95,7 +95,15 @@
             field: "component.version",
             sortable: true,
             formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              if (Object.prototype.hasOwnProperty.call(row.component, "latestVersion")) {
+                if (row.component.latestVersion !== row.component.version) {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                } else {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                }
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              }
             }
           },
           {
