@@ -348,7 +348,9 @@
                 getAnalysis: function() {
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
-                  this.axios.get(url).then((response) => {
+                  this.axios.get(url, {
+                    validateStatus: (status) => status === 200 || status === 404
+                  }).then((response) => {
                     this.updateAnalysisData(response.data);
                   });
                 },

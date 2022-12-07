@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags">
+  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags" @hide="resetValues()">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-edit"></i> {{ $t('message.general') }}</template>
@@ -17,6 +17,12 @@
                                      v-model="project.classifier" :options="availableClassifiers"
                                      :label="$t('message.classifier')" :tooltip="$t('message.component_classifier_desc')"
                                      :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
+          <div style="margin-bottom: 1rem">
+            <label>Parent</label>
+            <multiselect v-model="selectedParent" id="multiselect" :custom-label="createProjectLabel" :placeholder="this.$t('message.search_parent')" open-direction="bottom" :options="availableParents"
+                         :multiple="false" :searchable="true" track-by="uuid" :loading="isLoading" @search-change="asyncFind" :internal-search="false" :close-on-select="true"
+                         selectLabel="" deselectLabel="" ></multiselect>
+          </div>
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -33,7 +39,9 @@
                             style="max-width:none; background-color:transparent;"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" v-bind="labelIcon" /> {{$t('message.active')}}
+          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
+                    :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
+                    v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
                                     lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
@@ -88,6 +96,7 @@
   import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import common from "../../../shared/common";
+  import Multiselect from "vue-multiselect"
 
   export default {
     name: "ProjectDetailsModal",
@@ -96,10 +105,12 @@
       BInputGroupFormInput,
       BInputGroupFormSelect,
       VueTagsInput,
-      cSwitch
+      cSwitch,
+      Multiselect
     },
     props: {
-      project: Object
+      project: Object,
+      uuid: String
     },
     data() {
       return {
@@ -115,6 +126,9 @@
           { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
           { value: 'FILE', text: this.$i18n.t('message.component_file') }
         ],
+        parent: null,
+        selectedParent: null,
+        availableParents: [],
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
@@ -122,11 +136,22 @@
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
+        isLoading: false
       }
     },
     beforeUpdate() {
       this.readOnlyProjectName = this.project.name;
       this.readOnlyProjectVersion = this.project.version;
+    },
+    beforeMount() {
+      this.$root.$on('initializeProjectDetailsModal', async () => {
+        if (!this.retrievedParents && this.project.parent) {
+          this.parent = (await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.project.parent.uuid}`)).data
+          this.selectedParent = this.parent
+          this.retrievedParents = true
+        }
+        this.$root.$emit("bv::show::modal", "projectDetailsModal")
+      })
     },
     methods: {
       initializeTags: function() {
@@ -141,6 +166,10 @@
       updateProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
+        let parent = null
+        if (this.selectedParent){
+          parent = {uuid: this.selectedParent.uuid};
+        }
         this.tags.forEach((tag) => tagsNode.push({name: tag.text}));
         this.axios.post(url, {
           uuid: this.project.uuid,
@@ -151,6 +180,7 @@
           version: this.project.version,
           description: this.project.description,
           classifier: this.project.classifier,
+          parent: parent,
           cpe: this.project.cpe,
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
@@ -159,6 +189,7 @@
         }).then((response) => {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));
+          this.parent = this.selectedParent
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
@@ -174,6 +205,36 @@
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+      },
+      hasActiveChild: function (project) {
+        return project.children && project.children.some((child) => {
+          return child.active || this.hasActiveChild(child);
+        });
+      },
+      createProjectLabel: function (project) {
+        if (project.version){
+          return project.name + " : " + project.version
+        } else {
+          return project.name
+        }
+      },
+      asyncFind: function (query) {
+        if (query) {
+          this.isLoading = true
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}?searchText=${query}&excludeInactive=true`
+          this.axios.get(url).then(response => {
+            if (response.data) {
+              this.availableParents = response.data
+            } else {
+              this.availableParents = []
+            }
+            this.isLoading = false
+          })
+        }
+      },
+      resetValues: function () {
+        this.selectedParent = this.parent
+        this.availableParents = []
       }
     }
   }

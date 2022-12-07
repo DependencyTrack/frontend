@@ -55,6 +55,11 @@
                 href: "#emailTab"
               },
               {
+                component: 'Jira',
+                name: this.$t('admin.jira'),
+                href: "#jiraTab"
+              },
+              {
                 component: 'InternalComponents',
                 name: this.$t('admin.internal_components'),
                 href: "#internalComponentsTab"
@@ -63,6 +68,11 @@
                 component: 'TaskScheduler',
                 name: this.$t('admin.task_scheduler'),
                 href: "#taskSchedulerTab"
+              },
+              {
+                component: 'Search',
+                name: this.$t('message.search'),
+                href: "#searchTab"
               }
             ]
           },

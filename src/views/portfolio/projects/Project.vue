@@ -92,7 +92,7 @@
         </b-row>
       </b-card-body>
       <div id="project-info-footer" slot="footer">
-        <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.projectDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+        <b-link class="font-weight-bold font-xs btn-block text-muted" @click="initializeProjectDetailsModal">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
@@ -125,7 +125,7 @@
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
     </b-tabs>
-    <project-details-modal :project="cloneDeep(project)" v-on:projectUpdated="syncProjectFields"/>
+    <project-details-modal :project="cloneDeep(project)" :uuid="this.uuid" v-on:projectUpdated="syncProjectFields"/>
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
@@ -241,12 +241,13 @@
           this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
           this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
         });
+      },
+      initializeProjectDetailsModal: function () {
+        this.$root.$emit('initializeProjectDetailsModal')
       }
     },
     beforeMount() {
       this.uuid = this.$route.params.uuid;
-    },
-    mounted() {
       this.initialize();
       if (this.$route.params.componentUuid){
         this.$refs.tabDependencyGraph.active = true
