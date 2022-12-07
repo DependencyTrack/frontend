@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="projectDetailsModal" size="md" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags" @hide="resetValues()">
+  <b-modal id="projectDetailsModal" size="lg" hide-header-close no-stacking :title="$t('message.project_details')" @show="initializeTags" @hide="resetValues()">
     <b-tabs class="body-bg-color" style="border:0;padding:0">
       <b-tab class="body-bg-color" style="border:0;padding:0" active>
         <template v-slot:title><i class="fa fa-edit"></i> {{ $t('message.general') }}</template>
@@ -78,6 +78,17 @@
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
         </b-card>
       </b-tab>
+      <b-tab>
+        <template v-slot:title><i class="fa fa-external-link"></i> {{ $t('message.external_references') }}</template>
+        <b-card>
+          <bootstrap-table
+            ref="referencesTable"
+            :columns="referencesTableColumns"
+            :data="project.externalReferences"
+            :options="referencesTableOptions">
+          </bootstrap-table>
+        </b-card>
+      </b-tab>
     </b-tabs>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProject()" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">{{ $t('message.delete') }}</b-button>
@@ -97,6 +108,7 @@
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import common from "../../../shared/common";
   import Multiselect from "vue-multiselect"
+  import xssFilters from "xss-filters";
 
   export default {
     name: "ProjectDetailsModal",
@@ -136,7 +148,44 @@
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
-        isLoading: false
+        isLoading: false,
+        referencesTableColumns: [
+          {
+            title: this.$t('message.url'),
+            field: "url",
+            sortable: false,
+            formatter(value, row, index) {
+              let url = xssFilters.uriInUnQuotedAttr(common.valueWithDefault(value, ""));
+              return `<a href="${url}">${xssFilters.inHTMLData(common.valueWithDefault(value, ""))}</a>`;
+            }
+          },
+          {
+            title: this.$t('message.type'),
+            field: "type",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          }
+        ],
+        referencesTableOptions: {
+          search: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        }
       }
     },
     beforeUpdate() {
