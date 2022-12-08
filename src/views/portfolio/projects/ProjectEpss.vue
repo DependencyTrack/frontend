@@ -29,6 +29,7 @@ import i18n from "../../../i18n";
 import permissionsMixin from "../../../mixins/permissionsMixin";
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
+import $ from "jquery";
 
 export default {
   props: {
@@ -62,7 +63,15 @@ export default {
           field: "component.version",
           sortable: true,
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            if (Object.prototype.hasOwnProperty.call(row.component, "latestVersion")) {
+              if (row.component.latestVersion !== row.component.version) {
+                return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+              } else {
+                return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+              }
+            } else {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
           }
         },
         {
@@ -133,7 +142,8 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: this.apiUrl()
+        url: this.apiUrl(),
+        onPostBody: this.initializeTooltips,
       }
     };
   },
@@ -156,7 +166,10 @@ export default {
     tableLoaded: function(data) {
       this.$emit('total', data.total);
       this.$refs.chartEpssVsCvss.render(data);
-    }
+    },
+    initializeTooltips: function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    },
   },
   watch:{
     showSuppressedFindings() {
