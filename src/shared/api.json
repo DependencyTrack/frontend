@@ -36,6 +36,7 @@
   "URL_SEARCH": "api/v1/search",
   "URL_METRICS": "api/v1/metrics",
   "URL_CALCULATOR_CVSS": "api/v1/calculator/cvss",
+  "URL_CALCULATOR_OWASP": "api/v1/calculator/owasp",
   "URL_REPOSITORY": "api/v1/repository",
   "URL_CONFIG_PROPERTY": "api/v1/configProperty",
   "URL_NOTIFICATION_PUBLISHER": "api/v1/notification/publisher",
