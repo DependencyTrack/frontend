@@ -1,8 +1,17 @@
 <template>
     <b-card no-body :header="header">
       <b-card-body>
-        <c-switch id="scannerEnabled" color="primary" v-model="scannerEnabled" label v-bind="labelIcon" />{{$t('admin.analyzer_snyk_enable')}}
+        <img alt="Snyk logo" src="@/assets/img/snyk-logo.png" height="128px"/>
         <hr/>
+        <c-switch
+          :disabled="!this.scannerEnabled && (!this.baseUrl || !this.orgId || !this.apitoken || !this.apiVersion)"
+          id="scannerEnabled"
+          color="primary"
+          v-model="scannerEnabled"
+          label
+          v-bind="labelIcon"
+        />
+        {{$t('admin.analyzer_snyk_enable')}}
         <b-validated-input-group-form-input
           id="snyk-baseUrl"
           :label="$t('admin.base_url')"
@@ -13,12 +22,16 @@
         />
         <b-validated-input-group-form-input
           id="snyk-orgId"
-          :label="$t('admin.org_id')"
+          :label="$t('admin.analyzer_snyk_org_id')"
           input-group-size="mb-3"
           rules="required"
           v-model="orgId"
           lazy="true"
         />
+        <p class="font-sm text-muted">
+          <span class="fa fa-question-circle">&nbsp;</span>
+          <a :href="findOrgIdUrl" target="_blank">{{ $t('admin.analyzer_snyk_how_to_org_id_help') }}</a>
+        </p>
         <b-validated-input-group-form-input
           id="snyk-apitoken"
           :label="$t('admin.api_token')"
@@ -28,15 +41,28 @@
           v-model="apitoken"
           lazy="true"
         />
+        <p class="font-sm text-muted">
+          <span class="fa fa-question-circle">&nbsp;</span>
+          <a :href="findApiTokenUrl" target="_blank">{{ $t('admin.analyzer_snyk_how_to_api_token_help') }}</a>
+          <br/>
+          <span class="fa fa-info-circle"></span>
+          {{ $t('admin.analyzer_snyk_multiple_tokens_info') }}<code>token1;token2</code>
+        </p>
         <b-validated-input-group-form-input
           id="snyk-apiVersion"
-          :label="$t('admin.api_version')"
+          :label="$t('admin.analyzer_snyk_api_version')"
           input-group-size="mb-3"
           rules="required"
           v-model="apiVersion"
           lazy="true"
         />
-        <i>{{ $t('admin.api_version_warning') }}</i>
+        <p class="font-sm text-muted">
+          <span class="fa fa-question-circle">&nbsp;</span>
+          <a :href="apiDocsUrl" target="_blank">{{ $t('admin.analyzer_snyk_how_to_api_version_help') }}</a>
+          <br/>
+          <span class="fa fa-warning"></span>
+          {{ $t('admin.analyzer_snyk_api_version_warning') }}
+        </p>
         <b-row style="margin-top:2rem;">
           <b-col sm="6">
             <b-form-group :label="$t('message.cvss_source')" v-slot="{ cvssSource }">
@@ -47,16 +73,25 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <a :href="apiDocUrl">{{$t('admin.analyzer_snyk_why_multiple_cvss')}}</a>
+        <p class="font-sm text-muted">
+          <span class="fa fa-question-circle">&nbsp;</span>
+          <a :href="multipleCvssDocs" target="_blank">{{$t('admin.analyzer_snyk_why_multiple_cvss')}}</a>
+        </p>
         <hr/>
-        {{ $t('admin.analyzer_snyk_desc') }}
+        <p>{{ $t('admin.analyzer_snyk_desc') }}</p>
       </b-card-body>
       <b-card-footer>
-        <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
+        <b-button
+          :disabled="!this.baseUrl || !this.orgId || !this.apitoken || !this.apiVersion"
+          variant="outline-primary"
+          class="px-4"
+          @click="saveChanges">
+          {{ $t('message.update') }}
+        </b-button>
       </b-card-footer>
     </b-card>
   </template>
-  
+
   <script>
     import { Switch as cSwitch } from '@coreui/vue';
     import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
@@ -83,7 +118,10 @@
             'SNYK'
           ],
           cvssSourceSelected: '',
-          apiDocUrl: 'https://docs.snyk.io/features/fixing-and-prioritizing-issues/issue-management/severity-levels#understanding-snyks-vulnerability-analysis',
+          apiDocsUrl: 'https://apidocs.snyk.io',
+          multipleCvssDocs: 'https://docs.snyk.io/features/fixing-and-prioritizing-issues/issue-management/severity-levels#understanding-snyks-vulnerability-analysis',
+          findApiTokenUrl: 'https://docs.snyk.io/snyk-api-info/authentication-for-api',
+          findOrgIdUrl: 'https://docs.snyk.io/products/snyk-code/cli-for-snyk-code/before-you-start-set-the-organization-for-the-cli-tests/finding-the-snyk-id-and-internal-name-of-an-organization',
           labelIcon: {
             dataOn: '\u2713',
             dataOff: '\u2715'
