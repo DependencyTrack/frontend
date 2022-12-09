@@ -29,6 +29,7 @@ import i18n from "../../../i18n";
 import permissionsMixin from "../../../mixins/permissionsMixin";
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
+import $ from "jquery";
 
 export default {
   props: {
@@ -52,9 +53,10 @@ export default {
           title: this.$t('message.component'),
           field: "component.name",
           sortable: true,
-          formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+          formatter: (value, row, index) => {
+            let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
+            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
+            return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
         {
@@ -78,7 +80,7 @@ export default {
           field: "vulnerability.vulnId",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
+            let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + row.vulnerability.source + "/" + value);
             return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
@@ -133,7 +135,8 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: this.apiUrl()
+        url: this.apiUrl(),
+        onPostBody: this.initializeTooltips,
       }
     };
   },
@@ -156,7 +159,12 @@ export default {
     tableLoaded: function(data) {
       this.$emit('total', data.total);
       this.$refs.chartEpssVsCvss.render(data);
-    }
+    },
+    initializeTooltips: function () {
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+      });
+    },
   },
   watch:{
     showSuppressedFindings() {
