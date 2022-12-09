@@ -4,8 +4,8 @@
   </div>
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
     <span v-if="this.$route.params.componentUuid && this.$route.params.componentUuid.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
-      <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showOnlySearched" color="primary" v-model="showOnlySearched" label v-bind="labelIcon" />
-      <span class="text-muted">{{ $t('message.hide_other_components') }}</span><br>
+      <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" v-model="showCompleteGraph" label v-bind="labelIcon" />
+      <span class="text-muted">{{ $t('message.show_complete_graph') }}</span><br>
     </span>
     <span v-if="this.notFound">
       <span class="text-muted">{{ $t('message.not_found_in_dependency_graph') }}</span><br>
@@ -49,7 +49,7 @@ export default {
       collapsable: true,
       pos: { top: 0, left: 0, x: 0, y: 0},
       loading: false,
-      showOnlySearched: false,
+      showCompleteGraph: false,
       notFound: false,
       labelIcon: {
         dataOn: '\u2713',
@@ -66,25 +66,18 @@ export default {
           let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
           this.axios.get(url).then(response => {
             if (response.data && response.data.length > 0){
-              this.showOnlySearched = false
+              this.showCompleteGraph = false
               this.notFound = false
               this.response = response
               this.data = {
                 id: this.nodeId,
                 label: this.createNodeLabel(this.project),
                 objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
+                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
                 fetchedChildren: true,
                 expand: true
               }
               this.loading = false
-              new Promise(resolve => setTimeout(resolve, 50)).then(() => {
-                document.getElementsByClassName("searched").item(0).scrollIntoView({
-                  behavior: "smooth",
-                  inline: "center",
-                  block: "center"
-                })
-              })
             } else {
               this.$route.query.dependencyGraph = null
               this.notFound = true
@@ -126,22 +119,29 @@ export default {
         }
       }
     },
-    showOnlySearched: function () {
-      if (this.showOnlySearched) {
-        this.data = {
-          id: this.nodeId,
-          label: this.createNodeLabel(this.project),
-          objectType: "PROJECT",
-          children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
-          fetchedChildren: true,
-          expand: true
-        }
-      } else {
+    showCompleteGraph: function () {
+      if (this.showCompleteGraph) {
         this.data = {
           id: this.nodeId,
           label: this.createNodeLabel(this.project),
           objectType: "PROJECT",
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
+          fetchedChildren: true,
+          expand: true
+        }
+        new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+          document.getElementsByClassName("searched").item(0).scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "center"
+          })
+        })
+      } else {
+        this.data = {
+          id: this.nodeId,
+          label: this.createNodeLabel(this.project),
+          objectType: "PROJECT",
+          children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
           fetchedChildren: true,
           expand: true
         }
@@ -218,7 +218,7 @@ export default {
       if (dependencies) {
         children = []
         for (const dependency of dependencies) {
-          if (!onlySearched || (onlySearched && (dependency.expand || dependency.uuid === this.$route.params.componentUuid))) {
+          if (!onlySearched || (onlySearched && (dependency.expandDependencyGraph || dependency.uuid === this.$route.params.componentUuid))) {
             let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
             for (const gatheredKey of treeNode.gatheredKeys) {
               childNode.gatheredKeys.push(gatheredKey)
@@ -253,9 +253,9 @@ export default {
         label: this.createNodeLabel(dependency),
         objectType: "COMPONENT",
         uuid: dependency.uuid,
-        fetchedChildren: dependency.expand,
+        fetchedChildren: dependency.expandDependencyGraph,
         gatheredKeys: [],
-        expand: dependency.expand
+        expand: dependency.expandDependencyGraph
       }
     },
     getChildrenFromDependency: function(treeNode, dependency) {

@@ -249,6 +249,8 @@
     beforeMount() {
       this.uuid = this.$route.params.uuid;
       this.initialize();
+    },
+    mounted() {
       if (this.$route.params.componentUuid){
         this.$refs.tabDependencyGraph.active = true
       }
