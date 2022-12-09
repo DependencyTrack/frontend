@@ -13,6 +13,7 @@
       :columns="columns"
       :data="data"
       :options="options"
+      @on-load-success="onLoadSuccess()"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody">
     </bootstrap-table>
@@ -31,6 +32,7 @@
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import MurmurHash2 from "imurmurhash"
+  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
     mixins: [permissionsMixin],
@@ -38,6 +40,10 @@
       cSwitch,
       ProjectCreateProjectModal,
       PortfolioWidgetRow
+    },
+    beforeCreate() {
+      this.showInactiveProjects = (localStorage && localStorage.getItem("ProjectListShowInactiveProjects") !== null) ? (localStorage.getItem("ProjectListShowInactiveProjects") === "true" ) : false;
+      this.showFlatView = (localStorage && localStorage.getItem("ProjectListShowFlatView") !== null) ? (localStorage.getItem("ProjectListShowFlatView") === "true") : false;
     },
     methods: {
       initializeProjectCreateProjectModal: function () {
@@ -77,6 +83,9 @@
           url: this.apiUrl(),
           silent: true
         });
+      },
+      onLoadSuccess: function () {
+        loadUserPreferencesForBootstrapTable(this, "ProjectList", this.$refs.table.columns);
       },
       onPreBody: function() {
           this.$refs.table.getData().forEach(project => {
@@ -129,10 +138,16 @@
         this.refreshTable();
       },
       showInactiveProjects() {
+        if (localStorage) {
+          localStorage.setItem("ProjectListShowInactiveProjects", this.showInactiveProjects.toString());
+        }
         this.$refs.table.showLoading()
         this.refreshTable();
       },
       showFlatView() {
+        if (localStorage) {
+          localStorage.setItem("ProjectListShowFlatView", this.showFlatView.toString());
+        }
         this.$refs.table.showLoading()
         this.refreshTable();
       },
@@ -142,8 +157,8 @@
     },
     data() {
       return {
-        showInactiveProjects: false,
-        showFlatView: false,
+        showInactiveProjects: this.showInactiveProjects,
+        showFlatView: this.showFlatView,
         isSearching: false,
         savedViewState: null,
         labelIcon: {
@@ -259,7 +274,9 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("ProjectListPageSize") !== null) ? Number(localStorage.getItem("ProjectListPageSize")) : 10,
+          sortName: (localStorage && localStorage.getItem("ProjectListSortName") !== null) ? localStorage.getItem("ProjectListSortName") : undefined,
+          sortOrder: (localStorage && localStorage.getItem("ProjectListSortOrder") !== null) ? localStorage.getItem("ProjectListSortOrder") : undefined,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -297,6 +314,22 @@
               } else {
                 this.showFlatView = false
               }
+            }
+          }),
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectListPageSize", size.toString())
+            }
+          }),
+          onColumnSwitch: ((field, checked) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectListShow"+common.capitalize(field), checked.toString())
+            }
+          }),
+          onSort: ((name, order) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectListSortName", name);
+              localStorage.setItem("ProjectListSortOrder", order);
             }
           })
         }
