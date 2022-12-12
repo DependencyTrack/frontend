@@ -338,10 +338,10 @@ export default {
     onNodeClick: function(e, data) {
       //console.log('onNodeClick: %o', data)
       this.$set(data, 'selectedKey', !data.selectedKey)
-      if (data.type === 'component') {
-        this.$router.replace({ path: "/components/" + data.uuid });
-      } else if (data.type === 'service') {
-        this.$router.replace({ path: "/services/" + data.uuid });
+      if (data.objectType === 'COMPONENT') {
+        this.$router.push({ path: "/components/" + data.uuid });
+      } else if (data.objectType === 'SERVICE') {
+        this.$router.push({ path: "/services/" + data.uuid });
       }
     },
     collapse: function(list) {
