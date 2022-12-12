@@ -85,9 +85,10 @@
             title: this.$t('message.component'),
             field: "component.name",
             sortable: true,
-            formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            formatter: (value, row, index) => {
+              let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
+              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
+              return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
           {
@@ -119,7 +120,7 @@
             field: "vulnerability.vulnId",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
+              let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + row.vulnerability.source + "/" + value);
               return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
@@ -133,7 +134,7 @@
                 let label = "";
                 for (let i=0; i<value.length; i++) {
                   let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
-                  let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + alias.source + "/" + alias.vulnId);
+                  let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
                   label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
                   if (i < value.length-1) label += ", "
                 }
@@ -494,7 +495,9 @@
         this.$emit('total', data.total);
       },
       initializeTooltips: function () {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({
+          trigger: "hover"
+        });
       },
     },
     watch:{

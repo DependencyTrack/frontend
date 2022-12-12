@@ -53,9 +53,10 @@ export default {
           title: this.$t('message.component'),
           field: "component.name",
           sortable: true,
-          formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../components/" + row.component.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+          formatter: (value, row, index) => {
+            let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
+            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
+            return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
         {
@@ -87,7 +88,7 @@ export default {
           field: "vulnerability.vulnId",
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + row.vulnerability.source + "/" + value);
+            let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + row.vulnerability.source + "/" + value);
             return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           }
         },
@@ -168,7 +169,9 @@ export default {
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+      });
     },
   },
   watch:{
