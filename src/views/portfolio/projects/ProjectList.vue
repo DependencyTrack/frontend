@@ -13,7 +13,7 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="onLoadSuccess()"
+      @on-load-success="onLoadSuccess"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody">
     </bootstrap-table>

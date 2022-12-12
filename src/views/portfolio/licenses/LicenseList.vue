@@ -10,7 +10,8 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      @on-load-success="onLoadSuccess">
     </bootstrap-table>
     <license-add-license-modal v-on:refreshTable="refreshTable"/>
   </div>
@@ -22,6 +23,7 @@
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import LicenseAddLicenseModal from "@/views/portfolio/licenses/LicenseAddLicenseModal";
+  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
     mixins: [permissionsMixin],
@@ -35,6 +37,9 @@
           url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
           silent: true
         })
+      },
+      onLoadSuccess: function () {
+        loadUserPreferencesForBootstrapTable(this, "LicenseList", this.$refs.table.columns);
       }
     },
     data() {
@@ -99,7 +104,9 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("LicenseListPageSize") !== null) ? Number(localStorage.getItem("LicenseListPageSize")) : 10,
+          sortName: (localStorage && localStorage.getItem("LicenseListSortName") !== null) ? localStorage.getItem("LicenseListSortName") : undefined,
+          sortOrder: (localStorage && localStorage.getItem("LicenseListSortOrder") !== null) ? localStorage.getItem("LicenseListSortOrder") : undefined,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -108,7 +115,23 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("LicenseListPageSize", size.toString())
+            }
+          }),
+          onColumnSwitch: ((field, checked) => {
+            if (localStorage) {
+              localStorage.setItem("LicenseListShow"+common.capitalize(field), checked.toString())
+            }
+          }),
+          onSort: ((name, order) => {
+            if (localStorage) {
+              localStorage.setItem("LicenseListSortName", name);
+              localStorage.setItem("LicenseListSortOrder", order);
+            }
+          })
         }
       };
     }

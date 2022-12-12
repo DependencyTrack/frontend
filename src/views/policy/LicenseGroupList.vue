@@ -82,7 +82,7 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("LicenseGroupListPageSize") !== null) ? Number(localStorage.getItem("LicenseGroupListPageSize")) : 10,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -198,7 +198,12 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`,
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("LicenseGroupListPageSize", size.toString())
+            }
+          }),
         }
       };
     }
