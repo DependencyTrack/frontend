@@ -73,6 +73,7 @@
     "suppress": "Suppress",
     "suppressed": "Suppressed",
     "last_measurement": "Last Measurement",
+    "last_bom_import": "Last BOM Import",
     "overview": "Overview",
     "audit": "Audit",
     "audit_vulnerabilities": "Audit Vulnerabilities",

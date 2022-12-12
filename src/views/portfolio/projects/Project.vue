@@ -98,7 +98,7 @@
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
       <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
-        <project-dashboard :key="this.uuid" style="border-left: 0; border-right:0; border-top:0 "/>
+        <project-dashboard :key="this.uuid" :uuid="this.uuid" :project="this.project" style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
