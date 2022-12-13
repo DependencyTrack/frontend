@@ -4,9 +4,21 @@
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">{{ $t('message.project_vulnerabilities') }}</h4>
-          <div class="small text-muted">
-            {{$t('message.last_measurement')}}: {{lastMeasurement}}<b-link v-permission="'PORTFOLIO_MANAGEMENT'" class="font-weight-bold" style="margin-left:6px" v-on:click="refreshMetrics"><i class="fa fa-refresh"></i></b-link>
-          </div>
+          <table class="small text-muted" style="border: 0">
+            <tr>
+              <td>{{$t('message.last_bom_import')}}:</td>
+              <td>{{lastBomImport}}</td>
+            </tr>
+            <tr>
+              <td>{{$t('message.last_measurement')}}:</td>
+              <td>
+                {{lastMeasurement}}
+                <b-link v-permission="'PORTFOLIO_MANAGEMENT'" class="font-weight-bold" style="margin-left:6px" v-on:click="refreshMetrics">
+                  <i class="fa fa-refresh"></i>
+                </b-link>
+              </td>
+            </tr>
+          </table>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
         </b-col>
@@ -143,8 +155,11 @@
       ChartAuditingProgress,
       ChartComponentVulnerabilities,
       ChartPortfolioVulnerabilities,
-      Callout,
-
+      Callout
+    },
+    props: {
+      uuid: String,
+      project: Object
     },
     data() {
       return {
@@ -165,7 +180,8 @@
 
         vulnerabilities: 0,
         suppressed: 0,
-        lastMeasurement: ""
+        lastMeasurement: "n/a",
+        lastBomImport: "n/a",
       }
     },
     methods: {
@@ -194,8 +210,7 @@
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
       },
       refreshMetrics() {
-        let uuid = this.$route.params.uuid;
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/refresh`;
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/refresh`;
         this.axios.get(url).then((response) => {
           this.$toastr.s(this.$t('message.metric_refresh_requested'));
         });
@@ -203,8 +218,7 @@
     },
     mounted() {
       const daysBack = 90;
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${uuid}/days/${daysBack}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartPolicyViolations.render(response.data);
@@ -213,6 +227,17 @@
         this.$refs.chartComponentVulnerabilities.render(response.data);
         this.extractStats(response.data);
       });
+    },
+    watch: {
+      project(newProject) {
+        // Project is loaded asynchronously in the parent component and may not be
+        // initialized yet when the dashboard is mounted. Thus, initialize lastBomImport lazily.
+        if (newProject && newProject.lastBomImport) {
+          this.lastBomImport = common.formatTimestamp(newProject.lastBomImport, true);
+        } else {
+          this.lastBomImport = "n/a"
+        }
+      }
     }
   }
 </script>
