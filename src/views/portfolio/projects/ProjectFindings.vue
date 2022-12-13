@@ -5,17 +5,26 @@
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
     <div id="findingsToolbar" class="bs-table-custom-toolbar">
-      <b-button size="md" variant="outline-primary"
+      <b-button id="apply-vex-button" size="md" variant="outline-primary"
                 v-b-modal.projectUploadVexModal
                 v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
         <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
       </b-button>
+      <b-tooltip target="apply-vex-button" triggers="hover focus">{{ $t('message.apply_vex_tooltip') }}</b-tooltip>
 
-      <b-button size="md" variant="outline-primary"
+      <b-button id="export-vex-button" size="md" variant="outline-primary"
                 @click="downloadVex()"
                 v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
         <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
       </b-button>
+      <b-tooltip target="export-vex-button" triggers="hover focus">{{ $t('message.export_vex_tooltip') }}</b-tooltip>
+
+      <b-button id="export-vdr-button" size="md" variant="outline-primary"
+                @click="downloadVdr()"
+                v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
+        <span class="fa fa-download"></span> {{ $t('message.export_vdr') }}
+      </b-button>
+      <b-tooltip target="export-vdr-button" triggers="hover focus">{{ $t('message.export_vdr_tooltip') }}</b-tooltip>
 
       <b-button id="reanalyze-button" size="md" variant="outline-primary"
                 @click="reAnalyze()"
@@ -442,7 +451,7 @@
         }
         return url;
       },
-      downloadVex: function (data) {
+      downloadVex: function () {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
         this.axios.request({
           responseType: 'blob',
@@ -456,6 +465,35 @@
           const link = document.createElement('a');
           link.href = url;
           let filename = "vex.json";
+          let disposition = response.headers["content-disposition"]
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            let matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
+          }
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+        });
+      },
+      downloadVdr: function () {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
+        this.axios.request({
+          responseType: 'blob',
+          url: url,
+          method: 'get',
+          params: {
+            format: 'json',
+            variant: 'vdr',
+            download: 'true'
+          }
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          let filename = "bom.json";
           let disposition = response.headers["content-disposition"]
           if (disposition && disposition.indexOf('attachment') !== -1) {
             let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
