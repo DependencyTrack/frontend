@@ -313,6 +313,20 @@
                       this.$toastr.w(this.$t('condition.unsuccessful_action'));
                     });
                   }
+                },
+                updateIncludeChildren: function() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+                  this.axios.post(url, {
+                    uuid: this.policy.uuid,
+                    name: this.name,
+                    operator: this.operator,
+                    violationState: this.violationState,
+                    includeChildren: this.includeChildren
+                  }).then((response) => {
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
                 }
               },
               watch: {
@@ -323,7 +337,7 @@
                   this.updatePolicy();
                 },
                 includeChildren() {
-                  this.updatePolicy();
+                  this.updateIncludeChildren();
                 }
               }
             })
