@@ -30,6 +30,7 @@
   import BToggleableDisplayButton from "@/views/components/BToggleableDisplayButton";
   import SelectProjectModal from "@/views/portfolio/projects/SelectProjectModal";
   import SelectTagModal from "@/views/portfolio/tags/SelectTagModal";
+  import { Switch as cSwitch } from '@coreui/vue';
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
@@ -134,6 +135,10 @@
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
+                    <div v-if="limitToVisible === true" style="margin-bottom: 1.5rem">
+                      <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="includeChildren" label v-bind="labelIcon"/>
+                      {{ $t('admin.include_children') }}
+                    </div>
                     <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
                       <div class="list-group">
                         <span v-for="tag in tags">
@@ -161,7 +166,8 @@
                 BToggleableDisplayButton,
                 SelectProjectModal,
                 SelectTagModal,
-                PolicyCondition
+                PolicyCondition,
+                cSwitch
               },
               data() {
                 return {
@@ -181,7 +187,12 @@
                   ],
                   projects: row.projects || [],
                   limitToVisible: false,
-                  tags: row.tags
+                  tags: row.tags,
+                  includeChildren: row.includeChildren,
+                  labelIcon: {
+                    dataOn: '\u2713',
+                    dataOff: '\u2715'
+                  }
                 }
               },
               methods: {
@@ -216,7 +227,8 @@
                     uuid: this.policy.uuid,
                     name: this.name,
                     operator: this.operator,
-                    violationState: this.violationState
+                    violationState: this.violationState,
+                    includeChildren: this.includeChildren
                   }).then((response) => {
                     this.policy = response.data;
                     EventBus.$emit('policyManagement:policies:rowUpdate', index, this.policy);
@@ -240,6 +252,7 @@
                   this.operator = policy.operator;
                   this.violationState = policy.violationState;
                   this.conditions = policy.policyConditions;
+                  this.includeChildren = policy.includeChildren;
                 },
                 deleteProjectLimiter: function(projectUuid) {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
@@ -300,6 +313,20 @@
                       this.$toastr.w(this.$t('condition.unsuccessful_action'));
                     });
                   }
+                },
+                updateIncludeChildren: function() {
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+                  this.axios.post(url, {
+                    uuid: this.policy.uuid,
+                    name: this.name,
+                    operator: this.operator,
+                    violationState: this.violationState,
+                    includeChildren: this.includeChildren
+                  }).then((response) => {
+                    this.$toastr.s(this.$t('message.updated'));
+                  }).catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
                 }
               },
               watch: {
@@ -308,6 +335,9 @@
                 },
                 violationState() {
                   this.updatePolicy();
+                },
+                includeChildren() {
+                  this.updateIncludeChildren();
                 }
               }
             })

@@ -163,7 +163,7 @@
                     </b-form-group>
                   <div v-if="limitToVisible === true">
                       <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
-                      {{ $t('admin.include_children') }}
+                      {{ $t('admin.include_active_children') }}
                   </div>
                   </b-col>
                   <b-col sm="6">
