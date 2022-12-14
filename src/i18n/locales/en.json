@@ -791,9 +791,9 @@
     "low_severity": "Low Severity",
     "info_severity": "Informational",
     "unassigned_severity": "Unassigned Severity",
-    "derive_from_cvss_or_owasp": "Derive from CVSS or OWASP RR",
+    "derive_from_cvss_or_owasp_rr": "Derive from CVSS or OWASP RR",
     "cvss_severity": "CVSS Severity",
-    "owasp_severity": "OWASP Risk Rating Severity"
+    "owasp_rr_severity": "OWASP Risk Rating Severity"
   },
   "validation": {
     "required": "{_field_} is required",

@@ -429,7 +429,7 @@ $common.trimToNull = function(value) {
   return value;
 };
 
-$common.OWASP_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
+$common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
   "LOW" : {
     "LOW": "INFO",
     "MEDIUM": "LOW",
@@ -474,5 +474,5 @@ module.exports = {
   sleep: $common.sleep,
   toBoolean: $common.toBoolean,
   trimToNull: $common.trimToNull,
-  OWASP_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX: $common.OWASP_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX
+  OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX: $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX
 };
