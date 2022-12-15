@@ -429,6 +429,29 @@ $common.trimToNull = function(value) {
   return value;
 };
 
+$common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
+  "LOW" : {
+    "LOW": "INFO",
+    "MEDIUM": "LOW",
+    "HIGH": "MEDIUM"
+  },
+  "MEDIUM" : {
+    "LOW": "LOW",
+    "MEDIUM": "MEDIUM",
+    "HIGH": "HIGH"
+  },
+  "HIGH" : {
+    "LOW": "MEDIUM",
+    "MEDIUM": "HIGH",
+    "HIGH": "CRITICAL"
+  },
+  "UNASSIGNED": {
+    "LOW": "UNASSIGNED",
+    "MEDIUM": "UNASSIGNED",
+    "HIGH": "UNASSIGNED"
+  }
+}
+
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   formatNotificationLabel: $common.formatNotificationLabel,
@@ -450,5 +473,6 @@ module.exports = {
   calcProgressPercent: $common.calcProgressPercent,
   sleep: $common.sleep,
   toBoolean: $common.toBoolean,
-  trimToNull: $common.trimToNull
+  trimToNull: $common.trimToNull,
+  OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX: $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX
 };
