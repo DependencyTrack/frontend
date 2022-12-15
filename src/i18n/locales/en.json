@@ -642,7 +642,8 @@
     "index_rebuild_description" : "You can selectively trigger an immediate rebuild of some or all indexes. The index rebuild will be perform by an asynchronous tasks. You can check the progress using Dependency Track logs.",
     "enable_index_consistency_check": "Enable periodic consistency check",
     "index_consistency_check_cadence": "Cadence (in minutes)",
-    "index_consistency_check_threshold": "Delta threshold (in percentage)"
+    "index_consistency_check_threshold": "Delta threshold (in percentage)",
+    "team_deleted": "Team deleted"
   },
   "condition": {
     "warning": "Warning",
