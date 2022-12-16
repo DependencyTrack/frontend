@@ -5,6 +5,15 @@
         {{ $t('admin.jira_desc') }}
       </p>
       <b-validated-input-group-form-input
+        id="jira-url"
+        :label="$t('admin.jira_url')"
+        input-group-size="mb-3"
+        rules="required"
+        type="text"
+        v-model="jiraUrl"
+        lazy="true"
+      />
+      <b-validated-input-group-form-input
         id="jira-username"
         :label="$t('admin.jira_username')"
         input-group-size="mb-3"
@@ -41,6 +50,7 @@ export default {
   },
   data() {
     return {
+      jiraUrl: "",
       jiraUsername: "",
       jiraPassword: "",
     }
@@ -48,6 +58,7 @@ export default {
   methods: {
     saveChanges: function() {
       this.updateConfigProperties([
+        {groupName: 'jira', propertyName: 'jira.url', propertyValue: this.jiraUrl},
         {groupName: 'jira', propertyName: 'jira.username', propertyValue: this.jiraUsername}
       ]);
       if (this.jiraPassword !== "HiddenDecryptedPropertyPlaceholder") {
@@ -61,6 +72,8 @@ export default {
       for (let i=0; i<configItems.length; i++) {
         let item = configItems[i];
         switch (item.propertyName) {
+          case "jira.url":
+            this.jiraUrl = item.propertyValue; break;
           case "jira.username":
             this.jiraUsername = item.propertyValue; break;
           case "jira.password":
