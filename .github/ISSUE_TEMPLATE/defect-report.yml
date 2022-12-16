@@ -59,10 +59,9 @@ body:
     description: >-
       What version of the Dependency-Track Frontend are you using?
     options:
-    - 4.5.x
-    - 4.6.0
-    - 4.6.1
-    - 4.7.0-SNAPSHOT
+    - 4.6.x
+    - 4.7.0
+    - 4.8.0-SNAPSHOT
   validations:
     required: true
 - type: dropdown
