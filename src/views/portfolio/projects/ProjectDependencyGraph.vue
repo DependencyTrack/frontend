@@ -65,7 +65,7 @@ export default {
           this.loading = true
           let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
           this.axios.get(url).then(response => {
-            if (response.data && response.data.length > 0){
+            if (response.data && Object.keys(response.data).length > 0){
               this.showCompleteGraph = false
               this.notFound = false
               this.response = response
@@ -201,37 +201,58 @@ export default {
         for(let i = 0; i < dependencies.length; i++) {
           let dependency = dependencies[i]
           let childNode = this.transformDependencyToOrgTree(dependency);
-          for (const gatheredKey of treeNode.gatheredKeys){
+          for (const gatheredKey of treeNode.gatheredKeys) {
             childNode.gatheredKeys.push(gatheredKey)
           }
-          childNode.gatheredKeys.push(childNode.label)
-          if (getChildren === true) {
-            this.getChildrenFromDependency(childNode, dependency);
+          if (!childNode.gatheredKeys.some(gatheredKey => gatheredKey === childNode.label)) {
+            childNode.gatheredKeys.push(childNode.label)
+            if (getChildren === true) {
+              this.getChildrenFromDependency(childNode, dependency);
+            }
+            children.push(childNode);
           }
-          children.push(childNode);
         }
       }
       return children;
     },
     transformDependenciesToOrgTreeWithSearchedDependency: function (dependencies, treeNode, onlySearched) {
-      let children
-      if (dependencies) {
-        children = []
-        for (const dependency of dependencies) {
-          if (!onlySearched || (onlySearched && (dependency.expandDependencyGraph || dependency.uuid === this.$route.params.componentUuid))) {
-            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependency)
+      let children = []
+      let directDependencies = JSON.parse(this.project.directDependencies)
+      directDependencies.forEach((directDependency) => {
+        if (dependencies[directDependency.uuid] && (!onlySearched || (onlySearched && (dependencies[directDependency.uuid].expandDependencyGraph || directDependency.uuid === this.$route.params.componentUuid)))) {
+          let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[directDependency.uuid])
+          childNode.gatheredKeys.push(childNode.label)
+          children.push(childNode)
+          if (onlySearched && directDependency.uuid === this.$route.params.componentUuid) {
+            this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, false))
+          } else {
+            this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, onlySearched))
+          }
+        }
+      })
+      return children
+    },
+    getChildrenFromDependencyWithSearchedDependency: function (dependencies, component, treeNode, onlySearched) {
+      let children = []
+      if (component.dependencyGraph) {
+        component.dependencyGraph.forEach((dependency) => {
+          if (dependencies[dependency] && (!onlySearched || (onlySearched && (dependencies[dependency].expandDependencyGraph || dependency === this.$route.params.componentUuid)))) {
+            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[dependency])
             for (const gatheredKey of treeNode.gatheredKeys) {
               childNode.gatheredKeys.push(gatheredKey)
             }
-            childNode.gatheredKeys.push(childNode.label)
-            children.push(childNode)
-            if (onlySearched && dependency.uuid === this.$route.params.componentUuid) {
-              this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, false))
-            } else {
-              this.$set(childNode, 'children', this.transformDependenciesToOrgTreeWithSearchedDependency(dependency.dependencyGraph, childNode, onlySearched))
+            if (!childNode.gatheredKeys.some(gatheredKey => gatheredKey === childNode.label)) {
+              childNode.gatheredKeys.push(childNode.label)
+              children.push(childNode)
+              if (onlySearched && dependency === this.$route.params.componentUuid) {
+                this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[dependency], childNode, false))
+                this.collapse(childNode.children)
+              } else {
+                this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[dependency], childNode, onlySearched))
+              }
             }
           }
-        }
+        })
       }
       return children
     },
@@ -265,15 +286,6 @@ export default {
         let data = response.data;
         if (data && data.directDependencies) {
           let jsonObject = JSON.parse(data.directDependencies)
-          let indexes = []
-          for (let i = 0; i < jsonObject.length; i++){
-            if (treeNode.gatheredKeys.some(gatheredKey => gatheredKey === jsonObject[i].purl)){
-              indexes.unshift(i)
-            }
-          }
-          for (const index of indexes){
-            jsonObject.splice(index, 1)
-          }
           this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode) )
         }
       }
@@ -350,6 +362,7 @@ export default {
         if (child.expand) {
           child.expand = false
         }
+        child.fetchedChildren = false
         child.children && _this.collapse(child.children)
       })
     },
