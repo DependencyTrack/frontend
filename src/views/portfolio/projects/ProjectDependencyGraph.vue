@@ -201,14 +201,16 @@ export default {
         for(let i = 0; i < dependencies.length; i++) {
           let dependency = dependencies[i]
           let childNode = this.transformDependencyToOrgTree(dependency);
-          for (const gatheredKey of treeNode.gatheredKeys){
+          for (const gatheredKey of treeNode.gatheredKeys) {
             childNode.gatheredKeys.push(gatheredKey)
           }
-          childNode.gatheredKeys.push(childNode.label)
-          if (getChildren === true) {
-            this.getChildrenFromDependency(childNode, dependency);
+          if (!childNode.gatheredKeys.some(gatheredKey => gatheredKey === childNode.label)) {
+            childNode.gatheredKeys.push(childNode.label)
+            if (getChildren === true) {
+              this.getChildrenFromDependency(childNode, dependency);
+            }
+            children.push(childNode);
           }
-          children.push(childNode);
         }
       }
       return children;
@@ -244,6 +246,7 @@ export default {
               children.push(childNode)
               if (onlySearched && dependency === this.$route.params.componentUuid) {
                 this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[dependency], childNode, false))
+                this.collapse(childNode.children)
               } else {
                 this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[dependency], childNode, onlySearched))
               }
@@ -283,15 +286,6 @@ export default {
         let data = response.data;
         if (data && data.directDependencies) {
           let jsonObject = JSON.parse(data.directDependencies)
-          let indexes = []
-          for (let i = 0; i < jsonObject.length; i++){
-            if (treeNode.gatheredKeys.some(gatheredKey => gatheredKey === jsonObject[i].purl)){
-              indexes.unshift(i)
-            }
-          }
-          for (const index of indexes){
-            jsonObject.splice(index, 1)
-          }
           this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode) )
         }
       }
@@ -368,6 +362,7 @@ export default {
         if (child.expand) {
           child.expand = false
         }
+        child.fetchedChildren = false
         child.children && _this.collapse(child.children)
       })
     },
