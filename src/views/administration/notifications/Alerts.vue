@@ -141,9 +141,6 @@
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-ticket-type"
                                               :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
-                    <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-project"
-                                              :label="$t('admin.jira_project_key')" :required="true" type="text" v-model="jiraProjectKey" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
@@ -224,7 +221,6 @@
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
                   jiraTicketType: this.parseJiraTicketType(row),
-                  jiraProjectKey: this.parseJiraProjectKey(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
                   projects: row.projects,
@@ -239,7 +235,6 @@
               created() {
                 this.parseDestination(this.alert);
                 this.parseJiraTicketType(this.alert);
-                this.parseJiraProjectKey(this.alert);
               },
               watch: {
                 enabled() {
@@ -281,15 +276,6 @@
                     return null;
                   }
                 },
-                parseJiraProjectKey: function(alert) {
-                  if (alert.publisherConfig) {
-                    let value = JSON.parse(alert.publisherConfig);
-                    if (value) {
-                      return value.jiraProjectKey;
-                    }
-                    return null;
-                  }
-                },
                 updateNotificationRule: function () {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
                   this.axios.post(url, {
@@ -298,13 +284,12 @@
                     enabled: this.enabled,
                     notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
-                    publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType, jiraProjectKey: this.jiraProjectKey }),
+                    publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType }),
                     notifyOn: this.notifyOn
                   }).then((response) => {
                     this.alert = response.data;
                     this.destination = this.parseDestination(this.alert);
                     this.jiraTicketType = this.parseJiraTicketType(this.alert);
-                    this.jiraProjectKey = this.parseJiraProjectKey(this.alert);
                     EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
                     this.$toastr.s(this.$t('message.updated'));
                   }).catch((error) => {
