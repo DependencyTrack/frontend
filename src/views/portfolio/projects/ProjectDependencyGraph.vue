@@ -5,7 +5,7 @@
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
     <span v-if="this.$route.params.componentUuid && this.$route.params.componentUuid.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
       <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" v-model="showCompleteGraph" label v-bind="labelIcon" />
-      <span class="text-muted">{{ $t('message.show_complete_graph') }}</span><br>
+      <span class="text-muted">{{ $t('message.show_complete_graph') }}</span>
     </span>
     <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="fetchRepositoryMetaData" color="primary" v-model="fetchRepositoryMetaData" label v-bind="labelIcon" />
     <span class="text-muted">{{$t('message.show_update_information')}}</span><br>
@@ -278,11 +278,13 @@ export default {
       return {
         id: this.nodeId,
         label: this.createNodeLabel(dependency),
+        version: dependency.version,
         objectType: "COMPONENT",
         uuid: dependency.uuid,
         fetchedChildren: dependency.expandDependencyGraph,
         gatheredKeys: [],
-        expand: dependency.expandDependencyGraph
+        expand: dependency.expandDependencyGraph,
+        repositoryMeta: dependency.repositoryMeta
       }
     },
     getChildrenFromDependency: function(treeNode, dependency) {
@@ -335,7 +337,7 @@ export default {
       if (this.fetchRepositoryMetaData && data.repositoryMeta && data.repositoryMeta.latestVersion && data.repositoryMeta.latestVersion !== data.version) {
         return (<div style="white-space: nowrap;">{data.label + ' '}<i id={"icon"+data.id} class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i><b-tooltip target={"icon"+data.id} triggers="hover" noninteractive="noninteractive">{"Risk: Outdated component. Current version is: "+ xssFilters.inHTMLData(data.repositoryMeta.latestVersion)}</b-tooltip></div>)
       } else {
-        return (<div>{data.label}</div>)
+        return (<div style="white-space: nowrap;">{data.label}</div>)
       }
     },
     onExpand: async function (e, data) {
