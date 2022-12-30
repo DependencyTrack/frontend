@@ -150,7 +150,7 @@
           {
             title: this.$t('message.project_name'),
             field: "project.name",
-            sortable: false,
+            sortable: true,
             formatter(value, row, index) {
               let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.project.uuid);
               let name = common.concatenateComponentName(null, row.project.name, row.project.version);
