@@ -1,5 +1,8 @@
 // Here you can add other styles
 
+html {
+  filter: contrast(110%);
+}
 .modal-header {
   background-color: $grey-800;
 }

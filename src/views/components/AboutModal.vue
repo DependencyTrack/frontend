@@ -34,6 +34,7 @@
           <li><i class="fa-li fa fa-github" aria-hidden="true"></i><a href="https://github.com/DependencyTrack">GitHub</a></li>
           <li><i class="fa-li fa fa-slack" aria-hidden="true"></i><a href="https://dependencytrack.org/slack">Slack</a> (<a href="https://dependencytrack.org/slack/invite">invite</a>)</li>
           <li><i class="fa-li fa fa-twitter" aria-hidden="true"></i><a href="https://twitter.com/dependencytrack">Twitter</a></li>
+          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://infosec.exchange/@DependencyTrack">Mastodon</a></li>
           <li><i class="fa-li fa fa-youtube-play" aria-hidden="true"></i><a href="https://www.youtube.com/c/OWASPDependencyTrack">YouTube</a></li>
         </ul>
       </b-col>
@@ -41,8 +42,10 @@
         <h6>Datasource Providers</h6>
         <ul class="fa-ul">
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://nvd.nist.gov/">National Vulnerability Database</a></li>
-          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://github.com/advisories">GitHub Advisories</a></li>
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://ossindex.sonatype.org/">Sonatype OSS Index</a></li>
+          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://github.com/advisories">GitHub Advisories</a></li>
+          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://snyk.io/">Snyk</a></li>
+          <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://osv.dev/">OSV</a></li>
           <li><i class="fa-li fa fa-link" aria-hidden="true"></i><a href="https://vulndb.cyberriskanalytics.com">VulnDB</a></li>
         </ul>
       </b-col>
