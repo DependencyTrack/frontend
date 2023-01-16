@@ -222,7 +222,11 @@
       },
       initialize: function() {
         let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
-        this.axios.get(projectUrl).then((response) => {
+        this.axios.get(projectUrl).catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.replace({name: "Projects"})
+          }
+        }).then((response) => {
           this.project = response.data;
           let projectVersionsUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?offset=0&limit=10&excludeInactive=true&name=` + encodeURIComponent(this.project.name);
           this.axios.get(projectVersionsUrl).then((response) => {
