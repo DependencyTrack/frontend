@@ -96,31 +96,31 @@
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
-      <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
+      <b-tab ref="overview" @click="routeTo()" class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
         <project-dashboard :key="this.uuid" :uuid="this.uuid" :project="this.project" style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
-      <b-tab>
+      <b-tab ref="components" @click="routeTo('components')">
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
         <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
       </b-tab>
-      <b-tab>
+      <b-tab ref="services" @click="routeTo('services')">
         <template v-slot:title><i class="fa fa-exchange"></i> {{ $t('message.services') }} <b-badge variant="tab-total">{{ totalServices }}</b-badge></template>
         <project-services :key="this.uuid" :uuid="this.uuid" v-on:total="totalServices = $event" />
       </b-tab>
-      <b-tab ref="tabDependencyGraph">
+      <b-tab ref="dependencygraph" @click="routeTo('dependencyGraph')">
         <template v-slot:title><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }} <b-badge variant="tab-total">{{ totalDependencyGraphs }}</b-badge></template>
         <project-dependency-graph :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalDependencyGraphs = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
+      <b-tab ref="findings" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('findings')">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
         <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)">
+      <b-tab ref="epss" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('epss')">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }} <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template>
         <project-epss :key="this.uuid" :uuid="this.uuid" v-on:total="totalEpss = $event" />
       </b-tab>
-      <b-tab v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)">
+      <b-tab ref="policyviolations" v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)" @click="routeTo('policyViolations')">
         <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
@@ -244,6 +244,15 @@
       },
       initializeProjectDetailsModal: function () {
         this.$root.$emit('initializeProjectDetailsModal')
+      },
+      routeTo(path) {
+        if (path) {
+          if (!this.$route.fullPath.toLowerCase().includes('/' + path.toLowerCase())) {
+            this.$router.push({path: '/projects/' + this.uuid + '/' + path})
+          }
+        } else if (this.$route.fullPath !== '/projects/' + this.uuid && this.$route.fullPath !== '/projects/' + this.uuid + '/') {
+          this.$router.push({path: '/projects/' + this.uuid})
+        }
       }
     },
     beforeMount() {
@@ -251,16 +260,41 @@
       this.initialize();
     },
     mounted() {
-      if (this.$route.params.componentUuid){
-        this.$refs.tabDependencyGraph.active = true
+      try {
+        if (this.$route.params.componentUuid){
+          this.$refs.dependencygraph.active = true
+        } else {
+          let pattern = new RegExp("/projects\\/" + this.uuid + "\\/([^\\/]*)", "gi")
+          let tab = pattern.exec(this.$route.fullPath.toLowerCase())
+          if (tab && tab[1]) {
+            this.$refs[tab[1].toLowerCase()].active = true
+          } else {
+            this.$refs.overview.active = true
+          }
+        }
+      } catch (e) {
+        this.$toastr.e(this.$t('condition.forbidden'));
+        this.$router.replace({path: '/projects/' + this.uuid})
+        this.$refs.overview.active = true
       }
+
     },
     watch:{
       $route (to, from){
         this.uuid = this.$route.params.uuid;
-        this.initialize();
+        if (to.params.uuid !== from.params.uuid) {
+          this.initialize();
+        }
         if (this.$route.params.componentUuid){
-          this.$refs.tabDependencyGraph.activate()
+          this.$refs.dependencygraph.activate()
+          this.initialize();
+        }
+        let pattern = new RegExp("/projects\\/" + this.uuid + "\\/([^\\/]*)", "gi")
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
+        if (tab && tab[1]) {
+          this.$refs[tab[1].toLowerCase()].activate()
+        } else {
+          this.$refs.overview.activate()
         }
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
-      <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
+      <b-tab ref="overview" class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active @click="routeTo()">
         <template v-slot:title>{{ $t('message.overview') }}</template>
         <table>
           <tr>
@@ -50,15 +50,15 @@
           </tr>
         </table>
       </b-tab>
-      <b-tab>
+      <b-tab ref="licensetext" @click="routeTo('licenseText')">
         <template v-slot:title>{{ $t('message.license_text') }}</template>
         <div class="licenseText formattedLicenseContent">{{ license.licenseText }}</div>
       </b-tab>
-      <b-tab>
+      <b-tab ref="template" @click="routeTo('template')">
         <template v-slot:title>{{ $t('message.template') }}</template>
         <div class="templateText formattedLicenseContent">{{ license.standardLicenseTemplate }}</div>
       </b-tab>
-      <b-tab>
+      <b-tab ref="header" @click="routeTo('header')">
         <template v-slot:title>{{ $t('message.source_header') }}</template>
         <div class="headerText formattedLicenseContent">{{ license.standardLicenseHeader }}</div>
       </b-tab>
@@ -105,6 +105,15 @@
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+      },
+      routeTo(path) {
+        if (path) {
+          if (!this.$route.fullPath.toLowerCase().includes('/' + path.toLowerCase())) {
+            this.$router.push({path: '/licenses/' + this.licenseId + '/' + path})
+          }
+        } else if (this.$route.fullPath !== '/licenses/' + this.licenseId && this.$route.fullPath !== '/licenses/' + this.licenseId + '/') {
+          this.$router.push({path: '/licenses/' + this.licenseId})
+        }
       }
     },
     beforeMount() {
@@ -117,6 +126,24 @@
         EventBus.$emit('addCrumb', this.licenseLabel);
         this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
       });
+      let pattern = new RegExp("/licenses\\/" + this.licenseId + "\\/([^\\/]*)", "gi")
+      let tab = pattern.exec(this.$route.fullPath.toLowerCase())
+      if (tab && tab[1]) {
+        this.$refs[tab[1].toLowerCase()].active = true
+      } else {
+        this.$refs.overview.active = true
+      }
+    },
+    watch:{
+      $route() {
+        let pattern = new RegExp("/licenses\\/" + this.licenseId + "\\/([^\\/]*)", "gi")
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
+        if (tab && tab[1]) {
+          this.$refs[tab[1].toLowerCase()].activate()
+        } else {
+          this.$refs.overview.activate()
+        }
+      }
     },
     destroyed() {
       EventBus.$emit('crumble');

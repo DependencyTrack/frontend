@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import i18n from '../i18n'
 import { getContextPath } from "../shared/utils"
-import { getToken }  from '../shared/permissions';
+import {decodeToken, getToken} from '../shared/permissions';
 import EventBus from '../shared/eventbus';
 
 // Containers
@@ -14,10 +14,52 @@ const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
 const ComponentSearch = () => import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');
 const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
-const Administration = () => import('@/views/administration/Administration');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
-
 const Project = () => import('@/views/portfolio/projects/Project');
+
+const Administration = () => import('@/views/administration/Administration');
+const General = () => import('@/views/administration/configuration/General')
+const BomFormats = () => import('@/views/administration/configuration/BomFormats')
+const Email = () => import('@/views/administration/configuration/Email')
+const Jira = () => import('@/views/administration/configuration/JiraConfig')
+const InternalComponents = () => import('@/views/administration/configuration/InternalComponents')
+const TaskScheduler = () => import('@/views/administration/configuration/TaskScheduler')
+const Search = () => import('@/views/administration/configuration/Search')
+
+const InternalAnalyzer = () => import('@/views/administration/analyzers/InternalAnalyzer')
+const OssIndexAnalyzer = () => import('@/views/administration/analyzers/OssIndexAnalyzer')
+const VulnDbAnalyzer = () => import('@/views/administration/analyzers/VulnDbAnalyzer')
+const SnykAnalyzer = () => import('@/views/administration/analyzers/SnykAnalyzer')
+
+const VulnSourceNvd = () => import('@/views/administration/vuln-sources/VulnSourceNvd')
+const VulnSourceGitHubAdvisories = () => import('@/views/administration/vuln-sources/VulnSourceGitHubAdvisories')
+const VulnSourceOSVAdvisories = () => import('@/views/administration/vuln-sources/VulnSourceOSVAdvisories')
+
+const Cargo = () => import('@/views/administration/repositories/Cargo')
+const Composer = () => import('@/views/administration/repositories/Composer')
+const Gem = () => import('@/views/administration/repositories/Gem')
+const GoModules = () => import('@/views/administration/repositories/GoModules')
+const Hex = () => import('@/views/administration/repositories/Hex')
+const Maven = () => import('@/views/administration/repositories/Maven')
+const Npm = () => import('@/views/administration/repositories/Npm')
+const Nuget = () => import('@/views/administration/repositories/Nuget')
+const Python = () => import('@/views/administration/repositories/Python')
+
+const Alerts = () => import('@/views/administration/notifications/Alerts')
+const Templates = () => import('@/views/administration/notifications/Templates')
+
+const FortifySsc = () => import('@/views/administration/integrations/FortifySsc')
+const DefectDojo = () => import('@/views/administration/integrations/DefectDojo')
+const KennaSecurity = () => import('@/views/administration/integrations/KennaSecurity')
+
+const LdapUsers = () => import('@/views/administration/accessmanagement/LdapUsers')
+const ManagedUsers = () => import('@/views/administration/accessmanagement/ManagedUsers')
+const OidcUsers = () => import('@/views/administration/accessmanagement/OidcUsers')
+const OidcGroups = () => import('@/views/administration/accessmanagement/OidcGroups')
+const Teams = () => import('@/views/administration/accessmanagement/Teams')
+const Permissions = () => import('@/views/administration/accessmanagement/Permissions')
+const PortfolioAccessControl = () => import('@/views/administration/accessmanagement/PortfolioAccessControl')
+
 const Component = () => import('@/views/portfolio/projects/Component');
 const Service = () => import('@/views/portfolio/projects/Service');
 const Vulnerability = () => import('@/views/portfolio/vulnerabilities/Vulnerability');
@@ -55,17 +97,20 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.projects'),
             i18n: 'message.projects',
-            sectionPath: '/projects'
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
           path: 'projects/:uuid',
           name: 'Project',
+          alias: ['projects/:uuid/overview', 'projects/:uuid/components', 'projects/:uuid/services', 'projects/:uuid/dependencyGraph', 'projects/:uuid/findings', 'projects/:uuid/epss', 'projects/:uuid/policyViolations'],
           props: (route) => ( { uuid: route.params.uuid } ),
           component: Project,
           meta: {
             i18n: 'message.projects',
-            sectionPath: '/projects'
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -78,7 +123,8 @@ function configRoutes() {
           component: Project,
           meta: {
             i18n: 'message.projects',
-            sectionPath: '/projects'
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -88,17 +134,20 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.component_search'),
             i18n: 'message.component_search',
-            sectionPath: '/components'
+            sectionPath: '/components',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
           path: '/components/:uuid',
           name: 'Component',
+          alias: ['/components/:uuid/overview', '/components/:uuid/vulnerabilities'],
           props: (route) => ( { uuid: route.params.uuid } ),
           component: Component,
           meta: {
             i18n: 'message.projects',
-            sectionPath: '/projects'
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -108,7 +157,8 @@ function configRoutes() {
           component: Service,
           meta: {
             i18n: 'message.projects',
-            sectionPath: '/projects'
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -118,12 +168,14 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.vulnerabilities'),
             i18n: 'message.vulnerabilities',
-            sectionPath: '/vulnerabilities'
+            sectionPath: '/vulnerabilities',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
           path: 'vulnerabilities/:source/:vulnId',
           name: 'Vulnerability',
+          alias: ['vulnerabilities/:source/:vulnId/overview', 'vulnerabilities/:source/:vulnId/affectedProjects'],
           props: (route) => ( {
             source: route.params.source,
             vulnId: route.params.vulnId
@@ -131,7 +183,8 @@ function configRoutes() {
           component: Vulnerability,
           meta: {
             i18n: 'message.vulnerabilities',
-            sectionPath: '/vulnerabilities'
+            sectionPath: '/vulnerabilities',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -141,38 +194,403 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.licenses'),
             i18n: 'message.licenses',
-            sectionPath: '/licenses'
+            sectionPath: '/licenses',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
           path: 'licenses/:licenseId',
           name: 'License',
+          alias: ['licenses/:licenseId/overview', 'licenses/:licenseId/licenseText', 'licenses/:licenseId/template', 'licenses/:licenseId/header'],
           props: (route) => ( { licenseId: route.params.licenseId } ),
           component: License,
           meta: {
             i18n: 'message.licenses',
-            sectionPath: '/licenses'
+            sectionPath: '/licenses',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
           path: 'policy',
           name: 'Policy Management',
+          alias: ['policy/policies', 'policy/licenseGroups'],
           component: PolicyManagement,
           meta: {
             title: i18n.t('message.policy_management'),
             i18n: 'message.policy_management',
-            sectionPath: '/policy'
+            sectionPath: '/policy',
+            permission: 'POLICY_MANAGEMENT'
           }
         },
         {
           path: 'admin',
-          name: 'Administration',
           component: Administration,
           meta: {
             title: i18n.t('message.administration'),
             i18n: 'message.administration',
-            sectionPath: '/admin'
-          }
+            sectionPath: '/admin',
+            permission: 'SYSTEM_CONFIGURATION'
+          },
+          children: [
+            {
+              path: '',
+              name: 'Administration',
+              alias: ['configuration', 'configuration/general'],
+              component: General,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/bomFormats',
+              component: BomFormats,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/email',
+              component: Email,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/jira',
+              component: Jira,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/internalComponents',
+              component: InternalComponents,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/taskScheduler',
+              component: TaskScheduler,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/search',
+              component: Search,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'analyzers/internal',
+              alias: ['analyzers'],
+              component: InternalAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'analyzers/oss',
+              component: OssIndexAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'analyzers/vulnDB',
+              component: VulnDbAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'analyzers/snyk',
+              component: SnykAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'vulnerabilitySources/nvd',
+              alias: ['vulnerabilitySources'],
+              component: VulnSourceNvd,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'vulnerabilitySources/github',
+              component: VulnSourceGitHubAdvisories,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'vulnerabilitySources/osv',
+              component: VulnSourceOSVAdvisories,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/cargo',
+              alias: ['repositories'],
+              component: Cargo,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/composer',
+              component: Composer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/gem',
+              component: Gem,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/goModules',
+              component: GoModules,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/hex',
+              component: Hex,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/maven',
+              component: Maven,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/npm',
+              component: Npm,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/nuget',
+              component: Nuget,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/python',
+              component: Python,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'notifications/alerts',
+              alias: ['notifications'],
+              component: Alerts,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'notifications/templates',
+              component: Templates,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'integrations/fortifySSC',
+              alias: ['integrations'],
+              component: FortifySsc,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'integrations/defectDojo',
+              component: DefectDojo,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'integrations/kennaSecurity',
+              component: KennaSecurity,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'accessManagement/ldapUsers',
+              alias: ['accessManagement'],
+              component: LdapUsers,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/managedUsers',
+              component: ManagedUsers,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/oidcUsers',
+              component: OidcUsers,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/oidcGroups',
+              component: OidcGroups,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/teams',
+              component: Teams,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/permissions',
+              component: Permissions,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            },
+            {
+              path: 'accessManagement/portfolioAccessControl',
+              component: PortfolioAccessControl,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'ACCESS_MANAGEMENT'
+              },
+            }
+          ]
         },
         // The following route redirects URLs from legacy Dependency-Track UI to new URL format.
         {
@@ -268,31 +686,36 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const jwt = getToken();
-  const publicRoutes = ['Login', '404', 'PasswordForceChange'];
-  if (!publicRoutes.includes(to.name)) {
-    const redirectTo = to.fullPath;
-    if (jwt) {
-      // let backend verify the token
-      router.app.axios.get(`${router.app.$api.BASE_URL}/${router.app.$api.URL_USER_SELF}`, {
-        headers: { 'Authorization': `Bearer ${jwt}` }
-      }).then((result) => {
-        Vue.prototype.$currentUser = result.data
-        // allowed to proceed
-        next();
-      }).catch(() => {
-        // token is stale
-        // notify app about this
-        EventBus.$emit('authenticated', null);
-        // redirect to login page
+  if (!to.meta.permission || to.meta.permission && jwt && decodeToken(jwt).permissions.includes(to.meta.permission)){
+    const publicRoutes = ['Login', '404', 'PasswordForceChange'];
+    if (!publicRoutes.includes(to.name)) {
+      const redirectTo = to.fullPath;
+      if (jwt) {
+        // let backend verify the token
+        router.app.axios.get(`${router.app.$api.BASE_URL}/${router.app.$api.URL_USER_SELF}`, {
+          headers: { 'Authorization': `Bearer ${jwt}` }
+        }).then((result) => {
+          Vue.prototype.$currentUser = result.data
+          // allowed to proceed
+          next();
+        }).catch(() => {
+          // token is stale
+          // notify app about this
+          EventBus.$emit('authenticated', null);
+          // redirect to login page
+          next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+        });
+      } else {
+        // no token at all, redirect to login page
         next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
-      });
+      }
     } else {
-      // no token at all, redirect to login page
-      next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+      // allowed to proceed
+      next();
     }
   } else {
-    // allowed to proceed
-    next();
+    Vue.prototype.$toastr.e(i18n.t('condition.forbidden'));
+    next({name: "Dashboard", replace: true})
   }
 });
 
