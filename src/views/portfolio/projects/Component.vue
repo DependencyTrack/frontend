@@ -177,6 +177,11 @@
         } else if (this.$route.fullPath !== '/components/' + this.uuid && this.$route.fullPath !== '/components/' + this.uuid + '/') {
           this.$router.push({path: '/components/' + this.uuid})
         }
+      },
+      getTabFromRoute: function () {
+        let pattern = new RegExp("/components\\/" + this.uuid + "\\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
       }
     },
     beforeMount() {
@@ -200,23 +205,11 @@
         this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
       });
 
-      let pattern = new RegExp("/components\\/" + this.uuid + "\\/([^\\/]*)", "gi")
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-      if (tab && tab[1]) {
-        this.$refs[tab[1].toLowerCase()].active = true
-      } else {
-        this.$refs.overview.active = true
-      }
+      this.getTabFromRoute().active = true;
     },
     watch:{
       $route() {
-        let pattern = new RegExp("/components\\/" + this.uuid + "\\/([^\\/]*)", "gi")
-        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-        if (tab && tab[1]) {
-          this.$refs[tab[1].toLowerCase()].activate()
-        } else {
-          this.$refs.overview.activate()
-        }
+        this.getTabFromRoute().activate();
       }
     },
     destroyed() {

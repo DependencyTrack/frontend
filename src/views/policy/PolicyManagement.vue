@@ -39,26 +39,19 @@
         } else if (this.$route.fullPath !== '/policy' && this.$route.fullPath !== '/policy/') {
           this.$router.push({path: '/policy'})
         }
+      },
+      getTabFromRoute: function () {
+        let pattern = new RegExp("/policy\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
       }
     },
     mounted() {
-      let pattern = new RegExp("/policy\/([^\\/]*)", "gi")
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-      if (tab && tab[1]) {
-        this.$refs[tab[1].toLowerCase()].active = true
-      } else {
-        this.$refs.policies.active = true
-      }
+      this.getTabFromRoute().active = true;
     },
     watch: {
       $route() {
-        let pattern = new RegExp("/policy\/([^\\/]*)", "gi")
-        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-        if (tab && tab[1]) {
-          this.$refs[tab[1].toLowerCase()].activate()
-        } else {
-          this.$refs.policies.activate()
-        }
+        this.getTabFromRoute().activate();
       }
     }
   }

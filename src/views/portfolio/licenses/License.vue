@@ -114,6 +114,11 @@
         } else if (this.$route.fullPath !== '/licenses/' + this.licenseId && this.$route.fullPath !== '/licenses/' + this.licenseId + '/') {
           this.$router.push({path: '/licenses/' + this.licenseId})
         }
+      },
+      getTabFromRoute: function () {
+        let pattern = new RegExp("/licenses\\/" + this.licenseId + "\\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
       }
     },
     beforeMount() {
@@ -126,23 +131,11 @@
         EventBus.$emit('addCrumb', this.licenseLabel);
         this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
       });
-      let pattern = new RegExp("/licenses\\/" + this.licenseId + "\\/([^\\/]*)", "gi")
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-      if (tab && tab[1]) {
-        this.$refs[tab[1].toLowerCase()].active = true
-      } else {
-        this.$refs.overview.active = true
-      }
+      this.getTabFromRoute().active = true;
     },
     watch:{
       $route() {
-        let pattern = new RegExp("/licenses\\/" + this.licenseId + "\\/([^\\/]*)", "gi")
-        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-        if (tab && tab[1]) {
-          this.$refs[tab[1].toLowerCase()].activate()
-        } else {
-          this.$refs.overview.activate()
-        }
+        this.getTabFromRoute().activate();
       }
     },
     destroyed() {

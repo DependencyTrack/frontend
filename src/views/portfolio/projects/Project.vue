@@ -252,11 +252,16 @@
       routeTo(path) {
         if (path) {
           if (!this.$route.fullPath.toLowerCase().includes('/' + path.toLowerCase())) {
-            this.$router.push({path: '/projects/' + this.uuid + '/' + path})
+            this.$router.push({path: '/projects/' + this.uuid + '/' + path});
           }
         } else if (this.$route.fullPath !== '/projects/' + this.uuid && this.$route.fullPath !== '/projects/' + this.uuid + '/') {
-          this.$router.push({path: '/projects/' + this.uuid})
+          this.$router.push({path: '/projects/' + this.uuid});
         }
+      },
+      getTabFromRoute: function () {
+        let pattern = new RegExp("/projects\\/" + this.uuid + "\\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return this.$refs[(tab && tab[1]) ? tab[1].toLowerCase() : 'overview'];
       }
     },
     beforeMount() {
@@ -266,40 +271,26 @@
     mounted() {
       try {
         if (this.$route.params.componentUuid){
-          this.$refs.dependencygraph.active = true
+          this.$refs.dependencygraph.active = true;
         } else {
-          let pattern = new RegExp("/projects\\/" + this.uuid + "\\/([^\\/]*)", "gi")
-          let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-          if (tab && tab[1]) {
-            this.$refs[tab[1].toLowerCase()].active = true
-          } else {
-            this.$refs.overview.active = true
-          }
+          this.getTabFromRoute().active = true;
         }
       } catch (e) {
         this.$toastr.e(this.$t('condition.forbidden'));
-        this.$router.replace({path: '/projects/' + this.uuid})
-        this.$refs.overview.active = true
+        this.$router.replace({path: '/projects/' + this.uuid});
+        this.$refs.overview.active = true;
       }
-
     },
     watch:{
       $route (to, from){
         this.uuid = this.$route.params.uuid;
         if (to.params.uuid !== from.params.uuid) {
           this.initialize();
-        }
-        if (this.$route.params.componentUuid){
-          this.$refs.dependencygraph.activate()
+        } else if (this.$route.params.componentUuid){
           this.initialize();
+          this.$refs.dependencygraph.activate();
         }
-        let pattern = new RegExp("/projects\\/" + this.uuid + "\\/([^\\/]*)", "gi")
-        let tab = pattern.exec(this.$route.fullPath.toLowerCase())
-        if (tab && tab[1]) {
-          this.$refs[tab[1].toLowerCase()].activate()
-        } else {
-          this.$refs.overview.activate()
-        }
+        this.getTabFromRoute().activate();
       }
     },
     destroyed() {
