@@ -29,45 +29,20 @@
     methods: {
       emitEvent: function(plugin) {
         EventBus.$emit('admin:plugin', plugin);
+      },
+      getMenuFromRoute: function() {
+        let pattern = new RegExp("/admin\\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return tab && tab[1] ? tab[1].toLowerCase() : 'configuration';
       }
     },
     mounted() {
-      let path = this.$route.fullPath.toLowerCase()
-      if (path.includes('/analyzers')) {
-        this.$root.$emit('bv::toggle::collapse', 'analyzersMenu')
-      } else if (path.includes('/vulnerabilitysources')) {
-        this.$root.$emit('bv::toggle::collapse', 'vulnSourceMenu')
-      } else if (path.includes('/repositories')) {
-        this.$root.$emit('bv::toggle::collapse', 'repositoriesMenu')
-      } else if (path.includes('/notifications')) {
-        this.$root.$emit('bv::toggle::collapse', 'notificationsMenu')
-      } else if (path.includes('/integrations')) {
-        this.$root.$emit('bv::toggle::collapse', 'integrationsMenu')
-      } else if (path.includes('/accessmanagement')) {
-        this.$root.$emit('bv::toggle::collapse', 'accessmanagementMenu')
-      } else {
-        this.$root.$emit('bv::toggle::collapse', 'configurationMenu')
-      }
+      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute())
     },
     watch: {
-      $route (to) {
-        this.$refs.accordion.forEach(o => o.show = false)
-        let path = to.fullPath.toLowerCase()
-        if (path.includes('/analyzers')) {
-          this.$root.$emit('bv::toggle::collapse', 'analyzersMenu')
-        } else if (path.includes('/vulnerabilitysources')) {
-          this.$root.$emit('bv::toggle::collapse', 'vulnSourceMenu')
-        } else if (path.includes('/repositories')) {
-          this.$root.$emit('bv::toggle::collapse', 'repositoriesMenu')
-        } else if (path.includes('/notifications')) {
-          this.$root.$emit('bv::toggle::collapse', 'notificationsMenu')
-        } else if (path.includes('/integrations')) {
-          this.$root.$emit('bv::toggle::collapse', 'integrationsMenu')
-        } else if (path.includes('/accessmanagement')) {
-          this.$root.$emit('bv::toggle::collapse', 'accessmanagementMenu')
-        } else {
-          this.$root.$emit('bv::toggle::collapse', 'configurationMenu')
-        }
+      $route () {
+        this.$refs.accordion.forEach(menu => menu.show = false);
+        this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
       }
     },
     data() {
@@ -75,7 +50,7 @@
         menu: [
           {
             name: this.$t('admin.configuration'),
-            id: "configurationMenu",
+            id: "configuration",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -117,7 +92,7 @@
           },
           {
             name: this.$t('admin.analyzers'),
-            id: "analyzersMenu",
+            id: "analyzers",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -144,7 +119,7 @@
           },
           {
             name: this.$t('admin.vuln_sources'),
-            id: "vulnSourceMenu",
+            id: "vulnerabilitysources",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -166,7 +141,7 @@
           },
           {
             name: this.$t('admin.repositories'),
-            id: "repositoriesMenu",
+            id: "repositories",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -218,7 +193,7 @@
           },
           {
             name: this.$t('admin.notifications'),
-            id: "notificationsMenu",
+            id: "notifications",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -235,7 +210,7 @@
           },
           {
             name: this.$t('admin.integrations'),
-            id: "integrationsMenu",
+            id: "integrations",
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
@@ -257,7 +232,7 @@
           },
           {
             name: this.$t('admin.access_management'),
-            id: "accessmanagementMenu",
+            id: "accessmanagement",
             permission: ACCESS_MANAGEMENT,
             children: [
               {
