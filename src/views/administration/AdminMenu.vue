@@ -69,11 +69,6 @@
                 route: "configuration/email"
               },
               {
-                component: 'Jira',
-                name: this.$t('admin.jira'),
-                route: "configuration/jira"
-              },
-              {
                 component: 'InternalComponents',
                 name: this.$t('admin.internal_components'),
                 route: "configuration/internalComponents"
@@ -214,14 +209,19 @@
             permission: SYSTEM_CONFIGURATION,
             children: [
               {
+                component: "DefectDojo",
+                name: this.$t('admin.defectdojo'),
+                route: "integrations/defectDojo"
+              },
+              {
                 component: "FortifySsc",
                 name: this.$t('admin.fortify_ssc'),
                 route: "integrations/fortifySSC"
               },
               {
-                component: "DefectDojo",
-                name: this.$t('admin.defectdojo'),
-                route: "integrations/defectDojo"
+                component: 'Jira',
+                name: this.$t('admin.jira'),
+                route: "configuration/jira"
               },
               {
                 component: "KennaSecurity",
