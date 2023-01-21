@@ -747,7 +747,8 @@
     "http_status_code": "HTTP Status Code",
     "unsuccessful_action": "Could not perform the requested action",
     "http_request_error": "HTTP Request Error",
-    "server_error": "Server Error"
+    "server_error": "Server Error",
+    "forbidden": "Forbidden (403)"
   },
   "violation": {
     "info": "Inform",
