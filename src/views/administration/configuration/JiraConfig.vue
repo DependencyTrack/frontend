@@ -58,17 +58,17 @@ export default {
   methods: {
     saveChanges: function() {
       this.updateConfigProperties([
-        {groupName: 'jira', propertyName: 'jira.url', propertyValue: this.jiraUrl},
-        {groupName: 'jira', propertyName: 'jira.username', propertyValue: this.jiraUsername}
+        {groupName: 'integrations', propertyName: 'jira.url', propertyValue: this.jiraUrl},
+        {groupName: 'integrations', propertyName: 'jira.username', propertyValue: this.jiraUsername}
       ]);
       if (this.jiraPassword !== "HiddenDecryptedPropertyPlaceholder") {
-        this.updateConfigProperty("jira", "jira.password", this.jiraPassword);
+        this.updateConfigProperty("integrations", "jira.password", this.jiraPassword);
       }
     }
   },
   created () {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) { return item.groupName === "jira" });
+      let configItems = response.data.filter(function (item) { return item.groupName === "integrations" });
       for (let i=0; i<configItems.length; i++) {
         let item = configItems[i];
         switch (item.propertyName) {
