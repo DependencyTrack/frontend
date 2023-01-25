@@ -88,7 +88,7 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("PolicyListPageSize") !== null) ? Number(localStorage.getItem("PolicyListPageSize")) : 10,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -348,7 +348,12 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`,
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("PolicyListPageSize", size.toString())
+            }
+          }),
         }
       };
     }
