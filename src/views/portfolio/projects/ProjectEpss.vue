@@ -30,6 +30,7 @@ import permissionsMixin from "../../../mixins/permissionsMixin";
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
 import $ from "jquery";
+import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
 export default {
   props: {
@@ -41,9 +42,12 @@ export default {
     BootstrapToggle,
     ChartEpssVsCvss
   },
+  beforeCreate() {
+    this.showSuppressedFindings = (localStorage && localStorage.getItem("ProjectEpssShowSuppressedFindings") !== null) ? (localStorage.getItem("ProjectEpssShowSuppressedFindings") === "true") : false;
+  },
   data() {
     return {
-      showSuppressedFindings: false,
+      showSuppressedFindings: this.showSuppressedFindings,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -135,7 +139,9 @@ export default {
         toolbar: '#epssToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
-        pageSize: 10,
+        pageSize: (localStorage && localStorage.getItem("ProjectEpssPageSize") !== null) ? Number(localStorage.getItem("ProjectEpssPageSize")) : 10,
+        sortName: (localStorage && localStorage.getItem("ProjectEpssSortName") !== null) ? localStorage.getItem("ProjectEpssSortName") : undefined,
+        sortOrder: (localStorage && localStorage.getItem("ProjectEpssSortOrder") !== null) ? localStorage.getItem("ProjectEpssSortOrder") : undefined,
         icons: {
           refresh: 'fa-refresh'
         },
@@ -145,6 +151,22 @@ export default {
         },
         url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
+        onPageChange: ((number, size) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectEpssPageSize", size.toString())
+          }
+        }),
+        onColumnSwitch: ((field, checked) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectEpssShow"+common.capitalize(field), checked.toString())
+          }
+        }),
+        onSort: ((name, order) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectEpssSortName", name);
+            localStorage.setItem("ProjectEpssSortOrder", order);
+          }
+        })
       }
     };
   },
@@ -165,6 +187,7 @@ export default {
       });
     },
     tableLoaded: function(data) {
+      loadUserPreferencesForBootstrapTable(this, "ProjectEpss", this.$refs.table.columns);
       this.$emit('total', data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },
@@ -176,6 +199,9 @@ export default {
   },
   watch:{
     showSuppressedFindings() {
+      if (localStorage) {
+        localStorage.setItem("ProjectEpssShowSuppressedFindings", this.showSuppressedFindings.toString());
+      }
       this.refreshTable();
     }
   },

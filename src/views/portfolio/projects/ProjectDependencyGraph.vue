@@ -39,6 +39,9 @@ export default {
     project: Object,
     uuid: String
   },
+  beforeCreate() {
+    this.showCompleteGraph = (localStorage && localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") !== null) ? (localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") === "true") : false;
+  },
   data() {
     return {
       data: {},
@@ -49,7 +52,7 @@ export default {
       collapsable: true,
       pos: { top: 0, left: 0, x: 0, y: 0},
       loading: false,
-      showCompleteGraph: false,
+      showCompleteGraph: this.showCompleteGraph,
       notFound: false,
       labelIcon: {
         dataOn: '\u2713',
@@ -66,18 +69,24 @@ export default {
           let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
           this.axios.get(url).then(response => {
             if (response.data && Object.keys(response.data).length > 0){
-              this.showCompleteGraph = false
               this.notFound = false
               this.response = response
               this.data = {
                 id: this.nodeId,
                 label: this.createNodeLabel(this.project),
                 objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
+                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, !this.showCompleteGraph),
                 fetchedChildren: true,
                 expand: true
               }
               this.loading = false
+              new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+                document.getElementsByClassName("searched").item(0).scrollIntoView({
+                  behavior: "smooth",
+                  inline: "center",
+                  block: "center"
+                })
+              })
             } else {
               this.$route.query.dependencyGraph = null
               this.notFound = true
@@ -120,6 +129,9 @@ export default {
       }
     },
     showCompleteGraph: function () {
+      if (this.$route.params.componentUuid && localStorage) {
+        localStorage.setItem("ProjectDependencyGraphShowCompleteGraph", this.showCompleteGraph.toString());
+      }
       if (this.showCompleteGraph) {
         this.data = {
           id: this.nodeId,
@@ -127,7 +139,7 @@ export default {
           objectType: "PROJECT",
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
           fetchedChildren: true,
-          expand: true
+          expand: !!this.$route.params.componentUuid
         }
         if (this.$route.params.componentUuid) {
           new Promise(resolve => setTimeout(resolve, 50)).then(() => {
@@ -149,10 +161,14 @@ export default {
         }
       }
     },
-    $route: function () {
-      this.showCompleteGraph = true
-      this.collapse(this.data.children)
-      this.data.expand = false
+    $route: function (to, from) {
+      if (!to.params.componentUuid && from.params.componentUuid) {
+        this.showCompleteGraph = true
+        this.collapse(this.data.children)
+        this.data.expand = false
+      } else if (to.params.componentUuid && !from.params.componentUuid) {
+        this.showCompleteGraph = (localStorage && localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") !== null) ? (localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") === "true") : false;
+      }
     }
   },
   methods: {

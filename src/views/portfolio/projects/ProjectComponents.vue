@@ -48,6 +48,7 @@
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
   import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
+  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
     components: {ProjectUploadBomModal, ProjectAddComponentModal},
@@ -177,7 +178,9 @@
           toolbar: '#componentsToolbar',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("ProjectComponentsPageSize") !== null) ? Number(localStorage.getItem("ProjectComponentsPageSize")) : 10,
+          sortName: (localStorage && localStorage.getItem("ProjectComponentsSortName") !== null) ? localStorage.getItem("ProjectComponentsSortName") : undefined,
+          sortOrder: (localStorage && localStorage.getItem("ProjectComponentsSortOrder") !== null) ? localStorage.getItem("ProjectComponentsSortOrder") : undefined,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -185,7 +188,23 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`,
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectComponentsPageSize", size.toString())
+            }
+          }),
+          onColumnSwitch: ((field, checked) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectComponentsShow"+common.capitalize(field), checked.toString())
+            }
+          }),
+          onSort: ((name, order) => {
+            if (localStorage) {
+              localStorage.setItem("ProjectComponentsSortName", name);
+              localStorage.setItem("ProjectComponentsSortOrder", order);
+            }
+          })
         }
       };
     },
@@ -239,6 +258,7 @@
         });
       },
       tableLoaded: function(data) {
+        loadUserPreferencesForBootstrapTable(this, "ProjectComponents", this.$refs.table.columns);
         if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
           this.$emit('total', data.total);
         } else {
