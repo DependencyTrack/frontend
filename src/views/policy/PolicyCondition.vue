@@ -14,7 +14,7 @@
                                    v-on:change="saveCondition" v-model="value" :options="possibleValues" />
 
         <b-input-group-form-input v-else-if="subject !== 'COORDINATES' && !isSubjectSelectable" id="input-value" required="true" type="text" v-model="value" lazy="true"
-                                  v-debounce:750ms="saveCondition" :debounce-events="'keyup'" />
+                                  v-debounce:750ms="saveCondition" :tooltip="valueInputTooltip()" :debounce-events="'keyup'" />
 
         <b-input-group v-else-if="subject === 'COORDINATES'">
           <b-form-input id="input-value-coordinates-group" :placeholder="$t('message.group')" type="text" v-model="coordinatesGroup" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
@@ -63,7 +63,7 @@
         coordinatesName: null,
         coordinatesVersion: null,
         subjects: [
-          //{value: 'AGE', text: this.$t('message.age')},
+          {value: 'AGE', text: this.$t('message.age')},
           //{value: 'ANALYZER', text: this.$t('message.analyzer')},
           //{value: 'BOM', text: this.$t('message.bom')},
           {value: 'SEVERITY', text: this.$t('message.severity')},
@@ -315,6 +315,14 @@
           {value: "INFO", text: this.$t('severity.info')},
           {value: "UNASSIGNED", text: this.$t('severity.unassigned')}
         ];
+      },
+      valueInputTooltip: function () {
+        switch (this.subject) {
+          case "AGE":
+            return this.$t('message.age_tooltip');
+          default:
+            return "";
+        }
       }
     }
   }
