@@ -45,6 +45,7 @@ export default {
   },
   beforeCreate() {
     this.highlightOutdatedComponents = (localStorage && localStorage.getItem("ProjectDependencyGraphHighlightOutdatedComponents") !== null) ? (localStorage.getItem("ProjectDependencyGraphHighlightOutdatedComponents") === "true") : false;
+    this.showCompleteGraph = (localStorage && localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") !== null) ? (localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") === "true") : false;
   },
   data() {
     return {
@@ -56,7 +57,7 @@ export default {
       collapsable: true,
       pos: { top: 0, left: 0, x: 0, y: 0},
       loading: false,
-      showCompleteGraph: false,
+      showCompleteGraph: this.showCompleteGraph,
       notFound: false,
       highlightOutdatedComponents: this.highlightOutdatedComponents,
       labelIcon: {
@@ -74,18 +75,24 @@ export default {
           let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
           this.axios.get(url).then(response => {
             if (response.data && Object.keys(response.data).length > 0){
-              this.showCompleteGraph = false
               this.notFound = false
               this.response = response
               this.data = {
                 id: this.nodeId,
                 label: this.createNodeLabel(this.project),
                 objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, true),
+                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, !this.showCompleteGraph),
                 fetchedChildren: true,
                 expand: true
               }
               this.loading = false
+              new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+                document.getElementsByClassName("searched").item(0).scrollIntoView({
+                  behavior: "smooth",
+                  inline: "center",
+                  block: "center"
+                })
+              })
             } else {
               this.$route.query.dependencyGraph = null
               this.notFound = true
@@ -128,6 +135,9 @@ export default {
       }
     },
     showCompleteGraph: function () {
+      if (this.$route.params.componentUuid && localStorage) {
+        localStorage.setItem("ProjectDependencyGraphShowCompleteGraph", this.showCompleteGraph.toString());
+      }
       if (this.showCompleteGraph) {
         this.data = {
           id: this.nodeId,
@@ -135,15 +145,17 @@ export default {
           objectType: "PROJECT",
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
           fetchedChildren: true,
-          expand: true
+          expand: !!this.$route.params.componentUuid
         }
-        new Promise(resolve => setTimeout(resolve, 50)).then(() => {
-          document.getElementsByClassName("searched").item(0).scrollIntoView({
-            behavior: "smooth",
-            inline: "center",
-            block: "center"
+        if (this.$route.params.componentUuid) {
+          new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+            document.getElementsByClassName("searched").item(0).scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "center"
+            })
           })
-        })
+        }
       } else {
         this.data = {
           id: this.nodeId,
@@ -158,6 +170,15 @@ export default {
     highlightOutdatedComponents: function () {
       if (localStorage) {
         localStorage.setItem("ProjectDependencyGraphHighlightOutdatedComponents", this.highlightOutdatedComponents.toString());
+      }
+    },
+    $route: function (to, from) {
+      if (!to.params.componentUuid && from.params.componentUuid) {
+        this.showCompleteGraph = true
+        this.collapse(this.data.children)
+        this.data.expand = false
+      } else if (to.params.componentUuid && !from.params.componentUuid) {
+        this.showCompleteGraph = (localStorage && localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") !== null) ? (localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") === "true") : false;
       }
     }
   },
@@ -230,19 +251,21 @@ export default {
     },
     transformDependenciesToOrgTreeWithSearchedDependency: function (dependencies, treeNode, onlySearched) {
       let children = []
-      let directDependencies = JSON.parse(this.project.directDependencies)
-      directDependencies.forEach((directDependency) => {
-        if (dependencies[directDependency.uuid] && (!onlySearched || (onlySearched && (dependencies[directDependency.uuid].expandDependencyGraph || directDependency.uuid === this.$route.params.componentUuid)))) {
-          let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[directDependency.uuid])
-          childNode.gatheredKeys.push(childNode.label)
-          children.push(childNode)
-          if (onlySearched && directDependency.uuid === this.$route.params.componentUuid) {
-            this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, false))
-          } else {
-            this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, onlySearched))
+      if (dependencies) {
+        let directDependencies = JSON.parse(this.project.directDependencies)
+        directDependencies.forEach((directDependency) => {
+          if (dependencies[directDependency.uuid] && (!onlySearched || (onlySearched && (dependencies[directDependency.uuid].expandDependencyGraph || directDependency.uuid === this.$route.params.componentUuid)))) {
+            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[directDependency.uuid])
+            childNode.gatheredKeys.push(childNode.label)
+            children.push(childNode)
+            if (onlySearched && directDependency.uuid === this.$route.params.componentUuid) {
+              this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, false))
+            } else {
+              this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, onlySearched))
+            }
           }
-        }
-      })
+        })
+      }
       return children
     },
     getChildrenFromDependencyWithSearchedDependency: function (dependencies, component, treeNode, onlySearched) {

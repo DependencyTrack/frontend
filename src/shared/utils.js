@@ -1,3 +1,5 @@
+import common from "@/shared/common";
+
 export function random (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -66,4 +68,10 @@ export function getContextPath() {
     // App is deployed in a non-root context. Return the context.
     return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
   }
+}
+
+export function loadUserPreferencesForBootstrapTable(_this, id, columns) {
+  columns.forEach((column) => {
+    _this.$set(column, "visible", (localStorage && localStorage.getItem(id + "Show" + common.capitalize(column.field)) !== null) ? (localStorage.getItem(id + "Show" + common.capitalize(column.field)) === "true") : column.visible);
+  })
 }

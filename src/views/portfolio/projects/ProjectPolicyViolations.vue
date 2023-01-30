@@ -27,6 +27,7 @@ import xssFilters from "xss-filters";
 import i18n from "../../../i18n";
 import BootstrapToggle from 'vue-bootstrap-toggle'
 import $ from "jquery";
+import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
 export default {
   props: {
@@ -37,9 +38,12 @@ export default {
     cSwitch,
     BootstrapToggle
   },
+  beforeCreate() {
+    this.showSuppressedViolations = (localStorage && localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") !== null) ? (localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") === "true") : false;
+  },
   data() {
     return {
-      showSuppressedViolations: false,
+      showSuppressedViolations: this.showSuppressedViolations,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -81,10 +85,8 @@ export default {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
               let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-              if (row.component.project.directDependencies) {
-                let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
-                return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
-              }
+              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
+              return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
             } else {
               return "";
             }
@@ -125,7 +127,9 @@ export default {
         toolbar: '#violationsToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
-        pageSize: 10,
+        pageSize: (localStorage && localStorage.getItem("ProjectPolicyViolationsPageSize") !== null) ? Number(localStorage.getItem("ProjectPolicyViolationsPageSize")) : 10,
+        sortName: (localStorage && localStorage.getItem("ProjectPolicyViolationsSortName") !== null) ? localStorage.getItem("ProjectPolicyViolationsSortName") : undefined,
+        sortOrder: (localStorage && localStorage.getItem("ProjectPolicyViolationsSortOrder") !== null) ? localStorage.getItem("ProjectPolicyViolationsSortOrder") : undefined,
         icons: {
           detailOpen: 'fa-fw fa-angle-right',
           detailClose: 'fa-fw fa-angle-down',
@@ -300,6 +304,22 @@ export default {
         },
         url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
+        onPageChange: ((number, size) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectPolicyViolationsPageSize", size.toString())
+          }
+        }),
+        onColumnSwitch: ((field, checked) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectPolicyViolationsShow"+common.capitalize(field), checked.toString())
+          }
+        }),
+        onSort: ((name, order) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectPolicyViolationsSortName", name);
+            localStorage.setItem("ProjectPolicyViolationsSortOrder", order);
+          }
+        })
       }
     };
   },
@@ -320,6 +340,7 @@ export default {
       });
     },
     tableLoaded: function(data) {
+      loadUserPreferencesForBootstrapTable(this, "ProjectPolicyViolations", this.$refs.table.columns);
       this.$emit('total', data.total);
     },
     initializeTooltips: function () {
@@ -330,6 +351,9 @@ export default {
   },
   watch:{
     showSuppressedViolations() {
+      if (localStorage) {
+        localStorage.setItem("ProjectPolicyViolationsShowSuppressedViolations", this.showSuppressedViolations.toString());
+      }
       this.refreshTable();
     }
   },

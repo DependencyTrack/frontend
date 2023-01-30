@@ -17,6 +17,7 @@ import common from "../../../shared/common";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
 import xssFilters from "xss-filters";
 import permissionsMixin from "../../../mixins/permissionsMixin";
+import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
 export default {
   mixins: [permissionsMixin],
@@ -111,7 +112,9 @@ export default {
         toolbar: '#servicesToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
-        pageSize: 10,
+        pageSize: (localStorage && localStorage.getItem("ProjectServicesPageSize") !== null) ? Number(localStorage.getItem("ProjectServicesPageSize")) : 10,
+        sortName: (localStorage && localStorage.getItem("ProjectServicesSortName") !== null) ? localStorage.getItem("ProjectServicesSortName") : undefined,
+        sortOrder: (localStorage && localStorage.getItem("ProjectServicesSortOrder") !== null) ? localStorage.getItem("ProjectServicesSortOrder") : undefined,
         icons: {
           refresh: 'fa-refresh'
         },
@@ -119,7 +122,23 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/project/${this.uuid}`
+        url: `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/project/${this.uuid}`,
+        onPageChange: ((number, size) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectServicesPageSize", size.toString())
+          }
+        }),
+        onColumnSwitch: ((field, checked) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectServicesShow"+common.capitalize(field), checked.toString())
+          }
+        }),
+        onSort: ((name, order) => {
+          if (localStorage) {
+            localStorage.setItem("ProjectServicesSortName", name);
+            localStorage.setItem("ProjectServicesSortOrder", order);
+          }
+        })
       }
     };
   },
@@ -142,6 +161,7 @@ export default {
       this.$refs.table.uncheckAll();
     },
     tableLoaded: function(data) {
+      loadUserPreferencesForBootstrapTable(this, "ProjectServices", this.$refs.table.columns);
       if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
         this.$emit('total', data.total);
       } else {

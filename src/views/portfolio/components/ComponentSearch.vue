@@ -23,7 +23,8 @@
       ref="table"
       :columns="columns"
       :data="data"
-      :options="options">
+      :options="options"
+      @on-pre-body="onPreBody">
     </bootstrap-table>
   </div>
 </template>
@@ -38,6 +39,7 @@
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import xssFilters from "xss-filters";
   import SeverityProgressBar from "@/views/components/SeverityProgressBar";
+  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
     mixins: [permissionsMixin],
@@ -46,6 +48,16 @@
       PortfolioWidgetRow,
       BInputGroupFormSelect,
       BInputGroupFormInput
+    },
+    beforeCreate() {
+      this.subject = (localStorage && localStorage.getItem("ComponentSearchSubject") !== null) ? localStorage.getItem("ComponentSearchSubject") : 'COORDINATES';
+    },
+    watch: {
+      subject () {
+        if (localStorage) {
+          localStorage.setItem("ComponentSearchSubject", this.subject);
+        }
+      }
     },
     methods: {
       createQueryParams: function() {
@@ -81,11 +93,14 @@
           this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity?${queryParams}`;
           this.$refs.table.refresh({ silent: true });
         }
+      },
+      onPreBody: function() {
+        loadUserPreferencesForBootstrapTable(this, "ComponentSearch", this.$refs.table.columns);
       }
     },
     data() {
       return {
-        subject: 'COORDINATES',
+        subject: this.subject,
         value: null,
         coordinatesGroup: null,
         coordinatesName: null,
@@ -202,7 +217,9 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
+          pageSize: (localStorage && localStorage.getItem("ComponentSearchPageSize") !== null) ? Number(localStorage.getItem("ComponentSearchPageSize")) : 10,
+          sortName: (localStorage && localStorage.getItem("ComponentSearchSortName") !== null) ? localStorage.getItem("ComponentSearchSortName") : undefined,
+          sortOrder: (localStorage && localStorage.getItem("ComponentSearchSortOrder") !== null) ? localStorage.getItem("ComponentSearchSortOrder") : undefined,
           icons: {
             refresh: 'fa-refresh'
           },
@@ -211,7 +228,23 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity`,
+          onPageChange: ((number, size) => {
+            if (localStorage) {
+              localStorage.setItem("ComponentSearchPageSize", size.toString())
+            }
+          }),
+          onColumnSwitch: ((field, checked) => {
+            if (localStorage) {
+              localStorage.setItem("ComponentSearchShow"+common.capitalize(field), checked.toString())
+            }
+          }),
+          onSort: ((name, order) => {
+            if (localStorage) {
+              localStorage.setItem("ComponentSearchSortName", name);
+              localStorage.setItem("ComponentSearchSortOrder", order);
+            }
+          })
         }
       };
     }

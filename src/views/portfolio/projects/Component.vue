@@ -79,11 +79,11 @@
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
-      <b-tab class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active>
+      <b-tab ref="overview" class="body-bg-color overview-chart" style="border-left: 0; border-right:0; border-top:0 " active @click="routeTo()">
         <template v-slot:title><i class="fa fa-line-chart"></i> {{ $t('message.overview') }}</template>
         <component-dashboard style="border-left: 0; border-right:0; border-top:0 "/>
       </b-tab>
-      <b-tab>
+      <b-tab ref="vulnerabilities" @click="routeTo('vulnerabilities')">
         <template v-slot:title><i class="fa fa-shield"></i> {{ $t('message.vulnerabilities') }} <b-badge variant="tab-total">{{ totalVulnerabilities }}</b-badge></template>
         <component-vulnerabilities :key="this.uuid" :uuid="this.uuid" v-on:total="totalVulnerabilities = $event" />
       </b-tab>
@@ -169,6 +169,20 @@
       redirectToDependencyGraph: function (){
         this.$router.push({path: "/projects/" + this.component.project.uuid + "/dependencyGraph/" + this.component.uuid})
       },
+      routeTo(path) {
+        if (path) {
+          if (!this.$route.fullPath.toLowerCase().includes('/' + path.toLowerCase())) {
+            this.$router.push({path: '/components/' + this.uuid + '/' + path})
+          }
+        } else if (this.$route.fullPath !== '/components/' + this.uuid && this.$route.fullPath !== '/components/' + this.uuid + '/') {
+          this.$router.push({path: '/components/' + this.uuid})
+        }
+      },
+      getTabFromRoute: function () {
+        let pattern = new RegExp("/components\\/" + this.uuid + "\\/([^\\/]*)", "gi");
+        let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+        return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
+      }
     },
     beforeMount() {
       this.uuid = this.$route.params.uuid;
@@ -190,6 +204,13 @@
         this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
         this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
       });
+
+      this.getTabFromRoute().active = true;
+    },
+    watch:{
+      $route() {
+        this.getTabFromRoute().activate();
+      }
     },
     destroyed() {
       EventBus.$emit('crumble');
