@@ -7,7 +7,7 @@
       <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" v-model="showCompleteGraph" label v-bind="labelIcon" />
       <span class="text-muted">{{ $t('message.show_complete_graph') }}</span>
     </span>
-    <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="fetchRepositoryMetaData" color="primary" v-model="fetchRepositoryMetaData" label v-bind="labelIcon" />
+    <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="highlightOutdatedComponents" color="primary" v-model="highlightOutdatedComponents" label v-bind="labelIcon" />
     <span class="text-muted">{{$t('message.show_update_information')}}</span><br>
     <span v-if="this.notFound">
       <span class="text-muted">{{ $t('message.not_found_in_dependency_graph') }}</span><br>
@@ -55,7 +55,7 @@ export default {
       loading: false,
       showCompleteGraph: false,
       notFound: false,
-      fetchRepositoryMetaData: false,
+      highlightOutdatedComponents: false,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -334,7 +334,7 @@ export default {
       }
     },
     renderContent: function(h, data) {
-      if (this.fetchRepositoryMetaData && data.repositoryMeta && data.repositoryMeta.latestVersion && data.repositoryMeta.latestVersion !== data.version) {
+      if (this.highlightOutdatedComponents && data.repositoryMeta && data.repositoryMeta.latestVersion && data.repositoryMeta.latestVersion !== data.version) {
         return (<div style="white-space: nowrap;">{data.label + ' '}<i id={"icon"+data.id} class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i><b-tooltip target={"icon"+data.id} triggers="hover" noninteractive="noninteractive">{"Risk: Outdated component. Current version is: "+ xssFilters.inHTMLData(data.repositoryMeta.latestVersion)}</b-tooltip></div>)
       } else {
         return (<div style="white-space: nowrap;">{data.label}</div>)
