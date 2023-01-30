@@ -43,6 +43,9 @@ export default {
     project: Object,
     uuid: String
   },
+  beforeCreate() {
+    this.highlightOutdatedComponents = (localStorage && localStorage.getItem("ProjectDependencyGraphHighlightOutdatedComponents") !== null) ? (localStorage.getItem("ProjectDependencyGraphHighlightOutdatedComponents") === "true") : false;
+  },
   data() {
     return {
       data: {},
@@ -55,7 +58,7 @@ export default {
       loading: false,
       showCompleteGraph: false,
       notFound: false,
-      highlightOutdatedComponents: false,
+      highlightOutdatedComponents: this.highlightOutdatedComponents,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -150,6 +153,11 @@ export default {
           fetchedChildren: true,
           expand: true
         }
+      }
+    },
+    highlightOutdatedComponents: function () {
+      if (localStorage) {
+        localStorage.setItem("ProjectDependencyGraphHighlightOutdatedComponents", this.highlightOutdatedComponents.toString());
       }
     }
   },
