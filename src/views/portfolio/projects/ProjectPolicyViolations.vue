@@ -81,10 +81,8 @@ export default {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
               let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-              if (row.component.project.directDependencies) {
-                let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
-                return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
-              }
+              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
+              return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
             } else {
               return "";
             }
