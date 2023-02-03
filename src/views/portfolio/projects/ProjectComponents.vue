@@ -50,6 +50,11 @@
             >{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item
           >
         </b-dropdown>
+        <b-button id="license-button" size="md" variant="outline-primary"
+                  @click="downloadBom('license')"
+                  v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+          <span class="fa fa-download"></span> {{ $t('message.download_license_attestation') }}
+        </b-button>
         <span
           id="switch-container-outdated"
           style="margin-left: 1rem; margin-right: 0.5rem"
