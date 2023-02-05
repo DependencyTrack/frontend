@@ -278,6 +278,7 @@
     "component_author": "Author",
     "coordinates": "Coordinates",
     "coordinates_version_tooltip": "You can use the comparison operators >, <, >=, <=, == and != to match specific versions or version ranges",
+    "age_tooltip":  "Age in ISO-8601 period format (e.g. P1Y = 1 Year; P2Y3M = 2 Years, 3 Months)",
     "package_url_full": "Package URL (PURL)",
     "swid_tagid": "SWID Tag ID",
     "cpe": "CPE",
