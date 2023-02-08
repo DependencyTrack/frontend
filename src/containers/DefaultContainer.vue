@@ -93,6 +93,22 @@
           icon: 'fa fa-balance-scale',
           permission: permissions.VIEW_PORTFOLIO
         },
+          {
+            title: true,
+            name: this.$t('message.global_audit'),
+            class: '',
+            wrapper: {
+              element: '',
+              attributes: {}
+            },
+            permission: permissions.VIEW_VULNERABILITY
+          },
+          {
+            name: this.$t('message.vulnerability_audit'),
+            url: '/vulnerabilityAudit',
+            icon: 'fa fa-tasks',
+            permission: permissions.VIEW_VULNERABILITY
+          },
         {
           title: true,
           name: this.$t('message.administration'),
@@ -114,7 +130,7 @@
           url: '/admin',
           icon: 'fa fa-cogs',
           permission: permissions.SYSTEM_CONFIGURATION
-        }
+        },
       ]
       }
     },
