@@ -124,7 +124,9 @@
         let url = this.apiUrl(project.uuid)
         await this.axios.get(url).then((response) => {
           for (let project of response.data) {
-            project.pid = MurmurHash2(project.parentUuid).result()
+            if (project.parent) {
+              project.pid = MurmurHash2(project.parent.uuid).result()
+            }
           }
           this.$refs.table.append(response.data)
         })
