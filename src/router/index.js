@@ -21,7 +21,7 @@ const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 const Project = () => import('@/views/portfolio/projects/Project');
 
-const VulnerabilityAudit = () => import('@/views/audit/PolicyViolationAudit');
+const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit');
 
 const Administration = () => import('@/views/administration/Administration');
 const General = () => import('@/views/administration/configuration/General');
@@ -304,7 +304,7 @@ function configRoutes() {
         },
         {
           path: 'policyViolationAudit',
-          component: VulnerabilityAudit,
+          component: PolicyViolationAudit,
           meta: {
             title: i18n.t('message.policy_violation_audit'),
             i18n: 'message.policy_violation_audit',
