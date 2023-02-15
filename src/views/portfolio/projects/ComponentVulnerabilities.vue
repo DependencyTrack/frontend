@@ -39,6 +39,24 @@
             }
           },
           {
+            title: this.$t('message.aliases'),
+            field: "aliases",
+            sortable: true,
+            visible: false,
+            formatter(value, row, index) {
+              if (typeof value !== 'undefined') {
+                let label = "";
+                for (let i=0; i<value.length; i++) {
+                  let alias = common.resolveVulnAliasInfo(row.source, value[i]);
+                  let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + alias.source + "/" + alias.vulnId);
+                  label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
+                  if (i < value.length-1) label += "<br/><br/>"
+                }
+                return label;
+              }
+            }
+          },
+          {
             title: this.$t('message.published'),
             field: "published",
             sortable: true,
