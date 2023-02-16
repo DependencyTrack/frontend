@@ -41,7 +41,6 @@
           {
             title: this.$t('message.aliases'),
             field: "aliases",
-            sortable: true,
             visible: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
