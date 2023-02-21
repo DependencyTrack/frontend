@@ -197,6 +197,7 @@
         if (!this.retrievedParents && this.project.parent) {
           this.parent = (await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.project.parent.uuid}`)).data
           this.selectedParent = this.parent
+          this.availableParents = this.parent ? [this.parent] : []
           this.retrievedParents = true
         }
         this.$root.$emit("bv::show::modal", "projectDetailsModal")
@@ -275,7 +276,7 @@
             if (response.data) {
               this.availableParents = response.data
             } else {
-              this.availableParents = []
+              this.availableParents = this.parent ? [this.parent] : []
             }
             this.isLoading = false
           })
@@ -283,7 +284,7 @@
       },
       resetValues: function () {
         this.selectedParent = this.parent
-        this.availableParents = []
+        this.availableParents = this.parent ? [this.parent] : []
       }
     }
   }
