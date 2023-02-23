@@ -32,7 +32,7 @@
             label-for="input-4">
             <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
                             :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
-                            style="max-width:none; background-color:transparent;"/>
+                            style="max-width:none; background-color:transparent; text-transform: lowercase;"/>
           </b-form-group>
         </b-card>
       </b-tab>
