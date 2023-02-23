@@ -60,9 +60,9 @@
   },
   "devDependencies": {
     "@cyclonedx/webpack-plugin": "2.0.0",
-    "@vue/cli-plugin-babel": "3.12.1",
+    "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-eslint": "3.12.1",
-    "@vue/cli-service": "3.12.1",
+    "@vue/cli-service": "5.0.8",
     "babel-core": "7.0.0-bridge.0",
     "copy-webpack-plugin": "5.1.2",
     "growl": "1.10.5",
