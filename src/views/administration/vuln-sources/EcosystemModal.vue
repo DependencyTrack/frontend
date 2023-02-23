@@ -60,7 +60,7 @@
                 name: ecosystem
             }));
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_OSV_ECOSYSTEM}`
+          url: `${this.$api.BASE_URL}/${this.$api.URL_OSV_ECOSYSTEM}/inactive`
         }
       };
     }
