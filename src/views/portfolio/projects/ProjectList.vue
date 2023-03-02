@@ -175,9 +175,8 @@
             field: "name",
             sortable: true,
             formatter(value, row, index) {
-              let name_url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
-              let projectName = `<a href="${name_url}">${xssFilters.inHTMLData(value)}</a>`;
-              return projectName
+              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
+              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             }
           },
           {
@@ -186,19 +185,7 @@
             sortable: true,
             visible: false,
             formatter(value, row, index) {
-              if (!row.tags) {
-                return "";
-              } else {
-                let tagNames = ""
-                  for (let i=0; i<row.tags.length; i++) {
-                  let tag = row.tags[i].name
-                  let tag_url = xssFilters.uriInUnQuotedAttr("../projects/?tag=" + tag);
-                  let tagName = `<a href="${tag_url}" target="_self" class="">${tag}</a>`
-                  tagNames += tagName
-                  if (i < row.tags.length-1) tagNames += ", "
-                }
-                return tagNames
-              }
+              return row.tags?.map(tag => `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag)}">${xssFilters.inHTMLData(tag)}</a>`).join(', ') || '';
             }
           },
           {
