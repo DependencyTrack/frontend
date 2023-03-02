@@ -170,7 +170,7 @@
           dataOff: '\u2715'
         },
         columns: [
-        {
+          {
             title: this.$t('message.project_name'),
             field: "name",
             sortable: true,
