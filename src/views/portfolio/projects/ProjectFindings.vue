@@ -151,7 +151,7 @@ import common from "../../../shared/common";
                 return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
               } else {
                 // outdated component
-                return xssFilters.inHTMLData("Outdated Component");
+                return common.formatSourceLabel("OWASP") + ` <a href="https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/" target="_blank">${xssFilters.inHTMLData("Outdated Component")} <i class="fa fa-external-link"></i></a>`;
               }
             }
           },
