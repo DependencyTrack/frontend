@@ -59,16 +59,16 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
-  import common from "../../../shared/common";
-  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-  import xssFilters from "xss-filters";
-  import i18n from "../../../i18n";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import BootstrapToggle from 'vue-bootstrap-toggle';
-  import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
-  import $ from "jquery";
-  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+  import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
+import { Switch as cSwitch } from '@coreui/vue';
+import $ from "jquery";
+import BootstrapToggle from 'vue-bootstrap-toggle';
+import xssFilters from "xss-filters";
+import i18n from "../../../i18n";
+import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
 
   export default {
     props: {
@@ -121,6 +121,19 @@
             }
           },
           {
+            title: this.$t('message.latest_version'),
+            field: "component.latestVersion",
+            sortable: true,
+            formatter(value, row, index) {
+              if (Object.prototype.hasOwnProperty.call(row.component, "latestVersion")) {
+                // outdated component
+                return xssFilters.inHTMLData(row.component.latestVersion);
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              }
+            }
+          },
+          {
             title: this.$t('message.group'),
             field: "component.group",
             sortable: true,
@@ -133,8 +146,13 @@
             field: "vulnerability.vulnId",
             sortable: true,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + row.vulnerability.source + "/" + value);
-              return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              if (row.vulnerability.uuid) {
+                let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + row.vulnerability.source + "/" + value);
+                return common.formatSourceLabel(row.vulnerability.source) + ` <a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              } else {
+                // outdated component
+                return xssFilters.inHTMLData("Outdated Component");
+              }
             }
           },
           {
@@ -143,15 +161,20 @@
             sortable: true,
             visible: false,
             formatter(value, row, index) {
-              if (typeof value !== 'undefined') {
-                let label = "";
-                for (let i=0; i<value.length; i++) {
-                  let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
-                  let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
-                  label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
-                  if (i < value.length-1) label += ", "
+              if (row.vulnerability.uuid) {
+                if (typeof value !== 'undefined') {
+                  let label = "";
+                  for (let i=0; i<value.length; i++) {
+                    let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
+                    let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
+                    label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
+                    if (i < value.length-1) label += ", "
+                  }
+                  return label;
                 }
-                return label;
+              } else {
+                // outdated component
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
               }
             }
           },
@@ -161,13 +184,18 @@
             sortable: true,
             visible: false,
             formatter(value, row, index) {
-              if (typeof value !== 'undefined') {
-                let label = "";
-                for (let i=0; i<value.length; i++) {
-                  label += common.formatCweShortLabel(value[i].cweId, value[i].name);
-                  if (i < value.length-1) label += ", "
+              if (row.vulnerability.uuid) {
+                if (typeof value !== 'undefined') {
+                  let label = "";
+                  for (let i=0; i<value.length; i++) {
+                    label += common.formatCweShortLabel(value[i].cweId, value[i].name);
+                    if (i < value.length-1) label += ", "
+                  }
+                  return label;
                 }
-                return label;
+              } else {
+                // outdated component
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
               }
             }
           },
@@ -177,8 +205,11 @@
             sortName: "vulnerability.severityRank",
             sortable: true,
             formatter(value, row, index) {
-              if (typeof value !== 'undefined') {
+              if (row.vulnerability.uuid && typeof value !== 'undefined') {
                 return common.formatSeverityLabel(value);
+              } else {
+                // outdated component
+                return "";
               }
             }
           },
@@ -187,8 +218,13 @@
             field: "attribution.analyzerIdentity",
             sortable: true,
             formatter(value, row, index) {
-              return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.source, row.vulnerability.vulnId,
-                row.attribution.alternateIdentifier, row.attribution.referenceUrl);
+              if (row.vulnerability.uuid) {
+                return common.formatAnalyzerLabel(row.attribution.analyzerIdentity, row.vulnerability.source, row.vulnerability.vulnId,
+                  row.attribution.alternateIdentifier, row.attribution.referenceUrl);
+              } else {
+                // outdated component
+                return common.formatAnalyzerLabel('INTERNAL_ANALYZER', "Dependency Track", null, null, null);
+              }
             }
           },
           {
@@ -196,7 +232,14 @@
             field: "attribution.attributedOn",
             sortable: true,
             formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.formatTimestamp(value));
+              if (row.vulnerability.uuid) {
+                return xssFilters.inHTMLData(common.formatTimestamp(value));
+              } else {
+                // outdated component
+                if (Object.prototype.hasOwnProperty.call(row.component, "lastCheck")) {
+                  return xssFilters.inHTMLData(common.formatTimestamp(row.component.lastCheck));
+                }
+              }
             }
           },
           {
