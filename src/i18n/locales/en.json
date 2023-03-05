@@ -514,7 +514,13 @@
     "outdated_only": "Outdated only",
     "only_outdated_tooltip": "Only show dependencies that have newer stable versions available",
     "direct_only": "Direct only",
-    "only_direct_tooltip": "Only show direct dependencies, hiding transitive dependencies"
+    "only_direct_tooltip": "Only show direct dependencies, hiding transitive dependencies",
+    "version_distance": "Version Distance",
+    "version_distance_epoch": "epoch",
+    "version_distance_major": "major",
+    "version_distance_minor": "minor",
+    "version_distance_patch": "patch",
+    "version_distance_tooltip": "Specify the difference between version numbers, or empty to ignore"
   },
   "admin": {
     "configuration": "Configuration",
