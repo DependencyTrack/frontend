@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="componentsToolbar">
-      <div class="form-inline btn-spaced-group" role="form">
+      <div class="btn-spaced-group" role="form">
         <b-button size="md" variant="outline-primary"
                   v-b-modal.projectAddComponentModal
                   v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
@@ -25,6 +25,7 @@
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
+        <span style="margin-left:1rem; margin-right:.5rem" class="keep-together"><c-switch id="onlyOutdated" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
       </div>
     </div>
     <bootstrap-table
@@ -40,18 +41,23 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-  import Vue from 'vue'
-  import common from "../../../shared/common";
-  import SeverityProgressBar from "../../components/SeverityProgressBar";
-  import xssFilters from "xss-filters";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
-  import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
-  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
+import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
+import { Switch as cSwitch } from '@coreui/vue';
+import $ from 'jquery';
+import Vue from 'vue';
+import xssFilters from "xss-filters";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
+import SeverityProgressBar from "../../components/SeverityProgressBar";
 
   export default {
-    components: {ProjectUploadBomModal, ProjectAddComponentModal},
+    components: {
+      cSwitch,
+      ProjectUploadBomModal,
+      ProjectAddComponentModal
+    },
     mixins: [permissionsMixin],
     comments: {
       ProjectAddComponentModal,
@@ -62,6 +68,11 @@
     },
     data() {
       return {
+        labelIcon: {
+          dataOn: '\u2713',
+          dataOff: '\u2715'
+        },
+        onlyOutdated: this.onlyOutdated,
         columns: [
           {
             field: "state",
@@ -188,7 +199,7 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`,
+          url: this.apiUrl(),
           onPageChange: ((number, size) => {
             if (localStorage) {
               localStorage.setItem("ProjectComponentsPageSize", size.toString())
@@ -264,11 +275,28 @@
         } else {
           this.$emit('total', '?');
         }
+        this.$refs.table.hideLoading()
+      },
+      apiUrl: function() {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
+        if (this.onlyOutdated === undefined) {
+          url += "?onlyOutdated=false";
+        } else {
+          url += "?onlyOutdated=" + this.onlyOutdated;
+        }
+        return url;
       },
       refreshTable: function() {
         this.$refs.table.refresh({
+          url: this.apiUrl(),
           silent: true
         });
+      },
+    },
+    watch: {
+      onlyOutdated() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
       }
     }
   };

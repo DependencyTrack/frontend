@@ -510,7 +510,8 @@
     "show_complete_graph": "Show complete graph",
     "not_found_in_dependency_graph": "Dependency could not be found in dependency graph",
     "reindex": "Rebuild index(es)",
-    "show_update_information": "Highlight outdated components"
+    "show_update_information": "Highlight outdated components",
+    "outdated_only": "Outdated only"
   },
   "admin": {
     "configuration": "Configuration",
