@@ -22,17 +22,17 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import { Switch as cSwitch } from '@coreui/vue';
-  import common from "../../../shared/common";
-  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
-  import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
-  import SeverityProgressBar from "../../components/SeverityProgressBar";
-  import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
-  import xssFilters from "xss-filters";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import MurmurHash2 from "imurmurhash"
-  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+  import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import { Switch as cSwitch } from '@coreui/vue';
+import MurmurHash2 from "imurmurhash";
+import Vue from 'vue';
+import xssFilters from "xss-filters";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
+import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
+import SeverityProgressBar from "../../components/SeverityProgressBar";
+import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
 
   export default {
     mixins: [permissionsMixin],
@@ -82,7 +82,7 @@
         this.$refs.table.refresh({
           url: this.apiUrl(),
           silent: true,
-          pageNumber: this.currentPage
+          pageNumber: 1
         });
       },
       onLoadSuccess: function () {
