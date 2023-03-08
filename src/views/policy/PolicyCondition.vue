@@ -75,7 +75,8 @@
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
           {value: 'VERSION', text: this.$t('message.version')},
           {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')},
-          {value: 'CWE', text: this.$t('message.cwe_full')}
+          {value: 'CWE', text: this.$t('message.cwe_full')},
+          {value: 'VULNERABILITY_ID', text: this.$t('message.vulnerability_vuln_id')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -144,6 +145,8 @@
             return false;
           case 'CWE':
             return false;
+          case 'VULNERABILITY_ID':
+            return false;
           default:
             return false;
         }
@@ -203,6 +206,9 @@
             break;
           case 'CWE':
             this.operators = this.listOperators;
+            break;
+          case 'VULNERABILITY_ID':
+            this.operators = this.objectOperators;
             break;
           default:
             this.operators = [];
