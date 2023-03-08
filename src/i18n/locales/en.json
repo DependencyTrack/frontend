@@ -511,7 +511,8 @@
     "not_found_in_dependency_graph": "Dependency could not be found in dependency graph",
     "reindex": "Rebuild index(es)",
     "show_update_information": "Highlight outdated components",
-    "outdated_only": "Outdated only"
+    "outdated_only": "Outdated only",
+    "only_outdated_tooltip": "Only show direct dependencies of the project that have newer stable versions available"
   },
   "admin": {
     "configuration": "Configuration",

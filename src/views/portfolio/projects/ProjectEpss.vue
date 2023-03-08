@@ -21,16 +21,14 @@
 </template>
 
 <script>
+import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
 import { Switch as cSwitch } from '@coreui/vue';
-import common from "../../../shared/common";
-import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import xssFilters from "xss-filters";
-import i18n from "../../../i18n";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import BootstrapToggle from 'vue-bootstrap-toggle';
-import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
 import $ from "jquery";
-import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+import BootstrapToggle from 'vue-bootstrap-toggle';
+import xssFilters from "xss-filters";
+import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+import common from "../../../shared/common";
+import ChartEpssVsCvss from "../../dashboard/ChartEpssVsCvss";
 
 export default {
   props: {
@@ -69,11 +67,14 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             if (Object.prototype.hasOwnProperty.call(row.component, "latestVersion")) {
-              if (row.component.latestVersion !== row.component.version) {
-                return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
-              } else {
-                return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
-              }
+              if (compareVersions(row.component.latestVersion, row.component.version) > 0) {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.component.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                } else if (compareVersions(row.component.latestVersion, row.component.version) < 0) {
+                  // should be unstable then
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: '+ xssFilters.inHTMLData(row.component.latestVersion) + '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                } else {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.component.version);
+                }
             } else {
               return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
             }

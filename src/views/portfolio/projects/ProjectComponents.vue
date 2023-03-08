@@ -25,7 +25,10 @@
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
-        <span style="margin-left:1rem; margin-right:.5rem" class="keep-together"><c-switch id="onlyOutdated" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
+        <span id="switch-container" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
+          <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
+        <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
+        <b-tooltip target="switch-container" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
       </div>
     </div>
     <bootstrap-table
@@ -41,7 +44,7 @@
 </template>
 
 <script>
-import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
 import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
 import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
 import { Switch as cSwitch } from '@coreui/vue';
@@ -64,7 +67,8 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
       ProjectUploadBomModal,
     },
     props: {
-      uuid: String
+      uuid: String,
+      project: Object,
     },
     data() {
       return {
@@ -93,13 +97,16 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
             title: this.$t('message.version'),
             field: "version",
             sortable: true,
-            formatter(value, row, index) {
+            formatter: (value, row, index) => {
               if (Object.prototype.hasOwnProperty.call(row, "repositoryMeta") && Object.prototype.hasOwnProperty.call(row.repositoryMeta, "latestVersion")) {
                 row.latestVersion = row.repositoryMeta.latestVersion;
-                if (row.repositoryMeta.latestVersion !== row.version) {
+                if (compareVersions(row.repositoryMeta.latestVersion, row.version) > 0) {
                   return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
+                } else if (compareVersions(row.repositoryMeta.latestVersion, row.version) < 0) {
+                  // should be unstable then
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: '+ xssFilters.inHTMLData(row.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
                 } else {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
                 }
               } else {
                 return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
@@ -289,6 +296,7 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
       refreshTable: function() {
         this.$refs.table.refresh({
           url: this.apiUrl(),
+          pageNumber: 1,
           silent: true
         });
       },

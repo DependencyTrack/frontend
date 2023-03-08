@@ -120,7 +120,7 @@
       </b-tab>
       <b-tab ref="components" @click="routeTo('components')">
         <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.components') }} <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template>
-        <project-components :key="this.uuid" :uuid="this.uuid" v-on:total="totalComponents = $event" />
+        <project-components :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalComponents = $event" />
       </b-tab>
       <b-tab ref="services" @click="routeTo('services')">
         <template v-slot:title><i class="fa fa-exchange"></i> {{ $t('message.services') }} <b-badge variant="tab-total">{{ totalServices }}</b-badge></template>

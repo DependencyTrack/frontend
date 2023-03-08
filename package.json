@@ -15,7 +15,8 @@
     "serve": "npm run prebuild && vue-cli-service serve",
     "prebuild": "node update-embedded-version.js",
     "build": "npm run prebuild && vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "sbom": "cyclonedx-npm --output-file sbom.json"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
@@ -33,6 +34,7 @@
     "core-js": "2.6.12",
     "css-vars-ponyfill": "2.4.7",
     "dompurify": "2.4.0",
+    "flexver": "^1.1.0",
     "font-awesome": "4.7.0",
     "imurmurhash": "^0.1.4",
     "jquery": "3.6.0",
@@ -61,6 +63,7 @@
     "xss-filters": "1.2.7"
   },
   "devDependencies": {
+    "@cyclonedx/cyclonedx-npm": "^1.8.0",
     "@cyclonedx/webpack-plugin": "2.0.0",
     "@vue/cli-plugin-babel": "3.12.1",
     "@vue/cli-plugin-eslint": "3.12.1",
