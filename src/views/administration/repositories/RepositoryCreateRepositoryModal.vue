@@ -50,8 +50,8 @@
 
 <script>
   import { Switch as cSwitch } from '@coreui/vue';
-  import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-  import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
+import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
+import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
 
   export default {
     name: "RepositoryCreateRepositoryModal",
@@ -83,6 +83,7 @@
         },
         repositoryTypes: [
           { value: 'COMPOSER', text: 'PHP (Composer)' },
+          { value: 'CPAN', text: 'Perl (CPAN)' },
           { value: 'GEM', text: 'Ruby (Gem)' },
           { value: 'GO_MODULES', text: 'Go Modules'},
           { value: 'CARGO', text: 'Rust (Cargo)' },

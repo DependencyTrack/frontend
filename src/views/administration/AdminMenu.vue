@@ -17,9 +17,9 @@
 </template>
 
 <script>
-  import EventBus from "../../shared/eventbus";
-  import {ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION} from "../../shared/permissions";
   import permissionsMixin from "../../mixins/permissionsMixin";
+import EventBus from "../../shared/eventbus";
+import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permissions";
 
   export default {
     mixins: [permissionsMixin],
@@ -148,6 +148,11 @@
                 component: "Composer",
                 name: this.$t('admin.composer'),
                 route: "repositories/composer"
+              },
+              {
+                component: "Cpan",
+                name: this.$t('admin.cpan'),
+                route: "repositories/cpan"
               },
               {
                 component: "Gem",

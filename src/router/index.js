@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import i18n from '../i18n'
-import { getContextPath } from "../shared/utils"
-import {decodeToken, getToken} from '../shared/permissions';
+import Vue from 'vue';
+import Router from 'vue-router';
+import i18n from '../i18n';
 import EventBus from '../shared/eventbus';
+import { decodeToken, getToken } from '../shared/permissions';
+import { getContextPath } from "../shared/utils";
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');
@@ -37,6 +37,7 @@ const VulnSourceOSVAdvisories = () => import('@/views/administration/vuln-source
 
 const Cargo = () => import('@/views/administration/repositories/Cargo')
 const Composer = () => import('@/views/administration/repositories/Composer')
+const Cpan = () => import('@/views/administration/repositories/Cpan')
 const Gem = () => import('@/views/administration/repositories/Gem')
 const GoModules = () => import('@/views/administration/repositories/GoModules')
 const Hex = () => import('@/views/administration/repositories/Hex')
@@ -390,6 +391,16 @@ function configRoutes() {
             {
               path: 'repositories/composer',
               component: Composer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/cpan',
+              component: Cpan,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
