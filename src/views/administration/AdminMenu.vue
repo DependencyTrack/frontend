@@ -226,7 +226,7 @@ import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permission
               {
                 component: 'Jira',
                 name: this.$t('admin.jira'),
-                route: "configuration/jira"
+                route: "integrations/jira"
               },
               {
                 component: "KennaSecurity",
