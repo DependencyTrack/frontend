@@ -533,6 +533,7 @@
     "repositories": "Repositories",
     "cargo": "Cargo",
     "composer": "Composer",
+    "cpan": "CPAN",
     "gem": "Gem",
     "go_modules": "Go Modules",
     "hex": "Hex",
