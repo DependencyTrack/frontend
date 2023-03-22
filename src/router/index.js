@@ -266,7 +266,7 @@ function configRoutes() {
               },
             },
             {
-              path: 'configuration/jira',
+              path: 'integrations/jira',
               component: Jira,
               meta: {
                 title: i18n.t('message.administration'),
