@@ -81,7 +81,8 @@
       refreshTable: function () {
         this.$refs.table.refresh({
           url: this.apiUrl(),
-          silent: true
+          silent: true,
+          pageNumber: this.currentPage
         });
       },
       onLoadSuccess: function () {
@@ -143,7 +144,8 @@
         if (localStorage) {
           localStorage.setItem("ProjectListShowInactiveProjects", this.showInactiveProjects.toString());
         }
-        this.$refs.table.showLoading()
+        this.$refs.table.showLoading();
+        this.currentPage = 1;
         this.refreshTable();
       },
       showFlatView() {
@@ -277,6 +279,7 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
+          currentPage: 1,
           pageSize: (localStorage && localStorage.getItem("ProjectListPageSize") !== null) ? Number(localStorage.getItem("ProjectListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("ProjectListSortName") !== null) ? localStorage.getItem("ProjectListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("ProjectListSortOrder") !== null) ? localStorage.getItem("ProjectListSortOrder") : undefined,
@@ -323,6 +326,7 @@
             if (localStorage) {
               localStorage.setItem("ProjectListPageSize", size.toString());
             }
+            this.currentPage = number;
           }),
           onColumnSwitch: ((field, checked) => {
             if (localStorage) {
