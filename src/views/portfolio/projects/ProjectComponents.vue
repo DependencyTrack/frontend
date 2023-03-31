@@ -25,10 +25,14 @@
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
-        <span id="switch-container" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
+        <span id="switch-container-outdated" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
           <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
         <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
-        <b-tooltip target="switch-container" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
+        <b-tooltip target="switch-container-outdated" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
+        <span id="switch-container-direct" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
+          <c-switch id="only-direct" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyDirect" label v-bind="labelIcon" />
+        <span class="text-muted">{{ $t('message.direct_only') }}</span></span>
+        <b-tooltip target="switch-container-direct" triggers="hover focus">{{ $t('message.only_direct_tooltip') }}</b-tooltip>
       </div>
     </div>
     <bootstrap-table
@@ -77,6 +81,7 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
           dataOff: '\u2715'
         },
         onlyOutdated: this.onlyOutdated,
+        onlyDirect: this.onlyDirect,
         columns: [
           {
             field: "state",
@@ -291,6 +296,11 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
         } else {
           url += "?onlyOutdated=" + this.onlyOutdated;
         }
+        if (this.onlyDirect === undefined) {
+          url += "&onlyDirect=false";
+        } else {
+          url += "&onlyDirect=" + this.onlyDirect;
+        }
         return url;
       },
       refreshTable: function() {
@@ -303,6 +313,10 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
     },
     watch: {
       onlyOutdated() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
+      },
+      onlyDirect() {
         this.$refs.table.showLoading()
         this.refreshTable();
       }

@@ -512,7 +512,9 @@
     "reindex": "Rebuild index(es)",
     "show_update_information": "Highlight outdated components",
     "outdated_only": "Outdated only",
-    "only_outdated_tooltip": "Only show direct dependencies of the project that have newer stable versions available"
+    "only_outdated_tooltip": "Only show dependencies that have newer stable versions available",
+    "direct_only": "Direct only",
+    "only_direct_tooltip": "Only show direct dependencies, hiding transitive dependencies"
   },
   "admin": {
     "configuration": "Configuration",
