@@ -42,17 +42,17 @@
       PortfolioWidgetRow
     },
     beforeCreate() {
-      this.showInactiveProjects = (localStorage && localStorage.getItem("ProjectListShowInactiveProjects") !== null) ? (localStorage.getItem("ProjectListShowInactiveProjects") === "true" ) : false;
+      this.showInactiveProjects = (localStorage && localStorage.getItem("ProjectListShowInactiveProjects") !== null) ? (localStorage.getItem("ProjectListShowInactiveProjects") === "true") : false;
       this.showFlatView = (localStorage && localStorage.getItem("ProjectListShowFlatView") !== null) ? (localStorage.getItem("ProjectListShowFlatView") === "true") : false;
     },
     methods: {
       initializeProjectCreateProjectModal: function () {
-        this.$root.$emit("initializeProjectCreateProjectModal")
+        this.$root.$emit("initializeProjectCreateProjectModal");
       },
       apiUrl: function (uuid) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-        if (uuid){
-          url += `/${uuid}/children`
+        if (uuid) {
+          url += `/${uuid}/children`;
         }
         let tag = this.$route.query.tag;
         if (tag) {
@@ -67,10 +67,10 @@
         } else {
           url += "?excludeInactive=" + !this.showInactiveProjects;
         }
-        if (this.isSearching){
+        if (this.isSearching) {
           url += "&onlyRoot=false";
         } else {
-          if (this.showFlatView === undefined){
+          if (this.showFlatView === undefined) {
             url += "&onlyRoot=true";
           } else {
             url += "&onlyRoot=" + !this.showFlatView;
@@ -78,23 +78,24 @@
         }
         return url;
       },
-      refreshTable: function() {
+      refreshTable: function () {
         this.$refs.table.refresh({
           url: this.apiUrl(),
-          silent: true
+          silent: true,
+          pageNumber: this.currentPage
         });
       },
       onLoadSuccess: function () {
         loadUserPreferencesForBootstrapTable(this, "ProjectList", this.$refs.table.columns);
       },
-      onPreBody: function() {
-          this.$refs.table.getData().forEach(project => {
-            project.id = MurmurHash2(project.uuid).result()
-          })
+      onPreBody: function () {
+        this.$refs.table.getData().forEach(project => {
+          project.id = MurmurHash2(project.uuid).result();
+        })
       },
-      onPostBody: function() {
+      onPostBody: function () {
         if (!this.showFlatView && !this.isSearching) {
-          let columns = this.$refs.table.getOptions().columns
+          let columns = this.$refs.table.getOptions().columns;
 
           if (columns && columns[0][0].visible) {
             this.$refs.table.$table.treegrid({
@@ -106,51 +107,52 @@
             if (project.children && !project.fetchedChildren && (this.showInactiveProjects || project.children.some(child => child.active))
               && (!this.$route.query.classifier || project.children.some(child => child.classifier === this.$route.query.classifier))
               && (!this.$route.query.tag || project.children.some(child => child.tag === this.$route.query.tag))) {
-              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).addClass('treegrid-collapsed')
-              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).treegrid('renderExpander')
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).addClass('treegrid-collapsed');
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + project.id.toString()).treegrid('renderExpander');
             }
           })
           this.$refs.table.getData().forEach(row => {
             if (row.expanded) {
-              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('expand')
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('expand');
             } else if (row.expanded === false) {
-              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('collapse')
+              this.$refs.table.$table.find('tbody').find('tr.treegrid-' + row.id.toString()).treegrid('collapse');
             }
           })
         }
-        this.$refs.table.hideLoading()
+        this.$refs.table.hideLoading();
       },
       getChildren: async function (project) {
-        let url = this.apiUrl(project.uuid)
+        let url = this.apiUrl(project.uuid);
         await this.axios.get(url).then((response) => {
           for (let project of response.data) {
             if (project.parent) {
-              project.pid = MurmurHash2(project.parent.uuid).result()
+              project.pid = MurmurHash2(project.parent.uuid).result();
             }
           }
-          this.$refs.table.append(response.data)
+          this.$refs.table.append(response.data);
         })
       },
       saveViewState: function () {
-        this.savedViewState = this.showFlatView
+        this.savedViewState = this.showFlatView;
       }
     },
-    watch:{
-      $route (to, from) {
+    watch: {
+      $route(to, from) {
         this.refreshTable();
       },
       showInactiveProjects() {
         if (localStorage) {
           localStorage.setItem("ProjectListShowInactiveProjects", this.showInactiveProjects.toString());
         }
-        this.$refs.table.showLoading()
+        this.$refs.table.showLoading();
+        this.currentPage = 1;
         this.refreshTable();
       },
       showFlatView() {
         if (localStorage) {
           localStorage.setItem("ProjectListShowFlatView", this.showFlatView.toString());
         }
-        this.$refs.table.showLoading()
+        this.$refs.table.showLoading();
         this.refreshTable();
       },
       isSearching() {
@@ -256,7 +258,8 @@
                   high: metrics.high,
                   medium: metrics.medium,
                   low: metrics.low,
-                  unassigned: metrics.unassigned }
+                  unassigned: metrics.unassigned
+                }
               });
               progressBar.$mount();
               return progressBar.$el.outerHTML;
@@ -276,6 +279,7 @@
           sidePagination: 'server',
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
+          currentPage: 1,
           pageSize: (localStorage && localStorage.getItem("ProjectListPageSize") !== null) ? Number(localStorage.getItem("ProjectListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("ProjectListSortName") !== null) ? localStorage.getItem("ProjectListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("ProjectListSortOrder") !== null) ? localStorage.getItem("ProjectListSortOrder") : undefined,
@@ -294,38 +298,39 @@
               if (event.target.tagName.toLowerCase() !== 'a' && $element.treegrid('isLeaf') && row.children && !row.fetchedChildren && (this.showInactiveProjects || row.children.some(child => child.active))
                 && (!this.$route.query.classifier || row.children.some(child => child.classifier === this.$route.query.classifier))
                 && (!this.$route.query.tag || row.children.some(child => child.tag === this.$route.query.tag))) {
-                row.fetchedChildren = true
-                this.getChildren(row)
-                row.expanded = true
+                row.fetchedChildren = true;
+                this.getChildren(row);
+                row.expanded = true;
               } else if (event.target.tagName.toLowerCase() !== 'a' && ((!$element.treegrid('isLeaf') && $element.treegrid('isCollapsed') && event.target.className !== "treegrid-expander treegrid-expander-collapsed") || event.target.className === "treegrid-expander treegrid-expander-expanded")) {
-                $element.treegrid('expand')
-                row.expanded = true
+                $element.treegrid('expand');
+                row.expanded = true;
               } else if (event.target.tagName.toLowerCase() !== 'a' && ((!$element.treegrid('isLeaf') && $element.treegrid('isExpanded') && event.target.className !== "treegrid-expander treegrid-expander-expanded") || event.target.className === "treegrid-expander treegrid-expander-collapsed")) {
-                $element.treegrid('collapse')
-                row.expanded = false
+                $element.treegrid('collapse');
+                row.expanded = false;
               }
             }
           }),
           onSearch: ((text) => {
             this.isSearching = text.length !== 0
             if (this.isSearching) {
-              this.showFlatView = true
+              this.showFlatView = true;
             } else {
               if (this.savedViewState !== null) {
-                this.showFlatView = !this.savedViewState
+                this.showFlatView = !this.savedViewState;
               } else {
-                this.showFlatView = false
+                this.showFlatView = false;
               }
             }
           }),
           onPageChange: ((number, size) => {
             if (localStorage) {
-              localStorage.setItem("ProjectListPageSize", size.toString())
+              localStorage.setItem("ProjectListPageSize", size.toString());
             }
+            this.currentPage = number;
           }),
           onColumnSwitch: ((field, checked) => {
             if (localStorage) {
-              localStorage.setItem("ProjectListShow"+common.capitalize(field), checked.toString())
+              localStorage.setItem("ProjectListShow" + common.capitalize(field), checked.toString());
             }
           }),
           onSort: ((name, order) => {
