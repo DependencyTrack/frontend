@@ -18,7 +18,7 @@
           <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
         </b-button>
         <b-tooltip target="upload-button" triggers="hover focus">{{ $t('message.upload_bom_tooltip') }}</b-tooltip>
-        <b-dropdown variant="outline-primary" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
+        <b-dropdown variant="outline-primary" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
           <template #button-content>
             <span class="fa fa-download"></span> {{ $t('message.download_bom') }}
           </template>
