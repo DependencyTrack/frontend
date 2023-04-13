@@ -1,7 +1,23 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="scannerEnabled" color="primary" v-model="scannerEnabled" label v-bind="labelIcon" />{{$t('admin.analyzer_ossindex_enable')}}
+      <c-switch
+        id="scannerEnabled"
+        color="primary"
+        v-model="scannerEnabled"
+        label v-bind="labelIcon"
+      />
+      {{$t('admin.analyzer_ossindex_enable')}}
+      <br/>
+      <c-switch
+        :disabled="!this.scannerEnabled"
+        id="aliasSyncEnabled"
+        color="primary"
+        v-model="aliasSyncEnabled"
+        label
+        v-bind="labelIcon"
+      />
+      {{$t('admin.vulnsource_alias_sync_enable')}}
       <b-validated-input-group-form-input
         id="ossindex-username"
         :label="$t('admin.registered_email_address')"
@@ -47,6 +63,7 @@
     data() {
       return {
         scannerEnabled: false,
+        aliasSyncEnabled: false,
         username: '',
         apitoken: '',
         labelIcon: {
@@ -59,6 +76,7 @@
       saveChanges: function() {
         this.updateConfigProperties([
           {groupName: 'scanner', propertyName: 'ossindex.enabled', propertyValue: this.scannerEnabled},
+          {groupName: 'scanner', propertyName: 'ossindex.alias.sync.enabled', propertyValue: this.aliasSyncEnabled},
           {groupName: 'scanner', propertyName: 'ossindex.api.username', propertyValue: this.username},
           {groupName: 'scanner', propertyName: 'ossindex.api.token', propertyValue: this.apitoken}
         ]);
@@ -72,6 +90,8 @@
           switch (item.propertyName) {
             case "ossindex.enabled":
               this.scannerEnabled = common.toBoolean(item.propertyValue); break;
+            case "ossindex.alias.sync.enabled":
+              this.aliasSyncEnabled = common.toBoolean(item.propertyValue); break;
             case "ossindex.api.username":
               this.username = item.propertyValue; break;
             case "ossindex.api.token":
