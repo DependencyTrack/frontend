@@ -19,6 +19,7 @@
         label
         v-bind="labelIcon"
         v-model="aliasSyncEnabled"
+        :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
         :disabled="!this.vulnsourceEnabled"
       />
       {{$t('admin.vulnsource_alias_sync_enable')}}

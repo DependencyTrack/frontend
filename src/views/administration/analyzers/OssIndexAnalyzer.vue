@@ -16,6 +16,7 @@
         v-model="aliasSyncEnabled"
         label
         v-bind="labelIcon"
+        :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
       />
       {{$t('admin.vulnsource_alias_sync_enable')}}
       <b-validated-input-group-form-input

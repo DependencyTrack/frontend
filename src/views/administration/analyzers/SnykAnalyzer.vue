@@ -20,8 +20,13 @@
           v-model="aliasSyncEnabled"
           label
           v-bind="labelIcon"
+          :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
         />
         {{$t('admin.vulnsource_alias_sync_enable')}}
+        <p class="font-sm text-muted">
+          <span class="fa fa-warning">&nbsp;</span>
+          {{ $t('admin.analyzer_snyk_alias_sync_warning') }}
+        </p>
         <b-validated-input-group-form-input
           id="snyk-baseUrl"
           :label="$t('admin.base_url')"
