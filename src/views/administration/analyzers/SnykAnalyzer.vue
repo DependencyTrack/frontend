@@ -12,6 +12,21 @@
           v-bind="labelIcon"
         />
         {{$t('admin.analyzer_snyk_enable')}}
+        <br/>
+        <c-switch
+          :disabled="!this.scannerEnabled"
+          id="aliasSyncEnabled"
+          color="primary"
+          v-model="aliasSyncEnabled"
+          label
+          v-bind="labelIcon"
+          :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
+        />
+        {{$t('admin.vulnsource_alias_sync_enable')}}
+        <p class="font-sm text-muted">
+          <span class="fa fa-warning">&nbsp;</span>
+          {{ $t('admin.analyzer_snyk_alias_sync_warning') }}
+        </p>
         <b-validated-input-group-form-input
           id="snyk-baseUrl"
           :label="$t('admin.base_url')"
@@ -109,6 +124,7 @@
       data() {
         return {
           scannerEnabled: false,
+          aliasSyncEnabled: false,
           apitoken: '',
           apiVersion: '',
           baseUrl: '',
@@ -132,6 +148,7 @@
         saveChanges: function() {
           this.updateConfigProperties([
             {groupName: 'scanner', propertyName: 'snyk.enabled', propertyValue: this.scannerEnabled},
+            {groupName: 'scanner', propertyName: 'snyk.alias.sync.enabled', propertyValue: this.aliasSyncEnabled},
             {groupName: 'scanner', propertyName: 'snyk.api.token', propertyValue: this.apitoken},
             {groupName: 'scanner', propertyName: 'snyk.org.id', propertyValue: this.orgId},
             {groupName: 'scanner', propertyName: 'snyk.base.url', propertyValue: this.baseUrl},
@@ -148,6 +165,8 @@
             switch (item.propertyName) {
               case "snyk.enabled":
                 this.scannerEnabled = common.toBoolean(item.propertyValue); break;
+              case "snyk.alias.sync.enabled":
+                this.aliasSyncEnabled = common.toBoolean(item.propertyValue); break;
               case "snyk.api.token":
                 this.apitoken = item.propertyValue; break;
               case "snyk.org.id":

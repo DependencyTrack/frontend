@@ -12,6 +12,21 @@
         :disabled="enabledEcosystems.length === 0"
       />
       {{$t('admin.vulnsource_osv_advisories_enable')}}
+      <br/>
+      <c-switch
+        color="primary"
+        id="aliasSyncEnabled"
+        label
+        v-bind="labelIcon"
+        v-model="aliasSyncEnabled"
+        :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
+        :disabled="!vulnsourceEnabled"
+      />
+      {{$t('admin.vulnsource_alias_sync_enable')}}
+      <p class="font-sm text-muted">
+        <span class="fa fa-warning">&nbsp;</span>
+        <a :href="aliasGitHubIssueUrl" target="_blank">{{ $t('admin.vulnsource_osv_alias_sync_warning') }}</a>
+      </p>
       <hr/>
       {{ $t('admin.vulnsource_osv_advisories_desc') }}
       <hr/>
@@ -49,6 +64,7 @@
 <script>
 
 import { Switch as cSwitch } from '@coreui/vue';
+import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
 import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
@@ -68,6 +84,8 @@ export default {
   data() {
     return {
       vulnsourceEnabled: false,
+      aliasSyncEnabled: false,
+      aliasGitHubIssueUrl: "https://github.com/google/osv.dev/issues/888",
       osvBaseUrl: '',
       ecosystemConfig: null,
       enabledEcosystems: [],
@@ -103,7 +121,8 @@ export default {
     saveUrl: function() {
       this.updateConfigProperties([
         {groupName: 'vuln-source', propertyName: 'google.osv.base.url', propertyValue: this.osvBaseUrl},
-        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")}
+        {groupName: 'vuln-source', propertyName: 'google.osv.enabled', propertyValue: this.enabledEcosystems.join(";")},
+        {groupName: 'vuln-source', propertyName: 'google.osv.alias.sync.enabled', propertyValue: this.aliasSyncEnabled}
       ]);
     }
   },
@@ -116,6 +135,9 @@ export default {
           case "google.osv.enabled":
             this.ecosystemConfig = item.propertyValue;
             this.vulnsourceEnabled = this.ecosystemConfig != null;
+            break;
+          case "google.osv.alias.sync.enabled":
+            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
             break;
           case "google.osv.base.url":
             this.osvBaseUrl = item.propertyValue;

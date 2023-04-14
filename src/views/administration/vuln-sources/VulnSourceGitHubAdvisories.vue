@@ -12,6 +12,17 @@
         v-model="vulnsourceEnabled"
       />
       {{$t('admin.vulnsource_github_advisories_enable')}}
+      <br/>
+      <c-switch
+        color="primary"
+        id="aliasSyncEnabled"
+        label
+        v-bind="labelIcon"
+        v-model="aliasSyncEnabled"
+        :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
+        :disabled="!this.vulnsourceEnabled"
+      />
+      {{$t('admin.vulnsource_alias_sync_enable')}}
       <b-validated-input-group-form-input
         id="github-advisories-apitoken"
         :label="$t('admin.personal_access_token')"
@@ -54,6 +65,7 @@ export default {
   data() {
     return {
       vulnsourceEnabled: false,
+      aliasSyncEnabled: false,
       apitoken: '',
       labelIcon: {
         dataOn: '\u2713',
@@ -65,6 +77,7 @@ export default {
     saveChanges: function() {
       this.updateConfigProperties([
         {groupName: 'vuln-source', propertyName: 'github.advisories.enabled', propertyValue: this.vulnsourceEnabled},
+        {groupName: 'vuln-source', propertyName: 'github.advisories.alias.sync.enabled', propertyValue: this.aliasSyncEnabled},
         {groupName: 'vuln-source', propertyName: 'github.advisories.access.token', propertyValue: this.apitoken}
       ]);
     }
@@ -77,6 +90,8 @@ export default {
         switch (item.propertyName) {
           case "github.advisories.enabled":
             this.vulnsourceEnabled = common.toBoolean(item.propertyValue); break;
+          case "github.advisories.alias.sync.enabled":
+            this.aliasSyncEnabled = common.toBoolean(item.propertyValue); break;
           case "github.advisories.access.token":
             this.apitoken = item.propertyValue; break;
         }
