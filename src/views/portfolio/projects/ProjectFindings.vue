@@ -140,7 +140,6 @@
           {
             title: this.$t('message.aliases'),
             field: "vulnerability.aliases",
-            sortable: true,
             visible: false,
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
@@ -149,7 +148,7 @@
                   let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
                   let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
                   label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
-                  if (i < value.length-1) label += ", "
+                  if (i < value.length-1) label += "<br/><br/>"
                 }
                 return label;
               }
