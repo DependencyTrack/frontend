@@ -182,7 +182,7 @@
           {
             title: this.$t('message.tags'),
             field: "tags",
-            sortable: true,
+            sortable: false,
             visible: false,
             formatter(value, row, index) {
               let tag_string = row.tags.slice(0, 2)?.map(tag => common.formatProjectTagLabel(tag)).join(' ') || '';
