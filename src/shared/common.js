@@ -6,7 +6,7 @@
 
 "use strict";
 
-const xssFilters = require("xss-filters");
+import xssFilters from "xss-filters";
 const $common = function() {
 };
 
@@ -39,8 +39,7 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(tag) {
   if (! tag) {
     return "";
   }
-  return `<a href="../projects/?tag=dummy" class="badge badge-tag text-lowercase mr-1">dummy</a>`;
-  // return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+  return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
 };
 
 /**
@@ -463,7 +462,7 @@ $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
   }
 }
 
-module.exports = {
+export default {
   formatSourceLabel: $common.formatSourceLabel,
   formatNotificationLabel: $common.formatNotificationLabel,
   formatProjectTagLabel: $common.formatProjectTagLabel,
