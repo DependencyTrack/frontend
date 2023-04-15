@@ -187,8 +187,8 @@
             formatter(value, row, index) {
               let tag_string = row.tags.slice(0, 2)?.map(tag => common.formatProjectTagLabel(tag)).join(', ') || '';
               if (row.tags.length > 2) {
-                tag_string += `<span class="d-none">`
-                  tag_string += ', ' + row.tags.slice(1)?.map(tag => common.formatProjectTagLabel(tag)).join(', ');
+                tag_string += `, <span class="d-none">`
+                  tag_string += row.tags.slice(1)?.map(tag => common.formatProjectTagLabel(tag)).join(', ');
                   tag_string += `</span>`
                   tag_string += `<a href="#" title="show all tags" class="badge badge-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`
               }
