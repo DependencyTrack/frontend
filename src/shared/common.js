@@ -33,6 +33,17 @@ $common.formatNotificationLabel = function formatNotificationLabel(violationStat
 };
 
 /**
+ * Formats and returns a specialized label for a project tag.
+ */
+$common.formatProjectTagLabel = function formatProjectTagLabel(tag) {
+  if (! tag) {
+    return "";
+  }
+  return `<a href="../projects/?tag=dummy" class="badge badge-tag text-lowercase mr-1">dummy</a>`;
+  // return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+};
+
+/**
  * Changes the first letter to uppercase and the remaining letters to lowercase.
  *
  * @param {string} string the String to capitalize
@@ -455,6 +466,7 @@ $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
 module.exports = {
   formatSourceLabel: $common.formatSourceLabel,
   formatNotificationLabel: $common.formatNotificationLabel,
+  formatProjectTagLabel: $common.formatProjectTagLabel,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
