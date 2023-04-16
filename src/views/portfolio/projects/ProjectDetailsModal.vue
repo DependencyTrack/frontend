@@ -36,7 +36,7 @@
             label-for="input-4">
             <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
                             :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
-                            style="max-width:none; background-color:transparent; text-transform: lowercase;"
+                            class="mw-100 bg-transparent text-lowercase"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
           <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label

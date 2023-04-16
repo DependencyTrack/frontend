@@ -19,9 +19,9 @@
               </ol>
               {{ project.version }}
             </div>
-            <div class="text-muted text-uppercase font-weight-bold font-xs">
+            <div class="text-muted text-lowercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
-                <b-badge :href="'../projects/?tag='+tag.name" variant="tag">{{ tag.name }}</b-badge>
+				  <b-badge :href="'../projects/?tag='+tag.name" variant="tag">{{ tag.name }}</b-badge>
               </span>
             </div>
           </b-col>
