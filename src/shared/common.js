@@ -39,7 +39,7 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(tag) {
   if (! tag) {
     return "";
   }
-  return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-uppercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+  return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
 };
 
 /**
