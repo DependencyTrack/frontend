@@ -728,6 +728,8 @@
     "jira_url": "Jira base URL",
     "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",
     "jira_password": "Jira password",
+    "jira_auth_with_token": "Jira personal access token",
+    "bearer_token_auth_enable": "Authenticate with a personal access token",
     "jira_ticket_type": "Jira ticket type",
     "reindex_projects": "Projects",
     "reindex_components": "Components",
