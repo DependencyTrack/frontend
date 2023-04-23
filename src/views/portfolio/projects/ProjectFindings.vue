@@ -144,11 +144,12 @@
             formatter(value, row, index) {
               if (typeof value !== 'undefined') {
                 let label = "";
-                for (let i=0; i<value.length; i++) {
-                  let alias = common.resolveVulnAliasInfo(row.vulnerability.source, value[i]);
+                const aliases = common.resolveVulnAliases(row.vulnerability.source, value);
+                for (let i=0; i<aliases.length; i++) {
+                  let alias = aliases[i];
                   let url = xssFilters.uriInUnQuotedAttr("../../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
                   label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
-                  if (i < value.length-1) label += "<br/><br/>"
+                  if (i < aliases.length-1) label += "<br/><br/>"
                 }
                 return label;
               }
@@ -248,9 +249,9 @@
                     <label>Aliases</label>
                       <b-card class="font-weight-bold">
                         <b-card-text>
-                          <span v-for="alias in finding.vulnerability.aliases">
-                          <b-link style="margin-right:1.0rem" :href="'/vulnerabilities/' + aliasLabel(finding.vulnerability.source, alias).source + '/' + aliasLabel(finding.vulnerability.source, alias).vulnId">{{aliasLabel(finding.vulnerability.source, alias).vulnId}}</b-link>
-                         </span>
+                          <span v-for="alias in resolveVulnAliases(finding.vulnerability.aliases)">
+                          <b-link style="margin-right:1.0rem" :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId">{{ alias.vulnId }}</b-link>
+                          </span>
                         </b-card-text>
                      </b-card>
                     </div>
@@ -364,8 +365,8 @@
               },
               mixins: [permissionsMixin],
               methods: {
-                aliasLabel: function(vulnSource, alias) {
-                  return common.resolveVulnAliasInfo(vulnSource, alias);
+                resolveVulnAliases: function(aliases) {
+                  return common.resolveVulnAliases(this.source, aliases);
                 },
                 getAnalysis: function() {
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
