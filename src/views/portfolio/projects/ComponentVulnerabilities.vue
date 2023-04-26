@@ -48,7 +48,7 @@
                 const aliases = common.resolveVulnAliases(row.source, value);
                 for (let i=0; i<aliases.length; i++) {
                   let alias = aliases[i];
-                  let url = xssFilters.uriInUnQuotedAttr("../vulnerabilities/" + alias.source + "/" + alias.vulnId);
+                  let url = xssFilters.uriInUnQuotedAttr("../../vulnerabilities/" + alias.source + "/" + alias.vulnId);
                   label += common.formatSourceLabel(alias.source) + ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`
                   if (i < aliases.length-1) label += "<br/><br/>"
                 }
