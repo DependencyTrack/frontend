@@ -6,26 +6,35 @@
           <b-col>
             <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
             <div class="h5 mb-0 mt-2">
-              {{ project.name }}
-              <ol v-if="project.version" style="display: inline-block; margin: 0; list-style-type: none; padding-inline-start: 0">
-                <li class="dropdown">
-                  <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
-                  <ul class="dropdown-menu">
-                    <span v-for="p in availableProjectVersions">
-                      <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
-                      </span>
-                  </ul>
-                </li>
-              </ol>
-              {{ project.version }}
+              <b-row>
+                <b-col class="text-nowrap" md="auto">
+                  {{ project.name }}
+                  <ol v-if="project.version" style="display: inline-block; margin: 0; list-style-type: none; padding-inline-start: 0">
+                    <li class="dropdown">
+                      <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
+                      <ul class="dropdown-menu">
+                        <span v-for="p in availableProjectVersions">
+                          <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
+                          </span>
+                      </ul>
+                    </li>
+                  </ol>
+                  {{ project.version }}
+                </b-col>
+                <b-col class="d-none d-md-flex">
+                  <span class="text-muted font-xs font-italic align-text-top text-truncate" style="max-width: 100ch;" v-b-tooltip.hover="{title: project.description}">{{ project.description }}</span>
+                </b-col>
+              </b-row>
             </div>
-            <div class="text-muted text-lowercase font-weight-bold font-xs">
-              <span v-for="tag in project.tags">
-                <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+            <div class="text-muted font-xs">
+              <span class="text-lowercase font-weight-bold">
+                <span v-for="tag in project.tags">
+                  <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+                </span>
               </span>
             </div>
           </b-col>
-          <b-col>
+          <b-col md="auto">
             <b-row class="d-none d-md-flex float-right">
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityCritical"
