@@ -184,13 +184,15 @@
             field: "tags",
             sortable: false,
             visible: false,
+            routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
             formatter(value, row, index) {
+              const router = this.routerFunc();
               let tag_string = ""
               if (row.tags) {
-                tag_string = row.tags?.slice(0, 2).map(tag => common.formatProjectTagLabel(tag)).join(' ') || '';
+                tag_string = row.tags?.slice(0, 2).map(tag => common.formatProjectTagLabel(router, tag)).join(' ') || '';
                 if (row.tags.length > 2) {
                   tag_string += ` <span class="d-none">`
-                  tag_string += row.tags.slice(2)?.map(tag => common.formatProjectTagLabel(tag)).join(' ');
+                  tag_string += row.tags.slice(2)?.map(tag => common.formatProjectTagLabel(router, tag)).join(' ');
                   tag_string += `</span>`
                   tag_string += `<a href="#" title="show all tags" class="badge badge-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`
                 }
