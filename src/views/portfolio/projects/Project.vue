@@ -21,7 +21,7 @@
             </div>
             <div class="text-muted text-lowercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
-                <b-badge :to="{path: '../projects/', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+                <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
               </span>
             </div>
           </b-col>
