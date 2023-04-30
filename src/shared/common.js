@@ -35,11 +35,11 @@ $common.formatNotificationLabel = function formatNotificationLabel(violationStat
 /**
  * Formats and returns a specialized label for a project tag.
  */
-$common.formatProjectTagLabel = function formatProjectTagLabel(tag) {
+$common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   if (! tag) {
     return "";
   }
-  return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+  return `<a href="${router.resolve({name: 'Projects', query: {'tag': tag.name}}).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
 };
 
 /**
