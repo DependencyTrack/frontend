@@ -12,7 +12,7 @@
                   <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
                   <ul class="dropdown-menu">
                     <span v-for="p in availableProjectVersions">
-                      <b-dropdown-item :to="p.uuid">{{ p.version }}</b-dropdown-item>
+                      <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
                       </span>
                   </ul>
                 </li>
@@ -21,7 +21,7 @@
             </div>
             <div class="text-muted text-lowercase font-weight-bold font-xs">
               <span v-for="tag in project.tags">
-                <b-badge :to="{path: '../projects/', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+                <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
               </span>
             </div>
           </b-col>

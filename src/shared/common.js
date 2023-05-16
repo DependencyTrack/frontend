@@ -35,11 +35,11 @@ $common.formatNotificationLabel = function formatNotificationLabel(violationStat
 /**
  * Formats and returns a specialized label for a project tag.
  */
-$common.formatProjectTagLabel = function formatProjectTagLabel(tag) {
+$common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   if (! tag) {
     return "";
   }
-  return `<a href="../projects/?tag=${xssFilters.uriComponentInUnQuotedAttr(tag.name)}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+  return `<a href="${router.resolve({name: 'Projects', query: {'tag': tag.name}}).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
 };
 
 /**
@@ -191,32 +191,55 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(vulnSource, vulnI
   return sourceInfo;
 }
 
-/**
- * Given the source of a vulnerability (vulnSource) and an alias of the vulnerability, normalizes
- * the return object.
- * @param vulnSource the source of a Vulnerability object
- * @param alias a VulnerabilityAlias response object for the given Vulnerability
- * @returns A resolved and normalized object with metadata
- */
-$common.resolveVulnAliasInfo = function resolveVulnAliasInfo(vulnSource, alias) {
-  if (!vulnSource || !alias) return;
-  if (vulnSource !== "INTERNAL" && alias.internalId) {
-    return $common.resolveSourceVulnInfo("INTERNAL", alias.internalId);
-  } else if (vulnSource !== "NVD" && alias.cveId) {
-    return $common.resolveSourceVulnInfo("NVD", alias.cveId);
-  } else if (vulnSource !== "GITHUB" && alias.ghsaId) {
-    return $common.resolveSourceVulnInfo("GITHUB", alias.ghsaId);
-  } else if (vulnSource !== "OSSINDEX" && alias.sonatypeId) {
-    return $common.resolveSourceVulnInfo("OSSINDEX", alias.sonatypeId);
-  } else if (vulnSource !== "SNYK" && alias.snykId) {
-    return $common.resolveSourceVulnInfo("SNYK", alias.snykId);
-  } else if (vulnSource !== "OSV" && alias.osvId) {
-    return $common.resolveSourceVulnInfo("OSV", alias.osvId);
-  } else if (vulnSource !== "GSD" && alias.gsdId) {
-    return $common.resolveSourceVulnInfo("GSD", alias.gsdId);
-  } else if (vulnSource !== "VULNDB" && alias.vulnDbId) {
-    return $common.resolveSourceVulnInfo("VULNDB", alias.vulnDbId);
+$common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
+  if (!vulnSource || !aliases) {
+    return [];
   }
+
+  let resolvedAliases = aliases
+    .flatMap((alias) => {
+      const _resolvedAliases = [];
+      if (vulnSource !== "INTERNAL" && alias.internalId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("INTERNAL", alias.internalId));
+      }
+      if (vulnSource !== "NVD" && alias.cveId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("NVD", alias.cveId));
+      }
+      if (vulnSource !== "GITHUB" && alias.ghsaId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("GITHUB", alias.ghsaId));
+      }
+      if (vulnSource !== "OSSINDEX" && alias.sonatypeId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("OSSINDEX", alias.sonatypeId));
+      }
+      if (vulnSource !== "SNYK" && alias.snykId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("SNYK", alias.snykId));
+      }
+      if (vulnSource !== "OSV" && alias.osvId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("OSV", alias.osvId));
+      }
+      if (vulnSource !== "GSD" && alias.gsdId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("GSD", alias.gsdId));
+      }
+      if (vulnSource !== "VULNDB" && alias.vulnDbId) {
+        _resolvedAliases.push($common.resolveSourceVulnInfo("VULNDB", alias.vulnDbId));
+      }
+      return _resolvedAliases;
+    });
+
+  // Deduplicate by vulnerability ID, so we're not showing the same ID more than once.
+  resolvedAliases = [...new Map(resolvedAliases.map(alias => [alias.vulnId, alias])).values()];
+
+  // Sort aliases by vulnerability ID to achieve consistent output.
+  return resolvedAliases
+    .sort((a, b) => {
+      if (a.vulnId < b.vulnId) {
+        return -1;
+      }
+      if (a.vulnId > b.vulnId) {
+        return 1;
+      }
+      return 0;
+    });
 }
 
 /**
@@ -473,7 +496,7 @@ export default {
   formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
   resolveSourceVulnInfo: $common.resolveSourceVulnInfo,
-  resolveVulnAliasInfo: $common.resolveVulnAliasInfo,
+  resolveVulnAliases: $common.resolveVulnAliases,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
   makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
   componentClassifierLabelFormatter: $common.componentClassifierLabelFormatter,
