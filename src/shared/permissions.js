@@ -17,19 +17,9 @@ export const POLICY_MANAGEMENT = "POLICY_MANAGEMENT";
  * retrieve and decode it.
  */
 export const hasPermission = function hasPermission(permission, decodedToken) {
-  let token = decodedToken;
-  if (!decodedToken) {
-    token = decodeToken(getToken());
-  }
-  if (token !== null && Object.prototype.hasOwnProperty.call(token, "permissions")) {
-    let permissions = token.permissions.split(",");
-    for (let i = 0; i < permissions.length; i++) {
-      if (permissions[i] === permission) {
-        return true;
-      }
-    }
-  }
-  return false;
+  const token = decodedToken || decodeToken(getToken());
+  const permissions = token?.permissions?.split(',') || [];
+  return permissions.includes(permission);
 };
 
 /**
