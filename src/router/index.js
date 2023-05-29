@@ -88,7 +88,8 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.dashboard'),
             i18n: 'message.dashboard',
-            sectionPath: '/dashboard'
+            sectionPath: '/dashboard',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
