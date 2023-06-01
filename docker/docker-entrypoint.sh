@@ -2,9 +2,12 @@
 
 set -e
 
+CONFIG_FILE="./static/config.json"
+TMP_FILE="/tmp/config.json"
+
 # Check if config.json is mounted
-if mount | grep '/static/config.json'; then
-  echo "config.json is mounted from host - ENV configuration will be ignored"
+if ! touch $CONFIG_FILE 2>/dev/null; then
+  echo "can not modify config.json - ENV configuration will be ignored"
 else
   # Apply ENV vars to temporary config.json
   jq '.API_BASE_URL = env.API_BASE_URL
@@ -14,10 +17,11 @@ else
         | .OIDC_SCOPE = env.OIDC_SCOPE
         | .OIDC_FLOW = env.OIDC_FLOW
         | .OIDC_LOGIN_BUTTON_TEXT = env.OIDC_LOGIN_BUTTON_TEXT' \
-    ./static/config.json > /tmp/config.json
+    $CONFIG_FILE > $TMP_FILE
 
   # Override default config file
-  mv -f /tmp/config.json ./static/config.json
+  mv -f $TMP_FILE $CONFIG_FILE
 fi
 
 exec "$@"
+
