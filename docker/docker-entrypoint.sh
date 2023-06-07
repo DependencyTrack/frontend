@@ -3,7 +3,7 @@
 set -e
 
 # Check if config.json is mounted
-if mount | grep '/static/config.json'; then
+if cat /proc/mounts | grep '/static/config.json'; then
   echo "config.json is mounted from host - ENV configuration will be ignored"
 else
   # Apply ENV vars to temporary config.json
