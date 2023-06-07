@@ -3,12 +3,12 @@
 set -e
 
 # Check if config.json is mounted
-if cat /proc/mounts | grep '/static/config.json'; then
+if grep '/static/config.json' /proc/mounts; then
   echo "config.json is mounted from host - ENV configuration will be ignored"
 else
   # Apply ENV vars to temporary config.json
   jq '.API_BASE_URL = env.API_BASE_URL
-        | .API_WITH_CREDENTIALS = env.API_WITH_CREDENTIALS 
+        | .API_WITH_CREDENTIALS = env.API_WITH_CREDENTIALS
         | .OIDC_ISSUER = env.OIDC_ISSUER
         | .OIDC_CLIENT_ID = env.OIDC_CLIENT_ID
         | .OIDC_SCOPE = env.OIDC_SCOPE
