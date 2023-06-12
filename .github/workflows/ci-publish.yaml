@@ -26,7 +26,7 @@ jobs:
         id: parse
         run: |-
           VERSION=`jq -r '.version' package.json`
-          echo "::set-output name=version::${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
   call-build:
     needs:
