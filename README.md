@@ -71,7 +71,7 @@ reflect the base URL of a Dependency-Track server.
 ![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.svg?sanitize=true)
 
 The front-end is deployed to a general purpose web server (e.g. NGINX or Apache). To configure the front-end 
-for this scenario, simply change the value of API_BASE_URL in static/config.json.
+for this scenario, simply copy `static/config.tmpl.json` to `static/config.json` and change the value of API_BASE_URL in `static/config.json`.
 
 ```json
 {
