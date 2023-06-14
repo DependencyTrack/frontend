@@ -168,6 +168,9 @@
         ],
         data: [],
         options: {
+          showExport: true,
+          exportDataType: 'all',
+          exportTypes: ['json', 'txt'],
           onPostBody: this.initializeTooltips,
           search: true,
           showColumns: true,
