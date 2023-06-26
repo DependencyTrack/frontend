@@ -6,26 +6,35 @@
           <b-col>
             <i class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"></i>
             <div class="h5 mb-0 mt-2">
-              {{ project.name }}
-              <ol v-if="project.version" style="display: inline-block; margin: 0; list-style-type: none; padding-inline-start: 0">
-                <li class="dropdown">
-                  <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
-                  <ul class="dropdown-menu">
-                    <span v-for="p in availableProjectVersions">
-                      <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
-                      </span>
-                  </ul>
-                </li>
-              </ol>
-              {{ project.version }}
+              <b-row>
+                <b-col class="text-nowrap" md="auto">
+                  {{ project.name }}
+                  <ol v-if="project.version" style="display: inline-block; margin: 0; list-style-type: none; padding-inline-start: 0">
+                    <li class="dropdown">
+                      <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
+                      <ul class="dropdown-menu">
+                        <span v-for="p in availableProjectVersions">
+                          <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
+                          </span>
+                      </ul>
+                    </li>
+                  </ol>
+                  {{ project.version }}
+                </b-col>
+                <b-col class="d-none d-md-flex">
+                  <span class="text-muted font-xs font-italic align-text-top text-truncate" style="max-width: 100ch;" v-b-tooltip.hover="{title: project.description}">{{ project.description }}</span>
+                </b-col>
+              </b-row>
             </div>
-            <div class="text-muted text-lowercase font-weight-bold font-xs">
-              <span v-for="tag in project.tags">
-                <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+            <div class="text-muted font-xs">
+              <span class="text-lowercase font-weight-bold">
+                <span v-for="tag in project.tags">
+                  <b-badge :to="{name: 'Projects', query: {'tag': tag.name}}" variant="tag">{{ tag.name }}</b-badge>
+                </span>
               </span>
             </div>
           </b-col>
-          <b-col>
+          <b-col md="auto">
             <b-row class="d-none d-md-flex float-right">
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityCritical"
@@ -92,7 +101,16 @@
         </b-row>
       </b-card-body>
       <div id="project-info-footer" slot="footer">
-        <b-link class="font-weight-bold font-xs btn-block text-muted" @click="initializeProjectDetailsModal">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+        <b-row>
+          <b-col>
+            <b-link class="font-weight-bold font-xs btn-block text-muted" @click="initializeProjectDetailsModal">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+          </b-col>
+          <b-col v-if="project.externalReferences" md="auto">
+            <b-row class="d-none d-md-flex float-right">
+              <ExternalReferencesDropdown :externalReferences="project.externalReferences" />
+            </b-row>
+          </b-col>
+        </b-row>
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
@@ -152,6 +170,7 @@
   import ProjectFindings from "./ProjectFindings";
   import ProjectPolicyViolations from "./ProjectPolicyViolations";
   import ProjectEpss from "./ProjectEpss";
+  import ExternalReferencesDropdown from "../../components/ExternalReferencesDropdown.vue";
 
   export default {
     mixins: [permissionsMixin],
@@ -169,7 +188,8 @@
       ProjectDashboard,
       PortfolioWidgetRow,
       VueEasyPieChart,
-      ProjectEpss
+      ProjectEpss,
+      ExternalReferencesDropdown
     },
     title: '',
     computed: {
