@@ -15,8 +15,7 @@
     "serve": "npm run prebuild && vue-cli-service serve",
     "prebuild": "node update-embedded-version.js",
     "build": "npm run prebuild && vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "sbom": "cyclonedx-npm --output-file sbom.json"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
