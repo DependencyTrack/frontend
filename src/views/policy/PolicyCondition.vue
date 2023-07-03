@@ -59,6 +59,7 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
     },
     created() {
       if (this.condition) {
+        this.uuid = this.condition.uuid;
         this.subject = this.condition.subject;
         this.subjectChanged();
         this.operator = this.condition.operator;
@@ -67,6 +68,7 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
     },
     data() {
       return {
+        uuid: null,
         subject: null,
         operator: null,
         value: null,
@@ -257,10 +259,10 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
           });
         } else if (this.subject === "VERSION_DISTANCE") {
           let result = {
-            epoch: parseInt(common.trimToNull(this.versionDistance.epoch)),
-            major: parseInt(common.trimToNull(this.versionDistance.major)),
-            minor: parseInt(common.trimToNull(this.versionDistance.minor)),
-            patch: parseInt(common.trimToNull(this.versionDistance.patch))
+            epoch: this.parseIntNull(common.trimToNull(this.versionDistance.epoch)),
+            major: this.parseIntNull(common.trimToNull(this.versionDistance.major)),
+            minor: this.parseIntNull(common.trimToNull(this.versionDistance.minor)),
+            patch: this.parseIntNull(common.trimToNull(this.versionDistance.patch))
           };
 
           if (result.epoch < 0) {
@@ -279,7 +281,6 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
             result.patch = null;
           }
           this.versionDistance = result;
-          console.log('createDynamicValue', result);
           return JSON.stringify(result);
         } else {
           return this.value;
@@ -290,15 +291,18 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
         if (!this.subject || !this.operator || !dynamicValue) {
           return;
         }
-        if (this.condition.uuid) {
+        if (this.uuid) {
           let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
           this.axios.post(url, {
-            uuid: this.condition.uuid,
+            uuid: this.uuid,
             subject: this.subject,
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.updated'));
           }).catch((error) => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -310,7 +314,10 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.updated'));
           }).catch((error) => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -318,10 +325,13 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
         }
       },
       removeCondition: function() {
-        if (this.condition && this.condition.uuid) {
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.condition.uuid}`;
+        if (this.uuid) {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
           this.axios.delete(url).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           }).catch((error) => {
@@ -383,6 +393,9 @@ import ActionableListGroupItem from "../components/ActionableListGroupItem";
           default:
             return "";
         }
+      },
+      parseIntNull: function (value) {
+        return value == null ? null : parseInt(value);
       }
     }
   }
