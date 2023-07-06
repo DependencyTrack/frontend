@@ -152,6 +152,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                         id="username" :label="$t('admin.username')"
                         input-group-size="mb-3"
                         v-model="username"
+                        rules="required"
                         v-show="authenticationRequired"
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
@@ -162,6 +163,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                         input-group-size="mb-3"
                         type="password"
                         v-model="password"
+                        rules="required"
                         v-show="authenticationRequired"
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
@@ -188,7 +190,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                   internal: row.internal,
                   authenticationRequired: row.authenticationRequired,
                   username: row.username,
-                  password: row.password || null,
+                  password: row.password || "HiddenDecryptedPropertyPlaceholder",
                   enabled: row.enabled,
                   uuid: row.uuid,
                   labelIcon: {
@@ -205,6 +207,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                   this.updateRepository();
                 },
                 authenticationRequired(){
+
                 this.updateRepository();
                 }
 
@@ -227,7 +230,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
                     username: this.username,
-                    password: this.password || null,
+                    password: this.password || "HiddenDecryptedPropertyPlaceholder",
                     enabled: this.enabled,
                     uuid: this.uuid
                   }).then((response) => {
