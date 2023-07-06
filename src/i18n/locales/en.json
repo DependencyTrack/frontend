@@ -696,6 +696,7 @@
     "create_repository": "Create Repository",
     "repository_type": "Repository Type",
     "internal": "Internal",
+    "repository_authentication": "Authentication required",
     "delete_repository": "Delete Repository",
     "repository_created": "Repository created",
     "repository_deleted": "Repository deleted",

@@ -90,6 +90,15 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
             },
           },
           {
+                      title: this.$t('admin.repository_authentication'),
+                      field: "authenticationRequired",
+                      class: "tight",
+                      sortable: true,
+                      formatter(value, row, index) {
+                        return value === true ? '<i class="fa fa-check-square-o" />' : "";
+                      },
+                    },
+          {
             title: this.$t('admin.enabled'),
             field: "enabled",
             class: "tight",
@@ -134,13 +143,16 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                     <div>
                       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
                     </div>
+                    <div>
+                     <c-switch color="primary" v-model="authenticationRequired" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+                    </div>
 
                     <div>
                       <b-validated-input-group-form-input
                         id="username" :label="$t('admin.username')"
                         input-group-size="mb-3"
                         v-model="username"
-                        v-show="internal"
+                        v-show="authenticationRequired"
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
 
@@ -148,8 +160,9 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                       <b-validated-input-group-form-input
                         id="password" :label="$t('admin.password')"
                         input-group-size="mb-3"
+                        type="password"
                         v-model="password"
-                        v-show="internal"
+                        v-show="authenticationRequired"
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
 
@@ -173,6 +186,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                   identifier: row.identifier,
                   url: row.url,
                   internal: row.internal,
+                  authenticationRequired: row.authenticationRequired,
                   username: row.username,
                   password: row.password || null,
                   enabled: row.enabled,
@@ -189,7 +203,11 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                 },
                 enabled() {
                   this.updateRepository();
+                },
+                authenticationRequired(){
+                this.updateRepository();
                 }
+
               },
               methods: {
                 deleteRepository: function() {
@@ -207,6 +225,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                     identifier: this.identifier,
                     url: this.url,
                     internal: this.internal,
+                    authenticationRequired: this.authenticationRequired,
                     username: this.username,
                     password: this.password || null,
                     enabled: this.enabled,
