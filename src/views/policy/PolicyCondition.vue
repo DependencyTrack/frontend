@@ -10,10 +10,10 @@
                                    v-model="operator" :options="operators" />
       </b-col>
       <b-col md="5" lg="5">
-        <b-input-group-form-select v-if="subject !== 'COORDINATES' && isSubjectSelectable" id="input-value" required="true"
+        <b-input-group-form-select v-if="subject !== 'COORDINATES' && subject !== 'VERSION_DISTANCE' && isSubjectSelectable" id="input-value" required="true"
                                    v-on:change="saveCondition" v-model="value" :options="possibleValues" />
 
-        <b-input-group-form-input v-else-if="subject !== 'COORDINATES' && !isSubjectSelectable" id="input-value" required="true" type="text" v-model="value" lazy="true"
+        <b-input-group-form-input v-else-if="subject !== 'COORDINATES' && subject !== 'VERSION_DISTANCE' && !isSubjectSelectable" id="input-value" required="true" type="text" v-model="value" lazy="true"
                                   v-debounce:750ms="saveCondition" :tooltip="valueInputTooltip()" :debounce-events="'keyup'" />
 
         <b-input-group v-else-if="subject === 'COORDINATES'">
@@ -21,6 +21,17 @@
           <b-form-input id="input-value-coordinates-name" :placeholder="$t('message.name')" type="text" v-model="coordinatesName" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-form-input id="input-value-coordinates-version" :placeholder="$t('message.version')" type="text" v-model="coordinatesVersion" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
           <b-tooltip target="input-value-coordinates-version" triggers="hover focus">{{ $t('message.coordinates_version_tooltip') }}</b-tooltip>
+        </b-input-group>
+
+        <b-input-group v-else-if="subject === 'VERSION_DISTANCE'">
+          <b-form-input id="input-value-distance-epoch" :placeholder="$t('message.version_distance_epoch')" type="number" min="0" oninput="validity.valid||(value='');" v-model="versionDistance.epoch" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-distance-major" :placeholder="$t('message.version_distance_major')" type="number" min="0" oninput="validity.valid||(value='');" v-model="versionDistance.major" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-distance-minor" :placeholder="$t('message.version_distance_minor')" type="number" min="0" oninput="validity.valid||(value='');" v-model="versionDistance.minor" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-form-input id="input-value-distance-patch" :placeholder="$t('message.version_distance_patch')" type="number" min="0" oninput="validity.valid||(value='');" v-model="versionDistance.patch" v-debounce:750ms="saveCondition" :debounce-events="'keyup'"></b-form-input>
+          <b-tooltip target="input-value-distance-epoch" triggers="hover focus">{{ $t('message.version_distance_tooltip') }}</b-tooltip>
+          <b-tooltip target="input-value-distance-major" triggers="hover focus">{{ $t('message.version_distance_tooltip') }}</b-tooltip>
+          <b-tooltip target="input-value-distance-minor" triggers="hover focus">{{ $t('message.version_distance_tooltip') }}</b-tooltip>
+          <b-tooltip target="input-value-distance-patch" triggers="hover focus">{{ $t('message.version_distance_tooltip') }}</b-tooltip>
         </b-input-group>
 
       </b-col>
@@ -31,10 +42,10 @@
 </template>
 
 <script>
-  import ActionableListGroupItem from "../components/ActionableListGroupItem";
-  import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
   import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
-  import common from "../../shared/common";
+import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
+import common from "../../shared/common";
+import ActionableListGroupItem from "../components/ActionableListGroupItem";
 
   export default {
     props: {
@@ -48,6 +59,7 @@
     },
     created() {
       if (this.condition) {
+        this.uuid = this.condition.uuid;
         this.subject = this.condition.subject;
         this.subjectChanged();
         this.operator = this.condition.operator;
@@ -56,12 +68,19 @@
     },
     data() {
       return {
+        uuid: null,
         subject: null,
         operator: null,
         value: null,
         coordinatesGroup: null,
         coordinatesName: null,
         coordinatesVersion: null,
+        versionDistance: {
+          epoch: null,
+          major: null,
+          minor: null,
+          patch: null,
+        },
         subjects: [
           {value: 'AGE', text: this.$t('message.age')},
           //{value: 'ANALYZER', text: this.$t('message.analyzer')},
@@ -76,7 +95,8 @@
           {value: 'VERSION', text: this.$t('message.version')},
           {value: 'COMPONENT_HASH', text: this.$t('message.component_hash')},
           {value: 'CWE', text: this.$t('message.cwe_full')},
-          {value: 'VULNERABILITY_ID', text: this.$t('message.vulnerability_vuln_id')}
+          {value: 'VULNERABILITY_ID', text: this.$t('message.vulnerability_vuln_id')},
+          {value: 'VERSION_DISTANCE', text: this.$t('message.version_distance')}
         ],
         objectOperators: [
           {value: 'IS', text: this.$t('operator.is')},
@@ -147,6 +167,8 @@
             return false;
           case 'VULNERABILITY_ID':
             return false;
+          case 'VERSION_DISTANCE':
+            return false;
           default:
             return false;
         }
@@ -159,6 +181,11 @@
           this.coordinatesGroup = v.group;
           this.coordinatesName = v.name;
           this.coordinatesVersion = v.version;
+        }
+      } else if (this.subject === "VERSION_DISTANCE") {
+        let v = JSON.parse(this.value);
+        if (v) {
+          this.versionDistance = v;
         }
       }
     },
@@ -210,6 +237,9 @@
           case 'VULNERABILITY_ID':
             this.operators = this.objectOperators;
             break;
+          case 'VERSION_DISTANCE':
+            this.operators = this.numericOperators;
+            break;
           default:
             this.operators = [];
         }
@@ -227,6 +257,31 @@
             algorithm: common.trimToNull(this.operator),
             value: common.trimToNull(this.value)
           });
+        } else if (this.subject === "VERSION_DISTANCE") {
+          let result = {
+            epoch: this.parseIntNull(common.trimToNull(this.versionDistance.epoch)),
+            major: this.parseIntNull(common.trimToNull(this.versionDistance.major)),
+            minor: this.parseIntNull(common.trimToNull(this.versionDistance.minor)),
+            patch: this.parseIntNull(common.trimToNull(this.versionDistance.patch))
+          };
+
+          if (result.epoch < 0) {
+            result.epoch = 0; // no smaller values
+          }
+          if (result.major < 0) {
+            result.major = null; // no smaller values
+            result.minor = null;
+            result.patch = null;
+          }
+          if (result.minor < 0) {
+            result.minor = null; // no smaller values
+            result.patch = null;
+          }
+          if (result.patch < 0) {
+            result.patch = null;
+          }
+          this.versionDistance = result;
+          return JSON.stringify(result);
         } else {
           return this.value;
         }
@@ -236,15 +291,18 @@
         if (!this.subject || !this.operator || !dynamicValue) {
           return;
         }
-        if (this.condition.uuid) {
+        if (this.uuid) {
           let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
           this.axios.post(url, {
-            uuid: this.condition.uuid,
+            uuid: this.uuid,
             subject: this.subject,
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.updated'));
           }).catch((error) => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -256,7 +314,10 @@
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
             value: dynamicValue
           }).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.updated'));
           }).catch((error) => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -264,10 +325,13 @@
         }
       },
       removeCondition: function() {
-        if (this.condition && this.condition.uuid) {
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.condition.uuid}`;
+        if (this.uuid) {
+          let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
           this.axios.delete(url).then((response) => {
-            this.condition = response.data;
+            this.uuid = response.data.uuid;
+            this.subject = response.data.subject;
+            this.operator = response.data.operator;
+            this.value = response.data.value;
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           }).catch((error) => {
@@ -329,6 +393,9 @@
           default:
             return "";
         }
+      },
+      parseIntNull: function (value) {
+        return value == null ? null : parseInt(value);
       }
     }
   }
