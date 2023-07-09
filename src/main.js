@@ -2,25 +2,25 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import '@/directives/VuePermission'
-import axios from 'axios'
-import BootstrapVue from 'bootstrap-vue'
-import Vue from 'vue'
-import VueAxios from 'vue-axios'
-import vueDebounce from 'vue-debounce'
-import VuePageTitle from 'vue-page-title'
-import VueToastr from "vue-toastr"
-import App from './App'
-import i18n from './i18n'
-import './plugins/table.js'
-import router from './router'
-import CoreuiVue from '@coreui/vue'
-import api from "./shared/api.json"
-import oidc from "./shared/oidc.json"
-import { getContextPath } from "./shared/utils"
-import store from './store'
-import './validation'
-import version from "./version"
+import '@/directives/VuePermission';
+import axios from 'axios';
+import BootstrapVue from 'bootstrap-vue';
+import Vue from 'vue';
+import VueAxios from 'vue-axios';
+import vueDebounce from 'vue-debounce';
+import VuePageTitle from 'vue-page-title';
+import VueToastr from "vue-toastr";
+import App from './App';
+import i18n from './i18n';
+import './plugins/table.js';
+import router from './router';
+import CoreuiVue from '@coreui/vue';
+import api from "./shared/api.json";
+import oidc from "./shared/oidc.json";
+import { getContextPath } from "./shared/utils";
+import store from './store';
+import './validation';
+import version from "./version";
 
 Vue.use(CoreuiVue)
 Vue.use(BootstrapVue);
