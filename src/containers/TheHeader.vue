@@ -19,7 +19,7 @@
       <TheHeaderDropdownAccnt/>
     </CHeaderNav>
     <CSubheader class="px-3 pb-0 mb-0">
-      <CBreadcrumb class="pb-0" :items="breadcrumbItems"/>
+      <CBreadcrumb class="my-0 pb-0" :items="breadcrumbItems"/>
     </CSubheader>
   </CHeader>
 </template>
