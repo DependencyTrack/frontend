@@ -151,26 +151,26 @@
 </template>
 
 <script>
-  import common from "../../../shared/common"
+  import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
   import { cloneDeep } from 'lodash-es';
-  import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities'
-  import VueEasyPieChart from 'vue-easy-pie-chart'
-  import ProjectComponents from "./ProjectComponents";
-  import ProjectDependencyGraph from "./ProjectDependencyGraph";
-  import ProjectServices from "./ProjectServices";
-  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
-  import ProjectDashboard from "./ProjectDashboard";
-  import SeverityBarChart from "../../dashboard/SeverityBarChart";
-  import EventBus from '../../../shared/eventbus';
+  import VueEasyPieChart from 'vue-easy-pie-chart';
   import permissionsMixin from "../../../mixins/permissionsMixin";
-  import ProjectDetailsModal from "./ProjectDetailsModal";
-  import ProjectPropertiesModal from "./ProjectPropertiesModal";
-  import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
+  import common from "../../../shared/common";
+  import EventBus from '../../../shared/eventbus';
+  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+  import SeverityBarChart from "../../dashboard/SeverityBarChart";
   import ProjectAddVersionModal from "./ProjectAddVersionModal";
+  import ProjectComponents from "./ProjectComponents";
+  import ProjectCreatePropertyModal from "./ProjectCreatePropertyModal";
+  import ProjectDashboard from "./ProjectDashboard";
+  import ProjectDependencyGraph from "./ProjectDependencyGraph";
+  import ProjectDetailsModal from "./ProjectDetailsModal";
+  import ProjectEpss from "./ProjectEpss";
   import ProjectFindings from "./ProjectFindings";
   import ProjectPolicyViolations from "./ProjectPolicyViolations";
-  import ProjectEpss from "./ProjectEpss";
   import ExternalReferencesDropdown from "../../components/ExternalReferencesDropdown.vue";
+  import ProjectPropertiesModal from "./ProjectPropertiesModal";
+  import ProjectServices from "./ProjectServices";
 
   export default {
     mixins: [permissionsMixin],

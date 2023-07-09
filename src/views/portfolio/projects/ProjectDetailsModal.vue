@@ -39,8 +39,8 @@
                             class="mw-100 bg-transparent text-lowercase"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
-                    :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
+          <CSwitch id="input-5" class="mx-1" color="primary" :checked.sync="project.active" label
+                    :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))"
                     v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
@@ -101,14 +101,14 @@
 </template>
 
 <script>
+  import { CSwitch } from '@coreui/vue';
+  import VueTagsInput from '@johmun/vue-tags-input';
+  import Multiselect from "vue-multiselect";
+  import xssFilters from "xss-filters";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-  import VueTagsInput from '@johmun/vue-tags-input';
-  import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import common from "../../../shared/common";
-  import Multiselect from "vue-multiselect"
-  import xssFilters from "xss-filters";
 
   export default {
     name: "ProjectDetailsModal",
@@ -117,7 +117,7 @@
       BInputGroupFormInput,
       BInputGroupFormSelect,
       VueTagsInput,
-      cSwitch,
+      CSwitch,
       Multiselect
     },
     props: {
@@ -144,10 +144,6 @@
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         isLoading: false,
         referencesTableColumns: [
           {
@@ -292,7 +288,7 @@
 </script>
 
 <style lang="scss">
-  @import "../../../assets/scss/vendors/vue-tags-input/vue-tags-input";
+@import "../../../assets/scss/vendors/vue-tags-input/vue-tags-input";
 </style>
 
 <style scoped>

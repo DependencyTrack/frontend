@@ -1,14 +1,14 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="scannerEnabled" color="primary" v-model="scannerEnabled" label v-bind="labelIcon" />{{$t('admin.analyzer_vulndb_enable')}}
+      <CSwitch id="scannerEnabled" color="primary" :checked.sync="scannerEnabled" label />{{$t('admin.analyzer_vulndb_enable')}}
       <b-validated-input-group-form-input
         id="vulndb-consumer-key"
         :label="$t('admin.consumer_key')"
         input-group-size="mb-3"
         rules="required"
         type="email"
-        v-model="consumerKey"
+        :checked.sync="consumerKey"
         lazy="true"
       />
       <b-validated-input-group-form-input
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -41,7 +41,7 @@
       header: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       BValidatedInputGroupFormInput
     },
     data() {
@@ -49,10 +49,6 @@
         scannerEnabled: false,
         consumerKey: '',
         consumerSecret: '',
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
       }
     },
     methods: {

@@ -3,7 +3,7 @@
     <b-card-body>
       <p>{{ $t('admin.bom_formats_desc')}}</p>
       <div>
-        <c-switch color="primary" v-model="isCycloneDXEnabled" label v-bind="labelIcon" />{{$t('admin.enable_bom_cyclonedx')}}
+        <CSwitch color="primary" :checked.sync="isCycloneDXEnabled" label />{{$t('admin.enable_bom_cyclonedx')}}
       </div>
     </b-card-body>
     <b-card-footer>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
 
@@ -23,7 +23,7 @@
       header: String
     },
     components: {
-      cSwitch
+      CSwitch
     },
     data() {
       return {

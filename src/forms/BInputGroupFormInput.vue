@@ -17,7 +17,7 @@
         v-on="inputListeners"
         v-on:blur="hadFocus = true"
         trim />
-      <b-input-group-append v-if="tooltip"><b-input-group-text v-b-tooltip.hover :title="tooltip"><i class="cui-info font-lg"></i></b-input-group-text></b-input-group-append>
+      <b-input-group-append v-if="tooltip"><b-input-group-text v-b-tooltip.hover :title="tooltip"><i class="cil-info font-lg"></i></b-input-group-text></b-input-group-append>
     </b-input-group>
     <b-form-invalid-feedback v-if="this.feedback === 'true'" :state="feedbackState()">
       {{ feedbackText }}

@@ -16,21 +16,21 @@
 </template>
 
 <script>
-  import common from "../../shared/common";
-  import xssFilters from "xss-filters";
-  import CreatePolicyModal from "./CreatePolicyModal";
-  import permissionsMixin from "../../mixins/permissionsMixin";
-  import i18n from "../../i18n";
-  import ActionableListGroupItem from "../components/ActionableListGroupItem";
-  import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
-  import EventBus from "../../shared/eventbus";
-  import bootstrapTableMixin from "../../mixins/bootstrapTableMixin";
-  import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
-  import PolicyCondition from "./PolicyCondition";
   import BToggleableDisplayButton from "@/views/components/BToggleableDisplayButton";
   import SelectProjectModal from "@/views/portfolio/projects/SelectProjectModal";
   import SelectTagModal from "@/views/portfolio/tags/SelectTagModal";
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from "@coreui/vue";
+  import xssFilters from "xss-filters";
+  import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
+  import BInputGroupFormSelect from "../../forms/BInputGroupFormSelect";
+  import i18n from "../../i18n";
+  import bootstrapTableMixin from "../../mixins/bootstrapTableMixin";
+  import permissionsMixin from "../../mixins/permissionsMixin";
+  import common from "../../shared/common";
+  import EventBus from "../../shared/eventbus";
+  import ActionableListGroupItem from "../components/ActionableListGroupItem";
+  import CreatePolicyModal from "./CreatePolicyModal";
+  import PolicyCondition from "./PolicyCondition";
 
   export default {
     mixins: [permissionsMixin, bootstrapTableMixin],
@@ -108,13 +108,13 @@
                   </b-col>
                   <b-col sm="3">
                     <b-input-group-form-select id="input-repository-type" required="true"
-                               v-model="operator" :options="operators"
-                               :label="$t('message.operator')" />
+                                v-model="operator" :options="operators"
+                                :label="$t('message.operator')" />
                   </b-col>
                   <b-col sm="3">
                     <b-input-group-form-select id="input-repository-type" required="true"
-                               v-model="violationState" :options="violationStates"
-                               :label="$t('message.violation_state')" />
+                                v-model="violationState" :options="violationStates"
+                                :label="$t('message.violation_state')" />
                   </b-col>
                 </b-row>
                 <b-row class="expanded-row">
@@ -136,7 +136,7 @@
                       </div>
                     </b-form-group>
                     <div v-if="limitToVisible === true" style="margin-bottom: 1.5rem">
-                      <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="includeChildren" label v-bind="labelIcon"/>
+                      <CSwitch id="isNotifyChildrenEnabled" color="primary" :checked.sync="includeChildren" label/>
                       {{ $t('admin.include_children') }}
                     </div>
                     <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
@@ -150,7 +150,7 @@
                     <div style="text-align:right">
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                           v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible" />
-                       <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
+                        <b-button variant="outline-danger" @click="deletePolicy">{{ $t('message.delete_policy') }}</b-button>
                     </div>
                   </b-col>
                 </b-row>
@@ -167,7 +167,7 @@
                 SelectProjectModal,
                 SelectTagModal,
                 PolicyCondition,
-                cSwitch
+                CSwitch
               },
               data() {
                 return {
@@ -189,10 +189,6 @@
                   limitToVisible: false,
                   tags: row.tags,
                   includeChildren: row.includeChildren,
-                  labelIcon: {
-                    dataOn: '\u2713',
-                    dataOff: '\u2715'
-                  }
                 }
               },
               methods: {

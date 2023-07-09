@@ -18,9 +18,9 @@
             label-for="license-text-input">
             <b-form-textarea id="license-text-description" v-model="license.licenseText" rows="3" />
           </b-form-group>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="license.isOsiApproved" label v-bind="labelIcon"></c-switch> {{$t('message.osi_approved')}} <br>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="license.isFsfLibre" label v-bind="labelIcon"></c-switch> {{$t('message.fsf_libre')}} <br>
-          <c-switch id="input-5" class="mx-1" color="primary" v-model="license.isDeprecatedLicenseId" label v-bind="labelIcon"></c-switch> {{$t('message.deprecated')}}
+          <CSwitch id="input-5" class="mx-1" color="primary" :checked.sync="license.isOsiApproved" label></CSwitch> {{$t('message.osi_approved')}} <br>
+          <CSwitch id="input-5" class="mx-1" color="primary" :checked.sync="license.isFsfLibre" label></CSwitch> {{$t('message.fsf_libre')}} <br>
+          <CSwitch id="input-5" class="mx-1" color="primary" :checked.sync="license.isDeprecatedLicenseId" label></CSwitch> {{$t('message.deprecated')}}
         </b-card>
       </b-tab>
       <b-tab>
@@ -62,21 +62,17 @@
 
 <script>
   import BInputGroupFormInput from "@/forms/BInputGroupFormInput";
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
 
   export default {
     name: "LicenseAddLicenseModal",
     components: {
       BInputGroupFormInput,
-      cSwitch
+      CSwitch
     },
     data() {
       return {
         license: {},
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        }
       }
     },
     methods: {

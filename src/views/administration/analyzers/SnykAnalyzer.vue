@@ -3,17 +3,17 @@
       <b-card-body>
         <img alt="Snyk logo" src="@/assets/img/snyk-logo.png" height="128px"/>
         <hr/>
-        <c-switch
+        <CSwitch
           :disabled="!this.scannerEnabled && (!this.baseUrl || !this.orgId || !this.apitoken || !this.apiVersion)"
           id="scannerEnabled"
           color="primary"
-          v-model="scannerEnabled"
+          :checked.sync="scannerEnabled"
           label
-          v-bind="labelIcon"
+
         />
         {{$t('admin.analyzer_snyk_enable')}}
         <br/>
-        <c-switch
+        <CSwitch
           :disabled="!this.scannerEnabled"
           id="aliasSyncEnabled"
           color="primary"
@@ -108,7 +108,7 @@
   </template>
 
   <script>
-    import { Switch as cSwitch } from '@coreui/vue';
+    import { CSwitch } from '@coreui/vue';
     import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
     import common from "../../../shared/common";
     import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -118,7 +118,7 @@
         header: String
       },
       components: {
-        cSwitch,
+        CSwitch,
         BValidatedInputGroupFormInput
       },
       data() {
@@ -138,10 +138,6 @@
           multipleCvssDocs: 'https://docs.snyk.io/features/fixing-and-prioritizing-issues/issue-management/severity-levels#understanding-snyks-vulnerability-analysis',
           findApiTokenUrl: 'https://docs.snyk.io/snyk-api-info/authentication-for-api',
           findOrgIdUrl: 'https://docs.snyk.io/products/snyk-code/cli-for-snyk-code/before-you-start-set-the-organization-for-the-cli-tests/finding-the-snyk-id-and-internal-name-of-an-organization',
-          labelIcon: {
-            dataOn: '\u2713',
-            dataOff: '\u2715'
-          },
         }
       },
       methods: {

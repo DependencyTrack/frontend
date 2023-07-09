@@ -18,19 +18,19 @@
 </template>
 
 <script>
+  import { CSwitch } from "@coreui/vue";
   import xssFilters from "xss-filters";
-  import common from "../../../shared/common";
-  import i18n from "../../../i18n";
-  import CreateAlertModal from "./CreateAlertModal";
-  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-  import EventBus from "../../../shared/eventbus";
-  import ActionableListGroupItem from "../../components/ActionableListGroupItem";
-  import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
-  import SelectTeamModal from "../../administration/accessmanagement/SelectTeamModal";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
-  import { Switch as cSwitch } from '@coreui/vue';
+  import i18n from "../../../i18n";
+  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
+  import EventBus from "../../../shared/eventbus";
+  import SelectTeamModal from "../../administration/accessmanagement/SelectTeamModal";
+  import ActionableListGroupItem from "../../components/ActionableListGroupItem";
+  import BToggleableDisplayButton from "../../components/BToggleableDisplayButton";
+  import SelectProjectModal from "../../portfolio/projects/SelectProjectModal";
+  import CreateAlertModal from "./CreateAlertModal";
 
   export default {
     props: {
@@ -125,7 +125,7 @@
                                               required="true" type="text" v-model="name" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
                     <b-form-group>
-                      <c-switch id="notificationEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>
+                      <CSwitch id="notificationEnabled" color="primary" :checked.sync="enabled" label/>
                       {{ $t('admin.enabled') }}
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
@@ -141,9 +141,9 @@
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-ticket-type"
                                               :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true"
                                               v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
-                     <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
-                                   id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
-                       <div class="list group">
+                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
+                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
+                        <div class="list group">
                           <span v-for="team in teams">
                             <actionable-list-group-item :value="team.name" :delete-icon="true" v-on:actionClicked="removeSelectedTeam(team.uuid)"></actionable-list-group-item>
                           </span>
@@ -159,7 +159,7 @@
                       </div>
                     </b-form-group>
                   <div v-if="limitToVisible === true">
-                      <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
+                      <CSwitch id="isNotifyChildrenEnabled" color="primary" :checked.sync="notifyChildren" label/>
                       {{ $t('admin.include_active_children') }}
                   </div>
                   </b-col>
@@ -196,7 +196,7 @@
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
-                       <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                        <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
                     </div>
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>
@@ -210,7 +210,7 @@
                 SelectTeamModal,
                 BToggleableDisplayButton,
                 BInputGroupFormInput,
-                cSwitch
+                CSwitch
               },
               data() {
                 return {
@@ -228,10 +228,6 @@
                   projects: row.projects,
                   teams: row.teams,
                   limitToVisible: false,
-                  labelIcon: {
-                    dataOn: '\u2713',
-                    dataOff: '\u2715'
-                  },
                 }
               },
               created() {

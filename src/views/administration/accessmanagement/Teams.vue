@@ -19,18 +19,17 @@
 
 <script>
   import xssFilters from "xss-filters";
-  import common from "../../../shared/common";
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import i18n from "../../../i18n";
-  import CreateTeamModal from "./CreateTeamModal";
   import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
   import EventBus from "../../../shared/eventbus";
   import ActionableListGroupItem from "../../components/ActionableListGroupItem";
+  import CreateTeamModal from "./CreateTeamModal";
   import SelectLdapGroupModal from "./SelectLdapGroupModal";
   import SelectOidcGroupModal from "./SelectOidcGroupModal";
   import SelectPermissionModal from "./SelectPermissionModal";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import {Switch as cSwitch} from "@coreui/vue";
-  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
 
   export default {
     props: {
@@ -163,7 +162,7 @@
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
-                       <b-button variant="outline-danger" @click="deleteTeam">{{ $t('admin.delete_team') }}</b-button>
+                        <b-button variant="outline-danger" @click="deleteTeam">{{ $t('admin.delete_team') }}</b-button>
                     </div>
                   </b-col>
                   <select-permission-modal v-on:selection="updatePermissionSelection" />
@@ -173,7 +172,6 @@
               `,
               mixins: [permissionsMixin],
               components: {
-                cSwitch,
                 ActionableListGroupItem,
                 SelectLdapGroupModal,
                 SelectOidcGroupModal,
@@ -190,10 +188,6 @@
                   mappedOidcGroups: row.mappedOidcGroups,
                   managedUsers: row.managedUsers,
                   ldapUsers: row.ldapUsers,
-                  labelIcon: {
-                    dataOn: '\u2713',
-                    dataOff: '\u2715'
-                  }
                 }
               },
               methods: {

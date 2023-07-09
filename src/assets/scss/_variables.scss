@@ -16,8 +16,6 @@ $grey-800:   lighten($grey-base, 10%);
 $grey-850:   lighten($grey-base, 7.5%);
 $grey-900:   lighten($grey-base, 5%);
 
-$secondary:  $grey-600 !default;
-
 $white:      #fff;
 
 $blue:       #20a8d8 !default;
@@ -26,6 +24,11 @@ $orange:     #fd8c00 !default;
 $yellow:     #ffc107 !default;
 $green:      #4dbd74 !default;
 $light-blue: #6DD9FF !default;
+
+$primary:           $blue !default;
+$light:             $light-blue !default;
+$secondary:         $grey-600 !default;
+$secondary-25:      $grey-600 !default;
 
 $body-bg:       $grey-800 !default;
 $body-color:    $grey-200 !default;
@@ -49,11 +52,6 @@ $notification-info: $blue;
 $border-color:                      $grey-900 !default;
 $component-active-color:            $grey-750 !default;
 
-// Aside
-
-$aside-menu-color:                  $grey-100 !default;
-$aside-menu-bg:                     $grey-700 !default;
-
 // Avatars
 
 $avatar-status-border-color:        $grey-700 !default;
@@ -73,7 +71,6 @@ $dropdown-link-disabled-color:      $grey-600 !default;
 $dropdown-header-color:             $grey-200 !default;
 
 // Forms
-
 $input-bg:                              $grey-650 !default;
 $input-disabled-bg:                     $grey-700 !default;
 
@@ -95,18 +92,18 @@ $custom-control-indicator-bg:           $grey-300 !default;
 $custom-control-indicator-disabled-bg:          $grey-200 !default;
 $custom-control-label-disabled-color:           $grey-600 !default;
 
-$custom-select-disabled-bg: $input-disabled-bg !default;
-$custom-select-disabled-color: $input-color !default;
+$custom-select-bg:                      $input-bg !default;
+$custom-select-color:                   $input-color !default;
+$custom-select-disabled-bg:             $input-disabled-bg !default;
+$custom-select-disabled-color:          $input-color !default;
 
-  // Modals
-
+// Modals
 $modal-content-bg:                  $grey-700 !default;
 $modal-content-border-color:        $border-color !default;
 
 $modal-header-border-color:         $border-color !default;
 
 // Navs
-
 $nav-link-disabled-color:           $grey-600 !default;
 
 $nav-tabs-border-color:             $border-color !default;
@@ -129,7 +126,6 @@ $navbar-active-color:      $grey-200 !default;
 $navbar-disabled-color:    $grey-600 !default;
 
 // Pagination
-
 $pagination-bg:                     $grey-750 !default;
 $pagination-border-color:           $border-color !default;
 
@@ -149,7 +145,6 @@ $breadcrumb-active-color:  $grey-100 !default;
 $breadcrumb-menu-color:    $grey-100 !default;
 
 // Jumbotron
-
 $jumbotron-bg:             $grey-600 !default;
 
 // Cards
@@ -158,8 +153,8 @@ $card-border-color:        $border-color !default;
 $card-cap-bg:              $grey-750 !default;
 
 // Sidebar
-$sidebar-color:                       $grey-100 !default;
-$sidebar-bg:                          $grey-700 !default;
+$sidebar-dark-color:                       $grey-100 !default;
+$sidebar-dark-bg:                          $grey-700 !default;
 $sidebar-borders: (
   right: (
     size:                             1px,
@@ -168,25 +163,23 @@ $sidebar-borders: (
   )
 ) !default;
 
-$sidebar-nav-link-active-bg:          $grey-750 !default;
+$sidebar-nav-link-hover-bg:                $grey-750 !default;
+$sidebar-dark-nav-link-active-bg:          $grey-750 !default;
 
 // Footer
-
-$footer-bg:                           $grey-700 !default;
-$footer-color:                        $body-color !default;
+$footer-dark-bg:                           $grey-700 !default;
+$footer-dark-color:                        $body-color !default;
 
 // Progress bars
-
 $progress-bg:                       $grey-650 !default;
 
-
 // List group
-
 $list-group-bg:                     $grey-750 !default;
 $list-group-border-color:           $border-color !default;
 $list-group-hover-bg:               $grey-800 !default;
 
 $list-group-disabled-color:         $grey-600 !default;
+$list-group-disabled-bg:            $list-group-bg !default;
 
 $list-group-action-color:           $grey-200 !default;
 
@@ -194,11 +187,9 @@ $list-group-action-active-color:    $body-color !default;
 $list-group-action-active-bg:       $grey-200 !default;
 
 // Switches
-
 $switch-bg:                         $grey-750 !default;
 
 // Tables
-
 $table-bg:                    transparent !default;
 $table-border-color:          $border-color !default;
 

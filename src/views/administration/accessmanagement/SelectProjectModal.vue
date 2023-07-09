@@ -1,7 +1,7 @@
 <template>
   <b-modal id="selectProjectModal" size="lg" hide-header-close no-stacking :title="$t('admin.select_project')">
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" v-model="showInactiveProjects" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
+      <CSwitch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" :checked.sync="showInactiveProjects" label /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
     </div>
     <bootstrap-table
       ref="table"
@@ -17,23 +17,19 @@
 </template>
 
 <script>
+import { CSwitch } from '@coreui/vue';
 import xssFilters from "xss-filters";
 import permissionsMixin from "../../../mixins/permissionsMixin";
 import common from "../../../shared/common";
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
-    cSwitch
+    CSwitch
   },
   data() {
     return {
       showInactiveProjects: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
       columns: [
         {
           field: "state",

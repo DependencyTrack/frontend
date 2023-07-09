@@ -17,48 +17,48 @@
           <b-col sm="12" lg="4">
             <b-row>
               <b-col sm="6">
-                <Callout variant="severity-critical">
+                <CCallout variant="severity-critical">
                   <small class="text-muted">{{ $t('severity.critical') }}</small><br>
                   <strong class="h4">{{currentCritical}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
               <b-col sm="6">
-                <Callout variant="severity-high">
+                <CCallout variant="severity-high">
                   <small class="text-muted">{{ $t('severity.high') }}</small><br>
                   <strong class="h4">{{currentHigh}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
             </b-row>
           </b-col>
           <b-col sm="12" lg="4">
             <b-row>
               <b-col sm="6">
-                <Callout variant="severity-medium">
+                <CCallout variant="severity-medium">
                   <small class="text-muted">{{ $t('severity.medium') }}</small><br>
                   <strong class="h4">{{currentMedium}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
               <b-col sm="6">
-                <Callout variant="severity-low">
+                <CCallout variant="severity-low">
                   <small class="text-muted">{{ $t('severity.low') }}</small><br>
                   <strong class="h5">{{currentLow}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
             </b-row>
           </b-col>
           <b-col sm="12" lg="4">
             <b-row>
               <b-col sm="6">
-                <Callout variant="severity-unassigned">
+                <CCallout variant="severity-unassigned">
                   <small class="text-muted">{{ $t('severity.unassigned') }}</small><br>
                   <strong class="h4">{{currentUnassigned}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
               <b-col sm="6">
-                <Callout variant="severity-info">
+                <CCallout variant="severity-info">
                   <small class="text-muted">{{ $t('message.risk_score') }}</small><br>
                   <strong class="h5">{{currentRiskScore}}</strong>
-                </Callout>
+                </CCallout>
               </b-col>
             </b-row>
           </b-col>
@@ -101,13 +101,13 @@
 </template>
 
 <script>
-import common from "../../../shared/common"
-import { Callout } from '@coreui/vue'
+import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+import { CCallout } from '@coreui/vue';
+import common from "../../../shared/common";
 import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
 import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
-import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
 export default {
   name: 'ServiceDashboard',
@@ -117,7 +117,7 @@ export default {
     ChartPortfolioVulnerabilities,
     ChartPolicyViolations,
     ChartPolicyViolationBreakdown,
-    Callout,
+    CCallout,
 
   },
   data() {

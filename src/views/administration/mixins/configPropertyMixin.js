@@ -6,10 +6,6 @@ export default {
   data () {
     return {
       configUrl: `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
     }
   },
   methods: {

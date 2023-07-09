@@ -26,11 +26,11 @@
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
         <span id="switch-container-outdated" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
-          <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
+          <CSwitch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
         <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
         <b-tooltip target="switch-container-outdated" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
         <span id="switch-container-direct" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
-          <c-switch id="only-direct" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyDirect" label v-bind="labelIcon" />
+          <CSwitch id="only-direct" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyDirect" label v-bind="labelIcon" />
         <span class="text-muted">{{ $t('message.direct_only') }}</span></span>
         <b-tooltip target="switch-container-direct" triggers="hover focus">{{ $t('message.only_direct_tooltip') }}</b-tooltip>
       </div>
@@ -48,20 +48,20 @@
 </template>
 
 <script>
-import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
-import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
-import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
-import { Switch as cSwitch } from '@coreui/vue';
-import $ from 'jquery';
-import Vue from 'vue';
-import xssFilters from "xss-filters";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import common from "../../../shared/common";
-import SeverityProgressBar from "../../components/SeverityProgressBar";
+  import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+  import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
+  import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
+  import { CSwitch } from '@coreui/vue';
+  import $ from 'jquery';
+  import Vue from 'vue';
+  import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
+  import SeverityProgressBar from "../../components/SeverityProgressBar";
 
   export default {
     components: {
-      cSwitch,
+      CSwitch,
       ProjectUploadBomModal,
       ProjectAddComponentModal
     },

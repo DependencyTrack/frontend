@@ -19,7 +19,7 @@
                                v-model="repositoryType" :options="repositoryTypes"
                                :label="$t('admin.repository_type')" />
     <div>
-      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+      <CSwitch color="primary" :checked.sync="internal" label />{{$t('admin.internal')}}
     </div>
 
     <b-validated-input-group-form-input
@@ -39,7 +39,7 @@
       />
 
     <div>
-      <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
+      <CSwitch color="primary" :checked.sync="enabled" label />{{$t('admin.enabled')}}
     </div>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.close') }}</b-button>
@@ -49,9 +49,9 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
+  import { CSwitch } from '@coreui/vue';
+  import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
+  import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
 
   export default {
     name: "RepositoryCreateRepositoryModal",
@@ -59,7 +59,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
       type: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       BInputGroupFormSelect,
       BValidatedInputGroupFormInput
     },
@@ -77,10 +77,6 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
         username: null,
         password: null,
         enabled: true,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         repositoryTypes: [
           { value: 'COMPOSER', text: 'PHP (Composer)' },
           { value: 'CPAN', text: 'Perl (CPAN)' },

@@ -2,7 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <c-switch id="isAclEnabled" color="primary" v-model="isAclEnabled" label v-bind="labelIcon" />{{$t('admin.enable_acl')}}
+        <CSwitch id="isAclEnabled" color="primary" :checked.sync="isAclEnabled" label />{{$t('admin.enable_acl')}}
       </div>
       <bootstrap-table
         ref="table"
@@ -15,17 +15,16 @@
 </template>
 
 <script>
+import { CSwitch } from "@coreui/vue";
 import xssFilters from "xss-filters";
-import common from "../../../shared/common";
+import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
 import i18n from "../../../i18n";
 import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import EventBus from "../../../shared/eventbus";
-import ActionableListGroupItem from "../../components/ActionableListGroupItem";
-import SelectProjectModal from "./SelectProjectModal";
 import permissionsMixin from "../../../mixins/permissionsMixin";
-import {Switch as cSwitch} from "@coreui/vue";
-import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
+import common from "../../../shared/common";
+import ActionableListGroupItem from "../../components/ActionableListGroupItem";
 import configPropertyMixin from "../mixins/configPropertyMixin";
+import SelectProjectModal from "./SelectProjectModal";
 
 export default {
   props: {
@@ -33,15 +32,11 @@ export default {
   },
   mixins: [bootstrapTableMixin, configPropertyMixin],
   components: {
-    cSwitch
+    CSwitch
   },
   data() {
     return {
       isAclEnabled: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
       columns: [
         {
           title: this.$t('admin.team_name'),
@@ -91,7 +86,7 @@ export default {
               `,
             mixins: [permissionsMixin],
             components: {
-              cSwitch,
+              CSwitch,
               ActionableListGroupItem,
               SelectProjectModal,
               BInputGroupFormInput
@@ -101,10 +96,6 @@ export default {
                 team: row,
                 name: row.name,
                 projects: row.mappedLdapGroups,
-                labelIcon: {
-                  dataOn: '\u2713',
-                  dataOff: '\u2715'
-                }
               }
             },
             methods: {

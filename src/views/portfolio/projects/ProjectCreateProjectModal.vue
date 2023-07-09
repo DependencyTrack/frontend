@@ -86,12 +86,11 @@
 </template>
 
 <script>
+  import VueTagsInput from '@johmun/vue-tags-input';
+  import Multiselect from "vue-multiselect";
   import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
   import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-  import VueTagsInput from '@johmun/vue-tags-input';
-  import { Switch as cSwitch } from '@coreui/vue';
   import permissionsMixin from "../../../mixins/permissionsMixin";
-  import Multiselect from "vue-multiselect"
 
   export default {
     name: "ProjectCreateProjectModal",
@@ -100,7 +99,6 @@
       BInputGroupFormInput,
       BInputGroupFormSelect,
       VueTagsInput,
-      cSwitch,
       Multiselect
     },
     data() {
@@ -125,10 +123,6 @@
         tag: '', // The contents of a tag as its being typed into the vue-tag-input
         tags: [], // An array of tags bound to the vue-tag-input
         addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         isLoading: false
       }
     },

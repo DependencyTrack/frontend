@@ -43,7 +43,7 @@
         <b-dropdown-item @click="downloadVex('csaf')" href="#">CSAF</b-dropdown-item>
       </b-dropdown>
       -->
-      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedFindings" color="primary" v-model="showSuppressedFindings" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_suppressed_findings') }}</span>
+      <CSwitch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedFindings" color="primary" :checked.sync="showSuppressedFindings" label /><span class="text-muted">{{ $t('message.show_suppressed_findings') }}</span>
     </div>
 
     <bootstrap-table
@@ -59,16 +59,15 @@
 </template>
 
 <script>
-import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
-import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
-import { Switch as cSwitch } from '@coreui/vue';
-import $ from "jquery";
-import BootstrapToggle from 'vue-bootstrap-toggle';
-import xssFilters from "xss-filters";
-import i18n from "../../../i18n";
-import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import common from "../../../shared/common";
+  import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+  import ProjectUploadVexModal from "@/views/portfolio/projects/ProjectUploadVexModal";
+  import { CSwitch } from '@coreui/vue';
+  import $ from "jquery";
+  import xssFilters from "xss-filters";
+  import i18n from "../../../i18n";
+  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
 
   export default {
     props: {
@@ -79,8 +78,7 @@ import common from "../../../shared/common";
       permissionsMixin
     ],
     components: {
-      cSwitch,
-      BootstrapToggle,
+      CSwitch,
       ProjectUploadVexModal
     },
     beforeCreate() {
@@ -89,10 +87,6 @@ import common from "../../../shared/common";
     data() {
       return {
         showSuppressedFindings: this.showSuppressedFindings,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         columns: [
           {
             title: this.$t('message.component'),
@@ -256,7 +250,7 @@ import common from "../../../shared/common";
                           <b-link style="margin-right:1.0rem" :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId">{{ alias.vulnId }}</b-link>
                           </span>
                         </b-card-text>
-                     </b-card>
+                      </b-card>
                     </div>
                     <b-form-group v-if="finding.vulnerability.title" id="fieldset-1" :label="this.$t('message.title')" label-for="input-1">
                       <b-form-input id="input-1" v-model="finding.vulnerability.title" class="form-control disabled" readonly trim />
@@ -290,7 +284,7 @@ import common from "../../../shared/common";
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
                       <b-input-group id="input-9">
                         <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;" v-b-tooltip.hover :title="this.$t('message.analysis_tooltip')"/>
-                        <bootstrap-toggle v-model="isSuppressed" :options="{ on: this.$t('message.suppressed'), off: this.$t('message.suppress'), onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="analysisState === null" />
+                        <CSwitch color="warning" :checked.sync="isSuppressed" label :disabled="analysisState === null" /><span class="my-auto">{{$t('message.suppressed')}}</span>
                       </b-input-group>
                     </b-form-group>
                     <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
@@ -445,7 +439,7 @@ import common from "../../../shared/common";
                 this.getAnalysis();
               },
               components: {
-                BootstrapToggle
+                CSwitch
               }
             })
           },

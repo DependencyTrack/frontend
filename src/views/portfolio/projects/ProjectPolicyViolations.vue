@@ -5,7 +5,7 @@
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
     <div id="violationsToolbar" class="bs-table-custom-toolbar">
-      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedViolations" color="primary" v-model="showSuppressedViolations" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_suppressed_violations') }}</span>
+      <CSwitch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedViolations" color="primary" :checked.sync="showSuppressedViolations" label /><span class="text-muted">{{ $t('message.show_suppressed_violations') }}</span>
     </div>
 
     <bootstrap-table
@@ -19,15 +19,14 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import common from "../../../shared/common";
-import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import permissionsMixin from "../../../mixins/permissionsMixin";
+import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import { CSwitch } from '@coreui/vue';
+import $ from "jquery";
 import xssFilters from "xss-filters";
 import i18n from "../../../i18n";
-import BootstrapToggle from 'vue-bootstrap-toggle'
-import $ from "jquery";
-import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
 
 export default {
   props: {
@@ -35,8 +34,7 @@ export default {
   },
   mixins: [bootstrapTableMixin],
   components: {
-    cSwitch,
-    BootstrapToggle
+    CSwitch,
   },
   beforeCreate() {
     this.showSuppressedViolations = (localStorage && localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") !== null) ? (localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") === "true") : false;
@@ -44,10 +42,6 @@ export default {
   data() {
     return {
       showSuppressedViolations: this.showSuppressedViolations,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
       columns: [
         {
           title: this.$t('message.state'),
@@ -200,7 +194,7 @@ export default {
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.POLICY_VIOLATION_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
                     <b-input-group id="input-9">
                       <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;"/>
-                      <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
+                      <CSwitch color="warning" :checked.sync="isSuppressed" label :disabled="analysisState === null"  /><span class="my-auto">{{$t('message.suppressed')}}</span>
                     </b-input-group>
                     </b-form-group>
                   </b-col>
@@ -293,7 +287,7 @@ export default {
               this.getAnalysis();
             },
             components: {
-              BootstrapToggle
+              CSwitch
             }
           })
         },
