@@ -4,12 +4,12 @@ on:
       node-versions:
         type: string
         required: false
-        default: '["16"]'
+        default: '["18"]'
         description: 'Stringified JSON Array of node versions to build against'
       node-version-package:
         type: string
         required: false
-        default: '16'
+        default: '18'
         description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
       app-version:
         type: string
@@ -49,6 +49,8 @@ jobs:
       - name: Run Npm Build
         env:
           CI: true
+          NODE_OPTIONS: --openssl-legacy-provider
+
         run: |-
           npm ci
           npm run build --if-present
