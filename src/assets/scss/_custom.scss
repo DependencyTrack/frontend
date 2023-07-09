@@ -475,18 +475,16 @@ td a.detail-icon {
   position: absolute;
 }
 
-// fix for https://github.com/DependencyTrack/frontend/issues/397
-// to het dropdown above header
 .dropdown-menu {
   // fix for https://github.com/DependencyTrack/frontend/issues/397
   // to get dropdown above header
   z-index: 1050;
 }
 
-.c-subheader, .c-footer {
+.c-footer {
   background: #1c2937;
 }
 
 .c-main {
-  padding-top: 24px;
+  padding-top: 0;
 }
