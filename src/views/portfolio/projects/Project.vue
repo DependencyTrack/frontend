@@ -103,7 +103,7 @@
       <div id="project-info-footer" slot="footer">
         <b-row>
           <b-col>
-            <b-link class="font-weight-bold font-xs btn-block text-muted" @click="initializeProjectDetailsModal">{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+            <b-link class="font-weight-bold font-xs btn-block text-muted" @click="initializeProjectDetailsModal">{{ $t('message.view_details') }} <i class="fa fa-angle-right font-lg"></i></b-link>
           </b-col>
           <b-col v-if="project.externalReferences" md="auto">
             <b-row class="d-none d-md-flex float-right">
