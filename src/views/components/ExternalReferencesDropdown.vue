@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-dropdown size="sm" right>
+    <b-dropdown size="sm" class="mr-2" variant="outline-primary" right>
       <template #button-content>
         <span><i class="fa fa-link" v-b-tooltip.hover="{title: $t('message.external_references')}"></i></span>
       </template>
