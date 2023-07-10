@@ -12,9 +12,9 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "serve": "npm run prebuild && vue-cli-service serve",
-    "prebuild": "node update-embedded-version.js",
-    "build": "npm run prebuild && vue-cli-service build",
+    "serve": "npm run prebuild && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "prebuild": "cross-env NODE_OPTIONS=--openssl-legacy-provider node update-embedded-version.js",
+    "build": "npm run prebuild && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -69,6 +69,7 @@
     "@vue/cli-service": "3.12.1",
     "babel-core": "7.0.0-bridge.0",
     "copy-webpack-plugin": "5.1.2",
+    "cross-env": "^7.0.3",
     "growl": "1.10.5",
     "https-proxy-agent": "2.2.4",
     "sass": "1.49.7",
