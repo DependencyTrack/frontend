@@ -44,19 +44,6 @@ The Docker container includes NGINX and a pre-deployed Front-End release.
 
 ## Build Setup
 
-Webpack 4 has an [issue with nodejs 17 and higher](https://github.com/webpack/webpack/issues/14532) resulting in: `Error: error:0308010C:digital envelope routines::unsupported`. As a workaround you'll need to set the following NODE_OPTIONS on Linux:
-
-``` bash
-export NODE_OPTIONS=--openssl-legacy-provider
-```
-
-Or on Windows:
-``` bash
-set NODE_OPTIONS=--openssl-legacy-provider
-```
-
-After that you can run:
-
 ``` bash
 # Install dependencies
 npm install
