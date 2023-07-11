@@ -74,6 +74,7 @@
     "https-proxy-agent": "2.2.4",
     "sass": "1.49.7",
     "sass-loader": "8.0.2",
+    "typescript": "^5.1.6",
     "uuid": "7.0.3",
     "vue-template-compiler": "2.6.14"
   },
