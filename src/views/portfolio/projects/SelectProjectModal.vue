@@ -16,8 +16,8 @@
 
 <script>
   import xssFilters from "xss-filters";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import common from "../../../shared/common";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
 
   export default {
     mixins: [permissionsMixin],
@@ -34,6 +34,7 @@
       refreshTable: function() {
         this.$refs.table.refresh({
           url: this.apiUrl(),
+          pageNumber: 1,
           silent: true
         });
       }

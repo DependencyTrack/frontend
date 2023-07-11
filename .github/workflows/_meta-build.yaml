@@ -4,12 +4,12 @@ on:
       node-versions:
         type: string
         required: false
-        default: '["16"]'
+        default: '["18"]'
         description: 'Stringified JSON Array of node versions to build against'
       node-version-package:
         type: string
         required: false
-        default: '16'
+        default: '18'
         description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
       app-version:
         type: string
@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.3
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3.7.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.3
 
       - name: Download Artifacts
         uses: actions/download-artifact@v3.0.2
@@ -79,7 +79,7 @@ jobs:
         uses: docker/setup-qemu-action@v2.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.6.0
+        uses: docker/setup-buildx-action@v2.9.0
         id: buildx
         with:
           install: true
@@ -103,7 +103,7 @@ jobs:
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Build multi-arch Container Image
-        uses: docker/build-push-action@v4.1.0
+        uses: docker/build-push-action@v4.1.1
         with:
           tags: ${{ steps.tags.outputs.tags }}
           build-args: |-

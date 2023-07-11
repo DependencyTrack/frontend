@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="componentsToolbar">
-      <div class="form-inline btn-spaced-group" role="form">
+      <div class="btn-spaced-group" role="form">
         <b-button size="md" variant="outline-primary"
                   v-b-modal.projectAddComponentModal
                   v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
@@ -25,6 +25,14 @@
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{ $t('message.inventory') }}</b-dropdown-item>
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
+        <span id="switch-container-outdated" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
+          <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
+        <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
+        <b-tooltip target="switch-container-outdated" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
+        <span id="switch-container-direct" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
+          <c-switch id="only-direct" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyDirect" label v-bind="labelIcon" />
+        <span class="text-muted">{{ $t('message.direct_only') }}</span></span>
+        <b-tooltip target="switch-container-direct" triggers="hover focus">{{ $t('message.only_direct_tooltip') }}</b-tooltip>
       </div>
     </div>
     <bootstrap-table
@@ -40,28 +48,40 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-  import Vue from 'vue'
-  import common from "../../../shared/common";
-  import SeverityProgressBar from "../../components/SeverityProgressBar";
-  import xssFilters from "xss-filters";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
-  import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
-  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+import { compareVersions, loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import ProjectAddComponentModal from "@/views/portfolio/projects/ProjectAddComponentModal";
+import ProjectUploadBomModal from "@/views/portfolio/projects/ProjectUploadBomModal";
+import { Switch as cSwitch } from '@coreui/vue';
+import $ from 'jquery';
+import Vue from 'vue';
+import xssFilters from "xss-filters";
+import permissionsMixin from "../../../mixins/permissionsMixin";
+import common from "../../../shared/common";
+import SeverityProgressBar from "../../components/SeverityProgressBar";
 
   export default {
-    components: {ProjectUploadBomModal, ProjectAddComponentModal},
+    components: {
+      cSwitch,
+      ProjectUploadBomModal,
+      ProjectAddComponentModal
+    },
     mixins: [permissionsMixin],
     comments: {
       ProjectAddComponentModal,
       ProjectUploadBomModal,
     },
     props: {
-      uuid: String
+      uuid: String,
+      project: Object,
     },
     data() {
       return {
+        labelIcon: {
+          dataOn: '\u2713',
+          dataOff: '\u2715'
+        },
+        onlyOutdated: this.onlyOutdated,
+        onlyDirect: this.onlyDirect,
         columns: [
           {
             field: "state",
@@ -82,13 +102,16 @@
             title: this.$t('message.version'),
             field: "version",
             sortable: true,
-            formatter(value, row, index) {
+            formatter: (value, row, index) => {
               if (Object.prototype.hasOwnProperty.call(row, "repositoryMeta") && Object.prototype.hasOwnProperty.call(row.repositoryMeta, "latestVersion")) {
                 row.latestVersion = row.repositoryMeta.latestVersion;
-                if (row.repositoryMeta.latestVersion !== row.version) {
+                if (compareVersions(row.repositoryMeta.latestVersion, row.version) > 0) {
                   return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: '+ xssFilters.inHTMLData(row.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
+                } else if (compareVersions(row.repositoryMeta.latestVersion, row.version) < 0) {
+                  // should be unstable then
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: '+ xssFilters.inHTMLData(row.repositoryMeta.latestVersion) + '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
                 } else {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-exclamation-triangle status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.version);
                 }
               } else {
                 return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
@@ -191,7 +214,7 @@
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`,
+          url: this.apiUrl(),
           onPageChange: ((number, size) => {
             if (localStorage) {
               localStorage.setItem("ProjectComponentsPageSize", size.toString())
@@ -267,11 +290,38 @@
         } else {
           this.$emit('total', '?');
         }
+        this.$refs.table.hideLoading()
+      },
+      apiUrl: function() {
+        let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
+        if (this.onlyOutdated === undefined) {
+          url += "?onlyOutdated=false";
+        } else {
+          url += "?onlyOutdated=" + this.onlyOutdated;
+        }
+        if (this.onlyDirect === undefined) {
+          url += "&onlyDirect=false";
+        } else {
+          url += "&onlyDirect=" + this.onlyDirect;
+        }
+        return url;
       },
       refreshTable: function() {
         this.$refs.table.refresh({
+          url: this.apiUrl(),
+          pageNumber: 1,
           silent: true
         });
+      },
+    },
+    watch: {
+      onlyOutdated() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
+      },
+      onlyDirect() {
+        this.$refs.table.showLoading()
+        this.refreshTable();
       }
     }
   };
