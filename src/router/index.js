@@ -10,6 +10,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 
 // Views
 const Dashboard = () => import('@/views/Dashboard');
+const IntegrationList = () => import('@/views/portfolio/integrations/IntegrationList');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
 const ComponentSearch = () => import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');
@@ -87,6 +88,17 @@ function configRoutes() {
           component: Dashboard,
           meta: {
             title: i18n.t('message.dashboard'),
+            i18n: 'message.dashboard',
+            sectionPath: '/dashboard',
+            permission: 'VIEW_PORTFOLIO'
+          }
+        },
+        {
+          path: 'integrations',
+          name: 'Integrations',
+          component: IntegrationList,
+          meta: {
+            title: 'Integrations',
             i18n: 'message.dashboard',
             sectionPath: '/dashboard',
             permission: 'VIEW_PORTFOLIO'

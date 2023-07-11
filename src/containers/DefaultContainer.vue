@@ -59,6 +59,12 @@
           icon: 'icon-speedometer',
           permission: permissions.VIEW_PORTFOLIO
         },
+          {
+            name: "Integrations",
+            url: '/integrations',
+            icon: 'icon-speedometer',
+            permission: permissions.VIEW_PORTFOLIO
+          },
         {
           title: true,
           name: this.$t('message.portfolio'),
