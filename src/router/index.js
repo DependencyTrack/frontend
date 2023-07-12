@@ -10,7 +10,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 
 // Views
 const Dashboard = () => import('@/views/Dashboard');
-const IntegrationList = () => import('@/views/portfolio/integrations/IntegrationList');
+const IntegrationList = () => import('@/views/portfolio/integrations/tencyle.IntegrationList');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
 const ComponentSearch = () => import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');

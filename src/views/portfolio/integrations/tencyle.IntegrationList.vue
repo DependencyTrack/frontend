@@ -24,13 +24,14 @@
     </b-modal>
   </div>
 </template>
-<script>
-import PortfolioWidgetRow from "@/views/dashboard/PortfolioWidgetRow.vue";
-import BInputGroupFormInput from "@/forms/BInputGroupFormInput.vue";
+<script lang="ts">
+
+
+import {baseUrl} from "../../../Tencyle/Api/const/baseUrl.ts";
 
 export default {
   name: 'IntegrationList',
-  components: {BInputGroupFormInput, PortfolioWidgetRow},
+  // components: {BInputGroupFormInput, PortfolioWidgetRow},
   data () {
     return {
       selectedScmType: "",
@@ -61,11 +62,7 @@ export default {
     }
   },
   created () {
-    const scheme = "http://";
-    const domain = "ec2-54-146-31-129.compute-1.amazonaws.com";
-    const port = ":8081";
 
-    const baseUrl = [scheme, domain, port].join("");
     const requestConfig = (params = {}) => {
       return {
         baseURL: baseUrl,
