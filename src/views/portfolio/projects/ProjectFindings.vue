@@ -252,7 +252,7 @@ import common from "../../../shared/common";
                     <label>Aliases</label>
                       <b-card class="font-weight-bold">
                         <b-card-text>
-                          <span v-for="alias in resolveVulnAliases(finding.vulnerability.aliases)">
+                          <span v-for="alias in resolveVulnAliases(finding.vulnerability.aliases, finding.vulnerability.source)">
                           <b-link style="margin-right:1.0rem" :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId">{{ alias.vulnId }}</b-link>
                           </span>
                         </b-card-text>
@@ -368,8 +368,8 @@ import common from "../../../shared/common";
               },
               mixins: [permissionsMixin],
               methods: {
-                resolveVulnAliases: function(aliases) {
-                  return common.resolveVulnAliases(this.source, aliases);
+                resolveVulnAliases: function(aliases, vulnSource) {
+                  return common.resolveVulnAliases(vulnSource ? vulnSource : this.source, aliases);
                 },
                 getAnalysis: function() {
                   let queryString = "?project=" + projectUuid + "&component=" + this.finding.component.uuid + "&vulnerability=" + this.finding.vulnerability.uuid;
