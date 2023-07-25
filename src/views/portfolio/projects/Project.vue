@@ -13,9 +13,9 @@
                     <li class="dropdown">
                       <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
                       <ul class="dropdown-menu">
-                        <span v-for="p in availableProjectVersions">
-                          <b-dropdown-item :to="{name: 'Project', params: {'uuid': p.uuid}}">{{ p.version }}</b-dropdown-item>
-                          </span>
+                        <span v-for="projectVersion in project.versions">
+                          <b-dropdown-item :to="projectVersion.uuid">{{ projectVersion.version }}</b-dropdown-item>
+                        </span>
                       </ul>
                     </li>
                   </ol>
@@ -218,7 +218,6 @@
         currentLow: 0,
         currentUnassigned: 0,
         currentRiskScore: 0,
-        availableProjectVersions: [],
         totalComponents: 0,
         totalServices: 0,
         totalDependencyGraphs: 0,
@@ -248,22 +247,14 @@
           }
         }).then((response) => {
           this.project = response.data;
-          let projectVersionsUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?offset=0&limit=10&excludeInactive=true&name=` + encodeURIComponent(this.project.name);
-          this.axios.get(projectVersionsUrl).then((response) => {
-            this.availableProjectVersions = response.data;
-          });
+          this.currentCritical = common.valueWithDefault(this.project.metrics.critical, 0);
+          this.currentHigh = common.valueWithDefault(this.project.metrics.high, 0);
+          this.currentMedium = common.valueWithDefault(this.project.metrics.medium, 0);
+          this.currentLow = common.valueWithDefault(this.project.metrics.low, 0);
+          this.currentUnassigned = common.valueWithDefault(this.project.metrics.unassigned, 0);
+          this.currentRiskScore = common.valueWithDefault(this.project.metrics.inheritedRiskScore, 0);
           EventBus.$emit('addCrumb', this.projectLabel);
           this.$title = this.projectLabel;
-        });
-
-        let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/current`;
-        this.axios.get(metricsUrl).then((response) => {
-          this.currentCritical = common.valueWithDefault(response.data.critical, 0);
-          this.currentHigh = common.valueWithDefault(response.data.high, 0);
-          this.currentMedium = common.valueWithDefault(response.data.medium, 0);
-          this.currentLow = common.valueWithDefault(response.data.low, 0);
-          this.currentUnassigned = common.valueWithDefault(response.data.unassigned, 0);
-          this.currentRiskScore = common.valueWithDefault(response.data.inheritedRiskScore, 0);
         });
       },
       initializeProjectDetailsModal: function () {
