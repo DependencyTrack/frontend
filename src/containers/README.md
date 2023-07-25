@@ -1,0 +1,1 @@
+See [CoreUI Free Vue Bootstrap Admin Template](https://github.com/coreui/coreui-free-vue-admin-template/tree/v3) for inspiration

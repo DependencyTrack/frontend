@@ -30,21 +30,19 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import common from "../../../shared/common";
-  import { Switch as cSwitch } from '@coreui/vue';
-  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
-  import xssFilters from "xss-filters";
+  import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
   import SeverityProgressBar from "@/views/components/SeverityProgressBar";
-  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+  import Vue from 'vue';
+  import xssFilters from "xss-filters";
+  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
+  import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
+  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 
   export default {
     mixins: [permissionsMixin],
     components: {
-      cSwitch,
       PortfolioWidgetRow,
       BInputGroupFormSelect,
       BInputGroupFormInput

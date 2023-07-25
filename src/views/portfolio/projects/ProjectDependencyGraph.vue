@@ -4,10 +4,10 @@
   </div>
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
     <span v-if="this.$route.params.componentUuid && this.$route.params.componentUuid.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
-      <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" v-model="showCompleteGraph" label v-bind="labelIcon" />
+      <CSwitch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" :checked.sync="showCompleteGraph" label />
       <span class="text-muted">{{ $t('message.show_complete_graph') }}</span>
     </span>
-    <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="highlightOutdatedComponents" color="primary" v-model="highlightOutdatedComponents" label v-bind="labelIcon" />
+    <CSwitch style="margin-left:1.5rem; margin-right:.5rem" id="highlightOutdatedComponents" color="primary" :checked.sync="highlightOutdatedComponents" label />
     <span class="text-muted">{{$t('message.show_update_information')}}</span><br>
     <span v-if="this.notFound">
       <span class="text-muted">{{ $t('message.not_found_in_dependency_graph') }}</span><br>
@@ -27,17 +27,17 @@
 </template>
 
 <script>
-import Vue2OrgTree from 'vue2-org-tree'
-import permissionsMixin from "../../../mixins/permissionsMixin";
+import { CSwitch } from '@coreui/vue';
+import Vue2OrgTree from 'vue2-org-tree';
 import xssFilters from "xss-filters";
-import { Switch as cSwitch } from '@coreui/vue';
+import permissionsMixin from "../../../mixins/permissionsMixin";
 let pos = { top: 0, left: 0, x: 0, y: 0};
 
 export default {
   mixins: [permissionsMixin],
   components: {
     Vue2OrgTree,
-    cSwitch
+    CSwitch
   },
   props: {
     project: Object,
@@ -60,10 +60,6 @@ export default {
       showCompleteGraph: this.showCompleteGraph,
       notFound: false,
       highlightOutdatedComponents: this.highlightOutdatedComponents,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
     }
   },
   watch: {

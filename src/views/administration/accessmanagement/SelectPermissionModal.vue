@@ -22,10 +22,6 @@
     mixins: [permissionsMixin],
     data() {
       return {
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         columns: [
           {
             field: "state",

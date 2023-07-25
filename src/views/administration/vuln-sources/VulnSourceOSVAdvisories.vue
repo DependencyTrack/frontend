@@ -3,17 +3,16 @@
     <b-card-body>
       <img alt="OSV logo" src="@/assets/img/osv-logo.png" width="65"/>
       <hr/>
-      <c-switch
+      <CSwitch
         color="primary"
         id="vulnsourceEnabled"
         label
-        v-bind="labelIcon"
-        v-model="vulnsourceEnabled"
+        :checked.sync="vulnsourceEnabled"
         :disabled="enabledEcosystems.length === 0"
       />
       {{$t('admin.vulnsource_osv_advisories_enable')}}
       <br/>
-      <c-switch
+      <CSwitch
         color="primary"
         id="aliasSyncEnabled"
         label
@@ -61,14 +60,12 @@
     <ecosystem-modal v-on:selection="updateEcosystem"/>
   </b-card>
 </template>
-<script>
 
-import { Switch as cSwitch } from '@coreui/vue';
+<script>
+import { CSwitch } from '@coreui/vue';
 import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
 import EcosystemModal from "./EcosystemModal";
-import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 
 export default {
   mixins: [configPropertyMixin],
@@ -76,10 +73,8 @@ export default {
     header: String
   },
   components: {
-    cSwitch,
-    EcosystemModal,
-    ActionableListGroupItem,
-    BValidatedInputGroupFormInput
+    CSwitch,
+    EcosystemModal
 },
   data() {
     return {
@@ -89,10 +84,6 @@ export default {
       osvBaseUrl: '',
       ecosystemConfig: null,
       enabledEcosystems: [],
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
     }
   },
   watch: {

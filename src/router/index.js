@@ -6,7 +6,7 @@ import { getToken, hasPermission } from '../shared/permissions';
 import { getContextPath } from "../shared/utils";
 
 // Containers
-const DefaultContainer = () => import('@/containers/DefaultContainer');
+const TheContainer = () => import('@/containers/TheContainer');
 
 // Views
 const Dashboard = () => import('@/views/Dashboard');
@@ -79,7 +79,7 @@ function configRoutes() {
       path: '/',
       redirect: '/dashboard',
       name: 'Home',
-      component: DefaultContainer,
+      component: TheContainer,
       children: [
         {
           path: 'dashboard',

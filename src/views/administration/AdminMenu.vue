@@ -7,7 +7,7 @@
       </div>
       <b-collapse ref="accordion" v-if="isPermitted(section.permission)" :id="section.id" accordion="admin-accordion" role="tabpanel">
         <div class="list-group" id="list-tab" role="tablist">
-          <router-link :ref="item.id" v-for="item in section.children" class="list-group-item list-group-item-action" data-toggle="list" role="tab"
+          <router-link :ref="item.id" v-for="item in section.children" v-bind:key="item.id" class="list-group-item list-group-item-action" data-toggle="list" role="tab"
              :to="'/admin/' + item.route" @click="emitEvent(item)">{{ item.name }}</router-link>
         </div>
       </b-collapse>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import permissionsMixin from "../../mixins/permissionsMixin";
+import permissionsMixin from "../../mixins/permissionsMixin";
 import EventBus from "../../shared/eventbus";
 import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permissions";
 
@@ -284,14 +284,14 @@ import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permission
 </script>
 
 <style scoped>
-  .admin-menu {
-    margin-bottom: .3rem;
-  }
-  .list-group-item:first-child, .list-group-item:last-child {
-    border-radius: 0;
-  }
-  .list-group-item {
-    border-left: 0;
-    border-right: 0;
-  }
+.admin-menu {
+  margin-bottom: .3rem;
+}
+.list-group-item:first-child, .list-group-item:last-child {
+  border-radius: 0;
+}
+.list-group-item {
+  border-left: 0;
+  border-right: 0;
+}
 </style>

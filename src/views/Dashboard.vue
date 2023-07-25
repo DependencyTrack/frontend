@@ -100,32 +100,32 @@
             <b-col sm="12" lg="6">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <CCallout variant="info">
                     <small class="text-muted">{{ $t('message.projects') }}</small><br>
                     <strong class="h4">{{totalProjects}}</strong>
-                  </Callout>
+                  </CCallout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <CCallout variant="info">
                     <small class="text-muted">{{ $t('message.components') }}</small><br>
                     <strong class="h4">{{totalComponents}}</strong>
-                  </Callout>
+                  </CCallout>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="6">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <CCallout variant="info">
                     <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
                     <strong class="h4">{{vulnerabilities}}</strong>
-                  </Callout>
+                  </CCallout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <CCallout variant="info">
                     <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
                     <strong class="h4">{{suppressed}}</strong>
-                  </Callout>
+                  </CCallout>
                 </b-col>
               </b-row>
             </b-col>
@@ -138,21 +138,21 @@
 </template>
 
 <script>
-  import common from "../shared/common"
-  import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
-  import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
-  import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
-  import ChartAuditedProgress from "./dashboard/ChartAuditingProgress";
-  import ChartPolicyViolations from "./dashboard/ChartPolicyViolations";
-  import ChartComponentVulnerabilities from "./dashboard/ChartComponentVulnerabilities";
-  import { Callout } from '@coreui/vue'
-  import permissionsMixin from "../mixins/permissionsMixin";
+  import { CCallout } from '@coreui/vue';
+import permissionsMixin from "../mixins/permissionsMixin";
+import common from "../shared/common";
+import ChartAuditedProgress from "./dashboard/ChartAuditingProgress";
+import ChartComponentVulnerabilities from "./dashboard/ChartComponentVulnerabilities";
+import ChartPolicyViolations from "./dashboard/ChartPolicyViolations";
+import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities';
+import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
+import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow';
 
   export default {
     name: 'dashboard',
     mixins: [permissionsMixin],
     components: {
-      Callout,
+      CCallout,
       PortfolioWidgetRow,
       ChartPortfolioVulnerabilities,
       ChartProjectVulnerabilities,

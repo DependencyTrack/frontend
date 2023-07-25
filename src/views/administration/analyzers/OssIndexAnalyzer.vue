@@ -1,21 +1,20 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch
+      <CSwitch
         id="scannerEnabled"
         color="primary"
-        v-model="scannerEnabled"
-        label v-bind="labelIcon"
+        :checked.sync="scannerEnabled"
+        label
       />
       {{$t('admin.analyzer_ossindex_enable')}}
       <br/>
-      <c-switch
+      <CSwitch
         :disabled="!this.scannerEnabled"
         id="aliasSyncEnabled"
         color="primary"
-        v-model="aliasSyncEnabled"
+        :checked.sync="aliasSyncEnabled"
         label
-        v-bind="labelIcon"
         :title="$t('admin.vulnsource_alias_sync_enable_tooltip')"
       />
       {{$t('admin.vulnsource_alias_sync_enable')}}
@@ -47,7 +46,7 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -58,7 +57,7 @@
       header: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       BValidatedInputGroupFormInput
     },
     data() {
@@ -67,10 +66,6 @@
         aliasSyncEnabled: false,
         username: '',
         apitoken: '',
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
       }
     },
     methods: {

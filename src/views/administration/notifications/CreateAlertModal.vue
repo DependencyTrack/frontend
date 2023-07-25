@@ -45,10 +45,6 @@
         scope: 'PORTFOLIO',
         notificationLevel: 'INFORMATIONAL',
         publisher: null,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         availableScopes: [
           { value: 'PORTFOLIO', text: 'Portfolio' },
           { value: 'SYSTEM', text: 'System' }

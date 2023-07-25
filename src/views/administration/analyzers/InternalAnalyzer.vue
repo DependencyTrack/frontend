@@ -1,13 +1,13 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="scannerEnabled" color="primary" v-model="scannerEnabled" label v-bind="labelIcon" />{{$t('admin.analyzer_internal_enable')}}
+      <CSwitch id="scannerEnabled" color="primary" :checked.sync="scannerEnabled" label />{{$t('admin.analyzer_internal_enable')}}
       <br/>
-      <c-switch id="scannerCpeFuzzyEnableInput" color="primary" v-model="scannerCpeFuzzyEnableInput" label v-bind="labelIcon" />{{$t('admin.analyzer_internal_fuzzy_enable')}}
+      <CSwitch id="scannerCpeFuzzyEnableInput" color="primary" :checked.sync="scannerCpeFuzzyEnableInput" label />{{$t('admin.analyzer_internal_fuzzy_enable')}}
       <br/>
-      <c-switch id="scannerCpeFuzzyExcludePurlInput" color="primary" v-model="scannerCpeFuzzyExcludePurlInput" label v-bind="labelIcon" />{{$t('admin.analyzer_internal_fuzzy_exclude_purl')}}
+      <CSwitch id="scannerCpeFuzzyExcludePurlInput" color="primary" :checked.sync="scannerCpeFuzzyExcludePurlInput" label />{{$t('admin.analyzer_internal_fuzzy_exclude_purl')}}
       <br/>
-      <c-switch id="scannerCpeFuzzyExcludeInternalInput" color="primary" v-model="scannerCpeFuzzyExcludeInternalInput" label v-bind="labelIcon" />{{$t('admin.analyzer_internal_fuzzy_exclude_internal')}}
+      <CSwitch id="scannerCpeFuzzyExcludeInternalInput" color="primary" :checked.sync="scannerCpeFuzzyExcludeInternalInput" label />{{$t('admin.analyzer_internal_fuzzy_exclude_internal')}}
       <hr/>
       {{ $t('admin.analyzer_internal_desc') }}
     </b-card-body>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
 
@@ -28,7 +28,7 @@
       header: String
     },
     components: {
-      cSwitch
+      CSwitch
     },
     data() {
       return {
@@ -36,10 +36,6 @@
         scannerCpeFuzzyEnableInput: false,
         scannerCpeFuzzyExcludePurlInput: true,
         scannerCpeFuzzyExcludeInternalInput: true,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
       }
     },
     methods: {

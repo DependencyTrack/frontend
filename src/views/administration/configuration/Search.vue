@@ -7,7 +7,7 @@
     <b-card no-body :header="headers.consistencyCheck">
       <b-card-body>
         <p>{{ $t('admin.index_consistency_check_description') }}</p>
-        <c-switch id="consistency-check-enabled" color="primary" v-model="consistencyCheck.enabled" label v-bind="labelIcon" />{{$t('admin.enable_index_consistency_check')}}
+        <CSwitch id="consistency-check-enabled" color="primary" :checked.sync="consistencyCheck.enabled" label />{{$t('admin.enable_index_consistency_check')}}
         <b-validated-input-group-form-input
           id="consistency-check-cadence"
           :label="$t('admin.index_consistency_check_cadence')"
@@ -34,19 +34,19 @@
     <b-card no-body :header="headers.manualRebuild">
       <b-card-body>
         <p>{{ $t('admin.index_rebuild_description') }}</p>
-        <c-switch id="project" color="primary" v-model="type.project" label v-bind="labelIcon" />{{$t('admin.reindex_projects')}}
+        <CSwitch id="project" color="primary" :checked.sync="type.project" label />{{$t('admin.reindex_projects')}}
         <br/>
-        <c-switch id="component" color="primary" v-model="type.component" label v-bind="labelIcon" />{{$t('admin.reindex_components')}}
+        <CSwitch id="component" color="primary" :checked.sync="type.component" label />{{$t('admin.reindex_components')}}
         <br/>
-        <c-switch id="vulnerability" color="primary" v-model="type.vulnerability" label v-bind="labelIcon" />{{$t('admin.reindex_vulnerabilities')}}
+        <CSwitch id="vulnerability" color="primary" :checked.sync="type.vulnerability" label />{{$t('admin.reindex_vulnerabilities')}}
         <br/>
-        <c-switch id="vulnerablesoftware" color="primary" v-model="type.vulnerablesoftware" label v-bind="labelIcon" />{{$t('admin.reindex_vulnerable_software')}}
+        <CSwitch id="vulnerablesoftware" color="primary" :checked.sync="type.vulnerablesoftware" label />{{$t('admin.reindex_vulnerable_software')}}
         <br/>
-        <c-switch id="servicecomponent" color="primary" v-model="type.servicecomponent" label v-bind="labelIcon" />{{$t('admin.reindex_service_components')}}
+        <CSwitch id="servicecomponent" color="primary" :checked.sync="type.servicecomponent" label />{{$t('admin.reindex_service_components')}}
         <br/>
-        <c-switch id="license" color="primary" v-model="type.license" label v-bind="labelIcon" />{{$t('admin.reindex_licenses')}}
+        <CSwitch id="license" color="primary" :checked.sync="type.license" label />{{$t('admin.reindex_licenses')}}
         <br/>
-        <c-switch id="cpe" color="primary" v-model="type.cpe" label v-bind="labelIcon" />{{$t('admin.reindex_cpes')}}
+        <CSwitch id="cpe" color="primary" :checked.sync="type.cpe" label />{{$t('admin.reindex_cpes')}}
         <br/>
       </b-card-body>
       <b-card-footer>
@@ -57,10 +57,10 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-  import configPropertyMixin from "../mixins/configPropertyMixin";
   import common from "../../../shared/common";
+  import configPropertyMixin from "../mixins/configPropertyMixin";
 
   export default {
     mixins: [configPropertyMixin],
@@ -68,7 +68,7 @@
       header: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       BValidatedInputGroupFormInput
     },
     data() {

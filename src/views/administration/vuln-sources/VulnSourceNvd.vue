@@ -1,13 +1,12 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch
+      <CSwitch
         :disabled="!this.vulnsourceEnabled && !this.nvdFeedsUrl"
         id="vulnsourceEnabled"
         color="primary"
-        v-model="vulnsourceEnabled"
+        :checked.sync="vulnsourceEnabled"
         label
-        v-bind="labelIcon"
       />
       {{$t('admin.vulnsource_nvd_enable')}}
       <b-validated-input-group-form-input
@@ -35,7 +34,7 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
+import { CSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -46,17 +45,13 @@ export default {
     header: String
   },
   components: {
-    cSwitch,
+    CSwitch,
     BValidatedInputGroupFormInput
   },
   data() {
     return {
       vulnsourceEnabled: false,
       nvdFeedsUrl: '',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
     }
   },
   methods: {

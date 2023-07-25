@@ -10,7 +10,7 @@
         v-model="baseUrl"
         tooltip="This URL is used to construct links back to Dependency-Track from external systems."
       />
-      <c-switch id="isBadgesEnabled" color="primary" v-model="isBadgesEnabled" label v-bind="labelIcon" />{{$t('admin.enable_svg_badge')}}
+      <CSwitch id="isBadgesEnabled" color="primary" :checked.sync="isBadgesEnabled" label />{{$t('admin.enable_svg_badge')}}
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{ $t('message.update') }}</b-button>
@@ -19,9 +19,9 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import { ValidationObserver } from 'vee-validate';
-  import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput'
+  import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
 
@@ -31,7 +31,7 @@
       header: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       ValidationObserver,
       BValidatedInputGroupFormInput
     },
@@ -39,10 +39,6 @@
       return {
         baseUrl: "",
         isBadgesEnabled: false,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
       }
     },
     methods: {

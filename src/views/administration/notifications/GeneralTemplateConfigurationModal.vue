@@ -5,7 +5,7 @@
     <p>{{ $t('admin.template_override_security_warning') }}</p>
     <p>{{ $t('admin.template_override_restart_needed') }}</p>
     <b-form-group>
-        <c-switch id="template_override" color="primary" v-model="enableDefaultTemplatesOverride" label v-bind="labelIcon"/>
+        <CSwitch id="template_override" color="primary" :checked.sync="enableDefaultTemplatesOverride" label/>
         {{ $t('admin.enable_default_template_override') }}
     </b-form-group>
     <b-validated-input-group-form-input
@@ -25,15 +25,15 @@
   </b-modal>
 </template>
 <script>
-  import configPropertyMixin from "../mixins/configPropertyMixin";
-  import { Switch as cSwitch } from '@coreui/vue';
-  import common from "../../../shared/common";
+  import { CSwitch } from '@coreui/vue';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+  import common from "../../../shared/common";
+  import configPropertyMixin from "../mixins/configPropertyMixin";
 
   export default {
     mixins: [configPropertyMixin],
     components: {
-      cSwitch,
+      CSwitch,
       BValidatedInputGroupFormInput
     },
     data() {

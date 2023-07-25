@@ -3,17 +3,16 @@
     <b-card-body>
       <img alt="GitHub logo" src="@/assets/img/github-logo.svg" width="65"/>
       <hr/>
-      <c-switch
+      <CSwitch
         :disabled="!this.vulnsourceEnabled && !this.apitoken"
         color="primary"
         id="vulnsourceEnabled"
         label
-        v-bind="labelIcon"
-        v-model="vulnsourceEnabled"
+        :checked.sync="vulnsourceEnabled"
       />
       {{$t('admin.vulnsource_github_advisories_enable')}}
       <br/>
-      <c-switch
+      <CSwitch
         color="primary"
         id="aliasSyncEnabled"
         label
@@ -48,7 +47,7 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
+import { CSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import common from "../../../shared/common";
 import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -59,7 +58,7 @@ export default {
     header: String
   },
   components: {
-    cSwitch,
+    CSwitch,
     BValidatedInputGroupFormInput
   },
   data() {
@@ -67,10 +66,6 @@ export default {
       vulnsourceEnabled: false,
       aliasSyncEnabled: false,
       apitoken: '',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715'
-      },
     }
   },
   methods: {

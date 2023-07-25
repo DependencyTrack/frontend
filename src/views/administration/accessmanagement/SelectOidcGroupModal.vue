@@ -22,10 +22,6 @@
     mixins: [permissionsMixin],
     data() {
       return {
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         columns: [
           {
             field: "state",
@@ -49,7 +45,7 @@
           pagination: true,
           silentSort: false,
           sidePagination: 'server',
-          queryParamsType: 'pageSize',  
+          queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,
           icons: {

@@ -12,14 +12,20 @@ module.exports = {
   },
   configureWebpack: {
     plugins: [
-      new CopyPlugin([
-        { from: "node_modules/axios/dist/axios.min.js", to: "static/js", force: true },
-        { from: "node_modules/oidc-client/dist/oidc-client.min.js", to: "static/js", force: true }
-      ]),
+      new CopyPlugin({
+        patterns: [
+          { from: "node_modules/axios/dist/axios.min.js", to: "static/js", force: true },
+          { from: "node_modules/oidc-client/dist/oidc-client.min.js", to: "static/js", force: true }
+        ]
+      }),
       new CycloneDxWebpackPlugin({
         context: '../',
         outputLocation: '../'
       })
     ]
-  }
+  },
+  transpileDependencies: [
+    '@coreui/utils',
+    '@coreui/vue'
+  ]
 };

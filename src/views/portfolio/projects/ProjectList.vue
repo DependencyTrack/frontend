@@ -5,8 +5,8 @@
       <b-button size="md" variant="outline-primary" @click="initializeProjectCreateProjectModal" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
-      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" v-model="showInactiveProjects" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
-      <c-switch @click.native="saveViewState" style="margin-left:1rem; margin-right:.5rem" id="showFlatView" color="primary" v-model="showFlatView" label v-bind="labelIcon" :disabled="isSearching" v-b-tooltip.hover :title="$t('message.switch_view')" /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
+      <CSwitch style="margin-left:1rem; margin-right:.5rem" id="showInactiveProjects" color="primary" :checked.sync="showInactiveProjects" label /><span class="text-muted">{{ $t('message.show_inactive_projects') }}</span>
+      <CSwitch @click.native="saveViewState" style="margin-left:1rem; margin-right:.5rem" id="showFlatView" color="primary" :checked.sync="showFlatView" label :disabled="isSearching" v-b-tooltip.hover :title="$t('message.switch_view')" /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
     </div>
     <bootstrap-table
       ref="table"
@@ -23,21 +23,21 @@
 
 <script>
   import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
-import { Switch as cSwitch } from '@coreui/vue';
-import MurmurHash2 from "imurmurhash";
-import Vue from 'vue';
-import xssFilters from "xss-filters";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import common from "../../../shared/common";
-import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
-import SeverityProgressBar from "../../components/SeverityProgressBar";
-import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
-import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
+  import { CSwitch } from '@coreui/vue';
+  import MurmurHash2 from "imurmurhash";
+  import Vue from 'vue';
+  import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import common from "../../../shared/common";
+  import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
+  import SeverityProgressBar from "../../components/SeverityProgressBar";
+  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+  import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
 
   export default {
     mixins: [permissionsMixin],
     components: {
-      cSwitch,
+      CSwitch,
       ProjectCreateProjectModal,
       PortfolioWidgetRow
     },
@@ -165,10 +165,6 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
         showFlatView: this.showFlatView,
         isSearching: false,
         savedViewState: null,
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
         columns: [
           {
             title: this.$t('message.project_name'),

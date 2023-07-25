@@ -13,7 +13,7 @@
         v-model="jiraUrl"
         lazy="true"
       />
-      <c-switch id="jiraAuthWithTokenEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>{{$t('admin.bearer_token_auth_enable')}}
+      <CSwitch id="jiraAuthWithTokenEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>{{$t('admin.bearer_token_auth_enable')}}
       <b-validated-input-group-form-input
         id="jira-username"
         :label="$t('admin.jira_username')"
@@ -53,14 +53,14 @@
 <script>
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput'
 import configPropertyMixin from "../mixins/configPropertyMixin";
-import {Switch as cSwitch} from "@coreui/vue";
+import {CSwitch} from "@coreui/vue";
 export default {
   mixins: [configPropertyMixin],
   props: {
     header: String
   },
   components: {
-    cSwitch,
+    CSwitch,
     BValidatedInputGroupFormInput
   },
   data() {

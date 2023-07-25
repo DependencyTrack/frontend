@@ -1,7 +1,7 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <c-switch id="enabled" color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.integration_kenna_enable')}}
+      <CSwitch id="enabled" color="primary" :checked.sync="enabled" label />{{$t('admin.integration_kenna_enable')}}
       <b-validated-input-group-form-input
         id="kenna-cadence"
         :label="$t('admin.synchronization_cadence_minutes')"
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-  import { Switch as cSwitch } from '@coreui/vue';
+  import { CSwitch } from '@coreui/vue';
   import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
   import common from "../../../shared/common";
   import configPropertyMixin from "../mixins/configPropertyMixin";
@@ -49,7 +49,7 @@
       header: String
     },
     components: {
-      cSwitch,
+      CSwitch,
       BValidatedInputGroupFormInput
     },
     data() {
@@ -58,10 +58,6 @@
         cadence: '60',
         connectorId: '',
         token: '',
-        labelIcon: {
-          dataOn: '\u2713',
-          dataOff: '\u2715'
-        },
       }
     },
     methods: {
