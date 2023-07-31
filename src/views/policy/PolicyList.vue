@@ -20,6 +20,7 @@
   import xssFilters from "xss-filters";
   import CreatePolicyModal from "./CreatePolicyModal";
   import permissionsMixin from "../../mixins/permissionsMixin";
+  import routerMixin from "../../mixins/routerMixin";
   import i18n from "../../i18n";
   import ActionableListGroupItem from "../components/ActionableListGroupItem";
   import BInputGroupFormInput from "../../forms/BInputGroupFormInput";
@@ -33,7 +34,7 @@
   import { Switch as cSwitch } from '@coreui/vue';
 
   export default {
-    mixins: [permissionsMixin, bootstrapTableMixin],
+    mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
     components: {
       CreatePolicyModal
     },
@@ -89,6 +90,7 @@
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: (localStorage && localStorage.getItem("PolicyListPageSize") !== null) ? Number(localStorage.getItem("PolicyListPageSize")) : 10,
+          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },
@@ -354,6 +356,9 @@
               localStorage.setItem("PolicyListPageSize", size.toString())
             }
           }),
+          onSearch: ((text) => {
+            this.setSearchTextQuery(text);
+          })
         }
       };
     }

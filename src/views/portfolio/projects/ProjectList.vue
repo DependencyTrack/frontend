@@ -28,6 +28,7 @@ import MurmurHash2 from "imurmurhash";
 import Vue from 'vue';
 import xssFilters from "xss-filters";
 import permissionsMixin from "../../../mixins/permissionsMixin";
+import routerMixin from "../../../mixins/routerMixin";
 import common from "../../../shared/common";
 import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
@@ -35,7 +36,7 @@ import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
 
   export default {
-    mixins: [permissionsMixin],
+    mixins: [permissionsMixin, routerMixin],
     components: {
       cSwitch,
       ProjectCreateProjectModal,
@@ -304,6 +305,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
           pageSize: (localStorage && localStorage.getItem("ProjectListPageSize") !== null) ? Number(localStorage.getItem("ProjectListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("ProjectListSortName") !== null) ? localStorage.getItem("ProjectListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("ProjectListSortOrder") !== null) ? localStorage.getItem("ProjectListSortOrder") : undefined,
+          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },
@@ -342,6 +344,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
                 this.showFlatView = false;
               }
             }
+            this.setSearchTextQuery(text);
           }),
           onPageChange: ((number, size) => {
             if (localStorage) {
