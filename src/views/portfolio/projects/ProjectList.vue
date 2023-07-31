@@ -28,6 +28,7 @@ import MurmurHash2 from "imurmurhash";
 import Vue from 'vue';
 import xssFilters from "xss-filters";
 import permissionsMixin from "../../../mixins/permissionsMixin";
+import routerMixin from "../../../mixins/routerMixin";
 import common from "../../../shared/common";
 import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
 import SeverityProgressBar from "../../components/SeverityProgressBar";
@@ -35,7 +36,7 @@ import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
 import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
 
   export default {
-    mixins: [permissionsMixin],
+    mixins: [permissionsMixin, routerMixin],
     components: {
       cSwitch,
       ProjectCreateProjectModal,
@@ -343,6 +344,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
                 this.showFlatView = false;
               }
             }
+            this.setSearchTextQuery(text);
           }),
           onPageChange: ((number, size) => {
             if (localStorage) {
