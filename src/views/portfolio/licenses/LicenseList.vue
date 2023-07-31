@@ -107,6 +107,7 @@
           pageSize: (localStorage && localStorage.getItem("LicenseListPageSize") !== null) ? Number(localStorage.getItem("LicenseListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("LicenseListSortName") !== null) ? localStorage.getItem("LicenseListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("LicenseListSortOrder") !== null) ? localStorage.getItem("LicenseListSortOrder") : undefined,
+          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },

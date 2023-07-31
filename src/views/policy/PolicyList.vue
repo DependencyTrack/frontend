@@ -89,6 +89,7 @@
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: (localStorage && localStorage.getItem("PolicyListPageSize") !== null) ? Number(localStorage.getItem("PolicyListPageSize")) : 10,
+          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },
