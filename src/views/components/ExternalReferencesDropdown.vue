@@ -19,7 +19,7 @@
 <script>
   export default {
     props: {
-      externalReferences: Object
+      externalReferences: Array
     },
     data() {
       return {
