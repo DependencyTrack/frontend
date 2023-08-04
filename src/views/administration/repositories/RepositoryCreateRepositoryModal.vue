@@ -20,6 +20,8 @@
                                :label="$t('admin.repository_type')" />
     <div>
       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+      <br/>
+      <c-switch color="primary" v-model="integrityCheckEnabled" label v-bind="labelIcon" />{{$t('admin.integrity_check_enabled')}}
     </div>
 
     <b-validated-input-group-form-input
@@ -81,6 +83,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
+        integrityCheckEnabled: false,
         repositoryTypes: [
           { value: 'COMPOSER', text: 'PHP (Composer)' },
           { value: 'CPAN', text: 'Perl (CPAN)' },
@@ -103,6 +106,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
           identifier: this.identifier,
           url: this.url,
           internal: this.internal,
+          integrityCheckEnabled: this.integrityCheckEnabled,
           username: this.username,
           password: this.password || null,
           enabled: this.enabled
@@ -124,6 +128,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
         this.username = null;
         this.password = null;
         this.enabled = true;
+        this.integrityCheckEnabled = false;
       }
     }
   }

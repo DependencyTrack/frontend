@@ -90,6 +90,15 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
             },
           },
           {
+            title: this.$t('admin.integrity_check_enabled'),
+            field: "integrityCheckEnabled",
+            class: "tight",
+            sortable: true,
+            formatter(value, row, index) {
+              return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            },
+          },
+          {
             title: this.$t('admin.enabled'),
             field: "enabled",
             class: "tight",
@@ -133,6 +142,9 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
 
                     <div>
                       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                    </div>
+                    <div>
+                      <c-switch color="primary" v-model="integrityCheckEnabled" label v-bind="labelIcon" />{{$t('admin.integrity_check_enabled')}}
                     </div>
 
                     <div>
@@ -181,6 +193,7 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                     dataOn: '\u2713',
                     dataOff: '\u2715'
                   },
+                  integrityCheckEnabled: row.integrityCheckEnabled
                 }
               },
               watch: {
@@ -188,6 +201,9 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                   this.updateRepository();
                 },
                 enabled() {
+                  this.updateRepository();
+                },
+                integrityCheckEnabled() {
                   this.updateRepository();
                 }
               },
@@ -210,7 +226,8 @@ import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
                     username: this.username,
                     password: this.password || null,
                     enabled: this.enabled,
-                    uuid: this.uuid
+                    uuid: this.uuid,
+                    integrityCheckEnabled: this.integrityCheckEnabled
                   }).then((response) => {
                     this.repository = response.data;
                     EventBus.$emit('admin:repository:rowUpdate', index, this.repository);
