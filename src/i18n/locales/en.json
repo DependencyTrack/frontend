@@ -520,7 +520,8 @@
     "version_distance_major": "major",
     "version_distance_minor": "minor",
     "version_distance_patch": "patch",
-    "version_distance_tooltip": "Specify the difference between version numbers, or empty to ignore"
+    "version_distance_tooltip": "Specify the difference between version numbers, or empty to ignore",
+    "matrix": "Matrix"
   },
   "admin": {
     "configuration": "Configuration",
