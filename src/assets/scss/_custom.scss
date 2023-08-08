@@ -465,3 +465,8 @@ td a.detail-icon {
   font-weight: 700;
 }
 
+// keep elements together on the same line, e.g switch and label
+.keep-together {
+  display: inline;
+  white-space: nowrap;
+}

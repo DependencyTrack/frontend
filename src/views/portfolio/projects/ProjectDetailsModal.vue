@@ -36,7 +36,7 @@
             label-for="input-4">
             <vue-tags-input id="input-4" v-model="tag" :tags="tags" :add-on-key="addOnKeys"
                             :placeholder="$t('message.add_tag')" @tags-changed="newTags => this.tags = newTags"
-                            style="max-width:none; background-color:transparent;"
+                            class="mw-100 bg-transparent text-lowercase"
                             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
           </b-form-group>
           <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
@@ -197,6 +197,7 @@
         if (!this.retrievedParents && this.project.parent) {
           this.parent = (await this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.project.parent.uuid}`)).data
           this.selectedParent = this.parent
+          this.availableParents = [{ name: '', version: '', uuid: null}]
           this.retrievedParents = true
         }
         this.$root.$emit("bv::show::modal", "projectDetailsModal")
@@ -274,8 +275,9 @@
           this.axios.get(url).then(response => {
             if (response.data) {
               this.availableParents = response.data
+              this.availableParents.unshift({ name: '', version: '', uuid: null})
             } else {
-              this.availableParents = []
+              this.availableParents = [{ name: '', version: '', uuid: null}]
             }
             this.isLoading = false
           })
@@ -283,7 +285,7 @@
       },
       resetValues: function () {
         this.selectedParent = this.parent
-        this.availableParents = []
+        this.availableParents = [{ name: '', version: '', uuid: null}]
       }
     }
   }

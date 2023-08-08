@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import i18n from '../i18n'
-import { getContextPath } from "../shared/utils"
-import {decodeToken, getToken} from '../shared/permissions';
+import Vue from 'vue';
+import Router from 'vue-router';
+import i18n from '../i18n';
 import EventBus from '../shared/eventbus';
+import { getToken, hasPermission } from '../shared/permissions';
+import { getContextPath } from "../shared/utils";
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');
@@ -38,6 +38,7 @@ const VulnSourceOSVAdvisories = () => import('@/views/administration/vuln-source
 
 const Cargo = () => import('@/views/administration/repositories/Cargo')
 const Composer = () => import('@/views/administration/repositories/Composer')
+const Cpan = () => import('@/views/administration/repositories/Cpan')
 const Gem = () => import('@/views/administration/repositories/Gem')
 const GoModules = () => import('@/views/administration/repositories/GoModules')
 const Hex = () => import('@/views/administration/repositories/Hex')
@@ -88,7 +89,8 @@ function configRoutes() {
           meta: {
             title: i18n.t('message.dashboard'),
             i18n: 'message.dashboard',
-            sectionPath: '/dashboard'
+            sectionPath: '/dashboard',
+            permission: 'VIEW_PORTFOLIO'
           }
         },
         {
@@ -266,7 +268,7 @@ function configRoutes() {
               },
             },
             {
-              path: 'configuration/jira',
+              path: 'integrations/jira',
               component: Jira,
               meta: {
                 title: i18n.t('message.administration'),
@@ -391,6 +393,16 @@ function configRoutes() {
             {
               path: 'repositories/composer',
               component: Composer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/cpan',
+              component: Cpan,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
@@ -698,12 +710,15 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const jwt = getToken();
-  if (!to.meta.permission || to.meta.permission && jwt && decodeToken(jwt).permissions.includes(to.meta.permission)){
-    const publicRoutes = ['Login', '404', 'PasswordForceChange'];
-    if (!publicRoutes.includes(to.name)) {
-      const redirectTo = to.fullPath;
-      if (jwt) {
+  const redirectToLogin = () => {
+    next({ name: 'Login', query: { redirect: to.fullPath }, replace: true });
+  };
+
+  if (to.meta.permission) {
+    // non-public route, check permissions
+    const jwt = getToken();
+    if (jwt) {
+      if (hasPermission(to.meta.permission)) {
         // let backend verify the token
         router.app.axios.get(`${router.app.$api.BASE_URL}/${router.app.$api.URL_USER_SELF}`, {
           headers: { 'Authorization': `Bearer ${jwt}` }
@@ -716,19 +731,19 @@ router.beforeEach((to, from, next) => {
           // notify app about this
           EventBus.$emit('authenticated', null);
           // redirect to login page
-          next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+          redirectToLogin();
         });
       } else {
-        // no token at all, redirect to login page
-        next({ name: 'Login', query: { redirect: redirectTo }, replace: true });
+        Vue.prototype.$toastr.e(i18n.t('condition.forbidden'));
+        next({name: 'Dashboard', replace: true});
       }
     } else {
-      // allowed to proceed
-      next();
+      // no token at all, redirect to login page
+      redirectToLogin();
     }
   } else {
-    Vue.prototype.$toastr.e(i18n.t('condition.forbidden'));
-    next({name: "Dashboard", replace: true})
+    // public route, allowed to proceed
+    next();
   }
 });
 

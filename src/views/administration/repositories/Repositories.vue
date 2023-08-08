@@ -18,14 +18,14 @@
 </template>
 
 <script>
-  import xssFilters from "xss-filters";
-  import common from "../../../shared/common";
-  import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
-  import i18n from "../../../i18n";
-  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-  import { Switch as cSwitch } from '@coreui/vue';
-  import EventBus from "../../../shared/eventbus";
-  import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
+import { Switch as cSwitch } from '@coreui/vue';
+import xssFilters from "xss-filters";
+import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFormInput";
+import i18n from "../../../i18n";
+import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
+import common from "../../../shared/common";
+import EventBus from "../../../shared/eventbus";
+import RepositoryCreateRepositoryModal from "./RepositoryCreateRepositoryModal";
 
   export default {
     props: {
@@ -43,6 +43,7 @@
       refreshTable: function() {
         this.$refs.table.refresh({
           url: this.apiUrl(),
+          pageNumber: 1,
           silent: true
         });
       }

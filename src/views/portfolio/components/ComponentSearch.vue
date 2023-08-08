@@ -52,6 +52,26 @@
     beforeCreate() {
       this.subject = (localStorage && localStorage.getItem("ComponentSearchSubject") !== null) ? localStorage.getItem("ComponentSearchSubject") : 'COORDINATES';
     },
+    beforeMount() {
+      if (this.$route.hash) {
+        let pattern = /#\/search\/(COORDINATES)\/group=([^\/)]*)\/name=([^\/]*)\/version=([^\/]*)/gi;
+        let matches = pattern.exec(this.$route.hash);
+        if (matches) {
+          this.subject = matches[1].toUpperCase();
+          this.coordinatesGroup = decodeURIComponent(matches[2]);
+          this.coordinatesName = decodeURIComponent(matches[3]);
+          this.coordinatesVersion = decodeURIComponent(matches[4]);
+        } else {
+          pattern = /#\/search\/(?!COORDINATES)([^\/]*)\/(.*)/gi;
+          matches = pattern.exec(this.$route.hash)
+          if (matches && this.subjects.some(subject => subject.value === matches[1].toUpperCase())) {
+            this.subject = matches[1].toUpperCase();
+            this.value = decodeURIComponent(matches[2]);
+          }
+        }
+        this.changeSearchUrl = false;
+      }
+    },
     watch: {
       subject () {
         if (localStorage) {
@@ -93,9 +113,24 @@
           this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity?${queryParams}`;
           this.$refs.table.refresh({ silent: true });
         }
+        if (this.changeSearchUrl) {
+          if (this.subject === 'COORDINATES') {
+            let urlCoordinatesGroup = this.coordinatesGroup ? encodeURIComponent(this.coordinatesGroup) : '';
+            let urlCoordinatesName = this.coordinatesName ? encodeURIComponent(this.coordinatesName) : '';
+            let urlCoordinatesVersion = this.coordinatesVersion ? encodeURIComponent(this.coordinatesVersion) : '';
+            this.$router.replace({path: 'components', hash: '#/search/' + this.subject + '/group=' + urlCoordinatesGroup + '/name=' + urlCoordinatesName + '/version=' + urlCoordinatesVersion})
+          } else {
+            let urlValue = this.value ? encodeURIComponent(this.value) : '';
+            this.$router.replace({path: 'components', hash: '#/search/' + this.subject + '/' + urlValue})
+          }
+        }
       },
       onPreBody: function() {
         loadUserPreferencesForBootstrapTable(this, "ComponentSearch", this.$refs.table.columns);
+        if (!this.changeSearchUrl) {
+          this.performSearch();
+          this.changeSearchUrl = true;
+        }
       }
     },
     data() {
@@ -112,6 +147,7 @@
           {value: 'SWID_TAGID', text: this.$t('message.swid_tagid')},
           {value: 'HASH', text: this.$t('message.hashes_short_desc')}
         ],
+        changeSearchUrl: false,
         columns: [
           {
             title: this.$t('message.component'),

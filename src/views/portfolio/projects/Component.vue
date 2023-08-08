@@ -75,7 +75,16 @@
         </b-row>
       </b-card-body>
       <div id="component-info-footer" slot="footer">
-        <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.componentDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+        <b-row>
+          <b-col>
+            <b-link class="font-weight-bold font-xs btn-block text-muted" v-b-modal.componentDetailsModal>{{ $t('message.view_details') }} <i class="fa fa-angle-right float-right font-lg"></i></b-link>
+          </b-col>
+          <b-col v-if="component.externalReferences" md="auto">
+            <b-row class="d-none d-md-flex float-right">
+              <ExternalReferencesDropdown :externalReferences="component.externalReferences" />
+            </b-row>
+          </b-col>
+        </b-row>
       </div>
     </b-card>
     <b-tabs class="body-bg-color" style="border-left: 0; border-right:0; border-top:0 ">
@@ -104,6 +113,7 @@
   import EventBus from '../../../shared/eventbus';
   import permissionsMixin from "../../../mixins/permissionsMixin";
   import ComponentDetailsModal from "./ComponentDetailsModal";
+  import ExternalReferencesDropdown from "../../components/ExternalReferencesDropdown.vue";
 
   export default {
     mixins: [permissionsMixin],
@@ -113,7 +123,8 @@
       ComponentVulnerabilities,
       PortfolioWidgetRow,
       VueEasyPieChart,
-      ComponentDetailsModal
+      ComponentDetailsModal,
+      ExternalReferencesDropdown
     },
     title: '',
     computed: {

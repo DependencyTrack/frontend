@@ -4,12 +4,12 @@ on:
       node-versions:
         type: string
         required: false
-        default: '["16"]'
+        default: '["18"]'
         description: 'Stringified JSON Array of node versions to build against'
       node-version-package:
         type: string
         required: false
-        default: '16'
+        default: '18'
         description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
       app-version:
         type: string
@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.3
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v3.6.0
+        uses: actions/setup-node@v3.7.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.5.3
 
       - name: Download Artifacts
         uses: actions/download-artifact@v3.0.2
@@ -76,16 +76,16 @@ jobs:
           name: assembled-frontend-node${{ inputs.node-version-package }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.1.0
+        uses: docker/setup-qemu-action@v2.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.4.0
+        uses: docker/setup-buildx-action@v2.9.1
         id: buildx
         with:
           install: true
 
       - name: Login to Docker.io
-        uses: docker/login-action@v2.1.0
+        uses: docker/login-action@v2.2.0
         if: ${{ inputs.publish-container }}
         with:
           registry: docker.io
@@ -100,10 +100,10 @@ jobs:
           if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
             TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
           fi
-          echo "::set-output name=tags::${TAGS}"
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Build multi-arch Container Image
-        uses: docker/build-push-action@v3.3.0
+        uses: docker/build-push-action@v4.1.1
         with:
           tags: ${{ steps.tags.outputs.tags }}
           build-args: |-
@@ -116,7 +116,7 @@ jobs:
 
       - name: Run Trivy Vulnerability Scanner
         if: ${{ inputs.publish-container }}
-        uses: aquasecurity/trivy-action@0.9.0
+        uses: aquasecurity/trivy-action@0.11.2
         with:
           image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
           format: 'sarif'

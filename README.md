@@ -6,7 +6,7 @@
 Dependency-Track Front-End
 =========
 
-The Front-End is a Single Page Application (SPA) used in Dependency-Track, an open source Component Analysis platform 
+The Front-End is a Single Page Application (SPA) used in Dependency-Track, an open source Component Analysis platform
 that allows organizations to identify and reduce risk in the software supply chain.
 
 The project is built with:
@@ -39,7 +39,7 @@ Pre-compiled distributions are available in two variants:
 * [Docker container running NGINX](https://hub.docker.com/r/dependencytrack/frontend)
 * [GitHub Release (zip archive)](https://github.com/DependencyTrack/frontend/releases)
 
-The Docker container provides the fastest, most consistent deployment option and is recommended. 
+The Docker container provides the fastest, most consistent deployment option and is recommended.
 The Docker container includes NGINX and a pre-deployed Front-End release.
 
 ## Build Setup
@@ -63,14 +63,14 @@ npm run bom
 
 ## Development Setup
 
-In order to test with a Dependency-Track instance, the `.env.development` file needs to be modified and the `VUE_APP_SERVER_URL` property updated to 
+In order to test with a Dependency-Track instance, the `.env.development` file needs to be modified and the `VUE_APP_SERVER_URL` property updated to
 reflect the base URL of a Dependency-Track server.
 
 ## Deployment
 
 ![Deployment Options](https://raw.githubusercontent.com/DependencyTrack/frontend/master/docs/images/Frontend-Deployment.svg?sanitize=true)
 
-The front-end is deployed to a general purpose web server (e.g. NGINX or Apache). To configure the front-end 
+The front-end is deployed to a general purpose web server (e.g. NGINX or Apache). To configure the front-end
 for this scenario, simply change the value of API_BASE_URL in static/config.json.
 
 ```json
@@ -90,7 +90,7 @@ Copyright & License
 
 Dependency-Track is Copyright (c) Steve Springett. All Rights Reserved.
 
-Permission to modify and redistribute is granted under the terms of the 
+Permission to modify and redistribute is granted under the terms of the
 Apache 2.0 license. See the [LICENSE] file for the full license.
 
 [License]: https://github.com/DependencyTrack/frontend/blob/master/LICENSE
