@@ -153,8 +153,12 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
               if (Object.prototype.hasOwnProperty.call(row, "resolvedLicense")) {
                 let licenseurl = "../../../licenses/" + row.resolvedLicense.licenseId;
                 return "<a href=\"" + licenseurl + "\">" + xssFilters.inHTMLData(row.resolvedLicense.licenseId) + "</a>";
-              } else {
+              } else if (value) {
                 return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              } else if (row.licenseExpression) {
+                return xssFilters.inHTMLData(common.valueWithDefault(row.licenseExpression, ""));
+              } else {
+                return "";
               }
             }
           },
