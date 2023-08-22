@@ -224,6 +224,7 @@
           author: this.component.author,
           description: this.component.description,
           license: this.selectedLicense,
+          licenseExpression: this.component.licenseExpression,
           licenseUrl: this.component.licenseUrl,
           filename: this.component.filename,
           classifier: this.component.classifier,
@@ -258,6 +259,8 @@
       retrieveLicenses: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
         this.axios.get(url).then((response) => {
+          // Allow for license to be un-selected.
+          this.selectableLicenses.push({value: '', text: ''});
           for (let i = 0; i < response.data.length; i++) {
             let license = response.data[i];
             this.selectableLicenses.push({value: license.licenseId, text: license.name, uuid: license.uuid});
