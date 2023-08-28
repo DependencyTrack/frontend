@@ -347,6 +347,7 @@
     "vulnerability_deleted": "Vulnerability deleted",
     "created": "Created",
     "internal": "Internal",
+    "integrity_check": "Integrity Check",
     "latest_version": "Latest Version",
     "metric_refresh_requested": "A refresh has been requested. Metrics will be updated when the refresh task has completed.",
     "used_by": "Used By",

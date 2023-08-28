@@ -146,6 +146,26 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
             },
           },
           {
+            title: this.$t('message.integrity_check'),
+            field: "integrityCheckStatus",
+            sortable: true,
+            formatter: (value, row, index) => {
+              if (Object.prototype.hasOwnProperty.call(row, "integrityAnalysis") && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityCheckPassed")) {
+                row.lastCheck = row.integrityAnalysis.lastCheck;
+                if (typeof row.lastCheck !== 'undefined') {
+                  row.lastCheck = common.formatTimestamp(row.lastCheck);
+                }
+                if (row.integrityAnalysis.integrityCheckPassed == false) {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check FAILED "><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.lastCheck);
+                } else {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check PASSED "><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.lastCheck);
+                }
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              }
+            }
+          },
+          {
             title: this.$t('message.license'),
             field: "license",
             sortable: false,
