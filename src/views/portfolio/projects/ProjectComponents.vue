@@ -156,12 +156,12 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
                   row.lastCheck = common.formatTimestamp(row.lastCheck);
                 }
                 if (row.integrityAnalysis.integrityCheckPassed == false) {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check FAILED "><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.lastCheck);
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastCheck) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('FAIL');
                 } else {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check PASSED "><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData(row.lastCheck);
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastCheck) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('PASS');
                 }
               } else {
-                return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+                return xssFilters.inHTMLData(common.valueWithDefault(value, "UNKNOWN"));
               }
             }
           },
