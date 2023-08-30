@@ -147,7 +147,7 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
           },
           {
             title: this.$t('message.integrity_check'),
-            field: "integrityCheckStatus",
+            field: "integrityAnalysis.integrityCheckPassed",
             sortable: true,
             formatter: (value, row, index) => {
               if (Object.prototype.hasOwnProperty.call(row, "integrityAnalysis") && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityCheckPassed")) {
