@@ -76,7 +76,7 @@ jobs:
           name: assembled-frontend-node${{ inputs.node-version-package }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.2.0
+        uses: docker/setup-qemu-action@v3.0.0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.0.0
