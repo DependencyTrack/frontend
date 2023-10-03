@@ -257,7 +257,13 @@ import MonacoEditor from "@/views/components/MonacoEditor.vue";
       },
       saveCondition: function() {
         let dynamicValue = this.createDynamicValue();
-        if (!this.subject || !this.violationType || !dynamicValue) {
+        if (!this.subject) {
+          return;
+        }
+        if (this.subject == 'EXPRESSION' && (!this.violationType || !dynamicValue)) {
+          return;
+        }
+        if (this.subject != 'EXPRESSION' && (!this.operator || !dynamicValue)) {
           return;
         }
         if (this.uuid) {
