@@ -1,5 +1,6 @@
 const CopyPlugin = require('copy-webpack-plugin')
 const { CycloneDxWebpackPlugin } = require('@cyclonedx/webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   lintOnSave: false,
@@ -19,6 +20,10 @@ module.exports = {
       new CycloneDxWebpackPlugin({
         context: '../',
         outputLocation: '../'
+      }),
+      new MonacoWebpackPlugin({
+        languages: ['javascript'],
+        features: ['bracketMatching', 'coreCommands', 'find', 'indentation', 'inlineCompletions']
       })
     ]
   }

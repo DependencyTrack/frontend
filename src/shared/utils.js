@@ -1,5 +1,4 @@
 import common from "@/shared/common";
-import flexVerCompare from "flexver/dist/module";
 
 export function random (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -75,39 +74,4 @@ export function loadUserPreferencesForBootstrapTable(_this, id, columns) {
   columns.forEach((column) => {
     _this.$set(column, "visible", (localStorage && localStorage.getItem(id + "Show" + common.capitalize(column.field)) !== null) ? (localStorage.getItem(id + "Show" + common.capitalize(column.field)) === "true") : column.visible);
   })
-}
-
-export function compareVersions(v1, v2) {
-  if (!v1) {
-    return 1;
-  }
-  if (!v2) {
-    return -1;
-  }
-  if (v1.toLowerCase().startsWith('v')) {
-    v1 = v1.substring(1);
-  }
-  if (v2 && v2.toLowerCase().startsWith('v')) {
-    v2 = v2.substring(1);
-  }
-  let v1parts = v1.split(':');
-  let v2parts = v2.split(':');
-  if ((v1parts.length > 1) || (v2parts.length > 1)) {
-    return compareEpochVersions(v1parts, v2parts);
-  }
-  return flexVerCompare(v1, v2);
-}
-
-function compareEpochVersions(v1parts, v2parts) {
-    // compare epoch
-    let v1epoch = v1parts.length > 1 ? v1parts[0] : "0";
-    let v1version = v1parts.length > 1 ? v1parts[1] : v1parts[0];
-    let v2epoch = v2parts.length > 1 ? v2parts[0] : "0";
-    let v2version = v2parts.length > 1 ? v2parts[1] : v2parts[0];
-    let epochCompare=flexVerCompare(v1epoch, v2epoch);
-    if (epochCompare == 0) {
-      return flexVerCompare(v1version, v2version);
-    } else {
-      return epochCompare;
-    }
 }

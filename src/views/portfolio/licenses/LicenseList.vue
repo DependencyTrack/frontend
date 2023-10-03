@@ -22,12 +22,11 @@
   import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
   import xssFilters from "xss-filters";
   import permissionsMixin from "../../../mixins/permissionsMixin";
-  import routerMixin from "../../../mixins/routerMixin";
   import LicenseAddLicenseModal from "@/views/portfolio/licenses/LicenseAddLicenseModal";
   import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
-    mixins: [permissionsMixin, routerMixin],
+    mixins: [permissionsMixin],
     components: {
       LicenseAddLicenseModal,
       PortfolioWidgetRow
@@ -108,7 +107,6 @@
           pageSize: (localStorage && localStorage.getItem("LicenseListPageSize") !== null) ? Number(localStorage.getItem("LicenseListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("LicenseListSortName") !== null) ? localStorage.getItem("LicenseListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("LicenseListSortOrder") !== null) ? localStorage.getItem("LicenseListSortOrder") : undefined,
-          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },
@@ -133,9 +131,6 @@
               localStorage.setItem("LicenseListSortName", name);
               localStorage.setItem("LicenseListSortOrder", order);
             }
-          }),
-          onSearch: ((text) => {
-            this.setSearchTextQuery(text);
           })
         }
       };

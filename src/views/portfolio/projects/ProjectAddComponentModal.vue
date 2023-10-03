@@ -48,10 +48,6 @@
           <b-input-group-form-select id="component-license-input" required="false"
                                      v-model="selectedLicense" :options="selectableLicenses"
                                      :label="$t('message.license')" :tooltip="$t('message.component_spdx_license_desc')" />
-          <b-input-group-form-input id="component-license-expression" input-group-size="mb-3" type="text" v-model="component.licenseExpression"
-                                    required="false" :label="$t('message.license_expression')" :tooltip="$t('message.component_license_expression_desc')" />
-          <b-input-group-form-input id="component-license-url-input" input-group-size="mb-3" type="text" v-model="component.licenseUrl"
-                                    required="false" :label="$t('message.license_url')" :tooltip="$t('message.component_license_url_desc')" />
           <b-form-group
             id="component-copyright-form-group"
             :label="this.$t('message.copyright')"
@@ -142,7 +138,6 @@
           group: this.component.group,
           description: this.component.description,
           license: this.selectedLicense,
-          licenseExpression: this.component.licenseExpression,
           licenseUrl: this.component.licenseUrl,
           filename: this.component.filename,
           classifier: this.component.classifier,
@@ -172,7 +167,6 @@
           group: null,
           description: null,
           license: null,
-          licenseExpression: null,
           licenseUrl:null,
           filename: null,
           classifier: null,
@@ -192,8 +186,6 @@
       retrieveLicenses: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
         this.axios.get(url).then((response) => {
-          // Allow for license to be un-selected.
-          this.selectableLicenses.push({value: '', text: ''});
           for (let i = 0; i < response.data.length; i++) {
             let license = response.data[i];
             this.selectableLicenses.push({value: license.licenseId, text: license.name});

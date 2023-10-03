@@ -22,21 +22,20 @@
 </template>
 
 <script>
-  import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
-import { Switch as cSwitch } from '@coreui/vue';
-import MurmurHash2 from "imurmurhash";
-import Vue from 'vue';
-import xssFilters from "xss-filters";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import routerMixin from "../../../mixins/routerMixin";
-import common from "../../../shared/common";
-import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
-import SeverityProgressBar from "../../components/SeverityProgressBar";
-import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
-import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
+  import Vue from 'vue'
+  import { Switch as cSwitch } from '@coreui/vue';
+  import common from "../../../shared/common";
+  import PortfolioWidgetRow from "../../dashboard/PortfolioWidgetRow";
+  import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
+  import SeverityProgressBar from "../../components/SeverityProgressBar";
+  import PolicyViolationProgressBar from "../../components/PolicyViolationProgressBar";
+  import xssFilters from "xss-filters";
+  import permissionsMixin from "../../../mixins/permissionsMixin";
+  import MurmurHash2 from "imurmurhash"
+  import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
 
   export default {
-    mixins: [permissionsMixin, routerMixin],
+    mixins: [permissionsMixin],
     components: {
       cSwitch,
       ProjectCreateProjectModal,
@@ -83,7 +82,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
         this.$refs.table.refresh({
           url: this.apiUrl(),
           silent: true,
-          pageNumber: 1
+          pageNumber: this.currentPage
         });
       },
       onLoadSuccess: function () {
@@ -305,7 +304,6 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
           pageSize: (localStorage && localStorage.getItem("ProjectListPageSize") !== null) ? Number(localStorage.getItem("ProjectListPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("ProjectListSortName") !== null) ? localStorage.getItem("ProjectListSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("ProjectListSortOrder") !== null) ? localStorage.getItem("ProjectListSortOrder") : undefined,
-          searchText: (this.$route.query.searchText ? this.$route.query.searchText : ''),
           icons: {
             refresh: 'fa-refresh'
           },
@@ -344,7 +342,6 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
                 this.showFlatView = false;
               }
             }
-            this.setSearchTextQuery(text);
           }),
           onPageChange: ((number, size) => {
             if (localStorage) {

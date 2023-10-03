@@ -20,13 +20,13 @@ jobs:
           fi
 
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v3.5.2
 
       - name: Parse Version from package.json
         id: parse
         run: |-
           VERSION=`jq -r '.version' package.json`
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "::set-output name=version::${VERSION}"
 
   call-build:
     needs:
@@ -46,7 +46,7 @@ jobs:
       - call-build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v3.5.2
 
       - name: Download Artifacts
         uses: actions/download-artifact@v3.0.2

@@ -13,8 +13,8 @@ jobs:
   call-build:
     uses: ./.github/workflows/_meta-build.yaml
     with:
-      node-versions: '["18", "20"]'
-      node-version-package: '18'
+      node-versions: '["14", "16"]'
+      node-version-package: '16'
       app-version: 'snapshot'
       publish-container: ${{ github.ref == 'refs/heads/master' }}
     secrets:

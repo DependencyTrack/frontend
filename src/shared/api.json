@@ -30,7 +30,6 @@
   "URL_LICENSE_CONCISE": "api/v1/license/concise",
   "URL_CWE": "api/v1/cwe",
   "URL_COMPONENT": "api/v1/component",
-  "URL_DEPENDENCY_GRAPH": "api/v1/dependencyGraph",
   "URL_SERVICE": "api/v1/service",
   "URL_VULNERABILITY": "api/v1/vulnerability",
   "URL_ANALYSIS": "api/v1/analysis",

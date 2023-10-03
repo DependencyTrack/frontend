@@ -24,7 +24,7 @@ services:
       # - "OIDC_FLOW="
       # - "OIDC_LOGIN_BUTTON_TEXT="
     # volumes:
-      # - "/host/path/to/config.json:/opt/owasp/dependency-track-frontend/static/config.json"
+      # - "/host/path/to/config.json:/app/static/config.json"
     ports:
       - "8080:8080"
     restart: unless-stopped

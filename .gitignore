@@ -16,6 +16,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editor directories and files
+.idea
 .vscode
 *.suo
 *.ntvs*
@@ -25,7 +26,3 @@ yarn-error.log*
 
 # Generates as part of serve
 src/version.json
-
-# IntelliJ
-.idea/*
-!.idea/icon.svg
