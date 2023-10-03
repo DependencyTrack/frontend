@@ -41,7 +41,7 @@ export default {
 
       this.editorModel = this.editor.getModel();
       this.editorModel.onDidChangeContent(this.handleContentChange);
-      this.editorModel.setValue(this.value);
+      this.editorModel.setValue(this.value ? this.value : '');
     });
   },
   beforeDestroy() {

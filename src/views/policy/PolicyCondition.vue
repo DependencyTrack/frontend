@@ -257,7 +257,7 @@ import MonacoEditor from "@/views/components/MonacoEditor.vue";
       },
       saveCondition: function() {
         let dynamicValue = this.createDynamicValue();
-        if (!this.subject || !this.operator || !dynamicValue) {
+        if (!this.subject || !this.violationType || !dynamicValue) {
           return;
         }
         if (this.uuid) {
