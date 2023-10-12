@@ -334,11 +334,13 @@ export default {
         let dependencies = [...data];
         if (dependencies.length > 0) {
           for (let dependency of dependencies) {
-            if (dependency && dependency.directDependencies) {
+            if (dependency) {
               let treeNode = treeNodeMap.get(dependency.uuid);
               treeNode.latestVersion = dependency.latestVersion;
-              let jsonObject = JSON.parse(dependency.directDependencies);
-              this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode, dependency.uuid, "COMPONENT"));
+              if (dependency.directDependencies) {
+                let jsonObject = JSON.parse(dependency.directDependencies);
+                this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode, dependency.uuid, "COMPONENT"));
+              }
             }
           }
         }
