@@ -51,7 +51,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3.0.2
         with:
-          name: assembled-frontend-node16
+          name: assembled-frontend-node18
 
       - name: Create Checksums
         run: |-
