@@ -1,5 +1,5 @@
 <template>
-  <validation-provider :vid="id" :name="label" :rules="rules" v-slot="{ errors, valid }">
+  <validation-provider :vid="id" :name="label" :rules="rules" :mode="mode" v-slot="{ errors, valid }">
     <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
       <b-input-group :class="inputGroupSize">
         <b-input-group-prepend v-if="icon"><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
@@ -39,6 +39,7 @@
       inputGroupSize: String,
       icon: String,
       rules: String,
+      mode: String,
       type: String,
       autocomplete: String,
       autofocus: String,
