@@ -21,6 +21,7 @@
                       v-model="input.username"
                       autofocus="true"
                       lazy="true"
+                      v-show="showLoginForm"
                     />
                     <b-validated-input-group-form-input
                       name="password"
@@ -32,9 +33,10 @@
                       autcomplete="currentpassword"
                       v-model="input.password"
                       lazy="true"
+                      v-show="showLoginForm"
                     />
-                    <b-row>
-                      <b-col cols="6">
+                    <b-row style="margin-bottom: 1rem;">
+                      <b-col cols="6" v-show="showLoginForm">
                         <b-button
                           variant="primary"
                           type="submit"
@@ -42,12 +44,16 @@
                         >{{ $t('message.login') }}</b-button>
                       </b-col>
                       <b-col cols="6" v-show="oidcAvailable">
-                        <b-button style="float: right" v-on:click="oidcLogin()">
+                        <b-button :style="{ float: showLoginForm ? 'right' : 'none' }" v-on:click="oidcLogin()">
                           <span v-if="oidcCheckLoginButtonTextSetted()">{{ oidcLoginButtonText() }}</span>
                           <img alt="OpenID Logo" src="@/assets/img/openid-logo.svg" width="60px" v-else />
                         </b-button>
                       </b-col>
                     </b-row>
+                    <b-link
+                      v-show="oidcAvailable && !showLoginForm" 
+                      v-on:click="showLoginForm=true"
+                    >{{ $t('message.login_more_options') }}</b-link>
                   </b-form>
                 </validation-observer>
               </b-card-body>
@@ -102,7 +108,8 @@ export default {
         response_type: this.$oidc.FLOW === "implicit" ? "token id_token" : "code",
         scope: this.$oidc.SCOPE,
         loadUserInfo: false
-      })
+      }),
+      showLoginForm: false
     };
   },
   methods: {
@@ -187,6 +194,7 @@ export default {
     this.checkOidcAvailability()
       .then(oidcAvailable => {
         this.oidcAvailable = oidcAvailable;
+        this.showLoginForm = !oidcAvailable;
 
         if (!oidcAvailable) {
           return;
@@ -235,6 +243,8 @@ export default {
         });
       })
       .catch(err => {
+        // automatic fallback to login form when oidc availability check failed
+        this.showLoginForm = true;
         this.$toastr.e(this.$t("message.oidc_availability_check_failed"));
       });
   }
