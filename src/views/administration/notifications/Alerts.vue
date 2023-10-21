@@ -122,8 +122,7 @@
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-input-group-form-input id="input-name" :label="$t('message.name')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="name" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              required="true" type="text" v-model="name" lazy="true" />
                     <b-form-group>
                       <c-switch id="notificationEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>
                       {{ $t('admin.enabled') }}
@@ -136,11 +135,9 @@
                     </b-form-group>
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
-                                              type="text" v-model="destination" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              type="text" v-model="destination" lazy="true" />
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-ticket-type"
-                                              :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true" />
                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
@@ -197,6 +194,7 @@
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
                        <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                       <b-button variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
                     </div>
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>

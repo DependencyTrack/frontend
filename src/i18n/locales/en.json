@@ -653,6 +653,7 @@
     "notification_level": "Notification level",
     "destination": "Destination",
     "delete_alert": "Delete Alert",
+    "submit": "Submit",
     "limit_to": "Limit To",
     "limit_to_projects": "Limit to projects",
     "include_children": "Include children of projects",
