@@ -31,7 +31,7 @@ USER 101
 
 # Setup entrypoint
 COPY --chown=101:0 ./docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
-COPY ./docker/docker-entrypoint.sh /docker-entrypoint.d/30-oidc-configuration.sh
+COPY --chmod=755 ./docker/docker-entrypoint.d/ /docker-entrypoint.d/
 
 # Specify the container working directory
 WORKDIR ${APP_DIR}
