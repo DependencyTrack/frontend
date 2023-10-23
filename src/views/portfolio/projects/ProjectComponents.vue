@@ -123,6 +123,26 @@
             },
           },
           {
+            title: this.$t('message.integrity_analysis'),
+            field: "componentMetaInformation.integrityMatchStatus",
+            sortable: true,
+            formatter: (value, row, index) => {
+              if (Object.prototype.hasOwnProperty.call(row, "componentMetaInformation") && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityCheckPassed")) {
+                row.lastFetched = row.componentMetaInformation.lastFetched;
+                if (typeof row.lastFetched !== 'undefined') {
+                  row.lastFetched = common.formatTimestamp(row.lastFetched);
+                }
+                if (row.componentMetaInformation.integrityCheckPassed == 'HASH_MATCH_PASSED') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastFetched) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('FAIL');
+                } else {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastFetched) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('PASS');
+                }
+              } else {
+                return xssFilters.inHTMLData(common.valueWithDefault(value, "UNKNOWN"));
+              }
+            }
+          },
+          {
             title: this.$t('message.license'),
             field: "license",
             sortable: false,

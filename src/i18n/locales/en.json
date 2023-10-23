@@ -346,6 +346,7 @@
     "created": "Created",
     "internal": "Internal",
     "latest_version": "Latest Version",
+    "integrity_analysis": "Integrity Analysis",
     "metric_refresh_requested": "A refresh has been requested. Metrics will be updated when the refresh task has completed.",
     "used_by": "Used By",
     "oidc_availability_check_failed": "Failed to determine availability of OpenID Connect",
