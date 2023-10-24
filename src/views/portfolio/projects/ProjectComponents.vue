@@ -96,6 +96,16 @@
             }
           },
           {
+            title: this.$t('message.published_at'),
+            field: "componentMetaInformation.publishedDate",
+            sortable: true,
+            formatter(value, row, index) {
+              if (value != null) {
+                return xssFilters.inHTMLData(common.formatTimestamp(value));
+              }
+            }
+          },
+          {
             title: this.$t('message.latest_version'),
             field: "latestVersion",
             sortable: false,
@@ -125,20 +135,31 @@
           {
             title: this.$t('message.integrity_analysis'),
             field: "componentMetaInformation.integrityMatchStatus",
-            sortable: true,
+            sortable: false,
+            visible: false,
             formatter: (value, row, index) => {
-              if (Object.prototype.hasOwnProperty.call(row, "componentMetaInformation") && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityCheckPassed")) {
-                row.lastFetched = row.componentMetaInformation.lastFetched;
-                if (typeof row.lastFetched !== 'undefined') {
-                  row.lastFetched = common.formatTimestamp(row.lastFetched);
+              if (Object.prototype.hasOwnProperty.call(row, "componentMetaInformation") 
+                  && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityMatchStatus")
+                  && row.componentMetaInformation.integrityMatchStatus != null) {
+
+                var lastFetchMessage = "Last fetch unknown.";
+                if (typeof row.componentMetaInformation.lastFetched !== 'undefined' && row.componentMetaInformation.lastFetched != null) {
+                  lastFetchMessage = "Last performed on" + common.formatTimestamp(row.componentMetaInformation.lastFetched);
                 }
-                if (row.componentMetaInformation.integrityCheckPassed == 'HASH_MATCH_PASSED') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastFetched) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('FAIL');
-                } else {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Integrity Check was last performed on '+ xssFilters.inHTMLData(row.lastFetched) + ' against repository: '+ xssFilters.inHTMLData(row.integrityAnalysis.repositoryIdentifier) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('PASS');
+
+                if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_PASSED') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('PASS');
+                } else if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_FAILED') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes do not match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('FAIL');
+                } else if (row.componentMetaInformation.integrityMatchStatus == 'COMPONENT_MISSING_HASH') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
+                } else if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_UNKNOWN') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
+                } else if (row.componentMetaInformation.integrityMatchStatus == 'COMPONENT_MISSING_HASH_AND_MATCH_UNKNOWN') {
+                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
                 }
               } else {
-                return xssFilters.inHTMLData(common.valueWithDefault(value, "UNKNOWN"));
+                return xssFilters.inHTMLData(common.valueWithDefault(value, "NA"));
               }
             }
           },
