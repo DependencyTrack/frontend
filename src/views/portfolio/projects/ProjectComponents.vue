@@ -139,7 +139,7 @@
             visible: false,
             formatter: (value, row, index) => {
               if (Object.prototype.hasOwnProperty.call(row, "componentMetaInformation") 
-                  && Object.prototype.hasOwnProperty.call(row.integrityAnalysis, "integrityMatchStatus")
+                  && Object.prototype.hasOwnProperty.call(row.componentMetaInformation, "integrityMatchStatus")
                   && row.componentMetaInformation.integrityMatchStatus != null) {
 
                 var lastFetchMessage = "Last fetch unknown.";
