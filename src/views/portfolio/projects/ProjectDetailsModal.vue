@@ -235,7 +235,8 @@
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
           tags: tagsNode,
-          active: this.project.active
+          active: this.project.active,
+          externalReferences: this.project.externalReferences,
         }).then((response) => {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));
