@@ -144,7 +144,7 @@
 
                 var lastFetchMessage = "Last fetch unknown.";
                 if (typeof row.componentMetaInformation.lastFetched !== 'undefined' && row.componentMetaInformation.lastFetched != null) {
-                  lastFetchMessage = "Last performed on" + common.formatTimestamp(row.componentMetaInformation.lastFetched);
+                  lastFetchMessage = "Last fetched on " + common.formatTimestamp(row.componentMetaInformation.lastFetched);
                 }
 
                 if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_PASSED') {
