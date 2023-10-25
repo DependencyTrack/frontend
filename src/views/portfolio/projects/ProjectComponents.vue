@@ -98,7 +98,7 @@
           {
             title: this.$t('message.published_at'),
             field: "componentMetaInformation.publishedDate",
-            sortable: true,
+            sortable: false,
             formatter(value, row, index) {
               if (value != null) {
                 return xssFilters.inHTMLData(common.formatTimestamp(value));
