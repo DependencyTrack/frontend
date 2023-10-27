@@ -323,10 +323,18 @@ export default {
         let url = this.getDependencyUrl(dependency);
         let response = await this.axios.get(url);
         let data = response.data;
-        treeNode.repositoryMeta = data.repositoryMeta
-        if (data && data.directDependencies) {
-          let jsonObject = JSON.parse(data.directDependencies)
-          this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode) )
+        let dependencies = [...data];
+        if (dependencies.length > 0) {
+          for (let dependency of dependencies) {
+            if (dependency) {
+              let treeNode = treeNodeMap.get(dependency.uuid);
+              treeNode.latestVersion = dependency.latestVersion;
+              if (dependency.directDependencies) {
+                let jsonObject = JSON.parse(dependency.directDependencies);
+                this.$set(treeNode, 'children', this.transformDependenciesToOrgTree(jsonObject, false, treeNode, dependency.uuid, "COMPONENT"));
+              }
+            }
+          }
         }
       }
       return dependencyFunc();

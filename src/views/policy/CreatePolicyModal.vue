@@ -37,7 +37,7 @@
         }).then((response) => {
           this.$root.$emit('bv::hide::modal', 'createPolicyModal');
           this.$emit('refreshTable');
-          this.$toastr.s(this.$t('message.project_created'));
+          this.$toastr.s(this.$t('message.policy_created'));
         }).catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         }).finally(() => {
