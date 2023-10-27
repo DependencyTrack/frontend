@@ -1,17 +1,12 @@
 module.exports = {
   plugins: [
-       "@babel/plugin-proposal-optional-chaining"
+    '@babel/plugin-proposal-optional-chaining'
   ],
   presets: [
-    ['@vue/app', {
-      polyfills: [
-        'es6.array.find',
-        'es6.array.from',
-        'es6.symbol'
-      ]
-    }],
-    ["@babel/preset-env", {
-      "useBuiltIns": "entry"
+    ['@vue/babel-preset-jsx'],
+    ['@babel/preset-env', {
+      'useBuiltIns': 'entry',
+      'corejs': '3.30'
     }]
   ]
 }
