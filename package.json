@@ -61,7 +61,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@cyclonedx/cyclonedx-npm": "^1.8.0",
     "@cyclonedx/webpack-plugin": "2.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.4.0",
