@@ -100,7 +100,7 @@ export default {
                 id: this.nodeId,
                 label: this.createNodeLabel(this.project),
                 objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+                children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT"),
                 fetchedChildren: true
               }
               this.loading = false
@@ -121,7 +121,7 @@ export default {
             id: this.nodeId,
             label: this.createNodeLabel(this.project),
             objectType: "PROJECT",
-            children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}),
+            children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT"),
             fetchedChildren: true
           }
         } else {
@@ -228,23 +228,24 @@ export default {
       this.$el.style.cursor = 'grab';
       this.$el.style.removeProperty('user-select');
     },
-    transformDependenciesToOrgTree: function(dependencies, getChildren, treeNode) {
+    transformDependenciesToOrgTree: function (dependencies, getChildren, treeNode, parentUuid, objectType) {
       let children = null;
       if (dependencies && dependencies.length > 0) {
         children = [];
-        for(let i = 0; i < dependencies.length; i++) {
+        for (let i = 0; i < dependencies.length; i++) {
           let dependency = dependencies[i]
           let childNode = this.transformDependencyToOrgTree(dependency);
           for (const gatheredKey of treeNode.gatheredKeys) {
             childNode.gatheredKeys.push(gatheredKey)
           }
           if (!childNode.gatheredKeys.some(gatheredKey => gatheredKey === childNode.label)) {
-            childNode.gatheredKeys.push(childNode.label)
-            if (getChildren === true) {
-              this.getChildrenFromDependency(childNode, dependency);
-            }
+            childNode.gatheredKeys.push(childNode.label);
             children.push(childNode);
           }
+        }
+
+        if (getChildren === true) {
+          this.getChildrens(children, parentUuid, objectType);
         }
       }
       return children;
@@ -315,12 +316,19 @@ export default {
         fetchedChildren: dependency.expandDependencyGraph,
         gatheredKeys: [],
         expand: dependency.expandDependencyGraph,
-        repositoryMeta: dependency.repositoryMeta
+        latestVersion: dependency.latestVersion
       }
     },
-    getChildrenFromDependency: function(treeNode, dependency) {
-      let dependencyFunc = async() => {
-        let url = this.getDependencyUrl(dependency);
+    getChildrens: function (treeNodes, parentUuid, objectType) {
+      let dependenciesFunc = async () => {
+        let url = this.getDependenciesUrl(parentUuid, objectType);
+
+        let treeNodeMap = new Map();
+
+        for (let treeNode of treeNodes) {
+          treeNodeMap.set(treeNode.uuid, treeNode);
+        }
+
         let response = await this.axios.get(url);
         let data = response.data;
         let dependencies = [...data];
@@ -337,13 +345,15 @@ export default {
           }
         }
       }
-      return dependencyFunc();
+      return dependenciesFunc();
     },
-    getDependencyUrl(dependency) {
-      if (dependency.objectType === "COMPONENT") {
-        return `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dependency.uuid}?includeRepositoryMetaData=true`;
+    getDependenciesUrl(parentUuid, objectType) {
+      if (objectType === "PROJECT") {
+        return `${this.$api.BASE_URL}/${this.$api.URL_DEPENDENCY_GRAPH}/project/${parentUuid}/directDependencies`;
+      } else if (objectType === "COMPONENT") {
+        return `${this.$api.BASE_URL}/${this.$api.URL_DEPENDENCY_GRAPH}/component/${parentUuid}/directDependencies`;
       } else {
-        return `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${dependency.uuid}`;
+        return null
       }
     },
     createNodeLabel: function(identity) { // could be a project or a component
@@ -373,8 +383,8 @@ export default {
       }
     },
     renderContent: function(h, data) {
-      if (this.highlightOutdatedComponents && data.repositoryMeta && data.repositoryMeta.latestVersion && data.repositoryMeta.latestVersion !== data.version) {
-        return (<div style="white-space: nowrap;">{data.label + ' '}<i id={"icon"+data.id} class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i><b-tooltip target={"icon"+data.id} triggers="hover" noninteractive="noninteractive">{"Risk: Outdated component. Current version is: "+ xssFilters.inHTMLData(data.repositoryMeta.latestVersion)}</b-tooltip></div>)
+      if (this.highlightOutdatedComponents && data.version && data.latestVersion && data.latestVersion !== data.version) {
+        return (<div style="white-space: nowrap;">{data.label + ' '}<i id={"icon"+data.id} class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i><b-tooltip target={"icon"+data.id} triggers="hover" noninteractive="noninteractive">{"Risk: Outdated component. Current version is: "+ xssFilters.inHTMLData(data.latestVersion)}</b-tooltip></div>)
       } else {
         return (<div style="white-space: nowrap;">{data.label}</div>)
       }
@@ -382,8 +392,8 @@ export default {
     onExpand: async function (e, data) {
       if (!data.fetchedChildren) {
         e.target.style.cursor = "wait"
-        for (const child of data.children) {
-          await this.getChildrenFromDependency(child, child)
+        if (data.objectType === 'COMPONENT') {
+          await this.getChildrens(data.children, data.uuid, data.objectType);
         }
         data.fetchedChildren = true
         e.target.style.cursor = "pointer"
