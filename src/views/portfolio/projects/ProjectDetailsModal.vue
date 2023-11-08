@@ -78,6 +78,32 @@
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
         </b-card>
       </b-tab>
+      <b-tab class="body-bg-color" style="border:0;padding:0" v-if="project.supplier">
+        <template v-slot:title><i class="fa fa-building-o"></i> {{ $t('message.supplier') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-supplier-name-input" input-group-size="mb-3" type="text" v-model="project.supplier.name"
+                                    required="false" readonly :label="$t('message.supplier_name')"
+                                    :tooltip="this.$t('message.project_supplier_name_desc')"/>
+          <b-form-group id="supplierUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="supplierUrlsTable">
+            <bootstrap-table
+              id="supplierUrlsTable"
+              ref="supplierUrlsTable"
+              :columns="supplierUrlsTableColumns"
+              :data="project.supplier.urls"
+              :options="supplierUrlsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+          <b-form-group id="supplierContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+            <bootstrap-table
+              id="supplierContactsTable"
+              ref="supplierContactsTable"
+              :columns="supplierContactsTableColumns"
+              :data="project.supplier.contacts"
+              :options="supplierContactsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+        </b-card>
+      </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-external-link"></i> {{ $t('message.external_references') }}</template>
         <b-card>
@@ -149,6 +175,78 @@
           dataOff: '\u2715'
         },
         isLoading: false,
+        supplierUrlsTableColumns: [
+          {
+            title: this.$t('message.urls'),
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(row, ""));
+            }
+          }
+        ],
+        supplierUrlsTableOptions: {
+          search: false,
+          showHeader: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        },
+        supplierContactsTableColumns: [
+          {
+            title: this.$t('message.name'),
+            field: "name",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.email'),
+            field: "email",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.phone'),
+            field: "phone",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          }
+        ],
+        supplierContactsTableOptions: {
+          search: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        },
         referencesTableColumns: [
           {
             title: this.$t('message.url'),
@@ -225,6 +323,7 @@
           uuid: this.project.uuid,
           author: this.project.author,
           publisher: this.project.publisher,
+          supplier: this.project.supplier,
           group: this.project.group,
           name: this.project.name,
           version: this.project.version,
