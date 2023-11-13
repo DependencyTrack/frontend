@@ -133,7 +133,7 @@
             },
           },
           {
-            title: this.$t('message.integrity_analysis'),
+            title: this.$t('message.integrity'),
             field: "componentMetaInformation.integrityMatchStatus",
             sortable: false,
             visible: false,
@@ -148,18 +148,16 @@
                 }
 
                 if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_PASSED') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('PASS');
+                  return '<span style="float:center" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ';
                 } else if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_FAILED') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes do not match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('FAIL');
+                  return '<span style="float:center" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes do not match. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ';
                 } else if (row.componentMetaInformation.integrityMatchStatus == 'COMPONENT_MISSING_HASH') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
+                  return '<span style="float:center" data-toggle="tooltip" data-placement="bottom" title="Component hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ';
                 } else if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_UNKNOWN') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
+                  return '<span style="float:center" data-toggle="tooltip" data-placement="bottom" title="Repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ';
                 } else if (row.componentMetaInformation.integrityMatchStatus == 'COMPONENT_MISSING_HASH_AND_MATCH_UNKNOWN') {
-                  return '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' + xssFilters.inHTMLData('UNKNOWN');
+                  return '<span style="float:center" data-toggle="tooltip" data-placement="bottom" title="Component & repository hashes are missing. '+ xssFilters.inHTMLData(lastFetchMessage) + '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ';
                 }
-              } else {
-                return xssFilters.inHTMLData(common.valueWithDefault(value, "NA"));
               }
             }
           },
