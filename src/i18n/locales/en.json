@@ -541,6 +541,8 @@
     "nvd": "NVD",
     "nvd_enable_mirroring_via_api": "Enable mirroring via API",
     "nvd_why_enable_api_help": "Why should I enable API mirroring?",
+    "nvd_additionally_download_feeds": "Additionally download feeds",
+    "nvd_additionally_download_feeds_help": "Feeds will not be parsed, but made available to other clients at",
     "nvd_request_api_key_help": "How do I get an API key?",
     "nvd_api_last_modification": "Last Modification (UTC)",
     "nvd_api_last_modification_help": "After mirroring the NVD database once completely, all following mirror operations will only request data that was modified since its last successful execution.",

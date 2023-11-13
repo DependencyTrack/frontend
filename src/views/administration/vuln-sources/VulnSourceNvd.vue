@@ -35,6 +35,19 @@
         <span class="fa fa-question-circle">&nbsp;</span>
         <a :href="nvdApiWhyEnableUrl" target="_blank">{{ $t('admin.nvd_why_enable_api_help') }}</a>
       </p>
+      <c-switch
+        :disabled="!this.nvdApiEnabled"
+        id="nvdApiDownloadFeeds"
+        color="primary"
+        v-model="nvdApiDownloadFeeds"
+        label
+        v-bind="labelIcon"
+      />
+      {{ $t('admin.nvd_additionally_download_feeds') }}
+      <p class="font-sm text-muted">
+        <span class="fa fa-question-circle">&nbsp;</span>
+        {{ $t('admin.nvd_additionally_download_feeds_help') }} <code>/mirror/nvd</code>
+      </p>
       <b-validated-input-group-form-input
         id="nvdApiEndpoint"
         label="API endpoint"
@@ -117,6 +130,7 @@ export default {
       vulnsourceEnabled: false,
       nvdFeedsUrl: '',
       nvdApiEnabled: false,
+      nvdApiDownloadFeeds: false,
       nvdApiEndpoint: '',
       nvdApiKey: '',
       nvdApiLastModifiedDate: '',
@@ -137,6 +151,7 @@ export default {
         {groupName: 'vuln-source', propertyName: 'nvd.enabled', propertyValue: this.vulnsourceEnabled},
         {groupName: 'vuln-source', propertyName: 'nvd.feeds.url', propertyValue: this.nvdFeedsUrl},
         {groupName: 'vuln-source', propertyName: 'nvd.api.enabled', propertyValue: this.nvdApiEnabled},
+        {groupName: 'vuln-source', propertyName: 'nvd.api.download.feeds', propertyValue: this.nvdApiDownloadFeeds},
         {groupName: 'vuln-source', propertyName: 'nvd.api.url', propertyValue: this.nvdApiEndpoint},
         {groupName: 'vuln-source', propertyName: 'nvd.api.key', propertyValue: this.nvdApiKey},
         {groupName: 'vuln-source', propertyName: 'nvd.api.last.modified.epoch.seconds', propertyValue: this.getApiLastModifiedEpochSeconds()}
@@ -146,7 +161,7 @@ export default {
       if (!this.nvdApiLastModifiedDate) {
         return 0;
       } else if (!this.nvdApiLastModifiedTime) {
-        let lastModifiedDateTime = Date.parse(this.nvdApiLastModifiedDate);
+        let lastModifiedDateTime = Date.parse(`${this.nvdApiLastModifiedDate}T00:00:00Z`);
         return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;
       }
       let lastModifiedDateTime = Date.parse(`${this.nvdApiLastModifiedDate}T${this.nvdApiLastModifiedTime}Z`);
@@ -165,6 +180,8 @@ export default {
             this.nvdFeedsUrl = item.propertyValue; break;
           case "nvd.api.enabled":
             this.nvdApiEnabled = common.toBoolean(item.propertyValue); break;
+          case "nvd.api.download.feeds":
+            this.nvdApiDownloadFeeds = common.toBoolean(item.propertyValue); break;
           case "nvd.api.url":
             this.nvdApiEndpoint = item.propertyValue; break;
           case "nvd.api.key":
@@ -177,7 +194,7 @@ export default {
             let date = new Date(0);
             date.setUTCSeconds(epochSeconds);
             this.nvdApiLastModifiedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD
-            this.nvdApiLastModifiedTime = date.toLocaleTimeString("en-GB"); // HH:mm:SS
+            this.nvdApiLastModifiedTime = date.toISOString().split("T")[1].split(".")[0]; // HH:mm:SS
             break;
         }
       }
