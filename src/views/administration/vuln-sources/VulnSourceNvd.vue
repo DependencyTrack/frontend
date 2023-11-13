@@ -11,6 +11,8 @@
       />
       {{$t('admin.vulnsource_nvd_enable')}}
       <hr/>
+      {{ $t('admin.vulnsource_nvd_desc') }}
+      <hr/>
       <b-validated-input-group-form-input
         id="nvd-feeds-url"
         :label="$t('admin.vulnsource_nvd_feeds_url')"
@@ -28,11 +30,10 @@
         label
         v-bind="labelIcon"
       />
-      Enable API
+      {{ $t('admin.nvd_enable_mirroring_via_api') }}
       <p class="font-sm text-muted">
         <span class="fa fa-question-circle">&nbsp;</span>
-        <!-- TODO: Explain why users may want to enable API over feeds; Point out caveats (feed files no longer being downloaded etc.) -->
-        Foobarbaz
+        <a :href="nvdApiWhyEnableUrl" target="_blank">{{ $t('admin.nvd_why_enable_api_help') }}</a>
       </p>
       <b-validated-input-group-form-input
         id="nvdApiEndpoint"
@@ -49,28 +50,38 @@
         v-model="nvdApiKey"
         lazy="true"
       />
-      <b-form-group label="Last Modification">
+      <p class="font-sm text-muted">
+        <span class="fa fa-question-circle">&nbsp;</span>
+        <a :href="nvdApiRequestApiKeyUrl" target="_blank">{{ $t('admin.nvd_request_api_key_help') }}</a>
+      </p>
+      <b-form-group :label="$t('admin.nvd_api_last_modification')">
         <b-input-group>
           <b-form-datepicker
             id="nvdApiLastModifiedDate"
             v-model="nvdApiLastModifiedDate"
             :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+            :min="nvdApiLastModifiedDateMin"
+            :max="nvdApiLastModifiedDateMax"
             locale="en-GB"
+            :reset-button="true"
+            :show-decade-nav="true"
           />
           <b-form-timepicker
             id="nvdApiLastModifiedTime"
             v-model="nvdApiLastModifiedTime"
             locale="en-GB"
+            :reset-button="true"
           />
         </b-input-group>
       </b-form-group>
       <p class="font-sm text-muted">
         <span class="fa fa-question-circle">&nbsp;</span>
-        <!-- TODO: Explain what the last modified datetime is used for and when users may want to modify it. -->
-        Foobarbaz
+        {{ $t('admin.nvd_api_last_modification_help') }}
       </p>
-      <hr/>
-      {{ $t('admin.vulnsource_nvd_desc') }}
+      <p class="font-sm text-muted">
+        <span class="fa fa-warning">&nbsp;</span>
+        {{ $t('admin.nvd_api_last_modification_warning') }}
+      </p>
     </b-card-body>
     <b-card-footer>
       <b-button
@@ -108,8 +119,12 @@ export default {
       nvdApiEnabled: false,
       nvdApiEndpoint: '',
       nvdApiKey: '',
-      nvdApiLastModifiedDate: new Date().toISOString(),
+      nvdApiLastModifiedDate: '',
+      nvdApiLastModifiedDateMin: new Date(1999, 1, 1),
+      nvdApiLastModifiedDateMax: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
       nvdApiLastModifiedTime: '',
+      nvdApiWhyEnableUrl: 'https://nvd.nist.gov/General/News/change-timeline',
+      nvdApiRequestApiKeyUrl: 'https://nvd.nist.gov/developers/request-an-api-key',
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715'
@@ -128,8 +143,14 @@ export default {
       ]);
     },
     getApiLastModifiedEpochSeconds() {
+      if (!this.nvdApiLastModifiedDate) {
+        return 0;
+      } else if (!this.nvdApiLastModifiedTime) {
+        let lastModifiedDateTime = Date.parse(this.nvdApiLastModifiedDate);
+        return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;
+      }
       let lastModifiedDateTime = Date.parse(`${this.nvdApiLastModifiedDate}T${this.nvdApiLastModifiedTime}Z`);
-      return lastModifiedDateTime ? lastModifiedDateTime / 1000 : null;
+      return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;
     }
   },
   created () {
