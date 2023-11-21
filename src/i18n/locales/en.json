@@ -670,6 +670,8 @@
     "limit_to_tags": "Limit to Tags",
     "alert_created": "Alert created",
     "alert_deleted": "Alert deleted",
+    "alert_log_successful_publish": "Log successful publish",
+    "alert_log_successful_publish_help": "Emit a log message upon successful publishing of the alert to the destination, instead of only emitting logs when issues are encountered. Aids in debugging missing alerts, or making alert publishing auditable.",
     "change_password_next_login": "User must change password at next login",
     "password_never_expires": "Password never expires",
     "suspended": "Suspended",

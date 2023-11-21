@@ -126,6 +126,9 @@
                     <b-form-group>
                       <c-switch id="notificationEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>
                       {{ $t('admin.enabled') }}
+                      <br/>
+                      <c-switch id="notificationLogSuccessfulPublish" color="primary" v-model="logSuccessfulPublish" label v-bind="labelIcon" :title="$t('admin.alert_log_successful_publish_help')" />
+                      {{ $t('admin.alert_log_successful_publish') }}
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
@@ -216,6 +219,7 @@
                   uuid: row.uuid,
                   name: row.name,
                   enabled: row.enabled,
+                  logSuccessfulPublish: row.logSuccessfulPublish,
                   notifyChildren: row.notifyChildren,
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
@@ -238,6 +242,9 @@
               },
               watch: {
                 enabled() {
+                  this.updateNotificationRule();
+                },
+                logSuccessfulPublish() {
                   this.updateNotificationRule();
                 },
                 notifyChildren() {
@@ -282,6 +289,7 @@
                     uuid: this.uuid,
                     name: this.name,
                     enabled: this.enabled,
+                    logSuccessfulPublish: this.logSuccessfulPublish,
                     notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType }),
