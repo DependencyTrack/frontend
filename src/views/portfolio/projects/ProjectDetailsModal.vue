@@ -78,6 +78,32 @@
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
         </b-card>
       </b-tab>
+      <b-tab class="body-bg-color" style="border:0;padding:0" v-if="project.metadata && project.metadata.manufacturer">
+        <template v-slot:title><i class="fa fa-industry"></i> {{ $t('message.manufacturer') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-manufacturer-name-input" input-group-size="mb-3" type="text" v-model="project.metadata.manufacturer.name"
+                                    required="false" readonly :label="$t('message.manufacturer_name')"
+                                    :tooltip="this.$t('message.manufacturer_name_desc')"/>
+          <b-form-group id="manufacturerUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="manufacturerUrlsTable">
+            <bootstrap-table
+              id="manufacturerUrlsTable"
+              ref="manufacturerUrlsTable"
+              :columns="urlsTableColumns"
+              :data="project.metadata.manufacturer.urls"
+              :options="urlsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+          <b-form-group id="manufacturerContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+            <bootstrap-table
+              id="manufacturerContactsTable"
+              ref="manufacturerContactsTable"
+              :columns="contactsTableColumns"
+              :data="project.metadata.manufacturer.contacts"
+              :options="contactsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+        </b-card>
+      </b-tab>
       <b-tab class="body-bg-color" style="border:0;padding:0" v-if="project.supplier">
         <template v-slot:title><i class="fa fa-building-o"></i> {{ $t('message.supplier') }}</template>
         <b-card>
@@ -88,18 +114,18 @@
             <bootstrap-table
               id="supplierUrlsTable"
               ref="supplierUrlsTable"
-              :columns="supplierUrlsTableColumns"
+              :columns="urlsTableColumns"
               :data="project.supplier.urls"
-              :options="supplierUrlsTableOptions">
+              :options="urlsTableOptions">
             </bootstrap-table>
           </b-form-group>
           <b-form-group id="supplierContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
             <bootstrap-table
               id="supplierContactsTable"
               ref="supplierContactsTable"
-              :columns="supplierContactsTableColumns"
+              :columns="contactsTableColumns"
               :data="project.supplier.contacts"
-              :options="supplierContactsTableOptions">
+              :options="contactsTableOptions">
             </bootstrap-table>
           </b-form-group>
         </b-card>
@@ -175,7 +201,7 @@
           dataOff: '\u2715'
         },
         isLoading: false,
-        supplierUrlsTableColumns: [
+        urlsTableColumns: [
           {
             title: this.$t('message.urls'),
             sortable: false,
@@ -184,7 +210,7 @@
             }
           }
         ],
-        supplierUrlsTableOptions: {
+        urlsTableOptions: {
           search: false,
           showHeader: false,
           showColumns: false,
@@ -203,7 +229,7 @@
             return res;
           }
         },
-        supplierContactsTableColumns: [
+        contactsTableColumns: [
           {
             title: this.$t('message.name'),
             field: "name",
@@ -229,7 +255,7 @@
             }
           }
         ],
-        supplierContactsTableOptions: {
+        contactsTableOptions: {
           search: false,
           showColumns: false,
           showRefresh: false,
