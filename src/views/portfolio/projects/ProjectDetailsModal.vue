@@ -83,7 +83,7 @@
         <b-card>
           <b-input-group-form-input id="project-manufacturer-name-input" input-group-size="mb-3" type="text" v-model="project.manufacturer.name"
                                     required="false" readonly :label="$t('message.manufacturer_name')"
-                                    :tooltip="this.$t('message.manufacturer_name_desc')"/>
+                                    disabled="true" :tooltip="this.$t('message.manufacturer_name_desc')"/>
           <b-form-group id="manufacturerUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="manufacturerUrlsTable">
             <bootstrap-table
               id="manufacturerUrlsTable"
@@ -109,7 +109,7 @@
         <b-card>
           <b-input-group-form-input id="project-supplier-name-input" input-group-size="mb-3" type="text" v-model="project.supplier.name"
                                     required="false" readonly :label="$t('message.supplier_name')"
-                                    :tooltip="this.$t('message.project_supplier_name_desc')"/>
+                                    disabled="true" :tooltip="this.$t('message.project_supplier_name_desc')"/>
           <b-form-group id="supplierUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="supplierUrlsTable">
             <bootstrap-table
               id="supplierUrlsTable"
@@ -139,6 +139,52 @@
             :data="project.externalReferences"
             :options="referencesTableOptions">
           </bootstrap-table>
+        </b-card>
+      </b-tab>
+      <b-tab style="border:0;padding:0"
+             v-if="project.metadata && (project.metadata.authors || project.metadata.supplier)">
+        <template v-slot:title><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template>
+        <b-card>
+          <b-tabs pills card vertical>
+            <b-tab :title="$t('message.authors')" v-if="project.metadata.authors">
+              <b-card>
+                <b-form-group id="authorsTable-Fieldset">
+                  <bootstrap-table
+                      id="authorsTable"
+                      ref="authorsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.metadata.authors"
+                      :options="contactsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+              </b-card>
+            </b-tab>
+            <b-tab :title="$t('message.supplier')" v-if="project.metadata.supplier">
+              <b-card>
+                <b-input-group-form-input id="project-metadata-supplier-name-input" input-group-size="mb-3" type="text" v-model="project.metadata.supplier.name"
+                                          required="false" readonly :label="$t('message.supplier_name')"
+                                          disabled="true" :tooltip="this.$t('message.project_metadata_supplier_name_desc')"/>
+                <b-form-group id="supplierUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="supplierUrlsTable">
+                  <bootstrap-table
+                      id="supplierUrlsTable"
+                      ref="supplierUrlsTable"
+                      :columns="urlsTableColumns"
+                      :data="project.metadata.supplier.urls"
+                      :options="urlsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+                <b-form-group id="supplierContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+                  <bootstrap-table
+                      id="supplierContactsTable"
+                      ref="supplierContactsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.metadata.supplier.contacts"
+                      :options="contactsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+              </b-card>
+            </b-tab>
+          </b-tabs>
         </b-card>
       </b-tab>
     </b-tabs>
