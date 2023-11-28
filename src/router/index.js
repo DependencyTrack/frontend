@@ -39,6 +39,7 @@ const Cargo = () => import('@/views/administration/repositories/Cargo')
 const Composer = () => import('@/views/administration/repositories/Composer')
 const Cpan = () => import('@/views/administration/repositories/Cpan')
 const Gem = () => import('@/views/administration/repositories/Gem')
+const GitHub = () => import('@/views/administration/repositories/GitHub.vue')
 const GoModules = () => import('@/views/administration/repositories/GoModules')
 const Hex = () => import('@/views/administration/repositories/Hex')
 const Maven = () => import('@/views/administration/repositories/Maven')
@@ -412,6 +413,16 @@ function configRoutes() {
             {
               path: 'repositories/gem',
               component: Gem,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/github',
+              component: GitHub,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
