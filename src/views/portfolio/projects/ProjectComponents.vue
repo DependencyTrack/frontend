@@ -98,7 +98,7 @@
           {
             title: this.$t('message.published_at'),
             field: "componentMetaInformation.publishedDate",
-            sortable: false,
+            sortable: true,
             formatter(value, row, index) {
               if (value != null) {
                 return xssFilters.inHTMLData(common.formatTimestamp(value));
@@ -135,7 +135,7 @@
           {
             title: this.$t('message.integrity'),
             field: "componentMetaInformation.integrityMatchStatus",
-            sortable: false,
+            sortable: true,
             visible: false,
             formatter: (value, row, index) => {
               if (Object.prototype.hasOwnProperty.call(row, "componentMetaInformation") 
@@ -144,7 +144,11 @@
 
                 var lastFetchMessage = "Last fetch unknown.";
                 if (typeof row.componentMetaInformation.lastFetched !== 'undefined' && row.componentMetaInformation.lastFetched != null) {
-                  lastFetchMessage = "Last fetched on " + common.formatTimestamp(row.componentMetaInformation.lastFetched);
+                  lastFetchMessage = "Last fetched on " + common.formatTimestamp(row.componentMetaInformation.lastFetched) + ".";
+                }
+              
+                if (typeof row.componentMetaInformation.integrityRepoUrl != null) {
+                  lastFetchMessage += " Source:  " + row.componentMetaInformation.integrityRepoUrl;
                 }
 
                 if (row.componentMetaInformation.integrityMatchStatus == 'HASH_MATCH_PASSED') {
