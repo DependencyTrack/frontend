@@ -548,6 +548,7 @@
     "nvd_api_last_modification_help": "After mirroring the NVD database once completely, all following mirror operations will only request data that was modified since its last successful execution.",
     "nvd_api_last_modification_warning": "Changing the last modification datetime manually is generally not recommended, but may be used to force re-ingestion of NVD data. Note that due to a limitation in the NVD's REST API, only data for 120 consecutive days can be requested when a last modification datetime is configured. Resetting the last modification datetime will cause the entire NVD database to be re-mirrored.",
     "national_vulnerability_database": "National Vulnerability Database",
+    "github": "GitHub",
     "github_advisories": "GitHub Advisories",
     "osv_advisories": "Google OSV Advisories (Beta)",
     "repositories": "Repositories",
