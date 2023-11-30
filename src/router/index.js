@@ -25,6 +25,7 @@ const Jira = () => import('@/views/administration/configuration/JiraConfig')
 const InternalComponents = () => import('@/views/administration/configuration/InternalComponents')
 const TaskScheduler = () => import('@/views/administration/configuration/TaskScheduler')
 const Search = () => import('@/views/administration/configuration/Search')
+const RiskScore = () => import('@/views/administration/configuration/RiskScore')
 
 const InternalAnalyzer = () => import('@/views/administration/analyzers/InternalAnalyzer')
 const OssIndexAnalyzer = () => import('@/views/administration/analyzers/OssIndexAnalyzer')
@@ -299,6 +300,16 @@ function configRoutes() {
             {
               path: 'configuration/search',
               component: Search,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'configuration/riskscore',
+              component: RiskScore,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
