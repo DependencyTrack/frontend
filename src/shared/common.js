@@ -120,6 +120,8 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
         analyzerUrl = "https://osv.dev/vulnerability/" + vulnId;
       } else if(vulnSource === "SNYK") {
         analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
+      } else if(vulnSource === "TRIVY") {
+        analyzerUrl = "https://avd.aquasec.com/nvd/" + vulnId;
       }
       break;
     case 'OSSINDEX_ANALYZER':
@@ -134,6 +136,10 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
       analyzerLabel = "Snyk";
       analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       break;
+    case 'TRIVY_ANALYZER':
+        analyzerLabel = "Trivy";
+        analyzerUrl = "https://avd.aquasec.com/nvd/" + vulnId;
+        break;
   }
   if (analyzerUrl) {
     analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
@@ -183,6 +189,9 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(vulnSource, vulnI
       sourceInfo.name = "Global Security Database";
       sourceInfo.url = "https://github.com/cloudsecurityalliance/gsd-database";
       break;
+    case "TRIVY":
+      sourceInfo.name = "Trivy";
+      sourceInfo.url = "https://avd.aquasec.com/nvd/" + vulnId;
     case "VULNDB":
       sourceInfo.name = "VulnDB";
       sourceInfo.url = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
