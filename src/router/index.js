@@ -30,6 +30,7 @@ const InternalAnalyzer = () => import('@/views/administration/analyzers/Internal
 const OssIndexAnalyzer = () => import('@/views/administration/analyzers/OssIndexAnalyzer')
 const VulnDbAnalyzer = () => import('@/views/administration/analyzers/VulnDbAnalyzer')
 const SnykAnalyzer = () => import('@/views/administration/analyzers/SnykAnalyzer')
+const TrivyAnalyzer = () => import('@/views/administration/analyzers/TrivyAnalyzer')
 
 const VulnSourceNvd = () => import('@/views/administration/vuln-sources/VulnSourceNvd')
 const VulnSourceGitHubAdvisories = () => import('@/views/administration/vuln-sources/VulnSourceGitHubAdvisories')
@@ -341,6 +342,16 @@ function configRoutes() {
             {
               path: 'analyzers/snyk',
               component: SnykAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'analyzers/trivy',
+              component: TrivyAnalyzer,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',

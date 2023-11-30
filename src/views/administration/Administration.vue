@@ -30,6 +30,7 @@ import TaskScheduler from "./configuration/TaskScheduler.vue";
 import InternalAnalyzer from "./analyzers/InternalAnalyzer";
 import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
 import SnykAnalyzer from "./analyzers/SnykAnalyzer";
+import TrivyAnalyzer from "./analyzers/TrivyAnalyzer";
 import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
 // Vulnerability sources
 import VulnSourceGitHubAdvisories from "./vuln-sources/VulnSourceGitHubAdvisories";
@@ -68,7 +69,7 @@ export default {
     EventBus,
     AdminMenu,
     General, BomFormats, Email, Jira, InternalComponents, TaskScheduler, Search,
-    InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer,
+    InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer, TrivyAnalyzer,
     VulnSourceNvd, VulnSourceGitHubAdvisories, VulnSourceOSVAdvisories,
     Cargo, Composer, Gem, GitHub, GoModules, Hex, Maven, Npm, Cpan, Nuget, Python,
     Alerts, Templates,
