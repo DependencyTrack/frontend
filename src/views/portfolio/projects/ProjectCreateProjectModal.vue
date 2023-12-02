@@ -67,6 +67,24 @@
             :tooltip="$t('message.component_team_desc')"
             :disabled="isDisabled"
           />
+          <b-input-group-form-select
+            id="v-collection-logic-input"
+            required="true"
+            v-model="project.collectionLogic" :options="availableCollectionLogics"
+            :label="$t('message.collectionLogic')" :tooltip="$t('message.project_collection_logic_desc')"
+            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            v-on:change="syncCollectionTagsVisibility"
+          />
+          <vue-tags-input
+            id="input-collectionTags"
+            v-model="collectionTagTyping"
+            :tags="collectionTags"
+            :add-on-key="addOnKeys"
+            :placeholder="$t('message.project_add_collection_tag')" @tags-changed="newCollectionTags => this.collectionTags = newCollectionTags"
+            class="mw-100 bg-transparent text-lowercase" :max-tags="1" v-show="showCollectionTags"
+            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+          />
+
           <div style="margin-bottom: 1rem">
             <label>Parent</label>
             <multiselect
@@ -264,16 +282,28 @@ export default {
         { value: 'FILE', text: this.$i18n.t('message.component_file') },
       ],
       availableTeams: [],
+      availableCollectionLogics: [
+        { value: 'NONE', text: this.$i18n.t('message.project_collection_logic_none') },
+        { value: 'AGGREGATE_DIRECT_CHILDREN', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children') },
+        { value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children_with_tag') },
+        { value: 'HIGHEST_SEMVER_CHILD', text: this.$i18n.t('message.project_collection_logic_highest_semver_child') }
+      ],
       selectableLicenses: [],
       selectedLicense: '',
       selectedParent: null,
       availableParents: [],
-      project: { team: [] },
+      project: {
+        team: [],
+        collectionLogic: 'NONE' // set default to regular project
+      },
       teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
       tags: [], // An array of tags bound to the vue-tag-input
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
+      collectionTagTyping: '', // The contents of a collection tag as its being typed into the vue-tag-input
+      collectionTags: [], // An array of tags bound to the vue-tag-input for collection tag
+      showCollectionTags: false,
       addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
       isLoading: false,
     };
@@ -338,6 +368,9 @@ export default {
     syncReadOnlyVersionField: function (value) {
       this.readOnlyProjectVersion = value;
     },
+    syncCollectionTagsVisibility: function(value) {
+      this.showCollectionTags = value === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
+    },
     createProject: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tagsNode = [];
@@ -363,6 +396,10 @@ export default {
           parent: parent,
           classifier: this.project.classifier,
           accessTeams: choosenTeamswithoutAPIKeys,
+          collectionLogic: this.project.collectionLogic,
+          collectionTag: ( this.project.collectionLogic === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG' &&
+            this.collectionTags &&
+            this.collectionTags.length > 0 ) ? {name: this.collectionTags[0].text} : null,
           purl: this.project.purl,
           cpe: this.project.cpe,
           swidTagId: this.project.swidTagId,
@@ -414,12 +451,15 @@ export default {
     },
     resetValues: function () {
       this.project = {
+        collectionLogic: 'NONE', // set default to regular project
         team: [],
       };
       this.tag = '';
       this.tags = [];
       this.selectedParent = null;
       this.availableParents = [];
+      this.collectionTags = [];
+      this.showCollectionTags = false;
     },
     createProjectLabel: function (project) {
       if (project.version) {

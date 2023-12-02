@@ -243,7 +243,24 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr('../projects/' + row.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            let collectionIcon = '';
+            if(row.collectionLogic !== 'NONE') {
+              let title = 'Metrics of collection project are calculated '
+              switch (row.collectionLogic) {
+                case 'AGGREGATE_DIRECT_CHILDREN':
+                  title += 'by aggregating numbers of all direct children.';
+                  break;
+                case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
+                  const tag = !row.collectionTag ? '' : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
+                  title += `by aggregating numbers of direct children with tag '${tag}'.`;
+                  break;
+                case 'HIGHEST_SEMVER_CHILD':
+                  title += 'by using the child with highest SemVer version.'
+                  break;
+              }
+              collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
+            }
+            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>${collectionIcon}`;
           },
         },
         {

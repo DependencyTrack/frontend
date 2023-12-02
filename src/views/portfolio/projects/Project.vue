@@ -482,6 +482,10 @@ export default {
         })
         .then((response) => {
           this.project = response.data;
+          // metrics are not always returned by API, fix error sometimes raised in following lines
+          if(!Object.hasOwn(this.project, 'metrics')) {
+            this.project.metrics = {}
+          }
           this.currentCritical = common.valueWithDefault(
             this.project.metrics.critical,
             0,
