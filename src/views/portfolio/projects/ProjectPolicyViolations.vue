@@ -302,8 +302,11 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: this.apiUrl(),
-        onPostBody: this.initializeTooltips,
+        deferUrl: this.apiUrl(), // use deferUrl to prevent double loading of data after initializing columns
+        onPostBody: () => {
+          this.initializeTooltips();
+          loadUserPreferencesForBootstrapTable(this, "ProjectPolicyViolations", this.$refs.table.columns);
+        },
         onPageChange: ((number, size) => {
           if (localStorage) {
             localStorage.setItem("ProjectPolicyViolationsPageSize", size.toString())
@@ -340,7 +343,6 @@ export default {
       });
     },
     tableLoaded: function(data) {
-      loadUserPreferencesForBootstrapTable(this, "ProjectPolicyViolations", this.$refs.table.columns);
       this.$emit('total', data.total);
     },
     initializeTooltips: function () {

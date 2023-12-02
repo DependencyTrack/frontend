@@ -150,8 +150,11 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: this.apiUrl(),
-        onPostBody: this.initializeTooltips,
+        deferUrl: this.apiUrl(), // use deferUrl to prevent double loading of data after initializing columns
+        onPostBody: () => {
+          this.initializeTooltips()
+          loadUserPreferencesForBootstrapTable(this, "ProjectEpss", this.$refs.table.columns);
+        },
         onPageChange: ((number, size) => {
           if (localStorage) {
             localStorage.setItem("ProjectEpssPageSize", size.toString())
@@ -188,7 +191,6 @@ export default {
       });
     },
     tableLoaded: function(data) {
-      loadUserPreferencesForBootstrapTable(this, "ProjectEpss", this.$refs.table.columns);
       this.$emit('total', data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },

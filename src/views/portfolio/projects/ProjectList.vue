@@ -1,6 +1,5 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row :fetch="true" />
+  <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button size="md" variant="outline-primary" @click="initializeProjectCreateProjectModal" v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT">
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
@@ -13,7 +12,6 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="onLoadSuccess"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody">
     </bootstrap-table>
@@ -22,7 +20,7 @@
 </template>
 
 <script>
-  import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
+import { loadUserPreferencesForBootstrapTable } from "@/shared/utils";
 import { Switch as cSwitch } from '@coreui/vue';
 import MurmurHash2 from "imurmurhash";
 import Vue from 'vue';
@@ -42,6 +40,13 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
       ProjectCreateProjectModal,
       PortfolioWidgetRow
     },
+    props: {
+      /**
+       * If only children from a specific project shall be shown this must be set to the corresponding project
+       */
+      parentProject: Object,
+      uuid: String
+    },
     beforeCreate() {
       this.showInactiveProjects = (localStorage && localStorage.getItem("ProjectListShowInactiveProjects") !== null) ? (localStorage.getItem("ProjectListShowInactiveProjects") === "true") : false;
       this.showFlatView = (localStorage && localStorage.getItem("ProjectListShowFlatView") !== null) ? (localStorage.getItem("ProjectListShowFlatView") === "true") : false;
@@ -51,6 +56,11 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
         this.$root.$emit("initializeProjectCreateProjectModal");
       },
       apiUrl: function (uuid) {
+        // if we only want to show children of a specific parent we force the base call to fetch its children
+        if(this.uuid && !uuid) {
+          uuid = this.uuid;
+        }
+
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         if (uuid) {
           url += `/${uuid}/children`;
@@ -86,9 +96,6 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
           pageNumber: 1
         });
       },
-      onLoadSuccess: function () {
-        loadUserPreferencesForBootstrapTable(this, "ProjectList", this.$refs.table.columns);
-      },
       onPreBody: function () {
         this.$refs.table.getData().forEach(project => {
           project.id = MurmurHash2(project.uuid).result();
@@ -120,6 +127,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             }
           })
         }
+        loadUserPreferencesForBootstrapTable(this, "ProjectList", this.$refs.table.columns);
         this.$refs.table.hideLoading();
       },
       getChildren: async function (project) {
@@ -138,9 +146,6 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
       }
     },
     watch: {
-      $route(to, from) {
-        this.refreshTable();
-      },
       showInactiveProjects() {
         if (localStorage) {
           localStorage.setItem("ProjectListShowInactiveProjects", this.showInactiveProjects.toString());
@@ -175,8 +180,11 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             title: this.$t('message.project_name'),
             field: "name",
             sortable: true,
+            routerFunc: () => this.$router,
             formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../projects/" + row.uuid);
+              let url = xssFilters.uriInUnQuotedAttr(
+                  this.routerFunc().resolve({name: 'Project', params: {'uuid': row.uuid}}).href
+              );
               let collectionIcon = '';
               if(row.collectionLogic !== 'NONE') {
                 let title = 'Metrics of collection project are calculated '
@@ -230,6 +238,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             title: this.$t('message.classifier'),
             field: "classifier",
             sortable: true,
+            routerFunc: () => this.$router, // needed by formatter
             formatter: common.componentClassifierLabelProjectUrlFormatter(this),
           },
           {
@@ -331,7 +340,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl(),
+          deferUrl: this.apiUrl(), // use deferUrl to prevent double loading of data after initializing columns
           // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
           onClickRow: ((row, $element) => {
             if (!this.showFlatView && !this.isSearching) {

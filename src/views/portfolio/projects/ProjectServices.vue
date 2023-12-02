@@ -102,7 +102,10 @@ export default {
       ],
       data: [],
       options: {
-        onPostBody: this.initializeTooltips,
+        onPostBody: () => {
+          this.initializeTooltips()
+          loadUserPreferencesForBootstrapTable(this, "ProjectServices", this.$refs.table.columns);
+        },
         search: true,
         showColumns: true,
         showRefresh: true,
@@ -122,7 +125,7 @@ export default {
           res.total = xhr.getResponseHeader("X-Total-Count");
           return res;
         },
-        url: `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/project/${this.uuid}`,
+        deferUrl: `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/project/${this.uuid}`, // use deferUrl to prevent double loading of data after initializing columns
         onPageChange: ((number, size) => {
           if (localStorage) {
             localStorage.setItem("ProjectServicesPageSize", size.toString())
@@ -161,7 +164,6 @@ export default {
       this.$refs.table.uncheckAll();
     },
     tableLoaded: function(data) {
-      loadUserPreferencesForBootstrapTable(this, "ProjectServices", this.$refs.table.columns);
       if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
         this.$emit('total', data.total);
       } else {
