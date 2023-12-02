@@ -1,6 +1,5 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row :fetch="true" />
+  <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
         size="md"
@@ -38,7 +37,6 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="onLoadSuccess"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody"
     >
@@ -68,6 +66,13 @@ export default {
     ProjectCreateProjectModal,
     PortfolioWidgetRow,
   },
+  props: {
+    /**
+     * If only children from a specific project shall be shown this must be set to the corresponding project
+     */
+    parentProject: Object,
+    uuid: String
+  },
   beforeCreate() {
     this.showInactiveProjects =
       localStorage &&
@@ -84,6 +89,11 @@ export default {
       this.$root.$emit('initializeProjectCreateProjectModal');
     },
     apiUrl: function (uuid) {
+      // if we only want to show children of a specific parent we force the base call to fetch its children
+      if(this.uuid && !uuid) {
+        uuid = this.uuid;
+      }
+
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       if (uuid) {
         url += `/${uuid}/children`;
@@ -241,8 +251,11 @@ export default {
           title: this.$t('message.project_name'),
           field: 'name',
           sortable: true,
+          routerFunc: () => this.$router,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr('../projects/' + row.uuid);
+            let url = xssFilters.uriInUnQuotedAttr(
+              this.routerFunc().resolve({name: 'Project', params: {'uuid': row.uuid}}).href
+            );
             let collectionIcon = '';
             if(row.collectionLogic !== 'NONE') {
               let title = 'Metrics of collection project are calculated '
@@ -312,6 +325,7 @@ export default {
           title: this.$t('message.classifier'),
           field: 'classifier',
           sortable: true,
+          routerFunc: () => this.$router, // needed by formatter
           formatter: common.componentClassifierLabelProjectUrlFormatter(this),
         },
         {

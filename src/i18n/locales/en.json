@@ -362,6 +362,7 @@
     "close": "Close",
     "code_not_present": "Code not present",
     "code_not_reachable": "Code not reachable",
+    "collection_projects": "Collection Projects",
     "collectionLogic": "Project Collection Logic",
     "collection_indicator_tooltip": "Collection project with values calculated based on children.",
     "comment": "Comment",
