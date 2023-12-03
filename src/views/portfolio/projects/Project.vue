@@ -14,7 +14,7 @@
                       <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
                       <ul class="dropdown-menu">
                         <span v-for="projectVersion in project.versions">
-                          <b-dropdown-item :to="projectVersion.uuid">{{ projectVersion.version }}</b-dropdown-item>
+                          <b-dropdown-item :to="{name: 'Project', params: {'uuid': projectVersion.uuid}}">{{ projectVersion.version }}</b-dropdown-item>
                         </span>
                       </ul>
                     </li>
