@@ -134,7 +134,7 @@
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-3" :label="this.$t('admin.notification_level')" label-for="input-3">
-                      <b-form-input id="input-3" v-model="notificationLevel" disabled class="form-control disabled" readonly trim />
+                      <b-form-select id="input-3" v-model="notificationLevel" :options="availableLevels" required></b-form-select>
                     </b-form-group>
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
@@ -234,6 +234,11 @@
                     dataOn: '\u2713',
                     dataOff: '\u2715'
                   },
+                  availableLevels: [
+                    { value: 'INFORMATIONAL', text: 'Informational', selected: true },
+                    { value: 'WARNING', text: 'Warning' },
+                    { value: 'ERROR', text: 'Error' }
+                  ]
                 }
               },
               created() {
