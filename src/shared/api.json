@@ -54,7 +54,6 @@
   "URL_LICENSE_GROUP": "api/v1/licenseGroup",
   "URL_ACL_MAPPING": "api/v1/acl/mapping",
   "URL_ACL_TEAM": "api/v1/acl/team",
-  "URL_ACL_NOTASSIGNEDPROJECTS": "api/v1/acl/notassignedprojects",
   "URL_VEX": "api/v1/vex",
   "URL_OSV_ECOSYSTEM": "api/v1/integration/osv/ecosystem"
 }
