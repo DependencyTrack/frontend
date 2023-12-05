@@ -12,6 +12,8 @@
       {{$t('admin.vulnsource_nvd_enable')}}
       <hr/>
       {{ $t('admin.vulnsource_nvd_desc') }}
+      <br/><br/>
+      {{ $t('admin.vulnsource_nvd_notice') }}
       <hr/>
       <b-validated-input-group-form-input
         id="nvd-feeds-url"
