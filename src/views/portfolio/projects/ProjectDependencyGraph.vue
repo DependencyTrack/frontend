@@ -3,7 +3,7 @@
     Loading, please wait...
   </div>
   <div v-else style="overflow-x: hidden; overflow-y: hidden; cursor: grab" @mousedown="mouseDownHandler">
-    <span v-if="this.$route.params.componentUuid && this.$route.params.componentUuid.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
+    <span v-if="this.$route.params.componentUuids && this.$route.params.componentUuids.length > 0 && this.project.directDependencies && this.project.directDependencies.length > 0 && !this.notFound">
       <c-switch style="margin-left:1.5rem; margin-right:.5rem" id="showCompleteGraph" color="primary" v-model="showCompleteGraph" label v-bind="labelIcon" />
       <span class="text-muted">{{ $t('message.show_complete_graph') }}</span>
     </span>
@@ -13,15 +13,15 @@
       <span class="text-muted">{{ $t('message.not_found_in_dependency_graph') }}</span><br>
     </span>
     <vue2-org-tree
-      :data="data"
-      :horizontal="true"
-      :collapsable="collapsable"
-      :label-class-name="labelClassName"
-      :render-content="renderContent"
-      selected-class-name="bg-tomato"
-      selected-key="selectedKey"
-      @on-expand="onExpand"
-      @on-node-click="onNodeClick"
+        :data="data"
+        :horizontal="true"
+        :collapsable="collapsable"
+        :label-class-name="labelClassName"
+        :render-content="renderContent"
+        selected-class-name="bg-tomato"
+        selected-key="selectedKey"
+        @on-expand="onExpand"
+        @on-node-click="onNodeClick"
     />
   </div>
 </template>
@@ -64,78 +64,72 @@ export default {
         dataOn: '\u2713',
         dataOff: '\u2715'
       },
+      searchedComponentUuids: {}
     }
   },
   watch: {
     project: async function (newVal, oldVal) {
-      if (this.$route.params.componentUuid) {
-        if (this.project && this.project.directDependencies) {
-          this.$emit('total', 1);
-          this.loading = true
-          let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuid}`
-          this.axios.get(url).then(response => {
-            if (response.data && Object.keys(response.data).length > 0){
-              this.notFound = false
-              this.response = response
-              this.data = {
-                id: this.nodeId,
-                label: this.createNodeLabel(this.project),
-                objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, !this.showCompleteGraph),
-                fetchedChildren: true,
-                expand: true
-              }
-              this.loading = false
-              new Promise(resolve => setTimeout(resolve, 50)).then(() => {
-                document.getElementsByClassName("searched").item(0).scrollIntoView({
-                  behavior: "smooth",
-                  inline: "center",
-                  block: "center"
-                })
-              })
-            } else {
-              this.$route.query.dependencyGraph = null
-              this.notFound = true
-              this.data = {
-                id: this.nodeId,
-                label: this.createNodeLabel(this.project),
-                objectType: "PROJECT",
-                children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT"),
-                fetchedChildren: true
-              }
-              this.loading = false
-            }
+      // prepare base object
+      const data = {
+        id: this.nodeId,
+        label: this.createNodeLabel(this.project),
+        objectType: "PROJECT"
+      }
+      // do not assign data to this.data yet, otherwise tree breaks :(
+
+      // project has no tree data
+      if (!this.project || !this.project.directDependencies) {
+        this.$emit('total', 0);
+        this.data = data;
+        return;
+      }
+
+      // tree available, populate common info
+      this.$emit('total', 1);
+      data.fetchedChildren = true;
+
+      // full tree, not searching components
+      if(!this.$route.params.componentUuids) {
+        data.children = this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT");
+        this.data = data;
+        return;
+      }
+
+      // tree with component search active
+      this.createSearchedComponentLookupTable(this.$route.params.componentUuids);
+      this.loading = true
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${this.$route.params.componentUuids}`
+      this.axios.get(url).then(response => {
+        if (response.data && Object.keys(response.data).length > 0){
+          this.notFound = false
+          this.response = response
+
+          data.children = this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, !this.showCompleteGraph);
+          data.expand = true;
+          this.data = data;
+
+          this.loading = false
+          new Promise(resolve => setTimeout(resolve, 50)).then(() => {
+            const firstSearched = document.getElementsByClassName("searched").item(0);
+            firstSearched && firstSearched.scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "center"
+            });
+            !firstSearched && console.warn('Failed to locate first searched component in tree');
           })
         } else {
-          this.$emit('total', 0);
-          this.data = {
-            id: this.nodeId,
-            label: this.createNodeLabel(this.project),
-            objectType: "PROJECT",
-          }
+          this.$route.query.dependencyGraph = null
+          this.notFound = true
+          data.children = this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT");
+          this.loading = false
+
+          this.data = data;
         }
-      } else {
-        if (this.project && this.project.directDependencies) {
-          this.$emit('total', 1);
-          this.data = {
-            id: this.nodeId,
-            label: this.createNodeLabel(this.project),
-            objectType: "PROJECT",
-            children: this.transformDependenciesToOrgTree(JSON.parse(this.project.directDependencies), true, {gatheredKeys: []}, this.project.uuid, "PROJECT"),
-            fetchedChildren: true
-          }
-        } else {
-          this.$emit('total', 0);
-          this.data = {
-            id: this.nodeId,
-            label: this.createNodeLabel(this.project),
-            objectType: "PROJECT",
-          }
-        }
-      }
+      });
     },
     showCompleteGraph: function () {
-      if (this.$route.params.componentUuid && localStorage) {
+      if (this.$route.params.componentUuids && localStorage) {
         localStorage.setItem("ProjectDependencyGraphShowCompleteGraph", this.showCompleteGraph.toString());
       }
       if (this.showCompleteGraph) {
@@ -145,9 +139,9 @@ export default {
           objectType: "PROJECT",
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(this.response.data, {gatheredKeys: []}, false),
           fetchedChildren: true,
-          expand: !!this.$route.params.componentUuid
+          expand: !!this.$route.params.componentUuids
         }
-        if (this.$route.params.componentUuid) {
+        if (this.$route.params.componentUuids) {
           new Promise(resolve => setTimeout(resolve, 50)).then(() => {
             document.getElementsByClassName("searched").item(0).scrollIntoView({
               behavior: "smooth",
@@ -173,13 +167,15 @@ export default {
       }
     },
     $route: function (to, from) {
-      if (!to.params.componentUuid && from.params.componentUuid) {
+      if (!to.params.componentUuids && from.params.componentUuids) {
         this.showCompleteGraph = true
         this.collapse(this.data.children)
         this.data.expand = false
-      } else if (to.params.componentUuid && !from.params.componentUuid) {
+      } else if (to.params.componentUuids && !from.params.componentUuids) {
         this.showCompleteGraph = (localStorage && localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") !== null) ? (localStorage.getItem("ProjectDependencyGraphShowCompleteGraph") === "true") : false;
       }
+      // build map of searched components for later fast lookup
+      this.createSearchedComponentLookupTable(to.params.componentUuids);
     }
   },
   methods: {
@@ -255,11 +251,11 @@ export default {
       if (dependencies) {
         let directDependencies = JSON.parse(this.project.directDependencies)
         directDependencies.forEach((directDependency) => {
-          if (dependencies[directDependency.uuid] && (!onlySearched || (onlySearched && (dependencies[directDependency.uuid].expandDependencyGraph || directDependency.uuid === this.$route.params.componentUuid)))) {
-            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[directDependency.uuid])
+          if (dependencies[directDependency.uuid] && (!onlySearched || (dependencies[directDependency.uuid].expandDependencyGraph || this.searchedComponentUuids[directDependency.uuid]))) {
+            let childNode = this.transformDependencyToOrgTree(dependencies[directDependency.uuid])
             childNode.gatheredKeys.push(childNode.label)
             children.push(childNode)
-            if (onlySearched && directDependency.uuid === this.$route.params.componentUuid) {
+            if (onlySearched && this.searchedComponentUuids[directDependency.uuid]) {
               this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, false))
             } else {
               this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[directDependency.uuid], childNode, onlySearched))
@@ -273,15 +269,15 @@ export default {
       let children = []
       if (component.dependencyGraph) {
         component.dependencyGraph.forEach((dependency) => {
-          if (dependencies[dependency] && (!onlySearched || (onlySearched && (dependencies[dependency].expandDependencyGraph || dependency === this.$route.params.componentUuid)))) {
-            let childNode = this.transformDependencyToOrgTreeWithSearchedDependency(dependencies[dependency])
+          if (dependencies[dependency] && (!onlySearched || (dependencies[dependency].expandDependencyGraph || this.searchedComponentUuids[dependency] !== -1))) {
+            let childNode = this.transformDependencyToOrgTree(dependencies[dependency])
             for (const gatheredKey of treeNode.gatheredKeys) {
               childNode.gatheredKeys.push(gatheredKey)
             }
             if (!childNode.gatheredKeys.some(gatheredKey => gatheredKey === childNode.label)) {
               childNode.gatheredKeys.push(childNode.label)
               children.push(childNode)
-              if (onlySearched && dependency === this.$route.params.componentUuid) {
+              if (onlySearched && this.searchedComponentUuids[dependency]) {
                 this.$set(childNode, 'children', this.getChildrenFromDependencyWithSearchedDependency(dependencies, dependencies[dependency], childNode, false))
                 this.collapse(childNode.children)
               } else {
@@ -299,25 +295,13 @@ export default {
         id: this.nodeId,
         label: this.createNodeLabel(dependency),
         version: dependency.version,
-        objectType: dependency.objectType,
+        objectType: dependency.objectType || "COMPONENT",
         uuid: dependency.uuid,
-        fetchedChildren: false,
-        gatheredKeys: []
-      }
-    },
-    transformDependencyToOrgTreeWithSearchedDependency: function(dependency) {
-      this.nodeId++;
-      return {
-        id: this.nodeId,
-        label: this.createNodeLabel(dependency),
-        version: dependency.version,
-        objectType: "COMPONENT",
-        uuid: dependency.uuid,
-        fetchedChildren: dependency.expandDependencyGraph,
+        fetchedChildren: !!dependency.expandDependencyGraph,
         gatheredKeys: [],
-        expand: dependency.expandDependencyGraph,
-        latestVersion: dependency.latestVersion
-      }
+        expand: !!dependency.expandDependencyGraph,
+        latestVersion: dependency.latestVersion || dependency.repositoryMeta?.latestVersion
+      };
     },
     getChildrens: function (treeNodes, parentUuid, objectType) {
       let dependenciesFunc = async () => {
@@ -376,11 +360,10 @@ export default {
       }
     },
     labelClassName: function(data) {
-      if (this.$route.params.componentUuid && data.uuid === this.$route.params.componentUuid) {
+      if(this.$route.params.componentUuids && this.searchedComponentUuids[data.uuid]) {
         return 'clickable-node searched'
-      } else {
-        return 'clickable-node'
       }
+      return 'clickable-node'
     },
     renderContent: function(h, data) {
       if (this.highlightOutdatedComponents && data.version && data.latestVersion && data.latestVersion !== data.version) {
@@ -398,7 +381,7 @@ export default {
         data.fetchedChildren = true
         e.target.style.cursor = "pointer"
         this.$set(data, 'expand', true)
-    } else {
+      } else {
         if ('expand' in data) {
           data.expand = !data.expand
           if (!data.expand && data.children) {
@@ -410,7 +393,6 @@ export default {
       }
     },
     onNodeClick: function(e, data) {
-      //console.log('onNodeClick: %o', data)
       this.$set(data, 'selectedKey', !data.selectedKey)
       if (data.objectType === 'COMPONENT') {
         this.$router.push({ path: "/components/" + data.uuid });
@@ -446,103 +428,112 @@ export default {
           _this.toggleExpand(data.children, val)
         }
       }
+    },
+    createSearchedComponentLookupTable: function(componentUuids) {
+      this.searchedComponentUuids = {};
+      if(componentUuids) {
+        componentUuids.split('|').forEach((uuid) => {
+          this.searchedComponentUuids[uuid] = true;
+        });
+      }
+      return this.searchedComponentUuids;
     }
   }
 };
 </script>
 
 <style lang="scss">
-  @import "~vue2-org-tree/dist/style.css";
-  .org-tree-container {
-    background-color: inherit;
-  }
-  .org-tree-node-label .org-tree-node-label-inner {
-    border: 1px solid #20a8d8;
-    padding: 1px 2.5px;
-    font-size: 0.675rem;
-  }
-  .org-tree-node-label:hover {
-    cursor: pointer;
-  }
-  .org-tree-node-btn {
-    background-color: #105770;
-    color: #ffffff;
-    border: none;
-    pointer-events: initial;
-  }
-  .org-tree-node-btn:hover {
-    background-color: #20a8d8;
-  }
-  .horizontal .org-tree-node:not(:only-child):after {
-    border-top: 1px solid #20a8d8;
-  }
-  .horizontal .org-tree-node:not(:first-child):before, .horizontal .org-tree-node:not(:last-child):after {
-    border-left: 1px solid #20a8d8;
-  }
-  .horizontal .org-tree-node-children:before {
-    border-top: 1px solid #20a8d8;
-  }
-  .horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after {
-    border-bottom: 1px solid #20a8d8;
-  }
-  // Fixes white line instead of blue line to only-child nodes
-  .horizontal .org-tree-node:only-child:before {
-    border-bottom-color: #20a8d8;
-  }
-  // Horizontal line to a node
-  .horizontal .org-tree-node:after, .horizontal .org-tree-node:before, .horizontal .org-tree-node.is-leaf:before, .org-tree-node.is-leaf:after {
-    width: 10px;
-    height: 50%;
-  }
-  // Horizontal line from a node
-  .horizontal .org-tree-node-children {
-    padding-left: 10px;
-  }
-  .horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after, .horizontal .org-tree-node-children:before {
-    width: 10px;
-  }
-  // Margin between nodes
-  .horizontal .org-tree-node, .horizontal .org-tree-node.collapsed, .horizontal .org-tree-node.is-leaf {
-    padding: 0;
-  }
-  .horizontal .org-tree-node-label {
-    padding: 5px 0px 5px 10px
-  }
-  // Button size and position
-  .horizontal .org-tree-node-btn {
-    width: 17px;
-    height: 17px;
-    margin: -9px 0px 0px 1.5px;
-  }
-  // Inner button vertical line
-  .org-tree-node-btn:before {
-    left: 3px;
-    right: 3px;
-    top: 50%;
-  }
-  // Inner button horizontal line
-  .org-tree-node-btn:after {
-    top: 3px;
-    bottom: 3px;
-    left: 50%;
-  }
-  // Fix wrong pointer
-  .org-tree-node-label:hover {
-    cursor: default;
-  }
-  .org-tree-node-label .org-tree-node-label-inner {
-    cursor: pointer;
-  }
-  // Enable dragging nodes without scrolling by dragging
-  .org-tree-node-label-inner {
-    pointer-events: initial;
-  }
-  // Enable scrolling by dragging in empty space between nodes
-  .org-tree-node-label {
-    pointer-events: none;
-  }
-  .org-tree-node-label-inner.clickable-node.searched {
-    border: 2.5px solid #4dbd74;
-    font-weight: bold;
-  }
+@import "~vue2-org-tree/dist/style.css";
+.org-tree-container {
+  background-color: inherit;
+}
+.org-tree-node-label .org-tree-node-label-inner {
+  border: 1px solid #20a8d8;
+  padding: 1px 2.5px;
+  font-size: 0.675rem;
+}
+.org-tree-node-label:hover {
+  cursor: pointer;
+}
+.org-tree-node-btn {
+  background-color: #105770;
+  color: #ffffff;
+  border: none;
+  pointer-events: initial;
+}
+.org-tree-node-btn:hover {
+  background-color: #20a8d8;
+}
+.horizontal .org-tree-node:not(:only-child):after {
+  border-top: 1px solid #20a8d8;
+}
+.horizontal .org-tree-node:not(:first-child):before, .horizontal .org-tree-node:not(:last-child):after {
+  border-left: 1px solid #20a8d8;
+}
+.horizontal .org-tree-node-children:before {
+  border-top: 1px solid #20a8d8;
+}
+.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after {
+  border-bottom: 1px solid #20a8d8;
+}
+// Fixes white line instead of blue line to only-child nodes
+.horizontal .org-tree-node:only-child:before {
+  border-bottom-color: #20a8d8;
+}
+// Horizontal line to a node
+.horizontal .org-tree-node:after, .horizontal .org-tree-node:before, .horizontal .org-tree-node.is-leaf:before, .org-tree-node.is-leaf:after {
+  width: 10px;
+  height: 50%;
+}
+// Horizontal line from a node
+.horizontal .org-tree-node-children {
+  padding-left: 10px;
+}
+.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after, .horizontal .org-tree-node-children:before {
+  width: 10px;
+}
+// Margin between nodes
+.horizontal .org-tree-node, .horizontal .org-tree-node.collapsed, .horizontal .org-tree-node.is-leaf {
+  padding: 0;
+}
+.horizontal .org-tree-node-label {
+  padding: 5px 0px 5px 10px
+}
+// Button size and position
+.horizontal .org-tree-node-btn {
+  width: 17px;
+  height: 17px;
+  margin: -9px 0px 0px 1.5px;
+}
+// Inner button vertical line
+.org-tree-node-btn:before {
+  left: 3px;
+  right: 3px;
+  top: 50%;
+}
+// Inner button horizontal line
+.org-tree-node-btn:after {
+  top: 3px;
+  bottom: 3px;
+  left: 50%;
+}
+// Fix wrong pointer
+.org-tree-node-label:hover {
+  cursor: default;
+}
+.org-tree-node-label .org-tree-node-label-inner {
+  cursor: pointer;
+}
+// Enable dragging nodes without scrolling by dragging
+.org-tree-node-label-inner {
+  pointer-events: initial;
+}
+// Enable scrolling by dragging in empty space between nodes
+.org-tree-node-label {
+  pointer-events: none;
+}
+.org-tree-node-label-inner.clickable-node.searched {
+  border: 2.5px solid #4dbd74;
+  font-weight: bold;
+}
 </style>

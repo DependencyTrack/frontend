@@ -27,9 +27,19 @@
             field: "name",
             sortable: true,
             formatter: (value, row, index) => {
-              let url = xssFilters.uriInUnQuotedAttr("../../../projects/" + row.uuid + "/findings/" + row.affectedComponent + "/" + this.vulnerability);
-              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + row.uuid + "/dependencyGraph/" + row.affectedComponent)
-              return row.directDependencies ? `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(value)}</a>` : `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              const url = this.$router.resolve({name: 'Project Finding Lookup',
+                  params: {'uuid': row.uuid, affectedComponent: row.affectedComponentUuids[0],
+                      vulnerability:this.vulnerability}}).href;
+
+              let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              if(row.dependencyGraphAvailable) {
+                  const dependencyGraphUrl = this.$router.resolve({name: 'Dependency Graph Component Lookup',
+                      params: {'uuid': row.uuid,
+                        componentUuids: row.affectedComponentUuids.join('|')}}).href;
+                  html = `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + html
+              }
+
+              return html;
             }
           },
           {
