@@ -28,8 +28,7 @@
             sortable: true,
             formatter: (value, row, index) => {
               const url = this.$router.resolve({name: 'Project Finding Lookup',
-                  params: {'uuid': row.uuid, affectedComponent: row.affectedComponentUuids[0],
-                      vulnerability:this.vulnerability}}).href;
+                  params: {'uuid': row.uuid, vulnerability:this.vulnerability}}).href;
 
               let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
               if(row.dependencyGraphAvailable) {
