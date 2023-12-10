@@ -26,7 +26,7 @@
             title: this.$t('message.name'),
             field: "name",
             sortable: true,
-            formatter: (value, row, index) => {
+            formatter: (value, row) => {
               const url = this.$router.resolve({name: 'Project Finding Lookup',
                   params: {'uuid': row.uuid, vulnerability:this.vulnerability}}).href;
 
