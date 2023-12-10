@@ -117,11 +117,40 @@ function configRoutes() {
           }
         },
         {
-          path: 'projects/:uuid/dependencyGraph/:componentUuid',
+          path: 'projects/:uuid/dependencyGraph/:componentUuids',
           name: 'Dependency Graph Component Lookup',
           props: (route) => ( {
             uuid: route.params.uuid,
-            componentUuid: route.params.componentUuid
+            componentUuids: route.params.componentUuids
+          } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
+          }
+        },
+        {
+          path: 'projects/:uuid/findings/:vulnerability',
+          name: 'Project Finding Lookup',
+          props: (route) => ( {
+            uuid: route.params.uuid,
+            vulnerability: route.params.vulnerability
+          } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
+          }
+        },
+        {
+          path: 'projects/:uuid/findings/:affectedComponent/:vulnerability',
+          name: 'Project Finding Lookup',
+          props: (route) => ( {
+            uuid: route.params.uuid,
+            affectedComponent: route.params.componentUuid,
+            vulnerability: route.params.vulnerability
           } ),
           component: Project,
           meta: {

@@ -16,7 +16,8 @@
     mixins: [permissionsMixin],
     props: {
       source: String,
-      vulnId: String
+      vulnId: String,
+      vulnerability: String
     },
     data() {
       return {
@@ -25,9 +26,19 @@
             title: this.$t('message.name'),
             field: "name",
             sortable: true,
-            formatter(value, row, index) {
-              let url = xssFilters.uriInUnQuotedAttr("../../../projects/" + row.uuid);
-              return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            formatter: (value, row) => {
+              const url = this.$router.resolve({name: 'Project Finding Lookup',
+                  params: {'uuid': row.uuid, vulnerability:this.vulnerability}}).href;
+
+              let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+              if(row.dependencyGraphAvailable) {
+                  const dependencyGraphUrl = this.$router.resolve({name: 'Dependency Graph Component Lookup',
+                      params: {'uuid': row.uuid,
+                        componentUuids: row.affectedComponentUuids.join('|')}}).href;
+                  html = `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + html
+              }
+
+              return html;
             }
           },
           {

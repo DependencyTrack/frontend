@@ -281,7 +281,7 @@
     },
     mounted() {
       try {
-        if (this.$route.params.componentUuid){
+        if (this.$route.params.componentUuids){
           this.$refs.dependencygraph.active = true;
         } else {
           this.getTabFromRoute().active = true;
@@ -297,7 +297,7 @@
         this.uuid = this.$route.params.uuid;
         if (to.params.uuid !== from.params.uuid) {
           this.initialize();
-        } else if (this.$route.params.componentUuid){
+        } else if (this.$route.params.componentUuids){
           this.initialize();
           this.$refs.dependencygraph.activate();
         }
