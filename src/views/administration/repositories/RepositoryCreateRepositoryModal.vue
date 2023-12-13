@@ -18,24 +18,30 @@
     <b-input-group-form-select id="input-repository-type" required="true"
                                v-model="repositoryType" :options="repositoryTypes"
                                :label="$t('admin.repository_type')" />
-    <div>
-      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
-    </div>
 
-    <b-validated-input-group-form-input
+    <div>
+          <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+        </div>
+    <div>
+      <c-switch color="primary" v-model="repository_authentication" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+    </div>
+  <b-validated-input-group-form-input
           id="username"
           :label="$t('admin.username')"
           input-group-size="mb-3"
           v-model="username"
-          v-show="internal"
+          rules="required"
+          v-show="repository_authentication"
       />
 
       <b-validated-input-group-form-input
           id="password"
           :label="$t('admin.password')"
           input-group-size="mb-3"
+          type="password"
+          rules="required"
           v-model="password"
-          v-show="internal"
+          v-show="repository_authentication"
       />
 
     <div>
@@ -74,6 +80,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
         repositoryType: null,
         initialRepositoryType: null,
         internal: false,
+        repository_authentication: false,
         username: null,
         password: null,
         enabled: true,
@@ -103,6 +110,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
           identifier: this.identifier,
           url: this.url,
           internal: this.internal,
+          authenticationRequired: this.repository_authentication,
           username: this.username,
           password: this.password || null,
           enabled: this.enabled
@@ -124,6 +132,7 @@ import BValidatedInputGroupFormInput from "../../../forms/BValidatedInputGroupFo
         this.username = null;
         this.password = null;
         this.enabled = true;
+        this.repository_authentication = false;
       }
     }
   }
