@@ -214,7 +214,7 @@ function configRoutes() {
         {
           path: 'policy',
           name: 'Policy Management',
-          alias: ['policy/policies', 'policy/licenseGroups'],
+          alias: ['policy/policies', 'policy/licenseGroups', 'policy/vulnerability'],
           component: PolicyManagement,
           meta: {
             title: i18n.t('message.policy_management'),
