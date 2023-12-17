@@ -116,7 +116,7 @@ export default {
                 }
               },
               projectUri: function(uuid) {
-                return xssFilters.uriInUnQuotedAttr("../projects/" + uuid);
+                return xssFilters.uriInUnQuotedAttr("../../projects/" + uuid);
               },
               updateProjectSelection: function(selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
