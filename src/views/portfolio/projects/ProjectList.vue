@@ -245,6 +245,12 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             sortable: true
           },
           {
+            title: this.$t('message.components'),
+            field: "metrics.components",
+            sortable: true,
+            visible: false
+          },
+          {
             title: this.$t('message.policy_violations'),
             field: "metrics",
             formatter: function (metrics) {
