@@ -85,6 +85,15 @@ import ProjectUploadVexModal from "./ProjectUploadVexModal";
     },
     beforeCreate() {
       this.showSuppressedFindings = (localStorage && localStorage.getItem("ProjectFindingsShowSuppressedFindings") !== null) ? (localStorage.getItem("ProjectFindingsShowSuppressedFindings") === "true") : false;
+
+      if (this.$route.params.vulnerability) {
+        if (this.$route.params.affectedComponent) {
+          // search for the last portion of the finding's matrix ID
+          this.initialSearchText =  this.$route.params.affectedComponent + ":" + this.$route.params.vulnerability
+        } else {
+          this.initialSearchText = this.$route.params.vulnerability
+        } // the route doesn't allow a component to be specified without a vulnerability
+      }
     },
     data() {
       return {
@@ -239,7 +248,7 @@ import ProjectUploadVexModal from "./ProjectUploadVexModal";
           pageSize: (localStorage && localStorage.getItem("ProjectFindingsPageSize") !== null) ? Number(localStorage.getItem("ProjectFindingsPageSize")) : 10,
           sortName: (localStorage && localStorage.getItem("ProjectFindingsSortName") !== null) ? localStorage.getItem("ProjectFindingsSortName") : undefined,
           sortOrder: (localStorage && localStorage.getItem("ProjectFindingsSortOrder") !== null) ? localStorage.getItem("ProjectFindingsSortOrder") : undefined,
-          searchText: this.$route.params.vulnerability ? ":" + this.$route.params.vulnerability : undefined,
+          searchText: this.initialSearchText,
           icons: {
             detailOpen: 'fa-fw fa-angle-right',
             detailClose: 'fa-fw fa-angle-down',
@@ -366,8 +375,10 @@ import ProjectUploadVexModal from "./ProjectUploadVexModal";
       },
       tableLoaded: function(data) {
         loadUserPreferencesForBootstrapTable(this, "ProjectFindings", this.$refs.table.columns);
-        this.$emit('total', data.total);
-        if (this.$route.params.vulnerability) {
+        this.$emit('total', data.total); // the unfiltered length
+        if (this.$route.params.vulnerability && this.$refs.table.getData().length === 1) {
+          // If there's only one visible row due to a URL that selects a single finding, show it in full
+          // Don't expand if there are multiple findings, as it makes it harder to notice that there is more than one result
           this.$refs.table.expandRow(0);
         }
       },
