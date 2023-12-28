@@ -132,7 +132,7 @@ function configRoutes() {
         },
         {
           path: 'projects/:uuid/findings/:vulnerability',
-          name: 'Project Finding Lookup',
+          name: 'Project Vulnerability Lookup',
           props: (route) => ( {
             uuid: route.params.uuid,
             vulnerability: route.params.vulnerability

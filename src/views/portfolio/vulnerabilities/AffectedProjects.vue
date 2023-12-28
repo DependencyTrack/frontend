@@ -27,7 +27,7 @@
             field: "name",
             sortable: true,
             formatter: (value, row) => {
-              const url = this.$router.resolve({name: 'Project Finding Lookup',
+              const url = this.$router.resolve({name: 'Project Vulnerability Lookup',
                   params: {'uuid': row.uuid, vulnerability:this.vulnerability}}).href;
 
               let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
