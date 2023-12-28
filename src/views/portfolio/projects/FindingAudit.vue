@@ -6,7 +6,8 @@
                 <b-card class="font-weight-bold">
                     <b-card-text>
                         <span
-                            v-for="alias in resolveVulnAliases(finding.vulnerability.aliases, finding.vulnerability.source)">
+                            v-for="alias in resolveVulnAliases(finding.vulnerability.aliases, finding.vulnerability.source)"
+                            :key="alias.vulnId">
                             <b-link style="margin-right:1.0rem"
                                 :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId">{{ alias.vulnId }}</b-link>
                         </span>
@@ -15,32 +16,32 @@
             </div>
             <b-form-group v-if="finding.vulnerability.title" id="fieldset-1" :label="this.$t('message.title')"
                 label-for="input-1">
-                <b-form-input id="input-1" v-model="finding.vulnerability.title" class="form-control disabled" readonly
+                <b-form-input id="input-1" :value="finding.vulnerability.title" class="form-control disabled" readonly
                     trim />
             </b-form-group>
             <b-form-group v-if="finding.vulnerability.subtitle" id="fieldset-2" :label="this.$t('message.subtitle')"
                 label-for="input-2">
-                <b-form-input id="input-2" v-model="finding.vulnerability.subtitle" class="form-control disabled" readonly
+                <b-form-input id="input-2" :value="finding.vulnerability.subtitle" class="form-control disabled" readonly
                     trim />
             </b-form-group>
             <b-form-group v-if="finding.vulnerability.description" id="fieldset-3" :label="this.$t('message.description')"
                 label-for="input-3">
-                <b-form-textarea id="input-3" v-model="finding.vulnerability.description" rows="7"
+                <b-form-textarea id="input-3" :value="finding.vulnerability.description" rows="7"
                     class="form-control disabled" readonly trim />
             </b-form-group>
             <b-form-group v-if="finding.vulnerability.recommendation" id="fieldset-4"
                 :label="this.$t('message.recommendation')" label-for="input-4">
-                <b-form-textarea id="input-4" v-model="finding.vulnerability.recommendation" rows="7"
+                <b-form-textarea id="input-4" :value="finding.vulnerability.recommendation" rows="7"
                     class="form-control disabled" readonly trim />
             </b-form-group>
             <b-form-group v-if="finding.vulnerability.cvssV2Vector" id="fieldset-5"
                 :label="this.$t('message.cvss_v2_vector')" label-for="input-5">
-                <b-form-input id="input-5" v-model="finding.vulnerability.cvssV2Vector" class="form-control disabled"
+                <b-form-input id="input-5" :value="finding.vulnerability.cvssV2Vector" class="form-control disabled"
                     readonly trim />
             </b-form-group>
             <b-form-group v-if="finding.vulnerability.cvssV3Vector" id="fieldset-6"
                 :label="this.$t('message.cvss_v3_vector')" label-for="input-6">
-                <b-form-input id="input-6" v-model="finding.vulnerability.cvssV3Vector" class="form-control disabled"
+                <b-form-input id="input-6" :value="finding.vulnerability.cvssV3Vector" class="form-control disabled"
                     readonly trim />
             </b-form-group>
         </b-col>
@@ -230,7 +231,7 @@ export default {
             }).then((response) => {
                 this.$toastr.s(this.$t('message.updated'));
                 this.updateAnalysisData(response.data);
-            }).catch((error) => {
+            }).catch(() => {
                 this.$toastr.w(this.$t('condition.unsuccessful_action'));
             });
         }
