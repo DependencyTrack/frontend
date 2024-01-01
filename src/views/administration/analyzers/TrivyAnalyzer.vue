@@ -29,6 +29,14 @@
           v-model="apitoken"
           lazy="true"
         />
+         <c-switch
+          id="ignoreUnfixed"
+          color="primary"
+          v-model="ignoreUnfixed"
+          label
+          v-bind="labelIcon"
+        />
+        {{$t('admin.analyzer_trivy_ignore_unfixed')}}
       </b-card-body>
       <b-card-footer>
         <b-button
@@ -61,6 +69,7 @@
           scannerEnabled: false,
           apitoken: '',
           baseUrl: '',
+          ignoreUnfixed: false,
         }
       },
       methods: {
@@ -69,6 +78,7 @@
             {groupName: 'scanner', propertyName: 'trivy.enabled', propertyValue: this.scannerEnabled},
             {groupName: 'scanner', propertyName: 'trivy.api.token', propertyValue: this.apitoken},
             {groupName: 'scanner', propertyName: 'trivy.base.url', propertyValue: this.baseUrl},
+            {groupName: 'scanner', propertyName: 'trivy.ignore.unfixed', propertyValue: this.ignoreUnfixed},
           ]);
         }
       },
@@ -84,6 +94,8 @@
                 this.apitoken = item.propertyValue; break;
               case "trivy.base.url":
                 this.baseUrl = item.propertyValue; break;
+              case "trivy.ignore.unfixed":
+                this.ignoreUnfixed = common.toBoolean(item.propertyValue); break;
             }
           }
         });
