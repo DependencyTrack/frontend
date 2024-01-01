@@ -137,7 +137,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
     case 'TRIVY_ANALYZER':
         analyzerLabel = "Trivy";
 
-        analyzerUrl = "https://avd.aquasec.com/nvd/" + vulnId;
+        analyzerUrl = "https://nvd.nist.gov/vuln/detail/" + vulnId;
         if(vulnSource === "GITHUB") {
           analyzerUrl = "https://github.com/advisories/" + vulnId;
         }
