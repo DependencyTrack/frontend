@@ -139,6 +139,8 @@
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
                                               type="text" v-model="destination" lazy="true" />
+                    <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.WebhookPublisher'" id="input-token-header" :label="$t('admin.api_token_header')" input-group-size="mb-3"
+                                              type="password" v-model="tokenHeader" lazy="true" />
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.WebhookPublisher'" id="input-token" :label="$t('admin.api_token')" input-group-size="mb-3"
                                               type="password" v-model="token" lazy="true" />
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-ticket-type"
@@ -229,6 +231,7 @@
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
                   token: this.parseToken(row),
+                  tokenHeader: this.parseTokenHeader(row),
                   jiraTicketType: this.parseJiraTicketType(row),
                   scope: row.scope,
                   notifyOn: row.notifyOn,
@@ -244,6 +247,7 @@
               created() {
                 this.parseDestination(this.alert);
                 this.parseToken(this.alert);
+                this.parseTokenHeader(this.alert);
                 this.parseJiraTicketType(this.alert);
               },
               watch: {
@@ -289,6 +293,15 @@
                     return null;
                   }
                 },
+                parseTokenHeader: function(alert) {
+                  if (alert.publisherConfig) {
+                    let value = JSON.parse(alert.publisherConfig);
+                    if (value) {
+                      return value.tokenHeader;
+                    }
+                    return null;
+                  }
+                },
                 parseJiraTicketType: function(alert) {
                   if (alert.publisherConfig) {
                     let value = JSON.parse(alert.publisherConfig);
@@ -307,12 +320,13 @@
                     logSuccessfulPublish: this.logSuccessfulPublish,
                     notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
-                    publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType, token: this.token }),
+                    publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType, token: this.token, tokenHeader: this.tokenHeader }),
                     notifyOn: this.notifyOn
                   }).then((response) => {
                     this.alert = response.data;
                     this.destination = this.parseDestination(this.alert);
                     this.token = this.parseToken(this.alert);
+                    this.tokenHeader = this.parseTokenHeader(this.alert);
                     this.jiraTicketType = this.parseJiraTicketType(this.alert);
                     EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
                     this.$toastr.s(this.$t('message.updated'));
