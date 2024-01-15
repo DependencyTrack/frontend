@@ -26,6 +26,9 @@
     <b-form-checkbox id="checkbox-6" v-model="includeACL" name="checkbox-6" switch
                      value="true" unchecked-value="false"> {{ $t('message.include_acl') }}</b-form-checkbox>
 
+    <b-form-checkbox id="checkbox-7" v-model="includePolicyViolations" name="checkbox-7" switch
+                     value="true" unchecked-value="false"> {{ $t('message.include_policy_violations') }}</b-form-checkbox>
+
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
       <b-button size="md" variant="primary" @click="createVersion()">{{ $t('message.create') }}</b-button>
@@ -47,7 +50,8 @@
         includeComponents: true,
         includeServices: true,
         includeAuditHistory: true,
-        includeACL: true
+        includeACL: true,
+        includePolicyViolations: true
       }
     },
     methods: {
@@ -61,7 +65,8 @@
           includeComponents: this.includeComponents,
           includeServices: this.includeServices,
           includeAuditHistory: this.includeAuditHistory,
-          includeACL: this.includeACL
+          includeACL: this.includeACL,
+          includePolicyViolations: this.includePolicyViolations
         }).then((response) => {
           this.$root.$emit('bv::hide::modal', 'projectAddVersionModal');
           this.$toastr.s(this.$t('message.project_cloning_in_progress'));
@@ -77,6 +82,7 @@
         this.includeServices = true;
         this.includeAuditHistory = true;
         this.includeACL = true;
+        this.includePolicyViolations = true;
       }
     },
   }
