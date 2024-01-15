@@ -11,6 +11,7 @@ module.exports = {
     proxy: { "/api": { target: process.env.VUE_APP_SERVER_URL} }
   },
   configureWebpack: {
+    devtool: 'source-map',
     plugins: [
       new CopyPlugin([
         { from: "node_modules/axios/dist/axios.min.js", to: "static/js", force: true },
