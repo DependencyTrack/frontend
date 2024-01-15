@@ -226,7 +226,10 @@ import common from "../../../shared/common";
         ],
         data: [],
         options: {
-          onPostBody: this.initializeTooltips,
+          onPostBody: () => {
+            this.initializeTooltips()
+            loadUserPreferencesForBootstrapTable(this, "ProjectFindings", this.$refs.table.columns);
+          },
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -461,7 +464,7 @@ import common from "../../../shared/common";
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl(),
+          deferUrl: this.apiUrl(), // use deferUrl to prevent double loading of data after initializing columns
           onPageChange: ((number, size) => {
             if (localStorage) {
               localStorage.setItem("ProjectFindingsPageSize", size.toString())
@@ -563,7 +566,6 @@ import common from "../../../shared/common";
         });
       },
       tableLoaded: function(data) {
-        loadUserPreferencesForBootstrapTable(this, "ProjectFindings", this.$refs.table.columns);
         this.$emit('total', data.total);
         if (this.$route.params.vulnerability) {
           this.$refs.table.expandRow(0);

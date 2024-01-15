@@ -195,7 +195,10 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
         ],
         data: [],
         options: {
-          onPostBody: this.initializeTooltips,
+          onPostBody: () => {
+            this.initializeTooltips();
+            loadUserPreferencesForBootstrapTable(this, "ProjectComponents", this.$refs.table.columns);
+          },
           search: true,
           showColumns: true,
           showRefresh: true,
@@ -215,7 +218,7 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
             res.total = xhr.getResponseHeader("X-Total-Count");
             return res;
           },
-          url: this.apiUrl(),
+          deferUrl: this.apiUrl(), // use deferUrl to prevent double loading of data after initializing columns
           onPageChange: ((number, size) => {
             if (localStorage) {
               localStorage.setItem("ProjectComponentsPageSize", size.toString())
@@ -285,7 +288,6 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
         });
       },
       tableLoaded: function(data) {
-        loadUserPreferencesForBootstrapTable(this, "ProjectComponents", this.$refs.table.columns);
         if (data && Object.prototype.hasOwnProperty.call(data, "total")) {
           this.$emit('total', data.total);
         } else {
