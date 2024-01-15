@@ -27,6 +27,9 @@ export default {
   components: {
     cSwitch
   },
+  props: {
+    teamUuid: String
+  },
   data() {
     return {
       showInactiveProjects: false,
@@ -83,11 +86,11 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?notAssignedToTeamWithUuid=${this.teamUuid}`;
       if (this.showInactiveProjects === undefined) {
-        url += "?excludeInactive=true";
+        url += "&excludeInactive=true";
       } else {
-        url += "?excludeInactive=" + !this.showInactiveProjects;
+        url += "&excludeInactive=" + !this.showInactiveProjects;
       }
       return url;
     },
