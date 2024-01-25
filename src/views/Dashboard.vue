@@ -203,7 +203,7 @@
 
         this.totalViolations = common.valueWithDefault(metric.policyViolationsTotal, "0");
         this.auditedViolations = common.valueWithDefault(metric.policyViolationsAudited, "0");
-        this.auditedViolationsPercent = common.calcProgressPercent(this.policyViolationsTotal, this.policyViolationsAudited);
+        this.auditedViolationsPercent = common.calcProgressPercent(this.totalViolations, this.auditedViolations);
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
