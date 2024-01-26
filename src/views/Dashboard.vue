@@ -199,7 +199,7 @@
 
         this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
         this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-        this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
+        this.auditedFindingPercent = common.calcProgressPercent(this.totalFindings, this.auditedFindings);
 
         this.totalViolations = common.valueWithDefault(metric.policyViolationsTotal, "0");
         this.auditedViolations = common.valueWithDefault(metric.policyViolationsAudited, "0");
