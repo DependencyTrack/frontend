@@ -50,6 +50,55 @@
             </b-col>
           </b-row>
           <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0 d-md-down-none">
+                <div class="text-muted">
+                  {{ $t("policy_violation.fails") }}
+                </div>
+                <strong
+                  >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
+                >
+                <b-progress
+                  height="{}"
+                  class="progress-xs mt-2"
+                  :precision="1"
+                  variant="danger"
+                  v-bind:value="failViolationsPercent"
+                ></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">
+                  {{ $t("policy_violation.warns") }}
+                </div>
+                <strong
+                  >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
+                >
+                <b-progress
+                  height="{}"
+                  class="progress-xs mt-2"
+                  :precision="1"
+                  variant="warning"
+                  v-bind:value="warnViolationsPercent"
+                ></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">
+                  {{ $t("policy_violation.infos") }}
+                </div>
+                <strong
+                  >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
+                >
+                <b-progress
+                  height="{}"
+                  class="progress-xs mt-2"
+                  :precision="1"
+                  variant="info"
+                  v-bind:value="infoViolationsPercent"
+                ></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -177,6 +226,12 @@
         totalViolations: 0,
         auditedViolations: 0,
         auditedViolationsPercent: 0,
+        failViolations: 0,
+        failViolationsPercent: 0,
+        warnViolations: 0,
+        warnViolationsPercent: 0,
+        infoViolations: 0,
+        infoViolationsPercent: 0,
 
         vulnerabilities: 0,
         suppressed: 0,
@@ -204,6 +259,12 @@
         this.totalViolations = common.valueWithDefault(metric.policyViolationsTotal, "0");
         this.auditedViolations = common.valueWithDefault(metric.policyViolationsAudited, "0");
         this.auditedViolationsPercent = common.calcProgressPercent(this.totalViolations, this.auditedViolations);
+        this.failViolations = common.valueWithDefault(metric.policyViolationsFail, "0");
+        this.failViolationsPercent = common.calcProgressPercent(this.totalViolations, this.failViolations);
+        this.warnViolations = common.valueWithDefault(metric.policyViolationsWarn, "0");
+        this.warnViolationsPercent = common.calcProgressPercent(this.totalViolations, this.warnViolations);
+        this.infoViolations = common.valueWithDefault(metric.policyViolationsInfo, "0");
+        this.infoViolationsPercent = common.calcProgressPercent(this.totalViolations, this.infoViolations);
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
