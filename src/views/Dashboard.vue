@@ -63,7 +63,7 @@
                   height="{}"
                   class="progress-xs mt-2"
                   :precision="1"
-                  variant="info"
+                  variant="danger"
                   v-bind:value="failViolationsPercent"
                 ></b-progress>
               </b-col>
@@ -93,7 +93,7 @@
                   height="{}"
                   class="progress-xs mt-2"
                   :precision="1"
-                  variant="danger"
+                  variant="info"
                   v-bind:value="infoViolationsPercent"
                 ></b-progress>
               </b-col>
