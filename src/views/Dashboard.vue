@@ -125,9 +125,25 @@
                   </Callout>
                 </b-col>
                 <b-col sm="6">
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.vulnerable_projects') }}</small><br>
+                    <strong class="h4">{{vulnerableProjects}}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
                   <Callout variant="info">
                     <small class="text-muted">{{ $t('message.components') }}</small><br>
                     <strong class="h4">{{totalComponents}}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.vulnerable_components') }}</small><br>
+                    <strong class="h4">{{vulnerableComponents}}</strong>
                   </Callout>
                 </b-col>
               </b-row>
@@ -141,9 +157,27 @@
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="danger">
+                  <Callout variant="warning">
+                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
+                    <strong class="h4">{{suppressed}}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="info">
                     <small class="text-muted">{{ $t('message.policy_violations') }}</small><br>
                     <strong class="h4">{{totalViolations}}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('policy_violation.license') }}</small><br>
+                    <strong class="h4">{{licenseViolations}}</strong>
                   </Callout>
                 </b-col>
               </b-row>
@@ -152,14 +186,14 @@
               <b-row>
                 <b-col sm="6">
                   <Callout variant="info">
-                    <small class="text-muted">{{ $t('message.findings') }}</small><br>
-                    <strong class="h4">{{totalFindings}}</strong>
+                    <small class="text-muted">{{ $t('policy_violation.operational') }}</small><br>
+                    <strong class="h4">{{operationalViolations}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="warning">
-                    <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
-                    <strong class="h4">{{suppressed}}</strong>
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('policy_violation.security') }}</small><br>
+                    <strong class="h4">{{securityViolations}}</strong>
                   </Callout>
                 </b-col>
               </b-row>
@@ -218,6 +252,9 @@
         warnViolationsPercent: 0,
         infoViolations: 0,
         infoViolationsPercent: 0,
+        licenseViolations: 0,
+        operationalViolations: 0,
+        securityViolations: 0,
 
         vulnerabilities: 0,
         suppressed: 0,
@@ -251,6 +288,9 @@
         this.warnViolationsPercent = common.calcProgressPercent(this.totalViolations, this.warnViolations);
         this.infoViolations = common.valueWithDefault(metric.policyViolationsInfo, "0");
         this.infoViolationsPercent = common.calcProgressPercent(this.totalViolations, this.infoViolations);
+        this.licenseViolations = common.valueWithDefault(metric.policyViolationsLicenseTotal,"0");
+        this.operationalViolations = common.valueWithDefault(metric.policyViolationsOperationalTotal,"0");
+        this.securityViolations = common.valueWithDefault(metric.policyViolationsSecurityTotal,"0");
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
