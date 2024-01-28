@@ -249,7 +249,7 @@
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <Callout variant="warning">
                     <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
                     <strong class="h4">{{suppressed}}</strong>
                   </Callout>
