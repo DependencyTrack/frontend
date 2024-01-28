@@ -146,7 +146,7 @@
       <b-col md="12">
         <b-card v-bind:header="$t('message.portfolio_statistics')">
           <b-row>
-            <b-col sm="12" lg="6">
+            <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
                   <Callout variant="info">
@@ -162,12 +162,28 @@
                 </b-col>
               </b-row>
             </b-col>
-            <b-col sm="12" lg="6">
+            <b-col sm="12" lg="4">
               <b-row>
+                <b-col sm="6">
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
+                    <strong class="h4">{{vulnerabilities}}</strong>
+                  </Callout>
+                </b-col>
                 <b-col sm="6">
                   <Callout variant="danger">
                     <small class="text-muted">{{ $t('message.policy_violations') }}</small><br>
                     <strong class="h4">{{totalViolations}}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="info">
+                    <small class="text-muted">{{ $t('message.findings') }}</small><br>
+                    <strong class="h4">{{totalFindings}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
