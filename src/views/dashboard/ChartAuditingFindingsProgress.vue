@@ -46,7 +46,7 @@
               borderColor: auditedStyle,
               pointHoverBackgroundColor: '#fff',
               data: auditedData
-            },
+            }
           ]
         }, {
           tooltips: {
