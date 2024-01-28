@@ -43,9 +43,6 @@
         </b-row>
       </div>
     </b-card>
-
-    <policy-violations-widget-row ref="policyViolationsWidgetRow" />
-
     <b-row>
       <b-col sm="6">
         <b-card>
@@ -246,9 +243,9 @@
             <b-col sm="12" lg="6">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
-                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
-                    <strong class="h4">{{vulnerabilities}}</strong>
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.policy_violations') }}</small><br>
+                    <strong class="h4">{{totalViolations}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
@@ -270,7 +267,6 @@
 <script>
   import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
-  import PolicyViolationsWidgetRow from './dashboard/PolicyViolationsWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
   import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
   import ChartAuditedFindingsProgress from "./dashboard/ChartAuditingFindingsProgress";
@@ -287,7 +283,6 @@
     components: {
       Callout,
       PortfolioWidgetRow,
-      PolicyViolationsWidgetRow,
       ChartPortfolioVulnerabilities,
       ChartProjectVulnerabilities,
       ChartAuditedFindingsProgress,
@@ -418,7 +413,6 @@
         let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
         this.axios.get(url).then((response) => {
           this.$refs.portfolioWidgetRow.render(response.data)
-          this.$refs.policyViolationsWidgetRow.render(response.data)
           this.$refs.chartPortfolioVulnerabilities.render(response.data);
           this.$refs.chartProjectVulnerabilities.render(response.data);
           this.$refs.chartAuditedFindingsProgress.render(response.data);
