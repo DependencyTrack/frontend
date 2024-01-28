@@ -410,17 +410,17 @@ $common.valueWithDefault = function valueWithDefault(variable, defaultValue) {
  * function will return a percentage rounded to the tenth decimal place.
  */
 $common.calcProgressPercent = function calcProgressPercent(total, completed) {
-  if (total > 0) {
+  if (completed > total) {
+    // In something has already been completed (e.g. suppressed) and the completed value
+    // is greater than the total, return 100%
+    return 100;
+  } else if (total > 0) {
     if (completed === 0) {
       return 0;
     } else {
       let percentage = (completed / total) * 100;
-      return Math.round(percentage);
+      return Math.round(percentage * 10) / 10;
     }
-  } else if (completed > total) {
-    // In something has already been completed (e.g. suppressed) and the completed value
-    // is greater than the total, return 100%
-    return 100;
   }
   return 0; // the absence of work does not imply progress.
 };
