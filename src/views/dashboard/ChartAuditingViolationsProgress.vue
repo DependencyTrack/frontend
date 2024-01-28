@@ -20,13 +20,13 @@
 
         for (let i = 0; i < metrics.length; i++) {
           labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-          totalData.push(metrics[i].findingsTotal);
-          auditedData.push(metrics[i].findingsAudited);
+          totalData.push(metrics[i].policyViolationsTotal);
+          auditedData.push(metrics[i].policyViolationsAudited);
 
           if (i === metrics.length - 1) {
             labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
-            totalData.push(metrics[i].findingsTotal);
-            auditedData.push(metrics[i].findingsAudited);
+            totalData.push(metrics[i].policyViolationsTotal);
+            auditedData.push(metrics[i].policyViolationsAudited);
           }
         }
 
@@ -34,19 +34,19 @@
           labels: labels,
           datasets: [
             {
-              label: this.$t('message.total_findings'),
+              label: this.$t('message.policy_violations'),
               backgroundColor: 'transparent',
               borderColor: totalStyle,
               pointHoverBackgroundColor: '#fff',
               data: totalData
             },
             {
-              label: this.$t('message.findings_audited'),
+              label: this.$t('message.violations_audited'),
               backgroundColor: hexToRgba(auditedStyle, 10),
               borderColor: auditedStyle,
               pointHoverBackgroundColor: '#fff',
               data: auditedData
-            }
+            },
           ]
         }, {
           tooltips: {

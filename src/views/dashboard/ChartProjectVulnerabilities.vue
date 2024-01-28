@@ -12,7 +12,7 @@
     methods: {
       render: function(metrics) {
         const totalStyle = getStyle('--severity-unassigned');
-        const affectedStyle = getStyle('--severity-info');
+        const affectedStyle = getStyle('--severity-medium');
 
         let labels = [];
         let totalData = [];

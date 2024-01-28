@@ -12,17 +12,17 @@ export default {
   },
   methods: {
     render: function (metrics) {
-      const widgetColor = getStyle('--widget-1');
+      const widgetColor = getStyle('--widget-2');
       let chartLabels = [];
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
         chartLabels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-        chartData.push(metrics[i].policyViolationsTotal);
+        chartData.push(metrics[i].policyViolationsLicenseTotal);
       }
 
       const datasets = [
         {
-          label: this.$t('message.policy_violations'),
+          label: this.$t('policy_violation.license'),
           backgroundColor: hexToRgba(widgetColor, 10),
           borderColor: widgetColor,
           pointHoverBackgroundColor: '#fff',

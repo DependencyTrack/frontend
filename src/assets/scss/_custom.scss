@@ -11,21 +11,45 @@ html {
 }
 .severity-critical, .status-failed {
   color: $severity-critical;
+
+  .progress-bar {
+    background-color: $severity-critical;
+  }
 }
 .severity-high {
   color:$severity-high;
+
+  .progress-bar {
+    background-color: $severity-high;
+  }
 }
 .severity-medium, .status-warning {
   color: $severity-medium;
+
+  .progress-bar {
+    background-color: $severity-medium;
+  }
 }
 .severity-low, .status-passed {
   color: $severity-low;
+
+  .progress-bar {
+    background-color: $severity-low;
+  }
 }
-.severity-info {
+.severity-info, .status-info {
   color: $severity-info;
+
+  .progress-bar {
+    background-color: $severity-info;
+  }
 }
 .severity-unassigned {
   color: $severity-unassigned;
+
+  .progress-bar {
+    background-color: $severity-unassigned;
+  }
 }
 // Fixes the width for the bootstrap progress bar in tables
 .table-progress {

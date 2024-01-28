@@ -16,86 +16,63 @@
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.vulnerable_projects') }}</div>
-            <strong>{{vulnerableProjects}} ({{vulnerableProjectPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="success" v-bind:value="vulnerableProjectPercent"></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0 d-md-down-none">
-            <div class="text-muted">{{ $t('message.violations_audited') }}</div>
-            <strong>{{auditedViolations}} ({{auditedViolationsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="info" v-bind:value="auditedViolationsPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.critical') }}</div>
+            <strong>{{critical}} ({{criticalPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-critical" :precision="1" v-bind:value="criticalPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.vulnerable_components') }}</div>
-            <strong>{{vulnerableComponents}} ({{vulnerableComponentPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="warning" v-bind:value="vulnerableComponentPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.high') }}</div>
+            <strong>{{high}} ({{highPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-high" :precision="1" v-bind:value="highPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.findings_audited') }}</div>
-            <strong>{{auditedFindings}} ({{auditedFindingPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="danger" v-bind:value="auditedFindingPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.medium') }}</div>
+            <strong>{{medium}} ({{mediumPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-medium" :precision="1" v-bind:value="mediumPercent"></b-progress>
+          </b-col>
+          <b-col class="mb-sm-2 mb-0">
+            <div class="text-muted">{{ $t('severity.low') }}</div>
+            <strong>{{low}} ({{lowPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="lowPercent"></b-progress>
+          </b-col>
+          <b-col class="mb-sm-2 mb-0">
+            <div class="text-muted">{{ $t('severity.unassigned') }}</div>
+            <strong>{{unassigned}} ({{unassignedPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-unassigned" :precision="1" v-bind:value="unassignedPercent"></b-progress>
           </b-col>
         </b-row>
       </div>
     </b-card>
+
+    <policy-violations-widget-row ref="policyViolationsWidgetRow" />
 
     <b-row>
       <b-col sm="6">
         <b-card>
           <b-row>
             <b-col sm="5">
-              <h4 id="chart-violations" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <h4 id="chart-violations-state" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <div class="small text-muted">{{$t('message.policy_violations_by_state')}}</div>
             </b-col>
-            <b-col sm="7" class="d-none d-md-block">
-            </b-col>
+            <b-col sm="7" class="d-none d-md-block"></b-col>
           </b-row>
-          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <chart-policy-violations-state ref="chartPolicyViolationsState" chartId="chartPolicyViolationsState" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-state>
           <div slot="footer">
             <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0 d-md-down-none">
-                <div class="text-muted">
-                  {{ $t("policy_violation.fails") }}
-                </div>
-                <strong
-                  >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="danger"
-                  v-bind:value="failViolationsPercent"
-                ></b-progress>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("policy_violation.fails") }}</div>
+                <strong>{{ failViolations }} ({{ failViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="failViolationsPercent"></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t("policy_violation.warns") }}
-                </div>
-                <strong
-                  >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="warning"
-                  v-bind:value="warnViolationsPercent"
-                ></b-progress>
+                <div class="text-muted">{{ $t("policy_violation.warns") }}</div>
+                <strong>{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-warning" :precision="1"  v-bind:value="warnViolationsPercent"></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t("policy_violation.infos") }}
-                </div>
-                <strong
-                  >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="info"
-                  v-bind:value="infoViolationsPercent"
-                ></b-progress>
+                <div class="text-muted">{{ $t("policy_violation.infos") }}</div>
+                <strong>{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-info" :precision="1" v-bind:value="infoViolationsPercent"></b-progress>
               </b-col>
             </b-row>
           </div>
@@ -105,12 +82,88 @@
         <b-card>
           <b-row>
             <b-col sm="5">
-              <h4 id="chart-auditing-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
+              <h4 id="chart-violations-classification" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <div class="small text-muted">{{$t('message.policy_violations_by_classification')}}</div>
             </b-col>
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-audited-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-audited-progress>
+          <chart-policy-violations-classification ref="chartPolicyViolationsClassification" chartId="chartPolicyViolationsClassification" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-classification>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("policy_violation.security") }}</div>
+                <strong>{{ securityViolations }} ({{ securityViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="securityViolationsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("policy_violation.operational") }}</div>
+                <strong>{{ operationalViolations }} ({{ operationalViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-warning" :precision="1"  v-bind:value="operationalViolationsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("policy_violation.license") }}</div>
+                <strong>{{ licenseViolations }} ({{ licenseViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-info" :precision="1" v-bind:value="licenseViolationsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-auditing-findings-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
+              <div class="small text-muted">{{$t('message.findings')}}</div>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-audited-findings-progress ref="chartAuditedFindingsProgress" chartId="chartAuditedFindingsProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-audited-findings-progress>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.findings_unaudited") }}</div>
+                <strong>{{ unauditedFindings }} ({{ unauditedFindingsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-unassigned" :precision="1" v-bind:value="unauditedFindingsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.findings_audited") }}</div>
+                <strong>{{ auditedFindings }} ({{ auditedFindingsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="auditedFindingsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
+        </b-card>
+      </b-col>
+      <b-col sm="6">
+        <b-card>
+          <b-row>
+            <b-col sm="5">
+              <h4 id="chart-auditing-violations-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
+              <div class="small text-muted">{{$t('message.policy_violations')}}</div>
+            </b-col>
+            <b-col sm="7" class="d-none d-md-block">
+            </b-col>
+          </b-row>
+          <chart-audited-violations-progress ref="chartAuditedViolationsProgress" chartId="chartAuditedViolationsProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-audited-violations-progress>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t('message.violations_unaudited') }}</div>
+                <strong>{{unauditedViolations}} ({{unauditedViolationsPercent}}%)</strong>
+                <b-progress height={} class="progress-xs mt-2 severity-unassigned" :precision="1" v-bind:value="unauditedViolationsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t('message.violations_audited') }}</div>
+                <strong>{{auditedViolations}} ({{auditedViolationsPercent}}%)</strong>
+                <b-progress height={} class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="auditedViolationsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -126,6 +179,20 @@
             </b-col>
           </b-row>
           <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="chartProjectVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-project-vulnerabilities>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.invulnerable") }}</div>
+                <strong>{{ invulnerableProjects }} ({{ invulnerableProjectsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="invulnerableProjectsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.vulnerable") }}</div>
+                <strong>{{ vulnerableProjects }} ({{ vulnerableProjectsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-medium" :precision="1" v-bind:value="vulnerableProjectsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -138,6 +205,20 @@
             </b-col>
           </b-row>
           <chart-component-vulnerabilities ref="chartComponentVulnerabilities" chartId="chartComponentVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-component-vulnerabilities>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.invulnerable") }}</div>
+                <strong>{{ invulnerableComponents }} ({{ invulnerableComponentsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="invulnerableComponentsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.vulnerable") }}</div>
+                <strong>{{ vulnerableComponents }} ({{ vulnerableComponentsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 severity-medium" :precision="1" v-bind:value="vulnerableComponentsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -189,10 +270,13 @@
 <script>
   import common from "../shared/common"
   import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow'
+  import PolicyViolationsWidgetRow from './dashboard/PolicyViolationsWidgetRow'
   import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities'
   import ChartProjectVulnerabilities from "./dashboard/ChartProjectVulnerabilities";
-  import ChartAuditedProgress from "./dashboard/ChartAuditingProgress";
-  import ChartPolicyViolations from "./dashboard/ChartPolicyViolations";
+  import ChartAuditedFindingsProgress from "./dashboard/ChartAuditingFindingsProgress";
+  import ChartAuditedViolationsProgress from "./dashboard/ChartAuditingViolationsProgress";
+  import ChartPolicyViolationsState from "./dashboard/ChartPolicyViolationsState";
+  import ChartPolicyViolationsClassification from "./dashboard/ChartPolicyViolationsClassification";
   import ChartComponentVulnerabilities from "./dashboard/ChartComponentVulnerabilities";
   import { Callout } from '@coreui/vue'
   import permissionsMixin from "../mixins/permissionsMixin";
@@ -203,38 +287,65 @@
     components: {
       Callout,
       PortfolioWidgetRow,
+      PolicyViolationsWidgetRow,
       ChartPortfolioVulnerabilities,
       ChartProjectVulnerabilities,
-      ChartAuditedProgress,
-      ChartPolicyViolations,
+      ChartAuditedFindingsProgress,
+      ChartAuditedViolationsProgress,
+      ChartPolicyViolationsState,
+      ChartPolicyViolationsClassification,
       ChartComponentVulnerabilities
     },
     data() {
       return {
         totalProjects: 0,
         vulnerableProjects: 0,
-        vulnerableProjectPercent: 0,
+        vulnerableProjectsPercent: 0,
+        invulnerableProjects: 0,
+        invulnerableProjectsPercent: 0,
 
         totalComponents: 0,
         vulnerableComponents: 0,
-        vulnerableComponentPercent: 0,
+        vulnerableComponentsPercent: 0,
+        invulnerableComponents: 0,
+        invulnerableComponentsPercent: 0,
 
         totalFindings: 0,
         auditedFindings: 0,
-        auditedFindingPercent: 0,
+        auditedFindingsPercent: 0,
+        unauditedFindings: 0,
+        unauditedFindingsPercent: 0,
 
         totalViolations: 0,
         auditedViolations: 0,
         auditedViolationsPercent: 0,
+        unauditedViolations: 0,
+        unauditedViolationsPercent: 0,
         failViolations: 0,
         failViolationsPercent: 0,
         warnViolations: 0,
         warnViolationsPercent: 0,
         infoViolations: 0,
         infoViolationsPercent: 0,
+        securityViolations: 0,
+        securityViolationsPercent: 0,
+        operationalViolations: 0,
+        operationalViolationsPercent: 0,
+        licenseViolations: 0,
+        licenseViolationsPercent: 0,
 
         vulnerabilities: 0,
         suppressed: 0,
+        critical: 0,
+        criticalPercent: 0,
+        high: 0,
+        highPercent: 0,
+        medium: 0,
+        mediumPercent: 0,
+        low: 0,
+        lowPercent: 0,
+        unassigned: 0,
+        unassignedPercent: 0,
         lastMeasurement: ""
       }
     },
@@ -246,28 +357,52 @@
         let metric = metrics[metrics.length - 1]; //Use the most recent metric
         this.totalProjects = common.valueWithDefault(metric.projects, "0");
         this.vulnerableProjects = common.valueWithDefault(metric.vulnerableProjects, "0");
-        this.vulnerableProjectPercent = common.calcProgressPercent(this.totalProjects, this.vulnerableProjects);
+        this.vulnerableProjectsPercent = common.calcProgressPercent(this.totalProjects, this.vulnerableProjects);
+        this.invulnerableProjects = this.totalProjects - this.vulnerableProjects
+        this.invulnerableProjectsPercent = common.calcProgressPercent(this.totalProjects, this.invulnerableProjects);
 
         this.totalComponents = common.valueWithDefault(metric.components, "0");
         this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
-        this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
+        this.vulnerableComponentsPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
+        this.invulnerableComponents = this.totalComponents - this.vulnerableComponents
+        this.invulnerableComponentsPercent = common.calcProgressPercent(this.totalComponents, this.invulnerableComponents);
 
         this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
         this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-        this.auditedFindingPercent = common.calcProgressPercent(this.totalFindings, this.auditedFindings);
+        this.auditedFindingsPercent = common.calcProgressPercent(this.totalFindings, this.auditedFindings);
+        this.unauditedFindings = common.valueWithDefault(metric.findingsUnaudited, "0");
+        this.unauditedFindingsPercent = common.calcProgressPercent(this.totalFindings, this.unauditedFindings);
 
         this.totalViolations = common.valueWithDefault(metric.policyViolationsTotal, "0");
         this.auditedViolations = common.valueWithDefault(metric.policyViolationsAudited, "0");
         this.auditedViolationsPercent = common.calcProgressPercent(this.totalViolations, this.auditedViolations);
+        this.unauditedViolations = this.totalViolations - this.auditedViolations;
+        this.unauditedViolationsPercent = common.calcProgressPercent(this.totalViolations, this.unauditedViolations);
         this.failViolations = common.valueWithDefault(metric.policyViolationsFail, "0");
         this.failViolationsPercent = common.calcProgressPercent(this.totalViolations, this.failViolations);
         this.warnViolations = common.valueWithDefault(metric.policyViolationsWarn, "0");
         this.warnViolationsPercent = common.calcProgressPercent(this.totalViolations, this.warnViolations);
         this.infoViolations = common.valueWithDefault(metric.policyViolationsInfo, "0");
         this.infoViolationsPercent = common.calcProgressPercent(this.totalViolations, this.infoViolations);
+        this.securityViolations = common.valueWithDefault(metric.policyViolationsSecurityTotal, "0");
+        this.securityViolationsPercent = common.calcProgressPercent(this.totalViolations, this.securityViolations);
+        this.operationalViolations = common.valueWithDefault(metric.policyViolationsOperationalTotal, "0");
+        this.operationalViolationsPercent = common.calcProgressPercent(this.totalViolations, this.operationalViolations);
+        this.licenseViolations = common.valueWithDefault(metric.policyViolationsLicenseTotal, "0");
+        this.licenseViolationsPercent = common.calcProgressPercent(this.totalViolations, this.licenseViolations);
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
+        this.critical = common.valueWithDefault(metric.critical, "0");
+        this.criticalPercent = common.calcProgressPercent(this.vulnerabilities, this.critical);
+        this.high = common.valueWithDefault(metric.high, "0");
+        this.highPercent = common.calcProgressPercent(this.vulnerabilities, this.high);
+        this.medium = common.valueWithDefault(metric.medium, "0");
+        this.mediumPercent = common.calcProgressPercent(this.vulnerabilities, this.medium);
+        this.low = common.valueWithDefault(metric.low, "0");
+        this.lowPercent = common.calcProgressPercent(this.vulnerabilities, this.low);
+        this.unassigned = common.valueWithDefault(metric.unassigned, "0");
+        this.unassignedPercent = common.calcProgressPercent(this.vulnerabilities, this.unassigned);
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
       },
       refreshMetrics() {
@@ -283,10 +418,13 @@
         let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
         this.axios.get(url).then((response) => {
           this.$refs.portfolioWidgetRow.render(response.data)
+          this.$refs.policyViolationsWidgetRow.render(response.data)
           this.$refs.chartPortfolioVulnerabilities.render(response.data);
           this.$refs.chartProjectVulnerabilities.render(response.data);
-          this.$refs.chartAuditedProgress.render(response.data);
-          this.$refs.chartPolicyViolations.render(response.data);
+          this.$refs.chartAuditedFindingsProgress.render(response.data);
+          this.$refs.chartAuditedViolationsProgress.render(response.data);
+          this.$refs.chartPolicyViolationsState.render(response.data);
+          this.$refs.chartPolicyViolationsClassification.render(response.data);
           this.$refs.chartComponentVulnerabilities.render(response.data);
           this.extractStats(response.data);
         });

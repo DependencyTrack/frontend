@@ -82,7 +82,7 @@
         <b-card>
           <b-row>
             <b-col sm="5">
-              <h4 id="chart-policy-violations" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
+              <h4 id="chart-policy-violations-state" class="card-title mb-0">{{ $t('message.policy_violations') }}</h4>
               <div class="small text-muted">
                 {{$t('message.policy_violations_by_state')}}
               </div>
@@ -90,7 +90,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <chart-policy-violations-state ref="chartPolicyViolationsState" chartId="chartPolicyViolationsState" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-state>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -127,11 +127,12 @@
           <b-row>
             <b-col sm="5">
               <h4 id="chart-auditing-progress" class="card-title mb-0">{{ $t('message.auditing_progress') }}</h4>
+              <div class="small text-muted">{{$t('message.findings')}}</div>
             </b-col>
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-auditing-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-auditing-progress>
+          <chart-auditing-findings-progress ref="chartAuditedFindingsProgress" chartId="chartAuditedFindingsProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-auditing-findings-progress>
         </b-card>
       </b-col>
     </b-row>
@@ -141,18 +142,18 @@
 <script>
   import common from "../../../shared/common"
   import { Callout } from '@coreui/vue'
-  import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
+  import ChartAuditingFindingsProgress from "../../dashboard/ChartAuditingFindingsProgress";
   import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
   import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities'
-  import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+  import ChartPolicyViolationsState from "@/views/dashboard/ChartPolicyViolationsState";
   import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
   export default {
     name: 'project-dashboard',
     components: {
-      ChartPolicyViolations,
+      ChartPolicyViolationsState,
       ChartPolicyViolationBreakdown,
-      ChartAuditingProgress,
+      ChartAuditingFindingsProgress,
       ChartComponentVulnerabilities,
       ChartPortfolioVulnerabilities,
       Callout
@@ -221,9 +222,9 @@
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolations.render(response.data);
+        this.$refs.chartPolicyViolationsState.render(response.data);
         this.$refs.chartPolicyViolationBreakdown.render(response.data);
-        this.$refs.chartAuditedProgress.render(response.data);
+        this.$refs.chartAuditedFindingsProgress.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);
         this.extractStats(response.data);
       });
