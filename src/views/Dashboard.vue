@@ -165,9 +165,9 @@
             <b-col sm="12" lg="6">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
-                    <small class="text-muted">{{ $t('message.portfolio_vulnerabilities') }}</small><br>
-                    <strong class="h4">{{vulnerabilities}}</strong>
+                  <Callout variant="danger">
+                    <small class="text-muted">{{ $t('message.policy_violations') }}</small><br>
+                    <strong class="h4">{{totalViolations}}</strong>
                   </Callout>
                 </b-col>
                 <b-col sm="6">
