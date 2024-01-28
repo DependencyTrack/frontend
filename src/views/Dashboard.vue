@@ -18,22 +18,22 @@
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_projects') }}</div>
             <strong>{{vulnerableProjects}} ({{vulnerableProjectPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="success" v-bind:value="vulnerableProjectPercent"></b-progress>
+            <b-progress height={} class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="vulnerableProjectPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0 d-md-down-none">
             <div class="text-muted">{{ $t('message.violations_audited') }}</div>
             <strong>{{auditedViolations}} ({{auditedViolationsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="info" v-bind:value="auditedViolationsPercent"></b-progress>
+            <b-progress height={} class="progress-xs mt-2 status-info" :precision="1" v-bind:value="auditedViolationsPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_components') }}</div>
             <strong>{{vulnerableComponents}} ({{vulnerableComponentPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="warning" v-bind:value="vulnerableComponentPercent"></b-progress>
+            <b-progress height={} class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableComponentPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.findings_audited') }}</div>
             <strong>{{auditedFindings}} ({{auditedFindingPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2" :precision="1" variant="danger" v-bind:value="auditedFindingPercent"></b-progress>
+            <b-progress height={} class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="auditedFindingPercent"></b-progress>
           </b-col>
         </b-row>
       </div>
@@ -53,49 +53,19 @@
           <div slot="footer">
             <b-row class="text-center">
               <b-col class="mb-sm-2 mb-0 d-md-down-none">
-                <div class="text-muted">
-                  {{ $t("policy_violation.fails") }}
-                </div>
-                <strong
-                  >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="danger"
-                  v-bind:value="failViolationsPercent"
-                ></b-progress>
+                <div class="text-muted">{{ $t("policy_violation.fails") }}</div>
+                <strong>{{ failViolations }} ({{ failViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="failViolationsPercent"></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t("policy_violation.warns") }}
-                </div>
-                <strong
-                  >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="warning"
-                  v-bind:value="warnViolationsPercent"
-                ></b-progress>
+                <div class="text-muted">{{ $t("policy_violation.warns") }}</div>
+                <strong>{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="warnViolationsPercent"></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t("policy_violation.infos") }}
-                </div>
-                <strong
-                  >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2"
-                  :precision="1"
-                  variant="info"
-                  v-bind:value="infoViolationsPercent"
-                ></b-progress>
+                <div class="text-muted">{{ $t("policy_violation.infos") }}</div>
+                <strong>{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-info" :precision="1" v-bind:value="infoViolationsPercent"></b-progress>
               </b-col>
             </b-row>
           </div>
@@ -187,7 +157,7 @@
                   </Callout>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <Callout variant="warning">
                     <small class="text-muted">{{ $t('message.suppressed') }}</small><br>
                     <strong class="h4">{{suppressed}}</strong>
                   </Callout>
