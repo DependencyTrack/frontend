@@ -11,8 +11,8 @@
     },
     methods: {
       render: function(metrics) {
-        const totalStyle = getStyle('--severity-unassigned');
-        const affectedStyle = getStyle('--severity-info');
+        const totalStyle = getStyle('--notification-note');
+        const affectedStyle = getStyle('--notification-warn');
 
         let labels = [];
         let totalData = [];

@@ -96,6 +96,20 @@
             </b-col>
           </b-row>
           <chart-project-vulnerabilities ref="chartProjectVulnerabilities" chartId="chartProjectVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-project-vulnerabilities>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.non_vulnerable") }}</div>
+                <strong>{{ nonVulnerableProjects }} ({{ nonVulnerableProjectsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="nonVulnerableProjectsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.vulnerable") }}</div>
+                <strong>{{ vulnerableProjects }} ({{ vulnerableProjectsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableProjectsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -108,6 +122,20 @@
             </b-col>
           </b-row>
           <chart-component-vulnerabilities ref="chartComponentVulnerabilities" chartId="chartComponentVulnerabilities" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-component-vulnerabilities>
+          <div slot="footer">
+            <b-row class="text-center">
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.non_vulnerable") }}</div>
+                <strong>{{ nonVulnerableComponents }} ({{ nonVulnerableComponentsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="nonVulnerableComponentsPercent"></b-progress>
+              </b-col>
+              <b-col class="mb-sm-2 mb-0">
+                <div class="text-muted">{{ $t("message.vulnerable") }}</div>
+                <strong>{{ vulnerableComponents }} ({{ vulnerableComponentsPercent }}%)</strong>
+                <b-progress height="{}" class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableComponentsPercent"></b-progress>
+              </b-col>
+            </b-row>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -183,11 +211,15 @@
       return {
         totalProjects: 0,
         vulnerableProjects: 0,
-        vulnerableProjectPercent: 0,
+        vulnerableProjectsPercent: 0,
+        nonVulnerableProjects: 0,
+        nonVulnerableProjectsPercent: 0,
 
         totalComponents: 0,
         vulnerableComponents: 0,
-        vulnerableComponentPercent: 0,
+        vulnerableComponentsPercent: 0,
+        nonVulnerableComponents: 0,
+        nonVulnerableComponentsPercent: 0,
 
         totalFindings: 0,
         auditedFindings: 0,
@@ -216,11 +248,15 @@
         let metric = metrics[metrics.length - 1]; //Use the most recent metric
         this.totalProjects = common.valueWithDefault(metric.projects, "0");
         this.vulnerableProjects = common.valueWithDefault(metric.vulnerableProjects, "0");
-        this.vulnerableProjectPercent = common.calcProgressPercent(this.totalProjects, this.vulnerableProjects);
+        this.vulnerableProjectsPercent = common.calcProgressPercent(this.totalProjects, this.vulnerableProjects);
+        this.nonVulnerableProjects = this.totalProjects - this.vulnerableProjects;
+        this.nonVulnerableProjectsPercent = common.calcProgressPercent(this.totalProjects, this.nonVulnerableProjects);
 
         this.totalComponents = common.valueWithDefault(metric.components, "0");
         this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
-        this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
+        this.vulnerableComponentsPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
+        this.nonVulnerableComponents = this.totalComponents - this.vulnerableComponents;
+        this.nonVulnerableComponentsPercent = common.calcProgressPercent(this.totalComponents, this.nonVulnerableComponents);
 
         this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
         this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
