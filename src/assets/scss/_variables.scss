@@ -41,6 +41,7 @@ $severity-label-bg: $grey-900 !default;
 $notification-fail: $red;
 $notification-warn: $yellow;
 $notification-info: $blue;
+$notification-pass: $green;
 $notification-note: #777777;
 
 // Components
@@ -232,6 +233,7 @@ $recessed: $grey-850;
   --notification-fail: #{$notification-fail};
   --notification-warn: #{$notification-warn};
   --notification-info: #{$notification-info};
+  --notification-pass: #{$notification-pass};
   --notification-note: #{$notification-note};
 
   --component-active-color: #{$component-active-color};

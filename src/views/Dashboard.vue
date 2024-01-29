@@ -17,8 +17,8 @@
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_projects') }}</div>
-            <strong>{{vulnerableProjects}} ({{vulnerableProjectPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="vulnerableProjectPercent"></b-progress>
+            <strong>{{vulnerableProjects}} ({{vulnerableProjectsPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="vulnerableProjectsPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0 d-md-down-none">
             <div class="text-muted">{{ $t('message.violations_audited') }}</div>
@@ -27,8 +27,8 @@
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.vulnerable_components') }}</div>
-            <strong>{{vulnerableComponents}} ({{vulnerableComponentPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableComponentPercent"></b-progress>
+            <strong>{{vulnerableComponents}} ({{vulnerableComponentsPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableComponentsPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
             <div class="text-muted">{{ $t('message.findings_audited') }}</div>

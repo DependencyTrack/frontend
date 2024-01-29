@@ -13,20 +13,24 @@
       render: function(metrics) {
         const totalStyle = getStyle('--notification-note');
         const affectedStyle = getStyle('--notification-warn');
+        const nonAffectedStyle = getStyle('--notification-pass');
 
         let labels = [];
         let totalData = [];
         let affectedData = [];
+        let nonAffectedData = [];
 
         for (let i = 0; i < metrics.length; i++) {
           labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
           totalData.push(metrics[i].components);
           affectedData.push(metrics[i].vulnerableComponents);
+          nonAffectedData.push(metrics[i].components - metrics[i].vulnerableComponents)
 
           if (i === metrics.length - 1) {
             labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
             totalData.push(metrics[i].components);
             affectedData.push(metrics[i].vulnerableComponents);
+            nonAffectedData.push(metrics[i].components - metrics[i].vulnerableComponents)
           }
         }
 
@@ -39,6 +43,13 @@
               borderColor: totalStyle,
               pointHoverBackgroundColor: '#fff',
               data: totalData
+            },
+            {
+              label: this.$t('message.non_vulnerable'),
+              backgroundColor: hexToRgba(nonAffectedStyle, 10),
+              borderColor: nonAffectedStyle,
+              pointHoverBackgroundColor: '#fff',
+              data: nonAffectedData
             },
             {
               label: this.$t('message.vulnerable'),
