@@ -131,7 +131,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-auditing-progress ref="chartAuditedProgress" chartId="chartAuditedProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-auditing-progress>
+          <chart-auditing-findings-progress ref="chartAuditingFindingsProgress" chartId="chartAuditingFindingsProgress" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-auditing-findings-progress>
         </b-card>
       </b-col>
     </b-row>
@@ -141,7 +141,7 @@
 <script>
   import common from "../../../shared/common"
   import { Callout } from '@coreui/vue'
-  import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
+  import ChartAuditingFindingsProgress from "../../dashboard/ChartAuditingFindingsProgress";
   import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
   import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities'
   import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
@@ -152,7 +152,7 @@
     components: {
       ChartPolicyViolations,
       ChartPolicyViolationBreakdown,
-      ChartAuditingProgress,
+      ChartAuditingFindingsProgress,
       ChartComponentVulnerabilities,
       ChartPortfolioVulnerabilities,
       Callout
@@ -173,10 +173,6 @@
         totalComponents: 0,
         vulnerableComponents: 0,
         vulnerableComponentPercent: 0,
-
-        totalFindings: 0,
-        auditedFindings: 0,
-        auditedFindingPercent: 0,
 
         vulnerabilities: 0,
         suppressed: 0,
@@ -201,10 +197,6 @@
         this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
         this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
 
-        this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
-        this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-        this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
-
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
@@ -223,7 +215,7 @@
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartPolicyViolations.render(response.data);
         this.$refs.chartPolicyViolationBreakdown.render(response.data);
-        this.$refs.chartAuditedProgress.render(response.data);
+        this.$refs.chartAuditingFindingsProgress.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);
         this.extractStats(response.data);
       });
