@@ -105,9 +105,6 @@
     </b-row>
 
     <b-row>
-    </b-row>
-
-    <b-row>
       <b-col sm="6">
         <b-card>
           <b-row>
