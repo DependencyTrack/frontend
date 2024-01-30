@@ -11,26 +11,22 @@
     },
     methods: {
       render: function(metrics) {
-        const totalStyle = getStyle('--notification-note');
-        const affectedStyle = getStyle('--notification-warn');
-        const nonAffectedStyle = getStyle('--notification-pass');
+        const totalStyle = getStyle('--severity-unassigned');
+        const auditedStyle = getStyle('--severity-low');
 
         let labels = [];
         let totalData = [];
-        let affectedData = [];
-        let nonAffectedData = [];
+        let auditedData = [];
 
         for (let i = 0; i < metrics.length; i++) {
           labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-          totalData.push(metrics[i].projects);
-          affectedData.push(metrics[i].vulnerableProjects);
-          nonAffectedData.push(metrics[i].projects - metrics[i].vulnerableProjects)
+          totalData.push(metrics[i].policyViolationsTotal);
+          auditedData.push(metrics[i].policyViolationsAudited);
 
           if (i === metrics.length - 1) {
             labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
-            totalData.push(metrics[i].projects);
-            affectedData.push(metrics[i].vulnerableProjects);
-            nonAffectedData.push(metrics[i].projects - metrics[i].vulnerableProjects)
+            totalData.push(metrics[i].policyViolationsTotal);
+            auditedData.push(metrics[i].policyViolationsAudited);
           }
         }
 
@@ -38,25 +34,18 @@
           labels: labels,
           datasets: [
             {
-              label: this.$t('message.total'),
+              label: this.$t('message.policy_violations'),
               backgroundColor: 'transparent',
               borderColor: totalStyle,
               pointHoverBackgroundColor: '#fff',
               data: totalData
             },
             {
-              label: this.$t('message.non_vulnerable'),
-              backgroundColor: hexToRgba(nonAffectedStyle, 10),
-              borderColor: nonAffectedStyle,
+              label: this.$t('message.violations_audited'),
+              backgroundColor: hexToRgba(auditedStyle, 10),
+              borderColor: auditedStyle,
               pointHoverBackgroundColor: '#fff',
-              data: nonAffectedData
-            },
-            {
-              label: this.$t('message.vulnerable'),
-              backgroundColor: hexToRgba(affectedStyle, 10),
-              borderColor: affectedStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: affectedData
+              data: auditedData
             }
           ]
         }, {
