@@ -103,7 +103,6 @@
 <script>
 import common from "../../../shared/common"
 import { Callout } from '@coreui/vue'
-import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
 import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from "@/views/dashboard/ChartPolicyViolationsState";
@@ -112,7 +111,6 @@ import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolatio
 export default {
   name: 'ServiceDashboard',
   components: {
-    ChartAuditingProgress,
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
     ChartPolicyViolationsState,
@@ -132,10 +130,6 @@ export default {
       totalComponents: 0,
       vulnerableComponents: 0,
       vulnerableComponentPercent: 0,
-
-      totalFindings: 0,
-      auditedFindings: 0,
-      auditedFindingPercent: 0,
 
       vulnerabilities: 0,
       suppressed: 0,
@@ -158,10 +152,6 @@ export default {
       this.totalComponents = common.valueWithDefault(metric.components, "0");
       this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
       this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
-
-      this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
-      this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-      this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
 
       this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
       this.suppressed = common.valueWithDefault(metric.suppressed, "0");
