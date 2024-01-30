@@ -418,6 +418,12 @@
         this.warnViolationsPercent = common.calcProgressPercent(this.totalViolations, this.warnViolations);
         this.infoViolations = common.valueWithDefault(metric.policyViolationsInfo, "0");
         this.infoViolationsPercent = common.calcProgressPercent(this.totalViolations, this.infoViolations);
+        this.securityViolations = common.valueWithDefault(metric.policyViolationsSecurityTotal, "0");
+        this.securityViolationsPercent = common.calcProgressPercent(this.totalViolations, this.securityViolations);
+        this.operationalViolations = common.valueWithDefault(metric.policyViolationsOperationalTotal, "0");
+        this.operationalViolationsPercent = common.calcProgressPercent(this.totalViolations, this.operationalViolations);
+        this.licenseViolations = common.valueWithDefault(metric.policyViolationsLicenseTotal, "0");
+        this.licenseViolationsPercent = common.calcProgressPercent(this.totalViolations, this.licenseViolations);
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
