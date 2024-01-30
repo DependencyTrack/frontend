@@ -19,9 +19,9 @@ export default {
       let licenseData = [];
       for (let i = 0; i < metrics.length; i++) {
         labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
-        securityData.push(metrics[i].policyViolationsFail);
-        operationalData.push(metrics[i].policyViolationsWarn);
-        licenseData.push(metrics[i].policyViolationsInfo);
+        securityData.push(metrics[i].policyViolationsSecurityTotal);
+        operationalData.push(metrics[i].policyViolationsOperationalTotal);
+        licenseData.push(metrics[i].policyViolationsLicenseTotal);
         if (i === metrics.length - 1) {
           labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
           securityData.push(metrics[i].policyViolationsSecurityTotal);
