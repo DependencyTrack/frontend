@@ -36,9 +36,9 @@
             <b-progress height={} class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="lowPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.findings_audited') }}</div>
-            <strong>{{auditedFindings}} ({{auditedFindingPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="auditedFindingPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.unassigned') }}</div>
+            <strong>{{unassigned}} ({{unassignedPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="unassignedPercent"></b-progress>
           </b-col>
         </b-row>
       </div>
