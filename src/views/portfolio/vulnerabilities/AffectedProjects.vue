@@ -68,7 +68,7 @@
           {
             title: this.$t('message.active'),
             field: "active",
-            formatter(value, row, index) {
+            formatter(value) {
               return value === true ? '<i class="fa fa-check-square-o" />' : "";
             },
             align: "center",
