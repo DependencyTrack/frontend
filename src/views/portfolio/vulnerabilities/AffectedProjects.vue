@@ -86,6 +86,7 @@
           queryParamsType: 'pageSize',
           pageList: '[10, 25, 50, 100]',
           pageSize: 10,
+          toolbar: '#projectsToolbar',
           icons: {
             refresh: 'fa-refresh'
           },
