@@ -82,6 +82,11 @@ import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permission
                 component: 'Search',
                 name: this.$t('message.search'),
                 route: "configuration/search"
+              },
+              {
+                component: 'RiskScore',
+                name: this.$t('message.risk_score'),
+                route: "configuration/RiskScore"
               }
             ]
           },
