@@ -61,13 +61,22 @@
           icons: {
             refresh: 'fa-refresh'
           },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_VULNERABILITY}/source/${this.source}/vuln/${this.vulnId}/projects`
+          url: this.getUrl()
         }
       };
     },
     methods: {
       tableLoaded: function(array) {
         this.$emit('total', array.length);
+      },
+      getUrl() {
+        return `${this.$api.BASE_URL}/${this.$api.URL_VULNERABILITY}/source/${this.source}/vuln/${this.vulnId}/projects`;
+      }
+    },
+    watch: {
+      vulnId() {
+        // update url when vulnId changes, will trigger table refresh
+        this.$refs.table.refreshOptions({...this.options, url: this.getUrl()});
       }
     }
   };
