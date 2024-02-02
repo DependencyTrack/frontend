@@ -101,7 +101,7 @@
         this.updateConfigProperties([
           {groupName: 'email', propertyName: 'smtp.enabled', propertyValue: this.isEmailEnabled},
           {groupName: 'email', propertyName: 'smtp.from.address', propertyValue: this.emailFromAddress},
-          {groupName: 'email', propertyName: 'smtp.prefix', propertyValue: this.emailPrefix},
+          {groupName: 'email', propertyName: 'subject.prefix', propertyValue: this.emailPrefix},
           {groupName: 'email', propertyName: 'smtp.server.hostname', propertyValue: this.emailSmtpServer},
           {groupName: 'email', propertyName: 'smtp.server.port', propertyValue: this.emailSmtpPort},
           {groupName: 'email', propertyName: 'smtp.username', propertyValue: this.emailSmtpUsername},
@@ -112,7 +112,7 @@
           this.updateConfigProperty("email", "smtp.password", this.emailSmtpPassword);
         }
         if (typeof this.emailPrefix == "undefined") {
-          this.updateConfigProperty("email","smtp.prefix", " ");
+          this.updateConfigProperty("email","subject.prefix", " ");
         }
       }
     },
@@ -126,7 +126,7 @@
               this.isEmailEnabled = common.toBoolean(item.propertyValue); break;
             case "smtp.from.address":
               this.emailFromAddress = item.propertyValue; break;
-            case "smtp.prefix":
+            case "subject.prefix":
               this.emailPrefix = item.propertyValue; break;
             case "smtp.server.hostname":
               this.emailSmtpServer = item.propertyValue; break;
