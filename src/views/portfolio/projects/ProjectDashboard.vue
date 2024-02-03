@@ -90,7 +90,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <chart-policy-violations-state ref="chartPolicyViolationsState" chartId="chartPolicyViolationsState" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-state>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -144,13 +144,13 @@
   import ChartAuditingFindingsProgress from "../../dashboard/ChartAuditingFindingsProgress";
   import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
   import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities'
-  import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+  import ChartPolicyViolationsState from "@/views/dashboard/ChartPolicyViolationsState";
   import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
   export default {
     name: 'project-dashboard',
     components: {
-      ChartPolicyViolations,
+      ChartPolicyViolationsState,
       ChartPolicyViolationBreakdown,
       ChartAuditingFindingsProgress,
       ChartComponentVulnerabilities,
@@ -213,7 +213,7 @@
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
       this.axios.get(url).then((response) => {
         this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolations.render(response.data);
+        this.$refs.chartPolicyViolationsState.render(response.data);
         this.$refs.chartPolicyViolationBreakdown.render(response.data);
         this.$refs.chartAuditingFindingsProgress.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);

@@ -78,7 +78,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <chart-policy-violations-state ref="chartPolicyViolationsState" chartId="chartPolicyViolationsState" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-state>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -105,7 +105,7 @@ import common from "../../../shared/common"
 import { Callout } from '@coreui/vue'
 import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+import ChartPolicyViolationsState from "@/views/dashboard/ChartPolicyViolationsState";
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
 export default {
@@ -113,7 +113,7 @@ export default {
   components: {
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
-    ChartPolicyViolations,
+    ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
     Callout,
 
@@ -174,7 +174,7 @@ export default {
     let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${uuid}/days/${daysBack}`;
     this.axios.get(url).then((response) => {
       this.$refs.chartServiceVulnerabilities.render(response.data);
-      this.$refs.chartPolicyViolations.render(response.data);
+      this.$refs.chartPolicyViolationsState.render(response.data);
       this.$refs.chartPolicyViolationBreakdown.render(response.data);
       this.extractStats(response.data);
     });
