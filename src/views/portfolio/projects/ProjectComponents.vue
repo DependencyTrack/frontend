@@ -80,8 +80,8 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
-        onlyOutdated: this.onlyOutdated,
-        onlyDirect: this.onlyDirect,
+        onlyOutdated: false,
+        onlyDirect: false,
         columns: [
           {
             field: "state",
