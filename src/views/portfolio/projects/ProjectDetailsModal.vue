@@ -41,7 +41,7 @@
           </b-form-group>
           <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
                     :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
-                    v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
+                    v-b-tooltip.hover :title="$t('message.inactive_active_children')" @change="syncActiveLabel"/> {{projectActiveLabel}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
                                     lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
@@ -226,6 +226,7 @@
       return {
         readOnlyProjectName: '',
         readOnlyProjectVersion: '',
+        projectActiveLabel: this.project.active ? this.$i18n.t('message.active') : this.$i18n.t('message.inactive'),
         availableClassifiers: [
           { value: 'APPLICATION', text: this.$i18n.t('message.component_application') },
           { value: 'FRAMEWORK', text: this.$i18n.t('message.component_framework') },
@@ -382,6 +383,9 @@
       },
       syncReadOnlyVersionField: function(value) {
         this.readOnlyProjectVersion = value;
+      },
+      syncActiveLabel: function(value) {
+        this.projectActiveLabel = value ? this.$t('message.active') : this.$t('message.inactive')
       },
       updateProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;

@@ -58,6 +58,7 @@
     "version": "Version",
     "bom_format": "BOM Format",
     "active": "Active",
+    "inactive": "Inactive",
     "name": "Name",
     "published": "Published",
     "cwe": "CWE",
