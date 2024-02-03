@@ -26,7 +26,7 @@
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
         <span id="switch-container-outdated" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
-          <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
+          <c-switch id="only-outdated" :disabled="!project" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
         <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
         <b-tooltip target="switch-container-outdated" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
         <span id="switch-container-direct" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
