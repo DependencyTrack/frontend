@@ -16,24 +16,29 @@
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.vulnerable_projects') }}</div>
-            <strong>{{vulnerableProjects}} ({{vulnerableProjectsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-passed" :precision="1" v-bind:value="vulnerableProjectsPercent"></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0 d-md-down-none">
-            <div class="text-muted">{{ $t('message.violations_audited') }}</div>
-            <strong>{{auditedViolations}} ({{auditedViolationsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-info" :precision="1" v-bind:value="auditedViolationsPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.critical') }}</div>
+            <strong>{{critical}} ({{criticalPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-critical" :precision="1" v-bind:value="criticalPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.vulnerable_components') }}</div>
-            <strong>{{vulnerableComponents}} ({{vulnerableComponentsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-warning" :precision="1" v-bind:value="vulnerableComponentsPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.high') }}</div>
+            <strong>{{high}} ({{highPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-high" :precision="1" v-bind:value="highPercent"></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('message.findings_audited') }}</div>
-            <strong>{{auditedFindings}} ({{auditedFindingsPercent}}%)</strong>
-            <b-progress height={} class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="auditedFindingsPercent"></b-progress>
+            <div class="text-muted">{{ $t('severity.medium') }}</div>
+            <strong>{{medium}} ({{mediumPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-medium" :precision="1" v-bind:value="mediumPercent"></b-progress>
+          </b-col>
+          <b-col class="mb-sm-2 mb-0">
+            <div class="text-muted">{{ $t('severity.low') }}</div>
+            <strong>{{low}} ({{lowPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 severity-low" :precision="1" v-bind:value="lowPercent"></b-progress>
+          </b-col>
+          <b-col class="mb-sm-2 mb-0">
+            <div class="text-muted">{{ $t('severity.unassigned') }}</div>
+            <strong>{{unassigned}} ({{unassignedPercent}}%)</strong>
+            <b-progress height={} class="progress-xs mt-2 status-failed" :precision="1" v-bind:value="unassignedPercent"></b-progress>
           </b-col>
         </b-row>
       </div>
@@ -377,6 +382,16 @@
 
         vulnerabilities: 0,
         suppressed: 0,
+        critical: 0,
+        criticalPercent: 0,
+        high: 0,
+        highPercent: 0,
+        medium: 0,
+        mediumPercent: 0,
+        low: 0,
+        lowPercent: 0,
+        unassigned: 0,
+        unassignedPercent: 0,
         lastMeasurement: ""
       }
     },
@@ -424,6 +439,16 @@
 
         this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
         this.suppressed = common.valueWithDefault(metric.suppressed, "0");
+        this.critical = common.valueWithDefault(metric.critical, "0");
+        this.criticalPercent = common.calcProgressPercent(this.vulnerabilities, this.critical);
+        this.high = common.valueWithDefault(metric.high, "0");
+        this.highPercent = common.calcProgressPercent(this.vulnerabilities, this.high);
+        this.medium = common.valueWithDefault(metric.medium, "0");
+        this.mediumPercent = common.calcProgressPercent(this.vulnerabilities, this.medium);
+        this.low = common.valueWithDefault(metric.low, "0");
+        this.lowPercent = common.calcProgressPercent(this.vulnerabilities, this.low);
+        this.unassigned = common.valueWithDefault(metric.unassigned, "0");
+        this.unassignedPercent = common.calcProgressPercent(this.vulnerabilities, this.unassigned);
         this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
       },
       refreshMetrics() {
