@@ -130,6 +130,9 @@
                       <c-switch id="notificationLogSuccessfulPublish" color="primary" v-model="logSuccessfulPublish" label v-bind="labelIcon" :title="$t('admin.alert_log_successful_publish_help')" />
                       {{ $t('admin.alert_log_successful_publish') }}
                     </b-form-group>
+                    <b-form-group id="fieldset-2" :label="this.$t('admin.publisher')" label-for="input-2">
+                      <b-form-input id="input-2" v-model="publisherName" disabled class="form-control disabled" readonly trim />
+                    </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
@@ -221,6 +224,7 @@
                   enabled: row.enabled,
                   logSuccessfulPublish: row.logSuccessfulPublish,
                   notifyChildren: row.notifyChildren,
+                  publisherName: row.publisher.name,
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
