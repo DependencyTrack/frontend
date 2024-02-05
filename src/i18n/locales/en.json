@@ -599,6 +599,7 @@
     "enable_bom_spdx": "Enable SPDX",
     "enable_email": "Enable email",
     "email_from_address": "From email address",
+    "email_prefix": "Subject prefix",
     "email_smtp_server": "SMTP server",
     "email_smtp_port": "SMTP server port",
     "email_smtp_username": "SMTP username",
