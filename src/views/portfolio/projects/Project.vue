@@ -139,7 +139,12 @@
         <project-epss :key="this.uuid" :uuid="this.uuid" v-on:total="totalEpss = $event" />
       </b-tab>
       <b-tab ref="policyviolations" v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)" @click="routeTo('policyViolations')">
-        <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
+        <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
+          <b-badge variant="tab-total" v-b-tooltip.hover :title="$t('message.total')">{{ totalViolations }}</b-badge>
+          <b-badge variant="tab-info" v-b-tooltip.hover :title="$t('policy_violation.infos')">{{ infoViolations }}</b-badge>
+          <b-badge variant="tab-warn" v-b-tooltip.hover :title="$t('policy_violation.warns')">{{ warnViolations }}</b-badge>
+          <b-badge variant="tab-fail" v-b-tooltip.hover :title="$t('policy_violation.fails')">{{ failViolations }}</b-badge>
+        </template>
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
     </b-tabs>
@@ -210,6 +215,9 @@
         severityUnassigned: this.getStyle('--severity-unassigned'),
         severityInfo: this.getStyle('--severity-info'),
         trackColor: this.getStyle('--component-active-color'),
+        infoViolation: this.getStyle('--notification-info'),
+        warnViolation: this.getStyle('--notification-warn'),
+        failViolation: this.getStyle('--notification-fail'),
         uuid: null,
         project: {},
         currentCritical: 0,
@@ -224,6 +232,9 @@
         totalFindings: 0,
         totalEpss: 0,
         totalViolations: 0,
+        infoViolations: 0,
+        warnViolations: 0,
+        failViolations: 0,
         tabIndex: 0
       }
     },
@@ -253,6 +264,9 @@
           this.currentLow = common.valueWithDefault(this.project.metrics.low, 0);
           this.currentUnassigned = common.valueWithDefault(this.project.metrics.unassigned, 0);
           this.currentRiskScore = common.valueWithDefault(this.project.metrics.inheritedRiskScore, 0);
+          this.infoViolations = common.valueWithDefault(this.project.metrics.policyViolationsInfo, 0);
+          this.warnViolations = common.valueWithDefault(this.project.metrics.policyViolationsWarn, 0);
+          this.failViolations = common.valueWithDefault(this.project.metrics.policyViolationsFail, 0);
           EventBus.$emit('addCrumb', this.projectLabel);
           this.$title = this.projectLabel;
         });
