@@ -68,6 +68,7 @@
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-eslint": "3.12.1",
     "@vue/cli-service": "3.12.1",
+    "@vue/runtime-dom": "^3.4.15",
     "copy-webpack-plugin": "5.1.2",
     "cross-env": "^7.0.3",
     "growl": "1.10.5",
