@@ -131,8 +131,12 @@
         <project-dependency-graph :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalDependencyGraphs = $event" />
       </b-tab>
       <b-tab ref="findings" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('findings')">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
+        <template v-slot:title>
+          <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
+          <b-badge variant="tab-total" v-b-tooltip.hover :title="$t('message.total_findings_excluding_aliases')">{{ totalFindings }}</b-badge>
+          <b-badge variant="tab-info" v-b-tooltip.hover :title="$t('message.total_findings_including_aliases')">{{ totalFindingsIncludingAliases }}</b-badge>
+        </template>
+        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindingsIncludingAliases = $event" />
       </b-tab>
       <b-tab ref="epss" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('epss')">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }} <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template>
@@ -230,6 +234,7 @@
         totalServices: 0,
         totalDependencyGraphs: 0,
         totalFindings: 0,
+        totalFindingsIncludingAliases: 0,
         totalEpss: 0,
         totalViolations: 0,
         infoViolations: 0,
@@ -264,6 +269,7 @@
           this.currentLow = common.valueWithDefault(this.project.metrics.low, 0);
           this.currentUnassigned = common.valueWithDefault(this.project.metrics.unassigned, 0);
           this.currentRiskScore = common.valueWithDefault(this.project.metrics.inheritedRiskScore, 0);
+          this.totalFindings = common.valueWithDefault(this.project.metrics.findingsTotal, 0)
           this.infoViolations = common.valueWithDefault(this.project.metrics.policyViolationsInfo, 0);
           this.warnViolations = common.valueWithDefault(this.project.metrics.policyViolationsWarn, 0);
           this.failViolations = common.valueWithDefault(this.project.metrics.policyViolationsFail, 0);
