@@ -44,6 +44,8 @@
     "vulnerable_projects": "Vulnerable Projects",
     "findings": "Findings",
     "total_findings": "Total Findings",
+    "total_findings_including_aliases": "Total Findings (including aliases)",
+    "total_findings_excluding_aliases": "Total Findings (excluding aliases)",
     "findings_audited": "Findings Audited",
     "findings_unaudited": "Findings Unaudited",
     "auditing_progress": "Auditing Progress",
