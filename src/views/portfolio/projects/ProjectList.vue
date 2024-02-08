@@ -273,7 +273,7 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
             title: this.$t('message.vulnerabilities'),
             field: "metrics.vulnerabilities", // this column uses other fields, but the field id must be unique
             sortable: false,
-            formatter(_, row) {
+            formatter: function(_, row) {
               let metrics = row.metrics
               if (typeof metrics === "undefined") {
                 return "-"; // No vulnerability info available
@@ -288,12 +288,13 @@ import ProjectCreateProjectModal from "./ProjectCreateProjectModal";
                   high: metrics.high,
                   medium: metrics.medium,
                   low: metrics.low,
-                  unassigned: metrics.unassigned
+                  unassigned: metrics.unassigned,
+                  $t: this.$t.bind(this),
                 }
               });
               progressBar.$mount();
               return progressBar.$el.outerHTML;
-            }
+            }.bind(this)
           }
         ],
         data: [],
