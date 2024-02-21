@@ -859,6 +859,13 @@
     "cvss_severity": "CVSS Severity",
     "owasp_rr_severity": "OWASP Risk Rating Severity"
   },
+  "vulnerability": {
+    "critical": "Critical Severity Vulnerabilities",
+    "high": "High Severity Vulnerabilities",
+    "medium": "Medium Severity Vulnerabilities",
+    "low": "Low Severity Vulnerabilities",
+    "unassigned": "Unassigned Vulnerabilities"
+  },
   "validation": {
     "required": "{_field_} is required",
     "confirmed": "{_field_} doesn't match",
