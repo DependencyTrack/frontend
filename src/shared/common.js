@@ -134,6 +134,14 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
       analyzerLabel = "Snyk";
       analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       break;
+    case 'TRIVY_ANALYZER':
+        analyzerLabel = "Trivy";
+
+        analyzerUrl = "https://nvd.nist.gov/vuln/detail/" + vulnId;
+        if(vulnSource === "GITHUB") {
+          analyzerUrl = "https://github.com/advisories/" + vulnId;
+        }
+        break;
   }
   if (analyzerUrl) {
     analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;

@@ -109,6 +109,11 @@ import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from "../../shared/permission
                 component: "SnykAnalyzer",
                 name: this.$t('admin.snyk'),
                 route: "analyzers/snyk"
+              },
+              {
+                component: "TrivyAnalyzer",
+                name: this.$t('admin.trivy'),
+                route: "analyzers/trivy"
               }
             ]
           },
