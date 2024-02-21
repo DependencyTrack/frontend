@@ -835,6 +835,7 @@
     "blake3": "BLAKE3"
   },
   "policy_violation": {
+    "total": "Total Violations",
     "fails": "Violation Failures",
     "warns": "Violation Warnings",
     "infos": "Informational Violations",
