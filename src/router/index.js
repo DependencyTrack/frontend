@@ -13,6 +13,7 @@ const Dashboard = () => import('@/views/Dashboard');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
 const ComponentSearch = () => import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () => import('@/views/portfolio/vulnerabilities/VulnerabilityList');
+const VulnerabilityAudit = () => import('@/views/globalAudit/VulnerabilityAudit');
 const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 const Project = () => import('@/views/portfolio/projects/Project');
@@ -654,6 +655,18 @@ function configRoutes() {
               },
             }
           ]
+        },
+        {
+          path: 'vulnerabilityAudit',
+          name: 'Vulnerability Audit',
+          alias: ['vulnerabilityAudit/occurrences', 'vulnerabilityAudit/grouped'],
+          component: VulnerabilityAudit,
+          meta: {
+            title: i18n.t('message.vulnerability_audit'),
+            i18n: 'message.vulnerability_audit',
+            sectionPath: '/globalAudit',
+            permission: 'VIEW_VULNERABILITY'
+          }
         },
         // The following route redirects URLs from legacy Dependency-Track UI to new URL format.
         {
