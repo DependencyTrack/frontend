@@ -11,4 +11,4 @@ node_modules/
 release.sh
 snapshot.sh
 !docker/etc/nginx/conf.d/default.conf
-!docker/docker-entrypoint.sh
+!docker/docker-entrypoint.d/*.sh

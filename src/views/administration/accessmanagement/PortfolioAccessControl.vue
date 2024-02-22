@@ -86,7 +86,7 @@ export default {
                   </b-col>
                   <b-col sm="6">
                   </b-col>
-                  <select-project-modal v-on:selection="updateProjectSelection" />
+                  <select-project-modal v-on:selection="updateProjectSelection" :teamUuid="team.uuid" />
                 </b-row>
               `,
             mixins: [permissionsMixin],

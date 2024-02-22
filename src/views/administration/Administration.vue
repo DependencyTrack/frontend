@@ -30,6 +30,7 @@ import TaskScheduler from "./configuration/TaskScheduler.vue";
 import InternalAnalyzer from "./analyzers/InternalAnalyzer";
 import OssIndexAnalyzer from "./analyzers/OssIndexAnalyzer";
 import SnykAnalyzer from "./analyzers/SnykAnalyzer";
+import TrivyAnalyzer from "./analyzers/TrivyAnalyzer";
 import VulnDbAnalyzer from "./analyzers/VulnDbAnalyzer";
 // Vulnerability sources
 import VulnSourceGitHubAdvisories from "./vuln-sources/VulnSourceGitHubAdvisories";
@@ -40,6 +41,7 @@ import Cargo from "./repositories/Cargo";
 import Composer from "./repositories/Composer";
 import Cpan from "./repositories/Cpan";
 import Gem from "./repositories/Gem";
+import GitHub from './repositories/GitHub.vue';
 import GoModules from "./repositories/GoModules";
 import Hex from "./repositories/Hex";
 import Maven from "./repositories/Maven";
@@ -67,9 +69,9 @@ export default {
     EventBus,
     AdminMenu,
     General, BomFormats, Email, Jira, InternalComponents, TaskScheduler, Search,
-    InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer,
+    InternalAnalyzer, OssIndexAnalyzer, VulnDbAnalyzer, SnykAnalyzer, TrivyAnalyzer,
     VulnSourceNvd, VulnSourceGitHubAdvisories, VulnSourceOSVAdvisories,
-    Cargo, Composer, Gem, GoModules, Hex, Maven, Npm, Cpan, Nuget, Python,
+    Cargo, Composer, Gem, GitHub, GoModules, Hex, Maven, Npm, Cpan, Nuget, Python,
     Alerts, Templates,
     FortifySsc, DefectDojo, KennaSecurity,
     LdapUsers, ManagedUsers, OidcUsers, OidcGroups, Teams, Permissions, PortfolioAccessControl

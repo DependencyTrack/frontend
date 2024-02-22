@@ -78,7 +78,7 @@
             <b-col sm="7" class="d-none d-md-block">
             </b-col>
           </b-row>
-          <chart-policy-violations ref="chartPolicyViolations" chartId="chartPolicyViolations" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations>
+          <chart-policy-violations-state ref="chartPolicyViolationsState" chartId="chartPolicyViolationsState" class="chart-wrapper" style="height:200px;margin-top:40px;" :height="200"></chart-policy-violations-state>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -103,19 +103,17 @@
 <script>
 import common from "../../../shared/common"
 import { Callout } from '@coreui/vue'
-import ChartAuditingProgress from "../../dashboard/ChartAuditingProgress";
 import ChartComponentVulnerabilities from "../../dashboard/ChartComponentVulnerabilities";
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolations from "@/views/dashboard/ChartPolicyViolations";
+import ChartPolicyViolationsState from "@/views/dashboard/ChartPolicyViolationsState";
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 
 export default {
   name: 'ServiceDashboard',
   components: {
-    ChartAuditingProgress,
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
-    ChartPolicyViolations,
+    ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
     Callout,
 
@@ -132,10 +130,6 @@ export default {
       totalComponents: 0,
       vulnerableComponents: 0,
       vulnerableComponentPercent: 0,
-
-      totalFindings: 0,
-      auditedFindings: 0,
-      auditedFindingPercent: 0,
 
       vulnerabilities: 0,
       suppressed: 0,
@@ -159,10 +153,6 @@ export default {
       this.vulnerableComponents = common.valueWithDefault(metric.vulnerableComponents, "0");
       this.vulnerableComponentPercent = common.calcProgressPercent(this.totalComponents, this.vulnerableComponents);
 
-      this.totalFindings = common.valueWithDefault(metric.findingsTotal, "0");
-      this.auditedFindings = common.valueWithDefault(metric.findingsAudited, "0");
-      this.auditedFindingPercent = common.calcProgressPercent(this.findingsTotal, this.findingsAudited);
-
       this.vulnerabilities = common.valueWithDefault(metric.vulnerabilities, "0");
       this.suppressed = common.valueWithDefault(metric.suppressed, "0");
       this.lastMeasurement = common.formatTimestamp(metric.lastOccurrence, true);
@@ -184,7 +174,7 @@ export default {
     let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${uuid}/days/${daysBack}`;
     this.axios.get(url).then((response) => {
       this.$refs.chartServiceVulnerabilities.render(response.data);
-      this.$refs.chartPolicyViolations.render(response.data);
+      this.$refs.chartPolicyViolationsState.render(response.data);
       this.$refs.chartPolicyViolationBreakdown.render(response.data);
       this.extractStats(response.data);
     });

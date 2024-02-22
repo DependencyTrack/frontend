@@ -12,6 +12,14 @@
         lazy="true"
       />
       <b-validated-input-group-form-input
+        id="email-prefix"
+        :label="$t('admin.email_prefix')"
+        input-group-size="mb-3"
+        type="text"
+        v-model="emailPrefix"
+        lazy="true"
+      />
+      <b-validated-input-group-form-input
         id="email-smtp-server"
         :label="$t('admin.email_smtp_server')"
         input-group-size="mb-3"
@@ -79,6 +87,7 @@
       return {
         isEmailEnabled: false,
         emailFromAddress: '',
+        emailPrefix: '',
         emailSmtpServer: '',
         emailSmtpPort: '',
         emailSmtpUsername: '',
@@ -92,6 +101,7 @@
         this.updateConfigProperties([
           {groupName: 'email', propertyName: 'smtp.enabled', propertyValue: this.isEmailEnabled},
           {groupName: 'email', propertyName: 'smtp.from.address', propertyValue: this.emailFromAddress},
+          {groupName: 'email', propertyName: 'subject.prefix', propertyValue: this.emailPrefix},
           {groupName: 'email', propertyName: 'smtp.server.hostname', propertyValue: this.emailSmtpServer},
           {groupName: 'email', propertyName: 'smtp.server.port', propertyValue: this.emailSmtpPort},
           {groupName: 'email', propertyName: 'smtp.username', propertyValue: this.emailSmtpUsername},
@@ -100,6 +110,9 @@
         ]);
         if (this.emailSmtpPassword !== "HiddenDecryptedPropertyPlaceholder") {
           this.updateConfigProperty("email", "smtp.password", this.emailSmtpPassword);
+        }
+        if (typeof this.emailPrefix == "undefined") {
+          this.updateConfigProperty("email","subject.prefix", " ");
         }
       }
     },
@@ -113,6 +126,8 @@
               this.isEmailEnabled = common.toBoolean(item.propertyValue); break;
             case "smtp.from.address":
               this.emailFromAddress = item.propertyValue; break;
+            case "subject.prefix":
+              this.emailPrefix = item.propertyValue; break;
             case "smtp.server.hostname":
               this.emailSmtpServer = item.propertyValue; break;
             case "smtp.server.port":
