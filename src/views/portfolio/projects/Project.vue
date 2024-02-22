@@ -14,7 +14,7 @@
                       <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down" aria-hidden="true" style="padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;"></i></a>
                       <ul class="dropdown-menu">
                         <span v-for="projectVersion in project.versions">
-                          <b-dropdown-item :to="projectVersion.uuid">{{ projectVersion.version }}</b-dropdown-item>
+                          <b-dropdown-item :to="{name: 'Project', params: {'uuid': projectVersion.uuid}}">{{ projectVersion.version }}</b-dropdown-item>
                         </span>
                       </ul>
                     </li>
@@ -46,7 +46,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
-                                  v-b-tooltip.hover :title="$t('severity.critical')"
+                                  v-b-tooltip.hover :title="$t('vulnerability.critical')"
               >{{ currentCritical }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityHigh"
@@ -58,7 +58,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
-                                  v-b-tooltip.hover :title="$t('severity.high')"
+                                  v-b-tooltip.hover :title="$t('vulnerability.high')"
               >{{ currentHigh }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityMedium"
@@ -70,7 +70,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
-                                  v-b-tooltip.hover :title="$t('severity.medium')"
+                                  v-b-tooltip.hover :title="$t('vulnerability.medium')"
               >{{ currentMedium }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityLow"
@@ -82,7 +82,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
-                                  v-b-tooltip.hover :title="$t('severity.low')"
+                                  v-b-tooltip.hover :title="$t('vulnerability.low')"
               >{{ currentLow }}</vue-easy-pie-chart>
               <vue-easy-pie-chart style="margin-right: 1rem"
                                   :bar-color="severityUnassigned"
@@ -94,7 +94,7 @@
                                   :percent="100"
                                   :size="50"
                                   :animate="true"
-                                  v-b-tooltip.hover :title="$t('severity.unassigned')"
+                                  v-b-tooltip.hover :title="$t('vulnerability.unassigned')"
               >{{ currentUnassigned }}</vue-easy-pie-chart>
             </b-row>
           </b-col>
@@ -131,15 +131,24 @@
         <project-dependency-graph :key="this.uuid" :uuid="this.uuid" :project="this.project" v-on:total="totalDependencyGraphs = $event" />
       </b-tab>
       <b-tab ref="findings" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('findings')">
-        <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }} <b-badge variant="tab-total">{{ totalFindings }}</b-badge></template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindings = $event" />
+        <template v-slot:title>
+          <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
+          <b-badge variant="tab-total" v-b-tooltip.hover :title="$t('message.total_findings_excluding_aliases')">{{ totalFindings }}</b-badge>
+          <b-badge variant="tab-info" v-b-tooltip.hover :title="$t('message.total_findings_including_aliases')">{{ totalFindingsIncludingAliases }}</b-badge>
+        </template>
+        <project-findings :key="this.uuid" :uuid="this.uuid" v-on:total="totalFindingsIncludingAliases = $event" />
       </b-tab>
       <b-tab ref="epss" v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)" @click="routeTo('epss')">
         <template v-slot:title><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }} <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template>
         <project-epss :key="this.uuid" :uuid="this.uuid" v-on:total="totalEpss = $event" />
       </b-tab>
       <b-tab ref="policyviolations" v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)" @click="routeTo('policyViolations')">
-        <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }} <b-badge variant="tab-total">{{ totalViolations }}</b-badge></template>
+        <template v-slot:title><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
+            <b-badge variant="tab-total"  v-b-tooltip.hover :title="$t('policy_violation.total')">{{ totalViolations }}</b-badge>
+            <b-badge variant="tab-info"  v-b-tooltip.hover :title="$t('policy_violation.infos')">{{ infoViolations }}</b-badge>
+            <b-badge variant="tab-warn"  v-b-tooltip.hover :title="$t('policy_violation.warns')">{{ warnViolations }}</b-badge>
+            <b-badge variant="tab-fail"  v-b-tooltip.hover :title="$t('policy_violation.fails')">{{ failViolations }}</b-badge>
+          </template>
         <project-policy-violations :key="this.uuid" :uuid="this.uuid" v-on:total="totalViolations = $event" />
       </b-tab>
     </b-tabs>
@@ -222,8 +231,12 @@
         totalServices: 0,
         totalDependencyGraphs: 0,
         totalFindings: 0,
+        totalFindingsIncludingAliases: 0,
         totalEpss: 0,
         totalViolations: 0,
+        infoViolations: 0,
+        warnViolations: 0,
+        failViolations: 0,
         tabIndex: 0
       }
     },
@@ -253,6 +266,10 @@
           this.currentLow = common.valueWithDefault(this.project.metrics.low, 0);
           this.currentUnassigned = common.valueWithDefault(this.project.metrics.unassigned, 0);
           this.currentRiskScore = common.valueWithDefault(this.project.metrics.inheritedRiskScore, 0);
+          this.totalFindings = common.valueWithDefault(this.project.metrics.findingsTotal, 0)
+          this.infoViolations = common.valueWithDefault(this.project.metrics.policyViolationsInfo, 0)
+          this.warnViolations = common.valueWithDefault(this.project.metrics.policyViolationsWarn, 0)
+          this.failViolations = common.valueWithDefault(this.project.metrics.policyViolationsFail, 0)
           EventBus.$emit('addCrumb', this.projectLabel);
           this.$title = this.projectLabel;
         });
@@ -281,7 +298,7 @@
     },
     mounted() {
       try {
-        if (this.$route.params.componentUuid){
+        if (this.$route.params.componentUuids){
           this.$refs.dependencygraph.active = true;
         } else {
           this.getTabFromRoute().active = true;
@@ -297,7 +314,7 @@
         this.uuid = this.$route.params.uuid;
         if (to.params.uuid !== from.params.uuid) {
           this.initialize();
-        } else if (this.$route.params.componentUuid){
+        } else if (this.$route.params.componentUuids){
           this.initialize();
           this.$refs.dependencygraph.activate();
         }

@@ -41,7 +41,7 @@
           </b-form-group>
           <c-switch id="input-5" class="mx-1" color="primary" v-model="project.active" label
                     :disabled="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) || (project.active && this.hasActiveChild(project))" v-bind="labelIcon"
-                    v-b-tooltip.hover :title="$t('message.inactive_active_children')"/> {{$t('message.active')}}
+                    v-b-tooltip.hover :title="$t('message.inactive_active_children')" @change="syncActiveLabel"/> {{projectActiveLabel}}
           <p></p>
           <b-input-group-form-input id="project-uuid" input-group-size="mb-3" type="text" v-model="project.uuid"
                                     lazy="false" required="false" feedback="false" autofocus="false" disabled="true"
@@ -78,6 +78,58 @@
                                     :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)" />
         </b-card>
       </b-tab>
+      <b-tab class="body-bg-color" style="border:0;padding:0" v-if="project.manufacturer">
+        <template v-slot:title><i class="fa fa-industry"></i> {{ $t('message.manufacturer') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-manufacturer-name-input" input-group-size="mb-3" type="text" v-model="project.manufacturer.name"
+                                    required="false" readonly :label="$t('message.manufacturer_name')"
+                                    disabled="true" :tooltip="this.$t('message.manufacturer_name_desc')"/>
+          <b-form-group id="manufacturerUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="manufacturerUrlsTable">
+            <bootstrap-table
+              id="manufacturerUrlsTable"
+              ref="manufacturerUrlsTable"
+              :columns="urlsTableColumns"
+              :data="project.manufacturer.urls"
+              :options="urlsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+          <b-form-group id="manufacturerContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+            <bootstrap-table
+              id="manufacturerContactsTable"
+              ref="manufacturerContactsTable"
+              :columns="contactsTableColumns"
+              :data="project.manufacturer.contacts"
+              :options="contactsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+        </b-card>
+      </b-tab>
+      <b-tab class="body-bg-color" style="border:0;padding:0" v-if="project.supplier">
+        <template v-slot:title><i class="fa fa-building-o"></i> {{ $t('message.supplier') }}</template>
+        <b-card>
+          <b-input-group-form-input id="project-supplier-name-input" input-group-size="mb-3" type="text" v-model="project.supplier.name"
+                                    required="false" readonly :label="$t('message.supplier_name')"
+                                    disabled="true" :tooltip="this.$t('message.project_supplier_name_desc')"/>
+          <b-form-group id="supplierUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="supplierUrlsTable">
+            <bootstrap-table
+              id="supplierUrlsTable"
+              ref="supplierUrlsTable"
+              :columns="urlsTableColumns"
+              :data="project.supplier.urls"
+              :options="urlsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+          <b-form-group id="supplierContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+            <bootstrap-table
+              id="supplierContactsTable"
+              ref="supplierContactsTable"
+              :columns="contactsTableColumns"
+              :data="project.supplier.contacts"
+              :options="contactsTableOptions">
+            </bootstrap-table>
+          </b-form-group>
+        </b-card>
+      </b-tab>
       <b-tab>
         <template v-slot:title><i class="fa fa-external-link"></i> {{ $t('message.external_references') }}</template>
         <b-card>
@@ -87,6 +139,52 @@
             :data="project.externalReferences"
             :options="referencesTableOptions">
           </bootstrap-table>
+        </b-card>
+      </b-tab>
+      <b-tab style="border:0;padding:0"
+             v-if="project.metadata && (project.metadata.authors || project.metadata.supplier)">
+        <template v-slot:title><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template>
+        <b-card>
+          <b-tabs pills card vertical>
+            <b-tab :title="$t('message.authors')" v-if="project.metadata.authors">
+              <b-card>
+                <b-form-group id="authorsTable-Fieldset">
+                  <bootstrap-table
+                      id="authorsTable"
+                      ref="authorsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.metadata.authors"
+                      :options="contactsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+              </b-card>
+            </b-tab>
+            <b-tab :title="$t('message.supplier')" v-if="project.metadata.supplier">
+              <b-card>
+                <b-input-group-form-input id="project-metadata-supplier-name-input" input-group-size="mb-3" type="text" v-model="project.metadata.supplier.name"
+                                          required="false" readonly :label="$t('message.supplier_name')"
+                                          disabled="true" :tooltip="this.$t('message.project_metadata_supplier_name_desc')"/>
+                <b-form-group id="supplierUrlsTable-Fieldset" :label="this.$t('message.urls')" label-for="supplierUrlsTable">
+                  <bootstrap-table
+                      id="supplierUrlsTable"
+                      ref="supplierUrlsTable"
+                      :columns="urlsTableColumns"
+                      :data="project.metadata.supplier.urls"
+                      :options="urlsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+                <b-form-group id="supplierContactsTable-Fieldset" :label="this.$t('message.contacts')" label-for="contactsTable">
+                  <bootstrap-table
+                      id="supplierContactsTable"
+                      ref="supplierContactsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.metadata.supplier.contacts"
+                      :options="contactsTableOptions">
+                  </bootstrap-table>
+                </b-form-group>
+              </b-card>
+            </b-tab>
+          </b-tabs>
         </b-card>
       </b-tab>
     </b-tabs>
@@ -128,6 +226,7 @@
       return {
         readOnlyProjectName: '',
         readOnlyProjectVersion: '',
+        projectActiveLabel: this.project.active ? this.$i18n.t('message.active') : this.$i18n.t('message.inactive'),
         availableClassifiers: [
           { value: 'APPLICATION', text: this.$i18n.t('message.component_application') },
           { value: 'FRAMEWORK', text: this.$i18n.t('message.component_framework') },
@@ -149,6 +248,78 @@
           dataOff: '\u2715'
         },
         isLoading: false,
+        urlsTableColumns: [
+          {
+            title: this.$t('message.urls'),
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(row, ""));
+            }
+          }
+        ],
+        urlsTableOptions: {
+          search: false,
+          showHeader: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        },
+        contactsTableColumns: [
+          {
+            title: this.$t('message.name'),
+            field: "name",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.email'),
+            field: "email",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          },
+          {
+            title: this.$t('message.phone'),
+            field: "phone",
+            sortable: false,
+            formatter(value, row, index) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+            }
+          }
+        ],
+        contactsTableOptions: {
+          search: false,
+          showColumns: false,
+          showRefresh: false,
+          pagination: true,
+          silentSort: false,
+          sidePagination: 'client',
+          queryParamsType: 'pageSize',
+          pageList: '[5, 10, 25]',
+          pageSize: 5,
+          icons: {
+            refresh: 'fa-refresh'
+          },
+          responseHandler: function (res, xhr) {
+            res.total = xhr.getResponseHeader("X-Total-Count");
+            return res;
+          }
+        },
         referencesTableColumns: [
           {
             title: this.$t('message.url'),
@@ -213,6 +384,9 @@
       syncReadOnlyVersionField: function(value) {
         this.readOnlyProjectVersion = value;
       },
+      syncActiveLabel: function(value) {
+        this.projectActiveLabel = value ? this.$t('message.active') : this.$t('message.inactive')
+      },
       updateProject: function() {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
         let tagsNode = [];
@@ -225,6 +399,7 @@
           uuid: this.project.uuid,
           author: this.project.author,
           publisher: this.project.publisher,
+          supplier: this.project.supplier,
           group: this.project.group,
           name: this.project.name,
           version: this.project.version,
@@ -235,7 +410,8 @@
           purl: this.project.purl,
           swidTagId: this.project.swidTagId,
           tags: tagsNode,
-          active: this.project.active
+          active: this.project.active,
+          externalReferences: this.project.externalReferences,
         }).then((response) => {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));

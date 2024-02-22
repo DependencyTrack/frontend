@@ -26,7 +26,7 @@
           <b-dropdown-item @click="downloadBom('withVulnerabilities')" href="#">{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item>
         </b-dropdown>
         <span id="switch-container-outdated" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
-          <c-switch id="only-outdated" :disabled="!project || !this.project.directDependencies" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
+          <c-switch id="only-outdated" :disabled="!project" color="primary" v-model="onlyOutdated" label v-bind="labelIcon" />
         <span class="text-muted">{{ $t('message.outdated_only') }}</span></span>
         <b-tooltip target="switch-container-outdated" triggers="hover focus">{{ $t('message.only_outdated_tooltip') }}</b-tooltip>
         <span id="switch-container-direct" style="margin-left:1rem; margin-right:.5rem" class="keep-together">
@@ -80,8 +80,8 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
           dataOn: '\u2713',
           dataOff: '\u2715'
         },
-        onlyOutdated: this.onlyOutdated,
-        onlyDirect: this.onlyDirect,
+        onlyOutdated: false,
+        onlyDirect: false,
         columns: [
           {
             field: "state",
@@ -153,8 +153,12 @@ import SeverityProgressBar from "../../components/SeverityProgressBar";
               if (Object.prototype.hasOwnProperty.call(row, "resolvedLicense")) {
                 let licenseurl = "../../../licenses/" + row.resolvedLicense.licenseId;
                 return "<a href=\"" + licenseurl + "\">" + xssFilters.inHTMLData(row.resolvedLicense.licenseId) + "</a>";
-              } else {
+              } else if (value) {
                 return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
+              } else if (row.licenseExpression) {
+                return xssFilters.inHTMLData(common.valueWithDefault(row.licenseExpression, ""));
+              } else {
+                return "";
               }
             }
           },

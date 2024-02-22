@@ -134,6 +134,14 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
       analyzerLabel = "Snyk";
       analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
       break;
+    case 'TRIVY_ANALYZER':
+        analyzerLabel = "Trivy";
+
+        analyzerUrl = "https://nvd.nist.gov/vuln/detail/" + vulnId;
+        if(vulnSource === "GITHUB") {
+          analyzerUrl = "https://github.com/advisories/" + vulnId;
+        }
+        break;
   }
   if (analyzerUrl) {
     analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
@@ -410,19 +418,17 @@ $common.valueWithDefault = function valueWithDefault(variable, defaultValue) {
  * function will return a percentage rounded to the tenth decimal place.
  */
 $common.calcProgressPercent = function calcProgressPercent(total, completed) {
-  if (total > 0) {
-    if (completed === 0) {
-      return 0;
-    } else {
-      let percentage = (completed / total) * 100;
-      return Math.round(percentage);
-    }
-  } else if (completed > total) {
+  if (total == 0 || completed == 0) {
+    // the absence of work does not imply progress.
+    return 0;
+  } else if (completed >= total) {
     // In something has already been completed (e.g. suppressed) and the completed value
     // is greater than the total, return 100%
     return 100;
   }
-  return 0; // the absence of work does not imply progress.
+
+  let percentage = (completed / total) * 100;
+  return Math.round(percentage * 10) / 10;
 };
 
 /**

@@ -31,6 +31,7 @@ const InternalAnalyzer = () => import('@/views/administration/analyzers/Internal
 const OssIndexAnalyzer = () => import('@/views/administration/analyzers/OssIndexAnalyzer')
 const VulnDbAnalyzer = () => import('@/views/administration/analyzers/VulnDbAnalyzer')
 const SnykAnalyzer = () => import('@/views/administration/analyzers/SnykAnalyzer')
+const TrivyAnalyzer = () => import('@/views/administration/analyzers/TrivyAnalyzer')
 
 const VulnSourceNvd = () => import('@/views/administration/vuln-sources/VulnSourceNvd')
 const VulnSourceGitHubAdvisories = () => import('@/views/administration/vuln-sources/VulnSourceGitHubAdvisories')
@@ -40,6 +41,7 @@ const Cargo = () => import('@/views/administration/repositories/Cargo')
 const Composer = () => import('@/views/administration/repositories/Composer')
 const Cpan = () => import('@/views/administration/repositories/Cpan')
 const Gem = () => import('@/views/administration/repositories/Gem')
+const GitHub = () => import('@/views/administration/repositories/GitHub.vue')
 const GoModules = () => import('@/views/administration/repositories/GoModules')
 const Hex = () => import('@/views/administration/repositories/Hex')
 const Maven = () => import('@/views/administration/repositories/Maven')
@@ -117,11 +119,40 @@ function configRoutes() {
           }
         },
         {
-          path: 'projects/:uuid/dependencyGraph/:componentUuid',
+          path: 'projects/:uuid/dependencyGraph/:componentUuids',
           name: 'Dependency Graph Component Lookup',
           props: (route) => ( {
             uuid: route.params.uuid,
-            componentUuid: route.params.componentUuid
+            componentUuids: route.params.componentUuids
+          } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
+          }
+        },
+        {
+          path: 'projects/:uuid/findings/:vulnerability',
+          name: 'Project Vulnerability Lookup',
+          props: (route) => ( {
+            uuid: route.params.uuid,
+            vulnerability: route.params.vulnerability
+          } ),
+          component: Project,
+          meta: {
+            i18n: 'message.projects',
+            sectionPath: '/projects',
+            permission: 'VIEW_PORTFOLIO'
+          }
+        },
+        {
+          path: 'projects/:uuid/findings/:affectedComponent/:vulnerability',
+          name: 'Project Finding Lookup',
+          props: (route) => ( {
+            uuid: route.params.uuid,
+            affectedComponent: route.params.componentUuid,
+            vulnerability: route.params.vulnerability
           } ),
           component: Project,
           meta: {
@@ -349,6 +380,16 @@ function configRoutes() {
               },
             },
             {
+              path: 'analyzers/trivy',
+              component: TrivyAnalyzer,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
               path: 'vulnerabilitySources/nvd',
               alias: ['vulnerabilitySources'],
               component: VulnSourceNvd,
@@ -413,6 +454,16 @@ function configRoutes() {
             {
               path: 'repositories/gem',
               component: Gem,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION'
+              },
+            },
+            {
+              path: 'repositories/github',
+              component: GitHub,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',

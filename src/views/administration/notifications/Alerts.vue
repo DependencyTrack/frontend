@@ -122,25 +122,28 @@
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-input-group-form-input id="input-name" :label="$t('message.name')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="name" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              required="true" type="text" v-model="name" lazy="true" />
                     <b-form-group>
                       <c-switch id="notificationEnabled" color="primary" v-model="enabled" label v-bind="labelIcon"/>
                       {{ $t('admin.enabled') }}
+                      <br/>
+                      <c-switch id="notificationLogSuccessfulPublish" color="primary" v-model="logSuccessfulPublish" label v-bind="labelIcon" :title="$t('admin.alert_log_successful_publish_help')" />
+                      {{ $t('admin.alert_log_successful_publish') }}
+                    </b-form-group>
+                    <b-form-group id="fieldset-2" :label="this.$t('admin.publisher')" label-for="input-2">
+                      <b-form-input id="input-2" v-model="publisherName" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <b-form-group id="fieldset-3" :label="this.$t('admin.notification_level')" label-for="input-3">
-                      <b-form-input id="input-3" v-model="notificationLevel" disabled class="form-control disabled" readonly trim />
+                      <b-form-select id="input-3" v-model="notificationLevel" :options="availableLevels" required></b-form-select>
                     </b-form-group>
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
-                                              type="text" v-model="destination" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              type="text" v-model="destination" lazy="true" />
                     <b-input-group-form-input v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.JiraPublisher'" id="input-jira-ticket-type"
-                                              :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true"
-                                              v-debounce:750ms="updateNotificationRule" :debounce-events="'keyup'" />
+                                              :label="$t('admin.jira_ticket_type')" :required="true" type="text" v-model="jiraTicketType" lazy="true" />
                      <b-form-group v-if="this.publisherClass === 'org.dependencytrack.notification.publisher.SendMailPublisher'"
                                    id="teamDestinationList" :label="this.$t('admin.select_team_as_recipient')">
                        <div class="list group">
@@ -197,6 +200,7 @@
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
                        <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                       <b-button variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
                     </div>
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>
@@ -218,7 +222,9 @@
                   uuid: row.uuid,
                   name: row.name,
                   enabled: row.enabled,
+                  logSuccessfulPublish: row.logSuccessfulPublish,
                   notifyChildren: row.notifyChildren,
+                  publisherName: row.publisher.name,
                   publisherClass: row.publisher.publisherClass,
                   notificationLevel: row.notificationLevel,
                   destination: this.parseDestination(row),
@@ -232,6 +238,11 @@
                     dataOn: '\u2713',
                     dataOff: '\u2715'
                   },
+                  availableLevels: [
+                    { value: 'INFORMATIONAL', text: 'Informational', selected: true },
+                    { value: 'WARNING', text: 'Warning' },
+                    { value: 'ERROR', text: 'Error' }
+                  ]
                 }
               },
               created() {
@@ -240,6 +251,9 @@
               },
               watch: {
                 enabled() {
+                  this.updateNotificationRule();
+                },
+                logSuccessfulPublish() {
                   this.updateNotificationRule();
                 },
                 notifyChildren() {
@@ -284,6 +298,7 @@
                     uuid: this.uuid,
                     name: this.name,
                     enabled: this.enabled,
+                    logSuccessfulPublish: this.logSuccessfulPublish,
                     notifyChildren: this.notifyChildren,
                     notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({ destination: this.destination, jiraTicketType: this.jiraTicketType }),

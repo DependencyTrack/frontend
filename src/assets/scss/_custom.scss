@@ -11,21 +11,39 @@ html {
 }
 .severity-critical, .status-failed {
   color: $severity-critical;
+  .progress-bar {
+    background-color: $severity-critical;
+  }
 }
 .severity-high {
   color:$severity-high;
+  .progress-bar {
+    background-color: $severity-high;
+  }
 }
 .severity-medium, .status-warning {
   color: $severity-medium;
+  .progress-bar {
+    background-color: $severity-medium;
+  }
 }
 .severity-low, .status-passed {
   color: $severity-low;
+  .progress-bar {
+    background-color: $severity-low;
+  }
 }
-.severity-info {
+.severity-info, .status-info {
   color: $severity-info;
+  .progress-bar {
+    background-color: $severity-info;
+  }
 }
 .severity-unassigned {
   color: $severity-unassigned;
+  .progress-bar {
+    background-color: $severity-unassigned;
+  }
 }
 // Fixes the width for the bootstrap progress bar in tables
 .table-progress {
@@ -322,6 +340,21 @@ button:focus {
   background-color: $grey-900 !important;
   margin-left: 0.6em !important;
   color: #21D983 !important;
+}
+.badge-tab-fail {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-fail !important;
+}
+.badge-tab-warn {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-warn !important;
+}
+.badge-tab-info {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-info !important;
 }
 .badge-tag {
   color: $primary;

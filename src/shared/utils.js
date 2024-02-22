@@ -72,8 +72,24 @@ export function getContextPath() {
 }
 
 export function loadUserPreferencesForBootstrapTable(_this, id, columns) {
+  const table = _this.$refs.table;
+  if (!table) {
+    console.error("No table defined in the calling component; Can't apply user preferences");
+    return;
+  }
+
   columns.forEach((column) => {
-    _this.$set(column, "visible", (localStorage && localStorage.getItem(id + "Show" + common.capitalize(column.field)) !== null) ? (localStorage.getItem(id + "Show" + common.capitalize(column.field)) === "true") : column.visible);
+    const isVisible = column.visible;
+    const shouldShow = (localStorage && localStorage.getItem(id + "Show" + common.capitalize(column.field)) !== null)
+      ? (localStorage.getItem(id + "Show" + common.capitalize(column.field)) === "true")
+      : isVisible;
+    if (isVisible !== shouldShow) {
+      if (shouldShow) {
+        table.showColumn(column.field);
+      } else {
+        table.hideColumn(column.field);
+      }
+    }
   })
 }
 
