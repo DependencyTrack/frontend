@@ -32,10 +32,12 @@ import EventBus from '../../../shared/eventbus';
 import ActionableListGroupItem from '../../components/ActionableListGroupItem';
 import SelectProjectModal from '../../portfolio/projects/SelectProjectModal';
 import SelectTeamModal from '../../administration/accessmanagement/SelectTeamModal';
+import SelectTagModal from "../../portfolio/tags/SelectTagModal";
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BToggleableDisplayButton from '../../components/BToggleableDisplayButton';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import { Switch as cSwitch } from '@coreui/vue';
+
 
 export default {
   props: {
@@ -165,7 +167,7 @@ export default {
                     <b-form-group v-if="limitToVisible === true" id="projectLimitsList" :label="this.$t('admin.limit_to_projects')">
                       <div class="list-group">
                         <span v-for="project in projects">
-                          <actionable-list-group-item :value="formatProjectLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
+                          <actionable-list-group-item :value="formatLabel(project.name, project.version)" :delete-icon="true" v-on:actionClicked="deleteLimiter(project.uuid)"/>
                         </span>
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
@@ -174,6 +176,14 @@ export default {
                       <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
                       {{ $t('admin.include_active_children') }}
                   </div>
+                  <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
+                    <div class="list-group">
+                      <span v-for="tag in tags">
+                        <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.name)"/>
+                      </span>
+                      <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectTagModal')"/>
+                    </div>
+                  </b-form-group>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
@@ -216,6 +226,7 @@ export default {
                   </b-col>
                   <select-project-modal v-on:selection="updateProjectSelection"/>
                   <select-team-modal v-on:selection="updateTeamSelection"></select-team-modal>
+                  <select-tag-modal :alert="alert" v-on:selection="updateTagSelection"/>
                 </b-row>
               `,
             mixins: [permissionsMixin],
@@ -245,6 +256,7 @@ export default {
                 scope: row.scope,
                 notifyOn: row.notifyOn,
                 projects: row.projects,
+                tags: row.tags,
                 teams: row.teams,
                 limitToVisible: false,
                 labelIcon: {
@@ -286,12 +298,12 @@ export default {
               },
             },
             methods: {
-              formatProjectLabel: function (projectName, projectVersion) {
-                if (projectName && projectVersion) {
-                  return projectName + ' ' + projectVersion;
-                } else {
-                  return projectName;
-                }
+              formatLabel: function(labelName, labelProperty) {
+                  if (labelName && labelProperty) {
+                    return labelName + " " + labelProperty;
+                  } else {
+                    return labelName;
+                  }
               },
               parseDestination: function (alert) {
                 if (alert.publisherConfig) {
@@ -416,6 +428,21 @@ export default {
                     });
                 }
               },
+              deleteTagLimiter: function(tagName) {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/tag/${tagName}`;
+                this.axios.delete(url).then((response) => {
+                  let p = [];
+                  for (let i=0; i<this.tags.length; i++) {
+                    if (this.tags[i].name !== tagName) {
+                      p.push(this.tags[i]);
+                    }
+                  }
+                  this.tags = p;
+                  this.$toastr.s(this.$t('message.updated'));
+                }).catch((error) => {
+                  this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                });
+              },
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
@@ -462,7 +489,20 @@ export default {
                   .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
-              },
+                },
+                updateTagSelection: function(selections) {
+                  this.$root.$emit('bv::hide::modal', 'selectTagModal');
+                  for (let i=0; i<selections.length; i++) {
+                    let selection = selections[i];
+                    let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/tag/${selection.name}`;
+                    this.axios.post(url).then((response) => {
+                      this.tags.push(selection);
+                      this.$toastr.s(this.$t('message.updated'));
+                    }).catch((error) => {
+                      this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                    });
+                  }
+                },
             },
           });
         },
