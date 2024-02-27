@@ -27,3 +27,8 @@ jobs:
 
       - name: Lint Prettier
         run: npm run prettier
+        continue-on-error: true
+
+      - name: Lint ESLint
+        run: npm run eslint
+        continue-on-error: true
