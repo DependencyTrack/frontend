@@ -9,7 +9,7 @@ env:
   NODE_VERSION: 18
 
 jobs:
-  setup:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,16 +25,5 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-  lint-prettier:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Lint
+      - name: Lint Prettier
         run: npm run prettier
-
-  lint-eslint:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Lint
-        run: npm run eslint
