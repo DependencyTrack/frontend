@@ -2,7 +2,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { CycloneDxWebpackPlugin } = require('@cyclonedx/webpack-plugin');
 
 module.exports = {
-  lintOnSave: false,
   productionSourceMap: false,
   runtimeCompiler: true,
   // Relative paths cannot be supported. Research by @nscur0 - https://owasp.slack.com/archives/CTC03GX9S/p1608400149085400
