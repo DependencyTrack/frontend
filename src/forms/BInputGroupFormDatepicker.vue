@@ -1,29 +1,48 @@
 <template>
-  <b-form-group :id="id" :label="label" :label-for="`${id}-input`" :label-class="labelClasses">
+  <b-form-group
+    :id="id"
+    :label="label"
+    :label-for="`${id}-input`"
+    :label-class="labelClasses"
+  >
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"><b-input-group-text><i :class="icon"></i></b-input-group-text></b-input-group-prepend>
-      <b-form-datepicker :id="`${id}-input`"
-                         :class="inputClasses"
-                         v-model="innerValue"
-                         :placeholder="label"
-                         :state="feedbackState()"
-                         :autocomplete=autocomplete
-                         :required=isRequired
-                         :readonly=readonly
-                         :disabled=isDisabled
-                         v-on="inputListeners"
-                         :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                         v-on:blur="hadFocus = true"/>
-      <b-input-group-append v-if="tooltip"><b-input-group-text v-b-tooltip.hover :title="tooltip"><i class="cui-info font-lg"></i></b-input-group-text></b-input-group-append>
+      <b-input-group-prepend v-if="icon"
+        ><b-input-group-text><i :class="icon"></i></b-input-group-text
+      ></b-input-group-prepend>
+      <b-form-datepicker
+        :id="`${id}-input`"
+        :class="inputClasses"
+        v-model="innerValue"
+        :placeholder="label"
+        :state="feedbackState()"
+        :autocomplete="autocomplete"
+        :required="isRequired"
+        :readonly="readonly"
+        :disabled="isDisabled"
+        v-on="inputListeners"
+        :date-format-options="{
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }"
+        v-on:blur="hadFocus = true"
+      />
+      <b-input-group-append v-if="tooltip"
+        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
+          ><i class="cui-info font-lg"></i></b-input-group-text
+      ></b-input-group-append>
     </b-input-group>
-    <b-form-invalid-feedback v-if="this.feedback === 'true'" :state="feedbackState()">
+    <b-form-invalid-feedback
+      v-if="this.feedback === 'true'"
+      :state="feedbackState()"
+    >
       {{ feedbackText }}
     </b-form-invalid-feedback>
   </b-form-group>
 </template>
 
 <script>
-import common from "../shared/common";
+import common from '../shared/common';
 
 export default {
   props: {
@@ -44,16 +63,16 @@ export default {
     disabled: Boolean,
     state: {
       default: undefined,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
       isFocused: false,
       isRequired: false,
       isDisabled: false,
-      hadFocus: false
-    }
+      hadFocus: false,
+    };
   },
   beforeMount() {
     this.isFocused = common.toBoolean(this.autofocus);
@@ -63,36 +82,33 @@ export default {
   },
   computed: {
     innerValue: {
-      get: function() {
+      get: function () {
         if (this.value && this.value.length > 0) {
           //
         }
         return this.value;
       },
-      set: function(newValue) {
+      set: function (newValue) {
         return newValue;
-      }
+      },
     },
-    inputListeners: function() {
+    inputListeners: function () {
       const vm = this;
-      return Object.assign({},
-        this.$listeners,
-        {
-          input: function(event) {
-            vm.$emit('input', event);
-          }
-        }
-      )
+      return Object.assign({}, this.$listeners, {
+        input: function (event) {
+          vm.$emit('input', event);
+        },
+      });
     },
-    inputClasses: function() {
-      return (this.isRequired) ? "required" : null;
+    inputClasses: function () {
+      return this.isRequired ? 'required' : null;
     },
-    labelClasses: function() {
-      return (this.isRequired) ? "required" : null;
-    }
+    labelClasses: function () {
+      return this.isRequired ? 'required' : null;
+    },
   },
   methods: {
-    feedbackState: function() {
+    feedbackState: function () {
       if (this.isDisabled && !this.isRequired) {
         return undefined;
       }
@@ -113,7 +129,7 @@ export default {
       } else {
         return undefined;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -14,13 +14,13 @@ on:
       app-version:
         type: string
         required: false
-        default: "snapshot"
-        description: "Set the version that should be set/used as tag for the container image"
+        default: 'snapshot'
+        description: 'Set the version that should be set/used as tag for the container image'
       publish-container:
         type: boolean
         required: false
         default: false
-        description: "Set if the container image gets publish and scan once its build"
+        description: 'Set if the container image gets publish and scan once its build'
     secrets:
       registry-0-usr:
         required: true
