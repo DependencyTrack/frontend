@@ -4,31 +4,33 @@
  * approach was implemented.
  */
 
-"use strict";
+'use strict';
 
-import xssFilters from "xss-filters";
-const $common = function() {
-};
+import xssFilters from 'xss-filters';
+const $common = function () {};
 
 /**
  * Formats and returns a specialized label for a vulnerability source (NVD, NSP, VulnDB, OSSIndex etc).
  */
 $common.formatSourceLabel = function formatSourceLabel(source) {
-  if (! source) {
+  if (!source) {
     return null;
   }
-  let sourceClass = "label-source-" + source.toLowerCase();
+  let sourceClass = 'label-source-' + source.toLowerCase();
   return `<span class="label label-source ${sourceClass}">${source}</span>`;
 };
 
 /**
  * Formats and returns a specialized label for notifications (fail, warn, info)
  */
-$common.formatNotificationLabel = function formatNotificationLabel(violationState) {
-  if (! violationState) {
+$common.formatNotificationLabel = function formatNotificationLabel(
+  violationState,
+) {
+  if (!violationState) {
     return null;
   }
-  let violationStateClass = "label-notification-" + violationState.toLowerCase();
+  let violationStateClass =
+    'label-notification-' + violationState.toLowerCase();
   return `<span class="label label-notification ${violationStateClass}">${violationState}</span>`;
 };
 
@@ -36,10 +38,10 @@ $common.formatNotificationLabel = function formatNotificationLabel(violationStat
  * Formats and returns a specialized label for a project tag.
  */
 $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
-  if (! tag) {
-    return "";
+  if (!tag) {
+    return '';
   }
-  return `<a href="${router.resolve({name: 'Projects', query: {'tag': tag.name}}).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`
+  return `<a href="${router.resolve({ name: 'Projects', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`;
 };
 
 /**
@@ -59,10 +61,10 @@ $common.capitalize = function capitalize(string) {
  */
 $common.formatSeverityLabel = function formatSeverityLabel(severity) {
   if (!severity) {
-    return "";
+    return '';
   }
   let severityLabel = $common.capitalize(severity);
-  let severityClass = "severity-" + severity.toLowerCase() + "-bg";
+  let severityClass = 'severity-' + severity.toLowerCase() + '-bg';
 
   return `
      <div style="height:24px;margin:-4px;">
@@ -78,70 +80,93 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
 /**
  * Formats and returns a specialized label for the state of policy violations.
  */
-$common.formatViolationStateLabel = function formatViolationStateLabel(violationState) {
-  if (! violationState) {
+$common.formatViolationStateLabel = function formatViolationStateLabel(
+  violationState,
+) {
+  if (!violationState) {
     return null;
   }
-  let sourceClass = "label-notification-" + violationState.toLowerCase();
+  let sourceClass = 'label-notification-' + violationState.toLowerCase();
   return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
 };
 
 $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   if (cweId && cweName) {
-    return "<div class='truncate-ellipsis'><span>CWE-" + cweId + " " + cweName + "</span></div>"
+    return (
+      "<div class='truncate-ellipsis'><span>CWE-" +
+      cweId +
+      ' ' +
+      cweName +
+      '</span></div>'
+    );
   } else {
-    return "";
+    return '';
   }
 };
 
 $common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
   if (cweId && cweName) {
-    return "<span data-toggle='tooltip' data-placement='bottom' title='" + cweName + "'>CWE-" + cweId + "</span>";
+    return (
+      "<span data-toggle='tooltip' data-placement='bottom' title='" +
+      cweName +
+      "'>CWE-" +
+      cweId +
+      '</span>'
+    );
   } else {
-    return "";
+    return '';
   }
 };
 
 /**
  * Formats and returns a specialized label for a vulnerability analyzer (OSSINDEX_ANALYZER, INTERNAL_ANALYZER, etc).
  */
-$common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource, vulnId, alternateIdentifier, referenceUrl) {
-  if (! analyzer) {
+$common.formatAnalyzerLabel = function formatAnalyzerLabel(
+  analyzer,
+  vulnSource,
+  vulnId,
+  alternateIdentifier,
+  referenceUrl,
+) {
+  if (!analyzer) {
     return null;
   }
-  let analyzerLabel = "";
+  let analyzerLabel = '';
   let analyzerUrl = null;
   switch (analyzer) {
     case 'INTERNAL_ANALYZER':
       analyzerLabel = vulnSource;
-      if(vulnSource === "GITHUB") {
-        analyzerUrl = "https://github.com/advisories/" + vulnId;
-      } else if(vulnSource === "OSV") {
-        analyzerUrl = "https://osv.dev/vulnerability/" + vulnId;
-      } else if(vulnSource === "SNYK") {
-        analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
+      if (vulnSource === 'GITHUB') {
+        analyzerUrl = 'https://github.com/advisories/' + vulnId;
+      } else if (vulnSource === 'OSV') {
+        analyzerUrl = 'https://osv.dev/vulnerability/' + vulnId;
+      } else if (vulnSource === 'SNYK') {
+        analyzerUrl = 'https://security.snyk.io/vuln/' + vulnId;
       }
       break;
     case 'OSSINDEX_ANALYZER':
-      analyzerLabel = "OSS Index";
-      analyzerUrl = (referenceUrl) ? referenceUrl : "https://ossindex.sonatype.org/vuln/" + vulnId;
+      analyzerLabel = 'OSS Index';
+      analyzerUrl = referenceUrl
+        ? referenceUrl
+        : 'https://ossindex.sonatype.org/vuln/' + vulnId;
       break;
     case 'VULNDB_ANALYZER':
-      analyzerLabel = "VulnDB";
-      analyzerUrl = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
+      analyzerLabel = 'VulnDB';
+      analyzerUrl =
+        'https://vulndb.cyberriskanalytics.com/vulnerabilities/' + vulnId;
       break;
     case 'SNYK_ANALYZER':
-      analyzerLabel = "Snyk";
-      analyzerUrl = "https://security.snyk.io/vuln/" + vulnId;
+      analyzerLabel = 'Snyk';
+      analyzerUrl = 'https://security.snyk.io/vuln/' + vulnId;
       break;
     case 'TRIVY_ANALYZER':
-        analyzerLabel = "Trivy";
+      analyzerLabel = 'Trivy';
 
-        analyzerUrl = "https://nvd.nist.gov/vuln/detail/" + vulnId;
-        if(vulnSource === "GITHUB") {
-          analyzerUrl = "https://github.com/advisories/" + vulnId;
-        }
-        break;
+      analyzerUrl = 'https://nvd.nist.gov/vuln/detail/' + vulnId;
+      if (vulnSource === 'GITHUB') {
+        analyzerUrl = 'https://github.com/advisories/' + vulnId;
+      }
+      break;
   }
   if (analyzerUrl) {
     analyzerLabel = `<a href="${analyzerUrl}" target="_blank">${analyzerLabel} <i class="fa fa-external-link"></i></a>`;
@@ -159,96 +184,110 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(analyzer, vulnSource,
  * @param vulnId the unique identifier
  * @returns a SourceInfo object
  */
-$common.resolveSourceVulnInfo = function resolveSourceVulnInfo(vulnSource, vulnId) {
+$common.resolveSourceVulnInfo = function resolveSourceVulnInfo(
+  vulnSource,
+  vulnId,
+) {
   let sourceInfo = {};
   sourceInfo.source = vulnSource;
   sourceInfo.vulnId = vulnId;
   switch (vulnSource) {
-    case "INTERNAL":
+    case 'INTERNAL':
       // TODO
       break;
-    case "NVD":
-      sourceInfo.name = "National Vulnerability Database";
-      sourceInfo.url = "https://nvd.nist.gov/vuln/detail/" + vulnId;
+    case 'NVD':
+      sourceInfo.name = 'National Vulnerability Database';
+      sourceInfo.url = 'https://nvd.nist.gov/vuln/detail/' + vulnId;
       break;
-    case "GITHUB":
-      sourceInfo.name = "GitHub Advisories";
-      sourceInfo.url = "https://github.com/advisories/" + vulnId;
+    case 'GITHUB':
+      sourceInfo.name = 'GitHub Advisories';
+      sourceInfo.url = 'https://github.com/advisories/' + vulnId;
       break;
-    case "OSSINDEX":
-      sourceInfo.name = "OSS Index";
-      sourceInfo.url = "https://ossindex.sonatype.org/vuln/" + vulnId;
+    case 'OSSINDEX':
+      sourceInfo.name = 'OSS Index';
+      sourceInfo.url = 'https://ossindex.sonatype.org/vuln/' + vulnId;
       break;
-    case "SNYK":
-      sourceInfo.name = "Snyk";
-      sourceInfo.url = "https://security.snyk.io/vuln/" + vulnId;
+    case 'SNYK':
+      sourceInfo.name = 'Snyk';
+      sourceInfo.url = 'https://security.snyk.io/vuln/' + vulnId;
       break;
-    case "OSV":
-      sourceInfo.name = "Open Source Vulnerability Database";
-      sourceInfo.url = "https://osv.dev/vulnerability/" + vulnId;
+    case 'OSV':
+      sourceInfo.name = 'Open Source Vulnerability Database';
+      sourceInfo.url = 'https://osv.dev/vulnerability/' + vulnId;
       break;
-    case "GSD":
-      sourceInfo.name = "Global Security Database";
-      sourceInfo.url = "https://github.com/cloudsecurityalliance/gsd-database";
+    case 'GSD':
+      sourceInfo.name = 'Global Security Database';
+      sourceInfo.url = 'https://github.com/cloudsecurityalliance/gsd-database';
       break;
-    case "VULNDB":
-      sourceInfo.name = "VulnDB";
-      sourceInfo.url = "https://vulndb.cyberriskanalytics.com/vulnerabilities/" + vulnId;
+    case 'VULNDB':
+      sourceInfo.name = 'VulnDB';
+      sourceInfo.url =
+        'https://vulndb.cyberriskanalytics.com/vulnerabilities/' + vulnId;
       break;
   }
   return sourceInfo;
-}
+};
 
 $common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
   if (!vulnSource || !aliases) {
     return [];
   }
 
-  let resolvedAliases = aliases
-    .flatMap((alias) => {
-      const _resolvedAliases = [];
-      if (vulnSource !== "INTERNAL" && alias.internalId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("INTERNAL", alias.internalId));
-      }
-      if (vulnSource !== "NVD" && alias.cveId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("NVD", alias.cveId));
-      }
-      if (vulnSource !== "GITHUB" && alias.ghsaId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("GITHUB", alias.ghsaId));
-      }
-      if (vulnSource !== "OSSINDEX" && alias.sonatypeId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("OSSINDEX", alias.sonatypeId));
-      }
-      if (vulnSource !== "SNYK" && alias.snykId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("SNYK", alias.snykId));
-      }
-      if (vulnSource !== "OSV" && alias.osvId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("OSV", alias.osvId));
-      }
-      if (vulnSource !== "GSD" && alias.gsdId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("GSD", alias.gsdId));
-      }
-      if (vulnSource !== "VULNDB" && alias.vulnDbId) {
-        _resolvedAliases.push($common.resolveSourceVulnInfo("VULNDB", alias.vulnDbId));
-      }
-      return _resolvedAliases;
-    });
+  let resolvedAliases = aliases.flatMap((alias) => {
+    const _resolvedAliases = [];
+    if (vulnSource !== 'INTERNAL' && alias.internalId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('INTERNAL', alias.internalId),
+      );
+    }
+    if (vulnSource !== 'NVD' && alias.cveId) {
+      _resolvedAliases.push($common.resolveSourceVulnInfo('NVD', alias.cveId));
+    }
+    if (vulnSource !== 'GITHUB' && alias.ghsaId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('GITHUB', alias.ghsaId),
+      );
+    }
+    if (vulnSource !== 'OSSINDEX' && alias.sonatypeId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('OSSINDEX', alias.sonatypeId),
+      );
+    }
+    if (vulnSource !== 'SNYK' && alias.snykId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('SNYK', alias.snykId),
+      );
+    }
+    if (vulnSource !== 'OSV' && alias.osvId) {
+      _resolvedAliases.push($common.resolveSourceVulnInfo('OSV', alias.osvId));
+    }
+    if (vulnSource !== 'GSD' && alias.gsdId) {
+      _resolvedAliases.push($common.resolveSourceVulnInfo('GSD', alias.gsdId));
+    }
+    if (vulnSource !== 'VULNDB' && alias.vulnDbId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('VULNDB', alias.vulnDbId),
+      );
+    }
+    return _resolvedAliases;
+  });
 
   // Deduplicate by vulnerability ID, so we're not showing the same ID more than once.
-  resolvedAliases = [...new Map(resolvedAliases.map(alias => [alias.vulnId, alias])).values()];
+  resolvedAliases = [
+    ...new Map(resolvedAliases.map((alias) => [alias.vulnId, alias])).values(),
+  ];
 
   // Sort aliases by vulnerability ID to achieve consistent output.
-  return resolvedAliases
-    .sort((a, b) => {
-      if (a.vulnId < b.vulnId) {
-        return -1;
-      }
-      if (a.vulnId > b.vulnId) {
-        return 1;
-      }
-      return 0;
-    });
-}
+  return resolvedAliases.sort((a, b) => {
+    if (a.vulnId < b.vulnId) {
+      return -1;
+    }
+    if (a.vulnId > b.vulnId) {
+      return 1;
+    }
+    return 0;
+  });
+};
 
 /**
  *
@@ -268,11 +307,11 @@ $common.makeAnalysisStateLabelFormatter = (i18n) => {
       case 'FALSE_POSITIVE':
       case 'NOT_AFFECTED':
       case 'RESOLVED':
-        return i18n.$t(`message.${value.toLowerCase()}`)
+        return i18n.$t(`message.${value.toLowerCase()}`);
       default:
         return null;
     }
-  }
+  };
 };
 
 /**
@@ -295,11 +334,11 @@ $common.makeAnalysisJustificationLabelFormatter = (i18n) => {
       case 'PROTECTED_AT_RUNTIME':
       case 'PROTECTED_AT_PERIMETER':
       case 'PROTECTED_BY_MITIGATING_CONTROL':
-        return i18n.$t(`message.${value.toLowerCase()}`)
+        return i18n.$t(`message.${value.toLowerCase()}`);
       default:
         return null;
     }
-  }
+  };
 };
 
 /**
@@ -318,11 +357,11 @@ $common.makeAnalysisResponseLabelFormatter = (i18n) => {
       case 'UPDATE':
       case 'ROLLBACK':
       case 'WORKAROUND_AVAILABLE':
-        return i18n.$t(`message.${value.toLowerCase()}`)
+        return i18n.$t(`message.${value.toLowerCase()}`);
       default:
         return null;
     }
-  }
+  };
 };
 
 /**
@@ -343,11 +382,11 @@ $common.componentClassifierLabelFormatter = (i18n) => {
       case 'DEVICE':
       case 'FIRMWARE':
       case 'FILE':
-        return i18n.$t(`message.component_${value.toLowerCase()}`)
+        return i18n.$t(`message.component_${value.toLowerCase()}`);
       default:
         return null;
     }
-  }
+  };
 };
 
 /**
@@ -359,7 +398,7 @@ $common.componentClassifierLabelFormatter = (i18n) => {
  */
 $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
   return function (value) {
-    let url = "../projects/?classifier=" + value;
+    let url = '../projects/?classifier=' + value;
     switch (value) {
       case 'APPLICATION':
       case 'FRAMEWORK':
@@ -369,11 +408,11 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
       case 'DEVICE':
       case 'FIRMWARE':
       case 'FILE':
-        return `<a href="${url}">${i18n.$t(`message.component_${value.toLowerCase()}`)}</a>`
+        return `<a href="${url}">${i18n.$t(`message.component_${value.toLowerCase()}`)}</a>`;
       default:
         return null;
     }
-  }
+  };
 };
 
 /**
@@ -382,24 +421,61 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
  */
 $common.formatTimestamp = function formatTimestamp(timestamp, includeTime) {
   let date = new Date(timestamp);
-  let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function pad(num) { return num < 10 ? "0" + num : num; }
+  let months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  function pad(num) {
+    return num < 10 ? '0' + num : num;
+  }
   if (includeTime) {
-    return date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear() + " at " + pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
+    return (
+      date.getDate() +
+      ' ' +
+      months[date.getMonth()] +
+      ' ' +
+      date.getFullYear() +
+      ' at ' +
+      pad(date.getHours()) +
+      ':' +
+      pad(date.getMinutes()) +
+      ':' +
+      pad(date.getSeconds())
+    );
   } else {
-    return date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+    return (
+      date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear()
+    );
   }
 };
 
 /*
  * Concatenates the group, name, and version of a component.
  */
-$common.concatenateComponentName = function concatenateComponentName(group, name, version) {
+$common.concatenateComponentName = function concatenateComponentName(
+  group,
+  name,
+  version,
+) {
   let g = $common.trimToNull(group);
   let n = $common.trimToNull(name);
   let v = $common.trimToNull(version);
-  return (g != null? g + " " : "") + (n != null? n : "") + (v != null? " " + v: "");
-}
+  return (
+    (g != null ? g + ' ' : '') +
+    (n != null ? n : '') +
+    (v != null ? ' ' + v : '')
+  );
+};
 
 /**
  * Helper function that returns the variable if it is not null, undefined, NaN,
@@ -445,51 +521,59 @@ $common.sleep = function sleep(milliseconds) {
 /**
  * Converts a string representation of common boolean values and returns a boolean value.
  */
-$common.toBoolean = function(string) {
+$common.toBoolean = function (string) {
   if (!string) {
     return false;
   }
-  if (typeof string == "boolean") {
+  if (typeof string == 'boolean') {
     return string;
   }
-  switch(string.toLowerCase().trim()) {
-    case "true": case "yes": case "1": return true;
-    case "false": case "no": case "0": case null: return false;
-    default: return Boolean(string);
+  switch (string.toLowerCase().trim()) {
+    case 'true':
+    case 'yes':
+    case '1':
+      return true;
+    case 'false':
+    case 'no':
+    case '0':
+    case null:
+      return false;
+    default:
+      return Boolean(string);
   }
 };
 
-$common.trimToNull = function(value) {
+$common.trimToNull = function (value) {
   if (typeof value === 'undefined') {
     return null;
-  } else if (typeof value === 'string' && value.trim() === "") {
+  } else if (typeof value === 'string' && value.trim() === '') {
     return null;
   }
   return value;
 };
 
 $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX = {
-  "LOW" : {
-    "LOW": "INFO",
-    "MEDIUM": "LOW",
-    "HIGH": "MEDIUM"
+  LOW: {
+    LOW: 'INFO',
+    MEDIUM: 'LOW',
+    HIGH: 'MEDIUM',
   },
-  "MEDIUM" : {
-    "LOW": "LOW",
-    "MEDIUM": "MEDIUM",
-    "HIGH": "HIGH"
+  MEDIUM: {
+    LOW: 'LOW',
+    MEDIUM: 'MEDIUM',
+    HIGH: 'HIGH',
   },
-  "HIGH" : {
-    "LOW": "MEDIUM",
-    "MEDIUM": "HIGH",
-    "HIGH": "CRITICAL"
+  HIGH: {
+    LOW: 'MEDIUM',
+    MEDIUM: 'HIGH',
+    HIGH: 'CRITICAL',
   },
-  "UNASSIGNED": {
-    "LOW": "UNASSIGNED",
-    "MEDIUM": "UNASSIGNED",
-    "HIGH": "UNASSIGNED"
-  }
-}
+  UNASSIGNED: {
+    LOW: 'UNASSIGNED',
+    MEDIUM: 'UNASSIGNED',
+    HIGH: 'UNASSIGNED',
+  },
+};
 
 export default {
   formatSourceLabel: $common.formatSourceLabel,
@@ -504,9 +588,11 @@ export default {
   resolveSourceVulnInfo: $common.resolveSourceVulnInfo,
   resolveVulnAliases: $common.resolveVulnAliases,
   makeAnalysisStateLabelFormatter: $common.makeAnalysisStateLabelFormatter,
-  makeAnalysisJustificationLabelFormatter: $common.makeAnalysisJustificationLabelFormatter,
+  makeAnalysisJustificationLabelFormatter:
+    $common.makeAnalysisJustificationLabelFormatter,
   componentClassifierLabelFormatter: $common.componentClassifierLabelFormatter,
-  componentClassifierLabelProjectUrlFormatter: $common.componentClassifierLabelProjectUrlFormatter,
+  componentClassifierLabelProjectUrlFormatter:
+    $common.componentClassifierLabelProjectUrlFormatter,
   formatTimestamp: $common.formatTimestamp,
   concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,
@@ -514,5 +600,6 @@ export default {
   sleep: $common.sleep,
   toBoolean: $common.toBoolean,
   trimToNull: $common.trimToNull,
-  OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX: $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX
+  OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX:
+    $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX,
 };

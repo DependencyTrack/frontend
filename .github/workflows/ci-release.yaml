@@ -6,7 +6,7 @@ on:
       version-to-bump:
         type: choice
         required: true
-        description: "Select which part of the version to bump and release"
+        description: 'Select which part of the version to bump and release'
         options:
           - patch
           - minor
@@ -41,7 +41,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_RELEASE_TOKEN }}
-          GH_OPTS: ""
+          GH_OPTS: ''
         run: |-
           VERSION=`jq -r '.version' package.json`
 
