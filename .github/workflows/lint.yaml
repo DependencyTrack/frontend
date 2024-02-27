@@ -9,8 +9,9 @@ env:
   NODE_VERSION: 18
 
 jobs:
-  lint-prettier:
+  setup:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.1.1
@@ -21,20 +22,19 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: Install Dependencies
+        run: npm install
+
+  lint-prettier:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
       - name: Lint
         run: npm run prettier
 
   lint-eslint:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
-
-      - name: Set up NodeJs
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
       - name: Lint
         run: npm run eslint
