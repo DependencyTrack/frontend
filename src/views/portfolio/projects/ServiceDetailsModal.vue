@@ -348,7 +348,9 @@ export default {
             let url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
-            return `<a href="${url}">${xssFilters.inHTMLData(common.valueWithDefault(value, ''))}</a>`;
+            return `<a href="${url}">${xssFilters.inHTMLData(
+              common.valueWithDefault(value, ''),
+            )}</a>`;
           },
         },
         {

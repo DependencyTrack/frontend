@@ -148,8 +148,15 @@
           v-on:total="totalVulnerabilities = $event"
         />
       </b-tab>
-      <b-tab @click="$router.push(`/components#/search/PACKAGE_URL/${component.purl}`)">
-        <template v-slot:title><i class="fa fa-cubes"></i> {{ $t('message.projects_also_used_in') }}</template>
+      <b-tab
+        @click="
+          $router.push(`/components#/search/PACKAGE_URL/${component.purl}`)
+        "
+      >
+        <template v-slot:title
+          ><i class="fa fa-cubes"></i>
+          {{ $t('message.projects_also_used_in') }}</template
+        >
       </b-tab>
     </b-tabs>
     <component-details-modal

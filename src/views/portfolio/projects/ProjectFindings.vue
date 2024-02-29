@@ -267,7 +267,9 @@ export default {
                 );
                 label +=
                   common.formatSourceLabel(alias.source) +
-                  ` <a href="${url}">${xssFilters.inHTMLData(alias.vulnId)}</a>`;
+                  ` <a href="${url}">${xssFilters.inHTMLData(
+                    alias.vulnId,
+                  )}</a>`;
                 if (i < aliases.length - 1) label += '<br/><br/>';
               }
               return label;
