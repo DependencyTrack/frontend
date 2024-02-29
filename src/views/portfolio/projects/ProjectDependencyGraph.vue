@@ -149,7 +149,11 @@ export default {
         this.$route.params.componentUuids,
       );
       this.loading = true;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.project.uuid}/dependencyGraph/${encodeURIComponent(this.$route.params.componentUuids)}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${
+        this.project.uuid
+      }/dependencyGraph/${encodeURIComponent(
+        this.$route.params.componentUuids,
+      )}`;
       this.axios.get(url).then((response) => {
         if (response.data && Object.keys(response.data).length > 0) {
           this.notFound = false;
