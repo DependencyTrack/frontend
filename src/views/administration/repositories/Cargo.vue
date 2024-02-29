@@ -3,13 +3,13 @@
 </template>
 
 <script>
-import Repositories from "./Repositories";
+import Repositories from './Repositories';
 export default {
   props: {
-    header: String
+    header: String,
   },
   components: {
-    Repositories
-  }
-}
+    Repositories,
+  },
+};
 </script>

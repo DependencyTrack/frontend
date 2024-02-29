@@ -6,29 +6,52 @@
   </span>
   <span v-else class="progress">
     <span :id="'progressbar' + hoverId" class="table-progress">
-      <b-progress class="table-progress" :max="metrics.policyViolationsTotal" show-value>
-        <b-progress-bar :value="metrics.policyViolationsInfo" class="severity-info-bg"></b-progress-bar>
-        <b-progress-bar :value="metrics.policyViolationsWarn" class="severity-warn-bg"></b-progress-bar>
-        <b-progress-bar :value="metrics.policyViolationsFail" class="severity-fail-bg"></b-progress-bar>
+      <b-progress
+        class="table-progress"
+        :max="metrics.policyViolationsTotal"
+        show-value
+      >
+        <b-progress-bar
+          :value="metrics.policyViolationsInfo"
+          class="severity-info-bg"
+        ></b-progress-bar>
+        <b-progress-bar
+          :value="metrics.policyViolationsWarn"
+          class="severity-warn-bg"
+        ></b-progress-bar>
+        <b-progress-bar
+          :value="metrics.policyViolationsFail"
+          class="severity-fail-bg"
+        ></b-progress-bar>
       </b-progress>
     </span>
-  <b-tooltip :target="'progressbar' + hoverId" placement="left" noninteractive>
-    <div style="text-align: left;">
-      <h5>{{$t('message.type')}}</h5>
-      <p>
-        {{$t('policy_violation.license')}}: {{ metrics.policyViolationsLicenseTotal }}<br>
-        {{$t('policy_violation.operational')}}: {{ metrics.policyViolationsOperationalTotal }}<br>
-        {{$t('policy_violation.security')}}: {{ metrics.policyViolationsSecurityTotal }}<br>
-      </p>
-      <h5>{{ $t('message.violation_state') }}</h5>
-      <p>
-        {{$t('policy_violation.infos')}}: {{ metrics.policyViolationsInfo }}<br>
-        {{$t('policy_violation.warns')}}: {{ metrics.policyViolationsWarn }}<br>
-        {{$t('policy_violation.fails')}}: {{ metrics.policyViolationsFail }}<br>
-      </p>
-      {{$t('message.total')}}: {{ metrics.policyViolationsTotal }}
-    </div>
-  </b-tooltip>
+    <b-tooltip
+      :target="'progressbar' + hoverId"
+      placement="left"
+      noninteractive
+    >
+      <div style="text-align: left">
+        <h5>{{ $t('message.type') }}</h5>
+        <p>
+          {{ $t('policy_violation.license') }}:
+          {{ metrics.policyViolationsLicenseTotal }}<br />
+          {{ $t('policy_violation.operational') }}:
+          {{ metrics.policyViolationsOperationalTotal }}<br />
+          {{ $t('policy_violation.security') }}:
+          {{ metrics.policyViolationsSecurityTotal }}<br />
+        </p>
+        <h5>{{ $t('message.violation_state') }}</h5>
+        <p>
+          {{ $t('policy_violation.infos') }}: {{ metrics.policyViolationsInfo
+          }}<br />
+          {{ $t('policy_violation.warns') }}: {{ metrics.policyViolationsWarn
+          }}<br />
+          {{ $t('policy_violation.fails') }}: {{ metrics.policyViolationsFail
+          }}<br />
+        </p>
+        {{ $t('message.total') }}: {{ metrics.policyViolationsTotal }}
+      </div>
+    </b-tooltip>
   </span>
 </template>
 
@@ -44,5 +67,5 @@ export default {
       hoverId: Math.random().toString(36),
     };
   },
-}
+};
 </script>
