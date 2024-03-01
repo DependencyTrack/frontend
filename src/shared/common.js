@@ -41,7 +41,11 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   if (!tag) {
     return '';
   }
-  return `<a href="${router.resolve({ name: 'Projects', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`;
+  return `<a href="${
+    router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
+  }" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(
+    tag.name,
+  )}</a>`;
 };
 
 /**
@@ -408,7 +412,9 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
       case 'DEVICE':
       case 'FIRMWARE':
       case 'FILE':
-        return `<a href="${url}">${i18n.$t(`message.component_${value.toLowerCase()}`)}</a>`;
+        return `<a href="${url}">${i18n.$t(
+          `message.component_${value.toLowerCase()}`,
+        )}</a>`;
       default:
         return null;
     }
