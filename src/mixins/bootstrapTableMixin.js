@@ -1,22 +1,22 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 export default {
-  data () {
+  data() {
     return {
-      vueFormatters: []
-    }
+      vueFormatters: [],
+    };
   },
   methods: {
-    vueFormatter (obj) {
+    vueFormatter(obj) {
       const key = `_vue_formatter_${this.vueFormatters.length}`;
       this.vueFormatters.push({
         el: `.${key}`,
         name: key,
-        ...obj
+        ...obj,
       });
       return `<div class="${key}"/>`;
     },
-    vueFormatterInit () {
+    vueFormatterInit() {
       if (!this.vueFormatters.length) {
         return;
       }
@@ -27,6 +27,6 @@ export default {
           this.vueFormatters.splice(i, 1);
         }
       }
-    }
-  }
-}
+    },
+  },
+};

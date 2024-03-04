@@ -2,61 +2,70 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button size="md" variant="outline-primary" v-b-modal.createOidcGroupModal>
+        <b-button
+          size="md"
+          variant="outline-primary"
+          v-b-modal.createOidcGroupModal
+        >
           <span class="fa fa-plus"></span>
           {{ $t('admin.create_oidc_group') }}
         </b-button>
       </div>
-      <bootstrap-table ref="table" :columns="columns" :data="data" :options="options"></bootstrap-table>
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+      ></bootstrap-table>
     </b-card-body>
     <create-oidc-group-modal v-on:refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
-import xssFilters from "xss-filters";
-import common from "../../../shared/common";
-import i18n from "../../../i18n";
-import CreateOidcGroupModal from "./CreateOidcGroupModal";
-import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import EventBus from "../../../shared/eventbus";
-import ActionableListGroupItem from "../../components/ActionableListGroupItem";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
-import SelectTeamModal from "./SelectTeamModal";
+import xssFilters from 'xss-filters';
+import common from '../../../shared/common';
+import i18n from '../../../i18n';
+import CreateOidcGroupModal from './CreateOidcGroupModal';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import EventBus from '../../../shared/eventbus';
+import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import permissionsMixin from '../../../mixins/permissionsMixin';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import SelectTeamModal from './SelectTeamModal';
 
 export default {
   props: {
-    header: String
+    header: String,
   },
   mixins: [bootstrapTableMixin],
   components: {
-    CreateOidcGroupModal
+    CreateOidcGroupModal,
   },
   mounted() {
-    EventBus.$on("admin:oidcgroups:rowUpdate", (index, row) => {
+    EventBus.$on('admin:oidcgroups:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on("admin:oidcgroups:rowDeleted", (index, row) => {
+    EventBus.$on('admin:oidcgroups:rowDeleted', (index, row) => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off("admin:oidcgroups:rowUpdate");
-    EventBus.$off("admin:oidcgroups:rowDeleted");
+    EventBus.$off('admin:oidcgroups:rowUpdate');
+    EventBus.$off('admin:oidcgroups:rowDeleted');
   },
   data() {
     return {
       columns: [
         {
-          title: this.$t("admin.oidc_group_name"),
-          field: "name",
+          title: this.$t('admin.oidc_group_name'),
+          field: 'name',
           sortable: false,
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-          }
-        }
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
       ],
       data: [],
       options: {
@@ -65,12 +74,12 @@ export default {
         showRefresh: true,
         pagination: true,
         silentSort: false,
-        sidePagination: "client",
-        queryParamsType: "pageSize",
-        pageList: "[10, 25, 50, 100]",
+        sidePagination: 'client',
+        queryParamsType: 'pageSize',
+        pageList: '[10, 25, 50, 100]',
         pageSize: 10,
         icons: {
-          refresh: "fa-refresh"
+          refresh: 'fa-refresh',
         },
         detailView: true,
         detailViewIcon: false,
@@ -105,85 +114,85 @@ export default {
             components: {
               ActionableListGroupItem,
               BInputGroupFormInput,
-              SelectTeamModal
+              SelectTeamModal,
             },
             data() {
               return {
                 oidcGroup: row,
-                mappedTeams: []
+                mappedTeams: [],
               };
             },
             methods: {
-              updateOidcGroup: function() {
+              updateOidcGroup: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.oidcGroup.uuid,
-                    name: this.oidcGroup.name
+                    name: this.oidcGroup.name,
                   })
-                  .then(response => {
+                  .then((response) => {
                     this.team = response.data;
                     EventBus.$emit(
-                      "admin:oidcgroups:rowUpdate",
+                      'admin:oidcgroups:rowUpdate',
                       index,
-                      this.team
+                      this.team,
                     );
-                    this.$toastr.s(this.$t("message.updated"));
+                    this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch(error => {
-                    this.$toastr.w(this.$t("condition.unsuccessful_action"));
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
-              deleteOidcGroup: function() {
+              deleteOidcGroup: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
                 this.axios
                   .delete(url)
-                  .then(response => {
-                    EventBus.$emit("admin:oidcgroups:rowDeleted", index);
-                    this.$toastr.s(this.$t("admin.oidc_group_deleted"));
+                  .then((response) => {
+                    EventBus.$emit('admin:oidcgroups:rowDeleted', index);
+                    this.$toastr.s(this.$t('admin.oidc_group_deleted'));
                   })
-                  .catch(error => {
-                    this.$toastr.w(this.$t("condition.unsuccessful_action"));
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
-              getMappedTeams: function() {
+              getMappedTeams: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
                 this.axios
                   .get(url)
-                  .then(response => {
+                  .then((response) => {
                     this.mappedTeams = response.data;
                   })
-                  .catch(error => {
-                    this.$toastr.w(this.$t("condition.unsuccessful_action"));
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
-              updateTeamSelection: function(selections) {
-                this.$root.$emit("bv::hide::modal", "selectTeamModal");
+              updateTeamSelection: function (selections) {
+                this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
                   let selection = selections[i];
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
                   this.axios
                     .put(url, {
                       group: this.oidcGroup.uuid,
-                      team: selection.uuid
+                      team: selection.uuid,
                     })
-                    .then(response => {
+                    .then((response) => {
                       this.mappedTeams.push(selection);
                       this.mappedTeams.sort();
-                      this.$toastr.s(this.$t("message.updated"));
+                      this.$toastr.s(this.$t('message.updated'));
                     })
-                    .catch(error => {
-                      this.$toastr.w(this.$t("condition.unsuccessful_action"));
+                    .catch((error) => {
+                      this.$toastr.w(this.$t('condition.unsuccessful_action'));
                     });
                 }
               },
-              removeOidcGroupMapping: function(team) {
+              removeOidcGroupMapping: function (team) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
                 this.axios
                   .delete(url)
-                  .then(response => {
+                  .then((response) => {
                     let remainingTeams = [];
-                    for (let i=0; i<this.mappedTeams.length; i++) {
+                    for (let i = 0; i < this.mappedTeams.length; i++) {
                       if (this.mappedTeams[i].uuid !== team.uuid) {
                         remainingTeams.push(this.mappedTeams[i]);
                       }
@@ -191,32 +200,32 @@ export default {
                     this.mappedTeams = remainingTeams;
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch(error => {
-                    this.$toastr.w(this.$t("condition.unsuccessful_action"));
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
-              }
+              },
             },
-            mounted: function() {
+            mounted: function () {
               this.getMappedTeams();
-            }
+            },
           });
         },
         onExpandRow: this.vueFormatterInit,
-        toolbar: "#customToolbar",
-        responseHandler: function(res, xhr) {
-          res.total = xhr.getResponseHeader("X-Total-Count");
+        toolbar: '#customToolbar',
+        responseHandler: function (res, xhr) {
+          res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },
-        url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`
-      }
+        url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`,
+      },
     };
   },
   methods: {
-    refreshTable: function() {
+    refreshTable: function () {
       this.$refs.table.refresh({
-        silent: true
+        silent: true,
       });
-    }
-  }
+    },
+  },
 };
 </script>

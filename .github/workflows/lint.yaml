@@ -1,0 +1,39 @@
+name: Lint
+on:
+  push:
+    branches:
+      - 'master' # Default branch
+  pull_request:
+    branches:
+      - 'master' # Default branch
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Lint Prettier
+        run: npm run prettier
+        continue-on-error: false
+
+      - name: Lint ESLint
+        run: npm run eslint
+        continue-on-error: true

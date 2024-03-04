@@ -3,22 +3,22 @@
 </template>
 
 <script>
-import DOMPurify from "dompurify";
-import showdown from "showdown";
-import * as showdownHtmlEscape from "showdown-htmlescape";
+import DOMPurify from 'dompurify';
+import showdown from 'showdown';
+import * as showdownHtmlEscape from 'showdown-htmlescape';
 
 export default {
-  name: "Showdown",
+  name: 'Showdown',
   props: {
     markdown: String,
     allowHtml: {
       type: Boolean,
-      default: false
+      default: false,
     },
     flavor: {
       type: String,
-      default: "github"
-    }
+      default: 'github',
+    },
   },
   computed: {
     converter() {
@@ -27,15 +27,15 @@ export default {
         // Escape HTML tags outside of code blocks (Showdown will encode HTML tags within
         // code blocks automatically). This prevents unintended rendering of HTML elements,
         // but is not a security mechanism. Purely visual.
-        c.addExtension(showdownHtmlEscape, "html-escape");
+        c.addExtension(showdownHtmlEscape, 'html-escape');
       }
-      c.setFlavor(this.flavor)
+      c.setFlavor(this.flavor);
       return c;
     },
     outputHTML() {
       const html = this.converter.makeHtml(this.markdown);
       return DOMPurify.sanitize(html);
-    }
-  }
-}
+    },
+  },
+};
 </script>

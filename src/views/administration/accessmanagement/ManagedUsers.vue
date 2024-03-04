@@ -2,7 +2,11 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button size="md" variant="outline-primary" v-b-modal.createManagedUserModal>
+        <b-button
+          size="md"
+          variant="outline-primary"
+          v-b-modal.createManagedUserModal
+        >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
       </div>
@@ -10,7 +14,8 @@
         ref="table"
         :columns="columns"
         :data="data"
-        :options="options">
+        :options="options"
+      >
       </bootstrap-table>
     </b-card-body>
     <create-managed-user-modal v-on:refreshTable="refreshTable" />
@@ -18,98 +23,102 @@
 </template>
 
 <script>
-  import xssFilters from "xss-filters";
-  import common from "../../../shared/common";
-  import i18n from "../../../i18n";
-  import CreateManagedUserModal from "./CreateManagedUserModal";
-  import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-  import EventBus from "../../../shared/eventbus";
-  import ActionableListGroupItem from "../../components/ActionableListGroupItem";
-  import ChangePasswordModal from "./ChangePasswordModal";
-  import SelectTeamModal from "./SelectTeamModal";
-  import SelectPermissionModal from "./SelectPermissionModal";
-  import permissionsMixin from "../../../mixins/permissionsMixin";
-  import {Switch as cSwitch} from "@coreui/vue";
-  import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
+import xssFilters from 'xss-filters';
+import common from '../../../shared/common';
+import i18n from '../../../i18n';
+import CreateManagedUserModal from './CreateManagedUserModal';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import EventBus from '../../../shared/eventbus';
+import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import ChangePasswordModal from './ChangePasswordModal';
+import SelectTeamModal from './SelectTeamModal';
+import SelectPermissionModal from './SelectPermissionModal';
+import permissionsMixin from '../../../mixins/permissionsMixin';
+import { Switch as cSwitch } from '@coreui/vue';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 
-  export default {
-    props: {
-      header: String
-    },
-    mixins: [bootstrapTableMixin],
-    components: {
-      CreateManagedUserModal
-    },
-    mounted() {
-      EventBus.$on('admin:managedusers:rowUpdate', (index, row) => {
-        this.$refs.table.updateRow( {index: index, row: row});
-        this.$refs.table.expandRow(index);
-      });
-      EventBus.$on('admin:managedusers:rowDeleted', (index, row) => {
-        this.refreshTable();
-      });
-    },
-    beforeDestroy() {
-      EventBus.$off('admin:managedusers:rowUpdate');
-      EventBus.$off('admin:managedusers:rowDeleted');
-    },
-    data() {
-      return {
-        columns: [
-          {
-            title: this.$t('message.username'),
-            field: "username",
-            sortable: false,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
+export default {
+  props: {
+    header: String,
+  },
+  mixins: [bootstrapTableMixin],
+  components: {
+    CreateManagedUserModal,
+  },
+  mounted() {
+    EventBus.$on('admin:managedusers:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:managedusers:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:managedusers:rowUpdate');
+    EventBus.$off('admin:managedusers:rowDeleted');
+  },
+  data() {
+    return {
+      columns: [
+        {
+          title: this.$t('message.username'),
+          field: 'username',
+          sortable: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
-          {
-            title: this.$t('message.fullname'),
-            field: "fullname",
-            sortable: false,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
+        },
+        {
+          title: this.$t('message.fullname'),
+          field: 'fullname',
+          sortable: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
-          {
-            title: this.$t('message.email'),
-            field: "email",
-            sortable: false,
-            formatter(value, row, index) {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-            }
+        },
+        {
+          title: this.$t('message.email'),
+          field: 'email',
+          sortable: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
-          {
-            title: this.$t('admin.teams'),
-            field: "teams",
-            sortable: false,
-            formatter(value, row, index) {
-              return (value) ? xssFilters.inHTMLData(common.valueWithDefault(value.length, "0")) : 0;
-            }
+        },
+        {
+          title: this.$t('admin.teams'),
+          field: 'teams',
+          sortable: false,
+          formatter(value, row, index) {
+            return value
+              ? xssFilters.inHTMLData(
+                  common.valueWithDefault(value.length, '0'),
+                )
+              : 0;
           },
-        ],
-        data: [],
-        options: {
-          search: true,
-          showColumns: true,
-          showRefresh: true,
-          pagination: true,
-          silentSort: false,
-          sidePagination: 'client',
-          queryParamsType: 'pageSize',
-          pageList: '[10, 25, 50, 100]',
-          pageSize: 10,
-          icons: {
-            refresh: 'fa-refresh'
-          },
-          detailView: true,
-          detailViewIcon: false,
-          detailViewByClick: true,
-          detailFormatter: (index, row) => {
-            return this.vueFormatter({
-              i18n,
-              template: `
+        },
+      ],
+      data: [],
+      options: {
+        search: true,
+        showColumns: true,
+        showRefresh: true,
+        pagination: true,
+        silentSort: false,
+        sidePagination: 'client',
+        queryParamsType: 'pageSize',
+        pageList: '[10, 25, 50, 100]',
+        pageSize: 10,
+        icons: {
+          refresh: 'fa-refresh',
+        },
+        detailView: true,
+        detailViewIcon: false,
+        detailViewByClick: true,
+        detailFormatter: (index, row) => {
+          return this.vueFormatter({
+            i18n,
+            template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
                     <b-form-group :label="this.$t('admin.team_membership')">
@@ -151,163 +160,196 @@
                   <change-password-modal :managed-user="managedUser" />
                 </b-row>
               `,
-              mixins: [permissionsMixin],
-              components: {
-                cSwitch,
-                ActionableListGroupItem,
-                SelectTeamModal,
-                SelectPermissionModal,
-                ChangePasswordModal,
-                BInputGroupFormInput
-              },
-              data() {
-                return {
-                  managedUser: row,
-                  username: row.username,
-                  teams: row.teams,
-                  permissions: row.permissions,
-                  fullname: row.fullname,
-                  email: row.email,
-                  forcePasswordChange: row.forcePasswordChange,
-                  nonExpiryPassword: row.nonExpiryPassword,
-                  suspended: row.suspended,
-                  labelIcon: {
-                    dataOn: '\u2713',
-                    dataOff: '\u2715'
-                  },
-                }
-              },
-              watch: {
-                forcePasswordChange() {
-                  this.updateUser();
+            mixins: [permissionsMixin],
+            components: {
+              cSwitch,
+              ActionableListGroupItem,
+              SelectTeamModal,
+              SelectPermissionModal,
+              ChangePasswordModal,
+              BInputGroupFormInput,
+            },
+            data() {
+              return {
+                managedUser: row,
+                username: row.username,
+                teams: row.teams,
+                permissions: row.permissions,
+                fullname: row.fullname,
+                email: row.email,
+                forcePasswordChange: row.forcePasswordChange,
+                nonExpiryPassword: row.nonExpiryPassword,
+                suspended: row.suspended,
+                labelIcon: {
+                  dataOn: '\u2713',
+                  dataOff: '\u2715',
                 },
-                nonExpiryPassword() {
-                  this.updateUser();
-                },
-                suspended() {
-                  this.updateUser();
-                }
+              };
+            },
+            watch: {
+              forcePasswordChange() {
+                this.updateUser();
               },
-              methods: {
-                updateUser: function () {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
-                    this.axios.post(url, {
-                      username: this.username,
-                      fullname: this.fullname,
-                      email: this.email,
-                      newPassword: null,
-                      confirmPassword: null,
-                      forcePasswordChange: this.forcePasswordChange,
-                      nonExpiryPassword: this.nonExpiryPassword,
-                      suspended: this.suspended
-                  }).then((response) => {
+              nonExpiryPassword() {
+                this.updateUser();
+              },
+              suspended() {
+                this.updateUser();
+              },
+            },
+            methods: {
+              updateUser: function () {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                this.axios
+                  .post(url, {
+                    username: this.username,
+                    fullname: this.fullname,
+                    email: this.email,
+                    newPassword: null,
+                    confirmPassword: null,
+                    forcePasswordChange: this.forcePasswordChange,
+                    nonExpiryPassword: this.nonExpiryPassword,
+                    suspended: this.suspended,
+                  })
+                  .then((response) => {
                     this.manageduser = response.data;
-                    EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
+                    EventBus.$emit(
+                      'admin:managedusers:rowUpdate',
+                      index,
+                      this.manageduser,
+                    );
                     this.$toastr.s(this.$t('message.updated'));
-                  }).catch((error) => {
+                  })
+                  .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
-                },
-                deleteUser: function() {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
-                  this.axios.delete(url, { data: {
-                      username: this.username
-                    }
-                  }).then((response) => {
+              },
+              deleteUser: function () {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                this.axios
+                  .delete(url, {
+                    data: {
+                      username: this.username,
+                    },
+                  })
+                  .then((response) => {
                     EventBus.$emit('admin:managedusers:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.user_deleted'));
-                  }).catch((error) => {
+                  })
+                  .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
-                },
-                updateTeamSelection: function(selections) {
-                  this.$root.$emit('bv::hide::modal', 'selectTeamModal');
-                  for (let i=0; i<selections.length; i++) {
-                    let selection = selections[i];
-                    let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
-                    this.axios.post(url, {
-                      uuid: selection.uuid
-                    }).then((response) => {
-                      this.syncVariables(response.data);
-                      EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
-                      this.$toastr.s(this.$t('message.updated'));
-                    }).catch((error) => {
-                      if (error.response.status === 304) {
-                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                      } else {
-                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                      }
-                    });
-                  }
-                },
-                removeTeamMembership: function(teamUuid) {
+              },
+              updateTeamSelection: function (selections) {
+                this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+                for (let i = 0; i < selections.length; i++) {
+                  let selection = selections[i];
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
-                  this.axios.delete(url, { data: { uuid: teamUuid }
-                  }).then((response) => {
-                    this.syncVariables(response.data);
-                    EventBus.$emit('admin:managedusers:rowUpdate', index, this.manageduser);
-                    this.$toastr.s(this.$t('message.updated'));
-                  }).catch((error) => {
-                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                  });
-                },
-                updatePermissionSelection: function(selections) {
-                  this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
-                  for (let i=0; i<selections.length; i++) {
-                    let selection = selections[i];
-                    let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
-                    this.axios.post(url
-                    ).then((response) => {
+                  this.axios
+                    .post(url, {
+                      uuid: selection.uuid,
+                    })
+                    .then((response) => {
                       this.syncVariables(response.data);
+                      EventBus.$emit(
+                        'admin:managedusers:rowUpdate',
+                        index,
+                        this.manageduser,
+                      );
                       this.$toastr.s(this.$t('message.updated'));
-                    }).catch((error) => {
+                    })
+                    .catch((error) => {
                       if (error.response.status === 304) {
                         //this.$toastr.w(this.$t('condition.unsuccessful_action'));
                       } else {
-                        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                        this.$toastr.w(
+                          this.$t('condition.unsuccessful_action'),
+                        );
                       }
                     });
-                  }
-                },
-                removePermission: function(permission) {
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
-                  this.axios.delete(url).then((response) => {
+                }
+              },
+              removeTeamMembership: function (teamUuid) {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                this.axios
+                  .delete(url, { data: { uuid: teamUuid } })
+                  .then((response) => {
                     this.syncVariables(response.data);
+                    EventBus.$emit(
+                      'admin:managedusers:rowUpdate',
+                      index,
+                      this.manageduser,
+                    );
                     this.$toastr.s(this.$t('message.updated'));
-                  }).catch((error) => {
+                  })
+                  .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
-                },
-                syncVariables: function(managedUser) {
-                  this.manageduser = managedUser;
-                  this.username = managedUser.username;
-                  this.teams = managedUser.teams;
-                  this.permissions = managedUser.permissions;
-                  this.fullname = managedUser.fullname;
-                  this.email = managedUser.email;
-                  this.forcePasswordChange = managedUser.forcePasswordChange;
-                  this.nonExpiryPassword = managedUser.nonExpiryPassword;
-                  this.suspended = managedUser.suspended;
+              },
+              updatePermissionSelection: function (selections) {
+                this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
+                for (let i = 0; i < selections.length; i++) {
+                  let selection = selections[i];
+                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
+                  this.axios
+                    .post(url)
+                    .then((response) => {
+                      this.syncVariables(response.data);
+                      this.$toastr.s(this.$t('message.updated'));
+                    })
+                    .catch((error) => {
+                      if (error.response.status === 304) {
+                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                      } else {
+                        this.$toastr.w(
+                          this.$t('condition.unsuccessful_action'),
+                        );
+                      }
+                    });
                 }
-              }
-            })
-          },
-          onExpandRow: this.vueFormatterInit,
-          toolbar: '#customToolbar',
-          responseHandler: function (res, xhr) {
-            res.total = xhr.getResponseHeader("X-Total-Count");
-            return res;
-          },
-          url: `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`
-        }
-      };
+              },
+              removePermission: function (permission) {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
+                this.axios
+                  .delete(url)
+                  .then((response) => {
+                    this.syncVariables(response.data);
+                    this.$toastr.s(this.$t('message.updated'));
+                  })
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+              },
+              syncVariables: function (managedUser) {
+                this.manageduser = managedUser;
+                this.username = managedUser.username;
+                this.teams = managedUser.teams;
+                this.permissions = managedUser.permissions;
+                this.fullname = managedUser.fullname;
+                this.email = managedUser.email;
+                this.forcePasswordChange = managedUser.forcePasswordChange;
+                this.nonExpiryPassword = managedUser.nonExpiryPassword;
+                this.suspended = managedUser.suspended;
+              },
+            },
+          });
+        },
+        onExpandRow: this.vueFormatterInit,
+        toolbar: '#customToolbar',
+        responseHandler: function (res, xhr) {
+          res.total = xhr.getResponseHeader('X-Total-Count');
+          return res;
+        },
+        url: `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`,
+      },
+    };
+  },
+  methods: {
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        silent: true,
+      });
     },
-    methods: {
-      refreshTable: function() {
-        this.$refs.table.refresh({
-          silent: true
-        });
-      }
-    }
-  }
+  },
+};
 </script>
