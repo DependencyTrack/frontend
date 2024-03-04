@@ -238,6 +238,7 @@
     "no_file_chosen": "No file chosen",
     "download_bom": "Download BOM",
     "download": "Download",
+    "download_license_attestation": "Download License Attestation",
     "inventory": "Inventory",
     "inventory_with_vulnerabilities": "Inventory with Vulnerabilities",
     "vex_long_desc": "Vulnerability Exploitability Exchange (VEX)",
