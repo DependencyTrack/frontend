@@ -302,7 +302,7 @@ export default {
                   return null;
                 }
               },
-              parseToken: function(alert) {
+              parseToken: function (alert) {
                 if (alert.publisherConfig) {
                   let value = JSON.parse(alert.publisherConfig);
                   if (value) {
@@ -311,7 +311,7 @@ export default {
                   return null;
                 }
               },
-              parseTokenHeader: function(alert) {
+              parseTokenHeader: function (alert) {
                 if (alert.publisherConfig) {
                   let value = JSON.parse(alert.publisherConfig);
                   if (value) {
@@ -343,7 +343,7 @@ export default {
                       destination: this.destination,
                       jiraTicketType: this.jiraTicketType,
                       token: this.token,
-                      tokenHeader: this.tokenHeader
+                      tokenHeader: this.tokenHeader,
                     }),
                     notifyOn: this.notifyOn,
                   })
