@@ -71,12 +71,20 @@ export default {
     }
 
     this.axios.interceptors.response.use(null, (error) => {
-      // On error status codes (4xx - 5xx), display a toast with the HTTP status code and text.
+      // On error status codes (4xx - 5xx), display a toast with either:
+      //  * The problem title and detail in case of an RFC 9457 response
+      //  * the HTTP status code and text
       if (error.response.status >= 400 && error.response.status < 500) {
-        this.$toastr.e(
-          error.response.statusText + ' (' + error.response.status + ')',
-          this.$t('condition.http_request_error'),
-        );
+        if (
+          error.response.headers['content-type'] === 'application/problem+json'
+        ) {
+          this.$toastr.w(error.response.data.detail, error.response.data.title);
+        } else {
+          this.$toastr.e(
+            error.response.statusText + ' (' + error.response.status + ')',
+            this.$t('condition.http_request_error'),
+          );
+        }
       } else {
         this.$toastr.e(
           error.response.statusText + ' (' + error.response.status + ')',
