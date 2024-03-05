@@ -672,6 +672,7 @@
     "select_ecosystem": "Select Ecosystems",
     "registered_email_address": "Registered email address",
     "api_token": "API token",
+    "api_token_header": "API token header",
     "consumer_key": "Consumer key",
     "consumer_secret": "Consumer secret",
     "personal_access_token": "Personal Access Token",
