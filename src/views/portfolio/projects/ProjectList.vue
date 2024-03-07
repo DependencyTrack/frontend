@@ -320,7 +320,7 @@ export default {
         {
           title: this.$t('message.components'),
           field: 'metrics.components',
-          sortable: true,
+          sortable: false,
           visible: false,
         },
         {
