@@ -57,15 +57,10 @@ export default {
         },
       };
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
-      this.axios
-        .post(url, data, config)
-        .then((response) => {
-          this.$root.$emit('bv::hide::modal', 'projectUploadBomModal');
-          this.$toastr.s(this.$t('message.bom_uploaded'));
-        })
-        .catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+      this.axios.post(url, data, config).then(() => {
+        this.$root.$emit('bv::hide::modal', 'projectUploadBomModal');
+        this.$toastr.s(this.$t('message.bom_uploaded'));
+      });
     },
   },
 };
