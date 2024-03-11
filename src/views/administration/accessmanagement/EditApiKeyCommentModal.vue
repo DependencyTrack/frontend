@@ -50,7 +50,7 @@ export default {
     this.comment = this.apiKey.comment;
   },
   methods: {
-    updateComment: () => {
+    updateComment: function () {
       this.axios
         .post(
           `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${this.apiKey.key}/comment`,
@@ -70,7 +70,7 @@ export default {
           );
         });
     },
-    resetValues: () => {
+    resetValues: function () {
       this.comment = null;
     },
   },

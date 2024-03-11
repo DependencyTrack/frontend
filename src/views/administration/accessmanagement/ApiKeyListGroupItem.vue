@@ -57,18 +57,18 @@ export default {
     EditApiKeyCommentModal,
   },
   computed: {
-    keyId: () => {
+    keyId: function () {
       return MurmurHash2(this.apiKey.key).result();
     },
-    comment: () => {
+    comment: function () {
       return this.apiKey.comment ? this.apiKey.comment : 'No comment';
     },
-    createdTimestamp: () => {
+    createdTimestamp: function () {
       return this.apiKey.created
         ? common.formatTimestamp(this.apiKey.created, true)
         : 'N/A';
     },
-    lastUsedTimestamp: () => {
+    lastUsedTimestamp: function () {
       return this.apiKey.lastUsed
         ? common.formatTimestamp(this.apiKey.lastUsed, true)
         : 'N/A';
