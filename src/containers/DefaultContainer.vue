@@ -110,7 +110,10 @@ export default {
             element: '',
             attributes: {},
           },
-          permissions: [permissions.VIEW_VULNERABILITY, permissions.VIEW_POLICY_VIOLATION],
+          permissions: [
+            permissions.VIEW_VULNERABILITY,
+            permissions.VIEW_POLICY_VIOLATION,
+          ],
         },
         {
           name: this.$t('message.vulnerability_audit'),
@@ -119,10 +122,10 @@ export default {
           permission: permissions.VIEW_VULNERABILITY,
         },
         {
-            name: this.$t('message.policy_violation_audit'),
-            url: '/policyViolationAudit',
-            icon: 'fa fa-fire',
-            permission: permissions.VIEW_POLICY_VIOLATION
+          name: this.$t('message.policy_violation_audit'),
+          url: '/policyViolationAudit',
+          icon: 'fa fa-fire',
+          permission: permissions.VIEW_POLICY_VIOLATION,
         },
         {
           title: true,
@@ -205,8 +208,11 @@ export default {
       for (const item of this.nav) {
         if (
           (item.permission !== null &&
-          permissions.hasPermission(item.permission, decodedToken))
-          || (Object.prototype.hasOwnProperty.call(item, "permissions") && item.permissions.some((permission) => permissions.hasPermission(permission, decodedToken)))
+            permissions.hasPermission(item.permission, decodedToken)) ||
+          (Object.prototype.hasOwnProperty.call(item, 'permissions') &&
+            item.permissions.some((permission) =>
+              permissions.hasPermission(permission, decodedToken),
+            ))
         ) {
           array.push(item);
         }

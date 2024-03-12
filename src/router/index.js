@@ -309,8 +309,8 @@ function configRoutes() {
             title: i18n.t('message.policy_violation_audit'),
             i18n: 'message.policy_violation_audit',
             sectionPath: '/audit',
-            permission: 'VIEW_POLICY_VIOLATION'
-          }
+            permission: 'VIEW_POLICY_VIOLATION',
+          },
         },
         {
           path: 'admin',
