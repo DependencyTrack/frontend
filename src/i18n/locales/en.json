@@ -765,7 +765,7 @@
     "repository_created": "Repository created",
     "repository_deleted": "Repository deleted",
     "portfolio_access_control": "Portfolio Access Control",
-    "project_access": "Project access",
+    "project_access": "Project access (includes descendants of project)",
     "select_project": "Select Project",
     "create_template": "Create Template",
     "template_created": "Template created",
