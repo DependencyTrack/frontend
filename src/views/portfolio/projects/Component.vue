@@ -195,11 +195,17 @@ export default {
       }
     },
     componentLabel() {
-      if (this.component.name && this.component.version) {
-        return this.component.name + ' ▸ ' + this.component.version;
-      } else {
-        return this.component.name;
+      let label = this.component.name;
+
+      if (this.component.group) {
+        label = this.component.group + ' ▸ ' + label;
       }
+
+      if (this.component.version) {
+        label = label + ' ▸ ' + this.component.version;
+      }
+
+      return label;
     },
   },
   data() {
