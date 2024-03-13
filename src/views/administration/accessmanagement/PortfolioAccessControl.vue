@@ -33,7 +33,7 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import configPropertyMixin from '../mixins/configPropertyMixin';
-import router from '@/router'
+import router from '@/router';
 
 export default {
   props: {
