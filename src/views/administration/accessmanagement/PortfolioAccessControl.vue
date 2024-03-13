@@ -124,7 +124,10 @@ export default {
                 }
               },
               projectUri: function (uuid) {
-                const href = router.resolve({name: 'Project', params: {uuid: uuid}}).href;
+                const href = router.resolve({
+                  name: 'Project',
+                  params: { uuid: uuid },
+                }).href;
                 const sanitizedHref = xssFilters.uriInUnQuotedAttr(href);
                 return sanitizedHref;
               },
