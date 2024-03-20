@@ -87,7 +87,7 @@ Note to developers: Textual labels are defined in `src/i18n/locales/{lang}.json`
 
 ## Copyright & License
 
-Dependency-Track is Copyright (c) Steve Springett. All Rights Reserved.
+Dependency-Track is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the
 Apache 2.0 license. See the [LICENSE] file for the full license.

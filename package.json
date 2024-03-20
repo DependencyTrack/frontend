@@ -4,7 +4,7 @@
   "description": "Single Page Application for OWASP Dependency-Track",
   "author": "Steve Springett",
   "homepage": "https://dependencytrack.org/",
-  "copyright": "Copyright Steve Springett",
+  "copyright": "Copyright OWASP Foundation",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
