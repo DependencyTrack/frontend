@@ -240,7 +240,7 @@ export default {
                     <b-form-group id="fieldset-8" v-if="this.isPermitted(this.PERMISSIONS.POLICY_VIOLATION_ANALYSIS)" :label="this.$t('message.comment')" label-for="input-8">
                       <b-form-textarea id="input-8" v-model="comment" rows="4" class="form-control" trim />
                       <div class="pull-right">
-                        <b-button size="sm" variant="outline-primary" @click="addComment"><span class="fa fa-comment-o"></span> Add Comment</b-button>
+                        <b-button size="sm" variant="outline-primary" @click="addComment"><span class="fa fa-comment-o"></span>{{ $t("message.add_comment") }}</b-button>
                       </div>
                     </b-form-group>
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.POLICY_VIOLATION_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
