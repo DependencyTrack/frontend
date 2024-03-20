@@ -1,15 +1,20 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <div id="customToolbar">
-        <c-switch
-          id="isAclEnabled"
-          color="primary"
-          v-model="isAclEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_acl') }}
-      </div>
+      <c-switch 
+        id="isAclEnabled"
+        color="primary"
+        v-model="isAclEnabled"
+        label v-bind="labelIcon"
+      />{{$t('admin.enable_acl')}}
+      <br/>
+      <c-switch
+        id="isAclPortfolioMetricsEnabled"
+        color="primary"
+        v-model="isAclPortfolioMetricsEnabled"
+        label
+        v-bind="labelIcon"
+      />{{$t('admin.enable_acl_portfolio_metrics')}}
       <bootstrap-table
         ref="table"
         :columns="columns"
@@ -46,6 +51,7 @@ export default {
   data() {
     return {
       isAclEnabled: false,
+      isAclPortfolioMetricsEnabled: false,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -222,6 +228,11 @@ export default {
           propertyName: 'acl.enabled',
           propertyValue: this.isAclEnabled,
         },
+        {
+          groupName: 'access-management',
+          propertyName: 'acl.portfoliometrics.enabled',
+          propertyValue: this.isAclPortfolioMetricsEnabled,
+        },
       ]);
     },
     updateConfigProperties: function (configProperties) {
@@ -246,6 +257,9 @@ export default {
     isAclEnabled() {
       this.updateProperties();
     },
+    isAclPortfolioMetricsEnabled() {
+      this.updateProperties();
+    },
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
@@ -257,6 +271,9 @@ export default {
         switch (item.propertyName) {
           case 'acl.enabled':
             this.isAclEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'acl.portfoliometrics.enabled':
+            this.isAclPortfolioMetricsEnabled = common.toBoolean(item.propertyValue);
             break;
         }
       }

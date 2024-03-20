@@ -611,6 +611,7 @@
     "base_url": "Base URL",
     "enable_svg_badge": "Enable SVG badge support (unauthenticated)",
     "enable_acl": "Enable portfolio access control (beta)",
+    "enable_acl_portfolio_metrics": "Enable use of access control for portfolio metrics",
     "enable_bom_cyclonedx": "Enable CycloneDX",
     "enable_bom_spdx": "Enable SPDX",
     "enable_email": "Enable email",
