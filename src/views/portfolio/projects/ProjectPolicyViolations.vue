@@ -5,7 +5,16 @@
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
     <div id="violationsToolbar" class="bs-table-custom-toolbar">
-      <c-switch style="margin-left:1rem; margin-right:.5rem" id="showSuppressedViolations" color="primary" v-model="showSuppressedViolations" label v-bind="labelIcon" /><span class="text-muted">{{ $t('message.show_suppressed_violations') }}</span>
+      <c-switch
+        style="margin-left: 1rem; margin-right: 0.5rem"
+        id="showSuppressedViolations"
+        color="primary"
+        v-model="showSuppressedViolations"
+        label
+        v-bind="labelIcon"
+      /><span class="text-muted">{{
+        $t('message.show_suppressed_violations')
+      }}</span>
     </div>
 
     <bootstrap-table
@@ -13,108 +22,133 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="tableLoaded">
+      @on-load-success="tableLoaded"
+    >
     </bootstrap-table>
   </div>
 </template>
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from "../../../shared/common";
-import bootstrapTableMixin from "../../../mixins/bootstrapTableMixin";
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import xssFilters from "xss-filters";
-import i18n from "../../../i18n";
-import BootstrapToggle from 'vue-bootstrap-toggle'
-import $ from "jquery";
-import {loadUserPreferencesForBootstrapTable} from "@/shared/utils";
+import common from '../../../shared/common';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import permissionsMixin from '../../../mixins/permissionsMixin';
+import xssFilters from 'xss-filters';
+import i18n from '../../../i18n';
+import BootstrapToggle from 'vue-bootstrap-toggle';
+import $ from 'jquery';
+import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
   props: {
-    uuid: String
+    uuid: String,
   },
   mixins: [bootstrapTableMixin],
   components: {
     cSwitch,
-    BootstrapToggle
+    BootstrapToggle,
   },
   beforeCreate() {
-    this.showSuppressedViolations = (localStorage && localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") !== null) ? (localStorage.getItem("ProjectPolicyViolationsShowSuppressedViolations") === "true") : false;
+    this.showSuppressedViolations =
+      localStorage &&
+      localStorage.getItem(
+        'ProjectPolicyViolationsShowSuppressedViolations',
+      ) !== null
+        ? localStorage.getItem(
+            'ProjectPolicyViolationsShowSuppressedViolations',
+          ) === 'true'
+        : false;
   },
   data() {
     return {
       showSuppressedViolations: this.showSuppressedViolations,
       labelIcon: {
         dataOn: '\u2713',
-        dataOff: '\u2715'
+        dataOff: '\u2715',
       },
       columns: [
         {
           title: this.$t('message.state'),
-          field: "policyCondition.policy.violationState",
+          field: 'policyCondition.policy.violationState',
           sortable: true,
-          class: "tight",
+          class: 'tight',
           formatter(value, row, index) {
             if (typeof value !== 'undefined') {
               return common.formatViolationStateLabel(value);
             }
-          }
+          },
         },
         {
           title: this.$t('message.risk_type'),
-          field: "type",
+          field: 'type',
           sortable: true,
-          class: "tight",
+          class: 'tight',
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.capitalize(common.valueWithDefault(value, "")));
-          }
+            return xssFilters.inHTMLData(
+              common.capitalize(common.valueWithDefault(value, '')),
+            );
+          },
         },
         {
           title: this.$t('message.policy_name'),
-          field: "policyCondition.policy.name",
+          field: 'policyCondition.policy.name',
           sortable: true,
           formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ""));
-          }
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
         },
         {
           title: this.$t('message.component'),
-          field: "component.name",
+          field: 'component.name',
           sortable: true,
           formatter: (value, row, index) => {
             if (row.component) {
-              let url = xssFilters.uriInUnQuotedAttr("../../../components/" + row.component.uuid);
-              let name = common.concatenateComponentName(null, row.component.name, row.component.version);
-              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr("../../../projects/" + this.uuid + "/dependencyGraph/" + row.component.uuid)
-              return `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` + `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+              let url = xssFilters.uriInUnQuotedAttr(
+                '../../../components/' + row.component.uuid,
+              );
+              let name = common.concatenateComponentName(
+                null,
+                row.component.name,
+                row.component.version,
+              );
+              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+                '../../../projects/' +
+                  this.uuid +
+                  '/dependencyGraph/' +
+                  row.component.uuid,
+              );
+              return (
+                `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+                `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`
+              );
             } else {
-              return "";
+              return '';
             }
-          }
+          },
         },
         {
           title: this.$t('message.occurred_on'),
-          field: "timestamp",
+          field: 'timestamp',
           sortable: true,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
-          }
+          },
         },
         {
           title: this.$t('message.analysis'),
-          field: "analysis.analysisState",
+          field: 'analysis.analysisState',
           sortable: false,
           formatter: common.makeAnalysisStateLabelFormatter(this),
         },
         {
           title: this.$t('message.suppressed'),
-          field: "analysis.isSuppressed",
+          field: 'analysis.isSuppressed',
           sortable: false,
-          class: "tight",
+          class: 'tight',
           formatter(value, row, index) {
-            return value === true ? '<i class="fa fa-check-square-o" />' : "";
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
-        }
+        },
       ],
       data: [],
       options: {
@@ -127,13 +161,25 @@ export default {
         toolbar: '#violationsToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
-        pageSize: (localStorage && localStorage.getItem("ProjectPolicyViolationsPageSize") !== null) ? Number(localStorage.getItem("ProjectPolicyViolationsPageSize")) : 10,
-        sortName: (localStorage && localStorage.getItem("ProjectPolicyViolationsSortName") !== null) ? localStorage.getItem("ProjectPolicyViolationsSortName") : undefined,
-        sortOrder: (localStorage && localStorage.getItem("ProjectPolicyViolationsSortOrder") !== null) ? localStorage.getItem("ProjectPolicyViolationsSortOrder") : undefined,
+        pageSize:
+          localStorage &&
+          localStorage.getItem('ProjectPolicyViolationsPageSize') !== null
+            ? Number(localStorage.getItem('ProjectPolicyViolationsPageSize'))
+            : 10,
+        sortName:
+          localStorage &&
+          localStorage.getItem('ProjectPolicyViolationsSortName') !== null
+            ? localStorage.getItem('ProjectPolicyViolationsSortName')
+            : undefined,
+        sortOrder:
+          localStorage &&
+          localStorage.getItem('ProjectPolicyViolationsSortOrder') !== null
+            ? localStorage.getItem('ProjectPolicyViolationsSortOrder')
+            : undefined,
         icons: {
           detailOpen: 'fa-fw fa-angle-right',
           detailClose: 'fa-fw fa-angle-down',
-          refresh: 'fa-refresh'
+          refresh: 'fa-refresh',
         },
         detailView: true,
         detailViewIcon: true,
@@ -218,144 +264,197 @@ export default {
                   { value: 'REJECTED', text: this.$t('message.rejected') },
                 ],
                 analysisState: null,
-                projectUuid: projectUuid
-              }
+                projectUuid: projectUuid,
+              };
             },
             computed: {
-              conditionString: function() {
-                return "subject == " + this.violation.policyCondition.subject + " && value " + this.violation.policyCondition.operator + " " + this.violation.policyCondition.value;
-              }
+              conditionString: function () {
+                return (
+                  'subject == ' +
+                  this.violation.policyCondition.subject +
+                  ' && value ' +
+                  this.violation.policyCondition.operator +
+                  ' ' +
+                  this.violation.policyCondition.value
+                );
+              },
             },
             watch: {
               isSuppressed: function (currentValue, oldValue) {
                 if (oldValue != null) {
                   this.callRestEndpoint(this.analysisState, null, currentValue);
                 }
-              }
+              },
             },
             mixins: [permissionsMixin],
             methods: {
-              getAnalysis: function() {
-                let queryString = "?policyViolation=" + this.violation.uuid + "&component=" + this.violation.component.uuid;
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}` + queryString;
+              getAnalysis: function () {
+                let queryString =
+                  '?policyViolation=' +
+                  this.violation.uuid +
+                  '&component=' +
+                  this.violation.component.uuid;
+                let url =
+                  `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}` +
+                  queryString;
                 this.axios.get(url).then((response) => {
                   this.updateAnalysisData(response.data);
                 });
               },
-              updateAnalysisData: function(analysis) {
-                if (Object.prototype.hasOwnProperty.call(analysis, "analysisComments")) {
-                  let trail = "";
+              updateAnalysisData: function (analysis) {
+                if (
+                  Object.prototype.hasOwnProperty.call(
+                    analysis,
+                    'analysisComments',
+                  )
+                ) {
+                  let trail = '';
                   for (let i = 0; i < analysis.analysisComments.length; i++) {
-                    if (Object.prototype.hasOwnProperty.call(analysis.analysisComments[i], "commenter")) {
-                      trail += analysis.analysisComments[i].commenter + " - ";
+                    if (
+                      Object.prototype.hasOwnProperty.call(
+                        analysis.analysisComments[i],
+                        'commenter',
+                      )
+                    ) {
+                      trail += analysis.analysisComments[i].commenter + ' - ';
                     }
-                    trail += common.formatTimestamp(analysis.analysisComments[i].timestamp, true);
-                    trail += "\n";
+                    trail += common.formatTimestamp(
+                      analysis.analysisComments[i].timestamp,
+                      true,
+                    );
+                    trail += '\n';
                     trail += analysis.analysisComments[i].comment;
-                    trail += "\n\n";
+                    trail += '\n\n';
                   }
                   this.auditTrail = trail;
                 }
-                if (Object.prototype.hasOwnProperty.call(analysis, "analysisState")) {
+                if (
+                  Object.prototype.hasOwnProperty.call(
+                    analysis,
+                    'analysisState',
+                  )
+                ) {
                   this.analysisState = analysis.analysisState;
                 }
-                if (Object.prototype.hasOwnProperty.call(analysis, "isSuppressed")) {
+                if (
+                  Object.prototype.hasOwnProperty.call(analysis, 'isSuppressed')
+                ) {
                   this.isSuppressed = analysis.isSuppressed;
                 } else {
                   this.isSuppressed = false;
                 }
               },
-              makeAnalysis: function() {
+              makeAnalysis: function () {
                 this.callRestEndpoint(this.analysisState, null, null);
               },
-              addComment: function() {
+              addComment: function () {
                 if (this.comment != null) {
                   this.callRestEndpoint(this.analysisState, this.comment, null);
                 }
               },
-              callRestEndpoint: function(analysisState, comment, isSuppressed) {
+              callRestEndpoint: function (
+                analysisState,
+                comment,
+                isSuppressed,
+              ) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}`;
-                this.axios.put(url, {
-                  policyViolation: this.violation.uuid,
-                  component: this.violation.component.uuid,
-                  analysisState: analysisState,
-                  comment: comment,
-                  isSuppressed: isSuppressed
-                }).then((response) => {
-                  this.$toastr.s(this.$t('message.updated'));
-                  this.updateAnalysisData(response.data);
-                }).catch((error) => {
-                  this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                });
-              }
+                this.axios
+                  .put(url, {
+                    policyViolation: this.violation.uuid,
+                    component: this.violation.component.uuid,
+                    analysisState: analysisState,
+                    comment: comment,
+                    isSuppressed: isSuppressed,
+                  })
+                  .then((response) => {
+                    this.$toastr.s(this.$t('message.updated'));
+                    this.updateAnalysisData(response.data);
+                  })
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+              },
             },
             beforeMount() {
               this.getAnalysis();
             },
             components: {
-              BootstrapToggle
-            }
-          })
+              BootstrapToggle,
+            },
+          });
         },
         onExpandRow: this.vueFormatterInit,
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader("X-Total-Count");
+          res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },
         url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
-        onPageChange: ((number, size) => {
+        onPageChange: (number, size) => {
           if (localStorage) {
-            localStorage.setItem("ProjectPolicyViolationsPageSize", size.toString())
+            localStorage.setItem(
+              'ProjectPolicyViolationsPageSize',
+              size.toString(),
+            );
           }
-        }),
-        onColumnSwitch: ((field, checked) => {
+        },
+        onColumnSwitch: (field, checked) => {
           if (localStorage) {
-            localStorage.setItem("ProjectPolicyViolationsShow"+common.capitalize(field), checked.toString())
+            localStorage.setItem(
+              'ProjectPolicyViolationsShow' + common.capitalize(field),
+              checked.toString(),
+            );
           }
-        }),
-        onSort: ((name, order) => {
+        },
+        onSort: (name, order) => {
           if (localStorage) {
-            localStorage.setItem("ProjectPolicyViolationsSortName", name);
-            localStorage.setItem("ProjectPolicyViolationsSortOrder", order);
+            localStorage.setItem('ProjectPolicyViolationsSortName', name);
+            localStorage.setItem('ProjectPolicyViolationsSortOrder', order);
           }
-        })
-      }
+        },
+      },
     };
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`;
       if (this.showSuppressedViolations === undefined) {
-        url += "?suppressed=false";
+        url += '?suppressed=false';
       } else {
-        url += "?suppressed=" + this.showSuppressedViolations;
+        url += '?suppressed=' + this.showSuppressedViolations;
       }
       return url;
     },
-    refreshTable: function() {
+    refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
-        silent: true
+        silent: true,
       });
     },
-    tableLoaded: function(data) {
-      loadUserPreferencesForBootstrapTable(this, "ProjectPolicyViolations", this.$refs.table.columns);
+    tableLoaded: function (data) {
+      loadUserPreferencesForBootstrapTable(
+        this,
+        'ProjectPolicyViolations',
+        this.$refs.table.columns,
+      );
       this.$emit('total', data.total);
     },
     initializeTooltips: function () {
       $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
+        trigger: 'hover',
       });
     },
   },
-  watch:{
+  watch: {
     showSuppressedViolations() {
       if (localStorage) {
-        localStorage.setItem("ProjectPolicyViolationsShowSuppressedViolations", this.showSuppressedViolations.toString());
+        localStorage.setItem(
+          'ProjectPolicyViolationsShowSuppressedViolations',
+          this.showSuppressedViolations.toString(),
+        );
       }
       this.refreshTable();
-    }
+    },
   },
 };
 </script>

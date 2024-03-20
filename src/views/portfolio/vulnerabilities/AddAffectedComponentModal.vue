@@ -1,57 +1,105 @@
 <template>
-  <b-modal id="addAffectedComponentModal" @hide="resetValues()" size="lg" hide-header-close :title="$t('message.add_affected_component')">
+  <b-modal
+    id="addAffectedComponentModal"
+    @hide="resetValues()"
+    size="lg"
+    hide-header-close
+    :title="$t('message.add_affected_component')"
+  >
     <b-row>
       <b-col md="3">
-        <b-input-group-form-select required="true" :label="$t('message.identifier_type')"
-                                   v-model="affectedComponent.identityType" :options="identityTypes" />
+        <b-input-group-form-select
+          required="true"
+          :label="$t('message.identifier_type')"
+          v-model="affectedComponent.identityType"
+          :options="identityTypes"
+        />
       </b-col>
       <b-col md="6">
-        <b-input-group-form-input input-group-size="mb-3" type="text" v-model="affectedComponent.identity"
-                                  lazy="true" required="true" feedback="true" autofocus="false"
-                                  :label="$t('message.identifier')" :tooltip="this.$t('message.component_identifier_desc')"
-                                  :feedback-text="$t('message.required_component_identifier')" />
+        <b-input-group-form-input
+          input-group-size="mb-3"
+          type="text"
+          v-model="affectedComponent.identity"
+          lazy="true"
+          required="true"
+          feedback="true"
+          autofocus="false"
+          :label="$t('message.identifier')"
+          :tooltip="this.$t('message.component_identifier_desc')"
+          :feedback-text="$t('message.required_component_identifier')"
+        />
       </b-col>
       <b-col md="3">
-        <b-input-group-form-select required="true" :label="$t('message.version_type')"
-                                   v-model="affectedComponent.versionType" :options="versionTypes" />
+        <b-input-group-form-select
+          required="true"
+          :label="$t('message.version_type')"
+          v-model="affectedComponent.versionType"
+          :options="versionTypes"
+        />
       </b-col>
     </b-row>
-    <b-row v-if="affectedComponent.versionType==='RANGE'">
+    <b-row v-if="affectedComponent.versionType === 'RANGE'">
       <b-col md="2">
-        <b-input-group-form-select required="false" v-model="rangeBeginSyntax" :options="startRangeTypes" />
+        <b-input-group-form-select
+          required="false"
+          v-model="rangeBeginSyntax"
+          :options="startRangeTypes"
+        />
       </b-col>
       <b-col md="4">
-        <b-input-group-form-input input-group-size="mb-3" type="text" v-model="tempVersionStartRange"
-                                  lazy="true" required="false" feedback="false" autofocus="false" />
+        <b-input-group-form-input
+          input-group-size="mb-3"
+          type="text"
+          v-model="tempVersionStartRange"
+          lazy="true"
+          required="false"
+          feedback="false"
+          autofocus="false"
+        />
       </b-col>
       <b-col md="2">
-        <b-input-group-form-select required="false" v-model="rangeEndSyntax" :options="endRangeTypes" />
+        <b-input-group-form-select
+          required="false"
+          v-model="rangeEndSyntax"
+          :options="endRangeTypes"
+        />
       </b-col>
       <b-col md="4">
-        <b-input-group-form-input input-group-size="mb-3" type="text" v-model="tempVersionEndRange"
-                                  lazy="true" required="false" feedback="false" autofocus="false" />
+        <b-input-group-form-input
+          input-group-size="mb-3"
+          type="text"
+          v-model="tempVersionEndRange"
+          lazy="true"
+          required="false"
+          feedback="false"
+          autofocus="false"
+        />
       </b-col>
     </b-row>
 
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{ $t('message.cancel') }}</b-button>
-      <b-button size="md" variant="primary" @click="composeObject()">{{ $t('message.add') }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
+      <b-button size="md" variant="primary" @click="composeObject()">{{
+        $t('message.add')
+      }}</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import permissionsMixin from "../../../mixins/permissionsMixin";
-import BInputGroupFormInput from "../../../forms/BInputGroupFormInput";
-import BInputGroupFormSelect from "../../../forms/BInputGroupFormSelect";
-import {Switch as cSwitch} from "@coreui/vue";
+import permissionsMixin from '../../../mixins/permissionsMixin';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    cSwitch
+    cSwitch,
   },
   data() {
     return {
@@ -63,44 +111,62 @@ export default {
         versionEndExcluding: null,
         versionEndIncluding: null,
         versionStartExcluding: null,
-        versionStartIncluding: null
+        versionStartIncluding: null,
       },
       tempVersionStartRange: null,
       tempVersionEndRange: null,
       rangeBeginSyntax: null, // Temporary
       rangeEndSyntax: null, // Temporary
       identityTypes: [
-        {value: 'PURL', text: this.$t('message.package_url')},
-        {value: 'CPE', text: this.$t('message.cpe')},
+        { value: 'PURL', text: this.$t('message.package_url') },
+        { value: 'CPE', text: this.$t('message.cpe') },
       ],
       versionTypes: [
-        {value: 'EXACT', text: this.$t('message.exact')},
-        {value: 'RANGE', text: this.$t('message.range')}
+        { value: 'EXACT', text: this.$t('message.exact') },
+        { value: 'RANGE', text: this.$t('message.range') },
       ],
       startRangeTypes: [
-        {value: '>', text: '>'},
-        {value: '>=', text: '>='},
+        { value: '>', text: '>' },
+        { value: '>=', text: '>=' },
       ],
       endRangeTypes: [
-        {value: '<', text: '<'},
-        {value: '<=', text: '<='},
-      ]
-    }
+        { value: '<', text: '<' },
+        { value: '<=', text: '<=' },
+      ],
+    };
   },
   methods: {
-    composeObject: function() {
-      if (this.affectedComponent.versionType === "RANGE") {
-        if (this.tempVersionStartRange && this.rangeBeginSyntax && this.rangeBeginSyntax === '>') {
-          this.affectedComponent.versionStartExcluding = this.tempVersionStartRange;
+    composeObject: function () {
+      if (this.affectedComponent.versionType === 'RANGE') {
+        if (
+          this.tempVersionStartRange &&
+          this.rangeBeginSyntax &&
+          this.rangeBeginSyntax === '>'
+        ) {
+          this.affectedComponent.versionStartExcluding =
+            this.tempVersionStartRange;
           this.affectedComponent.versionStartIncluding = null;
-        } else if (this.tempVersionStartRange && this.rangeBeginSyntax && this.rangeBeginSyntax === '>=') {
-          this.affectedComponent.versionStartIncluding = this.tempVersionStartRange;
+        } else if (
+          this.tempVersionStartRange &&
+          this.rangeBeginSyntax &&
+          this.rangeBeginSyntax === '>='
+        ) {
+          this.affectedComponent.versionStartIncluding =
+            this.tempVersionStartRange;
           this.affectedComponent.versionStartExcluding = null;
         }
-        if (this.tempVersionEndRange && this.rangeEndSyntax && this.rangeEndSyntax === '<') {
+        if (
+          this.tempVersionEndRange &&
+          this.rangeEndSyntax &&
+          this.rangeEndSyntax === '<'
+        ) {
           this.affectedComponent.versionEndExcluding = this.tempVersionEndRange;
           this.affectedComponent.versionEndIncluding = null;
-        } else if (this.tempVersionEndRange && this.rangeEndSyntax && this.rangeEndSyntax === '<=') {
+        } else if (
+          this.tempVersionEndRange &&
+          this.rangeEndSyntax &&
+          this.rangeEndSyntax === '<='
+        ) {
           this.affectedComponent.versionEndIncluding = this.tempVersionEndRange;
           this.affectedComponent.versionEndExcluding = null;
         }
@@ -126,9 +192,9 @@ export default {
       };
       this.tempVersionStartRange = null;
       this.tempVersionEndRange = null;
-      this.rangeBeginSyntax = null
+      this.rangeBeginSyntax = null;
       this.rangeEndSyntax = null;
-    }
-  }
-}
+    },
+  },
+};
 </script>

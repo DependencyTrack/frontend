@@ -1,4 +1,4 @@
-import * as permissions from "../shared/permissions";
+import * as permissions from '../shared/permissions';
 
 export default {
   data() {
@@ -14,21 +14,21 @@ export default {
         VULNERABILITY_MANAGEMENT: permissions.VULNERABILITY_MANAGEMENT,
         POLICY_VIOLATION_ANALYSIS: permissions.POLICY_VIOLATION_ANALYSIS,
         SYSTEM_CONFIGURATION: permissions.SYSTEM_CONFIGURATION,
-        POLICY_MANAGEMENT: permissions.POLICY_MANAGEMENT
-      }
-    }
+        POLICY_MANAGEMENT: permissions.POLICY_MANAGEMENT,
+      },
+    };
   },
   computed: {
-    decodedToken () {
+    decodedToken() {
       return permissions.decodeToken(permissions.getToken());
-    }
+    },
   },
   methods: {
-    isPermitted (permission) {
+    isPermitted(permission) {
       return permissions.hasPermission(permission, this.decodedToken);
     },
-    isNotPermitted (permission) {
+    isNotPermitted(permission) {
       return !permissions.hasPermission(permission, this.decodedToken);
     },
-  }
+  },
 };

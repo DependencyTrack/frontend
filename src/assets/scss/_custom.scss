@@ -341,6 +341,21 @@ button:focus {
   margin-left: 0.6em !important;
   color: #21D983 !important;
 }
+.badge-tab-fail {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-fail !important;
+}
+.badge-tab-warn {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-warn !important;
+}
+.badge-tab-info {
+  border: 1px solid #60768c !important;
+  background-color: $grey-900 !important;
+  color: $notification-info !important;
+}
 .badge-tag {
   color: $primary;
   background-color: transparent;

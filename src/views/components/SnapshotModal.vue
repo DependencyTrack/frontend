@@ -1,16 +1,22 @@
 <template>
-  <b-modal id="snapshotModal" size="md" hide-header-close no-stacking :title="$t('message.snapshot_notification')">
+  <b-modal
+    id="snapshotModal"
+    size="md"
+    hide-header-close
+    no-stacking
+    :title="$t('message.snapshot_notification')"
+  >
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200">
+        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
       </b-col>
     </b-row>
-    <hr/>
+    <hr />
     <p>
       This version of Dependency-Track is a snapshot release that is dynamically
-      generated from continuous integration or from manually compiling from a branch.
-      It is likely beta-quality software and has not undergone extensive testing.
-      It may contain defects and incomplete features and functionality.
+      generated from continuous integration or from manually compiling from a
+      branch. It is likely beta-quality software and has not undergone extensive
+      testing. It may contain defects and incomplete features and functionality.
     </p>
     <p>
       Links to production-quality releases can be found at
@@ -19,17 +25,22 @@
     <p>
       Please consider contributing feedback and pull requests to help improve
       the project. All contributions are appreciated. Visit Dependency-Track on
-      <a href="https://github.com/DependencyTrack">GitHub</a>&nbsp;<i class="fa fa-github" aria-hidden="true"></i>
+      <a href="https://github.com/DependencyTrack">GitHub</a>&nbsp;<i
+        class="fa fa-github"
+        aria-hidden="true"
+      ></i>
     </p>
     <p><strong>Do not use snapshot releases on production data.</strong></p>
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{ $t('message.close') }}</b-button>
+      <b-button size="md" variant="outline-primary" @click="cancel()">{{
+        $t('message.close')
+      }}</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-  export default {
-    name: "SnapshotModal",
-  }
+export default {
+  name: 'SnapshotModal',
+};
 </script>

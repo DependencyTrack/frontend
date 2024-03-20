@@ -6,7 +6,7 @@ on:
       version-to-bump:
         type: choice
         required: true
-        description: "Select which part of the version to bump and release"
+        description: 'Select which part of the version to bump and release'
         options:
           - patch
           - minor
@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v4.0.1
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: '18'
           cache: 'npm'
@@ -41,7 +41,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_RELEASE_TOKEN }}
-          GH_OPTS: ""
+          GH_OPTS: ''
         run: |-
           VERSION=`jq -r '.version' package.json`
 
@@ -52,4 +52,4 @@ jobs:
           gh release create "${VERSION}" ${GH_OPTS} \
             --target "${{ github.ref_name }}" \
             --title "${VERSION}" \
-            --notes-file ".github/default-release-notes.md"
+            --generate-notes

@@ -20,7 +20,7 @@ jobs:
           fi
 
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Parse Version from package.json
         id: parse
@@ -46,10 +46,10 @@ jobs:
       - call-build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4.1.2
+        uses: actions/download-artifact@v4.1.4
         with:
           name: assembled-frontend-node18
 
@@ -73,6 +73,9 @@ jobs:
           $(cat checksums.txt)
           \`\`\`
           EOF
+
+          gh release view ${{ needs.read-version.outputs.version }} \
+            --json body --jq .body >> .github/default-release-notes.md
 
           gh release edit ${{ needs.read-version.outputs.version }} \
             --notes-file ".github/default-release-notes.md"
