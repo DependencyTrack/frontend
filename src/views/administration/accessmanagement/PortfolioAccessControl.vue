@@ -226,12 +226,12 @@ export default {
         {
           groupName: 'access-management',
           propertyName: 'acl.enabled',
-          propertyValue: this.isAclEnabled
+          propertyValue: this.isAclEnabled,
         },
         {
           groupName: 'access-management',
           propertyName: 'acl.portfoliometrics.enabled',
-          propertyValue: this.isAclPortfolioMetricsEnabled
+          propertyValue: this.isAclPortfolioMetricsEnabled,
         },
       ]);
     },
