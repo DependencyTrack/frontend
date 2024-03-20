@@ -132,7 +132,7 @@ function configRoutes() {
           },
         },
         {
-          path: 'projects/:uuid',
+          path: '/projects/:uuid',
           name: 'Project',
           alias: [
             'projects/:uuid/overview',
