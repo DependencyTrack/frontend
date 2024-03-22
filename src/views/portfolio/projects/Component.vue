@@ -5,7 +5,16 @@
         <b-row>
           <b-col>
             <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
-            <div class="h5 mb-0 mt-2">{{ componentLabel }}</div>
+            <div class="h5 mb-0 mt-2">
+              {{ componentLabel }}&nbsp;
+              <b-badge
+                :variant="component.isInternal ? 'tab-total' : 'tab-info'"
+                v-b-tooltip.hover
+                :title="$t('message.component_classification_desc')"
+                >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
+              >
+              <b-badge></b-badge>
+            </div>
             <i
               class="fa fa-sitemap"
               style="cursor: pointer"

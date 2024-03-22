@@ -51,6 +51,14 @@
             :tooltip="this.$t('message.component_group_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
+          {{ $t('message.component_classification') }}
+          <b-badge
+            :variant="component.isInternal ? 'tab-total' : 'tab-info'"
+            v-b-tooltip.hover
+            :title="$t('message.component_classification_desc')"
+            >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
+          >
+          <p></p>
           <b-input-group-form-input
             id="component-author-input"
             input-group-size="mb-3"

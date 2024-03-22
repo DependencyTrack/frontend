@@ -437,6 +437,8 @@
     "component_device": "Device",
     "component_firmware": "Firmware",
     "component_file": "File",
+    "component_classification": "Classification",
+    "component_classification_desc": "Classifies whether a component is considered internal or external to an organization",
     "dates": "Dates",
     "owasp_rr": "OWASP Risk Rating",
     "owasp_rr_likelihood_score": "OWASP RR Likelihood score",
