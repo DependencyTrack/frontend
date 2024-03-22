@@ -10,7 +10,7 @@
               <b-badge
                 :variant="component.isInternal ? 'tab-total' : 'tab-info'"
                 v-b-tooltip.hover
-                :title="$t('message.component_source')"
+                :title="$t('message.component_classification_desc')"
                 >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
               >
               <b-badge></b-badge>

@@ -51,11 +51,11 @@
             :tooltip="this.$t('message.component_group_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
-          {{ $t('message.component_source') }}
+          {{ $t('message.component_classification') }}
           <b-badge
             :variant="component.isInternal ? 'tab-total' : 'tab-info'"
             v-b-tooltip.hover
-            :title="$t('message.component_source_desc')"
+            :title="$t('message.component_classification_desc')"
             >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
           >
           <p></p>
