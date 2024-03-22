@@ -556,7 +556,8 @@
     "vulnerabilities_by_occurrence": "Vulnerabilities By Occurrence",
     "grouped_vulnerabilities": "Grouped Vulnerabilities",
     "occurrences_in_projects": "Occurrences in projects",
-    "matrix": "Matrix"
+    "matrix": "Matrix",
+    "projects_also_used_in": "Projects also used in"
   },
   "admin": {
     "configuration": "Configuration",
