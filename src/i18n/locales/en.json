@@ -153,6 +153,7 @@
     "exploit_predictions": "Exploit Predictions",
     "epss": "EPSS",
     "epss_percentile": "EPSS Percentile",
+    "epss_score": "EPSS Score",
     "cvss": "CVSS",
     "cvss_v2": "CVSSv2",
     "cvss_v3": "CVSSv3",
