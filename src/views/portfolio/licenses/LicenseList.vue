@@ -41,7 +41,7 @@ export default {
   methods: {
     refreshTable: function () {
       this.$refs.table.refresh({
-        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
+        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`,
         silent: true,
       });
     },
