@@ -96,6 +96,16 @@ export default {
           },
         },
         {
+          title: this.$t('message.deprecated'),
+          field: 'isDeprecatedLicenseId',
+          sortable: false,
+          align: 'center',
+          class: 'tight',
+          formatter: function (value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
+        {
           title: this.$t('message.custom_license'),
           field: 'isCustomLicense',
           sortable: false,
