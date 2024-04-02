@@ -24,6 +24,7 @@
       >
         <div class="list-group" id="list-tab" role="tablist">
           <router-link
+            :ref="item.id"
             :key="item.id"
             v-for="item in section.children"
             class="list-group-item list-group-item-action"
