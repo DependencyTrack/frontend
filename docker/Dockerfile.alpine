@@ -9,8 +9,8 @@ ENV TZ=Etc/UTC \
     LANG=C.UTF-8 \
     # Set default settings that may get overridden to empty values by
     # the entrypoint script, if not explicitly provided by the user
-    OIDC_SCOPE="openid profile email"
-
+    OIDC_SCOPE="openid profile email" \
+    BASE_HREF="/"
 USER root
 
 # Copy the static HTML and JS files to the application directory
@@ -31,7 +31,9 @@ USER 101
 
 # Setup entrypoint
 COPY --chown=101:0 ./docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
 COPY --chmod=755 ./docker/docker-entrypoint.d/ /docker-entrypoint.d/
+
 
 # Specify the container working directory
 WORKDIR ${APP_DIR}
