@@ -214,7 +214,7 @@
             type="text"
             v-model="component.md5"
             required="false"
-            :label="$t('message.md5')"
+            :label="$t('hashes.md5')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
@@ -224,7 +224,7 @@
             type="text"
             v-model="component.sha1"
             required="false"
-            :label="$t('message.sha1')"
+            :label="$t('hashes.sha_1')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
@@ -234,7 +234,7 @@
             type="text"
             v-model="component.sha256"
             required="false"
-            :label="$t('message.sha256')"
+            :label="$t('hashes.sha_256')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
@@ -244,7 +244,7 @@
             type="text"
             v-model="component.sha512"
             required="false"
-            :label="$t('message.sha512')"
+            :label="$t('hashes.sha_512')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
@@ -254,7 +254,7 @@
             type="text"
             v-model="component.sha3_256"
             required="false"
-            :label="$t('message.sha3_256')"
+            :label="$t('hashes.sha3_256')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
@@ -264,7 +264,7 @@
             type="text"
             v-model="component.sha3_512"
             required="false"
-            :label="$t('message.sha3_512')"
+            :label="$t('hashes.sha3_512')"
             :tooltip="$t('message.component_hash_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
