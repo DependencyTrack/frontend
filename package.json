@@ -18,7 +18,8 @@
     "eslint": "eslint . --ext .js,.vue,.json,.md,.yaml --report-unused-disable-directives",
     "eslint-fix": "eslint --ext .js,.vue,.json,.md,.yaml --fix . --report-unused-disable-directives",
     "prettier": "prettier --check --cache '**/*.{js,vue,json,md,yaml}'",
-    "prettier-fix": "prettier --write --cache '**/*.{js,vue,json,md,yaml}'"
+    "prettier-fix": "prettier --write --cache '**/*.{js,vue,json,md,yaml}'",
+    "vue-i18n-extract": "vue-i18n-extract report --vueFiles 'src/**/*.?(vue|js)' --languageFiles 'src/i18n/locales/*.json' --exclude 'validation.max_value' --exclude 'validation.min_value' --exclude 'validation.confirmed' --exclude 'validation.required' --ci --ci"
   },
   "dependencies": {
     "@coreui/coreui": "2.1.16",
@@ -84,6 +85,7 @@
     "sass": "1.72.0",
     "sass-loader": "8.0.2",
     "uuid": "9.0.1",
+    "vue-i18n-extract": "^2.0.7",
     "vue-template-compiler": "2.7.16"
   },
   "overrides": {
