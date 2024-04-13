@@ -438,6 +438,7 @@ export default {
         this.$refs.table.columns,
       );
       this.$emit('total', data.total);
+      this.$emit('showSuppressedViolations', this.showSuppressedViolations);
     },
     initializeTooltips: function () {
       $('[data-toggle="tooltip"]').tooltip({
