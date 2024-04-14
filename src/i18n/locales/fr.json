@@ -814,7 +814,9 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne réglera pas",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Frontière de confiance croisée"
+    "x_trust_boundary": "Frontière de confiance croisée",
+    "component_properties": "Propriétés des composants",
+    "create_component_property": "Créer une propriété de composant"
   },
   "operator": {
     "contains_all": "contient tout",

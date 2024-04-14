@@ -814,7 +814,9 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
+    "component_properties": "Komponenteneigenschaften",
+    "create_component_property": "Komponenteneigenschaft erstellen"
   },
   "operator": {
     "contains_all": "enthält alle",

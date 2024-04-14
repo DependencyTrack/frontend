@@ -814,7 +814,9 @@
     "weakness": "弱点",
     "will_not_fix": "直らないでしょう",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える"
+    "x_trust_boundary": "信頼境界を越える",
+    "component_properties": "コンポーネントのプロパティ",
+    "create_component_property": "コンポーネントプロパティの作成"
   },
   "operator": {
     "contains_all": "すべてを含む",

@@ -814,7 +814,9 @@
     "weakness": "Debolezza",
     "will_not_fix": "Non risolverà",
     "workaround_available": "Soluzione disponibile",
-    "x_trust_boundary": "Confine di fiducia incrociata"
+    "x_trust_boundary": "Confine di fiducia incrociata",
+    "component_properties": "Proprietà del componente",
+    "create_component_property": "Crea proprietà componente"
   },
   "operator": {
     "contains_all": "contiene tutto",

@@ -814,7 +814,9 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "component_properties": "Свойства компонента",
+    "create_component_property": "Создать свойство компонента"
   },
   "operator": {
     "contains_all": "содержит все",

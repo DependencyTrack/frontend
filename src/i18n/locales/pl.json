@@ -814,7 +814,9 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "component_properties": "Właściwości komponentu",
+    "create_component_property": "Utwórz właściwość komponentu"
   },
   "operator": {
     "contains_all": "zawiera wszystko",
