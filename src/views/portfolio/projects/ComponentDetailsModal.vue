@@ -363,6 +363,13 @@
         v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
         >{{ $t('message.delete') }}</b-button
       >
+      <b-button
+        size="md"
+        variant="outline-primary"
+        v-b-modal.componentPropertiesModal
+        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+        >{{ $t('message.properties') }}</b-button
+      >
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -380,6 +387,7 @@
 <script>
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
@@ -390,6 +398,7 @@ export default {
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
+    ComponentPropertiesModal,
   },
   props: {
     component: Object,

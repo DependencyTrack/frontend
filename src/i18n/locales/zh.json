@@ -814,7 +814,9 @@
     "weakness": "弱点",
     "will_not_fix": "不会修复",
     "workaround_available": "有解决方法",
-    "x_trust_boundary": "跨越信任边界"
+    "x_trust_boundary": "跨越信任边界",
+    "component_properties": "组件属性",
+    "create_component_property": "创建组件属性"
   },
   "operator": {
     "contains_all": "包含全部",

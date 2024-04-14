@@ -162,6 +162,8 @@
       :component="cloneDeep(component)"
       v-on:componentUpdated="syncComponentFields"
     />
+    <component-properties-modal :uuid="this.uuid" />
+    <component-create-property-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -178,10 +180,14 @@ import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
+import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
+    ComponentCreatePropertyModal,
+    ComponentPropertiesModal,
     SeverityBarChart,
     ComponentDashboard,
     ComponentVulnerabilities,
