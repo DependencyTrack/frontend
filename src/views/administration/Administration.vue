@@ -65,7 +65,6 @@ import Permissions from './accessmanagement/Permissions';
 import PortfolioAccessControl from './accessmanagement/PortfolioAccessControl';
 import Teams from './accessmanagement/Teams';
 
-
 export default {
   components: {
     EventBus,

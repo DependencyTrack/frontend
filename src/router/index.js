@@ -32,7 +32,8 @@ const InternalComponents = () =>
 const TaskScheduler = () =>
   import('@/views/administration/configuration/TaskScheduler');
 const Search = () => import('@/views/administration/configuration/Search');
-const Experimental = () => import('@/views/administration/configuration/Experimental');
+const Experimental = () =>
+  import('@/views/administration/configuration/Experimental');
 
 const InternalAnalyzer = () =>
   import('@/views/administration/analyzers/InternalAnalyzer');
