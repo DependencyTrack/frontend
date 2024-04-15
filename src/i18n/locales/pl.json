@@ -264,7 +264,13 @@
     "vulnsource_osv_advisories_enable": "Wybierz ekosystem, aby włączyć kopię lustrzaną Doradztwa Google OSV",
     "vulnsource_osv_alias_sync_warning": "OSV może zgłaszać nieidentyczne luki w zabezpieczeniach jako aliasy. Postępuj ostrożnie.",
     "vulnsource_osv_base_url": "Podstawowy adres URL OSV",
-    "analyzer_trivy_ignore_unfixed": "Ignoruj ​​nienaprawione luki"
+    "analyzer_trivy_ignore_unfixed": "Ignoruj ​​nienaprawione luki",
+    "experimental_info": "Poniższe opcje są opcjami eksperymentalnymi i należy ich używać ostrożnie.",
+    "experimental_bom_upload_v2": "Przetwarzanie BOM V2",
+    "experimental_bom_upload_v2_info": "Logika sposobu, w jaki przesłane BOM są przetwarzane i uwzględniane w Depency-Track, została zmieniona, aby była bardziej niezawodna i wydajna. \nCo więcej, przetwarzanie BOM jest teraz operacją atomową, tak że błędy pojawiające się w połowie nie powodują pozostawienia stanu częściowego. \nDeduplikacja komponentów i usług jest bardziej przewidywalna, a komunikaty dziennika emitowane podczas przetwarzania zawierają dodatkowy kontekst, co ułatwia ich korelację. \nPonieważ nowa implementacja może mieć duży wpływ na zachowanie funkcji Depency-Track w przypadku przesyłania BOM, w tej wersji jest ona domyślnie wyłączona.",
+    "experimental_bom_validation": "Walidacja BOM-u",
+    "experimental_validation_info": "Historycznie rzecz biorąc, zależność-Track nie sprawdzała przesłanych BOM i VEX pod kątem schematu CycloneDX. \nChociaż umożliwiało to przetwarzanie BOM-ów, które nie były ściśle zgodne ze schematem, mogło to prowadzić do zamieszania, gdy przesłane pliki zostały zaakceptowane, ale następnie nie zostały przyjęte podczas przetwarzania asynchronicznego. \nPocząwszy od tej wersji przesłane pliki będą odrzucane, jeśli nie przejdą weryfikacji schematu. \nNależy pamiętać, że może to ujawnić problemy w generatorach BOM, które obecnie generują nieprawidłowe dokumenty CycloneDX",
+    "experimental": "Eksperymentalny"
   },
   "condition": {
     "forbidden": "Zabronione (403)",

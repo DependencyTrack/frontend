@@ -264,7 +264,13 @@
     "vulnsource_osv_advisories_enable": "Seleccione el ecosistema para habilitar la duplicación del aviso OSV de Google",
     "vulnsource_osv_alias_sync_warning": "OSV puede informar vulnerabilidades no idénticas como alias. Proceda con precaución.",
     "vulnsource_osv_base_url": "URL base de OSV",
-    "analyzer_trivy_ignore_unfixed": "Ignorar vulnerabilidades no reparadas"
+    "analyzer_trivy_ignore_unfixed": "Ignorar vulnerabilidades no reparadas",
+    "experimental_info": "Las siguientes opciones son opciones experimentales y deben usarse con precaución.",
+    "experimental_bom_upload_v2": "Procesamiento de listas de materiales V2",
+    "experimental_bom_upload_v2_info": "La lógica de cómo se procesan e incorporan las listas de materiales cargadas en Dependency-Track se ha revisado para que sea más confiable y eficiente. \nAdemás, el procesamiento de BOM es ahora una operación atómica, de modo que los errores que se producen a mitad de camino no provocan que se deje atrás un estado parcial. \nLa deduplicación de componentes y servicios es más predecible y los mensajes de registro emitidos durante el procesamiento contienen contexto adicional, lo que facilita su correlación. \nDebido a que la nueva implementación puede tener un gran impacto en el comportamiento de Dependency-Track con respecto a las cargas de BOM, está deshabilitado de forma predeterminada para esta versión.",
+    "experimental_bom_validation": "Validación de lista de materiales",
+    "experimental_validation_info": "Históricamente, Dependency-Track no validaba las BOM y VEX cargadas con el esquema CycloneDX. \nSi bien esto permitía procesar listas de materiales que no se ajustaban estrictamente al esquema, podía generar confusión cuando se aceptaban los archivos cargados, pero luego no se podían ingerir durante el procesamiento asincrónico. \nA partir de esta versión, los archivos cargados se rechazarán si no superan la validación del esquema. \nTenga en cuenta que esto puede revelar problemas en los generadores de listas de materiales que actualmente producen documentos CycloneDX no válidos.",
+    "experimental": "Experimental"
   },
   "condition": {
     "forbidden": "Prohibido (403)",

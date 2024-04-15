@@ -264,7 +264,13 @@
     "vulnsource_osv_advisories_enable": "Sélectionnez l'écosystème pour activer la mise en miroir de Google OSV Advisory",
     "vulnsource_osv_alias_sync_warning": "OSV peut signaler des vulnérabilités non identiques sous forme d'alias. Procéder avec prudence.",
     "vulnsource_osv_base_url": "URL de base OSV",
-    "analyzer_trivy_ignore_unfixed": "Ignorer les vulnérabilités non corrigées"
+    "analyzer_trivy_ignore_unfixed": "Ignorer les vulnérabilités non corrigées",
+    "experimental_info": "Les options suivantes sont des options expérimentales et doivent être utilisées avec précaution.",
+    "experimental_bom_upload_v2": "Traitement de nomenclature V2",
+    "experimental_bom_upload_v2_info": "La logique selon laquelle les nomenclatures téléchargées sont traitées et ingérées dans Dependency-Track a été remaniée pour être plus fiable et efficace. \nDe plus, le traitement de la nomenclature est désormais une opération atomique, de sorte que les erreurs survenant à mi-chemin n’entraînent pas la perte d’un état partiel. \nLa déduplication des composants et des services est plus prévisible et les messages de journal émis pendant le traitement contiennent un contexte supplémentaire, ce qui facilite leur corrélation. \nÉtant donné que la nouvelle implémentation peut avoir un impact important sur le comportement de Dependency-Track concernant les téléchargements de nomenclature, elle est désactivée par défaut pour cette version.",
+    "experimental_bom_validation": "Validation de la nomenclature",
+    "experimental_validation_info": "Historiquement, Dependency-Track ne validait pas les nomenclatures et les VEX téléchargés par rapport au schéma CycloneDX. \nMême si cela permettait de traiter des nomenclatures qui ne respectaient pas strictement le schéma, cela pouvait prêter à confusion lorsque les fichiers téléchargés étaient acceptés, mais ne parvenaient pas à être ingérés lors du traitement asynchrone. \nÀ partir de cette version, les fichiers téléchargés seront rejetés s'ils échouent à la validation du schéma. \nNotez que cela peut révéler des problèmes dans les générateurs de nomenclature qui produisent actuellement des documents CycloneDX non valides.",
+    "experimental": "Expérimental"
   },
   "condition": {
     "forbidden": "Interdit (403)",

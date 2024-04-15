@@ -264,7 +264,13 @@
     "vulnsource_osv_advisories_enable": "Google OSV アドバイザリ ミラーリングを有効にするエコシステムを選択します",
     "vulnsource_osv_alias_sync_warning": "OSV は同一でない脆弱性をエイリアスとして報告する場合があります。注意して進めてください。",
     "vulnsource_osv_base_url": "OSV ベース URL",
-    "analyzer_trivy_ignore_unfixed": "未修正の脆弱性を無視する"
+    "analyzer_trivy_ignore_unfixed": "未修正の脆弱性を無視する",
+    "experimental_info": "次のオプションは実験的なオプションであり、注意して使用する必要があります。",
+    "experimental_bom_upload_v2": "BOM 処理 V2",
+    "experimental_bom_upload_v2_info": "アップロードされた BOM が処理され、Dependency-Track に取り込まれるロジックが、より信頼性と効率性を高めるために全面的に見直されました。\nさらに、BOM 処理はアトミック操作になり、途中でエラーが発生しても部分的な状態が残されることはありません。\nコンポーネントとサービスの重複排除はより予測可能であり、処理中に出力されるログ メッセージには追加のコンテキストが含まれるため、それらの関連付けが容易になります。\n新しい実装は、BOM アップロードに関する dependency-track の動作に大きな影響を与える可能性があるため、このリリースではデフォルトで無効になっています。",
+    "experimental_bom_validation": "BOM の検証",
+    "experimental_validation_info": "従来、Dependency-Track はアップロードされた BOM と VEX を CycloneDX スキーマに対して検証していませんでした。\nこれにより、スキーマに厳密に準拠していない BOM を処理できるようになりましたが、アップロードされたファイルは受け入れられたものの、非同期処理中に取り込みに失敗した場合に混乱が生じる可能性がありました。\nこのリリース以降、アップロードされたファイルはスキーマ検証に失敗すると拒否されます。\nこれにより、現在無効な CycloneDX ドキュメントを生成している BOM ジェネレーターの問題が明らかになる可能性があることに注意してください。",
+    "experimental": "実験的"
   },
   "condition": {
     "forbidden": "禁止 (403)",
