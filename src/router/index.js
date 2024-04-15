@@ -32,6 +32,7 @@ const InternalComponents = () =>
 const TaskScheduler = () =>
   import('@/views/administration/configuration/TaskScheduler');
 const Search = () => import('@/views/administration/configuration/Search');
+const Experimental = () => import('@/views/administration/configuration/Experimental');
 
 const InternalAnalyzer = () =>
   import('@/views/administration/analyzers/InternalAnalyzer');
@@ -375,6 +376,16 @@ function configRoutes() {
             {
               path: 'configuration/search',
               component: Search,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/experimental',
+              component: Experimental,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',

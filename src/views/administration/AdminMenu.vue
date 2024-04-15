@@ -110,6 +110,11 @@ export default {
               name: this.$t('message.search'),
               route: 'configuration/search',
             },
+            {
+              component: 'Experimental',
+              name: this.$t('admin.experimental'),
+              route: 'configuration/experimental',
+            },
           ],
         },
         {
