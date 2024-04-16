@@ -1,7 +1,10 @@
 <template>
   <span v-if="metrics.policyViolationsTotal === 0" class="progress">
     <b-progress class="table-progress" :max="'0'" show-value>
-      <b-progress-bar class="table-progress text-dark" value="0"></b-progress-bar>
+      <b-progress-bar
+        class="table-progress text-dark"
+        value="0"
+      ></b-progress-bar>
     </b-progress>
   </span>
   <span v-else class="progress">
