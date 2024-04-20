@@ -165,11 +165,13 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
       break;
     case 'TRIVY_ANALYZER':
       analyzerLabel = 'Trivy';
-
-      analyzerUrl = 'https://nvd.nist.gov/vuln/detail/' + vulnId;
-      if (vulnSource === 'GITHUB') {
+      if (vulnSource === 'NVD') {
+        analyzerUrl = 'https://nvd.nist.gov/vuln/detail/' + vulnId;
+      } else if (vulnSource === 'GITHUB') {
         analyzerUrl = 'https://github.com/advisories/' + vulnId;
       }
+      // NB: Trivy can report vulnerabilities from sources that DT does
+      // not explicitly support.
       break;
   }
   if (analyzerUrl) {
@@ -227,6 +229,9 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(
       sourceInfo.name = 'VulnDB';
       sourceInfo.url =
         'https://vulndb.cyberriskanalytics.com/vulnerabilities/' + vulnId;
+      break;
+    case 'UNKNOWN':
+      // Not possible to provide any additional information.
       break;
   }
   return sourceInfo;

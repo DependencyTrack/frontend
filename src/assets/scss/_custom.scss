@@ -137,6 +137,11 @@ html {
   background-color: #EBE5A8;
   border: 1px solid #DCD167;
 }
+.label-source-unknown {
+  background-color: $severity-unassigned;
+  border: 1px solid $grey-900;
+  color: #FFFFFF;
+}
 .label-notification {
   color: #222222;
   padding: .2em .6em .3em;
