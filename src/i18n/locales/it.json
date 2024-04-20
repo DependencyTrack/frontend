@@ -30,7 +30,6 @@
     "analyzer_snyk_org_id": "ID dell'organizzazione",
     "analyzer_snyk_why_multiple_cvss": "Perché esistono più punteggi CVSS per la stessa vulnerabilità?",
     "analyzer_trivy_enable": "Abilita l'analizzatore Trivy",
-    "analyzer_trivy_ignore_unfixed": "Ignora le vulnerabilità che non sono state corrette",
     "analyzer_vulndb_desc": "VulnDB è un servizio commerciale di Risk Based Security che identifica le vulnerabilità nei componenti di terze parti. Dependency-Track si integra nativamente con il servizio VulnDB per fornire risultati altamente accurati. L'utilizzo di questo analizzatore richiede un CPE valido per i componenti da analizzare.",
     "analyzer_vulndb_enable": "Abilita l'analizzatore VulnDB",
     "analyzers": "Analizzatori",
@@ -264,7 +263,8 @@
     "vulnsource_osv_advisories_desc": "Google OSV è un'infrastruttura distribuita di vulnerabilità e valutazione per progetti open source volta ad aiutare sia i manutentori che i consumatori dell'open source. Serve come aggregatore di database di vulnerabilità che hanno adottato il formato OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Seleziona l'ecosistema per abilitare il mirroring dell'advisory OSV di Google",
     "vulnsource_osv_alias_sync_warning": "OSV può segnalare vulnerabilità non identiche come alias. Procedi con cautela.",
-    "vulnsource_osv_base_url": "URL di base OSV"
+    "vulnsource_osv_base_url": "URL di base OSV",
+    "analyzer_trivy_ignore_unfixed": "Ignora le vulnerabilità non risolte"
   },
   "condition": {
     "forbidden": "Proibito (403)",

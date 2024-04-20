@@ -30,7 +30,6 @@
     "analyzer_snyk_org_id": "组织 ID",
     "analyzer_snyk_why_multiple_cvss": "为什么同一漏洞有多个 CVSS 评分？",
     "analyzer_trivy_enable": "启用 Trivy 分析器",
-    "analyzer_trivy_ignore_unfixed": "忽略尚未修复的漏洞",
     "analyzer_vulndb_desc": "VulnDB 是 Risk Based Security 提供的一项商业服务，可识别第三方组件中的漏洞。Dependency-Track 与 VulnDB 服务原生集成，可提供高度准确的结果。使用此分析器需要被分析组件的有效 CPE。",
     "analyzer_vulndb_enable": "启用 VulnDB 分析器",
     "analyzers": "分析器",
@@ -264,7 +263,8 @@
     "vulnsource_osv_advisories_desc": "Google OSV 是开源项目的分布式漏洞和分类基础设施，旨在帮助开源维护者和开源消费者。它充当采用 OpenSSF 漏洞格式的漏洞数据库的聚合器。",
     "vulnsource_osv_advisories_enable": "选择生态系统以启用 Google OSV 咨询镜像",
     "vulnsource_osv_alias_sync_warning": "OSV 可能会将不相同的漏洞报告为别名。请谨慎操作。",
-    "vulnsource_osv_base_url": "OSV 基本 URL"
+    "vulnsource_osv_base_url": "OSV 基本 URL",
+    "analyzer_trivy_ignore_unfixed": "忽略未修复的漏洞"
   },
   "condition": {
     "forbidden": "禁止 (403)",
