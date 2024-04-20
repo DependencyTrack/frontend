@@ -30,7 +30,6 @@
     "analyzer_snyk_org_id": "Identyfikator organizacji",
     "analyzer_snyk_why_multiple_cvss": "Dlaczego dla tej samej luki istnieje wiele wyników CVSS?",
     "analyzer_trivy_enable": "Włącz analizator Trivy",
-    "analyzer_trivy_ignore_unfixed": "Ignoruje luki, które nie zostały naprawione",
     "analyzer_vulndb_desc": "VulnDB to komercyjna usługa firmy Risk Based Security, która identyfikuje luki w komponentach innych firm. Zależność-Track integruje się natywnie z usługą VulnDB, aby zapewnić bardzo dokładne wyniki. Korzystanie z tego analizatora wymaga ważnego CPE dla analizowanych składników.",
     "analyzer_vulndb_enable": "Włącz analizator VulnDB",
     "analyzers": "Analizatory",
@@ -264,7 +263,8 @@
     "vulnsource_osv_advisories_desc": "Google OSV to rozproszona infrastruktura wykrywania luk i selekcji dla projektów open source, której celem jest pomoc zarówno opiekunom oprogramowania open source, jak i konsumentom oprogramowania open source. Służy jako agregator baz danych o lukach w zabezpieczeniach, które przyjęły format OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Wybierz ekosystem, aby włączyć kopię lustrzaną Doradztwa Google OSV",
     "vulnsource_osv_alias_sync_warning": "OSV może zgłaszać nieidentyczne luki w zabezpieczeniach jako aliasy. Postępuj ostrożnie.",
-    "vulnsource_osv_base_url": "Podstawowy adres URL OSV"
+    "vulnsource_osv_base_url": "Podstawowy adres URL OSV",
+    "analyzer_trivy_ignore_unfixed": "Ignoruj ​​nienaprawione luki"
   },
   "condition": {
     "forbidden": "Zabronione (403)",

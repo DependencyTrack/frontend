@@ -30,7 +30,6 @@
     "analyzer_snyk_org_id": "Organisations-ID",
     "analyzer_snyk_why_multiple_cvss": "Warum gibt es mehrere CVSS-Scores für dieselbe Schwachstelle?",
     "analyzer_trivy_enable": "Trivy-Analysator aktivieren",
-    "analyzer_trivy_ignore_unfixed": "Ignoriert Schwachstellen, die nicht behoben wurden",
     "analyzer_vulndb_desc": "VulnDB ist ein kommerzieller Dienst von Risk Based Security, der Schwachstellen in Komponenten von Drittanbietern identifiziert. Dependency-Track lässt sich nativ in den VulnDB-Dienst integrieren, um hochpräzise Ergebnisse zu liefern. Die Verwendung dieses Analysators erfordert eine gültige CPE für die zu analysierenden Komponenten.",
     "analyzer_vulndb_enable": "VulnDB-Analyzer aktivieren",
     "analyzers": "Analysatoren",
@@ -264,7 +263,8 @@
     "vulnsource_osv_advisories_desc": "Google OSV ist eine verteilte Infrastruktur für Schwachstellen und Triage für Open-Source-Projekte, die sowohl Open-Source-Betreuern als auch Open-Source-Nutzern helfen soll. Es dient als Aggregator von Schwachstellendatenbanken, die das OpenSSF-Schwachstellenformat übernommen haben.",
     "vulnsource_osv_advisories_enable": "Wählen Sie ein Ökosystem aus, um Google OSV Advisory Mirroring zu aktivieren",
     "vulnsource_osv_alias_sync_warning": "OSV kann nicht identische Schwachstellen als Aliase melden. Gehen Sie mit Vorsicht vor.",
-    "vulnsource_osv_base_url": "OSV-Basis-URL"
+    "vulnsource_osv_base_url": "OSV-Basis-URL",
+    "analyzer_trivy_ignore_unfixed": "Ignorieren Sie nicht behobene Schwachstellen"
   },
   "condition": {
     "forbidden": "Verboten (403)",
