@@ -26,6 +26,7 @@ import InternalComponents from './configuration/InternalComponents';
 import Jira from './configuration/JiraConfig';
 import Search from './configuration/Search.vue';
 import TaskScheduler from './configuration/TaskScheduler.vue';
+import Experimental from './configuration/Experimental.vue';
 // Analyzer plugins
 import InternalAnalyzer from './analyzers/InternalAnalyzer';
 import OssIndexAnalyzer from './analyzers/OssIndexAnalyzer';
@@ -75,6 +76,7 @@ export default {
     InternalComponents,
     TaskScheduler,
     Search,
+    Experimental,
     InternalAnalyzer,
     OssIndexAnalyzer,
     VulnDbAnalyzer,

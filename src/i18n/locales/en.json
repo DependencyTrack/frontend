@@ -264,7 +264,13 @@
     "vulnsource_osv_advisories_desc": "Google OSV is a distributed vulnerability and triage infrastructure for open source projects aimed at helping both open source maintainers and consumers of open source. It serves as an aggregator of vulnerability databases that have adopted the OpenSSF Vulnerability format.",
     "vulnsource_osv_advisories_enable": "Select ecosystem to enable Google OSV Advisory mirroring",
     "vulnsource_osv_alias_sync_warning": "OSV may report non-identical vulnerabilities as aliases. Proceed with caution.",
-    "vulnsource_osv_base_url": "OSV Base URL"
+    "vulnsource_osv_base_url": "OSV Base URL",
+    "experimental_info": "The following options are experimental options and should be used with precaution.",
+    "experimental_bom_upload_v2": "BOM Processing V2",
+    "bom_validation": "BOM Validation",
+    "experimental_bom_upload_v2_info": "The logic how uploaded BOMs are processed and ingested into Dependency-Track has been overhauled to be more reliable and efficient. Further, BOM processing is now an atomic operation, such that errors occurring midway do not cause a partial state to be left behind. De-duplication of components and services is more predictable, and log messages emitted during processing contain additional context, making them easier to correlate. Because the new implementation can have a big impact on how Dependency-Track behaves regarding BOM uploads, it is disabled by default for this release.",
+    "bom_validation_info": "Historically, Dependency-Track did not validate uploaded BOMs and VEXs against the CycloneDX schema. While this allowed BOMs to be processed that did not strictly adhere to the schema, it could lead to confusion when uploaded files were accepted, but then failed to be ingested during asynchronous processing. Starting with this release, uploaded files will be rejected if they fail schema validation. Note that this may reveal issues in BOM generators that currently produce invalid CycloneDX documents",
+    "experimental": "Experimental"
   },
   "condition": {
     "forbidden": "Forbidden (403)",
