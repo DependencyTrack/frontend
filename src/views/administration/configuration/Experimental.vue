@@ -14,17 +14,6 @@
           <span class="fa fa-info-circle"></span>
           {{ $t('admin.experimental_bom_upload_v2_info') }}
         </p>
-        <c-switch
-          id="component"
-          color="primary"
-          v-model="bomValidate"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.experimental_bom_validation') }}
-        <p class="font-sm text-muted">
-          <span class="fa fa-info-circle"></span>
-          {{ $t('admin.experimental_validation_info') }}
-        </p>
       </b-card-body>
       <b-card-footer>
         <b-button variant="outline-primary" class="px-4" @click="saveChanges">
@@ -51,7 +40,6 @@ export default {
   data() {
     return {
       uploadV2: false,
-      bomValidate: true,
     };
   },
   methods: {
@@ -61,11 +49,6 @@ export default {
           groupName: 'experimental',
           propertyName: 'bom.processing.task.v2.enabled',
           propertyValue: this.uploadV2,
-        },
-        {
-          groupName: 'experimental',
-          propertyName: 'bom.validation.enabled',
-          propertyValue: this.bomValidate,
         },
       ]);
     },
@@ -80,9 +63,6 @@ export default {
         switch (item.propertyName) {
           case 'bom.processing.task.v2.enabled':
             this.uploadV2 = common.toBoolean(item.propertyValue);
-            break;
-          case 'bom.validation.enabled':
-            this.bomValidate = common.toBoolean(item.propertyValue);
             break;
         }
       }

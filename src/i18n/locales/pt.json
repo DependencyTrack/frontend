@@ -268,8 +268,8 @@
     "experimental_info": "As opções a seguir são experimentais e devem ser usadas com precaução.",
     "experimental_bom_upload_v2": "Processamento de BOM V2",
     "experimental_bom_upload_v2_info": "A lógica de como as BOMs carregadas são processadas e ingeridas no Dependency-Track foi revisada para ser mais confiável e eficiente. \nAlém disso, o processamento da BOM é agora uma operação atômica, de modo que os erros que ocorrem no meio do caminho não fazem com que um estado parcial seja deixado para trás. \nA desduplicação de componentes e serviços é mais previsível e as mensagens de log emitidas durante o processamento contêm contexto adicional, facilitando sua correlação. \nComo a nova implementação pode ter um grande impacto no comportamento do Dependency-Track em relação aos uploads de BOM, ela está desabilitada por padrão nesta versão.",
-    "experimental_bom_validation": "Validação de BOM",
-    "experimental_validation_info": "Historicamente, o Dependency-Track não validava BOMs e VEXs carregados em relação ao esquema CycloneDX. \nEmbora isso permitisse o processamento de BOMs que não aderissem estritamente ao esquema, poderia causar confusão quando os arquivos carregados fossem aceitos, mas não fossem ingeridos durante o processamento assíncrono. \nA partir desta versão, os arquivos enviados serão rejeitados se falharem na validação do esquema. \nObserve que isso pode revelar problemas nos geradores de BOM que atualmente produzem documentos CycloneDX inválidos",
+    "bom_validation": "Validação de BOM",
+    "bom_validation_info": "Historicamente, o Dependency-Track não validava BOMs e VEXs carregados em relação ao esquema CycloneDX. \nEmbora isso permitisse o processamento de BOMs que não aderissem estritamente ao esquema, poderia causar confusão quando os arquivos carregados fossem aceitos, mas não fossem ingeridos durante o processamento assíncrono. \nA partir desta versão, os arquivos enviados serão rejeitados se falharem na validação do esquema. \nObserve que isso pode revelar problemas nos geradores de BOM que atualmente produzem documentos CycloneDX inválidos",
     "experimental": "Experimental"
   },
   "condition": {

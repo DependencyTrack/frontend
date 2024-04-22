@@ -268,8 +268,8 @@
     "experimental_info": "以下选项是实验性选项，应谨慎使用。",
     "experimental_bom_upload_v2": "BOM 处理 V2",
     "experimental_bom_upload_v2_info": "处理上传的 BOM 并将其引入 Dependency-Track 的逻辑已经过彻底修改，变得更加可靠和高效。\n此外，BOM 处理现在是一个原子操作，因此中途发生的错误不会导致部分状态被遗漏。\n组件和服务的重复数据删除更加可预测，并且在处理过程中发出的日志消息包含额外的上下文，使它们更容易关联。\n由于新的实现会对 Dependency-Track 在 BOM 上传方面的行为产生重大影响，因此此版本默认禁用它。",
-    "experimental_bom_validation": "物料清单验证",
-    "experimental_validation_info": "从历史上看，Dependency-Track 不会根据 CycloneDX 架构验证上传的 BOM 和 VEX。\n虽然这允许处理不严格遵守架构的 BOM，但当上传的文件被接受但在异步处理期间无法提取时，可能会导致混乱。\n从此版本开始，如果上传的文件未通过架构验证，将被拒绝。\n请注意，这可能会揭示 BOM 生成器中当前生成无效 CycloneDX 文档的问题",
+    "bom_validation": "物料清单验证",
+    "bom_validation_info": "从历史上看，Dependency-Track 不会根据 CycloneDX 架构验证上传的 BOM 和 VEX。\n虽然这允许处理不严格遵守架构的 BOM，但当上传的文件被接受但在异步处理期间无法提取时，可能会导致混乱。\n从此版本开始，如果上传的文件未通过架构验证，将被拒绝。\n请注意，这可能会揭示 BOM 生成器中当前生成无效 CycloneDX 文档的问题",
     "experimental": "实验性的"
   },
   "condition": {
