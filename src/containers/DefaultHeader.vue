@@ -12,14 +12,12 @@
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
     <b-navbar-nav class="ml-auto">
       <DefaultHeaderProfileDropdown />
-      <LocalePicker />
     </b-navbar-nav>
   </AppHeader>
 </template>
 <script>
 import { Header as AppHeader, SidebarToggler, AsideToggler } from '@coreui/vue';
 import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
-import LocalePicker from '@/views/components/LocalePicker.vue';
 
 export default {
   name: 'DefaultHeader',
@@ -27,7 +25,6 @@ export default {
     AsideToggler,
     AppHeader,
     DefaultHeaderProfileDropdown,
-    LocalePicker,
     SidebarToggler,
   },
 };

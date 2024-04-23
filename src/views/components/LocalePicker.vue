@@ -1,7 +1,7 @@
 <template>
-  <b-input-group class="mr-3">
+  <b-input-group>
     <b-input-group-prepend :title="this.$t('message.language')" is-text>
-      <span class="fa fa-language"> </span>
+      <span class="fa fa-language text-primary"></span>
     </b-input-group-prepend>
     <b-form-select
       class="bg-widget"
@@ -14,7 +14,8 @@
         :value="locale"
         :title="$t(`language.${locale}`)"
       >
-        {{ localeToFlag(locale) }}
+        <span class="mr-2">{{ localeToFlag(locale) }}</span>
+        {{ locale.toUpperCase() }}
       </b-form-select-option>
     </b-form-select>
   </b-input-group>
