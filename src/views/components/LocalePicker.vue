@@ -14,7 +14,7 @@
         :value="locale"
         :title="$t(`language.${locale}`)"
       >
-        {{ locale.toUpperCase() }}
+        {{ localeToFlag(locale) }}
       </b-form-select-option>
     </b-form-select>
   </b-input-group>
@@ -35,6 +35,26 @@ export default {
     onLocaleSelected: function (value) {
       localStorage.setItem('Locale', value);
       this.$i18n.locale = value;
+    },
+    localeToFlag: function (locale) {
+      // Largely taken from wojtekmaj/country-code-to-flag-emoji. Adopted to be able to deal with locale codes as inputs.
+      // https://github.com/wojtekmaj/country-code-to-flag-emoji/blob/ff0d3d2dd9680b6f860d85fc9e713e93e396adb7/src/index.ts
+
+      let countryCode = locale.split('-').pop().toUpperCase();
+      if (countryCode === 'EN') {
+        countryCode = 'US'; // Sorry Britain!
+      } else if (countryCode === 'HI') {
+        countryCode = 'IN';
+      } else if (countryCode === 'JA') {
+        countryCode = 'JP';
+      } else if (countryCode === 'ZH') {
+        countryCode = 'CN';
+      }
+
+      return Array.from(countryCode)
+        .map((letter) => letter.toLowerCase().charCodeAt(0) + 127365)
+        .map((charCode) => String.fromCodePoint(charCode))
+        .join('');
     },
   },
 };
