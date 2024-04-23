@@ -295,17 +295,17 @@
   },
   "language": {
     "de": "Niemiecki",
-    "en": "język angielski",
-    "es": "hiszpański",
+    "en": "Język angielski",
+    "es": "Hiszpański",
     "fr": "Francuski",
-    "hi": "hinduski",
+    "hi": "Hinduski",
     "it": "Włoski",
-    "ja": "język japoński",
+    "ja": "Język japoński",
     "pl": "Polski",
-    "pt": "portugalski (Portugalia)",
-    "pt-BR": "portugalski (Brazylia)",
+    "pt": "Portugalski (Portugalia)",
+    "pt-BR": "Portugalski (Brazylia)",
     "ru": "Rosyjski",
-    "zh": "chiński"
+    "zh": "Chiński"
   },
   "message": {
     "about": "O",
