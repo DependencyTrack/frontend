@@ -19,7 +19,7 @@
     "eslint-fix": "eslint --ext .js,.vue,.json,.md,.yaml --fix . --report-unused-disable-directives",
     "prettier": "prettier --check --cache '**/*.{js,vue,json,md,yaml}'",
     "prettier-fix": "prettier --write --cache '**/*.{js,vue,json,md,yaml}'",
-    "vue-i18n-extract": "vue-i18n-extract report --vueFiles 'src/**/*.?(vue|js)' --languageFiles 'src/i18n/locales/*.json' --exclude 'validation.max_value' --exclude 'validation.min_value' --exclude 'validation.confirmed' --exclude 'validation.required' --ci --ci"
+    "vue-i18n-extract": "vue-i18n-extract report --ci"
   },
   "dependencies": {
     "@coreui/coreui": "2.1.16",
