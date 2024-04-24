@@ -161,6 +161,7 @@ export default {
       this.mimeType = template.templateMimeType;
       this.template = template.template;
       this.schedulednotification = template.schedulednotification;
+      this.cronExpression = template.cronExpression;
       this.emailDestinations = template.emailDestinations;
       this.projectId = template.projectId;
     });
@@ -179,6 +180,7 @@ export default {
       template: null,
       schedulednotification: null,
       cronExpression: null,
+      emailDestinations: null,
       projectId: null,
     };
   },
