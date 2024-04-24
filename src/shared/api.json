@@ -54,5 +54,6 @@
   "URL_USER_SELF": "api/v1/user/self",
   "URL_VEX": "api/v1/vex",
   "URL_VULNERABILITY": "api/v1/vulnerability",
-  "WITH_CREDENTIALS": ""
+  "WITH_CREDENTIALS": "",
+  "URL_SCHEDULEDNOTIFICATION_CREATE": "api/v1/schedulednotification/create"
 }
