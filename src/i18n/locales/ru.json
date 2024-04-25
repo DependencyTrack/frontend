@@ -470,6 +470,7 @@
     "endpoints": "Конечные точки",
     "epss": "ЭПСС",
     "epss_percentile": "Процентиль EPSS",
+    "epss_score": "Оценка EPSS",
     "exact": "Точный",
     "exploit_predictions": "Эксплуатация прогнозов",
     "exploitable": "Эксплуатационный",

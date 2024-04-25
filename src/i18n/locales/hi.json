@@ -470,6 +470,7 @@
     "endpoints": "अंतिमबिंदुओं",
     "epss": "ईपीएसएस",
     "epss_percentile": "ईपीएसएस प्रतिशत",
+    "epss_score": "ईपीएसएस अंक",
     "exact": "एकदम सही",
     "exploit_predictions": "भविष्यवाणियों का फायदा उठाएँ",
     "exploitable": "दोहन",
