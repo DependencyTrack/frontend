@@ -470,6 +470,7 @@
     "endpoints": "端点",
     "epss": "增强子系统",
     "epss_percentile": "EPSS 百分位数",
+    "epss_score": "EPSS 评分",
     "exact": "精确的",
     "exploit_predictions": "利用预测",
     "exploitable": "可利用",

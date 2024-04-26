@@ -470,6 +470,7 @@
     "endpoints": "Points de terminaison",
     "epss": "EPSS",
     "epss_percentile": "Centile EPSS",
+    "epss_score": "Score EPSS",
     "exact": "Exact",
     "exploit_predictions": "Prédictions d’exploitation",
     "exploitable": "Exploitable",

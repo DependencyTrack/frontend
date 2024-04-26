@@ -470,6 +470,7 @@
     "endpoints": "Endpoint",
     "epss": "EPSS",
     "epss_percentile": "Percentile EPSS",
+    "epss_score": "Punteggio EPSS",
     "exact": "Esatto",
     "exploit_predictions": "Sfruttare le previsioni",
     "exploitable": "Sfruttabile",

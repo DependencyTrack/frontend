@@ -470,6 +470,7 @@
     "endpoints": "Punkty końcowe",
     "epss": "EPSS",
     "epss_percentile": "Percentyl EPSS",
+    "epss_score": "Wynik EPSS",
     "exact": "Dokładny",
     "exploit_predictions": "Przewidywania exploitów",
     "exploitable": "Możliwość wykorzystania",

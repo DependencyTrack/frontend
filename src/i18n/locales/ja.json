@@ -470,6 +470,7 @@
     "endpoints": "エンドポイント",
     "epss": "EPSS",
     "epss_percentile": "EPSSパーセンタイル",
+    "epss_score": "EPSS スコア",
     "exact": "ちょうど",
     "exploit_predictions": "エクスプロイト予測",
     "exploitable": "悪用可能",
