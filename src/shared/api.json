@@ -55,5 +55,6 @@
   "URL_ACL_MAPPING": "api/v1/acl/mapping",
   "URL_ACL_TEAM": "api/v1/acl/team",
   "URL_VEX": "api/v1/vex",
-  "URL_OSV_ECOSYSTEM": "api/v1/integration/osv/ecosystem"
+  "URL_OSV_ECOSYSTEM": "api/v1/integration/osv/ecosystem",
+  "URL_VULN_SOURCES": "api/v1/integration/sources"
 }
