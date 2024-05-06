@@ -35,6 +35,7 @@ jobs:
     with:
       app-version: ${{ needs.read-version.outputs.version }}
       publish-container: true
+      ref-name: ${{ github.ref_name }}
     secrets:
       registry-0-usr: ${{ secrets.HUB_USERNAME }}
       registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}

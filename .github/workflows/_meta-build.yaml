@@ -21,6 +21,10 @@ on:
         required: false
         default: false
         description: 'Set if the container image gets publish and scan once its build'
+      ref-name:
+        type: string
+        required: true
+        description: 'Short ref name of the branch or tag that triggered the workflow run'
     secrets:
       registry-0-usr:
         required: true
@@ -95,10 +99,17 @@ jobs:
       - name: Set Container Tags
         id: tags
         run: |-
-          TAGS="${TAGS},docker.io/dependencytrack/frontend:${{ inputs.app-version }}"
+          IMAGE_NAME="docker.io/dependencytrack/frontend"
+          REF_NAME="${{ inputs.ref-name }}"
+          TAGS=""
 
-          if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
-            TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
+          if [[ $REF_NAME == feature-* ]]; then
+            TAGS="${IMAGE_NAME}:${REF_NAME,,}"
+          else
+            TAGS="${IMAGE_NAME}:${{ inputs.app-version }}"
+            if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
+              TAGS="${TAGS},${IMAGE_NAME}:latest"
+            fi
           fi
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 

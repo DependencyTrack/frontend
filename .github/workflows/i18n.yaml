@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
   pull_request:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
 
 permissions:
   contents: read
