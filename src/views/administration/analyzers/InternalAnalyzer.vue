@@ -33,9 +33,9 @@
         v-bind="labelIcon"
       />{{ $t('admin.analyzer_internal_fuzzy_exclude_internal') }}
       {{ $t('admin.analyzer_internal_desc') }}
-      <hr/>
+      <hr />
       <h4>Avoid Duplicates with alias</h4>
-      <br/>
+      <br />
       <p>{{ $t('admin.analyzer_internal_deduplication_desc') }}</p>
       <p class="font-sm text-muted">
         <span class="fa fa-warning">&nbsp;</span>
@@ -50,36 +50,38 @@
         :value="enabledSources.length > 0"
       />
       {{ $t('admin.analyzer_internal_deduplication_enable') }}
-      <hr/>
-      <b-form-group
-      :disabled="!deduplicationEnabled"
-      class="muted">
+      <hr />
+      <b-form-group :disabled="!deduplicationEnabled" class="muted">
         <div class="list-group" style="width: 40%">
-        <actionable-list-group-item
-          :value="'Priotization of Vulnerability Sources'"
-          :refresh="true"
-          @actionClicked=updateSources();
-        />
-        <draggable
-        v-model="enabledSources"
-        class="list-group"
-        handle=".drag-handle"
-        @end="updatePositions"
-        :disabled="!deduplicationEnabled"
-        >
-          <span v-for="(source, index) in enabledSources" :key="source" class="list-group-item">
-            <actionable-list-group-item
-              :value="source"
-              :index="index"
-              :delete-icon="false"
-              :drag-icon="true"
-              :priority="true"
-            />
-          </span>
-        </draggable>
-      </div>
+          <actionable-list-group-item
+            :value="'Priotization of Vulnerability Sources'"
+            :refresh="true"
+            @actionClicked="updateSources()"
+          />
+          <draggable
+            v-model="enabledSources"
+            class="list-group"
+            handle=".drag-handle"
+            @end="updatePositions"
+            :disabled="!deduplicationEnabled"
+          >
+            <span
+              v-for="(source, index) in enabledSources"
+              :key="source"
+              class="list-group-item"
+            >
+              <actionable-list-group-item
+                :value="source"
+                :index="index"
+                :delete-icon="false"
+                :drag-icon="true"
+                :priority="true"
+              />
+            </span>
+          </draggable>
+        </div>
       </b-form-group>
-      <hr/>
+      <hr />
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -94,8 +96,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
-import draggable from "vuedraggable";
-
+import draggable from 'vuedraggable';
 
 export default {
   mixins: [configPropertyMixin],
@@ -106,7 +107,6 @@ export default {
     cSwitch,
     ActionableListGroupItem,
     draggable,
-
   },
   data() {
     return {
@@ -122,16 +122,14 @@ export default {
         dataOn: '\u2713',
         dataOff: '\u2715',
       },
-      data: [],
-      options: {},
-      info : null,
+      info: null,
     };
   },
   methods: {
     updatePositions() {
       this.positions = this.enabledSources.reduce(
         (accumulator, item, index) => ({ ...accumulator, [item]: index }),
-        {}
+        {},
       );
     },
     updateSources() {
@@ -225,7 +223,10 @@ export default {
             break;
           case 'internal.deduplication.list':
             this.sourceConfig = item.propertyValue;
-            this.deduplicationEnabled = this.deduplicationEnabled && this.sourceConfig != null && this.sourceConfig !== '';
+            this.deduplicationEnabled =
+              this.deduplicationEnabled &&
+              this.sourceConfig != null &&
+              this.sourceConfig !== '';
             break;
         }
       }
@@ -235,32 +236,34 @@ export default {
     });
   },
   mounted() {
-    this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_VULN_SOURCES}`).then(response => {
-      this.info = response.data;
-      this.updateSources();
-    });
+    this.axios
+      .get(`${this.$api.BASE_URL}/${this.$api.URL_VULN_SOURCES}`)
+      .then((response) => {
+        this.info = response.data;
+        this.updateSources();
+      });
   },
 };
 </script>
 
 <style>
-  .drag-handle {
-    cursor: move;
-    min-width: 25px;
-  }
-  .priority-value {
-    display: inline-block;
-    vertical-align: middle;
-  }
-  table {
+.drag-handle {
+  cursor: move;
+  min-width: 25px;
+}
+.priority-value {
+  display: inline-block;
+  vertical-align: middle;
+}
+table {
   width: 100%;
   table-layout: fixed;
-  }
-  td {
+}
+td {
   word-break: break-all;
   text-align: left;
-  }
-  .muted[disabled] {
+}
+.muted[disabled] {
   opacity: 0.5; /* Customize the opacity to indicate it is disabled */
   pointer-events: none; /* Disable pointer events on the element */
 }

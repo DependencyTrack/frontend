@@ -1,7 +1,9 @@
 <template>
   <li class="list-group-item align-middle">
     <span class="hovertext" data-hover="Drag to Prioritize.">
-    <span class="drag-handle" style="cursor: move" v-if="this.dragIcon">☰</span>
+      <span class="drag-handle" style="cursor: move" v-if="this.dragIcon"
+        >☰</span
+      >
     </span>
     <b-button
       size="sm"
@@ -22,12 +24,12 @@
       ><span v-else>{{ value }}</span
       >&nbsp;</span
     >
-      <span
-        class="pull-right badge badge badge-primary text-dark"
-        v-if="this.priority"
-        >
-          {{ index+1 }}
-      </span>
+    <span
+      class="pull-right badge badge badge-primary text-dark"
+      v-if="this.priority"
+    >
+      {{ index + 1 }}
+    </span>
   </li>
 </template>
 
