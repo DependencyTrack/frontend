@@ -5,7 +5,16 @@
         <b-row>
           <b-col>
             <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
-            <div class="h5 mb-0 mt-2">{{ componentLabel }}</div>
+            <div class="h5 mb-0 mt-2">
+              {{ componentLabel }}&nbsp;
+              <b-badge
+                :variant="component.isInternal ? 'tab-total' : 'tab-info'"
+                v-b-tooltip.hover
+                :title="$t('message.component_classification_desc')"
+                >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
+              >
+              <b-badge></b-badge>
+            </div>
             <i
               class="fa fa-sitemap"
               style="cursor: pointer"
@@ -163,6 +172,8 @@
       :component="cloneDeep(component)"
       v-on:componentUpdated="syncComponentFields"
     />
+    <component-properties-modal :uuid="this.uuid" />
+    <component-create-property-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -179,10 +190,14 @@ import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
+import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
+    ComponentCreatePropertyModal,
+    ComponentPropertiesModal,
     SeverityBarChart,
     ComponentDashboard,
     ComponentVulnerabilities,
@@ -205,11 +220,17 @@ export default {
       }
     },
     componentLabel() {
-      if (this.component.name && this.component.version) {
-        return this.component.name + ' ▸ ' + this.component.version;
-      } else {
-        return this.component.name;
+      let label = this.component.name;
+
+      if (this.component.group) {
+        label = this.component.group + ' ▸ ' + label;
       }
+
+      if (this.component.version) {
+        label = label + ' ▸ ' + this.component.version;
+      }
+
+      return label;
     },
   },
   data() {

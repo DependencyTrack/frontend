@@ -10,6 +10,19 @@
           v-bind="labelIcon"
         />{{ $t('admin.enable_bom_cyclonedx') }}
       </div>
+      <div>
+        <c-switch
+          id="component"
+          color="primary"
+          v-model="bomValidate"
+          label
+          v-bind="labelIcon"
+        />{{ $t('admin.bom_validation') }}
+        <p class="font-sm text-muted">
+          <span class="fa fa-info-circle"></span>
+          {{ $t('admin.bom_validation_info') }}
+        </p>
+      </div>
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -35,6 +48,7 @@ export default {
   data() {
     return {
       isCycloneDXEnabled: false,
+      bomValidate: true,
     };
   },
   methods: {
@@ -44,6 +58,11 @@ export default {
           groupName: 'artifact',
           propertyName: 'cyclonedx.enabled',
           propertyValue: this.isCycloneDXEnabled,
+        },
+        {
+          groupName: 'artifact',
+          propertyName: 'bom.validation.enabled',
+          propertyValue: this.bomValidate,
         },
       ]);
     },
@@ -59,6 +78,9 @@ export default {
         switch (item.propertyName) {
           case 'cyclonedx.enabled':
             this.isCycloneDXEnabled = enabled;
+            break;
+          case 'bom.validation.enabled':
+            this.bomValidate = common.toBoolean(item.propertyValue);
             break;
         }
       }

@@ -104,7 +104,7 @@
     </b-row>
     <template v-slot:modal-footer="{ cancel }">
       <div class="mx-auto">
-        Copyright &copy; Steve Springett. All Rights Reserved.
+        Copyright &copy; OWASP Foundation. All Rights Reserved.
       </div>
       <b-button size="md" variant="outline-primary" @click="cancel()">{{
         $t('message.close')

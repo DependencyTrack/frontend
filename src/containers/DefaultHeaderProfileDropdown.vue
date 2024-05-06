@@ -17,6 +17,10 @@
         {{ $t('message.change_password') }}</b-dropdown-item
       >
       <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
+      <b-dropdown-form id="locale-picker-form" class="pl-2 pr-2">
+        <LocalePicker />
+      </b-dropdown-form>
+      <b-dropdown-divider />
       <b-dropdown-item @click="logout"
         ><i class="fa fa-sign-out text-primary" />
         {{ $t('message.logout') }}</b-dropdown-item
@@ -30,12 +34,14 @@ import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue';
 import EventBus from '../shared/eventbus';
 import { decodeToken, getToken } from '../shared/permissions';
 import globalVarsMixin from '../mixins/globalVarsMixin';
+import LocalePicker from '@/views/components/LocalePicker.vue';
 
 export default {
   name: 'DefaultHeaderProfileDropdown',
   mixins: [globalVarsMixin],
   components: {
     AppHeaderDropdown,
+    LocalePicker,
   },
   data: () => {
     return {
@@ -70,5 +76,10 @@ export default {
 <style>
 .app-header .navbar-nav .dropdown-menu-right {
   right: inherit;
+}
+
+/* Remove default padding inherited from b-dropdown-form. */
+#locale-picker-form {
+  padding: 0;
 }
 </style>

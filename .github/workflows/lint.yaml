@@ -1,6 +1,13 @@
 name: Lint
 on:
+  push:
+    branches:
+      - 'master' # Default branch
+      - 'feature-**' # Feature branches
   pull_request:
+    branches:
+      - 'master' # Default branch
+      - 'feature-**' # Feature branches
 
 permissions:
   contents: read
@@ -14,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.4
 
       - name: Set up NodeJs
         uses: actions/setup-node@v4.0.2

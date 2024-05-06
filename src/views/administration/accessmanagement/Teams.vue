@@ -26,6 +26,7 @@ import CreateTeamModal from './CreateTeamModal';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../shared/eventbus';
 import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import ApiKeyListGroupItem from './ApiKeyListGroupItem.vue';
 import SelectLdapGroupModal from './SelectLdapGroupModal';
 import SelectOidcGroupModal from './SelectOidcGroupModal';
 import SelectPermissionModal from './SelectPermissionModal';
@@ -122,7 +123,7 @@ export default {
                     <b-form-group :label="this.$t('admin.api_keys')">
                       <div class="list-group">
                         <span v-for="apiKey in apiKeys">
-                          <actionable-list-group-item :value="apiKey.key" :delete-icon="true" v-on:actionClicked="removeApiKey(apiKey)"/>
+                          <api-key-list-group-item :team-uuid="team.uuid" :api-key="apiKey" :delete-icon="true" v-on:removeClicked="removeApiKey(apiKey)"/>
                         </span>
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="createApiKey()"/>
                       </div>
@@ -180,6 +181,7 @@ export default {
             components: {
               cSwitch,
               ActionableListGroupItem,
+              ApiKeyListGroupItem,
               SelectLdapGroupModal,
               SelectOidcGroupModal,
               SelectPermissionModal,

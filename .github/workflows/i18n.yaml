@@ -1,0 +1,39 @@
+name: i18n
+on:
+  push:
+    branches:
+      - 'master' # Default branch
+      - 'feature-**' # Feature branches
+  pull_request:
+    branches:
+      - 'master' # Default branch
+      - 'feature-**' # Feature branches
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.4
+
+      - name: Set up NodeJs
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Check for Translations
+        run: |
+          mv src/assets/scss/vendors/chart.js src/assets/scss/vendors/chart.js.skip
+          npm run vue-i18n-extract
+        continue-on-error: false

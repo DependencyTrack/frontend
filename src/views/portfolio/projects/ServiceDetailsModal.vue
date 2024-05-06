@@ -361,6 +361,14 @@ export default {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
+        {
+          title: this.$t('message.comment'),
+          field: 'comment',
+          sortable: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
       ],
       referencesTableOptions: {
         search: false,

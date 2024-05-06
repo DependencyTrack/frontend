@@ -57,15 +57,10 @@ export default {
         },
       };
       let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}`;
-      this.axios
-        .post(url, data, config)
-        .then((response) => {
-          this.$root.$emit('bv::hide::modal', 'projectUploadVexModal');
-          this.$toastr.s(this.$t('message.vex_uploaded'));
-        })
-        .catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+      this.axios.post(url, data, config).then(() => {
+        this.$root.$emit('bv::hide::modal', 'projectUploadVexModal');
+        this.$toastr.s(this.$t('message.vex_uploaded'));
+      });
     },
   },
 };

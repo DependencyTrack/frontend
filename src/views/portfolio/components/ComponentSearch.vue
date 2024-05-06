@@ -238,6 +238,7 @@ export default {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
+          visible: true,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -256,6 +257,16 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
+          title: this.$t('message.internal'),
+          field: 'isInternal',
+          sortable: false,
+          align: 'center',
+          class: 'tight',
+          formatter: function (value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
         {
@@ -288,6 +299,23 @@ export default {
               row.project.version,
             );
             return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+          },
+        },
+        {
+          title: this.$t('message.license_name'),
+          field: 'resolvedLicense.licenseId',
+          sortable: true,
+          visible: false,
+          formatter(resolvedLicense, row, index) {
+            if (typeof resolvedLicense === 'undefined') {
+              return '-'; // No resolvedLicense info available
+            }
+
+            let url = xssFilters.uriInUnQuotedAttr(
+              '../licenses/' +
+                encodeURIComponent(row.resolvedLicense.licenseId),
+            );
+            return `<a href="${url}">${xssFilters.inHTMLData(row.resolvedLicense.name)}</a>`;
           },
         },
         {

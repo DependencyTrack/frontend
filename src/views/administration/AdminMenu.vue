@@ -25,6 +25,7 @@
         <div class="list-group" id="list-tab" role="tablist">
           <router-link
             :ref="item.id"
+            :key="item.id"
             v-for="item in section.children"
             class="list-group-item list-group-item-action"
             data-toggle="list"
@@ -108,6 +109,11 @@ export default {
               component: 'Search',
               name: this.$t('message.search'),
               route: 'configuration/search',
+            },
+            {
+              component: 'Experimental',
+              name: this.$t('admin.experimental'),
+              route: 'configuration/experimental',
             },
           ],
         },
@@ -201,6 +207,11 @@ export default {
               route: 'repositories/goModules',
             },
             {
+              component: 'Hackage',
+              name: this.$t('admin.hackage'),
+              route: 'repositories/hackage',
+            },
+            {
               component: 'Hex',
               name: this.$t('admin.hex'),
               route: 'repositories/hex',
@@ -209,6 +220,11 @@ export default {
               component: 'Maven',
               name: this.$t('admin.maven'),
               route: 'repositories/maven',
+            },
+            {
+              component: 'Nixpkgs',
+              name: this.$t('admin.nixpkgs'),
+              route: 'repositories/nixpkgs',
             },
             {
               component: 'Npm',

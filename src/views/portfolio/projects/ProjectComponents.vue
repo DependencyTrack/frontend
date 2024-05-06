@@ -35,7 +35,7 @@
         }}</b-tooltip>
         <b-dropdown
           variant="outline-primary"
-          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
             <span class="fa fa-download"></span>
