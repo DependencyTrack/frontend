@@ -207,6 +207,11 @@ export default {
               route: 'repositories/goModules',
             },
             {
+              component: 'Hackage',
+              name: this.$t('admin.hackage'),
+              route: 'repositories/hackage',
+            },
+            {
               component: 'Hex',
               name: this.$t('admin.hex'),
               route: 'repositories/hex',
@@ -215,6 +220,11 @@ export default {
               component: 'Maven',
               name: this.$t('admin.maven'),
               route: 'repositories/maven',
+            },
+            {
+              component: 'Nixpkgs',
+              name: this.$t('admin.nixpkgs'),
+              route: 'repositories/nixpkgs',
             },
             {
               component: 'Npm',
