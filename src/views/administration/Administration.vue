@@ -44,8 +44,10 @@ import Cpan from './repositories/Cpan';
 import Gem from './repositories/Gem';
 import GitHub from './repositories/GitHub.vue';
 import GoModules from './repositories/GoModules';
+import Hackage from './repositories/Hackage.vue';
 import Hex from './repositories/Hex';
 import Maven from './repositories/Maven';
+import Nixpkgs from './repositories/Nixpkgs.vue';
 import Npm from './repositories/Npm';
 import Nuget from './repositories/Nuget';
 import Python from './repositories/Python';
@@ -90,8 +92,10 @@ export default {
     Gem,
     GitHub,
     GoModules,
+    Hackage,
     Hex,
     Maven,
+    Nixpkgs,
     Npm,
     Cpan,
     Nuget,

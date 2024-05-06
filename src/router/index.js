@@ -59,8 +59,10 @@ const Cpan = () => import('@/views/administration/repositories/Cpan');
 const Gem = () => import('@/views/administration/repositories/Gem');
 const GitHub = () => import('@/views/administration/repositories/GitHub.vue');
 const GoModules = () => import('@/views/administration/repositories/GoModules');
+const Hackage = () => import('@/views/administration/repositories/Hackage');
 const Hex = () => import('@/views/administration/repositories/Hex');
 const Maven = () => import('@/views/administration/repositories/Maven');
+const Nixpkgs = () => import('@/views/administration/repositories/Nixpkgs');
 const Npm = () => import('@/views/administration/repositories/Npm');
 const Nuget = () => import('@/views/administration/repositories/Nuget');
 const Python = () => import('@/views/administration/repositories/Python');
@@ -538,6 +540,16 @@ function configRoutes() {
               },
             },
             {
+              path: 'repositories/hackage',
+              component: Hackage,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
               path: 'repositories/hex',
               component: Hex,
               meta: {
@@ -550,6 +562,16 @@ function configRoutes() {
             {
               path: 'repositories/maven',
               component: Maven,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'repositories/nixpkgs',
+              component: Nixpkgs,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
