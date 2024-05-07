@@ -705,6 +705,7 @@
     "project_updated": "Projekt zaktualizowany",
     "project_vulnerabilities": "Luki w zabezpieczeniach projektu",
     "projects": "Projektowanie",
+    "projects_also_used_in": "Projekty wykorzystane także w",
     "projects_at_risk": "Projekty zagrożone",
     "properties": "Nieruchomości",
     "property_created": "Właściwość utworzona",
@@ -840,8 +841,7 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego",
-    "projects_also_used_in": "Projekty wykorzystane także w"
+    "x_trust_boundary": "Granica zaufania krzyżowego"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

@@ -705,6 +705,7 @@
     "project_updated": "Proyecto actualizado",
     "project_vulnerabilities": "Vulnerabilidades del proyecto",
     "projects": "Proyectos",
+    "projects_also_used_in": "Proyectos también utilizados en",
     "projects_at_risk": "Proyectos en riesgo",
     "properties": "Propiedades",
     "property_created": "Propiedad creada",
@@ -840,8 +841,7 @@
     "weakness": "Debilidad",
     "will_not_fix": "No se reparara",
     "workaround_available": "Solución alternativa disponible",
-    "x_trust_boundary": "Cruzar el límite de confianza",
-    "projects_also_used_in": "Proyectos también utilizados en"
+    "x_trust_boundary": "Cruzar el límite de confianza"
   },
   "operator": {
     "contains_all": "contiene todo",

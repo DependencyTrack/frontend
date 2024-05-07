@@ -705,6 +705,7 @@
     "project_updated": "Проект обновлен",
     "project_vulnerabilities": "Уязвимости проекта",
     "projects": "Проекты",
+    "projects_also_used_in": "Проекты также используются в",
     "projects_at_risk": "Проекты под угрозой",
     "properties": "Характеристики",
     "property_created": "Объект создан",
@@ -840,8 +841,7 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия",
-    "projects_also_used_in": "Проекты также используются в"
+    "x_trust_boundary": "Пересечение границы доверия"
   },
   "operator": {
     "contains_all": "содержит все",

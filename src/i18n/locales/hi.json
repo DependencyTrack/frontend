@@ -705,6 +705,7 @@
     "project_updated": "परियोजना अद्यतन",
     "project_vulnerabilities": "परियोजना की कमज़ोरियाँ",
     "projects": "परियोजनाओं",
+    "projects_also_used_in": "परियोजनाओं में भी उपयोग किया जाता है",
     "projects_at_risk": "जोखिम में परियोजनाएँ",
     "properties": "गुण",
     "property_created": "संपत्ति बनाई गई",
@@ -840,8 +841,7 @@
     "weakness": "कमजोरी",
     "will_not_fix": "ठीक नहीं होगा",
     "workaround_available": "वैकल्पिक उपाय उपलब्ध है",
-    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा",
-    "projects_also_used_in": "परियोजनाओं में भी उपयोग किया जाता है"
+    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

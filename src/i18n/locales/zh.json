@@ -705,6 +705,7 @@
     "project_updated": "项目已更新",
     "project_vulnerabilities": "项目漏洞",
     "projects": "项目",
+    "projects_also_used_in": "项目还用于",
     "projects_at_risk": "面临风险的项目",
     "properties": "特性",
     "property_created": "创建的财产",
@@ -840,8 +841,7 @@
     "weakness": "弱点",
     "will_not_fix": "不会修复",
     "workaround_available": "有解决方法",
-    "x_trust_boundary": "跨越信任边界",
-    "projects_also_used_in": "项目还用于"
+    "x_trust_boundary": "跨越信任边界"
   },
   "operator": {
     "contains_all": "包含全部",

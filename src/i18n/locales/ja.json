@@ -705,6 +705,7 @@
     "project_updated": "プロジェクトが更新されました",
     "project_vulnerabilities": "プロジェクトの脆弱性",
     "projects": "プロジェクト",
+    "projects_also_used_in": "以下でも使用されているプロジェクト",
     "projects_at_risk": "リスクのあるプロジェクト",
     "properties": "プロパティ",
     "property_created": "プロパティが作成されました",
@@ -840,8 +841,7 @@
     "weakness": "弱点",
     "will_not_fix": "直らないでしょう",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える",
-    "projects_also_used_in": "以下でも使用されているプロジェクト"
+    "x_trust_boundary": "信頼境界を越える"
   },
   "operator": {
     "contains_all": "すべてを含む",

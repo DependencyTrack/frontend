@@ -705,6 +705,7 @@
     "project_updated": "Проект оновлений",
     "project_vulnerabilities": "Уразливості проекту",
     "projects": "Проекти",
+    "projects_also_used_in": "Проекти також використовуються в",
     "projects_at_risk": "Проекти під загрозою",
     "properties": "Властивості",
     "property_created": "Власність створена",
@@ -840,8 +841,7 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри",
-    "projects_also_used_in": "Проекти також використовуються в"
+    "x_trust_boundary": "Перетнути кордон довіри"
   },
   "operator": {
     "contains_all": "містить усе",
