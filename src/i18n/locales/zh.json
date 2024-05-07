@@ -840,7 +840,8 @@
     "weakness": "弱点",
     "will_not_fix": "不会修复",
     "workaround_available": "有解决方法",
-    "x_trust_boundary": "跨越信任边界"
+    "x_trust_boundary": "跨越信任边界",
+    "projects_also_used_in": "项目还用于"
   },
   "operator": {
     "contains_all": "包含全部",

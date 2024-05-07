@@ -840,7 +840,8 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "projects_also_used_in": "Projekty wykorzystane także w"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

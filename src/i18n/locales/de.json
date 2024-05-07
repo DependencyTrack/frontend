@@ -840,7 +840,8 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
+    "projects_also_used_in": "Projekte, die auch in verwendet werden"
   },
   "operator": {
     "contains_all": "enthält alle",

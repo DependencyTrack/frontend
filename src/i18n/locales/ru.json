@@ -840,7 +840,8 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "projects_also_used_in": "Проекты также используются в"
   },
   "operator": {
     "contains_all": "содержит все",

@@ -840,7 +840,8 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne réglera pas",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Frontière de confiance croisée"
+    "x_trust_boundary": "Frontière de confiance croisée",
+    "projects_also_used_in": "Projets également utilisés dans"
   },
   "operator": {
     "contains_all": "contient tout",
