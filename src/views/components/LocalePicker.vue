@@ -36,6 +36,12 @@ export default {
     onLocaleSelected: function (value) {
       localStorage.setItem('Locale', value);
       this.$i18n.locale = value;
+
+      // NB: As of DT v4.11, not all UI elements are updated automatically
+      // when the locale is changed. We force a page reload to work around
+      // this, but it really is a crutch that should be replaced with a proper
+      // solution in the future.
+      this.$router.go(0);
     },
     localeToFlag: function (locale) {
       // Largely taken from wojtekmaj/country-code-to-flag-emoji. Adopted to be able to deal with locale codes as inputs.
