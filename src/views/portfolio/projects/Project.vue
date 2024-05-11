@@ -39,15 +39,34 @@
                         ></i
                       ></a>
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in project.versions">
+                        <span v-for="projectVersion in activeProjectVersions">
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
                               params: { uuid: projectVersion.uuid },
                             }"
-                            >{{ projectVersion.version }}</b-dropdown-item
                           >
+                            {{ projectVersion.version }}
+                          </b-dropdown-item>
                         </span>
+
+                        <b-dropdown-group
+                          v-if="inactiveProjectVersions.length > 0"
+                          header="Inactive Versions"
+                        >
+                          <span
+                            v-for="projectVersion in inactiveProjectVersions"
+                          >
+                            <b-dropdown-item
+                              :to="{
+                                name: 'Project',
+                                params: { uuid: projectVersion.uuid },
+                              }"
+                            >
+                              {{ projectVersion.version }}
+                            </b-dropdown-item>
+                          </span>
+                        </b-dropdown-group>
                       </ul>
                     </li>
                   </ol>
@@ -375,6 +394,12 @@ export default {
       } else {
         return this.project.name;
       }
+    },
+    activeProjectVersions() {
+      return this.project.versions.filter((version) => version.active);
+    },
+    inactiveProjectVersions() {
+      return this.project.versions.filter((version) => !version.active);
     },
   },
   data() {
