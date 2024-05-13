@@ -78,63 +78,16 @@
         trim
       />
     </b-form-group>
-    <b-form-group
-      id="fieldset-6"
-      :label="this.$t('admin.scheduled_notification')"
-      label-for="input-6"
-      label-class="optional"
-    >
-      <input
-        type="checkbox"
-        id="input-6"
-        v-model="schedulednotification"
-        @click="expandView()"
-      />
-    </b-form-group>
-    <b-form-group
-      v-if="schedulednotification"
-      id="fieldset-7"
-      :label="this.$t('admin.cron')"
-      label-for="input-7"
-      label-class="required"
-    >
-      <b-form-textarea
+    <b-form-group>
+      <c-switch
         id="input-7"
-        v-model="cronExpression"
-        class="required"
-        required
-        trim
+        color="primary"
+        v-model="publishScheduled"
+        label
+        v-bind="labelIcon"
+        class="optional"
       />
-    </b-form-group>
-    <b-form-group
-      v-if="schedulednotification"
-      id="fieldset-8"
-      :label="this.$t('admin.email_destinations')"
-      label-for="input-8"
-      label-class="required"
-    >
-      <b-form-textarea
-        id="input-8"
-        v-model="emailDestinations"
-        class="required"
-        required
-        trim
-      />
-    </b-form-group>
-    <b-form-group
-      v-if="schedulednotification"
-      id="fieldset-9"
-      :label="this.$t('admin.project_id')"
-      label-for="input-9"
-      label-class="required"
-    >
-      <b-form-textarea
-        id="input-9"
-        v-model="projectId"
-        class="required"
-        required
-        trim
-      />
+      {{ $t('admin.scheduled_notification') }}
     </b-form-group>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
@@ -150,9 +103,14 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
+import configPropertyMixin from '../mixins/configPropertyMixin';
+import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, configPropertyMixin],
+  components: {
+    cSwitch,
+  },
   mounted() {
     EventBus.$on('admin:templates:cloneTemplate', (template) => {
       this.name = `${template.name} - clone`;
@@ -160,10 +118,7 @@ export default {
       this.description = template.description;
       this.mimeType = template.templateMimeType;
       this.template = template.template;
-      this.schedulednotification = template.schedulednotification;
-      this.cronExpression = template.cronExpression;
-      this.emailDestinations = template.emailDestinations;
-      this.projectId = template.projectId;
+      this.publishScheduled = template.publishScheduled;
     });
     this.$root.$on('bv::modal::hide', (_, modalId) => {
       if (modalId == 'createTemplateModal') {
@@ -178,53 +133,30 @@ export default {
       description: null,
       mimeType: null,
       template: null,
-      schedulednotification: null,
-      cronExpression: null,
-      emailDestinations: null,
-      projectId: null,
+      publishScheduled: null,
     };
   },
   methods: {
     createTemplate: function () {
-      if (this.schedulednotification) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_SCHEDULEDNOTIFICATION_CREATE}`;
-        this.axios
-          .put(url, {
-            created: new Date(),
-            cronString: this.cronExpression,
-            nextExecution: null,
-            lastExecution: null,
-            destinations: this.emailDestinations,
-            projectId: this.projectId,
-          })
-          .then(() => {
-            this.$emit('refreshTable');
-            this.$toastr.s(this.$t('admin.template_created'));
-          })
-          .catch(() => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          });
-        this.$root.$emit('bv::hide::modal', 'createTemplateModal');
-      } else {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
-        this.axios
-          .put(url, {
-            name: this.name,
-            description: this.description,
-            publisherClass: this.publisherClass,
-            template: this.template,
-            templateMimeType: this.mimeType,
-            defaultPublisher: false,
-          })
-          .then(() => {
-            this.$emit('refreshTable');
-            this.$toastr.s(this.$t('admin.template_created'));
-          })
-          .catch(() => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          });
-        this.$root.$emit('bv::hide::modal', 'createTemplateModal');
-      }
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
+      this.axios
+        .put(url, {
+          name: this.name,
+          description: this.description,
+          publisherClass: this.publisherClass,
+          template: this.template,
+          templateMimeType: this.mimeType,
+          publishScheduled: this.publishScheduled,
+          defaultPublisher: false,
+        })
+        .then(() => {
+          this.$emit('refreshTable');
+          this.$toastr.s(this.$t('admin.template_created'));
+        })
+        .catch(() => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+      this.$root.$emit('bv::hide::modal', 'createTemplateModal');
     },
     resetValues: function () {
       this.name = null;
@@ -232,10 +164,7 @@ export default {
       this.description = null;
       this.mimeType = null;
       this.template = null;
-      this.schedulednotification = null;
-      this.cronExpression = null;
-      this.emailDestinations = null;
-      this.projectId = null;
+      this.publishScheduled = null;
     },
     expandView: function () {},
   },
