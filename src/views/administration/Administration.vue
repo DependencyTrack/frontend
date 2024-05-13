@@ -54,6 +54,7 @@ import Nuget from './repositories/Nuget';
 import Python from './repositories/Python';
 // Notification plugins
 import Alerts from './notifications/Alerts';
+import ScheduledAlerts from './notifications/ScheduledAlerts';
 import Templates from './notifications/Templates';
 // Integration plugins
 import DefectDojo from './integrations/DefectDojo';
@@ -103,6 +104,7 @@ export default {
     Nuget,
     Python,
     Alerts,
+    ScheduledAlerts,
     Templates,
     FortifySsc,
     DefectDojo,

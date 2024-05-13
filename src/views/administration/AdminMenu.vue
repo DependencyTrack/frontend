@@ -261,6 +261,11 @@ export default {
               route: 'notifications/alerts',
             },
             {
+              component: 'Scheduled Alerts',
+              name: this.$t('admin.scheduled_alerts'),
+              route: 'notifications/scheduledalerts',
+            },
+            {
               component: 'Templates',
               name: this.$t('admin.templates'),
               route: 'notifications/templates',
