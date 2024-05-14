@@ -135,6 +135,9 @@ export default {
                       <br/>
                       <c-switch id="notificationLogSuccessfulPublish" color="primary" v-model="logSuccessfulPublish" label v-bind="labelIcon" :title="$t('admin.alert_log_successful_publish_help')" />
                       {{ $t('admin.alert_log_successful_publish') }}
+                      <br/>
+                      <c-switch id="notificationPublishOnlyWithUpdates" color="primary" v-model="publishOnlyWithUpdates" label v-bind="labelIcon" />
+                      {{ $t('admin.alert_publish_only_with_updates') }}
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherName" disabled class="form-control disabled" readonly trim />
@@ -171,10 +174,10 @@ export default {
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
-                  <div v-if="limitToVisible === true">
-                      <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
-                      {{ $t('admin.include_active_children') }}
-                  </div>
+                    <div v-if="limitToVisible === true">
+                        <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
+                        {{ $t('admin.include_active_children') }}
+                    </div>
                   </b-col>
                   <b-col sm="6">
                     <b-form-group id="fieldset-5" :label="this.$t('admin.scope')" label-for="input-5">
@@ -184,28 +187,34 @@ export default {
                       <div class="list-group" v-if="this.scope === 'PORTFOLIO'">
                         <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
                           <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABILITY">NEW_VULNERABILITY</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABLE_DEPENDENCY">NEW_VULNERABLE_DEPENDENCY</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="PROJECT_AUDIT_CHANGE">PROJECT_AUDIT_CHANGE</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="BOM_CONSUMED">BOM_CONSUMED</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSED">BOM_PROCESSED</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSING_FAILED">BOM_PROCESSING_FAILED</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="VEX_CONSUMED">VEX_CONSUMED</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="VEX_PROCESSED">VEX_PROCESSED</b-form-checkbox></div>
+                          <!-- <div class="list-group-item"><b-form-checkbox value="NEW_VULNERABLE_DEPENDENCY">NEW_VULNERABLE_DEPENDENCY</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="PROJECT_AUDIT_CHANGE">PROJECT_AUDIT_CHANGE</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="BOM_CONSUMED">BOM_CONSUMED</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSED">BOM_PROCESSED</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSING_FAILED">BOM_PROCESSING_FAILED</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="VEX_CONSUMED">VEX_CONSUMED</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="VEX_PROCESSED">VEX_PROCESSED</b-form-checkbox></div> -->
                           <div class="list-group-item"><b-form-checkbox value="POLICY_VIOLATION">POLICY_VIOLATION</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="PROJECT_CREATED">PROJECT_CREATED</b-form-checkbox></div>
+                          <!-- <div class="list-group-item"><b-form-checkbox value="PROJECT_CREATED">PROJECT_CREATED</b-form-checkbox></div> -->
                         </b-form-checkbox-group>
                       </div>
                       <div class="list-group" v-if="this.scope === 'SYSTEM'">
                         <b-form-checkbox-group id="checkbox-group-notify-on" v-model="notifyOn">
-                          <div class="list-group-item"><b-form-checkbox value="ANALYZER">ANALYZER</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="REPOSITORY">REPOSITORY</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="USER_CREATED">USER_CREATED</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="USER_DELETED">USER_DELETED</b-form-checkbox></div>
+                          <!-- <div class="list-group-item"><b-form-checkbox value="ANALYZER">ANALYZER</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="REPOSITORY">REPOSITORY</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="USER_CREATED">USER_CREATED</b-form-checkbox></div> -->
+                          <!-- <div class="list-group-item"><b-form-checkbox value="USER_DELETED">USER_DELETED</b-form-checkbox></div> -->
                         </b-form-checkbox-group>
                       </div>
+                    </b-form-group>
+                    <b-input-group-form-input id="input-cronConfig" :label="$t('admin.cron')" input-group-size="mb-3"
+                                              :required="true"
+                                              type="text" v-model="cronConfig" lazy="true" />
+                    <b-form-group id="fieldset-7" :label="this.$t('admin.scheduled_last_execution')" label-for="input-7">
+                      <b-form-input id="input-7" v-model="lastExecutionTime" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <div style="text-align:right">
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
@@ -247,6 +256,9 @@ export default {
                 notifyOn: row.notifyOn,
                 projects: row.projects,
                 teams: row.teams,
+                cronConfig: row.cronConfig,
+                publishOnlyWithUpdates: row.publishOnlyWithUpdates,
+                lastExecutionTime: this.parseLastExecutionTime(row),
                 limitToVisible: false,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -268,6 +280,7 @@ export default {
               this.parseToken(this.alert);
               this.parseTokenHeader(this.alert);
               this.parseJiraTicketType(this.alert);
+              this.parseLastExecutionTime(this.alert);
             },
             watch: {
               enabled() {
@@ -283,6 +296,9 @@ export default {
                 this.updateNotificationRule();
               },
               teams() {
+                this.updateNotificationRule();
+              },
+              publishOnlyWithUpdates() {
                 this.updateNotificationRule();
               },
             },
@@ -330,6 +346,13 @@ export default {
                   return null;
                 }
               },
+              parseLastExecutionTime: function (alert) {
+                if (alert.lastExecutionTime) {
+                  const date = new Date(alert.lastExecutionTime * 1000);
+                  return date.toLocaleString();
+                }
+                return null;
+              },
               updateNotificationRule: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_SCHEDULED_NOTIFICATION_RULE}`;
                 this.axios
@@ -347,6 +370,8 @@ export default {
                       tokenHeader: this.tokenHeader,
                     }),
                     notifyOn: this.notifyOn,
+                    cronConfig: this.cronConfig,
+                    publishOnlyWithUpdates: this.publishOnlyWithUpdates,
                   })
                   .then((response) => {
                     this.alert = response.data;
@@ -354,6 +379,9 @@ export default {
                     this.token = this.parseToken(this.alert);
                     this.tokenHeader = this.parseTokenHeader(this.alert);
                     this.jiraTicketType = this.parseJiraTicketType(this.alert);
+                    this.lastExecutionTime = this.parseLastExecutionTime(
+                      this.alert,
+                    );
                     EventBus.$emit(
                       'admin:scheduledalerts:rowUpdate',
                       index,
