@@ -506,6 +506,7 @@
     "in_triage": "In Triage",
     "inactive": "Inaktiv",
     "inactive_active_children": "Das Projekt kann nicht auf inaktiv gesetzt werden, wenn es aktive untergeordnete Projekte hat",
+    "inactive_versions": "Inaktive Versionen",
     "include_acl": "Zugriffskontrollliste einschließen",
     "include_audit_history": "Prüfverlauf einschließen",
     "include_components": "Komponenten einbinden",

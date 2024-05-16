@@ -506,6 +506,7 @@
     "in_triage": "在分类中",
     "inactive": "不活跃",
     "inactive_active_children": "如果项目有活跃子项目，则不能将其设置为非活跃项目",
+    "inactive_versions": "非活动版本",
     "include_acl": "包括访问控制列表",
     "include_audit_history": "包括审计历史",
     "include_components": "包括组件",

@@ -506,6 +506,7 @@
     "in_triage": "Em triagem",
     "inactive": "Inativo",
     "inactive_active_children": "O projeto não pode ser definido como inativo se tiver filhos ativos",
+    "inactive_versions": "Versões inativas",
     "include_acl": "Incluir lista de controle de acesso",
     "include_audit_history": "Incluir histórico de auditoria",
     "include_components": "Incluir componentes",
