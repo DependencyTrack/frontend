@@ -506,6 +506,7 @@
     "in_triage": "ट्राइएज में",
     "inactive": "निष्क्रिय",
     "inactive_active_children": "यदि प्रोजेक्ट में सक्रिय बच्चे हैं तो उसे निष्क्रिय नहीं किया जा सकता",
+    "inactive_versions": "निष्क्रिय संस्करण",
     "include_acl": "पहुँच नियंत्रण सूची शामिल करें",
     "include_audit_history": "ऑडिट इतिहास शामिल करें",
     "include_components": "घटक शामिल करें",

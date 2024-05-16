@@ -506,6 +506,7 @@
     "in_triage": "トリアージ中",
     "inactive": "非活性",
     "inactive_active_children": "アクティブな子プロジェクトがある場合、プロジェクトを非アクティブに設定することはできません。",
+    "inactive_versions": "非アクティブなバージョン",
     "include_acl": "アクセス制御リストを含める",
     "include_audit_history": "監査履歴を含める",
     "include_components": "コンポーネントを含める",

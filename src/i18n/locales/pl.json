@@ -506,6 +506,7 @@
     "in_triage": "W segregacji",
     "inactive": "Nieaktywny",
     "inactive_active_children": "Projektu nie można ustawić jako nieaktywnego, jeśli ma aktywne elementy podrzędne",
+    "inactive_versions": "Nieaktywne wersje",
     "include_acl": "Dołącz listę kontroli dostępu",
     "include_audit_history": "Dołącz historię audytu",
     "include_components": "Uwzględnij komponenty",

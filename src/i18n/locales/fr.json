@@ -506,6 +506,7 @@
     "in_triage": "Au tri",
     "inactive": "Inactif",
     "inactive_active_children": "Le projet ne peut pas être défini comme inactif s'il a des enfants actifs",
+    "inactive_versions": "Versions inactives",
     "include_acl": "Inclure la liste de contrôle d'accès",
     "include_audit_history": "Inclure l'historique d'audit",
     "include_components": "Inclure les composants",

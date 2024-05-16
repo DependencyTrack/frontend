@@ -506,6 +506,7 @@
     "in_triage": "В Triage",
     "inactive": "Неактивний",
     "inactive_active_children": "Проект не можна зробити неактивним, якщо він має активних дітей",
+    "inactive_versions": "Неактивні версії",
     "include_acl": "Додайте список контролю доступу",
     "include_audit_history": "Включіть історію аудиту",
     "include_components": "Включіть компоненти",
