@@ -21,6 +21,10 @@ on:
         required: false
         default: false
         description: 'Set if the container image gets publish and scan once its build'
+      ref-name:
+        type: string
+        required: true
+        description: 'Short ref name of the branch or tag that triggered the workflow run'
     secrets:
       registry-0-usr:
         required: true
@@ -38,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4.1.6
 
       - name: Set up NodeJs
         uses: actions/setup-node@v4.0.2
@@ -54,7 +58,7 @@ jobs:
           npm run build --if-present
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: assembled-frontend-node${{ matrix.node-version }}
           path: |-
@@ -68,10 +72,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4.1.6
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4.1.4
+        uses: actions/download-artifact@v4.1.7
         with:
           name: assembled-frontend-node${{ inputs.node-version-package }}
 
@@ -79,7 +83,7 @@ jobs:
         uses: docker/setup-qemu-action@v3.0.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.2.0
+        uses: docker/setup-buildx-action@v3.3.0
         id: buildx
         with:
           install: true
@@ -95,10 +99,17 @@ jobs:
       - name: Set Container Tags
         id: tags
         run: |-
-          TAGS="${TAGS},docker.io/dependencytrack/frontend:${{ inputs.app-version }}"
+          IMAGE_NAME="docker.io/dependencytrack/frontend"
+          REF_NAME="${{ inputs.ref-name }}"
+          TAGS=""
 
-          if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
-            TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
+          if [[ $REF_NAME == feature-* ]]; then
+            TAGS="${IMAGE_NAME}:${REF_NAME,,}"
+          else
+            TAGS="${IMAGE_NAME}:${{ inputs.app-version }}"
+            if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
+              TAGS="${TAGS},${IMAGE_NAME}:latest"
+            fi
           fi
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
@@ -116,7 +127,7 @@ jobs:
 
       - name: Run Trivy Vulnerability Scanner
         if: ${{ inputs.publish-container }}
-        uses: aquasecurity/trivy-action@0.19.0
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
           format: 'sarif'

@@ -1,4 +1,4 @@
-name: Lint
+name: i18n
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ env:
   NODE_VERSION: 18
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,10 +32,8 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Lint Prettier
-        run: npm run prettier
+      - name: Check for Translations
+        run: |
+          mv src/assets/scss/vendors/chart.js src/assets/scss/vendors/chart.js.skip
+          npm run vue-i18n-extract
         continue-on-error: false
-
-      - name: Lint ESLint
-        run: npm run eslint
-        continue-on-error: true

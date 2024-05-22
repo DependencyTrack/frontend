@@ -35,7 +35,7 @@
         }}</b-tooltip>
         <b-dropdown
           variant="outline-primary"
-          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
             <span class="fa fa-download"></span>
@@ -275,7 +275,7 @@ export default {
           title: this.$t('message.vulnerabilities'),
           field: 'metrics',
           sortable: false,
-          formatter(metrics, row, index) {
+          formatter: function (metrics, row, index) {
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
@@ -290,11 +290,12 @@ export default {
                 medium: metrics.medium,
                 low: metrics.low,
                 unassigned: metrics.unassigned,
+                $t: this.$t.bind(this),
               },
             });
             progressBar.$mount();
             return progressBar.$el.outerHTML;
-          },
+          }.bind(this),
         },
       ],
       data: [],

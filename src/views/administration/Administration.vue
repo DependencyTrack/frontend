@@ -26,6 +26,7 @@ import InternalComponents from './configuration/InternalComponents';
 import Jira from './configuration/JiraConfig';
 import Search from './configuration/Search.vue';
 import TaskScheduler from './configuration/TaskScheduler.vue';
+import Experimental from './configuration/Experimental.vue';
 // Analyzer plugins
 import InternalAnalyzer from './analyzers/InternalAnalyzer';
 import OssIndexAnalyzer from './analyzers/OssIndexAnalyzer';
@@ -43,8 +44,10 @@ import Cpan from './repositories/Cpan';
 import Gem from './repositories/Gem';
 import GitHub from './repositories/GitHub.vue';
 import GoModules from './repositories/GoModules';
+import Hackage from './repositories/Hackage.vue';
 import Hex from './repositories/Hex';
 import Maven from './repositories/Maven';
+import Nixpkgs from './repositories/Nixpkgs.vue';
 import Npm from './repositories/Npm';
 import Nuget from './repositories/Nuget';
 import Python from './repositories/Python';
@@ -75,6 +78,7 @@ export default {
     InternalComponents,
     TaskScheduler,
     Search,
+    Experimental,
     InternalAnalyzer,
     OssIndexAnalyzer,
     VulnDbAnalyzer,
@@ -88,8 +92,10 @@ export default {
     Gem,
     GitHub,
     GoModules,
+    Hackage,
     Hex,
     Maven,
+    Nixpkgs,
     Npm,
     Cpan,
     Nuget,

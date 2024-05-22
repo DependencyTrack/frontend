@@ -81,9 +81,53 @@ for this scenario, simply change the value of API_BASE_URL in static/config.json
 
 ## Internationalization (i18n)
 
-This project supports internationalization. Currently, only English language is supported. Pull requests to support additional languages are encouraged.
+This project supports internationalization. Supported languages are:
 
-Note to developers: Textual labels are defined in `src/i18n/locales/{lang}.json`. Ensure that all labels are defined here and that components use i18n, not textual labels directly.
+- 🇩🇪 [German](src/i18n/locales/de.json)
+- 🇺🇸 [English](src/i18n/locales/en.json)
+- 🇪🇸 [Spanish](src/i18n/locales/es.json)
+- 🇫🇷 [French](src/i18n/locales/fr.json)
+- 🇮🇳 [Hindi](src/i18n/locales/hi.json)
+- 🇮🇹 [Italian](src/i18n/locales/it.json)
+- 🇯🇵 [Japanese](src/i18n/locales/ja.json)
+- 🇵🇱 [Polish](src/i18n/locales/pl.json)
+- 🇵🇹 [Portuguese](src/i18n/locales/pt.json)
+- 🇧🇷 [Portuguese (Brazil)](src/i18n/locales/pt-BR.json)
+- 🇷🇺 [Russian](src/i18n/locales/ru.json)
+- 🇺🇦 [Ukrainian](src/i18n/locales/uk-UA.json)
+- 🇨🇳 [Chinese](src/i18n/locales/zh.json)
+
+Pull requests to add support for additional languages, or improve existing
+ones are highly encouraged.
+
+> [!NOTE]
+> The core maintainers are currently able to support English and German.
+> Other languages rely on community contributions, and will be subject to
+> machine translation otherwise.
+
+Dependency-Track tries to detect the language preference from the user's browser.
+If no matching language is available, it will fall back to English.
+
+Users can customize their language preference via the profile dropdown menu:
+
+![Profile dropdown menu with language picker](.github/images/i18n_language-picker.png)
+
+> [!NOTE]
+> The page may need to be reloaded in order for the language preference to take
+> affect across all elements of the application.
+
+### Adding or Improving Translations
+
+Translations are defined in `src/i18n/locales/{lang}.json`, for example [en.json](src/i18n/locales/en.json).
+We recommend using [VS Code] with the [i18n Ally] extension when working on translation.
+The extension provides an overview of translation progress across all languages:
+
+![Translation progress in i18n Ally](.github/images/i18n_i18n-ally-progress.png)
+
+In case of missing translations, it is possible to translate automatically using Google Translate.
+To do this, hover over the _No Translation_ item of a language, and click the globe icon:
+
+![Machine translation in i18n Ally](.github/images/i18n_i18n-ally-translate.png)
 
 ## Copyright & License
 
@@ -93,3 +137,5 @@ Permission to modify and redistribute is granted under the terms of the
 Apache 2.0 license. See the [LICENSE] file for the full license.
 
 [License]: https://github.com/DependencyTrack/frontend/blob/master/LICENSE
+[VS Code]: https://code.visualstudio.com/
+[i18n Ally]: https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally

@@ -39,20 +39,42 @@
                         ></i
                       ></a>
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in project.versions">
+                        <span v-for="projectVersion in activeProjectVersions">
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
                               params: { uuid: projectVersion.uuid },
                             }"
-                            >{{ projectVersion.version }}</b-dropdown-item
                           >
+                            {{ projectVersion.version }}
+                          </b-dropdown-item>
                         </span>
+
+                        <b-dropdown-group
+                          v-if="inactiveProjectVersions.length > 0"
+                          :header="$t('message.inactive_versions')"
+                        >
+                          <span
+                            v-for="projectVersion in inactiveProjectVersions"
+                          >
+                            <b-dropdown-item
+                              :to="{
+                                name: 'Project',
+                                params: { uuid: projectVersion.uuid },
+                              }"
+                            >
+                              {{ projectVersion.version }}
+                            </b-dropdown-item>
+                          </span>
+                        </b-dropdown-group>
                       </ul>
                     </li>
                   </ol>
                   {{ project.version }}
                 </b-col>
+                <b-badge v-if="!this.project.active" :variant="'tab-warn'">
+                  {{ $t('message.inactive').toUpperCase() }}
+                </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
                     class="text-muted font-xs font-italic align-text-top text-truncate"
@@ -376,6 +398,12 @@ export default {
         return this.project.name;
       }
     },
+    activeProjectVersions() {
+      return this.project.versions.filter((version) => version.active);
+    },
+    inactiveProjectVersions() {
+      return this.project.versions.filter((version) => !version.active);
+    },
   },
   data() {
     return {
@@ -541,5 +569,9 @@ export default {
 }
 .badge {
   margin-right: 0.4rem;
+}
+.dropdown-menu {
+  max-height: 30rem;
+  overflow-y: auto;
 }
 </style>
