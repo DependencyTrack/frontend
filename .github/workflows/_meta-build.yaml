@@ -127,7 +127,7 @@ jobs:
 
       - name: Run Trivy Vulnerability Scanner
         if: ${{ inputs.publish-container }}
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.21.0
         with:
           image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
           format: 'sarif'
