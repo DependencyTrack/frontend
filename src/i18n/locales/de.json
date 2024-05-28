@@ -231,6 +231,7 @@
     "scheduled_alert_deleted": "Geplanter Alarm gelöscht",
     "scheduled_last_execution": "Letzte Ausführung",
     "scheduled_notification": "Geplante Benachrichtigung",
+    "scheduled_notify_on_info": "Für jede ausgewählte Gruppe wird eine separate E-Mail mit einer Zusammenfassung aller Benachrichtigungen der jeweiligen Gruppe seit der letzten Ausführung gesendet.",
     "scope": "Scope",
     "select_ecosystem": "Ökosysteme auswählen",
     "select_ldap_group": "LDAP-Gruppe auswählen",

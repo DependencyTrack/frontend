@@ -231,6 +231,7 @@
     "scheduled_alert_deleted": "Scheduled alert deleted",
     "scheduled_last_execution": "Last execution",
     "scheduled_notification": "Scheduled notification",
+    "scheduled_notify_on_info": "For each group selected a seperate email is sent with a summary of all notifications of the respective group since the last execution.",
     "scope": "Scope",
     "select_ecosystem": "Select Ecosystems",
     "select_ldap_group": "Select LDAP Group",
