@@ -210,7 +210,7 @@ export default {
                         </b-form-checkbox-group>
                       </div>
                     </b-form-group>
-                    <b-input-group-form-input id="input-cronConfig" :label="$t('admin.cron')" input-group-size="mb-3"
+                    <b-input-group-form-input id="input-cronConfig" :label="$t('admin.cron')" :title="$t('admin.cron_help')" input-group-size="mb-3"
                                               :required="true"
                                               type="text" v-model="cronConfig" lazy="true" />
                     <b-form-group id="fieldset-7" :label="this.$t('admin.scheduled_last_execution')" label-for="input-7">

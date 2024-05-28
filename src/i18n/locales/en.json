@@ -70,6 +70,7 @@
     "create_template": "Create Template",
     "create_user": "Create User",
     "cron": "Cron Expression",
+    "cron_help": "Cron expression has to match the following pattern: '[*] * * * * *' -> [(optional) seconds], minutes, hours, day of month, month, day of week.\nSupported special characters: * / , L\n(e. g. '0 0 0 * * 5L' -> at midnight on the last Friday of every month, '0 10 1,5,10 * *' -> at 10:00 AM on the 1st, 5th and 10th day of every month)",
     "default": "Default",
     "default_language": "Default Language",
     "default_language_desc": "Default language, which is used for everyone, when they didn't specify one. Langauge from Browser will be used, when this is disabled.",
