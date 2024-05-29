@@ -218,6 +218,10 @@ export default {
                                               :required="true"
                                               type="text" v-model="cronConfig" lazy="true" />
                     <b-form-group id="fieldset-7" :label="this.$t('admin.scheduled_last_execution')" label-for="input-7">
+                      <p class="font-sm text-muted">
+                        <span class="fa fa-info-circle"></span>
+                        {{ $t('admin.scheduled_last_execution_info') }}
+                      </p>
                       <b-form-input id="input-7" v-model="lastExecutionTime" disabled class="form-control disabled" readonly trim />
                     </b-form-group>
                     <div style="text-align:right">
@@ -225,6 +229,7 @@ export default {
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
                        <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                       <b-button variant="outline-primary" @click="runNotificationRuleNow">{{ $t('admin.scheduled_run_now') }}</b-button>
                        <b-button variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
                     </div>
                   </b-col>
@@ -359,6 +364,46 @@ export default {
               },
               updateNotificationRule: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_SCHEDULED_NOTIFICATION_RULE}`;
+                this.axios
+                  .post(url, {
+                    uuid: this.uuid,
+                    name: this.name,
+                    enabled: this.enabled,
+                    logSuccessfulPublish: this.logSuccessfulPublish,
+                    notifyChildren: this.notifyChildren,
+                    notificationLevel: this.notificationLevel,
+                    publisherConfig: JSON.stringify({
+                      destination: this.destination,
+                      jiraTicketType: this.jiraTicketType,
+                      token: this.token,
+                      tokenHeader: this.tokenHeader,
+                    }),
+                    notifyOn: this.notifyOn,
+                    cronConfig: this.cronConfig,
+                    publishOnlyWithUpdates: this.publishOnlyWithUpdates,
+                  })
+                  .then((response) => {
+                    this.alert = response.data;
+                    this.destination = this.parseDestination(this.alert);
+                    this.token = this.parseToken(this.alert);
+                    this.tokenHeader = this.parseTokenHeader(this.alert);
+                    this.jiraTicketType = this.parseJiraTicketType(this.alert);
+                    this.lastExecutionTime = this.parseLastExecutionTime(
+                      this.alert,
+                    );
+                    EventBus.$emit(
+                      'admin:scheduledalerts:rowUpdate',
+                      index,
+                      this.alert,
+                    );
+                    this.$toastr.s(this.$t('message.updated'));
+                  })
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+              },
+              runNotificationRuleNow: function () {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_SCHEDULED_NOTIFICATION_RULE}/execute`;
                 this.axios
                   .post(url, {
                     uuid: this.uuid,
