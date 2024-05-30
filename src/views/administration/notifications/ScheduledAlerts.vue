@@ -407,27 +407,9 @@ export default {
                 this.axios
                   .post(url, {
                     uuid: this.uuid,
-                    name: this.name,
-                    enabled: this.enabled,
-                    logSuccessfulPublish: this.logSuccessfulPublish,
-                    notifyChildren: this.notifyChildren,
-                    notificationLevel: this.notificationLevel,
-                    publisherConfig: JSON.stringify({
-                      destination: this.destination,
-                      jiraTicketType: this.jiraTicketType,
-                      token: this.token,
-                      tokenHeader: this.tokenHeader,
-                    }),
-                    notifyOn: this.notifyOn,
-                    cronConfig: this.cronConfig,
-                    publishOnlyWithUpdates: this.publishOnlyWithUpdates,
                   })
                   .then((response) => {
                     this.alert = response.data;
-                    this.destination = this.parseDestination(this.alert);
-                    this.token = this.parseToken(this.alert);
-                    this.tokenHeader = this.parseTokenHeader(this.alert);
-                    this.jiraTicketType = this.parseJiraTicketType(this.alert);
                     this.lastExecutionTime = this.parseLastExecutionTime(
                       this.alert,
                     );
@@ -436,7 +418,7 @@ export default {
                       index,
                       this.alert,
                     );
-                    this.$toastr.s(this.$t('message.updated'));
+                    this.$toastr.s(this.$t('message.executed'));
                   })
                   .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
