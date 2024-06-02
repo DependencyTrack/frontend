@@ -188,6 +188,7 @@ export default {
                           <div class="list-group-item"><b-form-checkbox value="BOM_CONSUMED">BOM_CONSUMED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSED">BOM_PROCESSED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSING_FAILED">BOM_PROCESSING_FAILED</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="BOM_VALIDATION_FAILED">BOM_VALIDATION_FAILED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="VEX_CONSUMED">VEX_CONSUMED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="VEX_PROCESSED">VEX_PROCESSED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="POLICY_VIOLATION">POLICY_VIOLATION</b-form-checkbox></div>
