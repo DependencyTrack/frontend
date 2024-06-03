@@ -267,7 +267,8 @@ export default {
                 teams: row.teams,
                 cronConfig: row.cronConfig,
                 publishOnlyWithUpdates: row.publishOnlyWithUpdates,
-                lastExecutionTime: this.parseLastExecutionTime(row),
+                lastExecutionTime:
+                  this.parseLastExecutionTimeToLocaleString(row),
                 limitToVisible: false,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -289,7 +290,7 @@ export default {
               this.parseToken(this.alert);
               this.parseTokenHeader(this.alert);
               this.parseJiraTicketType(this.alert);
-              this.parseLastExecutionTime(this.alert);
+              this.parseLastExecutionTimeToLocaleString(this.alert);
             },
             watch: {
               enabled() {
