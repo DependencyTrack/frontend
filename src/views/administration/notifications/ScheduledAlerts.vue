@@ -355,9 +355,9 @@ export default {
                   return null;
                 }
               },
-              parseLastExecutionTime: function (alert) {
+              parseLastExecutionTimeToLocaleString: function (alert) {
                 if (alert.lastExecutionTime) {
-                  const date = new Date(alert.lastExecutionTime * 1000);
+                  const date = new Date(alert.lastExecutionTime);
                   return date.toLocaleString();
                 }
                 return null;
@@ -388,9 +388,8 @@ export default {
                     this.token = this.parseToken(this.alert);
                     this.tokenHeader = this.parseTokenHeader(this.alert);
                     this.jiraTicketType = this.parseJiraTicketType(this.alert);
-                    this.lastExecutionTime = this.parseLastExecutionTime(
-                      this.alert,
-                    );
+                    this.lastExecutionTime =
+                      this.parseLastExecutionTimeToLocaleString(this.alert);
                     EventBus.$emit(
                       'admin:scheduledalerts:rowUpdate',
                       index,
@@ -410,9 +409,8 @@ export default {
                   })
                   .then((response) => {
                     this.alert = response.data;
-                    this.lastExecutionTime = this.parseLastExecutionTime(
-                      this.alert,
-                    );
+                    this.lastExecutionTime =
+                      this.parseLastExecutionTimeToLocaleString(this.alert);
                     EventBus.$emit(
                       'admin:scheduledalerts:rowUpdate',
                       index,
