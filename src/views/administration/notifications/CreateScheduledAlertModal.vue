@@ -33,18 +33,6 @@
       ></b-form-select>
     </b-form-group>
     <b-form-group
-      id="fieldset-3"
-      :label="this.$t('admin.notification_level')"
-      label-for="input-3"
-    >
-      <b-form-select
-        id="input-3"
-        v-model="notificationLevel"
-        :options="availableLevels"
-        required
-      ></b-form-select>
-    </b-form-group>
-    <b-form-group
       id="fieldset-4"
       :label="this.$t('admin.publisher')"
       label-for="input-4"
@@ -87,11 +75,6 @@ export default {
       availableScopes: [
         { value: 'PORTFOLIO', text: 'Portfolio' },
         { value: 'SYSTEM', text: 'System' },
-      ],
-      availableLevels: [
-        { value: 'INFORMATIONAL', text: 'Informational', selected: true },
-        { value: 'WARNING', text: 'Warning' },
-        { value: 'ERROR', text: 'Error' },
       ],
       availablePublishers: [],
     };

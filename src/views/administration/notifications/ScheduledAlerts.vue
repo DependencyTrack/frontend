@@ -87,14 +87,6 @@ export default {
           },
         },
         {
-          title: this.$t('admin.notification_level'),
-          field: 'notificationLevel',
-          sortable: false,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
-          },
-        },
-        {
           title: this.$t('admin.enabled'),
           field: 'enabled',
           sortable: false,
@@ -144,9 +136,6 @@ export default {
                     </b-form-group>
                     <b-form-group id="fieldset-2" :label="this.$t('admin.publisher_class')" label-for="input-2">
                       <b-form-input id="input-2" v-model="publisherClass" disabled class="form-control disabled" readonly trim />
-                    </b-form-group>
-                    <b-form-group id="fieldset-3" :label="this.$t('admin.notification_level')" label-for="input-3">
-                      <b-form-select id="input-3" v-model="notificationLevel" :options="availableLevels" required></b-form-select>
                     </b-form-group>
                     <b-input-group-form-input id="input-destination" :label="$t('admin.destination')" input-group-size="mb-3"
                                               :required="(!(this.alert.hasOwnProperty('teams') && this.alert.teams != null && this.alert.teams.length > 0)).toString()"
@@ -256,7 +245,6 @@ export default {
                 notifyChildren: row.notifyChildren,
                 publisherName: row.publisher.name,
                 publisherClass: row.publisher.publisherClass,
-                notificationLevel: row.notificationLevel,
                 destination: this.parseDestination(row),
                 token: this.parseToken(row),
                 tokenHeader: this.parseTokenHeader(row),
@@ -274,15 +262,6 @@ export default {
                   dataOn: '\u2713',
                   dataOff: '\u2715',
                 },
-                availableLevels: [
-                  {
-                    value: 'INFORMATIONAL',
-                    text: 'Informational',
-                    selected: true,
-                  },
-                  { value: 'WARNING', text: 'Warning' },
-                  { value: 'ERROR', text: 'Error' },
-                ],
               };
             },
             created() {
@@ -372,7 +351,6 @@ export default {
                     enabled: this.enabled,
                     logSuccessfulPublish: this.logSuccessfulPublish,
                     notifyChildren: this.notifyChildren,
-                    notificationLevel: this.notificationLevel,
                     publisherConfig: JSON.stringify({
                       destination: this.destination,
                       jiraTicketType: this.jiraTicketType,
