@@ -82,6 +82,7 @@
     "growl": "1.10.5",
     "https-proxy-agent": "2.2.4",
     "prettier": "3.2.5",
+    "prettier-plugin-sort-json": "4.0.0",
     "sass": "1.72.0",
     "sass-loader": "8.0.2",
     "uuid": "9.0.1",
