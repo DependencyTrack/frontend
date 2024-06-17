@@ -78,6 +78,17 @@
         trim
       />
     </b-form-group>
+    <b-form-group>
+      <c-switch
+        id="input-7"
+        color="primary"
+        v-model="publishScheduled"
+        label
+        v-bind="labelIcon"
+        class="optional"
+      />
+      {{ $t('admin.scheduled_notification') }}
+    </b-form-group>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
@@ -92,9 +103,14 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
+import configPropertyMixin from '../mixins/configPropertyMixin';
+import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, configPropertyMixin],
+  components: {
+    cSwitch,
+  },
   mounted() {
     EventBus.$on('admin:templates:cloneTemplate', (template) => {
       this.name = `${template.name} - clone`;
@@ -102,6 +118,7 @@ export default {
       this.description = template.description;
       this.mimeType = template.templateMimeType;
       this.template = template.template;
+      this.publishScheduled = template.publishScheduled;
     });
     this.$root.$on('bv::modal::hide', (_, modalId) => {
       if (modalId == 'createTemplateModal') {
@@ -116,6 +133,7 @@ export default {
       description: null,
       mimeType: null,
       template: null,
+      publishScheduled: null,
     };
   },
   methods: {
@@ -128,6 +146,7 @@ export default {
           publisherClass: this.publisherClass,
           template: this.template,
           templateMimeType: this.mimeType,
+          publishScheduled: this.publishScheduled,
           defaultPublisher: false,
         })
         .then(() => {
@@ -145,7 +164,9 @@ export default {
       this.description = null;
       this.mimeType = null;
       this.template = null;
+      this.publishScheduled = null;
     },
+    expandView: function () {},
   },
 };
 </script>

@@ -31,6 +31,8 @@
   "URL_LOGIN": "api/v1/user/login",
   "URL_METRICS": "api/v1/metrics",
   "URL_NOTIFICATION_PUBLISHER": "api/v1/notification/publisher",
+  "URL_NOTIFICATION_PUBLISHER_SCHEDULED": "api/v1/notification/publisher/scheduled",
+  "URL_NOTIFICATION_PUBLISHER_EVENT": "api/v1/notification/publisher/event",
   "URL_NOTIFICATION_RULE": "api/v1/notification/rule",
   "URL_OIDC_AVAILABLE": "api/v1/oidc/available",
   "URL_OIDC_GROUP": "api/v1/oidc/group",
