@@ -26,6 +26,7 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import router from '@/router';
 
 export default {
   props: {
@@ -56,8 +57,13 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          formatter: (value, row) => {
+            // TODO: Close modal when link is clicked.
+            const href = router.resolve({
+              name: 'Project',
+              params: { uuid: row.uuid },
+            }).href;
+            return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
           },
         },
         {
