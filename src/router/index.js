@@ -11,6 +11,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 // Views
 const Dashboard = () => import('@/views/Dashboard');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
+const TagList = () => import('@/views/portfolio/tags/TagList.vue');
 const ComponentSearch = () =>
   import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () =>
@@ -261,6 +262,17 @@ function configRoutes() {
           meta: {
             i18n: 'message.vulnerabilities',
             sectionPath: '/vulnerabilities',
+            permission: 'VIEW_PORTFOLIO',
+          },
+        },
+        {
+          path: 'tags',
+          name: 'Tags',
+          component: TagList,
+          meta: {
+            title: i18n.t('message.tags'),
+            i18n: 'message.tags',
+            sectionPath: '/tags',
             permission: 'VIEW_PORTFOLIO',
           },
         },
