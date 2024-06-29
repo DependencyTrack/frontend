@@ -1,16 +1,6 @@
 on:
   workflow_call:
     inputs:
-      node-versions:
-        type: string
-        required: false
-        default: '["18"]'
-        description: 'Stringified JSON Array of node versions to build against'
-      node-version-package:
-        type: string
-        required: false
-        default: '18'
-        description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
       app-version:
         type: string
         required: false
@@ -35,11 +25,6 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version: ${{ fromJson(inputs.node-versions) }}
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.1.7
@@ -47,7 +32,7 @@ jobs:
       - name: Set up NodeJs
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Run Npm Build
@@ -60,7 +45,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: assembled-frontend-node${{ matrix.node-version }}
+          name: assembled-frontend
           path: |-
             dist/
             bom.*
@@ -77,7 +62,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4.1.7
         with:
-          name: assembled-frontend-node${{ inputs.node-version-package }}
+          name: assembled-frontend
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.0.0
