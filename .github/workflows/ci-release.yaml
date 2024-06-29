@@ -26,7 +26,7 @@ jobs:
       - name: Set up NodeJs
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Bump version and tag via NodeJS

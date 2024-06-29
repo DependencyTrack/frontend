@@ -15,8 +15,6 @@ jobs:
   call-build:
     uses: ./.github/workflows/_meta-build.yaml
     with:
-      node-versions: '["18", "20"]'
-      node-version-package: '18'
       app-version: 'snapshot'
       publish-container: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'feature-') }}
       ref-name: ${{ github.ref_name }}
