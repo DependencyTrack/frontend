@@ -38,6 +38,11 @@ export default {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.tag}/project`;
     },
+    untag: function (projectUuids) {
+      return this.axios.delete(this.apiUrl(), {
+        data: projectUuids,
+      });
+    },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
@@ -53,6 +58,11 @@ export default {
         dataOff: '\u2715',
       },
       columns: [
+        {
+          field: 'state',
+          checkbox: true,
+          align: 'center',
+        },
         {
           title: this.$t('message.name'),
           field: 'name',
@@ -77,6 +87,28 @@ export default {
       ],
       data: [],
       options: {
+        buttons: {
+          btnDeleteSelected: {
+            text: 'Untag',
+            icon: 'fa fa-trash',
+            event: () => {
+              let selected = this.$refs.table.getSelections();
+              if (!selected) {
+                return;
+              }
+
+              this.untag(selected.map((row) => row.uuid))
+                .then(() => {
+                  this.$toastr.s(this.$t('message.updated'));
+                  this.refreshTable();
+                })
+                .catch((error) => {
+                  this.$toastr.e(this.$t('message.updated'));
+                });
+            },
+          },
+        },
+        clickToSelect: true,
         search: true,
         showColumns: true,
         showRefresh: true,
