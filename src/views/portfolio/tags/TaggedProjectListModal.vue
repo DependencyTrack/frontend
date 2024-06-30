@@ -15,9 +15,9 @@
     >
     </bootstrap-table>
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.cancel')
-      }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()"
+        >{{ $t('message.cancel') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
@@ -27,13 +27,14 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import router from '@/router';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 
 export default {
   props: {
     tag: String,
     index: Number,
   },
-  mixins: [permissionsMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin],
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.tag}/project`;
@@ -50,6 +51,21 @@ export default {
         silent: true,
       });
     },
+  },
+  mounted() {
+    // NB: Because this modal is loaded dynamically from TagList,
+    // this.$refs.table may still be undefined when mounted() is called.
+    // https://jefrydco.id/en/blog/safe-access-vue-refs-undefined
+    const interval = setInterval(() => {
+      if (this.$refs.table) {
+        this.$refs.table.refreshOptions({
+          showBtnDeleteSelected: this.isPermitted(
+            this.PERMISSIONS.PORTFOLIO_MANAGEMENT,
+          ),
+        });
+        clearInterval(interval);
+      }
+    }, 50);
   },
   data() {
     return {
@@ -89,25 +105,28 @@ export default {
       options: {
         buttons: {
           btnDeleteSelected: {
-            text: 'Untag',
-            icon: 'fa fa-trash',
+            icon: 'fa fa-minus',
+            attributes: {
+              title: this.$t('message.unassign_tag_from_selection'),
+            },
             event: () => {
               let selected = this.$refs.table.getSelections();
-              if (!selected) {
+              if (
+                !selected ||
+                (Array.isArray(selected) && selected.length === 0)
+              ) {
+                this.$toastr.w(this.$t('message.empty_selection'));
                 return;
               }
 
-              this.untag(selected.map((row) => row.uuid))
-                .then(() => {
-                  this.$toastr.s(this.$t('message.updated'));
-                  this.refreshTable();
-                })
-                .catch((error) => {
-                  this.$toastr.e(this.$t('message.updated'));
-                });
+              this.untag(selected.map((row) => row.uuid)).then(() => {
+                this.$toastr.s(this.$t('message.tag_unassigned_successfully'));
+                this.refreshTable();
+              });
             },
           },
         },
+        buttonsOrder: ['btnDeleteSelected', 'refresh', 'columns'],
         clickToSelect: true,
         search: true,
         showColumns: true,

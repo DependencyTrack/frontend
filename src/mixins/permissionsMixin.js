@@ -15,6 +15,7 @@ export default {
         POLICY_VIOLATION_ANALYSIS: permissions.POLICY_VIOLATION_ANALYSIS,
         SYSTEM_CONFIGURATION: permissions.SYSTEM_CONFIGURATION,
         POLICY_MANAGEMENT: permissions.POLICY_MANAGEMENT,
+        TAG_MANAGEMENT: permissions.TAG_MANAGEMENT,
       },
     };
   },

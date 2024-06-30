@@ -40,6 +40,11 @@ export default {
       });
     },
   },
+  mounted() {
+    this.$refs.table.refreshOptions({
+      showBtnDeleteSelected: this.isPermitted(this.PERMISSIONS.TAG_MANAGEMENT),
+    });
+  },
   data() {
     return {
       errorsByTagName: {},
@@ -124,17 +129,23 @@ export default {
       options: {
         buttons: {
           btnDeleteSelected: {
-            text: 'Delete',
             icon: 'fa fa-trash',
+            attributes: {
+              title: this.$t('message.delete_selected'),
+            },
             event: () => {
               let selected = this.$refs.table.getSelections();
-              if (!selected) {
+              if (
+                !selected ||
+                (Array.isArray(selected) && selected.length === 0)
+              ) {
+                this.$toastr.w(this.$t('message.empty_selection'));
                 return;
               }
 
               this.deleteTags(selected.map((row) => row.name))
                 .then(() => {
-                  this.$toastr.s(this.$t('message.updated'));
+                  this.$toastr.s(this.$t('message.selection_deleted'));
                   this.refreshTable();
                 })
                 .catch((error) => {
@@ -152,6 +163,7 @@ export default {
             },
           },
         },
+        buttonsOrder: ['btnDeleteSelected', 'refresh', 'columns'],
         clickToSelect: true,
         uniqueId: 'name',
         search: true,
