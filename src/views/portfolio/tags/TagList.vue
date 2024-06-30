@@ -28,6 +28,11 @@ export default {
     PortfolioWidgetRow,
   },
   methods: {
+    deleteTags: function (tagNames) {
+      return this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_TAG}`, {
+        data: tagNames,
+      });
+    },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: `${this.$api.BASE_URL}/${this.$api.URL_TAG}`,
@@ -35,9 +40,20 @@ export default {
       });
     },
   },
+  mounted() {
+    this.$refs.table.refreshOptions({
+      showBtnDeleteSelected: this.isPermitted(this.PERMISSIONS.TAG_MANAGEMENT),
+    });
+  },
   data() {
     return {
+      errorsByTagName: {},
       columns: [
+        {
+          field: 'state',
+          checkbox: true,
+          align: 'center',
+        },
         {
           title: this.$t('message.name'),
           field: 'name',
@@ -64,12 +80,14 @@ export default {
               template: `
                 <div>
                   <b-link v-b-modal="\`taggedProjectListModal-${index}\`">{{ value }}</b-link>
+                  <span v-if="error" class="fa fa-apple"></span>
                   <tagged-project-list-modal :tag="tagName" :index="index"/>
                 </div>`,
               data() {
                 return {
                   index: index,
                   tagName: row.name,
+                  error: row.error,
                   value: value,
                 };
               },
@@ -109,6 +127,45 @@ export default {
       ],
       data: [],
       options: {
+        buttons: {
+          btnDeleteSelected: {
+            icon: 'fa fa-trash',
+            attributes: {
+              title: this.$t('message.delete_selected'),
+            },
+            event: () => {
+              let selected = this.$refs.table.getSelections();
+              if (
+                !selected ||
+                (Array.isArray(selected) && selected.length === 0)
+              ) {
+                this.$toastr.w(this.$t('message.empty_selection'));
+                return;
+              }
+
+              this.deleteTags(selected.map((row) => row.name))
+                .then(() => {
+                  this.$toastr.s(this.$t('message.selection_deleted'));
+                  this.refreshTable();
+                })
+                .catch((error) => {
+                  if (
+                    error.response.status >= 400 &&
+                    error.response.status < 500 &&
+                    error.response.headers['content-type'] ===
+                      'application/problem+json' &&
+                    error.response.data.errors
+                  ) {
+                    // TODO: Use this to highlight rows that caused deletion to fail.
+                    this.errorsByTagName = error.response.data.errors;
+                  }
+                });
+            },
+          },
+        },
+        buttonsOrder: ['btnDeleteSelected', 'refresh', 'columns'],
+        clickToSelect: true,
+        uniqueId: 'name',
         search: true,
         showColumns: true,
         showRefresh: true,
