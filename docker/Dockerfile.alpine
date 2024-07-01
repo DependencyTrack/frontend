@@ -10,7 +10,7 @@ ENV TZ=Etc/UTC \
     # Set default settings that may get overridden to empty values by
     # the entrypoint script, if not explicitly provided by the user
     OIDC_SCOPE="openid profile email" \
-    BASE_HREF="/"
+    BASE_PATH="/"
 USER root
 
 # Copy the static HTML and JS files to the application directory
