@@ -103,6 +103,12 @@ export default {
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
+          name: 'Tags',
+          url: '/tags',
+          icon: 'fa fa-tag',
+          permission: permissions.VIEW_PORTFOLIO,
+        },
+        {
           title: true,
           name: this.$t('message.global_audit'),
           class: '',

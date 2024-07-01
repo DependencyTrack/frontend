@@ -81,7 +81,7 @@ export default {
         {
           title: this.$t('message.cwe'),
           field: 'cwes',
-          sortable: false,
+          sortable: true,
           formatter(value, row, index) {
             if (typeof value !== 'undefined') {
               let s = '';
@@ -99,7 +99,7 @@ export default {
         {
           title: this.$t('message.severity'),
           field: 'severity',
-          sortable: false,
+          sortable: true,
           formatter(value, row, index) {
             if (typeof value !== 'undefined') {
               return common.formatSeverityLabel(value);

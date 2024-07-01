@@ -44,6 +44,7 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import { Switch as cSwitch } from '@coreui/vue';
+import router from '@/router';
 
 export default {
   mixins: [permissionsMixin],
@@ -70,16 +71,20 @@ export default {
           title: this.$t('message.project_name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr('../projects/' + row.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+          formatter(value, row) {
+            // TODO: Close modal when link is clicked.
+            const href = router.resolve({
+              name: 'Project',
+              params: { uuid: row.uuid },
+            }).href;
+            return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
           },
         },
         {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
