@@ -87,6 +87,15 @@ export default {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
+        {
+          title: this.$t('admin.scheduled'),
+          field: 'publishScheduled',
+          class: 'tight',
+          sortable: true,
+          formatter(value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
       ],
       data: [],
       options: {
@@ -141,7 +150,7 @@ export default {
                       <b-button variant="outline-primary" @click="cloneNotificationPublisher">{{ $t('admin.clone_template') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-primary" @click="updateNotificationPublisher">{{ $t('message.update') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-danger" @click="deleteNotificationPublisher">{{ $t('admin.delete_template') }}</b-button>
-                    </div>    
+                    </div>
                   </b-col>
                 </b-row>
               `,
@@ -165,6 +174,7 @@ export default {
                     publisherClass: this.template.publisherClass,
                     template: this.template.template,
                     templateMimeType: this.template.templateMimeType,
+                    publishScheduled: this.template.publishScheduled,
                   })
                   .then((response) => {
                     this.template = response.data;

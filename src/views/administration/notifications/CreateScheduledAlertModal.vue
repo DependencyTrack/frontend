@@ -1,10 +1,10 @@
 <template>
   <b-modal
-    id="createAlertModal"
+    id="createScheduledAlertModal"
     size="md"
     hide-header-close
     no-stacking
-    :title="$t('admin.create_alert')"
+    :title="$t('admin.create_scheduled_alert')"
   >
     <b-form-group
       id="fieldset-1"
@@ -29,18 +29,6 @@
         id="input-2"
         v-model="scope"
         :options="availableScopes"
-        required
-      ></b-form-select>
-    </b-form-group>
-    <b-form-group
-      id="fieldset-3"
-      :label="this.$t('admin.notification_level')"
-      label-for="input-3"
-    >
-      <b-form-select
-        id="input-3"
-        v-model="notificationLevel"
-        :options="availableLevels"
         required
       ></b-form-select>
     </b-form-group>
@@ -88,18 +76,13 @@ export default {
         { value: 'PORTFOLIO', text: 'Portfolio' },
         { value: 'SYSTEM', text: 'System' },
       ],
-      availableLevels: [
-        { value: 'INFORMATIONAL', text: 'Informational', selected: true },
-        { value: 'WARNING', text: 'Warning' },
-        { value: 'ERROR', text: 'Error' },
-      ],
       availablePublishers: [],
     };
   },
   created() {
     axios
       .get(
-        `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER_EVENT}`,
+        `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER_SCHEDULED}`,
       )
       .then((result) => {
         for (let i = 0; i < result.data.length; i++) {
@@ -112,8 +95,8 @@ export default {
   },
   methods: {
     createAlert: function () {
-      this.$root.$emit('bv::hide::modal', 'createAlertModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+      this.$root.$emit('bv::hide::modal', 'createScheduledAlertModal');
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_SCHEDULED_NOTIFICATION_RULE}`;
       this.axios
         .put(url, {
           name: this.name,
@@ -123,7 +106,7 @@ export default {
         })
         .then(() => {
           this.$emit('refreshTable');
-          this.$toastr.s(this.$t('admin.alert_created'));
+          this.$toastr.s(this.$t('admin.scheduled_alert_created'));
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
