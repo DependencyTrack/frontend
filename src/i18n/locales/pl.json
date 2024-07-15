@@ -97,8 +97,6 @@
     "enable_svg_badge": "Włącz obsługę plakietek SVG (nieuwierzytelnione)",
     "enabled": "Włączony",
     "experimental": "Eksperymentalny",
-    "experimental_bom_upload_v2": "Przetwarzanie BOM V2",
-    "experimental_bom_upload_v2_info": "Logika sposobu, w jaki przesłane BOM są przetwarzane i uwzględniane w Depency-Track, została zmieniona, aby była bardziej niezawodna i wydajna. \nCo więcej, przetwarzanie BOM jest teraz operacją atomową, tak że błędy pojawiające się w połowie nie powodują pozostawienia stanu częściowego. \nDeduplikacja komponentów i usług jest bardziej przewidywalna, a komunikaty dziennika emitowane podczas przetwarzania zawierają dodatkowy kontekst, co ułatwia ich korelację. \nPonieważ nowa implementacja może mieć duży wpływ na zachowanie funkcji Depency-Track w przypadku przesyłania BOM, w tej wersji jest ona domyślnie wyłączona.",
     "experimental_info": "Poniższe opcje są opcjami eksperymentalnymi i należy ich używać ostrożnie.",
     "fortify_ssc": "Wzmocnij SSC",
     "gem": "Klejnot",

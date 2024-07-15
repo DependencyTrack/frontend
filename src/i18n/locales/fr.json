@@ -97,8 +97,6 @@
     "enable_svg_badge": "Activer la prise en charge des badges SVG (non authentifiés)",
     "enabled": "Activé",
     "experimental": "Expérimental",
-    "experimental_bom_upload_v2": "Traitement de nomenclature V2",
-    "experimental_bom_upload_v2_info": "La logique selon laquelle les nomenclatures téléversées sont traitées et ingérées dans Dependency-Track a été remaniée pour être plus fiable et efficace. \nDe plus, le traitement de la nomenclature est désormais une opération atomique, de sorte que les erreurs survenant à mi-chemin n’entraînent pas la perte d’un état partiel. \nLa déduplication des composants et des services est plus prévisible et les messages de journal émis pendant le traitement contiennent un contexte supplémentaire, ce qui facilite leur corrélation. \nÉtant donné que la nouvelle implémentation peut avoir un impact important sur le comportement de Dependency-Track concernant les téléversements de nomenclature, elle est désactivée par défaut pour cette version.",
     "experimental_info": "Les options suivantes sont des options expérimentales et doivent être utilisées avec précaution.",
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",

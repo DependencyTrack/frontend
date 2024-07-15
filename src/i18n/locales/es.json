@@ -97,8 +97,6 @@
     "enable_svg_badge": "Habilitar la compatibilidad con insignias SVG (sin autenticar)",
     "enabled": "Activado",
     "experimental": "Experimental",
-    "experimental_bom_upload_v2": "Procesamiento de listas de materiales V2",
-    "experimental_bom_upload_v2_info": "La lógica de cómo se procesan e incorporan las listas de materiales cargadas en Dependency-Track se ha revisado para que sea más confiable y eficiente. \nAdemás, el procesamiento de BOM es ahora una operación atómica, de modo que los errores que se producen a mitad de camino no provocan que se deje atrás un estado parcial. \nLa deduplicación de componentes y servicios es más predecible y los mensajes de registro emitidos durante el procesamiento contienen contexto adicional, lo que facilita su correlación. \nDebido a que la nueva implementación puede tener un gran impacto en el comportamiento de Dependency-Track con respecto a las cargas de BOM, está deshabilitado de forma predeterminada para esta versión.",
     "experimental_info": "Las siguientes opciones son opciones experimentales y deben usarse con precaución.",
     "fortify_ssc": "Fortificar CSS",
     "gem": "Joya",

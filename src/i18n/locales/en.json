@@ -97,8 +97,6 @@
     "enable_svg_badge": "Enable SVG badge support (unauthenticated)",
     "enabled": "Enabled",
     "experimental": "Experimental",
-    "experimental_bom_upload_v2": "BOM Processing V2",
-    "experimental_bom_upload_v2_info": "The logic how uploaded BOMs are processed and ingested into Dependency-Track has been overhauled to be more reliable and efficient. Further, BOM processing is now an atomic operation, such that errors occurring midway do not cause a partial state to be left behind. De-duplication of components and services is more predictable, and log messages emitted during processing contain additional context, making them easier to correlate. Because the new implementation can have a big impact on how Dependency-Track behaves regarding BOM uploads, it is disabled by default for this release.",
     "experimental_info": "The following options are experimental options and should be used with precaution.",
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
