@@ -97,8 +97,6 @@
     "enable_svg_badge": "Abilita il supporto del badge SVG (non autenticato)",
     "enabled": "Abilitato",
     "experimental": "Sperimentale",
-    "experimental_bom_upload_v2": "Elaborazione distinta base V2",
-    "experimental_bom_upload_v2_info": "La logica con cui le distinte materiali caricate vengono elaborate e inserite in Dependency-Track è stata revisionata per essere più affidabile ed efficiente. \nInoltre, l'elaborazione della distinta base è ora un'operazione atomica, in modo tale che gli errori che si verificano a metà non causano il superamento di uno stato parziale. \nLa deduplicazione di componenti e servizi è più prevedibile e i messaggi di registro emessi durante l'elaborazione contengono contesto aggiuntivo, rendendoli più facili da correlare. \nPoiché la nuova implementazione può avere un grande impatto sul comportamento di Dependency-Track in merito ai caricamenti della distinta base, è disabilitato per impostazione predefinita per questa versione.",
     "experimental_info": "Le seguenti opzioni sono opzioni sperimentali e devono essere utilizzate con precauzione.",
     "fortify_ssc": "Fortifica la SSC",
     "gem": "Gemma",

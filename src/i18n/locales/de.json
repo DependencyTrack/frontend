@@ -97,8 +97,6 @@
     "enable_svg_badge": "SVG-Badge-Unterstützung aktivieren (nicht authentifiziert)",
     "enabled": "Aktiviert",
     "experimental": "Experimentell",
-    "experimental_bom_upload_v2": "BOM-Verarbeitung V2",
-    "experimental_bom_upload_v2_info": "Die Logik, wie hochgeladene BOMs verarbeitet und in Dependency-Track aufgenommen werden, wurde überarbeitet, um zuverlässiger und effizienter zu sein. \nDarüber hinaus ist die Verarbeitung nun ein atomarer Vorgang, sodass Fehler, die auf halbem Weg auftreten, nicht dazu führen, dass ein Teilzustand zurückbleibt. \nDie Deduplizierung von Komponenten und Diensten ist vorhersehbarer und während der Verarbeitung ausgegebene Protokollnachrichten enthalten zusätzlichen Kontext, wodurch sie leichter korreliert werden können. \nDa die neue Implementierung große Auswirkungen auf das Verhalten von Dependency-Track beim Hochladen von BOMs haben kann, ist sie vorerst standardmäßig deaktiviert.",
     "experimental_info": "Die folgenden Optionen sind experimentelle Optionen und sollten mit Vorsicht verwendet werden.",
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",

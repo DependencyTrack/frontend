@@ -97,8 +97,6 @@
     "enable_svg_badge": "Ativar suporte para emblema SVG (não autenticado)",
     "enabled": "Habilitado",
     "experimental": "Experimental",
-    "experimental_bom_upload_v2": "Processamento de BOM V2",
-    "experimental_bom_upload_v2_info": "A lógica de como as BOMs carregadas são processadas e ingeridas no Dependency-Track foi revisada para ser mais confiável e eficiente. \nAlém disso, o processamento da BOM é agora uma operação atômica, de modo que os erros que ocorrem no meio do caminho não fazem com que um estado parcial seja deixado para trás. \nA desduplicação de componentes e serviços é mais previsível e as mensagens de log emitidas durante o processamento contêm contexto adicional, facilitando sua correlação. \nComo a nova implementação pode ter um grande impacto no comportamento do Dependency-Track em relação aos uploads de BOM, ela está desabilitada por padrão nesta versão.",
     "experimental_info": "As opções a seguir são experimentais e devem ser usadas com precaução.",
     "fortify_ssc": "Fortalecer o SSC",
     "gem": "Gema",

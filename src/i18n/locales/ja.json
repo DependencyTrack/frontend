@@ -97,8 +97,6 @@
     "enable_svg_badge": "SVG バッジのサポートを有効にする (認証なし)",
     "enabled": "有効",
     "experimental": "実験的",
-    "experimental_bom_upload_v2": "BOM 処理 V2",
-    "experimental_bom_upload_v2_info": "アップロードされた BOM が処理され、Dependency-Track に取り込まれるロジックが、より信頼性と効率性を高めるために全面的に見直されました。\nさらに、BOM 処理はアトミック操作になり、処理中にエラーが発生した場合であっても途中状態のまま残されることはありません。\nコンポーネントとサービスの重複排除はより予測可能であり、処理中に出力されるログ メッセージには追加のコンテキストが含まれるため、それらの関連付けが容易になります。\n新しい実装は、BOM アップロードに関する dependency-track の動作に大きな影響を与える可能性があるため、このリリースではデフォルトで無効になっています。",
     "experimental_info": "次のオプションは実験的なオプションであり、使用には注意が必要です。",
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
