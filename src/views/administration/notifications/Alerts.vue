@@ -208,7 +208,7 @@ export default {
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
-                      <b-button variant="primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
+                      <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
