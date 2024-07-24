@@ -857,8 +857,8 @@
     "no_match": "ne correspond pas"
   },
   "policy_violation": {
-    "fails": "Échecs",
-    "infos": "Informationnel",
+    "fails": "Échec",
+    "infos": "Information",
     "license": "Violations de licence",
     "operational": "Violations opérationnelles",
     "security": "Violations de sécurité",
