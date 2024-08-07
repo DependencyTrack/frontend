@@ -707,6 +707,7 @@
     "project_updated": "Проект оновлений",
     "project_vulnerabilities": "Уразливості проекту",
     "projects": "Проекти",
+    "projects_also_used_in": "Проекти також використовуються в",
     "projects_at_risk": "Проекти під загрозою",
     "projects_tagged_with": "Проекти з тегом {tag}",
     "properties": "Властивості",
