@@ -851,13 +851,13 @@
     "no_match": "ne correspond pas"
   },
   "policy_violation": {
-    "fails": "Échecs de violation",
-    "infos": "Violations informationnelles",
+    "fails": "Échec",
+    "infos": "Information",
     "license": "Violations de licence",
     "operational": "Violations opérationnelles",
     "security": "Violations de sécurité",
     "total": "Total des violations",
-    "warns": "Avertissements de violation"
+    "warns": "Avertissement"
   },
   "severity": {
     "critical": "Critique",
@@ -888,7 +888,7 @@
     "warn": "Avertissement"
   },
   "vulnerability": {
-    "critical": "Vulnérabilités de criticité critique",
+    "critical": "Vulnérabilités critiques",
     "high": "Vulnérabilités de haute criticité",
     "low": "Vulnérabilités de faible criticité",
     "medium": "Vulnérabilités de criticité moyenne",
