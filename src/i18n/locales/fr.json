@@ -707,6 +707,7 @@
     "project_updated": "Projet mis à jour",
     "project_vulnerabilities": "Vulnérabilités du projet",
     "projects": "Projets",
+    "projects_also_used_in": "Projets également utilisés dans",
     "projects_at_risk": "Projets à risque",
     "projects_tagged_with": "Projets marqués avec {tag}",
     "properties": "Propriétés",
@@ -857,13 +858,13 @@
     "no_match": "ne correspond pas"
   },
   "policy_violation": {
-    "fails": "Échecs de violation",
-    "infos": "Violations informationnelles",
+    "fails": "Échec",
+    "infos": "Information",
     "license": "Violations de licence",
     "operational": "Violations opérationnelles",
     "security": "Violations de sécurité",
     "total": "Total des violations",
-    "warns": "Avertissements de violation"
+    "warns": "Avertissement"
   },
   "severity": {
     "critical": "Critique",
@@ -894,7 +895,7 @@
     "warn": "Avertissement"
   },
   "vulnerability": {
-    "critical": "Vulnérabilités de criticité critique",
+    "critical": "Vulnérabilités critiques",
     "high": "Vulnérabilités de haute criticité",
     "low": "Vulnérabilités de faible criticité",
     "medium": "Vulnérabilités de criticité moyenne",

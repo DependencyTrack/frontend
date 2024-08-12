@@ -707,6 +707,7 @@
     "project_updated": "プロジェクトが更新されました",
     "project_vulnerabilities": "プロジェクトの脆弱性",
     "projects": "プロジェクト",
+    "projects_also_used_in": "以下でも使用されているプロジェクト",
     "projects_at_risk": "リスクのあるプロジェクト",
     "projects_tagged_with": "{tag} でタグ付けされたプロジェクト",
     "properties": "プロパティ",

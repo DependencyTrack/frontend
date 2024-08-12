@@ -707,6 +707,7 @@
     "project_updated": "Projekt aktualisiert",
     "project_vulnerabilities": "Projektschwachstellen",
     "projects": "Projekte",
+    "projects_also_used_in": "Projekte, die auch in verwendet werden",
     "projects_at_risk": "Gefährdete Projekte",
     "projects_tagged_with": "Projekte mit dem Tag {tag}",
     "properties": "Eigenschaften",
