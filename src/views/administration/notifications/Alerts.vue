@@ -397,8 +397,7 @@ export default {
                   });
               },
               testNotification: function () {
-                let publisherName = row.publisher.name;
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${publisherName.toLowerCase().replace(/ /g, '_')}`;
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${this.uuid}`;
 
                 let params = new URLSearchParams();
                 params.append('destination', this.destination);
