@@ -208,6 +208,7 @@ export default {
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
+                      <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
@@ -390,6 +391,26 @@ export default {
                     }
                     this.projects = p;
                     this.$toastr.s(this.$t('message.updated'));
+                  })
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+              },
+              testNotification: function () {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${this.uuid}`;
+
+                let params = new URLSearchParams();
+                params.append('destination', this.destination);
+
+                this.axios
+                  .post(url, params, {
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                  })
+                  .then((response) => {
+                    this.alert = response.data;
+                    this.$toastr.s(this.$t('admin.test_notification_queued'));
                   })
                   .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
