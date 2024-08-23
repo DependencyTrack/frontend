@@ -46,6 +46,16 @@
             :label="$t('message.classifier')"
             :tooltip="$t('message.component_classifier_desc')"
           />
+          <b-input-group-form-select
+            id="v-team-input"
+            :required="requiresTeam"
+            v-model="project.team"
+            :options="sortAvailableTeams"
+            :label="$t('message.team')"
+            :tooltip="$t('message.component_team_desc')"
+            selected="Administrators"
+          />
+          </b-input-group-form-select>
           <div style="margin-bottom: 1rem">
             <label>Parent</label>
             <multiselect
@@ -214,6 +224,7 @@ export default {
   },
   data() {
     return {
+      requiresTeam: true,
       readOnlyProjectName: '',
       readOnlyProjectVersion: '',
       availableClassifiers: [
@@ -238,6 +249,7 @@ export default {
         { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
         { value: 'FILE', text: this.$i18n.t('message.component_file') },
       ],
+      availableTeams: [],
       selectableLicenses: [],
       selectedLicense: '',
       selectedParent: null,
@@ -268,6 +280,13 @@ export default {
       await this.retrieveLicenses();
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
+    this.getAvailableTeams().then((teams) => {
+      this.availableTeams = teams[0];
+      this.requiresTeam = teams[1].toString();
+      if (teams[1] && this.availableTeams.length == 1) {
+        this.project.team = teams[0][0].value;
+      }
+    });
   },
   computed: {
     sortAvailableClassifiers: function () {
@@ -276,11 +295,23 @@ export default {
       });
       return this.availableClassifiers;
     },
+    sortAvailableTeams: function () {
+      this.availableTeams.sort(function (a, b) {
+        return a.text.localeCompare(b.text);
+      });
+      return this.availableTeams;
+    },
   },
   watch: {
     tag: 'searchTags',
   },
   methods: {
+    getAvailableTeams() {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/available-teams`;
+      return this.axios.get(url).then((response) => {
+        return [response.data.teams, response.data.required];
+      });
+    },
     syncReadOnlyNameField: function (value) {
       this.readOnlyProjectName = value;
     },
@@ -304,6 +335,7 @@ export default {
           //license: this.selectedLicense,
           parent: parent,
           classifier: this.project.classifier,
+          initialTeam: this.project.team,
           purl: this.project.purl,
           cpe: this.project.cpe,
           swidTagId: this.project.swidTagId,
