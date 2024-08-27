@@ -54,7 +54,6 @@
             :label="$t('message.team')"
             :tooltip="$t('message.component_team_desc')"
           />
-          </b-input-group-form-select>
           <div style="margin-bottom: 1rem">
             <label>Parent</label>
             <multiselect
@@ -253,7 +252,7 @@ export default {
       selectedLicense: '',
       selectedParent: null,
       availableParents: [],
-      project: {team: []},
+      project: { team: [] },
       teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
       tags: [], // An array of tags bound to the vue-tag-input
@@ -310,7 +309,9 @@ export default {
     getAvailableTeams() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
       return this.axios.get(url).then((response) => {
-        let convertedTeams = response.data.teams.map((team) => {return {text: team.name, value: team.uuid};});
+        let convertedTeams = response.data.teams.map((team) => {
+          return { text: team.name, value: team.uuid };
+        });
         return [convertedTeams, response.data.required, response.data.teams];
       });
     },
@@ -323,8 +324,13 @@ export default {
     createProject: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tagsNode = [];
-      let choosenTeams = this.teams.filter((team) => {return this.project.team.includes(team.uuid);});
-      let choosenTeamswithoutAPIKeys = choosenTeams.map((team) => {team.apiKeys = []; return team;});
+      let choosenTeams = this.teams.filter((team) => {
+        return this.project.team.includes(team.uuid);
+      });
+      let choosenTeamswithoutAPIKeys = choosenTeams.map((team) => {
+        team.apiKeys = [];
+        return team;
+      });
       let parent = null;
       if (this.selectedParent) {
         parent = { uuid: this.selectedParent.uuid };
