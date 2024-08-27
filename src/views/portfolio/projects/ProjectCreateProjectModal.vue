@@ -255,6 +255,7 @@ export default {
       selectedParent: null,
       availableParents: [],
       project: {},
+      teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
       tags: [], // An array of tags bound to the vue-tag-input
       tagsAutoCompleteItems: [],
@@ -283,6 +284,7 @@ export default {
     this.getAvailableTeams().then((teams) => {
       this.availableTeams = teams[0];
       this.requiresTeam = teams[1].toString();
+      this.teams = teams[2];
       if (teams[1] && this.availableTeams.length == 1) {
         this.project.team = teams[0][0].value;
       }
@@ -307,9 +309,10 @@ export default {
   },
   methods: {
     getAvailableTeams() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/available-teams`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
       return this.axios.get(url).then((response) => {
-        return [response.data.teams, response.data.required];
+        let convertedTeams = response.data.teams.map((team) => {return {text: team.name, value: team.uuid};});
+        return [convertedTeams, response.data.required, response.data.teams];
       });
     },
     syncReadOnlyNameField: function (value) {
@@ -321,6 +324,7 @@ export default {
     createProject: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tagsNode = [];
+      let choosenTeams = this.teams.filter((team) => {return this.project.team.includes(team.uuid);});
       let parent = null;
       if (this.selectedParent) {
         parent = { uuid: this.selectedParent.uuid };
@@ -335,7 +339,7 @@ export default {
           //license: this.selectedLicense,
           parent: parent,
           classifier: this.project.classifier,
-          initialTeam: this.project.team,
+          accessTeams: choosenTeams,
           purl: this.project.purl,
           cpe: this.project.cpe,
           swidTagId: this.project.swidTagId,
