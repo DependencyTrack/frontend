@@ -324,6 +324,7 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tagsNode = [];
       let choosenTeams = this.teams.filter((team) => {return this.project.team.includes(team.uuid);});
+      let choosenTeamswithoutAPIKeys = choosenTeams.map((team) => {team.apiKeys = []; return team;});
       let parent = null;
       if (this.selectedParent) {
         parent = { uuid: this.selectedParent.uuid };
@@ -338,7 +339,7 @@ export default {
           //license: this.selectedLicense,
           parent: parent,
           classifier: this.project.classifier,
-          accessTeams: choosenTeams,
+          accessTeams: choosenTeamswithoutAPIKeys,
           purl: this.project.purl,
           cpe: this.project.cpe,
           swidTagId: this.project.swidTagId,
