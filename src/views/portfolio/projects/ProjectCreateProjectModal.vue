@@ -253,7 +253,7 @@ export default {
       selectedLicense: '',
       selectedParent: null,
       availableParents: [],
-      project: {},
+      project: {team: []},
       teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
       tags: [], // An array of tags bound to the vue-tag-input
