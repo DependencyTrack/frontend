@@ -53,7 +53,6 @@
             :options="sortAvailableTeams"
             :label="$t('message.team')"
             :tooltip="$t('message.component_team_desc')"
-            selected="Administrators"
           />
           </b-input-group-form-select>
           <div style="margin-bottom: 1rem">
