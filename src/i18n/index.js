@@ -13,15 +13,15 @@ async function getDefaultLanguage() {
 }
 
 function loadLocaleMessages() {
-  const locales = import.meta.glob('./locales/*.json');
+  const locales = import.meta.glob('./locales/*.json', { eager: true });
   const messages = {};
-  locales.keys().forEach((key) => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
+  for (const [path, locale] of Object.entries(locales)) {
+    const matched = path.match(/\/locales\/([A-Za-z0-9-_]+)\.json$/);
     if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
+      const localeKey = matched[1];
+      messages[localeKey] = locale;
     }
-  });
+  }
   return messages;
 }
 
@@ -65,12 +65,13 @@ const i18n = createI18n({
   messages: localeMessages,
 });
 
+
 getDefaultLanguage().then((defaultLanguage) => {
   const matchedLocale = matchLocale(
     (localStorage && localStorage.getItem('Locale')) ||
-      defaultLanguage ||
-      navigator.language ||
-      navigator.userLanguage,
+    defaultLanguage ||
+    navigator.language ||
+    navigator.userLanguage,
   );
   i18n.locale = matchedLocale;
 });
