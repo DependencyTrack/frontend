@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
-import AppBasic from './AppBasic.vue'
+import App from './App.vue'
 import router from './routerbasic'
 
-const app = createApp(AppBasic)
+const app = createApp(App)
 
 app.use(router)
 
