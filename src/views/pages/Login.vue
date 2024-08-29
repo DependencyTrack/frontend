@@ -105,8 +105,8 @@ import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import $ from 'jquery';
 import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import InformationalModal from '../modals/InformationalModal';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
+import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
 const qs = require('querystring');
