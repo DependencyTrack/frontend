@@ -1,114 +1,111 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import i18n from '../i18n';
 import EventBus from '../shared/eventbus';
 import { getToken, hasPermission } from '../shared/permissions';
 import { getContextPath } from '../shared/utils';
 
 // Containers
-const DefaultContainer = () => import('@/containers/DefaultContainer');
+const DefaultContainer = () => import('@/containers/DefaultContainer.vue');
 
 // Views
-const Dashboard = () => import('@/views/Dashboard');
-const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
+const Dashboard = () => import('@/views/Dashboard.vue');
+const ProjectList = () => import('@/views/portfolio/projects/ProjectList.vue');
 const TagList = () => import('@/views/portfolio/tags/TagList.vue');
 const ComponentSearch = () =>
-  import('@/views/portfolio/components/ComponentSearch');
+  import('@/views/portfolio/components/ComponentSearch.vue');
 const VulnerabilityList = () =>
-  import('@/views/portfolio/vulnerabilities/VulnerabilityList');
+  import('@/views/portfolio/vulnerabilities/VulnerabilityList.vue');
 const VulnerabilityAudit = () =>
-  import('@/views/globalAudit/VulnerabilityAudit');
-const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
-const PolicyManagement = () => import('@/views/policy/PolicyManagement');
-const Project = () => import('@/views/portfolio/projects/Project');
+  import('@/views/globalAudit/VulnerabilityAudit.vue');
+const LicenseList = () => import('@/views/portfolio/licenses/LicenseList.vue');
+const PolicyManagement = () => import('@/views/policy/PolicyManagement.vue');
+const Project = () => import('@/views/portfolio/projects/Project.vue');
 
-const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit');
+const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit.vue');
 
-const Administration = () => import('@/views/administration/Administration');
-const General = () => import('@/views/administration/configuration/General');
+const Administration = () => import('@/views/administration/Administration.vue');
+const General = () => import('@/views/administration/configuration/General.vue');
 const BomFormats = () =>
-  import('@/views/administration/configuration/BomFormats');
+  import('@/views/administration/configuration/BomFormats.vue');
 const WelcomeMessage = () =>
-  import('@/views/administration/configuration/WelcomeMessage');
-const Email = () => import('@/views/administration/configuration/Email');
-const Jira = () => import('@/views/administration/configuration/JiraConfig');
+  import('@/views/administration/configuration/WelcomeMessage.vue');
+const Email = () => import('@/views/administration/configuration/Email.vue');
+const Jira = () => import('@/views/administration/configuration/JiraConfig.vue');
 const InternalComponents = () =>
-  import('@/views/administration/configuration/InternalComponents');
+  import('@/views/administration/configuration/InternalComponents.vue');
 const TaskScheduler = () =>
-  import('@/views/administration/configuration/TaskScheduler');
-const Search = () => import('@/views/administration/configuration/Search');
+  import('@/views/administration/configuration/TaskScheduler.vue');
+const Search = () => import('@/views/administration/configuration/Search.vue');
 const Experimental = () =>
-  import('@/views/administration/configuration/Experimental');
+  import('@/views/administration/configuration/Experimental.vue');
 
 const InternalAnalyzer = () =>
-  import('@/views/administration/analyzers/InternalAnalyzer');
+  import('@/views/administration/analyzers/InternalAnalyzer.vue');
 const OssIndexAnalyzer = () =>
-  import('@/views/administration/analyzers/OssIndexAnalyzer');
+  import('@/views/administration/analyzers/OssIndexAnalyzer.vue');
 const VulnDbAnalyzer = () =>
-  import('@/views/administration/analyzers/VulnDbAnalyzer');
+  import('@/views/administration/analyzers/VulnDbAnalyzer.vue');
 const SnykAnalyzer = () =>
-  import('@/views/administration/analyzers/SnykAnalyzer');
+  import('@/views/administration/analyzers/SnykAnalyzer.vue');
 const TrivyAnalyzer = () =>
-  import('@/views/administration/analyzers/TrivyAnalyzer');
+  import('@/views/administration/analyzers/TrivyAnalyzer.vue');
 
 const VulnSourceNvd = () =>
-  import('@/views/administration/vuln-sources/VulnSourceNvd');
+  import('@/views/administration/vuln-sources/VulnSourceNvd.vue');
 const VulnSourceGitHubAdvisories = () =>
-  import('@/views/administration/vuln-sources/VulnSourceGitHubAdvisories');
+  import('@/views/administration/vuln-sources/VulnSourceGitHubAdvisories.vue');
 const VulnSourceOSVAdvisories = () =>
-  import('@/views/administration/vuln-sources/VulnSourceOSVAdvisories');
+  import('@/views/administration/vuln-sources/VulnSourceOSVAdvisories.vue');
 
-const Cargo = () => import('@/views/administration/repositories/Cargo');
-const Composer = () => import('@/views/administration/repositories/Composer');
-const Cpan = () => import('@/views/administration/repositories/Cpan');
-const Gem = () => import('@/views/administration/repositories/Gem');
+const Cargo = () => import('@/views/administration/repositories/Cargo.vue');
+const Composer = () => import('@/views/administration/repositories/Composer.vue');
+const Cpan = () => import('@/views/administration/repositories/Cpan.vue');
+const Gem = () => import('@/views/administration/repositories/Gem.vue');
 const GitHub = () => import('@/views/administration/repositories/GitHub.vue');
-const GoModules = () => import('@/views/administration/repositories/GoModules');
-const Hackage = () => import('@/views/administration/repositories/Hackage');
-const Hex = () => import('@/views/administration/repositories/Hex');
-const Maven = () => import('@/views/administration/repositories/Maven');
-const Nixpkgs = () => import('@/views/administration/repositories/Nixpkgs');
-const Npm = () => import('@/views/administration/repositories/Npm');
-const Nuget = () => import('@/views/administration/repositories/Nuget');
-const Python = () => import('@/views/administration/repositories/Python');
+const GoModules = () => import('@/views/administration/repositories/GoModules.vue');
+const Hackage = () => import('@/views/administration/repositories/Hackage.vue');
+const Hex = () => import('@/views/administration/repositories/Hex.vue');
+const Maven = () => import('@/views/administration/repositories/Maven.vue');
+const Nixpkgs = () => import('@/views/administration/repositories/Nixpkgs.vue');
+const Npm = () => import('@/views/administration/repositories/Npm.vue');
+const Nuget = () => import('@/views/administration/repositories/Nuget.vue');
+const Python = () => import('@/views/administration/repositories/Python.vue');
 
-const Alerts = () => import('@/views/administration/notifications/Alerts');
+const Alerts = () => import('@/views/administration/notifications/Alerts.vue');
 const Templates = () =>
-  import('@/views/administration/notifications/Templates');
+  import('@/views/administration/notifications/Templates.vue');
 
 const FortifySsc = () =>
-  import('@/views/administration/integrations/FortifySsc');
+  import('@/views/administration/integrations/FortifySsc.vue');
 const DefectDojo = () =>
-  import('@/views/administration/integrations/DefectDojo');
+  import('@/views/administration/integrations/DefectDojo.vue');
 const KennaSecurity = () =>
-  import('@/views/administration/integrations/KennaSecurity');
+  import('@/views/administration/integrations/KennaSecurity.vue');
 
 const LdapUsers = () =>
-  import('@/views/administration/accessmanagement/LdapUsers');
+  import('@/views/administration/accessmanagement/LdapUsers.vue');
 const ManagedUsers = () =>
-  import('@/views/administration/accessmanagement/ManagedUsers');
+  import('@/views/administration/accessmanagement/ManagedUsers.vue');
 const OidcUsers = () =>
-  import('@/views/administration/accessmanagement/OidcUsers');
+  import('@/views/administration/accessmanagement/OidcUsers.vue');
 const OidcGroups = () =>
-  import('@/views/administration/accessmanagement/OidcGroups');
-const Teams = () => import('@/views/administration/accessmanagement/Teams');
+  import('@/views/administration/accessmanagement/OidcGroups.vue');
+const Teams = () => import('@/views/administration/accessmanagement/Teams.vue');
 const Permissions = () =>
-  import('@/views/administration/accessmanagement/Permissions');
+  import('@/views/administration/accessmanagement/Permissions.vue');
 const PortfolioAccessControl = () =>
-  import('@/views/administration/accessmanagement/PortfolioAccessControl');
+  import('@/views/administration/accessmanagement/PortfolioAccessControl.vue');
 
-const Component = () => import('@/views/portfolio/projects/Component');
-const Service = () => import('@/views/portfolio/projects/Service');
+const Component = () => import('@/views/portfolio/projects/Component.vue');
+const Service = () => import('@/views/portfolio/projects/Service.vue');
 const Vulnerability = () =>
-  import('@/views/portfolio/vulnerabilities/Vulnerability');
-const License = () => import('@/views/portfolio/licenses/License');
+  import('@/views/portfolio/vulnerabilities/Vulnerability.vue');
+const License = () => import('@/views/portfolio/licenses/License.vue');
 
 // Pages
-const Login = () => import('@/views/pages/Login');
-const PasswordForceChange = () => import('@/views/pages/PasswordForceChange');
-const Page404 = () => import('@/views/pages/Page404');
-
-Vue.use(Router);
+const Login = () => import('@/views/pages/Login.vue');
+const PasswordForceChange = () => import('@/views/pages/PasswordForceChange.vue');
+const Page404 = () => import('@/views/pages/Page404.vue');
 
 function configRoutes() {
   return [
@@ -934,11 +931,11 @@ function configRoutes() {
   ];
 }
 
-const router = new Router({
-  mode: 'history', // https://router.vuejs.org/api/#mode
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   base: getContextPath(),
   linkActiveClass: 'open active',
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: (to, from, savedPosition) => savedPosition || { top: 0 },
   routes: configRoutes(),
 });
 
