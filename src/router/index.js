@@ -4,6 +4,8 @@ import EventBus from '../shared/eventbus';
 import { getToken, hasPermission } from '../shared/permissions';
 import { getContextPath } from '../shared/utils';
 
+const { t } = i18n.global;
+
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer.vue');
 
@@ -120,7 +122,7 @@ function configRoutes() {
           name: 'Dashboard',
           component: Dashboard,
           meta: {
-            title: i18n.t('message.dashboard'),
+            title: t('message.dashboard'),
             i18n: 'message.dashboard',
             sectionPath: '/dashboard',
             sectionName: 'Dashboard',
@@ -132,7 +134,7 @@ function configRoutes() {
           name: 'Projects',
           component: ProjectList,
           meta: {
-            title: i18n.t('message.projects'),
+            title: t('message.projects'),
             i18n: 'message.projects',
             sectionPath: '/projects',
             sectionName: 'Projects',
@@ -211,7 +213,7 @@ function configRoutes() {
           name: 'Component Lookup',
           component: ComponentSearch,
           meta: {
-            title: i18n.t('message.component_search'),
+            title: t('message.component_search'),
             i18n: 'message.component_search',
             sectionPath: '/components',
             sectionName: 'Component Lookup',
@@ -251,7 +253,7 @@ function configRoutes() {
           name: 'Vulnerabilities',
           component: VulnerabilityList,
           meta: {
-            title: i18n.t('message.vulnerabilities'),
+            title: t('message.vulnerabilities'),
             i18n: 'message.vulnerabilities',
             sectionPath: '/vulnerabilities',
             sectionName: 'Vulnerabilities',
@@ -282,7 +284,7 @@ function configRoutes() {
           name: 'Tags',
           component: TagList,
           meta: {
-            title: i18n.t('message.tags'),
+            title: t('message.tags'),
             i18n: 'message.tags',
             sectionPath: '/tags',
             sectionName: 'Tags',
@@ -294,7 +296,7 @@ function configRoutes() {
           name: 'Licenses',
           component: LicenseList,
           meta: {
-            title: i18n.t('message.licenses'),
+            title: t('message.licenses'),
             i18n: 'message.licenses',
             sectionPath: '/licenses',
             sectionName: 'Licenses',
@@ -325,7 +327,7 @@ function configRoutes() {
           alias: ['policy/policies', 'policy/licenseGroups'],
           component: PolicyManagement,
           meta: {
-            title: i18n.t('message.policy_management'),
+            title: t('message.policy_management'),
             i18n: 'message.policy_management',
             sectionPath: '/policy',
             sectionName: 'Policy Management',
@@ -349,7 +351,7 @@ function configRoutes() {
           name: 'Admin',
           component: Administration,
           meta: {
-            title: i18n.t('message.administration'),
+            title: t('message.administration'),
             i18n: 'message.administration',
             sectionPath: '/admin',
             sectionName: 'Admin',
@@ -362,7 +364,7 @@ function configRoutes() {
               alias: ['configuration', 'configuration/general'],
               component: General,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -373,7 +375,7 @@ function configRoutes() {
               path: 'configuration/bomFormats',
               component: BomFormats,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -395,7 +397,7 @@ function configRoutes() {
               path: 'configuration/email',
               component: Email,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -406,7 +408,7 @@ function configRoutes() {
               path: 'integrations/jira',
               component: Jira,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -417,7 +419,7 @@ function configRoutes() {
               path: 'configuration/internalComponents',
               component: InternalComponents,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -428,7 +430,7 @@ function configRoutes() {
               path: 'configuration/taskScheduler',
               component: TaskScheduler,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -439,7 +441,7 @@ function configRoutes() {
               path: 'configuration/search',
               component: Search,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -450,7 +452,7 @@ function configRoutes() {
               path: 'configuration/experimental',
               component: Experimental,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -462,7 +464,7 @@ function configRoutes() {
               alias: ['analyzers'],
               component: InternalAnalyzer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -473,7 +475,7 @@ function configRoutes() {
               path: 'analyzers/oss',
               component: OssIndexAnalyzer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -484,7 +486,7 @@ function configRoutes() {
               path: 'analyzers/vulnDB',
               component: VulnDbAnalyzer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -495,7 +497,7 @@ function configRoutes() {
               path: 'analyzers/snyk',
               component: SnykAnalyzer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -506,7 +508,7 @@ function configRoutes() {
               path: 'analyzers/trivy',
               component: TrivyAnalyzer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -518,7 +520,7 @@ function configRoutes() {
               alias: ['vulnerabilitySources'],
               component: VulnSourceNvd,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -529,7 +531,7 @@ function configRoutes() {
               path: 'vulnerabilitySources/github',
               component: VulnSourceGitHubAdvisories,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -540,7 +542,7 @@ function configRoutes() {
               path: 'vulnerabilitySources/osv',
               component: VulnSourceOSVAdvisories,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -552,7 +554,7 @@ function configRoutes() {
               alias: ['repositories'],
               component: Cargo,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -563,7 +565,7 @@ function configRoutes() {
               path: 'repositories/composer',
               component: Composer,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -574,7 +576,7 @@ function configRoutes() {
               path: 'repositories/cpan',
               component: Cpan,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -585,7 +587,7 @@ function configRoutes() {
               path: 'repositories/gem',
               component: Gem,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -596,7 +598,7 @@ function configRoutes() {
               path: 'repositories/github',
               component: GitHub,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -607,7 +609,7 @@ function configRoutes() {
               path: 'repositories/goModules',
               component: GoModules,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -618,7 +620,7 @@ function configRoutes() {
               path: 'repositories/hackage',
               component: Hackage,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -629,7 +631,7 @@ function configRoutes() {
               path: 'repositories/hex',
               component: Hex,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -640,7 +642,7 @@ function configRoutes() {
               path: 'repositories/maven',
               component: Maven,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -651,7 +653,7 @@ function configRoutes() {
               path: 'repositories/nixpkgs',
               component: Nixpkgs,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -662,7 +664,7 @@ function configRoutes() {
               path: 'repositories/npm',
               component: Npm,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -673,7 +675,7 @@ function configRoutes() {
               path: 'repositories/nuget',
               component: Nuget,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -684,7 +686,7 @@ function configRoutes() {
               path: 'repositories/python',
               component: Python,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -696,7 +698,7 @@ function configRoutes() {
               alias: ['notifications'],
               component: Alerts,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -707,7 +709,7 @@ function configRoutes() {
               path: 'notifications/templates',
               component: Templates,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -719,7 +721,7 @@ function configRoutes() {
               alias: ['integrations'],
               component: FortifySsc,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -730,7 +732,7 @@ function configRoutes() {
               path: 'integrations/defectDojo',
               component: DefectDojo,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -741,7 +743,7 @@ function configRoutes() {
               path: 'integrations/kennaSecurity',
               component: KennaSecurity,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -753,7 +755,7 @@ function configRoutes() {
               alias: ['accessManagement'],
               component: LdapUsers,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -764,7 +766,7 @@ function configRoutes() {
               path: 'accessManagement/managedUsers',
               component: ManagedUsers,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -775,7 +777,7 @@ function configRoutes() {
               path: 'accessManagement/oidcUsers',
               component: OidcUsers,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -786,7 +788,7 @@ function configRoutes() {
               path: 'accessManagement/oidcGroups',
               component: OidcGroups,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -797,7 +799,7 @@ function configRoutes() {
               path: 'accessManagement/teams',
               component: Teams,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -808,7 +810,7 @@ function configRoutes() {
               path: 'accessManagement/permissions',
               component: Permissions,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -819,7 +821,7 @@ function configRoutes() {
               path: 'accessManagement/portfolioAccessControl',
               component: PortfolioAccessControl,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
@@ -837,7 +839,7 @@ function configRoutes() {
           ],
           component: VulnerabilityAudit,
           meta: {
-            title: i18n.t('message.vulnerability_audit'),
+            title: t('message.vulnerability_audit'),
             i18n: 'message.vulnerability_audit',
             sectionPath: '/vulnerabilityAudit',
             sectionName: 'Vulnerability Audit',
@@ -909,7 +911,7 @@ function configRoutes() {
       name: 'Login',
       component: Login,
       meta: {
-        title: i18n.t('message.login'),
+        title: t('message.login'),
       },
     },
     {
@@ -917,15 +919,15 @@ function configRoutes() {
       name: 'PasswordForceChange',
       component: PasswordForceChange,
       meta: {
-        title: i18n.t('message.change_password'),
+        title: t('message.change_password'),
       },
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       name: '404',
       component: Page404,
       meta: {
-        title: i18n.t('404.heading'),
+        title: t('404.heading'),
       },
     },
   ];
@@ -967,7 +969,7 @@ router.beforeEach((to, from, next) => {
             redirectToLogin();
           });
       } else {
-        Vue.prototype.$toastr.e(i18n.t('condition.forbidden'));
+        Vue.prototype.$toastr.e(t('condition.forbidden'));
         next({ name: 'Dashboard', replace: true });
       }
     } else {
