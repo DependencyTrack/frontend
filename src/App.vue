@@ -8,7 +8,7 @@ import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { getToken } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import VueRouter from 'vue-router';
+import { isNavigationFailure, NavigationFailureType } from 'vue-router';
 
 export default {
   name: 'app',
@@ -139,7 +139,6 @@ export default {
         if (window.location.pathname !== to && event.preventDefault) {
           event.preventDefault();
           this.$router.push(to + url.search).catch((e) => {
-            const { isNavigationFailure, NavigationFailureType } = VueRouter;
             // inform about navigation errors but ignore redirect errors that may be caused by the navigation guard when redirecting to the login page
             if (!isNavigationFailure(e, NavigationFailureType.redirected)) {
               this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));

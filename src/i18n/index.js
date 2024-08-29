@@ -1,9 +1,5 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import axios from 'axios';
-import api from '../shared/api.json';
-
-Vue.use(VueI18n);
 
 async function getDefaultLanguage() {
   try {
@@ -17,11 +13,7 @@ async function getDefaultLanguage() {
 }
 
 function loadLocaleMessages() {
-  const locales = require.context(
-    './locales',
-    true,
-    /[A-Za-z0-9-_,\s]+\.json$/i,
-  );
+  const locales = import.meta.glob('./locales/*.json');
   const messages = {};
   locales.keys().forEach((key) => {
     const matched = key.match(/([A-Za-z0-9-_]+)\./i);
@@ -67,7 +59,7 @@ function matchLocale(requestedLocale) {
   );
   return 'en';
 }
-const i18n = new VueI18n({
+const i18n = createI18n({
   locale: 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
   messages: localeMessages,
