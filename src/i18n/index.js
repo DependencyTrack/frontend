@@ -13,10 +13,12 @@ async function getDefaultLanguage() {
 }
 
 function loadLocaleMessages() {
-  const locales = import.meta.glob('./locales/*.json', { eager: true });
+  // import default is needed otherwise 404 will be missing as well as it won't be the raw json reference
+  const locales = import.meta.glob('./locales/*.json', { eager: true, import: 'default'});
   const messages = {};
   for (const [path, locale] of Object.entries(locales)) {
     const matched = path.match(/\/locales\/([A-Za-z0-9-_]+)\.json$/);
+
     if (matched && matched.length > 1) {
       const localeKey = matched[1];
       messages[localeKey] = locale;

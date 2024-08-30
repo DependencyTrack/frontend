@@ -937,8 +937,7 @@ function configRoutes() {
 }
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  base: getContextPath(),
+  history: createWebHistory(getContextPath()),
   linkActiveClass: 'open active',
   scrollBehavior: (to, from, savedPosition) => savedPosition || { top: 0 },
   routes: configRoutes(),
