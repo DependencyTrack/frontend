@@ -294,17 +294,17 @@ export default {
         return a.text.localeCompare(b.text);
       });
       this.getAvailableTeams().then((teams) => {
-      this.availableTeams = teams[0];
-      this.requiresTeam = teams[1].toString();
-      this.teams = teams[2];
-      if (teams[1] && this.availableTeams.length == 1) {
-        this.project.team = teams[0][0].value;
-        this.isDisabled = true;
-      }
-      this.availableTeams.sort(function (a, b) {
-      return a.text.localeCompare(b.text);
+        this.availableTeams = teams[0];
+        this.requiresTeam = teams[1].toString();
+        this.teams = teams[2];
+        if (teams[1] && this.availableTeams.length == 1) {
+          this.project.team = teams[0][0].value;
+          this.isDisabled = true;
+        }
+        this.availableTeams.sort(function (a, b) {
+          return a.text.localeCompare(b.text);
+        });
       });
-    });
       return this.availableTeams;
     },
   },
