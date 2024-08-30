@@ -1,8 +1,13 @@
+$fa-font-path: 'font-awesome/fonts/';
+$simple-line-font-path: 'simple-line-icons/fonts/';
+
+
+@import 'vue-multiselect/dist/vue-multiselect.css';
+@import 'font-awesome/scss/font-awesome.scss';
 @import 'bootstrap/dist/css/bootstrap.css';
 @import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 
 @import '@coreui/icons/css/free.min.css';
-@import 'font-awesome/scss/font-awesome.scss';
 @import 'simple-line-icons/scss/simple-line-icons.scss';
 
 // If you want to override variables do it here
@@ -20,7 +25,4 @@
 
 // ie fixes
 @import 'ie-fix';
-
-@import 'vue-multiselect/dist/vue-multiselect.css';
-
 
