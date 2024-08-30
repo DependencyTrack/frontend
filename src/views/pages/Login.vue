@@ -11,7 +11,7 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
+                <Form tag="form" v-slot="{ passes }">
                   <b-form @submit.prevent.stop="passes(login)">
                     <h1>{{ $t('message.login') }}</h1>
                     <p class="text-muted">{{ $t('message.login_desc') }}</p>
@@ -74,7 +74,7 @@
                       >{{ $t('message.login_more_options') }}</b-link
                     >
                   </b-form>
-                </validation-observer>
+                </Form>
               </b-card-body>
             </b-card>
             <b-card
@@ -104,12 +104,12 @@ import axios from 'axios';
 import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import $ from 'jquery';
-import { ValidationObserver } from 'vee-validate';
+import { Form } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
-const qs = require('querystring');
+import qs from 'querystring';
 import common from '../../shared/common';
 
 export default {
@@ -117,7 +117,7 @@ export default {
   components: {
     InformationalModal,
     BValidatedInputGroupFormInput,
-    ValidationObserver,
+    Form,
   },
   data() {
     return {

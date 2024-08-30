@@ -1,5 +1,5 @@
 <template>
-  <validation-provider
+  <Field
     :vid="id"
     :name="label"
     :rules="rules"
@@ -31,17 +31,17 @@
         {{ errors[0] }}
       </b-form-invalid-feedback>
     </b-form-group>
-  </validation-provider>
+  </Field>
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate';
+import { Field } from 'vee-validate';
 import common from '../shared/common';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
   components: {
-    ValidationProvider,
+    Field,
   },
   props: {
     id: String,

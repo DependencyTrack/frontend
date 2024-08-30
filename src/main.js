@@ -13,8 +13,7 @@ import { getContextPath } from './shared/utils';
 import { VueToastr } from 'vue-toastr';
 import { createBootstrap } from 'bootstrap-vue-next';
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import './assets/scss/style.scss';
 
 const app = createApp(App);
 

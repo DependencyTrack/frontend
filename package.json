@@ -23,6 +23,7 @@
     "@coreui/coreui": "5.1.2",
     "@coreui/icons": "3.0.1",
     "@coreui/vue": "5.2.0",
+    "@vee-validate/rules": "^4.13.2",
     "axios": "1.7.5",
     "bootstrap": "^5.3.3",
     "bootstrap-table": "1.23.2",
