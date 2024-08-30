@@ -53,6 +53,7 @@
             :options="sortAvailableTeams"
             :label="$t('message.team')"
             :tooltip="$t('message.component_team_desc')"
+            :disabled="isDisabled"
           />
           <div style="margin-bottom: 1rem">
             <label>Parent</label>
@@ -223,6 +224,7 @@ export default {
   data() {
     return {
       requiresTeam: true,
+      isDisabled: false,
       readOnlyProjectName: '',
       readOnlyProjectVersion: '',
       availableClassifiers: [
@@ -279,14 +281,6 @@ export default {
       await this.retrieveLicenses();
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
-    this.getAvailableTeams().then((teams) => {
-      this.availableTeams = teams[0];
-      this.requiresTeam = teams[1].toString();
-      this.teams = teams[2];
-      if (teams[1] && this.availableTeams.length == 1) {
-        this.project.team = teams[0][0].value;
-      }
-    });
   },
   computed: {
     sortAvailableClassifiers: function () {
@@ -299,6 +293,18 @@ export default {
       this.availableTeams.sort(function (a, b) {
         return a.text.localeCompare(b.text);
       });
+      this.getAvailableTeams().then((teams) => {
+      this.availableTeams = teams[0];
+      this.requiresTeam = teams[1].toString();
+      this.teams = teams[2];
+      if (teams[1] && this.availableTeams.length == 1) {
+        this.project.team = teams[0][0].value;
+        this.isDisabled = true;
+      }
+      this.availableTeams.sort(function (a, b) {
+      return a.text.localeCompare(b.text);
+      });
+    });
       return this.availableTeams;
     },
   },
