@@ -12,6 +12,7 @@ import version from './version';
 import { getContextPath } from './shared/utils';
 import { VueToastr } from 'vue-toastr';
 import { createBootstrap } from 'bootstrap-vue-next';
+import { BTooltip } from 'bootstrap-vue-next';
 
 import './assets/scss/style.scss';
 
@@ -56,6 +57,21 @@ axios
     createVueApp();
   })
 
+// For debug purposes
+const DirectiveTracker = {
+  install(app, options) {
+    app.config.globalProperties.$directives = {};
+
+    app.directive = new Proxy(app.directive, {
+      apply(target, thisArg, argumentsList) {
+        const [name, definition] = argumentsList;
+        app.config.globalProperties.$directives[name] = definition;
+        return Reflect.apply(...arguments);
+      }
+    });
+  }
+};
+
 /**
  * Removed finally block due to:
  * https://github.com/DependencyTrack/frontend/issues/34
@@ -71,9 +87,14 @@ function createVueApp() {
 
   console.log("Dependency Track v" + version.version);
 
+  if (import.meta.env.MODE === 'development') {
+    app.use(DirectiveTracker);
+  }
   app.use(router);
   app.use(i18n);
   app.use(createBootstrap());
+  // For some reason bootstrap doesn't seem to be registering the tooltip? Temporary workaround
+  app.directive('b-tooltip', BTooltip);
   app.use(VueToastr, {
     defaultTimeout: 5000,
     defaultProgressBar: false,
@@ -83,6 +104,10 @@ function createVueApp() {
   });
   app.use(VueAxios, axios);
   app.provide('axios', app.config.globalProperties.axios);
+
+  console.log(app.config.globalProperties.$directives);
+  console.log(app.config.globalProperties.$directives);
+  console.log(app.config.globalProperties.$directives);
 
   app.directive('debounce', vueDebounce({ defaultTime: '750ms' })).mount('#app');
 }

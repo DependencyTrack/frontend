@@ -1,17 +1,17 @@
 <template>
-  <Field
+  <field
     :vid="id"
     :name="label"
     :rules="rules"
     :mode="mode"
     v-slot="{ errors, valid }"
   >
-    <BFormGroup :id="id" :label="label" :label-for="`${id}-input`">
-      <BInputGroup :class="inputGroupSize">
+    <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
+      <b-input-group :class="inputGroupSize">
         <template #prepend v-if="icon"
           ><BInputGroupText><i :class="icon"></i></BInputGroupText
         ></template>
-        <BFormInput
+        <b-form-input
           :id="`${id}-input`"
           :type="type"
           :class="inputClasses"
@@ -23,15 +23,15 @@
           v-on="inputListeners"
         />
         <template #prepend v-if="tooltip"
-          ><BInputGroupText v-b-tooltip.hover :title="tooltip"
-            ><i class="cui-info font-lg"></i></BInputGroupText
+          ><b-input-group-text v-b-tooltip.hover :title="tooltip"
+            ><i class="cui-info font-lg"></i></b-input-group-text
         ></template>
-      </BInputGroup>
-      <BFormInvalidFeedback :state="errorHandlingMethod(errors, valid)">
+      </b-input-group>
+      <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
         {{ errors[0] }}
-      </BFormInvalidFeedback>
-    </BFormGroup>
-  </Field>
+      </b-form-invalid-feedback>
+    </b-form-group>
+  </field>
 </template>
 
 <script>

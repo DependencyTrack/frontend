@@ -107,6 +107,7 @@ import $ from 'jquery';
 import { Form } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import InformationalModal from '../modals/InformationalModal.vue';
+import { BButton } from 'bootstrap-vue-next';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
 import qs from 'querystring';
@@ -117,6 +118,7 @@ export default {
   components: {
     InformationalModal,
     BValidatedInputGroupFormInput,
+    BButton,
     Form,
   },
   data() {
