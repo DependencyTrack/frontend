@@ -959,7 +959,7 @@ router.beforeEach((to, from, next) => {
             headers: { Authorization: `Bearer ${jwt}` },
           })
           .then((result) => {
-            Vue.prototype.$currentUser = result.data;
+            app.config.globalProperties.$currentUser = result.data;
             // allowed to proceed
             next();
           })
@@ -971,7 +971,7 @@ router.beforeEach((to, from, next) => {
             redirectToLogin();
           });
       } else {
-        Vue.prototype.$toastr.e(t('condition.forbidden'));
+        app.config.globalProperties.$toastr.e(t('condition.forbidden'));
         next({ name: 'Dashboard', replace: true });
       }
     } else {

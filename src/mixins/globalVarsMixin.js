@@ -14,7 +14,7 @@ export default {
       this.dtrack = this.$dtrack;
     } else {
       axios
-        .get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
+        .get(`${app.config.globalProperties.$api.BASE_URL}/${app.config.globalProperties.$api.URL_ABOUT}`)
         .then((result) => {
           this.dtrack = result.data;
         });
@@ -29,7 +29,7 @@ export default {
     EventBus.$on('profileUpdated', () => {
       axios
         .get(
-          `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`,
+          `${app.config.globalProperties.$api.BASE_URL}/${app.config.globalProperties.$api.URL_USER_SELF}`,
         )
         .then((result) => {
           this.currentUser = result.data;

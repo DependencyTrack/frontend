@@ -10,7 +10,7 @@ import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
-import VueToastr from 'vue-toastr';
+import { VueToastr } from 'vue-toastr';
 import { createBootstrap } from 'bootstrap-vue-next';
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -47,15 +47,15 @@ axios
     } else {
       app.config.globalProperties.$oidc.LOGIN_BUTTON_TEXT = '';
     }
-    createVueApp();
   })
   .catch(function (error) {
     console.log(
       'Cannot retrieve static/config.json from host. This is expected behavior in development environments.',
     );
+  })
+  .finally(() => {
     createVueApp();
-  });
-
+  })
 
 /**
  * Removed finally block due to:
@@ -69,6 +69,8 @@ function createVueApp() {
     });
 
   app.config.globalProperties.$version = version;
+
+  console.log("Dependency Track v" + version.version);
 
   app.use(router);
   app.use(i18n);
