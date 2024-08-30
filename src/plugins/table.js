@@ -1,7 +1,6 @@
 import 'bootstrap-table/dist/bootstrap-table.min.css';
 
 import './jquery.js';
-import Vue from 'vue';
 import 'bootstrap';
 import 'jquery-treegrid/js/jquery.treegrid.min.js';
 import 'bootstrap-table/dist/bootstrap-table.js';
