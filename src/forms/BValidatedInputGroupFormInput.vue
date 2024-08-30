@@ -6,12 +6,12 @@
     :mode="mode"
     v-slot="{ errors, valid }"
   >
-    <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
-      <b-input-group :class="inputGroupSize">
-        <b-input-group-prepend v-if="icon"
-          ><b-input-group-text><i :class="icon"></i></b-input-group-text
-        ></b-input-group-prepend>
-        <b-form-input
+    <BFormGroup :id="id" :label="label" :label-for="`${id}-input`">
+      <BInputGroup :class="inputGroupSize">
+        <template #prepend v-if="icon"
+          ><BInputGroupText><i :class="icon"></i></BInputGroupText
+        ></template>
+        <BFormInput
           :id="`${id}-input`"
           :type="type"
           :class="inputClasses"
@@ -22,26 +22,32 @@
           :autofocus="isFocused"
           v-on="inputListeners"
         />
-        <b-input-group-append v-if="tooltip"
-          ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-            ><i class="cui-info font-lg"></i></b-input-group-text
-        ></b-input-group-append>
-      </b-input-group>
-      <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
+        <template #prepend v-if="tooltip"
+          ><BInputGroupText v-b-tooltip.hover :title="tooltip"
+            ><i class="cui-info font-lg"></i></BInputGroupText
+        ></template>
+      </BInputGroup>
+      <BFormInvalidFeedback :state="errorHandlingMethod(errors, valid)">
         {{ errors[0] }}
-      </b-form-invalid-feedback>
-    </b-form-group>
+      </BFormInvalidFeedback>
+    </BFormGroup>
   </Field>
 </template>
 
 <script>
 import { Field } from 'vee-validate';
 import common from '../shared/common';
+import { BFormGroup, BInputGroup, BInputGroupText, BFormInput, BFormInvalidFeedback } from 'bootstrap-vue-next';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
   components: {
     Field,
+    BFormGroup,
+    BInputGroup,
+    BInputGroupText,
+    BFormInput,
+    BFormInvalidFeedback,
   },
   props: {
     id: String,

@@ -27,7 +27,6 @@
     "axios": "1.7.5",
     "bootstrap": "^5.3.3",
     "bootstrap-table": "1.23.2",
-    "bootstrap-vue": "2.23.1",
     "bootstrap-vue-next": "^0.24.11",
     "core-js": "3.38.1",
     "flexver": "1.1.1",
