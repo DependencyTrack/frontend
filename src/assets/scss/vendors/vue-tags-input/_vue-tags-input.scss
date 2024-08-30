@@ -1,5 +1,5 @@
 // If you want to override variables do it here
-@import "../../variables";
+@import '../../variables';
 
 /* style the background and the text color of the input ... */
 .vue-tags-input {
@@ -91,7 +91,7 @@
 
 /* if the user presses backspace, the complete tag should be crossed out, to mark it for deletion */
 .vue-tags-input .ti-tag:after {
-  transition: transform .2s;
+  transition: transform 0.2s;
   position: absolute;
   content: '';
   height: 2px;

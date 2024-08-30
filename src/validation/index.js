@@ -1,9 +1,7 @@
 import { configure } from 'vee-validate';
-import {
-} from 'vee-validate';
+import {} from 'vee-validate';
 
 import i18n from '../i18n';
-
 
 const { t } = i18n.global;
 

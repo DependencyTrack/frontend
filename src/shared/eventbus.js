@@ -1,6 +1,6 @@
-import mitt from 'mitt'
+import mitt from 'mitt';
 
-const emitter = mitt()
+const emitter = mitt();
 
 const EventBus = {
   $on: (type, handler) => emitter.on(type, handler),

@@ -60,11 +60,13 @@ const VulnSourceOSVAdvisories = () =>
   import('@/views/administration/vuln-sources/VulnSourceOSVAdvisories.vue');
 
 const Cargo = () => import('@/views/administration/repositories/Cargo.vue');
-const Composer = () => import('@/views/administration/repositories/Composer.vue');
+const Composer = () =>
+  import('@/views/administration/repositories/Composer.vue');
 const Cpan = () => import('@/views/administration/repositories/Cpan.vue');
 const Gem = () => import('@/views/administration/repositories/Gem.vue');
 const GitHub = () => import('@/views/administration/repositories/GitHub.vue');
-const GoModules = () => import('@/views/administration/repositories/GoModules.vue');
+const GoModules = () =>
+  import('@/views/administration/repositories/GoModules.vue');
 const Hackage = () => import('@/views/administration/repositories/Hackage.vue');
 const Hex = () => import('@/views/administration/repositories/Hex.vue');
 const Maven = () => import('@/views/administration/repositories/Maven.vue');
@@ -106,7 +108,8 @@ const License = () => import('@/views/portfolio/licenses/License.vue');
 
 // Pages
 const Login = () => import('@/views/pages/Login.vue');
-const PasswordForceChange = () => import('@/views/pages/PasswordForceChange.vue');
+const PasswordForceChange = () =>
+  import('@/views/pages/PasswordForceChange.vue');
 const Page404 = () => import('@/views/pages/Page404.vue');
 
 function configRoutes() {
