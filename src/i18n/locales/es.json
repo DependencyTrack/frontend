@@ -322,6 +322,7 @@
     "affected_projects": "Proyectos afectados",
     "age": "Edad",
     "age_tooltip": "Edad en formato de período ISO-8601 (por ejemplo, P1Y = 1 año; P2Y3M = 2 años, 3 meses)",
+    "alerts_tagged_with": "Alertas etiquetadas con {tag}",
     "aliases": "Alias",
     "analysis": "Análisis",
     "analysis_details_tooltip": "Detalles (explicación, detalles de la solución alternativa y otra información sobre el impacto)",
