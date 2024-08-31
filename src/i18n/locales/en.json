@@ -141,7 +141,7 @@
     "ldap_users": "LDAP Users",
     "limit_to": "Limit To",
     "limit_to_projects": "Limit to projects",
-    "limit_to_tags": "Limit to Tags",
+    "limit_to_tags": "Limit to tags",
     "managed_users": "Managed Users",
     "mapped_ldap_groups": "Mapped LDAP groups",
     "mapped_oidc_groups": "Mapped OpenID Connect Groups",
