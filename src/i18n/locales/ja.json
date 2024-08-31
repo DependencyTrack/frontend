@@ -322,6 +322,7 @@
     "affected_projects": "影響を受けるプロジェクト",
     "age": "年",
     "age_tooltip": "ISO-8601 期間形式の年齢 (例: P1Y = 1 年、P2Y3M = 2 年 3 か月)",
+    "alerts_tagged_with": "{tag} でタグ付けされたアラート",
     "aliases": "エイリアス",
     "analysis": "分析",
     "analysis_details_tooltip": "詳細（説明、回避策の詳細、その他の影響情報）",

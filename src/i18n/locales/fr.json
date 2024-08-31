@@ -322,6 +322,7 @@
     "affected_projects": "Projets concernés",
     "age": "Âge",
     "age_tooltip": "Âge au format de période ISO-8601 (par exemple, P1Y = 1 an ; P2Y3M = 2 ans, 3 mois)",
+    "alerts_tagged_with": "Alertes marquées avec {tag}",
     "aliases": "Alias",
     "analysis": "Analyse",
     "analysis_details_tooltip": "Détails (explication, détails de la solution de contournement et autres informations sur l'impact)",

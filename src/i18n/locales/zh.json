@@ -322,6 +322,7 @@
     "affected_projects": "受影响的项目",
     "age": "年龄",
     "age_tooltip": "采用 ISO-8601 时期格式的年龄（例如 P1Y = 1 岁；P2Y3M = 2 岁，3 个月）",
+    "alerts_tagged_with": "带有 {tag} 标记的提醒",
     "aliases": "别名",
     "analysis": "分析",
     "analysis_details_tooltip": "详细信息（解释、解决方法详细信息和其他影响信息）",
