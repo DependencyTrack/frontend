@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico">
+  <title>Dependency-Track</title>
+  <base href="/" />
+</head>
+<body class="sidebar-minimized">
+<noscript>
+  <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+<script type="module">
+  (function () {
+    if (!sessionStorage.length) {
+      localStorage.setItem('getSessionStorage', Date.now());
+    }
+    window.addEventListener('storage', function (event) {
+      if (event.key == 'getSessionStorage') {
+        localStorage.setItem('sessionStorage', JSON.stringify(sessionStorage));
+        localStorage.removeItem('sessionStorage');
+      } else if (event.key == 'sessionStorage' && !sessionStorage.length) {
+        var data = JSON.parse(event.newValue);
+        for (let key in data) {
+          sessionStorage.setItem(key, data[key]);
+        }
+      } else if (event.key == 'sessionInvalidate') {
+        sessionStorage.clear();
+        location.reload();
+      }
+    });
+  })();
+</script>
+</body>
+</html>

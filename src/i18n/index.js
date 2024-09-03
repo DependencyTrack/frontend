@@ -1,29 +1,23 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-
-Vue.use(VueI18n);
+import { createI18n } from 'vue-i18n';
 
 function loadLocaleMessages() {
-  const locales = require.context(
-    './locales',
-    true,
-    /[A-Za-z0-9-_,\s]+\.json$/i,
-  );
+  // import default is needed otherwise 404 will be missing as well as it won't be the raw json reference
+  const locales = import.meta.glob('./locales/*.json', { eager: true, import: 'default'});
   const messages = {};
-  locales.keys().forEach((key) => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
+  for (const [path, locale] of Object.entries(locales)) {
+    const matched = path.match(/\/locales\/([A-Za-z0-9-_]+)\.json$/);
+
     if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
+      const localeKey = matched[1];
+      messages[localeKey] = locale;
     }
-  });
+  }
   return messages;
 }
 
 const localeMessages = loadLocaleMessages();
 
 function matchLocale(requestedLocale) {
-  console.log(localeMessages);
   let exactMatch = Object.keys(localeMessages).find(
     (locale) => requestedLocale === locale,
   );
@@ -55,14 +49,19 @@ function matchLocale(requestedLocale) {
   return 'en';
 }
 
-const i18n = new VueI18n({
+const translationConfig = {
+  legacy: false,
   locale: matchLocale(
     (localStorage && localStorage.getItem('Locale')) ||
-      navigator.language ||
-      navigator.userLanguage,
+    navigator.language ||
+    navigator.userLanguage,
   ),
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  fallbackLocale: import.meta.env.VITE_VUE_APP_I18N_FALLBACK_LOCALE || 'en',
   messages: localeMessages,
-});
+};
+
+console.log(translationConfig);
+
+const i18n = createI18n(translationConfig);
 
 export default i18n;

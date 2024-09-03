@@ -1,5 +1,5 @@
 <template>
-  <validation-provider
+  <field
     :vid="id"
     :name="label"
     :rules="rules"
@@ -8,9 +8,9 @@
   >
     <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
       <b-input-group :class="inputGroupSize">
-        <b-input-group-prepend v-if="icon"
-          ><b-input-group-text><i :class="icon"></i></b-input-group-text
-        ></b-input-group-prepend>
+        <template #prepend v-if="icon"
+          ><BInputGroupText><i :class="icon"></i></BInputGroupText
+        ></template>
         <b-form-input
           :id="`${id}-input`"
           :type="type"
@@ -22,26 +22,32 @@
           :autofocus="isFocused"
           v-on="inputListeners"
         />
-        <b-input-group-append v-if="tooltip"
+        <template #prepend v-if="tooltip"
           ><b-input-group-text v-b-tooltip.hover :title="tooltip"
             ><i class="cui-info font-lg"></i></b-input-group-text
-        ></b-input-group-append>
+        ></template>
       </b-input-group>
       <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
         {{ errors[0] }}
       </b-form-invalid-feedback>
     </b-form-group>
-  </validation-provider>
+  </field>
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate';
+import { Field } from 'vee-validate';
 import common from '../shared/common';
+import { BFormGroup, BInputGroup, BInputGroupText, BFormInput, BFormInvalidFeedback } from 'bootstrap-vue-next';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
   components: {
-    ValidationProvider,
+    Field,
+    BFormGroup,
+    BInputGroup,
+    BInputGroupText,
+    BFormInput,
+    BFormInvalidFeedback,
   },
   props: {
     id: String,
