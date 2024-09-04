@@ -96,7 +96,6 @@
     "enable_default_template_override": "Увімкнути заміну шаблону за замовчуванням",
     "enable_email": "Увімкнути електронну пошту",
     "enable_index_consistency_check": "Увімкнути періодичну перевірку узгодженості",
-    "enable_svg_badge": "Увімкнути підтримку значка SVG (не автентифіковано)",
     "enabled": "Увімкнено",
     "enabled_for_tags": "Увімкнено для тегів",
     "experimental": "Експериментальний",

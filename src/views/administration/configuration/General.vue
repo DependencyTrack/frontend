@@ -10,13 +10,6 @@
         v-model="baseUrl"
         tooltip="This URL is used to construct links back to Dependency-Track from external systems."
       />
-      <c-switch
-        id="isBadgesEnabled"
-        color="primary"
-        v-model="isBadgesEnabled"
-        label
-        v-bind="labelIcon"
-      />{{ $t('admin.enable_svg_badge') }}
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -27,10 +20,8 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
 export default {
@@ -39,18 +30,12 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     ValidationObserver,
     BValidatedInputGroupFormInput,
   },
   data() {
     return {
       baseUrl: '',
-      isBadgesEnabled: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {
@@ -60,11 +45,6 @@ export default {
           groupName: 'general',
           propertyName: 'base.url',
           propertyValue: this.baseUrl,
-        },
-        {
-          groupName: 'general',
-          propertyName: 'badge.enabled',
-          propertyValue: this.isBadgesEnabled,
         },
       ]);
     },
@@ -79,9 +59,6 @@ export default {
         switch (item.propertyName) {
           case 'base.url':
             this.baseUrl = item.propertyValue;
-            break;
-          case 'badge.enabled':
-            this.isBadgesEnabled = common.toBoolean(item.propertyValue);
             break;
         }
       }
