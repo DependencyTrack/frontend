@@ -97,6 +97,11 @@ export default {
               route: 'configuration/email',
             },
             {
+              component: 'WelcomeMessage',
+              name: this.$t('admin.welcome_message'),
+              route: 'configuration/welcomeMessage',
+            },
+            {
               component: 'InternalComponents',
               name: this.$t('admin.internal_components'),
               route: 'configuration/internalComponents',

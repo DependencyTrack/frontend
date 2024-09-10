@@ -187,6 +187,7 @@
     "permissions": "Uprawnienia",
     "personal_access_token": "Osobisty token dostępu",
     "portfolio_access_control": "Kontrola dostępu do portfela",
+    "preview": "Zapowiedź",
     "project_access": "Dostęp do projektu",
     "publisher": "Wydawca",
     "publisher_class": "Klasa wydawcy",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV to rozproszona infrastruktura wykrywania luk i selekcji dla projektów open source, której celem jest pomoc zarówno opiekunom oprogramowania open source, jak i konsumentom oprogramowania open source. Służy jako agregator baz danych o lukach w zabezpieczeniach, które przyjęły format OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Wybierz ekosystem, aby włączyć kopię lustrzaną Doradztwa Google OSV",
     "vulnsource_osv_alias_sync_warning": "OSV może zgłaszać nieidentyczne luki w zabezpieczeniach jako aliasy. Postępuj ostrożnie.",
-    "vulnsource_osv_base_url": "Podstawowy adres URL OSV"
+    "vulnsource_osv_base_url": "Podstawowy adres URL OSV",
+    "welcome_message": "Wiadomość powitalna",
+    "welcome_message_desc": "Dostosuj wiadomość powitalną wyświetlaną na stronie początkowej funkcji Depency-Track przed zalogowaniem się użytkownika.",
+    "welcome_message_enable": "Wiadomość powitalna włączona"
   },
   "condition": {
     "forbidden": "Zabronione (403)",

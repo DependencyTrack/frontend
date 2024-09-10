@@ -27,6 +27,7 @@ import Jira from './configuration/JiraConfig';
 import Search from './configuration/Search.vue';
 import TaskScheduler from './configuration/TaskScheduler.vue';
 import Experimental from './configuration/Experimental.vue';
+import WelcomeMessage from './configuration/WelcomeMessage.vue';
 // Analyzer plugins
 import InternalAnalyzer from './analyzers/InternalAnalyzer';
 import OssIndexAnalyzer from './analyzers/OssIndexAnalyzer';
@@ -72,6 +73,7 @@ export default {
     EventBus,
     AdminMenu,
     General,
+    WelcomeMessage,
     BomFormats,
     Email,
     Jira,
