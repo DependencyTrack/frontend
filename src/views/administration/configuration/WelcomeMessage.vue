@@ -74,10 +74,13 @@ export default {
     };
   },
   created() {
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/welcomeMessage`;
-    axios.get(url).then((response) => {
-      this.isWelcomeMessage = common.toBoolean(response.data[1].propertyValue);
-      this.welcomeMessage = decodeURIComponent(response.data[0].propertyValue);
+    let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
+    let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
+    axios.get(message_url).then((response) => {
+      this.welcomeMessage = decodeURIComponent(response.data.propertyValue);
+    });
+    axios.get(enabled_url).then((response) => {
+      this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
     });
   },
   computed: {},
@@ -90,15 +93,15 @@ export default {
     saveChanges() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}`;
       axios.post(url, {
-        groupName: 'Message',
-        propertyName: 'welcomeMessage',
+        groupName: 'general',
+        propertyName: 'welcome.message.html',
         propertyValue: encodeURIComponent(
           this.welcomeMessage !== '' ? this.welcomeMessage : ' ',
         ),
       });
       axios.post(url, {
-        groupName: 'Message',
-        propertyName: 'isWelcomeMessage',
+        groupName: 'general',
+        propertyName: 'welcome.message.enabled',
         propertyValue: this.isWelcomeMessage,
       });
     },
