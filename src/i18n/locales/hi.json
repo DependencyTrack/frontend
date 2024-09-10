@@ -277,7 +277,7 @@
     "vulnsource_osv_base_url": "OSV बेस यूआरएल",
     "welcome_message": "स्वागत संदेश",
     "welcome_message_desc": "उपयोगकर्ताओं के साइन इन करने से पहले डिपेंडेंसी-ट्रैक के आरंभ पृष्ठ पर दिखाई देने वाले स्वागत संदेश को अनुकूलित करें।",
-    "welcome_message_enable": "स्वागत संदेश सक्षम किया गया"
+    "welcome_message_enable": "स्वागत संदेश सक्षम करें"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",

@@ -277,7 +277,7 @@
     "vulnsource_osv_base_url": "OSV Base URL",
     "welcome_message": "Welcome Message",
     "welcome_message_desc": "Customize the welcome message that appears on the start page of Dependency-Track before users sign in.",
-    "welcome_message_enable": "Welcome Message enabled"
+    "welcome_message_enable": "Enable welcome message"
   },
   "condition": {
     "forbidden": "Forbidden (403)",
