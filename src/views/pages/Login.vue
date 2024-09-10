@@ -146,13 +146,16 @@ export default {
     };
   },
   beforeMount() {
-    let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
     let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
-    axios.get(message_url).then((response) => {
-      this.welcomeMessage = decodeURIComponent(response.data.propertyValue);
-    });
     axios.get(enabled_url).then((response) => {
       this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
+    }).then(() => {
+      if (this.isWelcomeMessage) {
+        let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
+        axios.get(message_url).then((response) => {
+          this.welcomeMessage = decodeURIComponent(response.data.propertyValue);
+        })
+      }
     });
 
   },
