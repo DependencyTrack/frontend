@@ -187,6 +187,7 @@
     "permissions": "権限",
     "personal_access_token": "パーソナルアクセストークン",
     "portfolio_access_control": "ポートフォリオアクセス制御",
+    "preview": "プレビュー",
     "project_access": "プロジェクトへのアクセス",
     "publisher": "パブリッシャー",
     "publisher_class": "パブリッシャークラス",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV は、オープンソース プロジェクト向けの分散型脆弱性およびトリアージ インフラストラクチャであり、オープンソースのメンテナーとオープンソースの消費者の両方を支援することを目的としています。OpenSSF 脆弱性形式を採用した脆弱性データベースのアグリゲータとして機能します。",
     "vulnsource_osv_advisories_enable": "Google OSV アドバイザリ ミラーリングを有効にするエコシステムを選択します",
     "vulnsource_osv_alias_sync_warning": "OSV は同一でない脆弱性をエイリアスとして報告する場合があります。ご注意ください。",
-    "vulnsource_osv_base_url": "OSV ベース URL"
+    "vulnsource_osv_base_url": "OSV ベース URL",
+    "welcome_message": "ウェルカムメッセージ",
+    "welcome_message_desc": "ユーザーがサインインする前に、Dependency-Track の開始ページに表示されるウェルカム メッセージをカスタマイズします。",
+    "welcome_message_enable": "ウェルカムメッセージを有効にする"
   },
   "condition": {
     "forbidden": "禁止 (403)",

@@ -187,6 +187,7 @@
     "permissions": "अनुमतियां",
     "personal_access_token": "व्यक्तिगत एक्सेस टोकन",
     "portfolio_access_control": "पोर्टफोलियो एक्सेस नियंत्रण",
+    "preview": "पूर्व दर्शन",
     "project_access": "परियोजना तक पहुंच",
     "publisher": "प्रकाशक",
     "publisher_class": "प्रकाशक वर्ग",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV ओपन सोर्स प्रोजेक्ट्स के लिए एक वितरित भेद्यता और ट्राइएज इंफ्रास्ट्रक्चर है जिसका उद्देश्य ओपन सोर्स अनुरक्षकों और ओपन सोर्स के उपभोक्ताओं दोनों की मदद करना है। यह भेद्यता डेटाबेस के एग्रीगेटर के रूप में कार्य करता है जिसने OpenSSF भेद्यता प्रारूप को अपनाया है।",
     "vulnsource_osv_advisories_enable": "Google OSV एडवाइजरी मिररिंग सक्षम करने के लिए पारिस्थितिकी तंत्र का चयन करें",
     "vulnsource_osv_alias_sync_warning": "OSV गैर-समान कमज़ोरियों को उपनाम के रूप में रिपोर्ट कर सकता है। सावधानी से आगे बढ़ें।",
-    "vulnsource_osv_base_url": "OSV बेस यूआरएल"
+    "vulnsource_osv_base_url": "OSV बेस यूआरएल",
+    "welcome_message": "स्वागत संदेश",
+    "welcome_message_desc": "उपयोगकर्ताओं के साइन इन करने से पहले डिपेंडेंसी-ट्रैक के आरंभ पृष्ठ पर दिखाई देने वाले स्वागत संदेश को अनुकूलित करें।",
+    "welcome_message_enable": "स्वागत संदेश सक्षम करें"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",

@@ -187,6 +187,7 @@
     "permissions": "Разрешения",
     "personal_access_token": "Токен личного доступа",
     "portfolio_access_control": "Контроль доступа к портфолио",
+    "preview": "Предварительный просмотр",
     "project_access": "Доступ к проекту",
     "publisher": "Издатель",
     "publisher_class": "Класс издателя",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV — это распределенная инфраструктура оценки уязвимостей и сортировки для проектов с открытым исходным кодом, призванная помочь как сопровождающим, так и потребителям открытого исходного кода. Он служит агрегатором баз данных уязвимостей, принятых в формате OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Выберите экосистему, чтобы включить зеркалирование рекомендаций Google OSV.",
     "vulnsource_osv_alias_sync_warning": "OSV может сообщать о неидентичных уязвимостях как псевдонимах. Действовать с осторожностью.",
-    "vulnsource_osv_base_url": "Базовый URL-адрес OSV"
+    "vulnsource_osv_base_url": "Базовый URL-адрес OSV",
+    "welcome_message": "Приветственное сообщение",
+    "welcome_message_desc": "Настройте приветственное сообщение, которое появляется на стартовой странице Dependency-Track перед входом пользователей.",
+    "welcome_message_enable": "Включить приветственное сообщение"
   },
   "condition": {
     "forbidden": "Запрещено (403)",

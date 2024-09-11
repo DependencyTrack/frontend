@@ -187,6 +187,7 @@
     "permissions": "Autorizzazioni",
     "personal_access_token": "Token di accesso personale",
     "portfolio_access_control": "Controllo degli accessi al portafoglio",
+    "preview": "Anteprima",
     "project_access": "Accesso al progetto",
     "publisher": "Editore",
     "publisher_class": "Classe editore",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV è un'infrastruttura distribuita di vulnerabilità e valutazione per progetti open source volta ad aiutare sia i manutentori che i consumatori dell'open source. Serve come aggregatore di database di vulnerabilità che hanno adottato il formato OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Seleziona l'ecosistema per abilitare il mirroring dell'advisory OSV di Google",
     "vulnsource_osv_alias_sync_warning": "OSV può segnalare vulnerabilità non identiche come alias. Procedi con cautela.",
-    "vulnsource_osv_base_url": "URL di base OSV"
+    "vulnsource_osv_base_url": "URL di base OSV",
+    "welcome_message": "Messaggio di benvenuto",
+    "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
+    "welcome_message_enable": "Abilita il messaggio di benvenuto"
   },
   "condition": {
     "forbidden": "Proibito (403)",

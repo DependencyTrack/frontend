@@ -187,6 +187,7 @@
     "permissions": "Дозволи",
     "personal_access_token": "Персональний маркер доступу",
     "portfolio_access_control": "Контроль доступу до портфоліо",
+    "preview": "Попередній перегляд",
     "project_access": "Доступ до проекту",
     "publisher": "Видавець",
     "publisher_class": "Клас видавця",
@@ -273,7 +274,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV — це розподілена інфраструктура уразливостей і сортування для проектів з відкритим кодом, спрямована на допомогу як розробникам відкритого коду, так і споживачам відкритого коду. \nВін служить агрегатором баз даних уразливостей, які прийняли формат OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Виберіть екосистему, щоб увімкнути віддзеркалення Google OSV Advisory",
     "vulnsource_osv_alias_sync_warning": "OSV може повідомляти про неідентичні вразливості як псевдоніми. \nДійте обережно.",
-    "vulnsource_osv_base_url": "Базовий URL OSV"
+    "vulnsource_osv_base_url": "Базовий URL OSV",
+    "welcome_message": "Вітальне повідомлення",
+    "welcome_message_desc": "Налаштуйте вітальне повідомлення, яке з’являється на початковій сторінці Dependency-Track перед входом користувачів.",
+    "welcome_message_enable": "Увімкнути вітальне повідомлення"
   },
   "condition": {
     "forbidden": "Заборонено (403)",
