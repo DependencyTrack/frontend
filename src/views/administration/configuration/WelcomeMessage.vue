@@ -99,11 +99,12 @@ export default {
           this.welcomeMessage !== '' ? this.welcomeMessage : ' ',
         ),
       });
-      axios.post(url, {
-        groupName: 'general',
-        propertyName: 'welcome.message.enabled',
-        propertyValue: this.isWelcomeMessage,
-      })
+      axios
+        .post(url, {
+          groupName: 'general',
+          propertyName: 'welcome.message.enabled',
+          propertyValue: this.isWelcomeMessage,
+        })
         .then((response) => {
           this.$toastr.s(this.$t('admin.configuration_saved'));
         })
