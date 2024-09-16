@@ -10,7 +10,8 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 
 // Views
 const Dashboard = () => import('@/views/Dashboard');
-const ProjectListView = () => import('@/views/portfolio/projects/ProjectListView');
+const ProjectListView = () =>
+  import('@/views/portfolio/projects/ProjectListView');
 const TagList = () => import('@/views/portfolio/tags/TagList.vue');
 const ComponentSearch = () =>
   import('@/views/portfolio/components/ComponentSearch');

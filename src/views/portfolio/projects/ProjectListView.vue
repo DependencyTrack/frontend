@@ -6,11 +6,10 @@
 </template>
 
 <script>
-
-import PortfolioWidgetRow from "@/views/dashboard/PortfolioWidgetRow.vue";
-import ProjectList from "@/views/portfolio/projects/ProjectList.vue";
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow.vue';
+import ProjectList from '@/views/portfolio/projects/ProjectList.vue';
 
 export default {
-  components: {ProjectList, PortfolioWidgetRow}
-}
+  components: { ProjectList, PortfolioWidgetRow },
+};
 </script>

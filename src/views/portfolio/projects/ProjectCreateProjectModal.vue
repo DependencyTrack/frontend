@@ -70,8 +70,10 @@
           <b-input-group-form-select
             id="v-collection-logic-input"
             required="true"
-            v-model="project.collectionLogic" :options="availableCollectionLogics"
-            :label="$t('message.collectionLogic')" :tooltip="$t('message.project_collection_logic_desc')"
+            v-model="project.collectionLogic"
+            :options="availableCollectionLogics"
+            :label="$t('message.collectionLogic')"
+            :tooltip="$t('message.project_collection_logic_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             v-on:change="syncCollectionTagsVisibility"
           />
@@ -80,8 +82,13 @@
             v-model="collectionTagTyping"
             :tags="collectionTags"
             :add-on-key="addOnKeys"
-            :placeholder="$t('message.project_add_collection_tag')" @tags-changed="newCollectionTags => this.collectionTags = newCollectionTags"
-            class="mw-100 bg-transparent text-lowercase" :max-tags="1" v-show="showCollectionTags"
+            :placeholder="$t('message.project_add_collection_tag')"
+            @tags-changed="
+              (newCollectionTags) => (this.collectionTags = newCollectionTags)
+            "
+            class="mw-100 bg-transparent text-lowercase"
+            :max-tags="1"
+            v-show="showCollectionTags"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
 
@@ -283,10 +290,28 @@ export default {
       ],
       availableTeams: [],
       availableCollectionLogics: [
-        { value: 'NONE', text: this.$i18n.t('message.project_collection_logic_none') },
-        { value: 'AGGREGATE_DIRECT_CHILDREN', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children') },
-        { value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children_with_tag') },
-        { value: 'HIGHEST_SEMVER_CHILD', text: this.$i18n.t('message.project_collection_logic_highest_semver_child') }
+        {
+          value: 'NONE',
+          text: this.$i18n.t('message.project_collection_logic_none'),
+        },
+        {
+          value: 'AGGREGATE_DIRECT_CHILDREN',
+          text: this.$i18n.t(
+            'message.project_collection_logic_aggregate_direct_children',
+          ),
+        },
+        {
+          value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG',
+          text: this.$i18n.t(
+            'message.project_collection_logic_aggregate_direct_children_with_tag',
+          ),
+        },
+        {
+          value: 'HIGHEST_SEMVER_CHILD',
+          text: this.$i18n.t(
+            'message.project_collection_logic_highest_semver_child',
+          ),
+        },
       ],
       selectableLicenses: [],
       selectedLicense: '',
@@ -294,7 +319,7 @@ export default {
       availableParents: [],
       project: {
         team: [],
-        collectionLogic: 'NONE' // set default to regular project
+        collectionLogic: 'NONE', // set default to regular project
       },
       teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
@@ -368,7 +393,7 @@ export default {
     syncReadOnlyVersionField: function (value) {
       this.readOnlyProjectVersion = value;
     },
-    syncCollectionTagsVisibility: function(value) {
+    syncCollectionTagsVisibility: function (value) {
       this.showCollectionTags = value === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
     },
     createProject: function () {
@@ -397,9 +422,13 @@ export default {
           classifier: this.project.classifier,
           accessTeams: choosenTeamswithoutAPIKeys,
           collectionLogic: this.project.collectionLogic,
-          collectionTag: ( this.project.collectionLogic === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG' &&
+          collectionTag:
+            this.project.collectionLogic ===
+              'AGGREGATE_DIRECT_CHILDREN_WITH_TAG' &&
             this.collectionTags &&
-            this.collectionTags.length > 0 ) ? {name: this.collectionTags[0].text} : null,
+            this.collectionTags.length > 0
+              ? { name: this.collectionTags[0].text }
+              : null,
           purl: this.project.purl,
           cpe: this.project.cpe,
           swidTagId: this.project.swidTagId,

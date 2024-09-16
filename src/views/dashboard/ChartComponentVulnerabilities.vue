@@ -14,7 +14,9 @@ export default {
       const totalStyle = getStyle('--notification-note');
       const affectedStyle = getStyle('--notification-warn');
       const nonAffectedStyle = getStyle('--notification-pass');
-      const collectionLogicChangedStyle = getStyle('--collection-logic-changed');
+      const collectionLogicChangedStyle = getStyle(
+        '--collection-logic-changed',
+      );
 
       let labels = [];
       let totalData = [];
@@ -73,13 +75,15 @@ export default {
               showLine: false,
               pointBorderColor: (context) => {
                 const value = context.dataset.data[context.dataIndex];
-                return value === true ? collectionLogicChangedStyle : 'transparent';
+                return value === true
+                  ? collectionLogicChangedStyle
+                  : 'transparent';
               },
               pointBorderWidth: 400,
               pointHoverBorderWidth: 400,
               data: collectionLogicChangedData,
               pointStyle: 'line',
-              pointRadius: 1
+              pointRadius: 1,
             },
           ],
         },

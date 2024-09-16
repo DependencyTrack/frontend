@@ -16,7 +16,9 @@ export default {
       const mediumStyle = getStyle('--severity-medium');
       const lowStyle = getStyle('--severity-low');
       const unassignedStyle = getStyle('--severity-unassigned');
-      const collectionLogicChangedStyle = getStyle('--collection-logic-changed');
+      const collectionLogicChangedStyle = getStyle(
+        '--collection-logic-changed',
+      );
 
       let labels = [];
       let criticalData = [];
@@ -91,13 +93,15 @@ export default {
               showLine: false,
               pointBorderColor: (context) => {
                 const value = context.dataset.data[context.dataIndex];
-                return value === true ? collectionLogicChangedStyle : 'transparent';
+                return value === true
+                  ? collectionLogicChangedStyle
+                  : 'transparent';
               },
               pointBorderWidth: 400,
               pointHoverBorderWidth: 400,
               data: collectionLogicChangedData,
               pointStyle: 'line',
-              pointRadius: 1
+              pointRadius: 1,
             },
           ],
         },

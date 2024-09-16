@@ -85,7 +85,9 @@
             :tags="collectionTags"
             :add-on-key="addOnKeys"
             :placeholder="$t('message.project_add_collection_tag')"
-            @tags-changed="newCollectionTags => this.collectionTags = newCollectionTags"
+            @tags-changed="
+              (newCollectionTags) => (this.collectionTags = newCollectionTags)
+            "
             class="mw-100 bg-transparent text-lowercase"
             :max-tags="1"
             v-show="showCollectionTags"
@@ -530,10 +532,28 @@ export default {
         { value: 'FILE', text: this.$i18n.t('message.component_file') },
       ],
       availableCollectionLogics: [
-        { value: 'NONE', text: this.$i18n.t('message.project_collection_logic_none') },
-        { value: 'AGGREGATE_DIRECT_CHILDREN', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children') },
-        { value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG', text: this.$i18n.t('message.project_collection_logic_aggregate_direct_children_with_tag') },
-        { value: 'HIGHEST_SEMVER_CHILD', text: this.$i18n.t('message.project_collection_logic_highest_semver_child') }
+        {
+          value: 'NONE',
+          text: this.$i18n.t('message.project_collection_logic_none'),
+        },
+        {
+          value: 'AGGREGATE_DIRECT_CHILDREN',
+          text: this.$i18n.t(
+            'message.project_collection_logic_aggregate_direct_children',
+          ),
+        },
+        {
+          value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG',
+          text: this.$i18n.t(
+            'message.project_collection_logic_aggregate_direct_children_with_tag',
+          ),
+        },
+        {
+          value: 'HIGHEST_SEMVER_CHILD',
+          text: this.$i18n.t(
+            'message.project_collection_logic_highest_semver_child',
+          ),
+        },
       ],
       parent: null,
       selectedParent: null,
@@ -699,7 +719,9 @@ export default {
   methods: {
     initializeTags: function () {
       this.tags = (this.project.tags || []).map((tag) => ({ text: tag.name }));
-      this.collectionTags = this.project.collectionTag ? [{ text: this.project.collectionTag.name }] : [];
+      this.collectionTags = this.project.collectionTag
+        ? [{ text: this.project.collectionTag.name }]
+        : [];
       this.syncCollectionTagsVisibility(this.project.collectionLogic);
     },
     syncReadOnlyNameField: function (value) {
@@ -708,7 +730,7 @@ export default {
     syncReadOnlyVersionField: function (value) {
       this.readOnlyProjectVersion = value;
     },
-    syncCollectionTagsVisibility: function(value) {
+    syncCollectionTagsVisibility: function (value) {
       this.showCollectionTags = value === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
     },
     updateProject: function () {
@@ -731,9 +753,13 @@ export default {
           description: this.project.description,
           classifier: this.project.classifier,
           collectionLogic: this.project.collectionLogic,
-          collectionTag: ( this.project.collectionLogic === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG' &&
-                          this.collectionTags &&
-                          this.collectionTags.length > 0 ) ? {name: this.collectionTags[0].text} : null,
+          collectionTag:
+            this.project.collectionLogic ===
+              'AGGREGATE_DIRECT_CHILDREN_WITH_TAG' &&
+            this.collectionTags &&
+            this.collectionTags.length > 0
+              ? { name: this.collectionTags[0].text }
+              : null,
           parent: parent,
           cpe: this.project.cpe,
           purl: this.project.purl,

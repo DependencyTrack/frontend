@@ -71,7 +71,7 @@ export default {
      * If only children from a specific project shall be shown this must be set to the corresponding project
      */
     parentProject: Object,
-    uuid: String
+    uuid: String,
   },
   beforeCreate() {
     this.showInactiveProjects =
@@ -90,7 +90,7 @@ export default {
     },
     apiUrl: function (uuid) {
       // if we only want to show children of a specific parent we force the base call to fetch its children
-      if(this.uuid && !uuid) {
+      if (this.uuid && !uuid) {
         uuid = this.uuid;
       }
 
@@ -254,21 +254,26 @@ export default {
           routerFunc: () => this.$router,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              this.routerFunc().resolve({name: 'Project', params: {'uuid': row.uuid}}).href
+              this.routerFunc().resolve({
+                name: 'Project',
+                params: { uuid: row.uuid },
+              }).href,
             );
             let collectionIcon = '';
-            if(row.collectionLogic !== 'NONE') {
-              let title = 'Metrics of collection project are calculated '
+            if (row.collectionLogic !== 'NONE') {
+              let title = 'Metrics of collection project are calculated ';
               switch (row.collectionLogic) {
                 case 'AGGREGATE_DIRECT_CHILDREN':
                   title += 'by aggregating numbers of all direct children.';
                   break;
                 case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
-                  const tag = !row.collectionTag ? '' : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
+                  const tag = !row.collectionTag
+                    ? ''
+                    : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
                   title += `by aggregating numbers of direct children with tag '${tag}'.`;
                   break;
                 case 'HIGHEST_SEMVER_CHILD':
-                  title += 'by using the child with highest SemVer version.'
+                  title += 'by using the child with highest SemVer version.';
                   break;
               }
               collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
