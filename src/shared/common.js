@@ -408,9 +408,12 @@ $common.componentClassifierLabelFormatter = (i18n) => {
 $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
   return function (value) {
     // if column defines a routerFunc returning the router we use a more robust solution
-    let url = !this.routerFunc ?
-        '../projects/?classifier=' + value :
-        this.routerFunc().resolve({name: 'Projects', query: {'classifier': value}}).href;
+    let url = !this.routerFunc
+      ? '../projects/?classifier=' + value
+      : this.routerFunc().resolve({
+          name: 'Projects',
+          query: { classifier: value },
+        }).href;
 
     switch (value) {
       case 'APPLICATION':
