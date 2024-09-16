@@ -14,17 +14,20 @@ export default {
       const failStyle = getStyle('--notification-fail');
       const warnStyle = getStyle('--notification-warn');
       const infoStyle = getStyle('--notification-info');
+      const collectionLogicChangedStyle = getStyle('--collection-logic-changed');
 
       let labels = [];
       let failData = [];
       let warnData = [];
       let infoData = [];
+      let collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
         failData.push(metrics[i].policyViolationsFail);
         warnData.push(metrics[i].policyViolationsWarn);
         infoData.push(metrics[i].policyViolationsInfo);
+        collectionLogicChangedData.push(metrics[i].collectionLogicChanged);
 
         if (i === metrics.length - 1) {
           labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
@@ -58,6 +61,21 @@ export default {
               borderColor: infoStyle,
               pointHoverBackgroundColor: '#fff',
               data: infoData,
+            },
+            {
+              label: this.$t('message.collection_logic_changed'),
+              backgroundColor: 'transparent',
+              borderColor: collectionLogicChangedStyle,
+              showLine: false,
+              pointBorderColor: (context) => {
+                const value = context.dataset.data[context.dataIndex];
+                return value === true ? collectionLogicChangedStyle : 'transparent';
+              },
+              pointBorderWidth: 400,
+              pointHoverBorderWidth: 400,
+              data: collectionLogicChangedData,
+              pointStyle: 'line',
+              pointRadius: 1
             },
           ],
         },

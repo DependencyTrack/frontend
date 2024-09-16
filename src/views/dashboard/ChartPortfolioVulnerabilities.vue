@@ -94,6 +94,7 @@ export default {
                 return value === true ? collectionLogicChangedStyle : 'transparent';
               },
               pointBorderWidth: 400,
+              pointHoverBorderWidth: 400,
               data: collectionLogicChangedData,
               pointStyle: 'line',
               pointRadius: 1
