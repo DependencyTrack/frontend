@@ -868,7 +868,16 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "collectionLogic": "Logika kolekcji projektów",
+    "collection_logic_changed": "Zmieniono logikę kolekcji projektów",
+    "collection_projects": "Projekty kolekcji",
+    "project_add_collection_tag": "Zbiorcze dane dzieci z tym tagiem",
+    "project_collection_logic_aggregate_direct_children": "Zagregowane bezpośrednie dzieci",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Zagreguj bezpośrednie dzieci ze znacznikiem",
+    "project_collection_logic_desc": "Określa, czy ten projekt jest projektem kolekcji i jaką logikę obliczania metryk należy zastosować w projekcie kolekcji. \nProjekty kolekcji nie mają własnych komponentów, ale wyświetlają dane swoich dzieci przy użyciu jednej z dostępnych logiki.",
+    "project_collection_logic_latest_version_children": "Łączne bezpośrednie elementy podrzędne oznaczone jako najnowsze",
+    "project_collection_logic_none": "Nic"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

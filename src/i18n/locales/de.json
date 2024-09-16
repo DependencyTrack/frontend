@@ -868,7 +868,16 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
+    "collectionLogic": "Projektsammlungslogik",
+    "collection_logic_changed": "Projektsammlungslogik geändert",
+    "collection_projects": "Projekte in Sammlung",
+    "project_add_collection_tag": "Summiere Daten von Kindern mit diesem Tag",
+    "project_collection_logic_aggregate_direct_children": "Summiere Daten von direkten Kindern",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Summiere Daten von direkten Kindern mit Tag",
+    "project_collection_logic_desc": "Gibt an, ob das Projekt ein Sammlungsprojekt ist und welche Berechnung für die Metriken verwendet werden soll. Sammlungsprojekte haben keine eigenen Komponenten, sondern zeigen Daten ihrer Kinder an, basierend auf der gewählten Berechnungsart.",
+    "project_collection_logic_latest_version_children": "Summiere Daten direkter Kinder, die als letzte Version markiert sind",
+    "project_collection_logic_none": "Keine"
   },
   "operator": {
     "contains_all": "enthält alle",

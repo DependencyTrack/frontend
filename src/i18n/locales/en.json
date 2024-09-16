@@ -363,7 +363,6 @@
     "code_not_present": "Code not present",
     "code_not_reachable": "Code not reachable",
     "collectionLogic": "Project Collection Logic",
-    "collection_indicator_tooltip": "Collection project with values calculated based on children.",
     "collection_logic_changed": "Project Collection Logic Changed",
     "collection_projects": "Collection Projects",
     "comment": "Comment",

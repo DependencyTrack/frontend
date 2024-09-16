@@ -868,7 +868,16 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える"
+    "x_trust_boundary": "信頼境界を越える",
+    "collectionLogic": "プロジェクト収集ロジック",
+    "collection_logic_changed": "プロジェクト収集ロジックの変更",
+    "collection_projects": "コレクションプロジェクト",
+    "project_add_collection_tag": "このタグを持つ子のデータを集約します",
+    "project_collection_logic_aggregate_direct_children": "直接の子を集約する",
+    "project_collection_logic_aggregate_direct_children_with_tag": "タグを使用して直接の子を集約する",
+    "project_collection_logic_desc": "このプロジェクトが収集プロジェクトであるかどうか、および収集プロジェクトにどのメトリック計算ロジックを適用するかを指定します。\nコレクション プロジェクトには独自のコンポーネントはありませんが、利用可能なロジックの 1 つを使用して子のデータを表示します。",
+    "project_collection_logic_latest_version_children": "最新としてマークされた直接の子を集約する",
+    "project_collection_logic_none": "なし"
   },
   "operator": {
     "contains_all": "すべてを含む",

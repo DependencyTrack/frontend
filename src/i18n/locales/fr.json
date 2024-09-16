@@ -868,7 +868,16 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle"
+    "x_trust_boundary": "Limte de confiance mutuelle",
+    "collectionLogic": "Logique de collecte de projets",
+    "collection_logic_changed": "La logique de collecte du projet a été modifiée",
+    "collection_projects": "Projets de collecte",
+    "project_add_collection_tag": "Agréger les données des enfants avec cette balise",
+    "project_collection_logic_aggregate_direct_children": "Agréger les enfants directs",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Agréger les enfants directs avec la balise",
+    "project_collection_logic_desc": "Spécifie si ce projet est un projet de collection et quelle logique de calcul de métriques appliquer pour un projet de collection. \nLes projets de collection n'ont pas de composants propres mais affichent les données de leurs enfants en utilisant l'une des logiques disponibles.",
+    "project_collection_logic_latest_version_children": "Agréger les enfants directs marqués comme les plus récents",
+    "project_collection_logic_none": "Aucun"
   },
   "operator": {
     "contains_all": "contient tous",

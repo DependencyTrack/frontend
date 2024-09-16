@@ -868,7 +868,16 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "collectionLogic": "Логика коллекции проектов",
+    "collection_logic_changed": "Изменена логика сбора проектов",
+    "collection_projects": "Коллекционные проекты",
+    "project_add_collection_tag": "Совокупные данные детей с этим тегом",
+    "project_collection_logic_aggregate_direct_children": "Агрегировать прямых дочерних элементов",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Объединить прямых дочерних элементов с помощью тега",
+    "project_collection_logic_desc": "Указывает, является ли этот проект проектом сбора и какую логику расчета метрик следует применить для проекта сбора. \nПроекты-коллекции не имеют собственных компонентов, а отображают данные своих дочерних элементов, используя одну из доступных логик.",
+    "project_collection_logic_latest_version_children": "Совокупные прямые дочерние элементы, отмеченные как последние",
+    "project_collection_logic_none": "Никто"
   },
   "operator": {
     "contains_all": "содержит все",

@@ -868,7 +868,16 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри"
+    "x_trust_boundary": "Перетнути кордон довіри",
+    "collectionLogic": "Логіка збору проектів",
+    "collection_logic_changed": "Змінено логіку збирання проекту",
+    "collection_projects": "Колекція проектів",
+    "project_add_collection_tag": "Сукупні дані дітей з цим тегом",
+    "project_collection_logic_aggregate_direct_children": "Сукупність прямих дітей",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Агрегувати прямі дочірні елементи з тегом",
+    "project_collection_logic_desc": "Визначає, чи є цей проект колекційним проектом і яку логіку обчислення показників застосовувати для колекційного проекту. \nКолекційні проекти не мають власних компонентів, але відображають дані своїх дітей за допомогою однієї з доступних логік.",
+    "project_collection_logic_latest_version_children": "Сукупні прямі дочірні елементи позначено як останні",
+    "project_collection_logic_none": "Жодного"
   },
   "operator": {
     "contains_all": "містить усе",

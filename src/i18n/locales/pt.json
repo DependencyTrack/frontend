@@ -868,7 +868,16 @@
     "weakness": "Fraqueza",
     "will_not_fix": "Não irá corrigir",
     "workaround_available": "Solução alternativa disponível",
-    "x_trust_boundary": "Limite de confiança cruzada"
+    "x_trust_boundary": "Limite de confiança cruzada",
+    "collectionLogic": "Lógica de coleção de projetos",
+    "collection_logic_changed": "Lógica de coleção de projetos alterada",
+    "collection_projects": "Projetos de Coleção",
+    "project_add_collection_tag": "Dados agregados de crianças com esta tag",
+    "project_collection_logic_aggregate_direct_children": "Agregar filhos diretos",
+    "project_collection_logic_aggregate_direct_children_with_tag": "Agregar filhos diretos com tag",
+    "project_collection_logic_desc": "Especifica se este projeto é um projeto de coleção e qual lógica de cálculo de métricas aplicar a um projeto de coleção. \nOs projetos de coleção não possuem componentes próprios, mas exibem os dados de seus filhos utilizando uma das lógicas disponíveis.",
+    "project_collection_logic_latest_version_children": "Agregar filhos diretos marcados como os mais recentes",
+    "project_collection_logic_none": "Nenhum"
   },
   "operator": {
     "contains_all": "contém tudo",
