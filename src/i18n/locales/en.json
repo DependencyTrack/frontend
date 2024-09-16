@@ -718,7 +718,7 @@
     "project_collection_logic_aggregate_direct_children": "Aggregate direct children",
     "project_collection_logic_aggregate_direct_children_with_tag": "Aggregate direct children with tag",
     "project_collection_logic_desc": "Specifies if this project is a collection project and which metrics calculation logic to apply for a collection project. Collection projects do not have own components but display data of their children using one of the available logics.",
-    "project_collection_logic_highest_semver_child": "Show highest SemVer child",
+    "project_collection_logic_latest_version_children": "Aggregate direct children marked as latest",
     "project_collection_logic_none": "None",
     "project_created": "Project created",
     "project_delete_message": "Deleting this project will also permanently delete all associated child projects. This action cannot be undone. Are you sure you want to proceed?",

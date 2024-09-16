@@ -610,21 +610,21 @@ export default {
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
     getCollectionLogicText: function (project) {
-      let title = 'Metrics of collection project are calculated ';
+      let title = 'Metrics of collection project are calculated by aggregating numbers of ';
       switch (project.collectionLogic) {
         case 'NONE':
           return '';
         case 'AGGREGATE_DIRECT_CHILDREN':
-          title += 'by aggregating numbers of all direct children.';
+          title += 'all direct children.';
           break;
         case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
           const tag = !project.collectionTag
             ? ''
             : xssFilters.inDoubleQuotedAttr(project.collectionTag.name);
-          title += `by aggregating numbers of direct children with tag '${tag}'.`;
+          title += `direct children with tag '${tag}'.`;
           break;
-        case 'HIGHEST_SEMVER_CHILD':
-          title += 'by using the child with highest SemVer version.';
+        case 'LATEST_VERSION_CHILDREN':
+          title += 'latest versions of direct children.';
           break;
       }
       return title;

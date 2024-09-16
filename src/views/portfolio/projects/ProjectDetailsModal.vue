@@ -549,9 +549,9 @@ export default {
           ),
         },
         {
-          value: 'HIGHEST_SEMVER_CHILD',
+          value: 'LATEST_VERSION_CHILDREN',
           text: this.$i18n.t(
-            'message.project_collection_logic_highest_semver_child',
+            'message.project_collection_logic_latest_version_children',
           ),
         },
       ],
