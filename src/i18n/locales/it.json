@@ -702,6 +702,8 @@
     "profile_updated": "profilo aggiornato",
     "project_cloning_in_progress": "Il progetto viene creato con le opzioni di clonazione specificate",
     "project_created": "Progetto creato",
+    "project_delete_message": "L'eliminazione di questo progetto eliminerà definitivamente anche tutti i progetti secondari associati. \nQuesta azione non può essere annullata. \nSei sicuro di voler procedere?",
+    "project_delete_title": "Conferma l'eliminazione del progetto",
     "project_deleted": "Progetto eliminato",
     "project_details": "Dettagli del progetto",
     "project_metadata_supplier_name_desc": "L'organizzazione che ha fornito la distinta base",

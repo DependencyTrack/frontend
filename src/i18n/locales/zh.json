@@ -702,6 +702,8 @@
     "profile_updated": "个人资料已更新",
     "project_cloning_in_progress": "正在使用指定的克隆选项创建项目",
     "project_created": "项目已创建",
+    "project_delete_message": "删除此项目还将永久删除所有关联的子项目。\n此操作无法撤消。\n您确定要继续吗？",
+    "project_delete_title": "确认项目删除",
     "project_deleted": "项目已删除",
     "project_details": "项目细节",
     "project_metadata_supplier_name_desc": "提供 BOM 的组织",

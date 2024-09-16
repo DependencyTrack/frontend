@@ -702,6 +702,8 @@
     "profile_updated": "プロフィール更新",
     "project_cloning_in_progress": "プロジェクトは指定されたクローンオプションで作成されています",
     "project_created": "プロジェクトが作成されました",
+    "project_delete_message": "このプロジェクトを削除すると、関連するすべての子プロジェクトも完全に削除されます。\nこの操作は元に戻すことができません。\n続行してもよろしいですか?",
+    "project_delete_title": "プロジェクトの削除の確認",
     "project_deleted": "プロジェクトが削除されました",
     "project_details": "プロジェクトの詳細",
     "project_metadata_supplier_name_desc": "BOMを提供した組織",
