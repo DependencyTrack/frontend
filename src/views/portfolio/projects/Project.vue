@@ -610,7 +610,8 @@ export default {
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
     getCollectionLogicText: function (project) {
-      let title = 'Metrics of collection project are calculated by aggregating numbers of ';
+      let title =
+        'Metrics of collection project are calculated by aggregating numbers of ';
       switch (project.collectionLogic) {
         case 'NONE':
           return '';

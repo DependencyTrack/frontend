@@ -305,7 +305,7 @@ export default {
           text: this.$i18n.t(
             'message.project_collection_logic_aggregate_direct_children_with_tag',
           ),
-        }/*
+        } /*
         TODO Enable when https://github.com/DependencyTrack/dependency-track/issues/4148 is implemented
         ,
         {
@@ -313,7 +313,7 @@ export default {
           text: this.$i18n.t(
             'message.project_collection_logic_latest_version_children',
           ),
-        },*/
+        },*/,
       ],
       selectableLicenses: [],
       selectedLicense: '',

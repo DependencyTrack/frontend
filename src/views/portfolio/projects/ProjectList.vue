@@ -261,7 +261,8 @@ export default {
             );
             let collectionIcon = '';
             if (row.collectionLogic !== 'NONE') {
-              let title = 'Metrics of collection project are calculated by aggregating numbers of ';
+              let title =
+                'Metrics of collection project are calculated by aggregating numbers of ';
               switch (row.collectionLogic) {
                 case 'AGGREGATE_DIRECT_CHILDREN':
                   title += 'all direct children.';
