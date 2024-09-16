@@ -16,6 +16,7 @@ export default {
       const mediumStyle = getStyle('--severity-medium');
       const lowStyle = getStyle('--severity-low');
       const unassignedStyle = getStyle('--severity-unassigned');
+      const collectionLogicChangedStyle = getStyle('--collection-logic-changed');
 
       let labels = [];
       let criticalData = [];
@@ -23,6 +24,7 @@ export default {
       let mediumData = [];
       let lowData = [];
       let unassignedData = [];
+      let collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
@@ -31,6 +33,7 @@ export default {
         mediumData.push(metrics[i].medium);
         lowData.push(metrics[i].low);
         unassignedData.push(metrics[i].unassigned);
+        collectionLogicChangedData.push(metrics[i].collectionLogicChanged);
 
         if (i === metrics.length - 1) {
           labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
@@ -80,6 +83,20 @@ export default {
               borderColor: unassignedStyle,
               pointHoverBackgroundColor: '#fff',
               data: unassignedData,
+            },
+            {
+              label: this.$t('message.collection_logic_changed'),
+              backgroundColor: 'transparent',
+              borderColor: collectionLogicChangedStyle,
+              showLine: false,
+              pointBorderColor: (context) => {
+                const value = context.dataset.data[context.dataIndex];
+                return value === true ? collectionLogicChangedStyle : 'transparent';
+              },
+              pointBorderWidth: 400,
+              data: collectionLogicChangedData,
+              pointStyle: 'line',
+              pointRadius: 1
             },
           ],
         },
