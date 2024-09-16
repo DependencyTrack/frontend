@@ -452,6 +452,8 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
+import NotificationDialog from '../../components/NotificationDialog';
+import Vue from 'vue';
 
 export default {
   name: 'ProjectDetailsModal',
@@ -708,8 +710,16 @@ export default {
           this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
         });
     },
-    deleteProject: function () {
+    deleteProject: async function () {
       this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
+      try {
+        await this.showWarning(
+          this.$t('message.project_delete_message'),
+          this.$t('message.project_delete_title'),
+        );
+      } catch {
+        return;
+      }
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
       this.axios
@@ -721,6 +731,31 @@ export default {
         .catch((error) => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
+    },
+    async showWarning(message, title) {
+      return new Promise((resolve, reject) => {
+        const WarningConstructor = Vue.extend(NotificationDialog);
+        const instance = new WarningConstructor({
+          propsData: { message, title },
+        });
+        instance.$mount();
+        document.body.appendChild(instance.$el);
+
+        instance.$bvModal.show('notification-dialog');
+        instance.$on('confirm', () => {
+          resolve();
+          this.cleanupInstance(instance);
+        });
+
+        instance.$on('cancel', () => {
+          reject();
+          this.cleanupInstance(instance);
+        });
+      });
+    },
+    cleanupInstance(instance) {
+      document.body.removeChild(instance.$el);
+      instance.$destroy();
     },
     hasActiveChild: function (project) {
       return (

@@ -702,6 +702,8 @@
     "profile_updated": "Profile updated",
     "project_cloning_in_progress": "The project is being created with the cloning options specified",
     "project_created": "Project created",
+    "project_delete_message": "Deleting this project will also permanently delete all associated child projects. This action cannot be undone. Are you sure you want to proceed?",
+    "project_delete_title": "Confirm Project Deletion",
     "project_deleted": "Project deleted",
     "project_details": "Project Details",
     "project_metadata_supplier_name_desc": "The organization that supplied the BOM",
