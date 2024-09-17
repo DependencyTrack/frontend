@@ -452,8 +452,6 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
-import NotificationDialog from '../../components/NotificationDialog';
-import Vue from 'vue';
 
 export default {
   name: 'ProjectDetailsModal',
@@ -712,50 +710,23 @@ export default {
     },
     deleteProject: async function () {
       this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-      try {
-        await this.showWarning(
-          this.$t('message.project_delete_message'),
-          this.$t('message.project_delete_title'),
-        );
-      } catch {
-        return;
+      let confirmed = await this.$bvModal
+        .msgBoxConfirm(this.$t('message.project_delete_message'), {
+          title: this.$t('message.project_delete_title'),
+        });
+      if (confirmed) {
+        let url =
+          `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
+        this.axios
+          .delete(url)
+          .then((response) => {
+            this.$toastr.s(this.$t('message.project_deleted'));
+            this.$router.replace({ name: 'Projects' });
+          })
+          .catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          });
       }
-      let url =
-        `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
-      this.axios
-        .delete(url)
-        .then((response) => {
-          this.$toastr.s(this.$t('message.project_deleted'));
-          this.$router.replace({ name: 'Projects' });
-        })
-        .catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
-    },
-    async showWarning(message, title) {
-      return new Promise((resolve, reject) => {
-        const WarningConstructor = Vue.extend(NotificationDialog);
-        const instance = new WarningConstructor({
-          propsData: { message, title },
-        });
-        instance.$mount();
-        document.body.appendChild(instance.$el);
-
-        instance.$bvModal.show('notification-dialog');
-        instance.$on('confirm', () => {
-          resolve();
-          this.cleanupInstance(instance);
-        });
-
-        instance.$on('cancel', () => {
-          reject();
-          this.cleanupInstance(instance);
-        });
-      });
-    },
-    cleanupInstance(instance) {
-      document.body.removeChild(instance.$el);
-      instance.$destroy();
     },
     hasActiveChild: function (project) {
       return (
