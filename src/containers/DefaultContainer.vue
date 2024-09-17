@@ -2,7 +2,7 @@
   <div class="app">
     <DefaultHeader />
     <div class="app-body">
-      <AppSidebar fixed>
+      <AppSidebar ref="sidebar" fixed>
         <SidebarHeader />
         <SidebarForm />
         <SidebarNav :navItems="permissibleNav"></SidebarNav>
@@ -60,6 +60,7 @@ export default {
   },
   data() {
     return {
+      isSidebarMinimized: true,
       breadcrumbs: [],
       nav: [
         {
@@ -100,6 +101,12 @@ export default {
           name: this.$t('message.licenses'),
           url: '/licenses',
           icon: 'fa fa-balance-scale',
+          permission: permissions.VIEW_PORTFOLIO,
+        },
+        {
+          name: 'Tags',
+          url: '/tags',
+          icon: 'fa fa-tag',
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
@@ -153,6 +160,12 @@ export default {
     };
   },
   methods: {
+    handleMinimizedUpdate() {
+      this.isSidebarMinimized = !this.isSidebarMinimized;
+      if (localStorage) {
+        localStorage.setItem('isSidebarMinimized', this.isSidebarMinimized);
+      }
+    },
     generateBreadcrumbs: function generateBreadcrumbs(
       crumbName,
       subSectionName,
@@ -189,6 +202,28 @@ export default {
   mounted() {
     if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
       this.$root.$emit('bv::show::modal', 'snapshotModal');
+
+      this.isSidebarMinimized =
+        localStorage && localStorage.getItem('isSidebarMinimized') !== null
+          ? localStorage.getItem('isSidebarMinimized') === 'true'
+          : false;
+      const sidebar = document.body;
+      if (sidebar) {
+        if (this.isSidebarMinimized) {
+          sidebar.classList.add('sidebar-minimized');
+        } else {
+          sidebar.classList.remove('sidebar-minimized');
+        }
+      }
+      this.$nextTick(() => {
+        const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
+        if (sidebarMinimizer) {
+          sidebarMinimizer.addEventListener(
+            'click',
+            this.handleMinimizedUpdate,
+          );
+        }
+      });
     }
   },
   computed: {

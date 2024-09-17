@@ -39,20 +39,42 @@
                         ></i
                       ></a>
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in project.versions">
+                        <span v-for="projectVersion in activeProjectVersions">
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
                               params: { uuid: projectVersion.uuid },
                             }"
-                            >{{ projectVersion.version }}</b-dropdown-item
                           >
+                            {{ projectVersion.version }}
+                          </b-dropdown-item>
                         </span>
+
+                        <b-dropdown-group
+                          v-if="inactiveProjectVersions.length > 0"
+                          :header="$t('message.inactive_versions')"
+                        >
+                          <span
+                            v-for="projectVersion in inactiveProjectVersions"
+                          >
+                            <b-dropdown-item
+                              :to="{
+                                name: 'Project',
+                                params: { uuid: projectVersion.uuid },
+                              }"
+                            >
+                              {{ projectVersion.version }}
+                            </b-dropdown-item>
+                          </span>
+                        </b-dropdown-group>
                       </ul>
                     </li>
                   </ol>
                   {{ project.version }}
                 </b-col>
+                <b-badge v-if="!this.project.active" :variant="'tab-warn'">
+                  {{ $t('message.inactive').toUpperCase() }}
+                </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
                     class="text-muted font-xs font-italic align-text-top text-truncate"
@@ -287,31 +309,47 @@
             variant="tab-total"
             v-b-tooltip.hover
             :title="$t('policy_violation.total')"
-            >{{ totalViolations }}</b-badge
+            >{{
+              showSuppressedViolations
+                ? policyViolationsTotal
+                : policyViolationsUnaudited
+            }}</b-badge
           >
           <b-badge
             variant="tab-info"
             v-b-tooltip.hover
             :title="$t('policy_violation.infos')"
-            >{{ infoViolations }}</b-badge
+            >{{
+              showSuppressedViolations
+                ? policyViolationsInfoTotal
+                : policyViolationsInfoUnaudited
+            }}</b-badge
           >
           <b-badge
             variant="tab-warn"
             v-b-tooltip.hover
             :title="$t('policy_violation.warns')"
-            >{{ warnViolations }}</b-badge
+            >{{
+              showSuppressedViolations
+                ? policyViolationsWarnTotal
+                : policyViolationsWarnUnaudited
+            }}</b-badge
           >
           <b-badge
             variant="tab-fail"
             v-b-tooltip.hover
             :title="$t('policy_violation.fails')"
-            >{{ failViolations }}</b-badge
+            >{{
+              showSuppressedViolations
+                ? policyViolationsFailTotal
+                : policyViolationsFailUnaudited
+            }}</b-badge
           >
         </template>
         <project-policy-violations
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:total="totalViolations = $event"
+          v-on:showSuppressedViolations="showSuppressedViolations = $event"
         />
       </b-tab>
     </b-tabs>
@@ -376,6 +414,12 @@ export default {
         return this.project.name;
       }
     },
+    activeProjectVersions() {
+      return this.project.versions.filter((version) => version.active);
+    },
+    inactiveProjectVersions() {
+      return this.project.versions.filter((version) => !version.active);
+    },
   },
   data() {
     return {
@@ -400,10 +444,15 @@ export default {
       totalFindings: 0,
       totalFindingsIncludingAliases: 0,
       totalEpss: 0,
-      totalViolations: 0,
-      infoViolations: 0,
-      warnViolations: 0,
-      failViolations: 0,
+      showSuppressedViolations: false,
+      policyViolationsTotal: 0,
+      policyViolationsUnaudited: 0,
+      policyViolationsFailTotal: 0,
+      policyViolationsFailUnaudited: 0,
+      policyViolationsWarnTotal: 0,
+      policyViolationsWarnUnaudited: 0,
+      policyViolationsInfoTotal: 0,
+      policyViolationsInfoUnaudited: 0,
       tabIndex: 0,
     };
   },
@@ -458,16 +507,36 @@ export default {
             this.project.metrics.findingsTotal,
             0,
           );
-          this.infoViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsInfo,
+          this.policyViolationsTotal = common.valueWithDefault(
+            this.project.metrics.policyViolationsTotal,
             0,
           );
-          this.warnViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsWarn,
+          this.policyViolationsUnaudited = common.valueWithDefault(
+            this.project.metrics.policyViolationsUnaudited,
             0,
           );
-          this.failViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsFail,
+          this.policyViolationsFailTotal = common.valueWithDefault(
+            this.project.metrics.policyViolationsFailTotal,
+            0,
+          );
+          this.policyViolationsFailUnaudited = common.valueWithDefault(
+            this.project.metrics.policyViolationsFailUnaudited,
+            0,
+          );
+          this.policyViolationsWarnTotal = common.valueWithDefault(
+            this.project.metrics.policyViolationsWarnTotal,
+            0,
+          );
+          this.policyViolationsWarnUnaudited = common.valueWithDefault(
+            this.project.metrics.policyViolationsWarnUnaudited,
+            0,
+          );
+          this.policyViolationsInfoTotal = common.valueWithDefault(
+            this.project.metrics.policyViolationsInfoTotal,
+            0,
+          );
+          this.policyViolationsInfoUnaudited = common.valueWithDefault(
+            this.project.metrics.policyViolationsInfoUnaudited,
             0,
           );
           EventBus.$emit('addCrumb', this.projectLabel);
@@ -541,5 +610,9 @@ export default {
 }
 .badge {
   margin-right: 0.4rem;
+}
+.dropdown-menu {
+  max-height: 30rem;
+  overflow-y: auto;
 }
 </style>

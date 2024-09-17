@@ -25,10 +25,12 @@
         <div class="list-group" id="list-tab" role="tablist">
           <router-link
             :ref="item.id"
+            :key="item.id"
             v-for="item in section.children"
             class="list-group-item list-group-item-action"
             data-toggle="list"
             role="tab"
+            :hidden="item.hidden"
             :to="'/admin/' + item.route"
             @click="emitEvent(item)"
             >{{ item.name }}</router-link
@@ -95,6 +97,11 @@ export default {
               route: 'configuration/email',
             },
             {
+              component: 'WelcomeMessage',
+              name: this.$t('admin.welcome_message'),
+              route: 'configuration/welcomeMessage',
+            },
+            {
               component: 'InternalComponents',
               name: this.$t('admin.internal_components'),
               route: 'configuration/internalComponents',
@@ -108,6 +115,12 @@ export default {
               component: 'Search',
               name: this.$t('message.search'),
               route: 'configuration/search',
+            },
+            {
+              component: 'Experimental',
+              name: this.$t('admin.experimental'),
+              route: 'configuration/experimental',
+              hidden: true,
             },
           ],
         },
@@ -201,6 +214,11 @@ export default {
               route: 'repositories/goModules',
             },
             {
+              component: 'Hackage',
+              name: this.$t('admin.hackage'),
+              route: 'repositories/hackage',
+            },
+            {
               component: 'Hex',
               name: this.$t('admin.hex'),
               route: 'repositories/hex',
@@ -209,6 +227,11 @@ export default {
               component: 'Maven',
               name: this.$t('admin.maven'),
               route: 'repositories/maven',
+            },
+            {
+              component: 'Nixpkgs',
+              name: this.$t('admin.nixpkgs'),
+              route: 'repositories/nixpkgs',
             },
             {
               component: 'Npm',

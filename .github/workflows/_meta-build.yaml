@@ -1,16 +1,6 @@
 on:
   workflow_call:
     inputs:
-      node-versions:
-        type: string
-        required: false
-        default: '["18"]'
-        description: 'Stringified JSON Array of node versions to build against'
-      node-version-package:
-        type: string
-        required: false
-        default: '18'
-        description: 'Set which version of node the container packaged dist should be based on. (MUST be part of the node-versions)'
       app-version:
         type: string
         required: false
@@ -21,6 +11,10 @@ on:
         required: false
         default: false
         description: 'Set if the container image gets publish and scan once its build'
+      ref-name:
+        type: string
+        required: true
+        description: 'Short ref name of the branch or tag that triggered the workflow run'
     secrets:
       registry-0-usr:
         required: true
@@ -31,19 +25,14 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version: ${{ fromJson(inputs.node-versions) }}
-
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.7
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@v4.0.3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Run Npm Build
@@ -54,9 +43,9 @@ jobs:
           npm run build --if-present
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.6
         with:
-          name: assembled-frontend-node${{ matrix.node-version }}
+          name: assembled-frontend
           path: |-
             dist/
             bom.*
@@ -68,24 +57,24 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.7
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4.1.4
+        uses: actions/download-artifact@v4.1.8
         with:
-          name: assembled-frontend-node${{ inputs.node-version-package }}
+          name: assembled-frontend
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.0.0
+        uses: docker/setup-qemu-action@v3.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.1.0
+        uses: docker/setup-buildx-action@v3.6.1
         id: buildx
         with:
           install: true
 
       - name: Login to Docker.io
-        uses: docker/login-action@v3.0.0
+        uses: docker/login-action@v3.3.0
         if: ${{ inputs.publish-container }}
         with:
           registry: docker.io
@@ -95,15 +84,22 @@ jobs:
       - name: Set Container Tags
         id: tags
         run: |-
-          TAGS="${TAGS},docker.io/dependencytrack/frontend:${{ inputs.app-version }}"
+          IMAGE_NAME="docker.io/dependencytrack/frontend"
+          REF_NAME="${{ inputs.ref-name }}"
+          TAGS=""
 
-          if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
-            TAGS="${TAGS},docker.io/dependencytrack/frontend:latest"
+          if [[ $REF_NAME == feature-* ]]; then
+            TAGS="${IMAGE_NAME}:${REF_NAME,,}"
+          else
+            TAGS="${IMAGE_NAME}:${{ inputs.app-version }}"
+            if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
+              TAGS="${TAGS},${IMAGE_NAME}:latest"
+            fi
           fi
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
 
       - name: Build multi-arch Container Image
-        uses: docker/build-push-action@v5.2.0
+        uses: docker/build-push-action@v6.7.0
         with:
           tags: ${{ steps.tags.outputs.tags }}
           build-args: |-
@@ -116,7 +112,7 @@ jobs:
 
       - name: Run Trivy Vulnerability Scanner
         if: ${{ inputs.publish-container }}
-        uses: aquasecurity/trivy-action@0.18.0
+        uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
           format: 'sarif'

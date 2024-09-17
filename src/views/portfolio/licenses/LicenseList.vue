@@ -41,7 +41,7 @@ export default {
   methods: {
     refreshTable: function () {
       this.$refs.table.refresh({
-        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
+        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`,
         silent: true,
       });
     },
@@ -88,6 +88,16 @@ export default {
         {
           title: this.$t('message.fsf_libre'),
           field: 'isFsfLibre',
+          sortable: false,
+          align: 'center',
+          class: 'tight',
+          formatter: function (value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
+        {
+          title: this.$t('message.deprecated'),
+          field: 'isDeprecatedLicenseId',
           sortable: false,
           align: 'center',
           class: 'tight',

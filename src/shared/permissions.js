@@ -10,6 +10,7 @@ export const VULNERABILITY_MANAGEMENT = 'VULNERABILITY_MANAGEMENT';
 export const POLICY_VIOLATION_ANALYSIS = 'POLICY_VIOLATION_ANALYSIS';
 export const SYSTEM_CONFIGURATION = 'SYSTEM_CONFIGURATION';
 export const POLICY_MANAGEMENT = 'POLICY_MANAGEMENT';
+export const TAG_MANAGEMENT = 'TAG_MANAGEMENT';
 
 /**
  * Determines if the current logged in user has a specific permission.

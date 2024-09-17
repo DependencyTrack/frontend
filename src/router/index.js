@@ -11,6 +11,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer');
 // Views
 const Dashboard = () => import('@/views/Dashboard');
 const ProjectList = () => import('@/views/portfolio/projects/ProjectList');
+const TagList = () => import('@/views/portfolio/tags/TagList.vue');
 const ComponentSearch = () =>
   import('@/views/portfolio/components/ComponentSearch');
 const VulnerabilityList = () =>
@@ -27,6 +28,8 @@ const Administration = () => import('@/views/administration/Administration');
 const General = () => import('@/views/administration/configuration/General');
 const BomFormats = () =>
   import('@/views/administration/configuration/BomFormats');
+const WelcomeMessage = () =>
+  import('@/views/administration/configuration/WelcomeMessage');
 const Email = () => import('@/views/administration/configuration/Email');
 const Jira = () => import('@/views/administration/configuration/JiraConfig');
 const InternalComponents = () =>
@@ -34,6 +37,8 @@ const InternalComponents = () =>
 const TaskScheduler = () =>
   import('@/views/administration/configuration/TaskScheduler');
 const Search = () => import('@/views/administration/configuration/Search');
+const Experimental = () =>
+  import('@/views/administration/configuration/Experimental');
 
 const InternalAnalyzer = () =>
   import('@/views/administration/analyzers/InternalAnalyzer');
@@ -59,8 +64,10 @@ const Cpan = () => import('@/views/administration/repositories/Cpan');
 const Gem = () => import('@/views/administration/repositories/Gem');
 const GitHub = () => import('@/views/administration/repositories/GitHub.vue');
 const GoModules = () => import('@/views/administration/repositories/GoModules');
+const Hackage = () => import('@/views/administration/repositories/Hackage');
 const Hex = () => import('@/views/administration/repositories/Hex');
 const Maven = () => import('@/views/administration/repositories/Maven');
+const Nixpkgs = () => import('@/views/administration/repositories/Nixpkgs');
 const Npm = () => import('@/views/administration/repositories/Npm');
 const Nuget = () => import('@/views/administration/repositories/Nuget');
 const Python = () => import('@/views/administration/repositories/Python');
@@ -263,6 +270,17 @@ function configRoutes() {
           },
         },
         {
+          path: 'tags',
+          name: 'Tags',
+          component: TagList,
+          meta: {
+            title: i18n.t('message.tags'),
+            i18n: 'message.tags',
+            sectionPath: '/tags',
+            permission: 'VIEW_PORTFOLIO',
+          },
+        },
+        {
           path: 'licenses',
           name: 'Licenses',
           component: LicenseList,
@@ -345,6 +363,16 @@ function configRoutes() {
               },
             },
             {
+              path: 'configuration/welcomeMessage',
+              component: WelcomeMessage,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
               path: 'configuration/email',
               component: Email,
               meta: {
@@ -387,6 +415,16 @@ function configRoutes() {
             {
               path: 'configuration/search',
               component: Search,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/experimental',
+              component: Experimental,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
@@ -538,6 +576,16 @@ function configRoutes() {
               },
             },
             {
+              path: 'repositories/hackage',
+              component: Hackage,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
               path: 'repositories/hex',
               component: Hex,
               meta: {
@@ -550,6 +598,16 @@ function configRoutes() {
             {
               path: 'repositories/maven',
               component: Maven,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'repositories/nixpkgs',
+              component: Nixpkgs,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',

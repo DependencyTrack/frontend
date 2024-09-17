@@ -3,15 +3,14 @@ on:
   push:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
   pull_request:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
 
 permissions:
   contents: read
-
-env:
-  NODE_VERSION: 18
 
 jobs:
   lint:
@@ -19,12 +18,12 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.7
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@v4.0.3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies

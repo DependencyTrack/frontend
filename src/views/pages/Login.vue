@@ -3,6 +3,11 @@
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
+          <b-card v-if="isWelcomeMessage" no-body class="bg-grey-900 p-4 m-0">
+            <div>
+              <p><span v-html="welcomeMessage" /></p>
+            </div>
+          </b-card>
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
@@ -103,8 +108,9 @@ import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import InformationalModal from '../modals/InformationalModal';
 import EventBus from '../../shared/eventbus';
-import { getRedirectUrl } from '../../shared/utils';
+import { getRedirectUrl, getContextPath } from '../../shared/utils';
 const qs = require('querystring');
+import common from '../../shared/common';
 
 export default {
   name: 'Login',
@@ -115,6 +121,8 @@ export default {
   },
   data() {
     return {
+      isWelcomeMessage: true,
+      welcomeMessage: '',
       loginError: '',
       input: {
         username: '',
@@ -125,7 +133,10 @@ export default {
         userStore: new Oidc.WebStorageStateStore(),
         authority: this.$oidc.ISSUER,
         client_id: this.$oidc.CLIENT_ID,
-        redirect_uri: `${window.location.origin}/static/oidc-callback.html`,
+        redirect_uri:
+          getContextPath() !== ''
+            ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
+            : `${window.location.origin}/static/oidc-callback.html`,
         response_type:
           this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
         scope: this.$oidc.SCOPE,
@@ -133,6 +144,24 @@ export default {
       }),
       showLoginForm: false,
     };
+  },
+  beforeMount() {
+    let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
+    axios
+      .get(enabled_url)
+      .then((response) => {
+        this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
+      })
+      .then(() => {
+        if (this.isWelcomeMessage) {
+          let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
+          axios.get(message_url).then((response) => {
+            this.welcomeMessage = decodeURIComponent(
+              response.data.propertyValue,
+            );
+          });
+        }
+      });
   },
   methods: {
     login() {
@@ -217,6 +246,9 @@ export default {
     },
     oidcLoginButtonText() {
       return this.$oidc.LOGIN_BUTTON_TEXT;
+    },
+    goToLogin() {
+      this.isWelcomeMessage = false;
     },
   },
   mounted() {

@@ -35,6 +35,7 @@ import SelectTeamModal from '../../administration/accessmanagement/SelectTeamMod
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BToggleableDisplayButton from '../../components/BToggleableDisplayButton';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
@@ -170,6 +171,18 @@ export default {
                         <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
                       </div>
                     </b-form-group>
+                    <b-form-group v-if="limitToVisible" id="tagLimits" :label="this.$t('admin.limit_to_tags')">
+                      <vue-tags-input
+                        id="limitToTagsInput"
+                        v-model="tag"
+                        :tags="tags"
+                        :add-on-key="addOnKeys"
+                        :placeholder="$t('message.add_tag')"
+                        :autocomplete-items="tagsAutoCompleteItems"
+                        @tags-changed="(newTags) => (this.tags = newTags)"
+                        class="mw-100 bg-transparent text-lowercase"
+                      />
+                    </b-form-group>
                   <div v-if="limitToVisible === true">
                       <c-switch id="isNotifyChildrenEnabled" color="primary" v-model="notifyChildren" label v-bind="labelIcon"/>
                       {{ $t('admin.include_active_children') }}
@@ -188,6 +201,7 @@ export default {
                           <div class="list-group-item"><b-form-checkbox value="BOM_CONSUMED">BOM_CONSUMED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSED">BOM_PROCESSED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="BOM_PROCESSING_FAILED">BOM_PROCESSING_FAILED</b-form-checkbox></div>
+                          <div class="list-group-item"><b-form-checkbox value="BOM_VALIDATION_FAILED">BOM_VALIDATION_FAILED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="VEX_CONSUMED">VEX_CONSUMED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="VEX_PROCESSED">VEX_PROCESSED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="POLICY_VIOLATION">POLICY_VIOLATION</b-form-checkbox></div>
@@ -207,6 +221,7 @@ export default {
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
+                      <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
@@ -225,6 +240,7 @@ export default {
               SelectTeamModal,
               BToggleableDisplayButton,
               BInputGroupFormInput,
+              VueTagsInput,
               cSwitch,
             },
             data() {
@@ -247,6 +263,11 @@ export default {
                 projects: row.projects,
                 teams: row.teams,
                 limitToVisible: false,
+                tag: '', // The contents of a tag as its being typed into the vue-tag-input
+                tags: [], // An array of tags bound to the vue-tag-input
+                tagsAutoCompleteItems: [],
+                tagsAutoCompleteDebounce: null,
+                addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
                 labelIcon: {
                   dataOn: '\u2713',
                   dataOff: '\u2715',
@@ -263,29 +284,24 @@ export default {
               };
             },
             created() {
+              this.initializeTags();
               this.parseDestination(this.alert);
               this.parseToken(this.alert);
               this.parseTokenHeader(this.alert);
               this.parseJiraTicketType(this.alert);
             },
             watch: {
-              enabled() {
-                this.updateNotificationRule();
+              alert() {
+                this.initializeTags();
               },
-              logSuccessfulPublish() {
-                this.updateNotificationRule();
-              },
-              notifyChildren() {
-                this.updateNotificationRule();
-              },
-              notifyOn() {
-                this.updateNotificationRule();
-              },
-              teams() {
-                this.updateNotificationRule();
-              },
+              tag: 'searchTags',
             },
             methods: {
+              initializeTags: function () {
+                this.tags = (this.alert.tags || []).map((tag) => ({
+                  text: tag.name,
+                }));
+              },
               formatProjectLabel: function (projectName, projectVersion) {
                 if (projectName && projectVersion) {
                   return projectName + ' ' + projectVersion;
@@ -346,6 +362,9 @@ export default {
                       tokenHeader: this.tokenHeader,
                     }),
                     notifyOn: this.notifyOn,
+                    tags: this.tags.map((tag) => {
+                      return { name: tag.text };
+                    }),
                   })
                   .then((response) => {
                     this.alert = response.data;
@@ -389,6 +408,26 @@ export default {
                     }
                     this.projects = p;
                     this.$toastr.s(this.$t('message.updated'));
+                  })
+                  .catch((error) => {
+                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
+                  });
+              },
+              testNotification: function () {
+                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${this.uuid}`;
+
+                let params = new URLSearchParams();
+                params.append('destination', this.destination);
+
+                this.axios
+                  .post(url, params, {
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                  })
+                  .then((response) => {
+                    this.alert = response.data;
+                    this.$toastr.s(this.$t('admin.test_notification_queued'));
                   })
                   .catch((error) => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -463,6 +502,21 @@ export default {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
+              searchTags: function () {
+                if (!this.tag) {
+                  return;
+                }
+
+                clearTimeout(this.tagsAutoCompleteDebounce);
+                this.tagsAutoCompleteDebounce = setTimeout(() => {
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?searchText=${encodeURIComponent(this.tag)}&pageNumber=1&pageSize=6`;
+                  this.axios.get(url).then((response) => {
+                    this.tagsAutoCompleteItems = response.data.map((tag) => {
+                      return { text: tag.name };
+                    });
+                  });
+                }, 250);
+              },
             },
           });
         },
@@ -485,3 +539,7 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+</style>

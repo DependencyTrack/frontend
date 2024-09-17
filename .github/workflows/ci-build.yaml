@@ -4,19 +4,20 @@ on:
   push:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
   pull_request:
     branches:
       - 'master' # Default branch
+      - 'feature-**' # Feature branches
   workflow_dispatch:
 
 jobs:
   call-build:
     uses: ./.github/workflows/_meta-build.yaml
     with:
-      node-versions: '["18", "20"]'
-      node-version-package: '18'
       app-version: 'snapshot'
-      publish-container: ${{ github.ref == 'refs/heads/master' }}
+      publish-container: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'feature-') }}
+      ref-name: ${{ github.ref_name }}
     secrets:
       registry-0-usr: ${{ secrets.HUB_USERNAME }}
       registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}
