@@ -63,9 +63,7 @@
         variant="outline-primary"
         class="px-4"
         @click="saveChanges"
-        :disabled="
-          this.isDefaultLanguageEnabled && this.defaultLanguage === ''
-        "
+        :disabled="this.isDefaultLanguageEnabled && this.defaultLanguage === ''"
         >{{ $t('message.update') }}</b-button
       >
     </b-card-footer>
@@ -119,7 +117,9 @@ export default {
         {
           groupName: 'general',
           propertyName: 'default.locale',
-          propertyValue: this.isDefaultLanguageEnabled ? this.defaultLanguage : null,
+          propertyValue: this.isDefaultLanguageEnabled
+            ? this.defaultLanguage
+            : null,
         },
       ]);
     },
@@ -159,8 +159,12 @@ export default {
             this.isBadgesEnabled = common.toBoolean(item.propertyValue);
             break;
           case 'default.locale':
-            this.isDefaultLanguageEnabled = !!common.trimToNull(item.propertyValue);
-            this.defaultLanguage = this.isDefaultLanguageEnabled ? item.propertyValue : '';
+            this.isDefaultLanguageEnabled = !!common.trimToNull(
+              item.propertyValue,
+            );
+            this.defaultLanguage = this.isDefaultLanguageEnabled
+              ? item.propertyValue
+              : '';
             break;
         }
       }
