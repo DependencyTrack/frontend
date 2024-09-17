@@ -692,6 +692,7 @@
     "policy_deleted": "Richtlinie gelöscht",
     "policy_management": "Richtlinienverwaltung",
     "policy_name": "Versicherungsname",
+    "policy_violation_audit": "Richtlinienverstoß-Audit",
     "policy_violations": "Richtlinienverstöße",
     "policy_violations_by_classification": "Richtlinienverletzungen nach Klassifizierung",
     "policy_violations_by_state": "Richtlinienverstöße nach Status",

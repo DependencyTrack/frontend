@@ -692,6 +692,7 @@
     "policy_deleted": "Politica eliminata",
     "policy_management": "Gestione delle politiche",
     "policy_name": "Nome della politica",
+    "policy_violation_audit": "Controllo della violazione delle policy",
     "policy_violations": "Violazioni delle norme",
     "policy_violations_by_classification": "Violazioni delle policy per classificazione",
     "policy_violations_by_state": "Violazioni delle politiche da parte dello Stato",

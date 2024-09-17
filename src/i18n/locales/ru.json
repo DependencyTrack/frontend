@@ -692,6 +692,7 @@
     "policy_deleted": "Политика удалена.",
     "policy_management": "Управление политиками",
     "policy_name": "Имя политики",
+    "policy_violation_audit": "Аудит нарушений политики",
     "policy_violations": "Нарушения политики",
     "policy_violations_by_classification": "Нарушения политики по классификации",
     "policy_violations_by_state": "Нарушения политики государством",

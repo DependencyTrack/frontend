@@ -692,6 +692,7 @@
     "policy_deleted": "ポリシーを削除しました",
     "policy_management": "ポリシー管理",
     "policy_name": "ポリシー名",
+    "policy_violation_audit": "ポリシー違反の監査",
     "policy_violations": "ポリシー違反",
     "policy_violations_by_classification": "分類別のポリシー違反",
     "policy_violations_by_state": "州別のポリシー違反",

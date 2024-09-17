@@ -692,6 +692,7 @@
     "policy_deleted": "策略已删除",
     "policy_management": "策略管理",
     "policy_name": "策略名称",
+    "policy_violation_audit": "政策违规审计",
     "policy_violations": "违反策略",
     "policy_violations_by_classification": "违反策略的分类",
     "policy_violations_by_state": "违反策略的情况",
