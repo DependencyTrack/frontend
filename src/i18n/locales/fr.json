@@ -705,6 +705,8 @@
     "profile_updated": "Profil mis à jour",
     "project_cloning_in_progress": "Le projet est en cours de création avec les options de clonage spécifiées",
     "project_created": "Projet créé",
+    "project_delete_message": "La suppression de ce projet supprimera également définitivement tous les projets enfants associés. \nCette action ne peut pas être annulée. \nÊtes-vous sûr de vouloir continuer ?",
+    "project_delete_title": "Confirmer la suppression du projet",
     "project_deleted": "Projet supprimé",
     "project_details": "Détails du projet",
     "project_metadata_supplier_name_desc": "L'organisation qui a fourni la nomenclature",

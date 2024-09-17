@@ -705,6 +705,8 @@
     "profile_updated": "perfil atualizado",
     "project_cloning_in_progress": "O projeto está sendo criado com as opções de clonagem especificadas",
     "project_created": "Projeto criado",
+    "project_delete_message": "A exclusão deste projeto também excluirá permanentemente todos os projetos secundários associados. \nEsta ação não pode ser desfeita. \nTem certeza de que deseja prosseguir?",
+    "project_delete_title": "Confirmar exclusão do projeto",
     "project_deleted": "Projeto excluído",
     "project_details": "Detalhes do Projeto",
     "project_metadata_supplier_name_desc": "A organização que forneceu a lista técnica",

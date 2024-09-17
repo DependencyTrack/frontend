@@ -705,6 +705,8 @@
     "profile_updated": "Perfil actualizado",
     "project_cloning_in_progress": "El proyecto se está creando con las opciones de clonación especificadas.",
     "project_created": "Proyecto creado",
+    "project_delete_message": "Al eliminar este proyecto, también se eliminarán permanentemente todos los proyectos secundarios asociados. \nEsta acción no se puede deshacer. \n¿Estás seguro de que quieres continuar?",
+    "project_delete_title": "Confirmar la eliminación del proyecto",
     "project_deleted": "Proyecto eliminado",
     "project_details": "detalles del proyecto",
     "project_metadata_supplier_name_desc": "La organización que suministró el BOM.",

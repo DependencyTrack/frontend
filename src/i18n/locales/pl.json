@@ -705,6 +705,8 @@
     "profile_updated": "Profil zaktualizowany",
     "project_cloning_in_progress": "Projekt jest tworzony z określonymi opcjami klonowania",
     "project_created": "Projekt stworzony",
+    "project_delete_message": "Usunięcie tego projektu spowoduje również trwałe usunięcie wszystkich powiązanych projektów podrzędnych. \nTej akcji nie można cofnąć. \nCzy na pewno chcesz kontynuować?",
+    "project_delete_title": "Potwierdź usunięcie projektu",
     "project_deleted": "Projekt usunięty",
     "project_details": "Szczegóły Projektu",
     "project_metadata_supplier_name_desc": "Organizacja, która dostarczyła BOM",
