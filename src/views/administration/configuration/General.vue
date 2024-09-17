@@ -64,7 +64,7 @@
         class="px-4"
         @click="saveChanges"
         :disabled="
-          this.isDefaultLanguageEnabled && this.defaultLanguage === ' '
+          this.isDefaultLanguageEnabled && this.defaultLanguage === ''
         "
         >{{ $t('message.update') }}</b-button
       >
@@ -119,9 +119,7 @@ export default {
         {
           groupName: 'general',
           propertyName: 'default.locale',
-          propertyValue: encodeURIComponent(
-            this.isDefaultLanguageEnabled ? this.defaultLanguage : ' ',
-          ),
+          propertyValue: this.isDefaultLanguageEnabled ? this.defaultLanguage : null,
         },
       ]);
     },
@@ -160,14 +158,12 @@ export default {
           case 'badge.enabled':
             this.isBadgesEnabled = common.toBoolean(item.propertyValue);
             break;
+          case 'default.locale':
+            this.isDefaultLanguageEnabled = !!common.trimToNull(item.propertyValue);
+            this.defaultLanguage = this.isDefaultLanguageEnabled ? item.propertyValue : '';
+            break;
         }
       }
-    });
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/default.locale`;
-    this.axios.get(url).then((response) => {
-      this.defaultLanguage = decodeURIComponent(response.data.propertyValue);
-      this.isDefaultLanguageEnabled =
-        decodeURIComponent(response.data.propertyValue) !== ' ';
     });
   },
 };
