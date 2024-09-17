@@ -1,32 +1,79 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <b-validated-input-group-form-input
-        id="base_url"
-        :label="$t('admin.base_url')"
-        input-group-size="mb-3"
-        rules="required"
-        type="url"
-        v-model="baseUrl"
-        tooltip="This URL is used to construct links back to Dependency-Track from external systems."
-      />
-      <c-switch
-        id="isBadgesEnabled"
-        color="primary"
-        v-model="isBadgesEnabled"
-        label
-        v-bind="labelIcon"
-      />{{ $t('admin.enable_svg_badge') }}
+      <b-form-group>
+        <b-validated-input-group-form-input
+          id="base_url"
+          :label="$t('admin.base_url')"
+          input-group-size="mb-3"
+          rules="required"
+          type="url"
+          v-model="baseUrl"
+          tooltip="This URL is used to construct links back to Dependency-Track from external systems."
+        />
+        <c-switch
+          id="isBadgesEnabled"
+          color="primary"
+          v-model="isBadgesEnabled"
+          label
+          v-bind="labelIcon"
+        />{{ $t('admin.enable_svg_badge') }}
+      </b-form-group>
+      <b-form-group>
+        <b-form-group
+          :label="$t('admin.default_language')"
+          label-size="lg"
+          label-class="font-weight-bold pt-0 mb-2"
+        >
+          <p>{{ $t('admin.default_language_desc') }}</p>
+          <div id="customToolbar">
+            <c-switch
+              id="default-language-enabled"
+              color="primary"
+              v-model="isDefaultLanguageEnabled"
+              label
+              v-bind="labelIcon"
+            />{{ $t('admin.default_language_enable') }}
+          </div>
+        </b-form-group>
+        <b-input-group>
+          <b-input-group-prepend :title="this.$t('message.language')" is-text>
+            <span class="fa fa-language text-primary"></span>
+          </b-input-group-prepend>
+          <b-form-select
+            class="bg-widget"
+            v-model="defaultLanguage"
+            :disabled="!isDefaultLanguageEnabled"
+          >
+            <b-form-select-option
+              v-for="locale in $i18n.availableLocales"
+              :key="`locale-${locale}`"
+              :value="locale"
+              :title="$t(`language.${locale}`)"
+            >
+              <span class="mr-2">{{ localeToFlag(locale) }}</span>
+              {{ locale.toUpperCase() }}</b-form-select-option
+            >
+          </b-form-select>
+        </b-input-group>
+      </b-form-group>
     </b-card-body>
     <b-card-footer>
-      <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
-        $t('message.update')
-      }}</b-button>
+      <b-button
+        variant="outline-primary"
+        class="px-4"
+        @click="saveChanges"
+        :disabled="
+          this.isDefaultLanguageEnabled && this.defaultLanguage === ' '
+        "
+        >{{ $t('message.update') }}</b-button
+      >
     </b-card-footer>
   </b-card>
 </template>
 
 <script>
+import LocalePicker from '@/views/components/LocalePicker.vue';
 import { Switch as cSwitch } from '@coreui/vue';
 import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
@@ -39,6 +86,7 @@ export default {
     header: String,
   },
   components: {
+    LocalePicker,
     cSwitch,
     ValidationObserver,
     BValidatedInputGroupFormInput,
@@ -47,6 +95,8 @@ export default {
     return {
       baseUrl: '',
       isBadgesEnabled: false,
+      isDefaultLanguageEnabled: false,
+      defaultLanguage: 'en',
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -66,7 +116,34 @@ export default {
           propertyName: 'badge.enabled',
           propertyValue: this.isBadgesEnabled,
         },
+        {
+          groupName: 'general',
+          propertyName: 'default.locale',
+          propertyValue: encodeURIComponent(
+            this.isDefaultLanguageEnabled ? this.defaultLanguage : ' ',
+          ),
+        },
       ]);
+    },
+    localeToFlag: function (locale) {
+      // Largely taken from wojtekmaj/country-code-to-flag-emoji. Adopted to be able to deal with locale codes as inputs.
+      // https://github.com/wojtekmaj/country-code-to-flag-emoji/blob/ff0d3d2dd9680b6f860d85fc9e713e93e396adb7/src/index.ts
+
+      let countryCode = locale.split('-').pop().toUpperCase();
+      if (countryCode === 'EN') {
+        countryCode = 'US'; // Sorry Britain!
+      } else if (countryCode === 'HI') {
+        countryCode = 'IN';
+      } else if (countryCode === 'JA') {
+        countryCode = 'JP';
+      } else if (countryCode === 'ZH') {
+        countryCode = 'CN';
+      }
+
+      return Array.from(countryCode)
+        .map((letter) => letter.toLowerCase().charCodeAt(0) + 127365)
+        .map((charCode) => String.fromCodePoint(charCode))
+        .join('');
     },
   },
   created() {
@@ -85,6 +162,12 @@ export default {
             break;
         }
       }
+    });
+    let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/default.locale`;
+    this.axios.get(url).then((response) => {
+      this.defaultLanguage = decodeURIComponent(response.data.propertyValue);
+      this.isDefaultLanguageEnabled =
+        decodeURIComponent(response.data.propertyValue) !== ' ';
     });
   },
 };

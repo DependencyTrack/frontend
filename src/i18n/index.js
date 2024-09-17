@@ -7,7 +7,7 @@ Vue.use(VueI18n);
 
 async function getDefaultLanguage() {
   try {
-    let url = `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}/public/general/default.language`;
+    let url = `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}/public/general/default.locale`;
     let response = await axios.get(url);
     return decodeURIComponent(response.data.propertyValue);
   } catch (error) {

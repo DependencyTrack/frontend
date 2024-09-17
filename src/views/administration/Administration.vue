@@ -20,7 +20,6 @@ import AdminMenu from './AdminMenu';
 
 // Configuration plugins
 import BomFormats from './configuration/BomFormats';
-import DefaultLanguage from './configuration/DefaultLanguage';
 import Email from './configuration/Email';
 import General from './configuration/General';
 import InternalComponents from './configuration/InternalComponents';
@@ -76,7 +75,6 @@ export default {
     General,
     WelcomeMessage,
     BomFormats,
-    DefaultLanguage,
     Email,
     Jira,
     InternalComponents,

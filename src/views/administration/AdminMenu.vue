@@ -92,11 +92,6 @@ export default {
               route: 'configuration/bomFormats',
             },
             {
-              component: 'DefaultLanguage',
-              name: this.$t('admin.default_language'),
-              route: 'configuration/defaultLanguage',
-            },
-            {
               component: 'Email',
               name: this.$t('admin.email'),
               route: 'configuration/email',
