@@ -710,10 +710,12 @@ export default {
     },
     deleteProject: async function () {
       this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-      let confirmed = await this.$bvModal
-        .msgBoxConfirm(this.$t('message.project_delete_message'), {
+      let confirmed = await this.$bvModal.msgBoxConfirm(
+        this.$t('message.project_delete_message'),
+        {
           title: this.$t('message.project_delete_title'),
-        });
+        },
+      );
       if (confirmed) {
         let url =
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
