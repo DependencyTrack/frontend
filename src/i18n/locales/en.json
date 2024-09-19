@@ -68,6 +68,9 @@
     "create_template": "Create Template",
     "create_user": "Create User",
     "default": "Default",
+    "default_language": "Default Language",
+    "default_language_desc": "Default language, which is used for everyone, when they didn't specify one. Langauge from Browser will be used, when this is disabled.",
+    "default_language_enable": "Enable Default language",
     "default_template_restored": "Default templates restored",
     "defectdojo": "DefectDojo",
     "delete_alert": "Delete Alert",
@@ -187,6 +190,7 @@
     "permissions": "Permissions",
     "personal_access_token": "Personal Access Token",
     "portfolio_access_control": "Portfolio Access Control",
+    "preview": "Preview",
     "project_access": "Project access",
     "publisher": "Publisher",
     "publisher_class": "Publisher class",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV is a distributed vulnerability and triage infrastructure for open source projects aimed at helping both open source maintainers and consumers of open source. It serves as an aggregator of vulnerability databases that have adopted the OpenSSF Vulnerability format.",
     "vulnsource_osv_advisories_enable": "Select ecosystem to enable Google OSV Advisory mirroring",
     "vulnsource_osv_alias_sync_warning": "OSV may report non-identical vulnerabilities as aliases. Proceed with caution.",
-    "vulnsource_osv_base_url": "OSV Base URL"
+    "vulnsource_osv_base_url": "OSV Base URL",
+    "welcome_message": "Welcome Message",
+    "welcome_message_desc": "Customize the welcome message that appears on the start page of Dependency-Track before users sign in.",
+    "welcome_message_enable": "Enable welcome message"
   },
   "condition": {
     "forbidden": "Forbidden (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "Profile updated",
     "project_cloning_in_progress": "The project is being created with the cloning options specified",
     "project_created": "Project created",
+    "project_delete_message": "Deleting this project will also permanently delete all associated child projects. This action cannot be undone. Are you sure you want to proceed?",
+    "project_delete_title": "Confirm Project Deletion",
     "project_deleted": "Project deleted",
     "project_details": "Project Details",
     "project_metadata_supplier_name_desc": "The organization that supplied the BOM",

@@ -68,6 +68,9 @@
     "create_template": "Criar modelo",
     "create_user": "Criar utilizador",
     "default": "Padrão",
+    "default_language": "Idioma padrão",
+    "default_language_desc": "Idioma padrão, que é usado por todos, quando não especificam um. \nO idioma do navegador será usado quando estiver desabilitado.",
+    "default_language_enable": "Ativar idioma padrão",
     "default_template_restored": "Modelos padrão restaurados",
     "defectdojo": "DefectDojo",
     "delete_alert": "Excluir alerta",
@@ -187,6 +190,7 @@
     "permissions": "Permissões",
     "personal_access_token": "Token de acesso pessoal",
     "portfolio_access_control": "Controle de acesso ao portfólio",
+    "preview": "Visualização",
     "project_access": "Acesso ao projeto",
     "publisher": "Editor",
     "publisher_class": "Classe de editor",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "O Google OSV é uma infraestrutura distribuída de vulnerabilidade e triagem para projetos de código aberto que visa ajudar mantenedores e consumidores de código aberto. Serve como um agregador de bancos de dados de vulnerabilidades que adotaram o formato OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Selecione o ecossistema para ativar o espelhamento do Google OSV Advisory",
     "vulnsource_osv_alias_sync_warning": "OSV pode relatar vulnerabilidades não idênticas como aliases. Prossiga com cuidado.",
-    "vulnsource_osv_base_url": "URL base do OSV"
+    "vulnsource_osv_base_url": "URL base do OSV",
+    "welcome_message": "Mensagem de boas-vindas",
+    "welcome_message_desc": "Personalize a mensagem de boas-vindas que aparece na página inicial do Dependency-Track antes dos usuários fazerem login.",
+    "welcome_message_enable": "Ativar mensagem de boas-vindas"
   },
   "condition": {
     "forbidden": "Proibido (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "perfil atualizado",
     "project_cloning_in_progress": "O projeto está sendo criado com as opções de clonagem especificadas",
     "project_created": "Projeto criado",
+    "project_delete_message": "A exclusão deste projeto também excluirá permanentemente todos os projetos secundários associados. \nEsta ação não pode ser desfeita. \nTem certeza de que deseja prosseguir?",
+    "project_delete_title": "Confirmar exclusão do projeto",
     "project_deleted": "Projeto excluído",
     "project_details": "Detalhes do Projeto",
     "project_metadata_supplier_name_desc": "A organização que forneceu a lista técnica",

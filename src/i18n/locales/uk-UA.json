@@ -68,6 +68,9 @@
     "create_template": "Створити шаблон",
     "create_user": "Створити користувача",
     "default": "За замовчуванням",
+    "default_language": "Мова за замовчуванням",
+    "default_language_desc": "Мова за замовчуванням, яка використовується для всіх, якщо вони не вказали її. \nЯкщо цей параметр вимкнено, використовуватиметься мова з браузера.",
+    "default_language_enable": "Увімкнути мову за замовчуванням",
     "default_template_restored": "Стандартні шаблони відновлено",
     "defectdojo": "DefectDojo",
     "delete_alert": "Видалити сповіщення",
@@ -187,6 +190,7 @@
     "permissions": "Дозволи",
     "personal_access_token": "Персональний маркер доступу",
     "portfolio_access_control": "Контроль доступу до портфоліо",
+    "preview": "Попередній перегляд",
     "project_access": "Доступ до проекту",
     "publisher": "Видавець",
     "publisher_class": "Клас видавця",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV — це розподілена інфраструктура уразливостей і сортування для проектів з відкритим кодом, спрямована на допомогу як розробникам відкритого коду, так і споживачам відкритого коду. \nВін служить агрегатором баз даних уразливостей, які прийняли формат OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Виберіть екосистему, щоб увімкнути віддзеркалення Google OSV Advisory",
     "vulnsource_osv_alias_sync_warning": "OSV може повідомляти про неідентичні вразливості як псевдоніми. \nДійте обережно.",
-    "vulnsource_osv_base_url": "Базовий URL OSV"
+    "vulnsource_osv_base_url": "Базовий URL OSV",
+    "welcome_message": "Вітальне повідомлення",
+    "welcome_message_desc": "Налаштуйте вітальне повідомлення, яке з’являється на початковій сторінці Dependency-Track перед входом користувачів.",
+    "welcome_message_enable": "Увімкнути вітальне повідомлення"
   },
   "condition": {
     "forbidden": "Заборонено (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "Профіль оновлено",
     "project_cloning_in_progress": "Проект створюється із зазначеними параметрами клонування",
     "project_created": "Проект створено",
+    "project_delete_message": "Видалення цього проекту призведе до остаточного видалення всіх пов’язаних дочірніх проектів. \nЦю дію не можна скасувати. \nВи впевнені, що бажаєте продовжити?",
+    "project_delete_title": "Підтвердити видалення проекту",
     "project_deleted": "Проект видалено",
     "project_details": "Деталі проекту",
     "project_metadata_supplier_name_desc": "Організація, яка надала специфікацію",

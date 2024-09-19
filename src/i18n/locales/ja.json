@@ -68,6 +68,9 @@
     "create_template": "テンプレートを作成",
     "create_user": "ユーザーを作成",
     "default": "デフォルト",
+    "default_language": "デフォルトの言語",
+    "default_language_desc": "デフォルトの言語。指定しなかった場合に全員に使用されます。\nこれを無効にすると、ブラウザの言語が使用されます。",
+    "default_language_enable": "デフォルト言語を有効にする",
     "default_template_restored": "デフォルトのテンプレートが復元されました",
     "defectdojo": "DefectDojo",
     "delete_alert": "アラートを削除",
@@ -187,6 +190,7 @@
     "permissions": "権限",
     "personal_access_token": "パーソナルアクセストークン",
     "portfolio_access_control": "ポートフォリオアクセス制御",
+    "preview": "プレビュー",
     "project_access": "プロジェクトへのアクセス",
     "publisher": "パブリッシャー",
     "publisher_class": "パブリッシャークラス",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV は、オープンソース プロジェクト向けの分散型脆弱性およびトリアージ インフラストラクチャであり、オープンソースのメンテナーとオープンソースの消費者の両方を支援することを目的としています。OpenSSF 脆弱性形式を採用した脆弱性データベースのアグリゲータとして機能します。",
     "vulnsource_osv_advisories_enable": "Google OSV アドバイザリ ミラーリングを有効にするエコシステムを選択します",
     "vulnsource_osv_alias_sync_warning": "OSV は同一でない脆弱性をエイリアスとして報告する場合があります。ご注意ください。",
-    "vulnsource_osv_base_url": "OSV ベース URL"
+    "vulnsource_osv_base_url": "OSV ベース URL",
+    "welcome_message": "ウェルカムメッセージ",
+    "welcome_message_desc": "ユーザーがサインインする前に、Dependency-Track の開始ページに表示されるウェルカム メッセージをカスタマイズします。",
+    "welcome_message_enable": "ウェルカムメッセージを有効にする"
   },
   "condition": {
     "forbidden": "禁止 (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "プロフィール更新",
     "project_cloning_in_progress": "プロジェクトは指定されたクローンオプションで作成されています",
     "project_created": "プロジェクトが作成されました",
+    "project_delete_message": "このプロジェクトを削除すると、関連するすべての子プロジェクトも完全に削除されます。\nこの操作は元に戻すことができません。\n続行してもよろしいですか?",
+    "project_delete_title": "プロジェクトの削除の確認",
     "project_deleted": "プロジェクトが削除されました",
     "project_details": "プロジェクトの詳細",
     "project_metadata_supplier_name_desc": "BOMを提供した組織",

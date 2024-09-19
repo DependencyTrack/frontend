@@ -68,6 +68,9 @@
     "create_template": "Crea modello",
     "create_user": "Creare un utente",
     "default": "Predefinito",
+    "default_language": "Lingua predefinita",
+    "default_language_desc": "Lingua predefinita, utilizzata da tutti quando non ne è stata specificata una. \nQuando questa opzione è disabilitata, verrà utilizzata la lingua del browser.",
+    "default_language_enable": "Abilita la lingua predefinita",
     "default_template_restored": "Modelli predefiniti ripristinati",
     "defectdojo": "DifettoDojo",
     "delete_alert": "Elimina avviso",
@@ -187,6 +190,7 @@
     "permissions": "Autorizzazioni",
     "personal_access_token": "Token di accesso personale",
     "portfolio_access_control": "Controllo degli accessi al portafoglio",
+    "preview": "Anteprima",
     "project_access": "Accesso al progetto",
     "publisher": "Editore",
     "publisher_class": "Classe editore",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV è un'infrastruttura distribuita di vulnerabilità e valutazione per progetti open source volta ad aiutare sia i manutentori che i consumatori dell'open source. Serve come aggregatore di database di vulnerabilità che hanno adottato il formato OpenSSF Vulnerability.",
     "vulnsource_osv_advisories_enable": "Seleziona l'ecosistema per abilitare il mirroring dell'advisory OSV di Google",
     "vulnsource_osv_alias_sync_warning": "OSV può segnalare vulnerabilità non identiche come alias. Procedi con cautela.",
-    "vulnsource_osv_base_url": "URL di base OSV"
+    "vulnsource_osv_base_url": "URL di base OSV",
+    "welcome_message": "Messaggio di benvenuto",
+    "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
+    "welcome_message_enable": "Abilita il messaggio di benvenuto"
   },
   "condition": {
     "forbidden": "Proibito (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "profilo aggiornato",
     "project_cloning_in_progress": "Il progetto viene creato con le opzioni di clonazione specificate",
     "project_created": "Progetto creato",
+    "project_delete_message": "L'eliminazione di questo progetto eliminerà definitivamente anche tutti i progetti secondari associati. \nQuesta azione non può essere annullata. \nSei sicuro di voler procedere?",
+    "project_delete_title": "Conferma l'eliminazione del progetto",
     "project_deleted": "Progetto eliminato",
     "project_details": "Dettagli del progetto",
     "project_metadata_supplier_name_desc": "L'organizzazione che ha fornito la distinta base",

@@ -708,19 +708,27 @@ export default {
           this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
         });
     },
-    deleteProject: function () {
+    deleteProject: async function () {
       this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-      let url =
-        `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
-      this.axios
-        .delete(url)
-        .then((response) => {
-          this.$toastr.s(this.$t('message.project_deleted'));
-          this.$router.replace({ name: 'Projects' });
-        })
-        .catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+      let confirmed = await this.$bvModal.msgBoxConfirm(
+        this.$t('message.project_delete_message'),
+        {
+          title: this.$t('message.project_delete_title'),
+        },
+      );
+      if (confirmed) {
+        let url =
+          `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
+        this.axios
+          .delete(url)
+          .then((response) => {
+            this.$toastr.s(this.$t('message.project_deleted'));
+            this.$router.replace({ name: 'Projects' });
+          })
+          .catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          });
+      }
     },
     hasActiveChild: function (project) {
       return (

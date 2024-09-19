@@ -68,6 +68,9 @@
     "create_template": "Vorlage erstellen",
     "create_user": "Benutzer erstellen",
     "default": "Standard",
+    "default_language": "Standardsprache",
+    "default_language_desc": "Standardsprache, die für alle verwendet wird, wenn sie keine angegeben haben. \nWenn dies deaktiviert ist, wird die Sprache des Browsers verwendet.",
+    "default_language_enable": "Aktivieren Sie die Standardsprache",
     "default_template_restored": "Standardvorlagen wiederhergestellt",
     "defectdojo": "DefectDojo",
     "delete_alert": "Alarm löschen",
@@ -187,6 +190,7 @@
     "permissions": "Berechtigungen",
     "personal_access_token": "Persönlicher Zugriffstoken",
     "portfolio_access_control": "Portfolio-Zugriffskontrolle",
+    "preview": "Vorschau",
     "project_access": "Projektzugriff",
     "publisher": "Publisher",
     "publisher_class": "Publisher-Klasse",
@@ -273,7 +277,10 @@
     "vulnsource_osv_advisories_desc": "Google OSV ist eine verteilte Infrastruktur für Schwachstellen und Triage für Open-Source-Projekte, die sowohl Open-Source-Betreuern als auch Open-Source-Nutzern helfen soll. Es dient als Aggregator von Schwachstellendatenbanken, die das OpenSSF-Schwachstellenformat übernommen haben.",
     "vulnsource_osv_advisories_enable": "Wählen Sie ein Ökosystem aus, um Google OSV Advisory Mirroring zu aktivieren",
     "vulnsource_osv_alias_sync_warning": "OSV kann nicht identische Schwachstellen als Aliase melden. Gehen Sie mit Vorsicht vor.",
-    "vulnsource_osv_base_url": "OSV-Basis-URL"
+    "vulnsource_osv_base_url": "OSV-Basis-URL",
+    "welcome_message": "Willkommensnachricht",
+    "welcome_message_desc": "Passen Sie die Willkommensnachricht an, die auf der Startseite von Dependency-Track angezeigt wird, bevor sich Benutzer anmelden.",
+    "welcome_message_enable": "Willkommensnachricht aktivieren"
   },
   "condition": {
     "forbidden": "Verboten (403)",
@@ -699,6 +706,8 @@
     "profile_updated": "Profil aktualisiert",
     "project_cloning_in_progress": "Das Projekt wird mit den angegebenen Klonoptionen erstellt",
     "project_created": "Projekt erstellt",
+    "project_delete_message": "Durch das Löschen dieses Projekts werden auch alle zugehörigen untergeordneten Projekte dauerhaft gelöscht. \nDiese Aktion kann nicht rückgängig gemacht werden. \nSind Sie sicher, dass Sie fortfahren möchten?",
+    "project_delete_title": "Bestätigen Sie die Projektlöschung",
     "project_deleted": "Projekt gelöscht",
     "project_details": "Projekt Details",
     "project_metadata_supplier_name_desc": "Die Organisation, die die BOM bereitgestellt hat",
