@@ -50,7 +50,7 @@
             id="v-team-input"
             :required="requiresTeam"
             v-model="project.team"
-            :options="sortAvailableTeams"
+            :options="availableTeams"
             :label="$t('message.team')"
             :tooltip="$t('message.component_team_desc')"
             :disabled="isDisabled"
@@ -268,6 +268,11 @@ export default {
       isLoading: false,
     };
   },
+  created() {
+    this.getACLEnabled().then(() => {
+      this.getAvailableTeams();
+    });
+  },
   beforeUpdate() {
     if (this.tags.length === 0 && this.project && this.project.tags) {
       // Prevents line from being executed when entering new tags
@@ -289,36 +294,32 @@ export default {
       });
       return this.availableClassifiers;
     },
-    sortAvailableTeams: function () {
-      this.availableTeams.sort(function (a, b) {
-        return a.text.localeCompare(b.text);
-      });
-      this.getAvailableTeams().then((teams) => {
-        this.availableTeams = teams[0];
-        this.requiresTeam = teams[1].toString();
-        this.teams = teams[2];
-        if (teams[1] && this.availableTeams.length == 1) {
-          this.project.team = teams[0][0].value;
-          this.isDisabled = true;
-        }
-        this.availableTeams.sort(function (a, b) {
-          return a.text.localeCompare(b.text);
-        });
-      });
-      return this.availableTeams;
-    },
   },
   watch: {
     tag: 'searchTags',
   },
   methods: {
-    getAvailableTeams() {
+    async getACLEnabled() {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
+      let response = await this.axios.get(url);
+      this.requiresTeam = response.data.propertyValue.toString();
+    },
+    async getAvailableTeams() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
-      return this.axios.get(url).then((response) => {
-        let convertedTeams = response.data.teams.map((team) => {
-          return { text: team.name, value: team.uuid };
-        });
-        return [convertedTeams, response.data.required, response.data.teams];
+      let response = await this.axios.get(url);
+      console.log(response.data);
+      let convertedTeams = response.data.map((team) => {
+        console.log(team.uuid);
+        return { text: team.name, value: team.uuid };
+      });
+      this.availableTeams = convertedTeams;
+      this.teams = response.data;
+      if (this.requiresTeam && this.availableTeams.length == 1) {
+        this.project.team = teams[0][0].value;
+        this.isDisabled = true;
+      }
+      this.availableTeams.sort(function (a, b) {
+        return a.text.localeCompare(b.text);
       });
     },
     syncReadOnlyNameField: function (value) {
