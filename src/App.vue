@@ -125,6 +125,14 @@ export default {
           const linkTarget = target.getAttribute('target');
           if (/\b_blank\b/i.test(linkTarget)) return;
         }
+        // don't handle if `href="#"`
+        if (target && target.getAttribute) {
+          const linkHref = target.getAttribute('href');
+          if ('#' === linkHref) {
+            event.preventDefault();
+            return;
+          }
+        }
         // don't handle same page links/anchors
         const url = new URL(target.href);
         const to = url.pathname;
