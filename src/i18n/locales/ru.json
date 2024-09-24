@@ -419,6 +419,7 @@
     "create_vulnerability": "Создать уязвимость",
     "created": "Созданный",
     "credits": "Кредиты",
+    "csv_filetype": "CSV",
     "custom_license": "Пользовательская лицензия",
     "custom_license_deleted": "Пользовательская лицензия удалена",
     "cvss": "CVSS",
@@ -475,6 +476,7 @@
     "direct_only": "Только прямой",
     "direction": "Направление",
     "download_bom": "Скачать спецификацию",
+    "download_component": "Загрузить компоненты",
     "email": "Электронная почта",
     "empty_selection": "Элементы не выбраны",
     "endpoints": "Конечные точки",
@@ -855,9 +857,7 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия",
-    "download_component": "Загрузить компоненты",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "Пересечение границы доверия"
   },
   "operator": {
     "contains_all": "содержит все",

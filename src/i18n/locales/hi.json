@@ -419,6 +419,7 @@
     "create_vulnerability": "भेद्यता बनाएँ",
     "created": "बनाया था",
     "credits": "क्रेडिट",
+    "csv_filetype": "CSV",
     "custom_license": "कस्टम लाइसेंस",
     "custom_license_deleted": "कस्टम लाइसेंस हटाया गया",
     "cvss": "सीवीएसएस",
@@ -475,6 +476,7 @@
     "direct_only": "केवल प्रत्यक्ष",
     "direction": "दिशा",
     "download_bom": "BOM डाउनलोड करें",
+    "download_component": "घटक डाउनलोड करें",
     "email": "ईमेल",
     "empty_selection": "कोई आइटम चयनित नहीं",
     "endpoints": "अंतिमबिंदुओं",
@@ -855,9 +857,7 @@
     "weakness": "कमजोरी",
     "will_not_fix": "ठीक नहीं होगा",
     "workaround_available": "वैकल्पिक उपाय उपलब्ध है",
-    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा",
-    "download_component": "घटक डाउनलोड करें",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

@@ -419,6 +419,7 @@
     "create_vulnerability": "创建漏洞",
     "created": "创建",
     "credits": "Credits",
+    "csv_filetype": "CSV",
     "custom_license": "自定义许可证",
     "custom_license_deleted": "自定义许可证已删除",
     "cvss": "计算机视觉安全标准",
@@ -475,6 +476,7 @@
     "direct_only": "仅限直接",
     "direction": "方向",
     "download_bom": "下载 BOM",
+    "download_component": "下载组件",
     "email": "电子邮件",
     "empty_selection": "没有选择任何项目",
     "endpoints": "终结点",
@@ -855,9 +857,7 @@
     "weakness": "弱点",
     "will_not_fix": "不会修复",
     "workaround_available": "有解决方法",
-    "x_trust_boundary": "跨越信任边界",
-    "download_component": "下载组件",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "跨越信任边界"
   },
   "operator": {
     "contains_all": "包含全部",

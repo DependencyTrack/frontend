@@ -419,6 +419,7 @@
     "create_vulnerability": "脆弱性の追加",
     "created": "作成日",
     "credits": "クレジット",
+    "csv_filetype": "CSV",
     "custom_license": "カスタムライセンス",
     "custom_license_deleted": "カスタムライセンスが削除されました",
     "cvss": "CVSS",
@@ -475,6 +476,7 @@
     "direct_only": "直接のみ",
     "direction": "方向",
     "download_bom": "BOMをダウンロード",
+    "download_component": "コンポーネントをダウンロードする",
     "email": "Eメール",
     "empty_selection": "項目が選択されていません",
     "endpoints": "エンドポイント",
@@ -855,9 +857,7 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える",
-    "download_component": "コンポーネントをダウンロードする",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "信頼境界を越える"
   },
   "operator": {
     "contains_all": "すべてを含む",

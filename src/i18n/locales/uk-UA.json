@@ -419,6 +419,7 @@
     "create_vulnerability": "Створити вразливість",
     "created": "Створено",
     "credits": "Кредити",
+    "csv_filetype": "CSV",
     "custom_license": "Спеціальна ліцензія",
     "custom_license_deleted": "Спеціальну ліцензію видалено",
     "cvss": "CVSS",
@@ -475,6 +476,7 @@
     "direct_only": "Тільки прямий",
     "direction": "Напрямок",
     "download_bom": "Завантажити BOM",
+    "download_component": "Завантажити компоненти",
     "email": "Електронна пошта",
     "empty_selection": "Елементи не вибрано",
     "endpoints": "Кінцеві точки",
@@ -855,9 +857,7 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри",
-    "download_component": "Завантажити компоненти",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "Перетнути кордон довіри"
   },
   "operator": {
     "contains_all": "містить усе",

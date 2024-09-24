@@ -419,6 +419,7 @@
     "create_vulnerability": "Créer une vulnérabilité",
     "created": "Créé(e)",
     "credits": "Crédits",
+    "csv_filetype": "CSV",
     "custom_license": "Licence personnalisée",
     "custom_license_deleted": "Licence personnalisée supprimée",
     "cvss": "CVSS",
@@ -475,6 +476,7 @@
     "direct_only": "Direct uniquement",
     "direction": "Direction",
     "download_bom": "Télécharger la nomenclature",
+    "download_component": "Télécharger les composants",
     "email": "Courriel",
     "empty_selection": "Aucun élément sélectionné",
     "endpoints": "Points de terminaison",
@@ -855,9 +857,7 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle",
-    "download_component": "Télécharger les composants",
-    "csv_filetype": "CSV"
+    "x_trust_boundary": "Limte de confiance mutuelle"
   },
   "operator": {
     "contains_all": "contient tous",
