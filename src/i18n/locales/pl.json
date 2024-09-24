@@ -695,6 +695,7 @@
     "policy_deleted": "Polityka została usunięta",
     "policy_management": "Zarządzanie polityką",
     "policy_name": "Nazwa zasady",
+    "policy_violation_audit": "Audyt naruszeń zasad",
     "policy_violations": "Naruszenia zasad",
     "policy_violations_by_classification": "Naruszenia zasad według klasyfikacji",
     "policy_violations_by_state": "Naruszenia zasad według stanu",

@@ -695,6 +695,7 @@
     "policy_deleted": "Policy deleted",
     "policy_management": "Policy Management",
     "policy_name": "Policy Name",
+    "policy_violation_audit": "Policy Violation Audit",
     "policy_violations": "Policy Violations",
     "policy_violations_by_classification": "Policy Violations by Classification",
     "policy_violations_by_state": "Policy Violations by State",

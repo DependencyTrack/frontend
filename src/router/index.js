@@ -22,6 +22,8 @@ const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 const Project = () => import('@/views/portfolio/projects/Project');
 
+const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit');
+
 const Administration = () => import('@/views/administration/Administration');
 const General = () => import('@/views/administration/configuration/General');
 const BomFormats = () =>
@@ -316,6 +318,16 @@ function configRoutes() {
             i18n: 'message.policy_management',
             sectionPath: '/policy',
             permission: 'POLICY_MANAGEMENT',
+          },
+        },
+        {
+          path: 'policyViolationAudit',
+          component: PolicyViolationAudit,
+          meta: {
+            title: i18n.t('message.policy_violation_audit'),
+            i18n: 'message.policy_violation_audit',
+            sectionPath: '/audit',
+            permission: 'VIEW_POLICY_VIOLATION',
           },
         },
         {
