@@ -855,7 +855,9 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える"
+    "x_trust_boundary": "信頼境界を越える",
+    "download_component": "コンポーネントをダウンロードする",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "すべてを含む",

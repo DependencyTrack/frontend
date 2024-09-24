@@ -855,7 +855,9 @@
     "weakness": "Fraqueza",
     "will_not_fix": "Não irá corrigir",
     "workaround_available": "Solução alternativa disponível",
-    "x_trust_boundary": "Limite de confiança cruzada"
+    "x_trust_boundary": "Limite de confiança cruzada",
+    "download_component": "Baixar componentes",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "contém tudo",

@@ -855,7 +855,9 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
+    "download_component": "Komponenten herunterladen",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "enthält alle",

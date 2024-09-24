@@ -855,7 +855,9 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "download_component": "Загрузить компоненты",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "содержит все",

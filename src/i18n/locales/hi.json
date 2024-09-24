@@ -855,7 +855,9 @@
     "weakness": "कमजोरी",
     "will_not_fix": "ठीक नहीं होगा",
     "workaround_available": "वैकल्पिक उपाय उपलब्ध है",
-    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा"
+    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा",
+    "download_component": "घटक डाउनलोड करें",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

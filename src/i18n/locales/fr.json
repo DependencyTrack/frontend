@@ -855,7 +855,9 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle"
+    "x_trust_boundary": "Limte de confiance mutuelle",
+    "download_component": "Télécharger les composants",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "contient tous",

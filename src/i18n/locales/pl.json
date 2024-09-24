@@ -855,7 +855,9 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "download_component": "Pobierz komponenty",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

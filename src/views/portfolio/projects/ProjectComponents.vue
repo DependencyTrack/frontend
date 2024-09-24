@@ -422,38 +422,44 @@ export default {
           link.click();
         });
     },
-buildTableFile: function (json, fileType) {
-      if(fileType == "csv") {
+    buildTableFile: function (json, fileType) {
+      if (fileType == 'csv') {
         const items = json.data;
-        const header = ['name', 'version', 'group', 'internal', 'resolvedLicense.licenseId', 'lastInheritedRiskScore', 'metrics.vulnerabilities'];//Object.keys(items[0])//as long as the structure of the json doesnt change these can be static
+        const header = [
+          'name',
+          'version',
+          'group',
+          'internal',
+          'resolvedLicense.licenseId',
+          'lastInheritedRiskScore',
+          'metrics.vulnerabilities',
+        ]; //Object.keys(items[0])//as long as the structure of the json doesnt change these can be static
         const csv = [
           header.join(','),
-          ...items.map(row =>
-              header.map(header => get(row, header)).join(','),
-            ),
-        ].join('\r\n')
+          ...items.map((row) =>
+            header.map((header) => get(row, header)).join(','),
+          ),
+        ].join('\r\n');
 
-      const url = window.URL.createObjectURL(new Blob([csv]));
-      const link = document.createElement('a');
-      link.href = url;
-      let filename = 'componentTable.csv';
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-    }
-
+        const url = window.URL.createObjectURL(new Blob([csv]));
+        const link = document.createElement('a');
+        link.href = url;
+        let filename = 'componentTable.csv';
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+      }
     },
     downloadTable: async function (fileType) {
       const result = await this.downloadTableJson();
-      this.buildTableFile(result, fileType)
+      this.buildTableFile(result, fileType);
     },
     downloadTableJson: async function () {
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}?limit=1000000&offset=0`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}?limit=1000000&offset=0`;
       try {
         let response = await this.axios.get(url);
         return response;
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
         return e;
       }

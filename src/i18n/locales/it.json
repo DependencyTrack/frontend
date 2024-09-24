@@ -855,7 +855,9 @@
     "weakness": "Debolezza",
     "will_not_fix": "Non risolverà",
     "workaround_available": "Soluzione disponibile",
-    "x_trust_boundary": "Confine di fiducia incrociata"
+    "x_trust_boundary": "Confine di fiducia incrociata",
+    "download_component": "Scarica Componenti",
+    "csv_filetype": "CSV"
   },
   "operator": {
     "contains_all": "contiene tutto",
