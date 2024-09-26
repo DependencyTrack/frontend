@@ -26,18 +26,30 @@
             :tooltip="this.$t('message.project_name_desc')"
             :feedback-text="$t('message.required_project_name')"
           />
-          <b-input-group-form-input
-            id="project-version-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.version"
-            lazy="true"
-            required="false"
-            feedback="false"
-            autofocus="false"
-            :label="$t('message.version')"
-            :tooltip="this.$t('message.component_version_desc')"
-          />
+          <b-row align-v="stretch">
+            <b-col>
+              <b-input-group-form-input
+                id="project-version-input"
+                input-group-size="mb-3"
+                type="text"
+                v-model="project.version"
+                lazy="true"
+                required="false"
+                feedback="false"
+                autofocus="false"
+                :label="$t('message.version')"
+                :tooltip="this.$t('message.component_version_desc')"
+              />
+            </b-col>
+            <b-col cols="auto">
+              <b-input-group-form-switch
+                id="project-create-islatest"
+                :label="$t('message.project_is_latest')"
+                v-model="project.isLatest"
+                :show-placeholder-label="true"
+              />
+            </b-col>
+          </b-row>
           <b-input-group-form-select
             id="v-classifier-input"
             required="true"
@@ -201,11 +213,13 @@ import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
+import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
 
 export default {
   name: 'ProjectCreateProjectModal',
   mixins: [permissionsMixin],
   components: {
+    BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
@@ -248,10 +262,6 @@ export default {
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
       addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       isLoading: false,
     };
   },
@@ -310,6 +320,7 @@ export default {
           copyright: this.project.copyright,
           tags: tagsNode,
           active: true,
+          isLatest: this.project.isLatest,
         })
         .then((response) => {
           this.$emit('refreshTable');

@@ -283,6 +283,15 @@ export default {
           },
         },
         {
+          title: this.$t('message.latest'),
+          field: 'isLatest',
+          formatter(value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+          align: 'center',
+          sortable: true,
+        },
+        {
           title: this.$t('message.classifier'),
           field: 'classifier',
           sortable: true,

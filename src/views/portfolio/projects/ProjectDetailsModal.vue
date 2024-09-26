@@ -29,20 +29,33 @@
             v-on:change="syncReadOnlyNameField"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
-          <b-input-group-form-input
-            id="project-version-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.version"
-            lazy="true"
-            required="false"
-            feedback="false"
-            autofocus="false"
-            v-on:change="syncReadOnlyVersionField"
-            :label="$t('message.version')"
-            :tooltip="this.$t('message.component_version_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
+          <b-row align-v="stretch">
+            <b-col>
+              <b-input-group-form-input
+                id="project-version-input"
+                input-group-size="mb-3"
+                type="text"
+                v-model="project.version"
+                lazy="true"
+                required="false"
+                feedback="false"
+                autofocus="false"
+                v-on:change="syncReadOnlyVersionField"
+                :label="$t('message.version')"
+                :tooltip="this.$t('message.component_version_desc')"
+                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              />
+            </b-col>
+            <b-col cols="auto">
+              <b-input-group-form-switch
+                id="project-details-islatest"
+                :label="$t('message.project_is_latest')"
+                v-model="project.isLatest"
+                :show-placeholder-label="true"
+                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              />
+            </b-col>
+          </b-row>
           <b-input-group-form-select
             id="v-classifier-input"
             required="true"
@@ -101,22 +114,17 @@
               :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             />
           </b-form-group>
-          <c-switch
-            id="input-5"
-            class="mx-1"
-            color="primary"
+          <b-input-group-form-switch
+            id="project-details-active"
+            :label-on="$t('message.active')"
+            :label-off="$t('message.inactive')"
             v-model="project.active"
-            label
+            :tooltip="$t('message.inactive_active_children')"
             :disabled="
               this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) ||
               (project.active && this.hasActiveChild(project))
             "
-            v-bind="labelIcon"
-            v-b-tooltip.hover
-            :title="$t('message.inactive_active_children')"
-            @change="syncActiveLabel"
           />
-          {{ projectActiveLabel }}
           <p></p>
           <b-input-group-form-input
             id="project-uuid"
@@ -452,11 +460,13 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
+import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
 
 export default {
   name: 'ProjectDetailsModal',
   mixins: [permissionsMixin],
   components: {
+    BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
@@ -471,9 +481,6 @@ export default {
     return {
       readOnlyProjectName: '',
       readOnlyProjectVersion: '',
-      projectActiveLabel: this.project.active
-        ? this.$i18n.t('message.active')
-        : this.$i18n.t('message.inactive'),
       availableClassifiers: [
         {
           value: 'APPLICATION',
@@ -664,11 +671,6 @@ export default {
     syncReadOnlyVersionField: function (value) {
       this.readOnlyProjectVersion = value;
     },
-    syncActiveLabel: function (value) {
-      this.projectActiveLabel = value
-        ? this.$t('message.active')
-        : this.$t('message.inactive');
-    },
     updateProject: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       let tagsNode = [];
@@ -694,6 +696,7 @@ export default {
           swidTagId: this.project.swidTagId,
           tags: tagsNode,
           active: this.project.active,
+          isLatest: this.project.isLatest,
           externalReferences: this.project.externalReferences,
         })
         .then((response) => {

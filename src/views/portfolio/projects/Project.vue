@@ -75,6 +75,9 @@
                 <b-badge v-if="!this.project.active" :variant="'tab-warn'">
                   {{ $t('message.inactive').toUpperCase() }}
                 </b-badge>
+                <b-badge v-if="this.project.isLatest" :variant="'tab-info'">
+                  {{ $t('message.latest_version').toUpperCase() }}
+                </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
                     class="text-muted font-xs font-italic align-text-top text-truncate"
