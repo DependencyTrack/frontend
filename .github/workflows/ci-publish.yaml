@@ -20,7 +20,7 @@ jobs:
           fi
 
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
 
       - name: Parse Version from package.json
         id: parse
@@ -47,7 +47,7 @@ jobs:
       - call-build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4.1.8
