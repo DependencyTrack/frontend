@@ -535,6 +535,7 @@
     "last_bom_import": "Останній імпорт специфікації",
     "last_measurement": "Останнє вимірювання",
     "last_seen": "Останнє побачення в",
+    "latest": "Останній",
     "latest_version": "Остання версія",
     "legal": "юридичний",
     "license": "Ліцензія",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Правила з тегом {tag}",
     "policy_created": "Політика створена",
     "policy_deleted": "Політику видалено",
+    "policy_is_only_for_latest_project_version": "Обмеження версіями проекту, позначеними як останні",
     "policy_management": "Управління політикою",
     "policy_name": "Назва політики",
     "policy_violations": "Порушення політики",
@@ -709,6 +711,7 @@
     "project_delete_title": "Підтвердити видалення проекту",
     "project_deleted": "Проект видалено",
     "project_details": "Деталі проекту",
+    "project_is_latest": "Остання версія",
     "project_metadata_supplier_name_desc": "Організація, яка надала специфікацію",
     "project_name": "Назва проекту",
     "project_name_desc": "Назва проекту або компонента, надана постачальником",
@@ -860,10 +863,7 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри",
-    "latest": "Останній",
-    "policy_is_only_for_latest_project_version": "Обмеження версіями проекту, позначеними як останні",
-    "project_is_latest": "Остання версія"
+    "x_trust_boundary": "Перетнути кордон довіри"
   },
   "operator": {
     "contains_all": "містить усе",
