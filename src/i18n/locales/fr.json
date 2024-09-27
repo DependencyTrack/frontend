@@ -535,6 +535,7 @@
     "last_bom_import": "Dernière importation de nomenclature",
     "last_measurement": "Dernière mesure",
     "last_seen": "Vu la dernière fois à",
+    "latest": "Dernier",
     "latest_version": "Dernière version",
     "legal": "Légal",
     "license": "Licence",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Règles marquées avec {tag}",
     "policy_created": "Politique créée",
     "policy_deleted": "Politique supprimée",
+    "policy_is_only_for_latest_project_version": "Limité aux versions de projet marquées comme les plus récentes",
     "policy_management": "Gestion des politiques",
     "policy_name": "Nom de la politique",
     "policy_violations": "Violations de politiques",
@@ -709,6 +711,7 @@
     "project_delete_title": "Confirmer la suppression du projet",
     "project_deleted": "Projet supprimé",
     "project_details": "Détails du projet",
+    "project_is_latest": "Est la dernière version",
     "project_metadata_supplier_name_desc": "L'organisation qui a fourni la nomenclature",
     "project_name": "Nom du projet",
     "project_name_desc": "Le nom du projet ou du composant tel que fourni par le fournisseur",
@@ -860,10 +863,7 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle",
-    "latest": "Dernier",
-    "policy_is_only_for_latest_project_version": "Limité aux versions de projet marquées comme les plus récentes",
-    "project_is_latest": "Est la dernière version"
+    "x_trust_boundary": "Limte de confiance mutuelle"
   },
   "operator": {
     "contains_all": "contient tous",

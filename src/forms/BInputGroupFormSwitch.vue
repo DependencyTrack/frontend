@@ -27,7 +27,7 @@
 
 <script>
 import common from '../shared/common';
-import {Switch as cSwitch} from "@coreui/vue";
+import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   components: {
@@ -60,7 +60,8 @@ export default {
         return common.toBoolean(this.value);
       },
       set: function (newValue) {
-        this.currentLabel = (newValue ? this.labelOn : this.labelOff) || this.label;
+        this.currentLabel =
+          (newValue ? this.labelOn : this.labelOff) || this.label;
         return common.toBoolean(newValue);
       },
     },
@@ -74,8 +75,7 @@ export default {
       });
     },
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 <style scoped>

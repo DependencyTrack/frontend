@@ -43,7 +43,9 @@
                 v-on:change="syncReadOnlyVersionField"
                 :label="$t('message.version')"
                 :tooltip="this.$t('message.component_version_desc')"
-                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+                :readonly="
+                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
+                "
               />
             </b-col>
             <b-col cols="auto">
@@ -52,7 +54,9 @@
                 :label="$t('message.project_is_latest')"
                 v-model="project.isLatest"
                 :show-placeholder-label="true"
-                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+                :readonly="
+                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
+                "
               />
             </b-col>
           </b-row>
@@ -460,7 +464,7 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
-import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
+import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {
   name: 'ProjectDetailsModal',

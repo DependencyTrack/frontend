@@ -116,11 +116,11 @@
 </template>
 
 <script>
-import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
+import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {
   name: 'ProjectAddVersionModal',
-  components: {BInputGroupFormSwitch},
+  components: { BInputGroupFormSwitch },
   props: {
     uuid: String,
   },

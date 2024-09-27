@@ -37,7 +37,7 @@ import PolicyCondition from './PolicyCondition';
 import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
 import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
 import SelectTagModal from '@/views/portfolio/tags/SelectTagModal';
-import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
+import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {
   mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
@@ -255,7 +255,8 @@ export default {
               },
               updatePolicy: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
-                let refreshTableRow = (this.policy.uuid === null || this.name !== this.policy.name);
+                let refreshTableRow =
+                  this.policy.uuid === null || this.name !== this.policy.name;
                 this.axios
                   .post(url, {
                     uuid: this.policy.uuid,
@@ -263,11 +264,12 @@ export default {
                     operator: this.operator,
                     violationState: this.violationState,
                     includeChildren: this.includeChildren,
-                    onlyForLatestProjectVersion: this.onlyForLatestProjectVersion,
+                    onlyForLatestProjectVersion:
+                      this.onlyForLatestProjectVersion,
                   })
                   .then((response) => {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
-                    if(refreshTableRow) {
+                    if (refreshTableRow) {
                       this.policy = response.data;
                       EventBus.$emit(
                         'policyManagement:policies:rowUpdate',
@@ -303,7 +305,8 @@ export default {
                 this.violationState = policy.violationState;
                 this.conditions = policy.policyConditions;
                 this.includeChildren = policy.includeChildren;
-                this.onlyForLatestProjectVersion = policy.onlyForLatestProjectVersion;
+                this.onlyForLatestProjectVersion =
+                  policy.onlyForLatestProjectVersion;
               },
               deleteProjectLimiter: function (projectUuid) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;

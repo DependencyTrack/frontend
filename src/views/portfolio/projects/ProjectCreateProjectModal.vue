@@ -213,7 +213,7 @@ import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
-import BInputGroupFormSwitch from "@/forms/BInputGroupFormSwitch.vue";
+import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {
   name: 'ProjectCreateProjectModal',

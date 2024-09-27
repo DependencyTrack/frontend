@@ -535,6 +535,7 @@
     "last_bom_import": "Letzter BOM-Import",
     "last_measurement": "Letzte Messung",
     "last_seen": "Zuletzt gesehen bei",
+    "latest": "Aktuellste",
     "latest_version": "Letzte Version",
     "legal": "Rechtliches",
     "license": "Lizenz",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Richtlinien mit dem Tag {tag}",
     "policy_created": "Richtlinie erstellt",
     "policy_deleted": "Richtlinie gelöscht",
+    "policy_is_only_for_latest_project_version": "Auf als aktuellste gekennzeichnete Projektversionen limitieren",
     "policy_management": "Richtlinienverwaltung",
     "policy_name": "Versicherungsname",
     "policy_violations": "Richtlinienverstöße",
@@ -709,6 +711,7 @@
     "project_delete_title": "Bestätigen Sie die Projektlöschung",
     "project_deleted": "Projekt gelöscht",
     "project_details": "Projekt Details",
+    "project_is_latest": "Ist aktuellste Version",
     "project_metadata_supplier_name_desc": "Die Organisation, die die BOM bereitgestellt hat",
     "project_name": "Projektname",
     "project_name_desc": "Der vom Lieferanten angegebene Name des Projekts oder der Komponente",
@@ -860,10 +863,7 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
-    "latest": "Aktuellste",
-    "policy_is_only_for_latest_project_version": "Auf als aktuellste gekennzeichnete Projektversionen limitieren",
-    "project_is_latest": "Ist aktuellste Version"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
   },
   "operator": {
     "contains_all": "enthält alle",

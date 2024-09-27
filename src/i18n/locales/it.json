@@ -535,6 +535,7 @@
     "last_bom_import": "Ultima importazione distinta base",
     "last_measurement": "Ultima misurazione",
     "last_seen": "Visto l'ultima volta a",
+    "latest": "Ultimo",
     "latest_version": "Ultima versione",
     "legal": "Legale",
     "license": "Licenza",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Politiche contrassegnate con {tag}",
     "policy_created": "Politica creata",
     "policy_deleted": "Politica eliminata",
+    "policy_is_only_for_latest_project_version": "Limita alle versioni del progetto contrassegnate come più recenti",
     "policy_management": "Gestione delle politiche",
     "policy_name": "Nome della politica",
     "policy_violations": "Violazioni delle norme",
@@ -709,6 +711,7 @@
     "project_delete_title": "Conferma l'eliminazione del progetto",
     "project_deleted": "Progetto eliminato",
     "project_details": "Dettagli del progetto",
+    "project_is_latest": "È l'ultima versione",
     "project_metadata_supplier_name_desc": "L'organizzazione che ha fornito la distinta base",
     "project_name": "Nome del progetto",
     "project_name_desc": "Il nome del progetto o del componente fornito dal fornitore",
@@ -860,10 +863,7 @@
     "weakness": "Debolezza",
     "will_not_fix": "Non risolverà",
     "workaround_available": "Soluzione disponibile",
-    "x_trust_boundary": "Confine di fiducia incrociata",
-    "latest": "Ultimo",
-    "policy_is_only_for_latest_project_version": "Limita alle versioni del progetto contrassegnate come più recenti",
-    "project_is_latest": "È l'ultima versione"
+    "x_trust_boundary": "Confine di fiducia incrociata"
   },
   "operator": {
     "contains_all": "contiene tutto",

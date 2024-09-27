@@ -535,6 +535,7 @@
     "last_bom_import": "Importación de la última lista de materiales",
     "last_measurement": "Última medición",
     "last_seen": "Visto por última vez en",
+    "latest": "El último",
     "latest_version": "Ultima versión",
     "legal": "Legal",
     "license": "Licencia",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Políticas etiquetadas con {tag}",
     "policy_created": "Política creada",
     "policy_deleted": "Política eliminada",
+    "policy_is_only_for_latest_project_version": "Limitar a las versiones del proyecto marcadas como más recientes",
     "policy_management": "Gestión de políticas",
     "policy_name": "Nombre de directiva",
     "policy_violations": "Violaciones de políticas",
@@ -709,6 +711,7 @@
     "project_delete_title": "Confirmar la eliminación del proyecto",
     "project_deleted": "Proyecto eliminado",
     "project_details": "detalles del proyecto",
+    "project_is_latest": "es la ultima version",
     "project_metadata_supplier_name_desc": "La organización que suministró el BOM.",
     "project_name": "Nombre del proyecto",
     "project_name_desc": "El nombre del proyecto o componente proporcionado por el proveedor.",
@@ -860,10 +863,7 @@
     "weakness": "Debilidad",
     "will_not_fix": "No se reparara",
     "workaround_available": "Solución alternativa disponible",
-    "x_trust_boundary": "Cruzar el límite de confianza",
-    "latest": "El último",
-    "policy_is_only_for_latest_project_version": "Limitar a las versiones del proyecto marcadas como más recientes",
-    "project_is_latest": "es la ultima version"
+    "x_trust_boundary": "Cruzar el límite de confianza"
   },
   "operator": {
     "contains_all": "contiene todo",

@@ -535,6 +535,7 @@
     "last_bom_import": "最後のBOMインポート",
     "last_measurement": "最終測定",
     "last_seen": "最終確認",
+    "latest": "最新",
     "latest_version": "最新バージョン",
     "legal": "法律上の",
     "license": "ライセンス",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "{tag} でタグ付けされたポリシー",
     "policy_created": "ポリシーが作成されました",
     "policy_deleted": "ポリシーを削除しました",
+    "policy_is_only_for_latest_project_version": "最新としてマークされたプロジェクト バージョンに制限する",
     "policy_management": "ポリシー管理",
     "policy_name": "ポリシー名",
     "policy_violations": "ポリシー違反",
@@ -709,6 +711,7 @@
     "project_delete_title": "プロジェクトの削除の確認",
     "project_deleted": "プロジェクトが削除されました",
     "project_details": "プロジェクトの詳細",
+    "project_is_latest": "最新バージョンです",
     "project_metadata_supplier_name_desc": "BOMを提供した組織",
     "project_name": "プロジェクト名",
     "project_name_desc": "サプライヤーから提供されたプロジェクトまたはコンポーネントの名前",
@@ -860,10 +863,7 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える",
-    "latest": "最新",
-    "policy_is_only_for_latest_project_version": "最新としてマークされたプロジェクト バージョンに制限する",
-    "project_is_latest": "最新バージョンです"
+    "x_trust_boundary": "信頼境界を越える"
   },
   "operator": {
     "contains_all": "すべてを含む",

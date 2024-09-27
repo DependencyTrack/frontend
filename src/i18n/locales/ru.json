@@ -535,6 +535,7 @@
     "last_bom_import": "Последний импорт спецификации",
     "last_measurement": "Последнее измерение",
     "last_seen": "Последний раз видели",
+    "latest": "Последний",
     "latest_version": "Последняя версия",
     "legal": "Юридический",
     "license": "Лицензия",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Политики с тегом {tag}",
     "policy_created": "Политика создана",
     "policy_deleted": "Политика удалена.",
+    "policy_is_only_for_latest_project_version": "Ограничить версии проекта, помеченные как последние.",
     "policy_management": "Управление политиками",
     "policy_name": "Имя политики",
     "policy_violations": "Нарушения политики",
@@ -709,6 +711,7 @@
     "project_delete_title": "Подтвердить удаление проекта",
     "project_deleted": "Проект удален",
     "project_details": "Детали проекта",
+    "project_is_latest": "Последняя версия",
     "project_metadata_supplier_name_desc": "Организация, предоставившая спецификацию",
     "project_name": "название проекта",
     "project_name_desc": "Название проекта или компонента, предоставленное поставщиком.",
@@ -860,10 +863,7 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия",
-    "latest": "Последний",
-    "policy_is_only_for_latest_project_version": "Ограничить версии проекта, помеченные как последние.",
-    "project_is_latest": "Последняя версия"
+    "x_trust_boundary": "Пересечение границы доверия"
   },
   "operator": {
     "contains_all": "содержит все",

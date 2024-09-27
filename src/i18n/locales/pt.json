@@ -535,6 +535,7 @@
     "last_bom_import": "Última importação de BOM",
     "last_measurement": "Última medição",
     "last_seen": "Visto por último em",
+    "latest": "Mais recente",
     "latest_version": "Última versão",
     "legal": "Jurídico",
     "license": "Licença",
@@ -693,6 +694,7 @@
     "policies_tagged_with": "Políticas marcadas com {tag}",
     "policy_created": "Política criada",
     "policy_deleted": "Política excluída",
+    "policy_is_only_for_latest_project_version": "Limitar às versões do projeto marcadas como mais recentes",
     "policy_management": "Gerenciamento de Políticas",
     "policy_name": "Nome da política",
     "policy_violations": "Violações de política",
@@ -709,6 +711,7 @@
     "project_delete_title": "Confirmar exclusão do projeto",
     "project_deleted": "Projeto excluído",
     "project_details": "Detalhes do Projeto",
+    "project_is_latest": "É a versão mais recente",
     "project_metadata_supplier_name_desc": "A organização que forneceu a lista técnica",
     "project_name": "Nome do Projeto",
     "project_name_desc": "O nome do projeto ou componente fornecido pelo fornecedor",
@@ -860,10 +863,7 @@
     "weakness": "Fraqueza",
     "will_not_fix": "Não irá corrigir",
     "workaround_available": "Solução alternativa disponível",
-    "x_trust_boundary": "Limite de confiança cruzada",
-    "latest": "Mais recente",
-    "policy_is_only_for_latest_project_version": "Limitar às versões do projeto marcadas como mais recentes",
-    "project_is_latest": "É a versão mais recente"
+    "x_trust_boundary": "Limite de confiança cruzada"
   },
   "operator": {
     "contains_all": "contém tudo",
