@@ -860,7 +860,10 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри"
+    "x_trust_boundary": "Перетнути кордон довіри",
+    "latest": "Останній",
+    "policy_is_only_for_latest_project_version": "Обмеження версіями проекту, позначеними як останні",
+    "project_is_latest": "Остання версія"
   },
   "operator": {
     "contains_all": "містить усе",

@@ -860,7 +860,10 @@
     "weakness": "Debolezza",
     "will_not_fix": "Non risolverà",
     "workaround_available": "Soluzione disponibile",
-    "x_trust_boundary": "Confine di fiducia incrociata"
+    "x_trust_boundary": "Confine di fiducia incrociata",
+    "latest": "Ultimo",
+    "policy_is_only_for_latest_project_version": "Limita alle versioni del progetto contrassegnate come più recenti",
+    "project_is_latest": "È l'ultima versione"
   },
   "operator": {
     "contains_all": "contiene tutto",

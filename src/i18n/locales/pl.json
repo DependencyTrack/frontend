@@ -860,7 +860,10 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "latest": "Najnowszy",
+    "policy_is_only_for_latest_project_version": "Ogranicz do wersji projektu oznaczonych jako najnowsze",
+    "project_is_latest": "Jest najnowszą wersją"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

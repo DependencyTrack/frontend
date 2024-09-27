@@ -860,7 +860,10 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "latest": "Последний",
+    "policy_is_only_for_latest_project_version": "Ограничить версии проекта, помеченные как последние.",
+    "project_is_latest": "Последняя версия"
   },
   "operator": {
     "contains_all": "содержит все",

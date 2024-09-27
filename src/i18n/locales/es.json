@@ -860,7 +860,10 @@
     "weakness": "Debilidad",
     "will_not_fix": "No se reparara",
     "workaround_available": "Solución alternativa disponible",
-    "x_trust_boundary": "Cruzar el límite de confianza"
+    "x_trust_boundary": "Cruzar el límite de confianza",
+    "latest": "El último",
+    "policy_is_only_for_latest_project_version": "Limitar a las versiones del proyecto marcadas como más recientes",
+    "project_is_latest": "es la ultima version"
   },
   "operator": {
     "contains_all": "contiene todo",

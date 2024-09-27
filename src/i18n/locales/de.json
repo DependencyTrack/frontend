@@ -860,7 +860,10 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenzen überschreiten"
+    "x_trust_boundary": "Vertrauensgrenzen überschreiten",
+    "latest": "Aktuellste",
+    "policy_is_only_for_latest_project_version": "Auf als aktuellste gekennzeichnete Projektversionen limitieren",
+    "project_is_latest": "Ist aktuellste Version"
   },
   "operator": {
     "contains_all": "enthält alle",

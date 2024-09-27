@@ -860,7 +860,10 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える"
+    "x_trust_boundary": "信頼境界を越える",
+    "latest": "最新",
+    "policy_is_only_for_latest_project_version": "最新としてマークされたプロジェクト バージョンに制限する",
+    "project_is_latest": "最新バージョンです"
   },
   "operator": {
     "contains_all": "すべてを含む",

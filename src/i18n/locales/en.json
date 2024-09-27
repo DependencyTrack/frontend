@@ -694,6 +694,7 @@
     "policies_tagged_with": "Policies tagged with {tag}",
     "policy_created": "Policy created",
     "policy_deleted": "Policy deleted",
+    "policy_is_only_for_latest_project_version": "Limit to project versions marked as latest",
     "policy_management": "Policy Management",
     "policy_name": "Policy Name",
     "policy_violations": "Policy Violations",

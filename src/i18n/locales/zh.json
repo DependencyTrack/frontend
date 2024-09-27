@@ -860,7 +860,10 @@
     "weakness": "弱点",
     "will_not_fix": "不会修复",
     "workaround_available": "有解决方法",
-    "x_trust_boundary": "跨越信任边界"
+    "x_trust_boundary": "跨越信任边界",
+    "latest": "最新的",
+    "policy_is_only_for_latest_project_version": "限制标记为最新的项目版本",
+    "project_is_latest": "是最新版本"
   },
   "operator": {
     "contains_all": "包含全部",

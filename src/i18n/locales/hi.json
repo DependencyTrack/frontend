@@ -860,7 +860,10 @@
     "weakness": "कमजोरी",
     "will_not_fix": "ठीक नहीं होगा",
     "workaround_available": "वैकल्पिक उपाय उपलब्ध है",
-    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा"
+    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा",
+    "latest": "नवीनतम",
+    "policy_is_only_for_latest_project_version": "नवीनतम के रूप में चिह्नित प्रोजेक्ट संस्करणों तक सीमित रहें",
+    "project_is_latest": "नवीनतम संस्करण है"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

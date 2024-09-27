@@ -860,7 +860,10 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle"
+    "x_trust_boundary": "Limte de confiance mutuelle",
+    "latest": "Dernier",
+    "policy_is_only_for_latest_project_version": "Limité aux versions de projet marquées comme les plus récentes",
+    "project_is_latest": "Est la dernière version"
   },
   "operator": {
     "contains_all": "contient tous",
