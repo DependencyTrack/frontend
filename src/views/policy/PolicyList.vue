@@ -264,8 +264,7 @@ export default {
                     operator: this.operator,
                     violationState: this.violationState,
                     includeChildren: this.includeChildren,
-                    onlyLatestProjectVersion:
-                      this.onlyLatestProjectVersion,
+                    onlyLatestProjectVersion: this.onlyLatestProjectVersion,
                   })
                   .then((response) => {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
@@ -305,8 +304,7 @@ export default {
                 this.violationState = policy.violationState;
                 this.conditions = policy.policyConditions;
                 this.includeChildren = policy.includeChildren;
-                this.onlyLatestProjectVersion =
-                  policy.onlyLatestProjectVersion;
+                this.onlyLatestProjectVersion = policy.onlyLatestProjectVersion;
               },
               deleteProjectLimiter: function (projectUuid) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
