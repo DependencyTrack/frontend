@@ -163,9 +163,9 @@ export default {
                         </b-col>
                         <b-col>
                           <b-input-group-form-switch
-                            id="isOnlyForLatestProjectVersion"
+                            id="isOnlyLatestProjectVersion"
                             :label="$t('message.policy_is_only_for_latest_project_version')"
-                            v-model="onlyForLatestProjectVersion"
+                            v-model="onlyLatestProjectVersion"
                           />
                         </b-col>
                       </b-row>
@@ -220,7 +220,7 @@ export default {
                 limitToVisible: false,
                 tags: row.tags,
                 includeChildren: row.includeChildren,
-                onlyForLatestProjectVersion: row.onlyForLatestProjectVersion,
+                onlyLatestProjectVersion: row.onlyLatestProjectVersion,
               };
             },
             methods: {
@@ -264,8 +264,8 @@ export default {
                     operator: this.operator,
                     violationState: this.violationState,
                     includeChildren: this.includeChildren,
-                    onlyForLatestProjectVersion:
-                      this.onlyForLatestProjectVersion,
+                    onlyLatestProjectVersion:
+                      this.onlyLatestProjectVersion,
                   })
                   .then((response) => {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
@@ -305,8 +305,8 @@ export default {
                 this.violationState = policy.violationState;
                 this.conditions = policy.policyConditions;
                 this.includeChildren = policy.includeChildren;
-                this.onlyForLatestProjectVersion =
-                  policy.onlyForLatestProjectVersion;
+                this.onlyLatestProjectVersion =
+                  policy.onlyLatestProjectVersion;
               },
               deleteProjectLimiter: function (projectUuid) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
@@ -398,7 +398,7 @@ export default {
               includeChildren() {
                 this.updatePolicy();
               },
-              onlyForLatestProjectVersion() {
+              onlyLatestProjectVersion() {
                 this.updatePolicy();
               },
             },
