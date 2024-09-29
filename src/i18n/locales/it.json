@@ -96,7 +96,7 @@
     "enable_default_template_override": "Abilita l'override del modello predefinito",
     "enable_email": "Abilita e-mail",
     "enable_index_consistency_check": "Abilita il controllo periodico della coerenza",
-    "enable_svg_badge": "Abilita il supporto del badge SVG (non autenticato)",
+    "enable_svg_badge": "Abilita l'accesso al badge SVG non autenticato (deprecato)",
     "enabled": "Abilitato",
     "enabled_for_tags": "Abilitato per i tag",
     "experimental": "Sperimentale",
