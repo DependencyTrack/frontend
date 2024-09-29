@@ -99,7 +99,7 @@
     "enable_default_template_override": "Überschreiben der Standardvorlage aktivieren",
     "enable_email": "E-Mail aktivieren",
     "enable_index_consistency_check": "Regelmäßige Konsistenzprüfungen aktivieren",
-    "enable_svg_badge": "SVG-Badge-Unterstützung aktivieren (nicht authentifiziert)",
+    "enable_svg_badge": "Nicht authentifizierten SVG-Badge-Zugriff aktivieren (veraltet)",
     "enabled": "Aktiviert",
     "enabled_for_tags": "Aktiviert für Tags",
     "experimental": "Experimentell",

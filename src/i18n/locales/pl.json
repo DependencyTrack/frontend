@@ -99,7 +99,7 @@
     "enable_default_template_override": "Włącz domyślne zastąpienie szablonu",
     "enable_email": "Włącz pocztę e-mail",
     "enable_index_consistency_check": "Włącz okresową kontrolę spójności",
-    "enable_svg_badge": "Włącz obsługę plakietek SVG (nieuwierzytelnione)",
+    "enable_svg_badge": "Włącz nieuwierzytelniony dostęp do plakietki SVG (przestarzałe)",
     "enabled": "Włączony",
     "enabled_for_tags": "Włączono dla tagów",
     "experimental": "Eksperymentalny",

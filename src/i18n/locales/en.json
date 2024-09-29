@@ -99,7 +99,7 @@
     "enable_default_template_override": "Enable default template override",
     "enable_email": "Enable email",
     "enable_index_consistency_check": "Enable periodic consistency check",
-    "enable_svg_badge": "Enable SVG badge support (unauthenticated)",
+    "enable_svg_badge": "Enable unauthenticated SVG badge access (deprecated)",
     "enabled": "Enabled",
     "enabled_for_tags": "Enabled for tags",
     "experimental": "Experimental",

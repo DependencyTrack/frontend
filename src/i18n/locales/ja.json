@@ -99,7 +99,7 @@
     "enable_default_template_override": "デフォルトのテンプレートのオーバーライドを有効にする",
     "enable_email": "メールを有効にする",
     "enable_index_consistency_check": "定期的な整合性チェックを有効にする",
-    "enable_svg_badge": "SVG バッジのサポートを有効にする (認証なし)",
+    "enable_svg_badge": "認証されていない SVG バッジ アクセスを有効にする (非推奨)",
     "enabled": "有効",
     "enabled_for_tags": "タグに対して有効化",
     "experimental": "実験的",

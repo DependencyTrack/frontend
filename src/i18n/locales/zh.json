@@ -99,7 +99,7 @@
     "enable_default_template_override": "启用默认模板覆盖",
     "enable_email": "启用电子邮件",
     "enable_index_consistency_check": "启用定期一致性检查",
-    "enable_svg_badge": "启用 SVG 徽章支持（未经身份验证）",
+    "enable_svg_badge": "启用未经身份验证的 SVG 徽章访问（已弃用）",
     "enabled": "已启用",
     "enabled_for_tags": "为标签启用",
     "experimental": "实验性的",
