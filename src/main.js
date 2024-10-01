@@ -69,6 +69,12 @@ axios
     createVueApp();
   });
 
+ const faviconPath = process.env.DT_FAVICON_PATH || '/default/favicon.ico';
+ app.get('/', (req, res) => {
+     res.render('index', { favicon_path: faviconPath });
+ });
+
+
 /**
  * Removed finally block due to:
  * https://github.com/DependencyTrack/frontend/issues/34
