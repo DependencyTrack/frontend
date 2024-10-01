@@ -74,6 +74,7 @@ axios
      res.render('index', { favicon_path: faviconPath });
  });
 
+ 
 
 /**
  * Removed finally block due to:
