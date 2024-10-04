@@ -480,6 +480,7 @@ export default {
     },
     resetValues: function () {
       this.project = {
+        team: [],
         collectionLogic: 'NONE', // set default to regular project
         team: [],
       };
