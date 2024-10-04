@@ -413,7 +413,9 @@ export default {
       });
     },
     resetValues: function () {
-      this.project = {};
+      this.project = {
+        team: [],
+      };
       this.tag = '';
       this.tags = [];
       this.selectedParent = null;
