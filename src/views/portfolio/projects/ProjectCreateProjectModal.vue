@@ -307,7 +307,7 @@ export default {
           ),
         },
         {
-          value: 'LATEST_VERSION_CHILDREN',
+          value: 'AGGREGATE_LATEST_VERSION_CHILDREN',
           text: this.$i18n.t(
             'message.project_collection_logic_latest_version_children',
           ),

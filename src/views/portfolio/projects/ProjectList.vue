@@ -273,7 +273,7 @@ export default {
                     : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
                   title += `direct children with tag '${tag}'.`;
                   break;
-                case 'LATEST_VERSION_CHILDREN':
+                case 'AGGREGATE_LATEST_VERSION_CHILDREN':
                   title += 'latest versions of direct children.';
                   break;
               }
