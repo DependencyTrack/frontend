@@ -248,10 +248,16 @@ import { Switch as cSwitch } from '@coreui/vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 
 export default {
   name: 'ProjectCreateProjectModal',
-  mixins: [permissionsMixin],
+  mixins: [
+    permissionsMixin,
+    availableClassifiersMixin,
+    availableCollectionLogicsMixin,
+  ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
@@ -266,53 +272,7 @@ export default {
       isDisabled: false,
       readOnlyProjectName: '',
       readOnlyProjectVersion: '',
-      availableClassifiers: [
-        {
-          value: 'APPLICATION',
-          text: this.$i18n.t('message.component_application'),
-        },
-        {
-          value: 'FRAMEWORK',
-          text: this.$i18n.t('message.component_framework'),
-        },
-        { value: 'LIBRARY', text: this.$i18n.t('message.component_library') },
-        {
-          value: 'CONTAINER',
-          text: this.$i18n.t('message.component_container'),
-        },
-        {
-          value: 'OPERATING_SYSTEM',
-          text: this.$i18n.t('message.component_operating_system'),
-        },
-        { value: 'DEVICE', text: this.$i18n.t('message.component_device') },
-        { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
-        { value: 'FILE', text: this.$i18n.t('message.component_file') },
-      ],
       availableTeams: [],
-      availableCollectionLogics: [
-        {
-          value: 'NONE',
-          text: this.$i18n.t('message.project_collection_logic_none'),
-        },
-        {
-          value: 'AGGREGATE_DIRECT_CHILDREN',
-          text: this.$i18n.t(
-            'message.project_collection_logic_aggregate_direct_children',
-          ),
-        },
-        {
-          value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG',
-          text: this.$i18n.t(
-            'message.project_collection_logic_aggregate_direct_children_with_tag',
-          ),
-        },
-        {
-          value: 'AGGREGATE_LATEST_VERSION_CHILDREN',
-          text: this.$i18n.t(
-            'message.project_collection_logic_latest_version_children',
-          ),
-        },
-      ],
       selectableLicenses: [],
       selectedLicense: '',
       selectedParent: null,
@@ -352,14 +312,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
   },
-  computed: {
-    sortAvailableClassifiers: function () {
-      this.availableClassifiers.sort(function (a, b) {
-        return a.text.localeCompare(b.text);
-      });
-      return this.availableClassifiers;
-    },
-  },
+  computed: {},
   watch: {
     tag: 'searchTags',
   },

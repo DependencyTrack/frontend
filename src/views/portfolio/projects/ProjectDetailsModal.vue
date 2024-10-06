@@ -64,7 +64,7 @@
             id="v-classifier-input"
             required="true"
             v-model="project.classifier"
-            :options="availableClassifiers"
+            :options="sortAvailableClassifiers"
             :label="$t('message.classifier')"
             :tooltip="$t('message.component_classifier_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
@@ -489,10 +489,16 @@ import common from '../../../shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 
 export default {
   name: 'ProjectDetailsModal',
-  mixins: [permissionsMixin],
+  mixins: [
+    permissionsMixin,
+    availableClassifiersMixin,
+    availableCollectionLogicsMixin,
+  ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
@@ -509,52 +515,6 @@ export default {
     return {
       readOnlyProjectName: '',
       readOnlyProjectVersion: '',
-      availableClassifiers: [
-        {
-          value: 'APPLICATION',
-          text: this.$i18n.t('message.component_application'),
-        },
-        {
-          value: 'FRAMEWORK',
-          text: this.$i18n.t('message.component_framework'),
-        },
-        { value: 'LIBRARY', text: this.$i18n.t('message.component_library') },
-        {
-          value: 'CONTAINER',
-          text: this.$i18n.t('message.component_container'),
-        },
-        {
-          value: 'OPERATING_SYSTEM',
-          text: this.$i18n.t('message.component_operating_system'),
-        },
-        { value: 'DEVICE', text: this.$i18n.t('message.component_device') },
-        { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
-        { value: 'FILE', text: this.$i18n.t('message.component_file') },
-      ],
-      availableCollectionLogics: [
-        {
-          value: 'NONE',
-          text: this.$i18n.t('message.project_collection_logic_none'),
-        },
-        {
-          value: 'AGGREGATE_DIRECT_CHILDREN',
-          text: this.$i18n.t(
-            'message.project_collection_logic_aggregate_direct_children',
-          ),
-        },
-        {
-          value: 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG',
-          text: this.$i18n.t(
-            'message.project_collection_logic_aggregate_direct_children_with_tag',
-          ),
-        },
-        {
-          value: 'AGGREGATE_LATEST_VERSION_CHILDREN',
-          text: this.$i18n.t(
-            'message.project_collection_logic_latest_version_children',
-          ),
-        },
-      ],
       parent: null,
       selectedParent: null,
       availableParents: [],
