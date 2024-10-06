@@ -252,6 +252,7 @@ export default {
           field: 'name',
           sortable: true,
           routerFunc: () => this.$router,
+          $t: (key, values) => this.$t(key, values),
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
@@ -261,20 +262,26 @@ export default {
             );
             let collectionIcon = '';
             if (row.collectionLogic !== 'NONE') {
-              let title =
-                'Metrics of collection project are calculated by aggregating numbers of ';
+              let title = '';
               switch (row.collectionLogic) {
                 case 'AGGREGATE_DIRECT_CHILDREN':
-                  title += 'all direct children.';
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_direct_children',
+                  );
                   break;
                 case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
                   const tag = !row.collectionTag
                     ? ''
                     : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
-                  title += `direct children with tag '${tag}'.`;
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_direct_children_with_tags',
+                    { tag: tag },
+                  );
                   break;
                 case 'AGGREGATE_LATEST_VERSION_CHILDREN':
-                  title += 'latest versions of direct children.';
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_latest_version',
+                  );
                   break;
               }
               collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;

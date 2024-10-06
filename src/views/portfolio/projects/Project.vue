@@ -610,25 +610,27 @@ export default {
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
     getCollectionLogicText: function (project) {
-      let title =
-        'Metrics of collection project are calculated by aggregating numbers of ';
       switch (project.collectionLogic) {
         case 'NONE':
           return '';
         case 'AGGREGATE_DIRECT_CHILDREN':
-          title += 'all direct children.';
-          break;
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_direct_children',
+          );
         case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
           const tag = !project.collectionTag
             ? ''
             : xssFilters.inDoubleQuotedAttr(project.collectionTag.name);
-          title += `direct children with tag '${tag}'.`;
-          break;
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_direct_children_with_tags',
+            { tag: tag },
+          );
         case 'AGGREGATE_LATEST_VERSION_CHILDREN':
-          title += 'latest versions of direct children.';
-          break;
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_latest_version',
+          );
       }
-      return title;
+      return '';
     },
     isCollectionProject: function () {
       return this.project.collectionLogic !== 'NONE';
