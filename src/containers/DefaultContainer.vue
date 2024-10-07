@@ -202,29 +202,26 @@ export default {
   mounted() {
     if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
       this.$root.$emit('bv::show::modal', 'snapshotModal');
-
-      this.isSidebarMinimized =
-        localStorage && localStorage.getItem('isSidebarMinimized') !== null
-          ? localStorage.getItem('isSidebarMinimized') === 'true'
-          : false;
-      const sidebar = document.body;
-      if (sidebar) {
-        if (this.isSidebarMinimized) {
-          sidebar.classList.add('sidebar-minimized');
-        } else {
-          sidebar.classList.remove('sidebar-minimized');
-        }
-      }
-      this.$nextTick(() => {
-        const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
-        if (sidebarMinimizer) {
-          sidebarMinimizer.addEventListener(
-            'click',
-            this.handleMinimizedUpdate,
-          );
-        }
-      });
     }
+
+    this.isSidebarMinimized =
+      localStorage && localStorage.getItem('isSidebarMinimized') !== null
+        ? localStorage.getItem('isSidebarMinimized') === 'true'
+        : false;
+    const sidebar = document.body;
+    if (sidebar) {
+      if (this.isSidebarMinimized) {
+        sidebar.classList.add('sidebar-minimized');
+      } else {
+        sidebar.classList.remove('sidebar-minimized');
+      }
+    }
+    this.$nextTick(() => {
+      const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
+      if (sidebarMinimizer) {
+        sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
+      }
+    });
   },
   computed: {
     name() {
