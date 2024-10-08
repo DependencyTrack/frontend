@@ -15,7 +15,13 @@
           label-for="input-1"
           label-class="required"
         >
-          <b-form-input id="input-1" v-model="version" class="required" trim />
+          <b-form-input
+            id="input-1"
+            v-model="version"
+            class="required"
+            trim
+            required
+          />
         </b-form-group>
       </b-col>
       <b-col cols="auto">
@@ -108,9 +114,13 @@
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createVersion()">{{
-        $t('message.create')
-      }}</b-button>
+      <b-button
+        size="md"
+        variant="primary"
+        :disabled="isSubmitButtonDisabled"
+        @click="createVersion()"
+        >{{ $t('message.create') }}</b-button
+      >
     </template>
   </b-modal>
 </template>
@@ -136,6 +146,20 @@ export default {
       includePolicyViolations: true,
       makeCloneLatest: false,
     };
+  },
+  computed: {
+    isSubmitButtonDisabled() {
+      const versionInputValue = this.version;
+      if (versionInputValue) {
+        /**
+         * * ideally we would apply the check with the input value trimmed, however, since we are already using 'trim' prop on the input value.
+         * * trimming the value here is not required.
+         */
+        return versionInputValue.length === 0;
+      }
+
+      return true;
+    },
   },
   methods: {
     createVersion: function () {
