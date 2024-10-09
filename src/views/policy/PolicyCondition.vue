@@ -249,6 +249,10 @@ export default {
       ],
       regexOperators: [
         { value: 'MATCHES', text: this.$t('operator.matches') },
+        { value: 'NO_MATCH', text: this.$t('operator.no_match') },
+      ],
+      regexOperatorsCpePurl: [
+        { value: 'MATCHES', text: this.$t('operator.matches') },
         { value: 'NOT_PRESENT', text: this.$t('operator.not_present') },
         { value: 'NO_MATCH', text: this.$t('operator.no_match') },
       ],
@@ -365,10 +369,10 @@ export default {
           this.retrieveLicenseGroups();
           break;
         case 'PACKAGE_URL':
-          this.operators = this.regexOperators;
+          this.operators = this.regexOperatorsCpePurl;
           break;
         case 'CPE':
-          this.operators = this.regexOperators;
+          this.operators = this.regexOperatorsCpePurl;
           break;
         case 'SWID_TAGID':
           this.operators = this.regexOperators;
