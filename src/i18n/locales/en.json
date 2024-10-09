@@ -876,7 +876,8 @@
     "is": "is",
     "is_not": "is not",
     "matches": "matches",
-    "no_match": "does not match"
+    "no_match": "does not match",
+    "not_present": "not present"
   },
   "policy_violation": {
     "fails": "Violation Failures",
