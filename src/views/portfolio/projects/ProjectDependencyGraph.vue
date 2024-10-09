@@ -529,10 +529,12 @@ export default {
       }
     },
     createNodeLabel: function (identity) {
-      // could be a project or a component
-      if (identity.purlCoordinates) {
+      // Could be a project or a directDependency object.
+      // Projects don't have the objectType property.
+      const isProject = !identity.objectType;
+      if (!isProject && identity.purlCoordinates) {
         return identity.purlCoordinates;
-      } else if (identity.purl) {
+      } else if (!isProject && identity.purl) {
         return identity.purl;
       } else {
         let label = '';
