@@ -43,7 +43,7 @@ jobs:
           npm run build --if-present
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4.4.2
+        uses: actions/upload-artifact@v4.4.3
         with:
           name: assembled-frontend
           path: |-
