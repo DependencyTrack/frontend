@@ -36,7 +36,7 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../../vulnerabilities/' + row.source + '/' + value,
+              './vulnerabilities/' + row.source + '/' + value,
             );
             return (
               common.formatSourceLabel(row.source) +
@@ -55,7 +55,7 @@ export default {
               for (let i = 0; i < aliases.length; i++) {
                 let alias = aliases[i];
                 let url = xssFilters.uriInUnQuotedAttr(
-                  '../../vulnerabilities/' + alias.source + '/' + alias.vulnId,
+                  './vulnerabilities/' + alias.source + '/' + alias.vulnId,
                 );
                 label +=
                   common.formatSourceLabel(alias.source) +

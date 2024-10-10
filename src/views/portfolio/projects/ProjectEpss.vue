@@ -80,10 +80,10 @@ export default {
           sortable: true,
           formatter: (value, row, index) => {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../../../components/' + row.component.uuid,
+              './components/' + row.component.uuid,
             );
             let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-              '../../../projects/' +
+              './projects/' +
                 this.uuid +
                 '/dependencyGraph/' +
                 row.component.uuid,
@@ -155,10 +155,7 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../../../vulnerabilities/' +
-                row.vulnerability.source +
-                '/' +
-                value,
+              './vulnerabilities/' + row.vulnerability.source + '/' + value,
             );
             return (
               common.formatSourceLabel(row.vulnerability.source) +

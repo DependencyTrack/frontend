@@ -356,7 +356,7 @@ export default {
           formatter: (value, row, index) => {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr(
-                '../../../components/' + row.component.uuid,
+                './components/' + row.component.uuid,
               );
               let name = common.concatenateComponentName(
                 null,
@@ -364,7 +364,7 @@ export default {
                 row.component.version,
               );
               let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-                '../../../projects/' +
+                './projects/' +
                   row.project.uuid +
                   '/dependencyGraph/' +
                   row.component.uuid,
@@ -384,7 +384,7 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../projects/' + row.project.uuid,
+              './projects/' + row.project.uuid,
             );
             let name = common.concatenateComponentName(
               null,
@@ -429,7 +429,7 @@ export default {
               )
             ) {
               let licenseurl =
-                '../../../licenses/' + row.component.resolvedLicense.licenseId;
+                './licenses/' + row.component.resolvedLicense.licenseId;
               return (
                 '<a href="' +
                 licenseurl +
