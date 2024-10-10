@@ -81,7 +81,6 @@ export default {
               template: `
                 <div>
                   <b-link v-b-modal="\`taggedProjectListModal-${index}\`">{{ value }}</b-link>
-                  <span v-if="error" class="fa fa-apple"></span>
                   <tagged-project-list-modal :tag="tagName" :index="index"/>
                 </div>`,
               data() {
