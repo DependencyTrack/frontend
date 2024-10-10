@@ -168,11 +168,9 @@ export default {
           field: 'name',
           sortable: true,
           formatter: (value, row, index) => {
-            let url = xssFilters.uriInUnQuotedAttr(
-              '../../../components/' + row.uuid,
-            );
+            let url = xssFilters.uriInUnQuotedAttr('./components/' + row.uuid);
             let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-              '../../../projects/' + this.uuid + '/dependencyGraph/' + row.uuid,
+              './projects/' + this.uuid + '/dependencyGraph/' + row.uuid,
             );
             return (
               `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
@@ -258,8 +256,7 @@ export default {
           sortable: false,
           formatter(value, row, index) {
             if (Object.prototype.hasOwnProperty.call(row, 'resolvedLicense')) {
-              let licenseurl =
-                '../../../licenses/' + row.resolvedLicense.licenseId;
+              let licenseurl = './licenses/' + row.resolvedLicense.licenseId;
               return (
                 '<a href="' +
                 licenseurl +

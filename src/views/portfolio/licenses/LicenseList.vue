@@ -70,7 +70,7 @@ export default {
           sortable: true,
           formatter: function (value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../licenses/' + encodeURIComponent(value),
+              './licenses/' + encodeURIComponent(value),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           },
