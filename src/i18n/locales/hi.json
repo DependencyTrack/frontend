@@ -481,6 +481,8 @@
     "direction": "दिशा",
     "download_bom": "BOM डाउनलोड करें",
     "download_component": "घटक डाउनलोड करें",
+    "edit": "संपादन करना",
+    "edit_affected_component": "प्रभावित घटक संपादित करें",
     "email": "ईमेल",
     "empty_selection": "कोई आइटम चयनित नहीं",
     "endpoints": "अंतिमबिंदुओं",
