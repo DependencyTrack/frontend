@@ -481,6 +481,8 @@
     "direction": "Kierunek",
     "download_bom": "Pobierz BOM",
     "download_component": "Pobierz komponenty",
+    "edit": "Redagować",
+    "edit_affected_component": "Edytuj komponent, którego dotyczy problem",
     "email": "E-mail",
     "empty_selection": "Nie wybrano żadnych elementów",
     "endpoints": "Punkty końcowe",

@@ -481,6 +481,8 @@
     "direction": "Direzione",
     "download_bom": "Scarica distinta base",
     "download_component": "Scarica Componenti",
+    "edit": "Modificare",
+    "edit_affected_component": "Modifica componente interessato",
     "email": "E-mail",
     "empty_selection": "Nessun elemento selezionato",
     "endpoints": "Endpoint",
