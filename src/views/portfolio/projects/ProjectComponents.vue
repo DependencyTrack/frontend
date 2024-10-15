@@ -243,6 +243,15 @@ export default {
           },
         },
         {
+          title: this.$t('message.classifier'),
+          field: 'classifier',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
           title: this.$t('message.internal'),
           field: 'isInternal',
           sortable: false,
