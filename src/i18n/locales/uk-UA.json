@@ -481,6 +481,8 @@
     "direction": "Напрямок",
     "download_bom": "Завантажити BOM",
     "download_component": "Завантажити компоненти",
+    "edit": "Редагувати",
+    "edit_affected_component": "Редагувати пошкоджений компонент",
     "email": "Електронна пошта",
     "empty_selection": "Елементи не вибрано",
     "endpoints": "Кінцеві точки",
