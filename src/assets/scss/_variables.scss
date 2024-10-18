@@ -36,6 +36,7 @@ $severity-medium: $yellow;
 $severity-low: $green;
 $severity-info: $blue;
 $severity-unassigned: #777777;
+$collection-logic-changed: #0000FF;
 $severity-label-bg: $grey-900 !default;
 
 $notification-fail: $red;
@@ -229,6 +230,7 @@ $recessed: $grey-850;
   --severity-low: #{$severity-low};
   --severity-info: #{$severity-info};
   --severity-unassigned: #{$severity-unassigned};
+  --collection-logic-changed: #{$collection-logic-changed};
 
   --notification-fail: #{$notification-fail};
   --notification-warn: #{$notification-warn};
