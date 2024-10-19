@@ -172,12 +172,17 @@ export default {
       subSectionUuid,
       subSectionLabel,
     ) {
+      let sectionName = this.$route.meta.sectionName;
       let sectionLabel = this.$t(this.$route.meta.i18n);
       let sectionPath = this.$route.meta.sectionPath;
       if (crumbName && subSectionName && subSectionUuid && subSectionLabel) {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
           {
             name: subSectionName,
             params: { uuid: subSectionUuid },
@@ -187,14 +192,22 @@ export default {
         ];
       } else if (crumbName) {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
           { name: crumbName, active: true },
         ];
       } else {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
         ];
       }
     },
