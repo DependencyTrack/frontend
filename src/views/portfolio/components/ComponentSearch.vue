@@ -223,10 +223,7 @@ export default {
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr('../components/' + row.uuid);
             let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-              '../../../projects/' +
-                row.project.uuid +
-                '/dependencyGraph/' +
-                row.uuid,
+              './projects/' + row.project.uuid + '/dependencyGraph/' + row.uuid,
             );
             return row.project.directDependencies
               ? `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
@@ -291,7 +288,7 @@ export default {
           sortable: false,
           formatter(value, row, index) {
             let url = xssFilters.uriInUnQuotedAttr(
-              '../projects/' + row.project.uuid,
+              './projects/' + row.project.uuid,
             );
             let name = common.concatenateComponentName(
               null,
@@ -312,8 +309,7 @@ export default {
             }
 
             let url = xssFilters.uriInUnQuotedAttr(
-              '../licenses/' +
-                encodeURIComponent(row.resolvedLicense.licenseId),
+              './licenses/' + encodeURIComponent(row.resolvedLicense.licenseId),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(row.resolvedLicense.name)}</a>`;
           },
