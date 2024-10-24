@@ -481,6 +481,8 @@
     "direction": "Direction",
     "download_bom": "Télécharger la nomenclature",
     "download_component": "Télécharger les composants",
+    "edit": "Modifier",
+    "edit_affected_component": "Modifier le composant concerné",
     "email": "Courriel",
     "empty_selection": "Aucun élément sélectionné",
     "endpoints": "Points de terminaison",
