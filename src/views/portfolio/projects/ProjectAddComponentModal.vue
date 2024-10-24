@@ -86,7 +86,7 @@
             id="component-classifier-input"
             required="true"
             v-model="component.classifier"
-            :options="availableClassifiers"
+            :options="sortAvailableClassifiers"
             :label="$t('message.classifier')"
             :tooltip="$t('message.component_classifier_desc')"
           />
@@ -256,10 +256,11 @@
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 
 export default {
   name: 'ProjectAddComponentModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, availableClassifiersMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
@@ -269,28 +270,6 @@ export default {
   },
   data() {
     return {
-      availableClassifiers: [
-        {
-          value: 'APPLICATION',
-          text: this.$i18n.t('message.component_application'),
-        },
-        {
-          value: 'FRAMEWORK',
-          text: this.$i18n.t('message.component_framework'),
-        },
-        { value: 'LIBRARY', text: this.$i18n.t('message.component_library') },
-        {
-          value: 'CONTAINER',
-          text: this.$i18n.t('message.component_container'),
-        },
-        {
-          value: 'OPERATING_SYSTEM',
-          text: this.$i18n.t('message.component_operating_system'),
-        },
-        { value: 'DEVICE', text: this.$i18n.t('message.component_device') },
-        { value: 'FIRMWARE', text: this.$i18n.t('message.component_firmware') },
-        { value: 'FILE', text: this.$i18n.t('message.component_file') },
-      ],
       selectableLicenses: [],
       selectedLicense: '',
       component: {},
