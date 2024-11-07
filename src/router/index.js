@@ -73,6 +73,8 @@ const Nuget = () => import('@/views/administration/repositories/Nuget');
 const Python = () => import('@/views/administration/repositories/Python');
 
 const Alerts = () => import('@/views/administration/notifications/Alerts');
+const ScheduledAlerts = () =>
+  import('@/views/administration/notifications/ScheduledAlerts');
 const Templates = () =>
   import('@/views/administration/notifications/Templates');
 
@@ -703,6 +705,17 @@ function configRoutes() {
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'notifications/scheduledalerts',
+              alias: ['scheduled_notifications'],
+              component: ScheduledAlerts,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
                 permission: 'SYSTEM_CONFIGURATION',
               },
             },
