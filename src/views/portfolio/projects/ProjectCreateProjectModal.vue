@@ -223,6 +223,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import common from '../../../shared/common';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -312,7 +313,9 @@ export default {
     async getACLEnabled() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
       let response = await this.axios.get(url);
-      this.requiresTeam = response.data.propertyValue.toString();
+      this.requiresTeam = common.toBoolean(
+        response.data.propertyValue.toString(),
+      );
     },
     async getAvailableTeams() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
