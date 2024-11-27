@@ -20,6 +20,7 @@
         size="md"
         variant="outline-danger"
         @click="deleteProperty"
+        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
         :disabled="!hasRowsSelected"
         >{{ $t('message.delete') }}</b-button
       >
@@ -29,6 +30,7 @@
       <b-button
         size="md"
         variant="primary"
+        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
         v-b-modal.componentCreatePropertyModal
         >{{ $t('message.create_property') }}</b-button
       >
@@ -39,9 +41,11 @@
 <script>
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
+import permissionsMixin from '../../../mixins/permissionsMixin';
 
 export default {
   name: 'ComponentPropertiesModal',
+  mixins: [permissionsMixin],
   props: {
     uuid: String,
   },
