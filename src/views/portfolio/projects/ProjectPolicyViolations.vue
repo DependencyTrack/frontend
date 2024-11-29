@@ -104,7 +104,7 @@ export default {
           formatter: (value, row, index) => {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr(
-                '../../../components/' + row.component.uuid,
+                './components/' + row.component.uuid,
               );
               let name = common.concatenateComponentName(
                 null,
@@ -112,7 +112,7 @@ export default {
                 row.component.version,
               );
               let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-                '../../../projects/' +
+                './projects/' +
                   this.uuid +
                   '/dependencyGraph/' +
                   row.component.uuid,
