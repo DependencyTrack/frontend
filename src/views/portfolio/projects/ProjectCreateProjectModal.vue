@@ -223,6 +223,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import common from '../../../shared/common';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -312,20 +313,20 @@ export default {
     async getACLEnabled() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
       let response = await this.axios.get(url);
-      this.requiresTeam = response.data.propertyValue.toString();
+      this.requiresTeam = common.toBoolean(
+        response.data.propertyValue.toString(),
+      );
     },
     async getAvailableTeams() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
       let response = await this.axios.get(url);
-      console.log(response.data);
       let convertedTeams = response.data.map((team) => {
-        console.log(team.uuid);
         return { text: team.name, value: team.uuid };
       });
       this.availableTeams = convertedTeams;
       this.teams = response.data;
       if (this.requiresTeam && this.availableTeams.length == 1) {
-        this.project.team = teams[0][0].value;
+        this.project.team = this.availableTeams[0].value;
         this.isDisabled = true;
       }
       this.availableTeams.sort(function (a, b) {
