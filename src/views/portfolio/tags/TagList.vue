@@ -23,6 +23,8 @@ import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotifi
 import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListModal.vue';
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import i18n from '@/i18n';
+import MurmurHash2 from 'imurmurhash';
+
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
@@ -81,7 +83,6 @@ export default {
               template: `
                 <div>
                   <b-link v-b-modal="\`taggedProjectListModal-${index}\`">{{ value }}</b-link>
-                  <span v-if="error" class="fa fa-apple"></span>
                   <tagged-project-list-modal :tag="tagName" :index="index"/>
                 </div>`,
               data() {
@@ -196,7 +197,7 @@ export default {
         },
         buttonsOrder: ['btnDeleteSelected', 'refresh', 'columns'],
         clickToSelect: true,
-        uniqueId: 'name',
+        uniqueId: 'nameHash',
         search: true,
         showColumns: true,
         showRefresh: true,
@@ -213,6 +214,11 @@ export default {
           refresh: 'fa-refresh',
         },
         responseHandler: function (res, xhr) {
+          for (let tag of res) {
+            // Tag names with special characters can break table rendering.
+            // https://github.com/DependencyTrack/dependency-track/issues/4357
+            tag.nameHash = MurmurHash2(tag.name).result();
+          }
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },

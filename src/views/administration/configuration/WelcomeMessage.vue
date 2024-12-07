@@ -91,26 +91,20 @@ export default {
       editor.style.height = editor.scrollHeight + 'px';
     },
     saveChanges() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}`;
-      axios.post(url, {
-        groupName: 'general',
-        propertyName: 'welcome.message.html',
-        propertyValue: encodeURIComponent(
-          this.welcomeMessage !== '' ? this.welcomeMessage : ' ',
-        ),
-      });
-      axios
-        .post(url, {
+      this.updateConfigProperties([
+        {
+          groupName: 'general',
+          propertyName: 'welcome.message.html',
+          propertyValue: encodeURIComponent(
+            this.welcomeMessage !== '' ? this.welcomeMessage : ' ',
+          ),
+        },
+        {
           groupName: 'general',
           propertyName: 'welcome.message.enabled',
           propertyValue: this.isWelcomeMessage,
-        })
-        .then((response) => {
-          this.$toastr.s(this.$t('admin.configuration_saved'));
-        })
-        .catch((error) => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
+        },
+      ]);
     },
   },
 };

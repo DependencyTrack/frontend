@@ -35,7 +35,7 @@ export default {
   mixins: [permissionsMixin],
   methods: {
     apiUrl: function () {
-      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.tag}/notificationRule`;
+      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/notificationRule`;
     },
     untag: function (notificationRuleUuids) {
       return this.axios.delete(this.apiUrl(), {

@@ -4,7 +4,7 @@
     @hide="resetValues()"
     size="lg"
     hide-header-close
-    :title="$t('message.add_affected_component')"
+    :title="title"
   >
     <b-row>
       <b-col md="3">
@@ -82,7 +82,7 @@
         $t('message.cancel')
       }}</b-button>
       <b-button size="md" variant="primary" @click="composeObject()">{{
-        $t('message.add')
+        okButton
       }}</b-button>
     </template>
   </b-modal>
@@ -103,6 +103,8 @@ export default {
   },
   data() {
     return {
+      okButton: this.$t('message.add'),
+      title: this.$t('message.add_affected_component'),
       affectedComponent: {
         identityType: 'PURL',
         identity: null,
@@ -134,6 +136,13 @@ export default {
         { value: '<=', text: '<=' },
       ],
     };
+  },
+  created() {
+    this.$root.$on('object-event', (data) => {
+      this.affectedComponent = data;
+      this.okButton = this.$t('message.edit');
+      this.title = this.$t('message.edit_affected_component');
+    });
   },
   methods: {
     composeObject: function () {
@@ -194,6 +203,15 @@ export default {
       this.tempVersionEndRange = null;
       this.rangeBeginSyntax = null;
       this.rangeEndSyntax = null;
+      this.okButton = this.$t('message.add');
+      this.title = this.$t('message.add_affected_component');
+    },
+    cancelEdit(cancel) {
+      this.resetValues();
+      cancel();
+    },
+    beforeDestroy() {
+      this.$root.$off('object-event');
     },
   },
 };

@@ -13,7 +13,7 @@ entrypoint_log() {
 }
 
 ME=$(basename $0)
-DEFAULT_CONF_FILE="etc/nginx/conf.d/default.conf"
+DEFAULT_CONF_FILE="etc/nginx/templates/default.conf.template"
 
 # check if we have ipv6 available
 if [ ! -f "/proc/net/if_inet6" ]; then

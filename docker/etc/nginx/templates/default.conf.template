@@ -7,6 +7,12 @@ server {
     index     index.html;
     try_files $uri $uri/ /index.html;
 
+    location ~ (config\.json|index\.html)$ {
+      add_header Cache-Control "max-age=0, no-cache, no-store, must-revalidate";
+      add_header Pragma "no-cache";
+      add_header Expires 0;
+    }
+
     sub_filter '<base href=/'  '<base href=${BASE_PATH}';
     sub_filter_once on;
   }

@@ -492,6 +492,8 @@
     "direction": "方向",
     "download_bom": "下载 BOM",
     "download_component": "下载组件",
+    "edit": "编辑",
+    "edit_affected_component": "编辑受影响的组件",
     "email": "电子邮件",
     "empty_selection": "没有选择任何项目",
     "endpoints": "终结点",
