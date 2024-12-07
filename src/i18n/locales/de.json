@@ -492,6 +492,8 @@
     "direction": "Richtung",
     "download_bom": "BOM herunterladen",
     "download_component": "Komponenten herunterladen",
+    "edit": "Bearbeiten",
+    "edit_affected_component": "Bearbeiten Sie die betroffene Komponente",
     "email": "E-Mail",
     "empty_selection": "Keine Elemente ausgewählt",
     "endpoints": "Endpunkte",

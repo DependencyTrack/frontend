@@ -172,12 +172,17 @@ export default {
       subSectionUuid,
       subSectionLabel,
     ) {
+      let sectionName = this.$route.meta.sectionName;
       let sectionLabel = this.$t(this.$route.meta.i18n);
       let sectionPath = this.$route.meta.sectionPath;
       if (crumbName && subSectionName && subSectionUuid && subSectionLabel) {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
           {
             name: subSectionName,
             params: { uuid: subSectionUuid },
@@ -187,14 +192,22 @@ export default {
         ];
       } else if (crumbName) {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
           { name: crumbName, active: true },
         ];
       } else {
         return [
-          { path: '', name: this.$t('message.home') },
-          { path: sectionPath, name: sectionLabel },
+          { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
+          {
+            path: sectionPath,
+            name: sectionName,
+            meta: { label: sectionLabel },
+          },
         ];
       }
     },
@@ -202,29 +215,26 @@ export default {
   mounted() {
     if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
       this.$root.$emit('bv::show::modal', 'snapshotModal');
-
-      this.isSidebarMinimized =
-        localStorage && localStorage.getItem('isSidebarMinimized') !== null
-          ? localStorage.getItem('isSidebarMinimized') === 'true'
-          : false;
-      const sidebar = document.body;
-      if (sidebar) {
-        if (this.isSidebarMinimized) {
-          sidebar.classList.add('sidebar-minimized');
-        } else {
-          sidebar.classList.remove('sidebar-minimized');
-        }
-      }
-      this.$nextTick(() => {
-        const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
-        if (sidebarMinimizer) {
-          sidebarMinimizer.addEventListener(
-            'click',
-            this.handleMinimizedUpdate,
-          );
-        }
-      });
     }
+
+    this.isSidebarMinimized =
+      localStorage && localStorage.getItem('isSidebarMinimized') !== null
+        ? localStorage.getItem('isSidebarMinimized') === 'true'
+        : false;
+    const sidebar = document.body;
+    if (sidebar) {
+      if (this.isSidebarMinimized) {
+        sidebar.classList.add('sidebar-minimized');
+      } else {
+        sidebar.classList.remove('sidebar-minimized');
+      }
+    }
+    this.$nextTick(() => {
+      const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
+      if (sidebarMinimizer) {
+        sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
+      }
+    });
   },
   computed: {
     name() {

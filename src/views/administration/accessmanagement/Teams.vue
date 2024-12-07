@@ -90,6 +90,9 @@ export default {
             if (row.ldapUsers) {
               count += row.ldapUsers.length;
             }
+            if (row.oidcUsers) {
+              count += row.oidcUsers.length;
+            }
             return count;
           },
         },
@@ -168,6 +171,13 @@ export default {
                         </span>
                       </div>
                     </b-form-group>
+                    <b-form-group v-if="oidcUsers && oidcUsers.length > 0"  :label="this.$t('admin.oidc_users')">
+                      <div class="list-group">
+                        <span v-for="oidcUser in oidcUsers">
+                          <actionable-list-group-item :value="oidcUser.username" :delete-icon="true" v-on:actionClicked="removeUser(oidcUser)"/>
+                        </span>
+                      </div>
+                    </b-form-group>
                     <div style="text-align:right">
                        <b-button variant="outline-danger" @click="deleteTeam">{{ $t('admin.delete_team') }}</b-button>
                     </div>
@@ -197,6 +207,7 @@ export default {
                 mappedOidcGroups: row.mappedOidcGroups,
                 managedUsers: row.managedUsers,
                 ldapUsers: row.ldapUsers,
+                oidcUsers: row.oidcUsers,
                 labelIcon: {
                   dataOn: '\u2713',
                   dataOff: '\u2715',
@@ -432,6 +443,15 @@ export default {
                         }
                       }
                       this.ldapUsers = k;
+                    }
+                    if (this.oidcUsers) {
+                      let k = [];
+                      for (let i = 0; i < this.oidcUsers.length; i++) {
+                        if (this.oidcUsers[i].username !== user.username) {
+                          k.push(this.oidcUsers[i]);
+                        }
+                      }
+                      this.oidcUsers = k;
                     }
                     this.$toastr.s(this.$t('message.updated'));
                   })

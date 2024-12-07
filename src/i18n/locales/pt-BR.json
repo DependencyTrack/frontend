@@ -492,6 +492,8 @@
     "direction": "Direção",
     "download_bom": "Baixe a lista técnica",
     "download_component": "Baixar componentes",
+    "edit": "Editar",
+    "edit_affected_component": "Editar componente afetado",
     "email": "E-mail",
     "empty_selection": "Nenhum item selecionado",
     "endpoints": "Pontos finais",

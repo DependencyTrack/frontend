@@ -367,7 +367,7 @@
         size="md"
         variant="outline-primary"
         v-b-modal.componentPropertiesModal
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+        v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >{{ $t('message.properties') }}</b-button
       >
       <b-button size="md" variant="secondary" @click="cancel()">{{

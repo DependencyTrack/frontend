@@ -37,7 +37,7 @@ export default {
   mixins: [bootstrapTableMixin, permissionsMixin],
   methods: {
     apiUrl: function () {
-      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.tag}/project`;
+      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/project`;
     },
     untag: function (projectUuids) {
       return this.axios.delete(this.apiUrl(), {
