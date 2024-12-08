@@ -1,99 +1,113 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
-import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue';
-import App from './App';
+import { createApp } from 'vue';
+import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
-import './validation';
-import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import vueDebounce from 'vue-debounce';
-import VuePageTitle from 'vue-page-title';
-import '@/directives/VuePermission';
-import VueToastr from 'vue-toastr';
+import './validation';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
+import { VueToastr } from 'vue-toastr';
+import { createBootstrap } from 'bootstrap-vue-next';
+import { BTooltip } from 'bootstrap-vue-next';
 
-Vue.use(BootstrapVue);
-Vue.use(VueAxios, axios);
-Vue.use(VueToastr, {
-  defaultTimeout: 5000,
-  defaultProgressBar: false,
-  defaultProgressBarValue: 0,
-  defaultPosition: 'toast-top-right',
-  defaultCloseOnHover: false,
-});
-Vue.use(vueDebounce, { defaultTime: '750ms' });
-Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
+import './assets/scss/style.scss';
 
-Vue.prototype.$api = api;
-Vue.prototype.$oidc = oidc;
+const app = createApp(App);
+
+app.config.globalProperties.$api = api;
+app.config.globalProperties.$oidc = oidc;
+
 const contextPath = getContextPath();
 axios
   .get(contextPath + '/static/config.json')
   .then((response) => {
     if (response.data.API_BASE_URL && response.data.API_BASE_URL !== '') {
-      Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+      app.config.globalProperties.$api.BASE_URL = response.data.API_BASE_URL;
     } else {
-      Vue.prototype.$api.BASE_URL = contextPath;
+      app.config.globalProperties.$api.BASE_URL = contextPath;
     }
 
     // Send XHR cross-site cookie credentials
-    Vue.prototype.$api.WITH_CREDENTIALS =
+    app.config.globalProperties.$api.WITH_CREDENTIALS =
       response.data.API_WITH_CREDENTIALS &&
       response.data.API_WITH_CREDENTIALS.toLowerCase() === 'true';
 
     // OpenID Connect
-    Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
-    Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
-    Vue.prototype.$oidc.SCOPE = response.data.OIDC_SCOPE;
-    Vue.prototype.$oidc.FLOW = response.data.OIDC_FLOW;
+    app.config.globalProperties.$oidc.ISSUER = response.data.OIDC_ISSUER;
+    app.config.globalProperties.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
+    app.config.globalProperties.$oidc.SCOPE = response.data.OIDC_SCOPE;
+    app.config.globalProperties.$oidc.FLOW = response.data.OIDC_FLOW;
     if (response.data.OIDC_LOGIN_BUTTON_TEXT) {
-      Vue.prototype.$oidc.LOGIN_BUTTON_TEXT =
+      app.config.globalProperties.$oidc.LOGIN_BUTTON_TEXT =
         response.data.OIDC_LOGIN_BUTTON_TEXT;
     } else {
-      Vue.prototype.$oidc.LOGIN_BUTTON_TEXT = '';
+      app.config.globalProperties.$oidc.LOGIN_BUTTON_TEXT = '';
     }
-    createVueApp();
   })
   .catch(function (error) {
     console.log(
       'Cannot retrieve static/config.json from host. This is expected behavior in development environments.',
     );
+  })
+  .finally(() => {
     createVueApp();
-  });
+  })
+
+// For debug purposes
+const DirectiveTracker = {
+  install(app, options) {
+    app.config.globalProperties.$directives = {};
+
+    app.directive = new Proxy(app.directive, {
+      apply(target, thisArg, argumentsList) {
+        const [name, definition] = argumentsList;
+        app.config.globalProperties.$directives[name] = definition;
+        return Reflect.apply(...arguments);
+      }
+    });
+  }
+};
 
 /**
  * Removed finally block due to:
  * https://github.com/DependencyTrack/frontend/issues/34
  */
 function createVueApp() {
-  /*
-  Register global $dtrack variable which will be the response body from /api/version.
-  $dtrack can then be used anywhere in the app to get information about the server,
-  the version of dtrack, timestamp, uuid, Alpine version, etc.
-  */
   axios
-    .get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
+    .get(`${app.config.globalProperties.$api.BASE_URL}/${app.config.globalProperties.$api.URL_ABOUT}`)
     .then((result) => {
-      Vue.prototype.$dtrack = result.data;
+      app.config.globalProperties.$dtrack = result.data;
     });
 
-  Vue.prototype.$version = version;
+  app.config.globalProperties.$version = version;
 
-  new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: {
-      App,
-    },
-    i18n,
+  console.log("Dependency Track v" + version.version);
+
+  if (import.meta.env.MODE === 'development') {
+    app.use(DirectiveTracker);
+  }
+  app.use(router);
+  app.use(i18n);
+  app.use(createBootstrap());
+  // For some reason bootstrap doesn't seem to be registering the tooltip? Temporary workaround
+  app.directive('b-tooltip', BTooltip);
+  app.use(VueToastr, {
+    defaultTimeout: 5000,
+    defaultProgressBar: false,
+    defaultProgressBarValue: 0,
+    defaultPosition: 'toast-top-right',
+    defaultCloseOnHover: false,
   });
+  app.use(VueAxios, axios);
+  app.provide('axios', app.config.globalProperties.axios);
+
+  console.log(app.config.globalProperties.$directives);
+  console.log(app.config.globalProperties.$directives);
+  console.log(app.config.globalProperties.$directives);
+
+  app.directive('debounce', vueDebounce({ defaultTime: '750ms' })).mount('#app');
 }

@@ -573,16 +573,17 @@
 
 <script>
 import common from '../shared/common';
-import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow';
-import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities';
-import ChartProjectVulnerabilities from './dashboard/ChartProjectVulnerabilities';
-import ChartAuditingFindingsProgress from './dashboard/ChartAuditingFindingsProgress';
-import ChartAuditingViolationsProgress from './dashboard/ChartAuditingViolationsProgress';
-import ChartPolicyViolationsState from './dashboard/ChartPolicyViolationsState';
-import ChartPolicyViolationsClassification from './dashboard/ChartPolicyViolationsClassification';
-import ChartComponentVulnerabilities from './dashboard/ChartComponentVulnerabilities';
-import { Callout } from '@coreui/vue';
+import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow.vue';
+import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities.vue';
+import ChartProjectVulnerabilities from './dashboard/ChartProjectVulnerabilities.vue';
+import ChartAuditingFindingsProgress from './dashboard/ChartAuditingFindingsProgress.vue';
+import ChartAuditingViolationsProgress from './dashboard/ChartAuditingViolationsProgress.vue';
+import ChartPolicyViolationsState from './dashboard/ChartPolicyViolationsState.vue';
+import ChartPolicyViolationsClassification from './dashboard/ChartPolicyViolationsClassification.vue';
+import ChartComponentVulnerabilities from './dashboard/ChartComponentVulnerabilities.vue';
+import { CCallout as Callout } from '@coreui/vue';
 import permissionsMixin from '../mixins/permissionsMixin';
+
 
 export default {
   name: 'dashboard',
