@@ -71,6 +71,13 @@
                     </li>
                   </ol>
                   {{ project.version }}
+                  <i
+                    v-if="isCollectionProject()"
+                    class="fa fa-calculator fa-fw collectionlogic-icon"
+                    v-b-tooltip.hover="{
+                      title: getCollectionLogicText(project),
+                    }"
+                  ></i>
                 </b-col>
                 <b-badge v-if="!this.project.active" :variant="'tab-warn'">
                   {{ $t('message.inactive').toUpperCase() }}
@@ -223,7 +230,11 @@
           style="border-left: 0; border-right: 0; border-top: 0"
         />
       </b-tab>
-      <b-tab ref="components" @click="routeTo('components')">
+      <b-tab
+        ref="components"
+        @click="routeTo('components')"
+        v-if="isShowComponents()"
+      >
         <template v-slot:title
           ><i class="fa fa-cubes"></i> {{ $t('message.components') }}
           <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template
@@ -235,7 +246,27 @@
           v-on:total="totalComponents = $event"
         />
       </b-tab>
-      <b-tab ref="services" @click="routeTo('services')">
+      <b-tab
+        ref="collectionprojects"
+        @click="routeTo('collectionprojects')"
+        v-if="isShowCollectionProjects()"
+        lazy
+      >
+        <template v-slot:title
+          ><i class="fa fa-sitemap"></i>
+          {{ $t('message.collection_projects') }}</template
+        >
+        <project-collection-projects
+          :key="this.uuid"
+          :uuid="this.uuid"
+          :project="this.project"
+        />
+      </b-tab>
+      <b-tab
+        ref="services"
+        @click="routeTo('services')"
+        v-if="isShowServices()"
+      >
         <template v-slot:title
           ><i class="fa fa-exchange"></i> {{ $t('message.services') }}
           <b-badge variant="tab-total">{{ totalServices }}</b-badge></template
@@ -246,7 +277,11 @@
           v-on:total="totalServices = $event"
         />
       </b-tab>
-      <b-tab ref="dependencygraph" @click="routeTo('dependencyGraph')">
+      <b-tab
+        ref="dependencygraph"
+        @click="routeTo('dependencyGraph')"
+        v-if="isShowDependencyGraph()"
+      >
         <template v-slot:title
           ><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }}
           <b-badge variant="tab-total">{{
@@ -262,7 +297,7 @@
       </b-tab>
       <b-tab
         ref="findings"
-        v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)"
+        v-if="isShowFindings()"
         @click="routeTo('findings')"
       >
         <template v-slot:title>
@@ -286,11 +321,7 @@
           v-on:total="totalFindingsIncludingAliases = $event"
         />
       </b-tab>
-      <b-tab
-        ref="epss"
-        v-if="isPermitted(PERMISSIONS.VIEW_VULNERABILITY)"
-        @click="routeTo('epss')"
-      >
+      <b-tab ref="epss" v-if="isShowFindings()" @click="routeTo('epss')">
         <template v-slot:title
           ><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }}
           <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template
@@ -303,7 +334,7 @@
       </b-tab>
       <b-tab
         ref="policyviolations"
-        v-if="isPermitted(PERMISSIONS.VIEW_POLICY_VIOLATION)"
+        v-if="isShowPolicyViolations()"
         @click="routeTo('policyViolations')"
       >
         <template v-slot:title
@@ -373,6 +404,7 @@ import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
 import ProjectComponents from './ProjectComponents';
+import ProjectCollectionProjects from './ProjectCollectionProjects';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
 import ProjectServices from './ProjectServices';
 import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
@@ -388,6 +420,7 @@ import ProjectFindings from './ProjectFindings';
 import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import xssFilters from 'xss-filters';
 
 export default {
   mixins: [permissionsMixin],
@@ -399,6 +432,7 @@ export default {
     ProjectPropertiesModal,
     ProjectDetailsModal,
     ProjectComponents,
+    ProjectCollectionProjects,
     ProjectDependencyGraph,
     ProjectServices,
     SeverityBarChart,
@@ -482,6 +516,10 @@ export default {
         })
         .then((response) => {
           this.project = response.data;
+          // metrics are not always returned by API, fix error sometimes raised in following lines
+          if (!Object.hasOwn(this.project, 'metrics')) {
+            this.project.metrics = {};
+          }
           this.currentCritical = common.valueWithDefault(
             this.project.metrics.critical,
             0,
@@ -570,6 +608,56 @@ export default {
       );
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
+    },
+    getCollectionLogicText: function (project) {
+      switch (project.collectionLogic) {
+        case 'NONE':
+          return '';
+        case 'AGGREGATE_DIRECT_CHILDREN':
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_direct_children',
+          );
+        case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
+          const tag = !project.collectionTag
+            ? ''
+            : xssFilters.inDoubleQuotedAttr(project.collectionTag.name);
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_direct_children_with_tags',
+            { tag: tag },
+          );
+        case 'AGGREGATE_LATEST_VERSION_CHILDREN':
+          return this.$t(
+            'message.collection_logic_metrics_by_aggregate_latest_version',
+          );
+      }
+      return '';
+    },
+    isCollectionProject: function () {
+      return this.project.collectionLogic !== 'NONE';
+    },
+    isShowComponents: function () {
+      return !this.isCollectionProject();
+    },
+    isShowCollectionProjects: function () {
+      return this.isCollectionProject();
+    },
+    isShowServices: function () {
+      return !this.isCollectionProject();
+    },
+    isShowDependencyGraph: function () {
+      return !this.isCollectionProject();
+    },
+    isShowFindings: function () {
+      return (
+        !this.isCollectionProject() &&
+        this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)
+      );
+    },
+    isShowPolicyViolations: function () {
+      return (
+        !this.isCollectionProject() &&
+        this.isPermitted(this.PERMISSIONS.VIEW_POLICY_VIOLATION)
+      );
     },
   },
   beforeMount() {

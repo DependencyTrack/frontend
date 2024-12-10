@@ -1,6 +1,5 @@
 <template>
-  <div class="animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <portfolio-widget-row :fetch="true" />
+  <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
         size="md"
@@ -38,7 +37,6 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="onLoadSuccess"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody"
     >
@@ -68,6 +66,13 @@ export default {
     ProjectCreateProjectModal,
     PortfolioWidgetRow,
   },
+  props: {
+    /**
+     * If only children from a specific project shall be shown this must be set to the corresponding project
+     */
+    parentProject: Object,
+    uuid: String,
+  },
   beforeCreate() {
     this.showInactiveProjects =
       localStorage &&
@@ -84,6 +89,11 @@ export default {
       this.$root.$emit('initializeProjectCreateProjectModal');
     },
     apiUrl: function (uuid) {
+      // if we only want to show children of a specific parent we force the base call to fetch its children
+      if (this.uuid && !uuid) {
+        uuid = this.uuid;
+      }
+
       let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
       if (uuid) {
         url += `/${uuid}/children`;
@@ -241,9 +251,42 @@ export default {
           title: this.$t('message.project_name'),
           field: 'name',
           sortable: true,
+          routerFunc: () => this.$router,
+          $t: (key, values) => this.$t(key, values),
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr('../projects/' + row.uuid);
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            let url = xssFilters.uriInUnQuotedAttr(
+              this.routerFunc().resolve({
+                name: 'Project',
+                params: { uuid: row.uuid },
+              }).href,
+            );
+            let collectionIcon = '';
+            if (row.collectionLogic !== 'NONE') {
+              let title = '';
+              switch (row.collectionLogic) {
+                case 'AGGREGATE_DIRECT_CHILDREN':
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_direct_children',
+                  );
+                  break;
+                case 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG':
+                  const tag = !row.collectionTag
+                    ? ''
+                    : xssFilters.inDoubleQuotedAttr(row.collectionTag.name);
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_direct_children_with_tags',
+                    { tag: tag },
+                  );
+                  break;
+                case 'AGGREGATE_LATEST_VERSION_CHILDREN':
+                  title = this.$t(
+                    'message.collection_logic_metrics_by_aggregate_latest_version',
+                  );
+                  break;
+              }
+              collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
+            }
+            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>${collectionIcon}`;
           },
         },
         {
@@ -295,6 +338,7 @@ export default {
           title: this.$t('message.classifier'),
           field: 'classifier',
           sortable: true,
+          routerFunc: () => this.$router, // needed by formatter
           formatter: common.componentClassifierLabelProjectUrlFormatter(this),
         },
         {
