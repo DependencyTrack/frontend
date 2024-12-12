@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Jira 个人访问令牌",
     "jira_desc": "Jira 服务身份验证",
     "jira_password": "Jira 密码",
+    "jira_project_key": "Jira 项目密钥",
     "jira_ticket_type": "Jira 票证类型",
     "jira_url": "Jira URL",
     "jira_username": "Jira 用户（服务帐户）。必须将用户配置到适当的 jira 实例并允许其创建问题。",

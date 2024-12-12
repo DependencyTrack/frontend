@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Jira 個人アクセス トークン",
     "jira_desc": "Jira サービス認証",
     "jira_password": "Jira パスワード",
+    "jira_project_key": "Jira プロジェクト キー",
     "jira_ticket_type": "Jira チケットタイプ",
     "jira_url": "Jira ベース URL",
     "jira_username": "Jira ユーザー (サービス アカウント)。ユーザーは適切な Jira インスタンスにプロビジョニングされ、イシューの作成を許可されている必要があります。",

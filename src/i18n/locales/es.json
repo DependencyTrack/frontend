@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Token de acceso personal de Jira",
     "jira_desc": "Autenticación del servicio Jira",
     "jira_password": "Contraseña de jira",
+    "jira_project_key": "Clave del proyecto Jira",
     "jira_ticket_type": "Tipo de billete de Jira",
     "jira_url": "URL base de Jira",
     "jira_username": "Usuario de Jira (cuenta de servicio). El usuario debe estar aprovisionado en la instancia de Jira adecuada y se le debe permitir crear problemas.",

@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Личный токен доступа Jira",
     "jira_desc": "Аутентификация сервиса Jira",
     "jira_password": "Пароль Jira",
+    "jira_project_key": "Ключ проекта Jira",
     "jira_ticket_type": "Тип тикета Jira",
     "jira_url": "Базовый URL Jira",
     "jira_username": "Пользователь Jira (служебная учетная запись). Пользователь должен быть подключен к соответствующему экземпляру Jira и иметь права для создания тикетов.",
