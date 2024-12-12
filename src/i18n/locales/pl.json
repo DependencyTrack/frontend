@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Osobisty token dostępu Jira",
     "jira_desc": "Uwierzytelnianie usługi Jira",
     "jira_password": "Hasło do Jiry",
+    "jira_project_key": "Klucz projektu Jira",
     "jira_ticket_type": "Typ biletu Jira",
     "jira_url": "Podstawowy adres URL Jira",
     "jira_username": "Użytkownik Jira (konto usługi). Użytkownik musi mieć dostęp do odpowiedniej instancji jira i mieć pozwolenie na tworzenie problemów.",

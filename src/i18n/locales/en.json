@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Jira personal access token",
     "jira_desc": "Jira service authentication",
     "jira_password": "Jira password",
+    "jira_project_key": "Jira project key",
     "jira_ticket_type": "Jira ticket type",
     "jira_url": "Jira base URL",
     "jira_username": "Jira user (service account). The user must be provisioned to the appropriate jira instance and permitted to create issues.",

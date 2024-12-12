@@ -140,6 +140,7 @@
     "jira_auth_with_token": "Persönlicher Jira-Zugriffstoken",
     "jira_desc": "Jira-Authentifizierung",
     "jira_password": "Jira-Passwort",
+    "jira_project_key": "Jira-Projektschlüssel",
     "jira_ticket_type": "Jira-Tickettyp",
     "jira_url": "Jira-Basis-URL",
     "jira_username": "Jira-Benutzer (Dienstkonto). Der Benutzer muss für die entsprechende Jira-Instanz bereitgestellt werden und die Berechtigung zum Erstellen von Problemen haben.",
