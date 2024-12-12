@@ -481,6 +481,8 @@
     "direction": "Направление",
     "download_bom": "Скачать BOM",
     "download_component": "Скачать компоненты",
+    "edit": "Редактировать",
+    "edit_affected_component": "Редактировать затронутый компонент",
     "email": "Электронная почта",
     "empty_selection": "Ничего не выбрано",
     "endpoints": "Точки доступа",
