@@ -105,9 +105,9 @@ function createVueApp() {
   app.use(VueAxios, axios);
   app.provide('axios', app.config.globalProperties.axios);
 
-  console.log(app.config.globalProperties.$directives);
-  console.log(app.config.globalProperties.$directives);
-  console.log(app.config.globalProperties.$directives);
+  if (import.meta.env.MODE === 'development') {
+    console.log("Directives", app.config.globalProperties.$directives);
+  }
 
   app.directive('debounce', vueDebounce({ defaultTime: '750ms' })).mount('#app');
 }

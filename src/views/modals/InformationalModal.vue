@@ -25,8 +25,13 @@
 </template>
 
 <script>
+import { BModal } from "bootstrap-vue-next";
+
 export default {
   name: 'InformationalModal',
+  components: {
+    BModal
+  },
   props: {
     message: String,
   },

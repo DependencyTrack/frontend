@@ -102,12 +102,10 @@
 <script>
 import axios from 'axios';
 import Oidc from 'oidc-client';
-// bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import $ from 'jquery';
 import { Form } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import InformationalModal from '../modals/InformationalModal.vue';
-import { BButton } from 'bootstrap-vue-next';
+import { BButton, BCol, BRow, BLink, BForm, BCard, BCardBody, BCardGroup } from 'bootstrap-vue-next';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
 import qs from 'querystring';
@@ -119,7 +117,14 @@ export default {
     InformationalModal,
     BValidatedInputGroupFormInput,
     BButton,
+    BCol,
+    BRow,
+    BLink,
     Form,
+    BForm,
+    BCard,
+    BCardBody,
+    BCardGroup
   },
   data() {
     return {

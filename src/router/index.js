@@ -23,16 +23,20 @@ const LicenseList = () => import('@/views/portfolio/licenses/LicenseList.vue');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement.vue');
 const Project = () => import('@/views/portfolio/projects/Project.vue');
 
-const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit.vue');
+const PolicyViolationAudit = () =>
+  import('@/views/audit/PolicyViolationAudit.vue');
 
-const Administration = () => import('@/views/administration/Administration.vue');
-const General = () => import('@/views/administration/configuration/General.vue');
+const Administration = () =>
+  import('@/views/administration/Administration.vue');
+const General = () =>
+  import('@/views/administration/configuration/General.vue');
 const BomFormats = () =>
   import('@/views/administration/configuration/BomFormats.vue');
 const WelcomeMessage = () =>
   import('@/views/administration/configuration/WelcomeMessage.vue');
 const Email = () => import('@/views/administration/configuration/Email.vue');
-const Jira = () => import('@/views/administration/configuration/JiraConfig.vue');
+const Jira = () =>
+  import('@/views/administration/configuration/JiraConfig.vue');
 const InternalComponents = () =>
   import('@/views/administration/configuration/InternalComponents.vue');
 const TaskScheduler = () =>
@@ -342,7 +346,7 @@ function configRoutes() {
           name: 'Policy Violation Audit',
           component: PolicyViolationAudit,
           meta: {
-            title: i18n.t('message.policy_violation_audit'),
+            title: t('message.policy_violation_audit'),
             i18n: 'message.policy_violation_audit',
             sectionPath: '/policyViolationAudit',
             sectionName: 'Policy Violation Audit',
@@ -389,7 +393,7 @@ function configRoutes() {
               path: 'configuration/welcomeMessage',
               component: WelcomeMessage,
               meta: {
-                title: i18n.t('message.administration'),
+                title: t('message.administration'),
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',

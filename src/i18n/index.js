@@ -14,7 +14,10 @@ async function getDefaultLanguage() {
 
 function loadLocaleMessages() {
   // import default is needed otherwise 404 will be missing as well as it won't be the raw json reference
-  const locales = import.meta.glob('./locales/*.json', { eager: true, import: 'default'});
+  const locales = import.meta.glob('./locales/*.json', {
+    eager: true,
+    import: 'default',
+  });
   const messages = {};
   for (const [path, locale] of Object.entries(locales)) {
     const matched = path.match(/\/locales\/([A-Za-z0-9-_]+)\.json$/);
@@ -62,17 +65,16 @@ function matchLocale(requestedLocale) {
 }
 const i18n = createI18n({
   locale: 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  fallbackLocale: import.meta.env.VITE_APP_I18N_FALLBACK_LOCALE || 'en',
   messages: localeMessages,
 });
-
 
 getDefaultLanguage().then((defaultLanguage) => {
   const matchedLocale = matchLocale(
     (localStorage && localStorage.getItem('Locale')) ||
-    defaultLanguage ||
-    navigator.language ||
-    navigator.userLanguage,
+      defaultLanguage ||
+      navigator.language ||
+      navigator.userLanguage,
   );
   i18n.locale = matchedLocale;
 });
