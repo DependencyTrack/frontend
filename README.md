@@ -129,6 +129,14 @@ To do this, hover over the _No Translation_ item of a language, and click the gl
 
 ![Machine translation in i18n Ally](.github/images/i18n_i18n-ally-translate.png)
 
+# Custom Favicon Configuration
+You can configure a custom favicon for your Dependency-Track instance by setting the `DT_FAVICON_PATH` environment variable.
+
+# Example:
+`bash
+DT_FAVICON_PATH=/assets/favicon-production.ico
+
+
 ## Copyright & License
 
 Dependency-Track is Copyright (c) OWASP Foundation. All Rights Reserved.
