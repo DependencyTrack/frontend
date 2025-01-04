@@ -99,7 +99,7 @@
     "enable_default_template_override": "डिफ़ॉल्ट टेम्पलेट ओवरराइड सक्षम करें",
     "enable_email": "ईमेल सक्षम करें",
     "enable_index_consistency_check": "आवधिक संगतता जांच सक्षम करें",
-    "enable_svg_badge": "अप्रमाणित एसवीजी बैज एक्सेस सक्षम करें (बहिष्कृत)",
+    "enable_svg_badge": "अप्रमाणित एसवीजी बैज एक्सेस सक्षम करें",
     "enabled": "सक्रिय",
     "enabled_for_tags": "टैग के लिए सक्षम",
     "experimental": "प्रयोगात्मक",

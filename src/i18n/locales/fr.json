@@ -99,7 +99,7 @@
     "enable_default_template_override": "Activer le remplacement du modèle par défaut",
     "enable_email": "Activer l'envoi de courriels",
     "enable_index_consistency_check": "Activer le contrôle de cohérence périodique",
-    "enable_svg_badge": "Activer l'accès au badge SVG non authentifié (obsolète)",
+    "enable_svg_badge": "Activer l'accès au badge SVG non authentifié",
     "enabled": "Activé",
     "enabled_for_tags": "Activé pour les balises",
     "experimental": "Expérimental",

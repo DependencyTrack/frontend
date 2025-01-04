@@ -99,7 +99,7 @@
     "enable_default_template_override": "Habilitar substituição de modelo padrão",
     "enable_email": "Ativar e-mail",
     "enable_index_consistency_check": "Habilitar verificação periódica de consistência",
-    "enable_svg_badge": "Ativar acesso não autenticado ao crachá SVG (obsoleto)",
+    "enable_svg_badge": "Ativar acesso não autenticado ao crachá SVG",
     "enabled": "Habilitado",
     "enabled_for_tags": "Ativado para tags",
     "experimental": "Experimental",
