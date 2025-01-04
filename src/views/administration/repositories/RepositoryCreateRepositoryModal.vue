@@ -48,7 +48,6 @@
       :label="$t('admin.username')"
       input-group-size="mb-3"
       v-model="username"
-      rules="required"
       v-show="repository_authentication"
     />
 
