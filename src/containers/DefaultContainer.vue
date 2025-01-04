@@ -214,8 +214,8 @@ export default {
   },
   mounted() {
     if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
-//TODO VS reinstate
-//      this.$root.$emit('bv::show::modal', 'snapshotModal');
+      //TODO VS reinstate
+      //      this.$root.$emit('bv::show::modal', 'snapshotModal');
     }
 
     this.isSidebarMinimized =

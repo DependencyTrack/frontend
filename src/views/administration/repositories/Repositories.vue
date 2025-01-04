@@ -206,8 +206,10 @@ export default {
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
-                vulnerabilitiyMirroringEnabled: this.parseVulnerabilitiyMirroringEnabled(row),
-                vulnerabilityMirroringAliasSyncEnabled: this.parseVulnerabilityMirroringAliasSyncEnabled(row),
+                vulnerabilitiyMirroringEnabled:
+                  this.parseVulnerabilitiyMirroringEnabled(row),
+                vulnerabilityMirroringAliasSyncEnabled:
+                  this.parseVulnerabilityMirroringAliasSyncEnabled(row),
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -272,8 +274,10 @@ export default {
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
                     config: JSON.stringify({
-                      vulnerabilitiyMirroringEnabled: this.vulnerabilitiyMirroringEnabled,
-                      vulnerabilityMirroringAliasSyncEnabled: this.vulnerabilityMirroringAliasSyncEnabled,
+                      vulnerabilitiyMirroringEnabled:
+                        this.vulnerabilitiyMirroringEnabled,
+                      vulnerabilityMirroringAliasSyncEnabled:
+                        this.vulnerabilityMirroringAliasSyncEnabled,
                     }),
                     username: this.username,
                     password:

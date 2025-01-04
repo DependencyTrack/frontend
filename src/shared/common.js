@@ -226,8 +226,8 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(
       sourceInfo.url = 'https://github.com/cloudsecurityalliance/gsd-database';
       break;
     case 'COMPOSER':
-        sourceInfo.name = 'Composer';
-        sourceInfo.url = 'https://packagist.org/apidoc';
+      sourceInfo.name = 'Composer';
+      sourceInfo.url = 'https://packagist.org/apidoc';
       break;
     case 'VULNDB':
       sourceInfo.name = 'VulnDB';
