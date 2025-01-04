@@ -225,6 +225,10 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(
       sourceInfo.name = 'Global Security Database';
       sourceInfo.url = 'https://github.com/cloudsecurityalliance/gsd-database';
       break;
+    case 'COMPOSER':
+        sourceInfo.name = 'Composer';
+        sourceInfo.url = 'https://packagist.org/apidoc';
+      break;
     case 'VULNDB':
       sourceInfo.name = 'VulnDB';
       sourceInfo.url =
@@ -276,6 +280,16 @@ $common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
     if (vulnSource !== 'VULNDB' && alias.vulnDbId) {
       _resolvedAliases.push(
         $common.resolveSourceVulnInfo('VULNDB', alias.vulnDbId),
+      );
+    }
+    if (vulnSource !== 'DRUPAL' && alias.drupalId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('DRUPAL', alias.drupalId),
+      );
+    }
+    if (vulnSource !== 'COMPOSER' && alias.composerId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('COMPOSER', alias.composerId),
       );
     }
     return _resolvedAliases;
