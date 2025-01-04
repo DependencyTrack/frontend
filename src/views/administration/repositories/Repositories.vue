@@ -149,12 +149,21 @@ export default {
                   <b-col sm="6">
 
                     <div>
-                      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                      <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
                     </div>
                     <div>
-                     <c-switch color="primary" v-model="authenticationRequired" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+                      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                    </div>
+                    <div v-if="this.type === 'COMPOSER'">
+                      <c-switch color="primary" v-model="vulnerabilitiyMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_mirror_vulnerabilities')}}
+                    </div>
+                    <div v-show="vulnerabilitiyMirroringEnabled" v-if="this.type === 'COMPOSER'">
+                      <c-switch color="primary" v-model="vulnerabilityMirroringAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_mirror_vulnerability_aliases')}}
                     </div>
 
+                    <div>
+                      <c-switch color="primary" v-model="authenticationRequired" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+                    </div>
                     <div>
                       <b-validated-input-group-form-input
                         id="username" :label="$t('admin.username')"
@@ -176,10 +185,6 @@ export default {
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
 
-                    <div>
-                      <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
-                    </div>
-
                     <div style="text-align:right">
                        <b-button variant="outline-danger" @click="deleteRepository">{{ $t('admin.delete_repository') }}</b-button>
                     </div>
@@ -193,6 +198,7 @@ export default {
             data() {
               return {
                 repository: row,
+                type: row.type,
                 identifier: row.identifier,
                 url: row.url,
                 internal: row.internal,
@@ -200,6 +206,8 @@ export default {
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
+                vulnerabilitiyMirroringEnabled: this.parseVulnerabilitiyMirroringEnabled(row),
+                vulnerabilityMirroringAliasSyncEnabled: this.parseVulnerabilityMirroringAliasSyncEnabled(row),
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -217,8 +225,32 @@ export default {
               authenticationRequired() {
                 this.updateRepository();
               },
+              vulnerabilitiyMirroringEnabled() {
+                this.updateRepository();
+              },
+              vulnerabilityMirroringAliasSyncEnabled() {
+                this.updateRepository();
+              },
             },
             methods: {
+              parseVulnerabilitiyMirroringEnabled: function (repo) {
+                if (repo.config) {
+                  let value = JSON.parse(repo.config);
+                  if (value) {
+                    return value.vulnerabilitiyMirroringEnabled;
+                  }
+                  return null;
+                }
+              },
+              parseVulnerabilityMirroringAliasSyncEnabled: function (repo) {
+                if (repo.config) {
+                  let value = JSON.parse(repo.config);
+                  if (value) {
+                    return value.vulnerabilityMirroringAliasSyncEnabled;
+                  }
+                  return null;
+                }
+              },
               deleteRepository: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
                 this.axios
@@ -239,6 +271,10 @@ export default {
                     url: this.url,
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
+                    config: JSON.stringify({
+                      vulnerabilitiyMirroringEnabled: this.vulnerabilitiyMirroringEnabled,
+                      vulnerabilityMirroringAliasSyncEnabled: this.vulnerabilityMirroringAliasSyncEnabled,
+                    }),
                     username: this.username,
                     password:
                       this.password || 'HiddenDecryptedPropertyPlaceholder',

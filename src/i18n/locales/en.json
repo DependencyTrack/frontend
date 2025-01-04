@@ -212,6 +212,8 @@
     "repository_created": "Repository created",
     "repository_deleted": "Repository deleted",
     "repository_type": "Repository Type",
+    "repository_mirror_vulnerabilities": "Enable mirroring of Security Advisories",
+    "repository_mirror_vulnerability_aliases": "Enable Vulnerability alias synchronization",
     "required_confirmPassword": "Password confirmation is required and passwords must match",
     "required_email": "Email address is required",
     "required_fullname": "Fullname is required",
