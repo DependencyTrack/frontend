@@ -281,7 +281,9 @@
     "vulnsource_osv_base_url": "OSV-Basis-URL",
     "welcome_message": "Willkommensnachricht",
     "welcome_message_desc": "Passen Sie die Willkommensnachricht an, die auf der Startseite von Dependency-Track angezeigt wird, bevor sich Benutzer anmelden.",
-    "welcome_message_enable": "Willkommensnachricht aktivieren"
+    "welcome_message_enable": "Willkommensnachricht aktivieren",
+    "repository_mirror_vulnerabilities": "Aktivieren Sie die Spiegelung von Sicherheitshinweisen",
+    "repository_mirror_vulnerability_aliases": "Aktivieren Sie die Synchronisierung des Schwachstellen-Alias"
   },
   "condition": {
     "forbidden": "Verboten (403)",

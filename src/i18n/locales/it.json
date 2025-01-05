@@ -281,7 +281,9 @@
     "vulnsource_osv_base_url": "URL di base OSV",
     "welcome_message": "Messaggio di benvenuto",
     "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
-    "welcome_message_enable": "Abilita il messaggio di benvenuto"
+    "welcome_message_enable": "Abilita il messaggio di benvenuto",
+    "repository_mirror_vulnerabilities": "Abilita il mirroring degli avvisi di sicurezza",
+    "repository_mirror_vulnerability_aliases": "Abilita la sincronizzazione degli alias di vulnerabilità"
   },
   "condition": {
     "forbidden": "Proibito (403)",
