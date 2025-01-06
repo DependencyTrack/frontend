@@ -276,8 +276,7 @@ export default {
                     config: JSON.stringify({
                       advisoryMirroringEnabled:
                         this.vulnerabilitiyMirroringEnabled,
-                      advisoryAliasSyncEnabled:
-                        this.advisoryAliasSyncEnabled,
+                      advisoryAliasSyncEnabled: this.advisoryAliasSyncEnabled,
                     }),
                     username: this.username,
                     password:
