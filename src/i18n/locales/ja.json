@@ -282,8 +282,8 @@
     "welcome_message": "ウェルカムメッセージ",
     "welcome_message_desc": "ユーザーがサインインする前に、Dependency-Track の開始ページに表示されるウェルカム メッセージをカスタマイズします。",
     "welcome_message_enable": "ウェルカムメッセージを有効にする",
-    "repository_mirror_vulnerabilities": "セキュリティ アドバイザリのミラーリングを有効にする",
-    "repository_mirror_vulnerability_aliases": "脆弱性エイリアスの同期を有​​効にする"
+    "repository_advisory_alias_sync_enabled": "セキュリティ アドバイザリのエイリアス同期を有効にする",
+    "repository_advisory_mirroring_enabled": "セキュリティ アドバイザリのミラーリングを有効にする"
   },
   "condition": {
     "forbidden": "禁止 (403)",

@@ -282,8 +282,8 @@
     "welcome_message": "स्वागत संदेश",
     "welcome_message_desc": "उपयोगकर्ताओं के साइन इन करने से पहले डिपेंडेंसी-ट्रैक के आरंभ पृष्ठ पर दिखाई देने वाले स्वागत संदेश को अनुकूलित करें।",
     "welcome_message_enable": "स्वागत संदेश सक्षम करें",
-    "repository_mirror_vulnerabilities": "सुरक्षा सलाह को मिरर करना सक्षम करें",
-    "repository_mirror_vulnerability_aliases": "भेद्यता उपनाम सिंक्रनाइज़ेशन सक्षम करें"
+    "repository_advisory_alias_sync_enabled": "सुरक्षा सलाहकार उपनाम सिंक्रनाइज़ेशन सक्षम करें",
+    "repository_advisory_mirroring_enabled": "सुरक्षा सलाह को मिरर करना सक्षम करें"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",

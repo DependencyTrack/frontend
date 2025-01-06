@@ -282,8 +282,8 @@
     "welcome_message": "Message de bienvenue",
     "welcome_message_desc": "Personnalisez le message de bienvenue qui apparaît sur la page de démarrage de Dependency-Track avant que les utilisateurs ne se connectent.",
     "welcome_message_enable": "Activer le message de bienvenue",
-    "repository_mirror_vulnerabilities": "Activer la mise en miroir des avis de sécurité",
-    "repository_mirror_vulnerability_aliases": "Activer la synchronisation des alias de vulnérabilité"
+    "repository_advisory_alias_sync_enabled": "Activer la synchronisation des alias des avis de sécurité",
+    "repository_advisory_mirroring_enabled": "Activer la mise en miroir des avis de sécurité"
   },
   "condition": {
     "forbidden": "Interdit (403)",

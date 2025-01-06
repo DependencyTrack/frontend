@@ -282,8 +282,8 @@
     "welcome_message": "Приветственное сообщение",
     "welcome_message_desc": "Настройте приветственное сообщение, которое отображается на стартовой странице Dependency-Track перед входом пользователей.",
     "welcome_message_enable": "Включить приветственное сообщение",
-    "repository_mirror_vulnerabilities": "Включить зеркалирование рекомендаций по безопасности",
-    "repository_mirror_vulnerability_aliases": "Включить синхронизацию псевдонимов уязвимостей"
+    "repository_advisory_alias_sync_enabled": "Включить синхронизацию псевдонимов рекомендаций по безопасности",
+    "repository_advisory_mirroring_enabled": "Включить зеркалирование рекомендаций по безопасности"
   },
   "condition": {
     "forbidden": "Запрещено (403)",

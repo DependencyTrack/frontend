@@ -282,8 +282,8 @@
     "welcome_message": "Mensagem de boas-vindas",
     "welcome_message_desc": "Personalize a mensagem de boas-vindas que aparece na página inicial do Dependency-Track antes dos usuários fazerem login.",
     "welcome_message_enable": "Ativar mensagem de boas-vindas",
-    "repository_mirror_vulnerabilities": "Habilitar espelhamento de avisos de segurança",
-    "repository_mirror_vulnerability_aliases": "Habilitar sincronização de alias de vulnerabilidade"
+    "repository_advisory_alias_sync_enabled": "Habilitar sincronização de alias do Comunicado de Segurança",
+    "repository_advisory_mirroring_enabled": "Habilitar espelhamento de avisos de segurança"
   },
   "condition": {
     "forbidden": "Proibido (403)",

@@ -282,8 +282,8 @@
     "welcome_message": "欢迎辞",
     "welcome_message_desc": "自定义用户登录前 Dependency-Track 起始页上显示的欢迎消息。",
     "welcome_message_enable": "启用欢迎消息",
-    "repository_mirror_vulnerabilities": "启用安全公告的镜像",
-    "repository_mirror_vulnerability_aliases": "启用漏洞别名同步"
+    "repository_advisory_alias_sync_enabled": "启用安全建议别名同步",
+    "repository_advisory_mirroring_enabled": "启用安全公告的镜像"
   },
   "condition": {
     "forbidden": "禁止 (403)",

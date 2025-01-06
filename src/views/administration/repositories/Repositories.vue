@@ -155,10 +155,10 @@ export default {
                       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
                     </div>
                     <div v-if="this.type === 'COMPOSER'">
-                      <c-switch color="primary" v-model="vulnerabilitiyMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_mirror_vulnerabilities')}}
+                      <c-switch color="primary" v-model="advisoryMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_mirroring_enabled')}}
                     </div>
-                    <div v-show="vulnerabilitiyMirroringEnabled" v-if="this.type === 'COMPOSER'">
-                      <c-switch color="primary" v-model="vulnerabilityMirroringAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_mirror_vulnerability_aliases')}}
+                    <div v-show="advisoryMirroringEnabled" v-if="this.type === 'COMPOSER'">
+                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('repository_advisory_alias_sync_enabled')}}
                     </div>
 
                     <div>
@@ -206,10 +206,10 @@ export default {
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
-                vulnerabilitiyMirroringEnabled:
-                  this.parseVulnerabilitiyMirroringEnabled(row),
-                vulnerabilityMirroringAliasSyncEnabled:
-                  this.parseVulnerabilityMirroringAliasSyncEnabled(row),
+                advisoryMirroringEnabled:
+                  this.parseAdvisoryMirroringEnabled(row),
+                advisoryAliasSyncEnabled:
+                  this.parseAdvisoryAliasSyncEnabled(row),
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -227,28 +227,28 @@ export default {
               authenticationRequired() {
                 this.updateRepository();
               },
-              vulnerabilitiyMirroringEnabled() {
+              advisoryMirroringEnabled() {
                 this.updateRepository();
               },
-              vulnerabilityMirroringAliasSyncEnabled() {
+              advisoryAliasSyncEnabled() {
                 this.updateRepository();
               },
             },
             methods: {
-              parseVulnerabilitiyMirroringEnabled: function (repo) {
+              parseAdvisoryMirroringEnabled: function (repo) {
                 if (repo.config) {
                   let value = JSON.parse(repo.config);
                   if (value) {
-                    return value.vulnerabilitiyMirroringEnabled;
+                    return value.advisoryMirroringEnabled;
                   }
                   return null;
                 }
               },
-              parseVulnerabilityMirroringAliasSyncEnabled: function (repo) {
+              parseAdvisoryAliasSyncEnabled: function (repo) {
                 if (repo.config) {
                   let value = JSON.parse(repo.config);
                   if (value) {
-                    return value.vulnerabilityMirroringAliasSyncEnabled;
+                    return value.advisoryAliasSyncEnabled;
                   }
                   return null;
                 }
@@ -274,10 +274,10 @@ export default {
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
                     config: JSON.stringify({
-                      vulnerabilitiyMirroringEnabled:
+                      advisoryMirroringEnabled:
                         this.vulnerabilitiyMirroringEnabled,
-                      vulnerabilityMirroringAliasSyncEnabled:
-                        this.vulnerabilityMirroringAliasSyncEnabled,
+                      advisoryAliasSyncEnabled:
+                        this.advisoryAliasSyncEnabled,
                     }),
                     username: this.username,
                     password:
