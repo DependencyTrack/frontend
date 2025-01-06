@@ -208,6 +208,8 @@
     "reindex_vulnerable_software": "Software vulnerabile",
     "remove_api_key": "remove_api_key",
     "repositories": "Repository",
+    "repository_advisory_alias_sync_enabled": "Abilita la sincronizzazione degli alias degli avvisi di sicurezza",
+    "repository_advisory_mirroring_enabled": "Abilita il mirroring degli avvisi di sicurezza",
     "repository_authentication": "Autenticazione richiesta",
     "repository_created": "Archivio creato",
     "repository_deleted": "Archivio eliminato",
@@ -281,9 +283,7 @@
     "vulnsource_osv_base_url": "URL di base OSV",
     "welcome_message": "Messaggio di benvenuto",
     "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
-    "welcome_message_enable": "Abilita il messaggio di benvenuto",
-    "repository_advisory_alias_sync_enabled": "Abilita la sincronizzazione degli alias degli avvisi di sicurezza",
-    "repository_advisory_mirroring_enabled": "Abilita il mirroring degli avvisi di sicurezza"
+    "welcome_message_enable": "Abilita il messaggio di benvenuto"
   },
   "condition": {
     "forbidden": "Proibito (403)",

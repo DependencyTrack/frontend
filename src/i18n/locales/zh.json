@@ -208,6 +208,8 @@
     "reindex_vulnerable_software": "重新生成软件索引",
     "remove_api_key": "删除 API Key",
     "repositories": "存储库",
+    "repository_advisory_alias_sync_enabled": "启用安全建议别名同步",
+    "repository_advisory_mirroring_enabled": "启用安全公告的镜像",
     "repository_authentication": "存储库身份验证",
     "repository_created": "已创建存储库",
     "repository_deleted": "存储库已删除",
@@ -281,9 +283,7 @@
     "vulnsource_osv_base_url": "OSV 基本 URL",
     "welcome_message": "欢迎辞",
     "welcome_message_desc": "自定义用户登录前 Dependency-Track 起始页上显示的欢迎消息。",
-    "welcome_message_enable": "启用欢迎消息",
-    "repository_advisory_alias_sync_enabled": "启用安全建议别名同步",
-    "repository_advisory_mirroring_enabled": "启用安全公告的镜像"
+    "welcome_message_enable": "启用欢迎消息"
   },
   "condition": {
     "forbidden": "禁止 (403)",

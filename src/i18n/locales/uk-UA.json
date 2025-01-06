@@ -208,6 +208,8 @@
     "reindex_vulnerable_software": "Вразливе програмне забезпечення",
     "remove_api_key": "Видалити ключ API",
     "repositories": "Репозиторії",
+    "repository_advisory_alias_sync_enabled": "Увімкнути синхронізацію псевдонімів Security Advisory",
+    "repository_advisory_mirroring_enabled": "Увімкнути дзеркальне відображення повідомлень безпеки",
     "repository_authentication": "Потрібна автентифікація",
     "repository_created": "Репозиторій створено",
     "repository_deleted": "Репозиторій видалено",
@@ -281,9 +283,7 @@
     "vulnsource_osv_base_url": "Базовий URL OSV",
     "welcome_message": "Вітальне повідомлення",
     "welcome_message_desc": "Налаштуйте вітальне повідомлення, яке з’являється на початковій сторінці Dependency-Track перед входом користувачів.",
-    "welcome_message_enable": "Увімкнути вітальне повідомлення",
-    "repository_advisory_alias_sync_enabled": "Увімкнути синхронізацію псевдонімів Security Advisory",
-    "repository_advisory_mirroring_enabled": "Увімкнути дзеркальне відображення повідомлень безпеки"
+    "welcome_message_enable": "Увімкнути вітальне повідомлення"
   },
   "condition": {
     "forbidden": "Заборонено (403)",

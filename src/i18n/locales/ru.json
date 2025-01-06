@@ -208,6 +208,8 @@
     "reindex_vulnerable_software": "Уязвимое ПО",
     "remove_api_key": "Удалить API-ключ",
     "repositories": "Репозитории",
+    "repository_advisory_alias_sync_enabled": "Включить синхронизацию псевдонимов рекомендаций по безопасности",
+    "repository_advisory_mirroring_enabled": "Включить зеркалирование рекомендаций по безопасности",
     "repository_authentication": "Требуется аутентификация",
     "repository_created": "Репозиторий создан",
     "repository_deleted": "Репозиторий удален",
@@ -281,9 +283,7 @@
     "vulnsource_osv_base_url": "Базовый URL OSV",
     "welcome_message": "Приветственное сообщение",
     "welcome_message_desc": "Настройте приветственное сообщение, которое отображается на стартовой странице Dependency-Track перед входом пользователей.",
-    "welcome_message_enable": "Включить приветственное сообщение",
-    "repository_advisory_alias_sync_enabled": "Включить синхронизацию псевдонимов рекомендаций по безопасности",
-    "repository_advisory_mirroring_enabled": "Включить зеркалирование рекомендаций по безопасности"
+    "welcome_message_enable": "Включить приветственное сообщение"
   },
   "condition": {
     "forbidden": "Запрещено (403)",
