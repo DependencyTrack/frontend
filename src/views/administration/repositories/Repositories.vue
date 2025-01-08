@@ -158,7 +158,7 @@ export default {
                       <c-switch color="primary" v-model="advisoryMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_mirroring_enabled')}}
                     </div>
                     <div v-show="advisoryMirroringEnabled" v-if="this.type === 'COMPOSER'">
-                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('repository_advisory_alias_sync_enabled')}}
+                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_alias_sync_enabled')}}
                     </div>
 
                     <div>
