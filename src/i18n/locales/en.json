@@ -283,7 +283,12 @@
     "vulnsource_osv_base_url": "OSV Base URL",
     "welcome_message": "Welcome Message",
     "welcome_message_desc": "Customize the welcome message that appears on the start page of Dependency-Track before users sign in.",
-    "welcome_message_enable": "Enable welcome message"
+    "welcome_message_enable": "Enable welcome message",
+    "composer_advisories": "Composer Security Advisories",
+    "vulnsource_composer_advisories_desc": "The Composer ecosystem provides security advisories via its Composer repositories. Examples are https://packagist.org and https://packages.drupal.org/8. These security advisories are used by Composer to provide the composer audit command.",
+    "vulnsource_composer_to_enable": "Composer advisory mirroring can be enabled for a repository via it configuration:",
+    "composer_repositories": "Composer Repositories",
+    "documentation": "Documentation"
   },
   "condition": {
     "forbidden": "Forbidden (403)",
