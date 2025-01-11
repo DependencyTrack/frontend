@@ -152,6 +152,10 @@ export default {
       this.currentPage = 1;
       this.refreshTable();
     },
+    vulnId() {
+      // update url when vulnId changes, will trigger table refresh
+      this.$refs.table.refreshOptions({ ...this.options, url: this.apiUrl() });
+    },
   },
 };
 </script>
