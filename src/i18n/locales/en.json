@@ -69,7 +69,7 @@
     "create_user": "Create User",
     "default": "Default",
     "default_language": "Default Language",
-    "default_language_desc": "Default language, which is used for everyone, when they didn't specify one. Langauge from Browser will be used, when this is disabled.",
+    "default_language_desc": "Default language, which is used for everyone, when they didn't specify one. Language from Browser will be used, when this is disabled.",
     "default_language_enable": "Enable Default language",
     "default_template_restored": "Default templates restored",
     "defectdojo": "DefectDojo",
