@@ -154,7 +154,7 @@ export default {
     },
     vulnId() {
       // update url when vulnId changes, will trigger table refresh
-      this.$refs.table.refreshOptions({...this.options, url: this.apiUrl()});
+      this.$refs.table.refreshOptions({ ...this.options, url: this.apiUrl() });
     },
   },
 };
