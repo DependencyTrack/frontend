@@ -217,6 +217,11 @@ export default {
                 },
               };
             },
+            // TODO remove this dead code
+            // created() {
+            //   this.parseAdvisoryMirroringEnabled(this.repository);
+            //   this.parseAdvisoryAliasSyncEnabled(this.repository);
+            // },
             watch: {
               internal() {
                 this.updateRepository();
@@ -274,8 +279,7 @@ export default {
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
                     config: JSON.stringify({
-                      advisoryMirroringEnabled:
-                        this.vulnerabilitiyMirroringEnabled,
+                      advisoryMirroringEnabled: this.advisoryMirroringEnabled,
                       advisoryAliasSyncEnabled: this.advisoryAliasSyncEnabled,
                     }),
                     username: this.username,
