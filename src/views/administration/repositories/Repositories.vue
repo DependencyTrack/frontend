@@ -89,6 +89,14 @@ export default {
           },
         },
         {
+          title: this.$t('admin.description'),
+          field: 'description',
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
           title: this.$t('admin.internal'),
           field: 'internal',
           class: 'tight',
@@ -145,6 +153,13 @@ export default {
                       type="url" v-model="url"
                       autofocus="true"
                       v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+                    <b-validated-input-group-form-input
+                      id="description" :label="$t('admin.description')"
+                      input-group-size="mb-3"
+                      type="text" v-model="description"
+                      autofocus="true"
+                      v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+
                   </b-col>
                   <b-col sm="6">
 
@@ -200,6 +215,7 @@ export default {
                 repository: row,
                 type: row.type,
                 identifier: row.identifier,
+                description: row.description,
                 url: row.url,
                 internal: row.internal,
                 authenticationRequired: row.authenticationRequired,
@@ -275,6 +291,7 @@ export default {
                 this.axios
                   .post(url, {
                     identifier: this.identifier,
+                    description: this.description,
                     url: this.url,
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,

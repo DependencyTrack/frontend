@@ -209,7 +209,6 @@
     "remove_api_key": "删除 API Key",
     "repositories": "存储库",
     "repository_advisory_alias_sync_enabled": "启用安全建议别名同步",
-    "repository_advisory_mirroring_enabled": "启用安全公告的镜像",
     "repository_authentication": "存储库身份验证",
     "repository_created": "已创建存储库",
     "repository_deleted": "存储库已删除",

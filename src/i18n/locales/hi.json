@@ -209,7 +209,6 @@
     "remove_api_key": "remove_api_key",
     "repositories": "डेटा संग्रह स्थान",
     "repository_advisory_alias_sync_enabled": "सुरक्षा सलाहकार उपनाम सिंक्रनाइज़ेशन सक्षम करें",
-    "repository_advisory_mirroring_enabled": "सुरक्षा सलाह को मिरर करना सक्षम करें",
     "repository_authentication": "प्रमाणित करना",
     "repository_created": "रिपोजिटरी बनाई गई",
     "repository_deleted": "रिपॉजिटरी हटा दी गई",

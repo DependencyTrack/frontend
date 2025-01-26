@@ -209,7 +209,6 @@
     "remove_api_key": "Retirer la clé d'API",
     "repositories": "Dépôts",
     "repository_advisory_alias_sync_enabled": "Activer la synchronisation des alias des avis de sécurité",
-    "repository_advisory_mirroring_enabled": "Activer la mise en miroir des avis de sécurité",
     "repository_authentication": "Authentification requise",
     "repository_created": "Dépôt créé",
     "repository_deleted": "Dépôt supprimé",

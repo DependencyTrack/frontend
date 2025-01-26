@@ -209,7 +209,6 @@
     "remove_api_key": "remove_api_key",
     "repositories": "Repository",
     "repository_advisory_alias_sync_enabled": "Abilita la sincronizzazione degli alias degli avvisi di sicurezza",
-    "repository_advisory_mirroring_enabled": "Abilita il mirroring degli avvisi di sicurezza",
     "repository_authentication": "Autenticazione richiesta",
     "repository_created": "Archivio creato",
     "repository_deleted": "Archivio eliminato",

@@ -209,7 +209,6 @@
     "remove_api_key": "Видалити ключ API",
     "repositories": "Репозиторії",
     "repository_advisory_alias_sync_enabled": "Увімкнути синхронізацію псевдонімів Security Advisory",
-    "repository_advisory_mirroring_enabled": "Увімкнути дзеркальне відображення повідомлень безпеки",
     "repository_authentication": "Потрібна автентифікація",
     "repository_created": "Репозиторій створено",
     "repository_deleted": "Репозиторій видалено",

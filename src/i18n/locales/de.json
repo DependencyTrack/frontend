@@ -209,7 +209,6 @@
     "remove_api_key": "remove_api_key",
     "repositories": "Repositorys",
     "repository_advisory_alias_sync_enabled": "Aktivieren Sie die Synchronisierung des Sicherheitshinweis-Alias",
-    "repository_advisory_mirroring_enabled": "Aktivieren Sie die Spiegelung von Sicherheitshinweisen",
     "repository_authentication": "Authentifizierung erforderlich",
     "repository_created": "Repository erstellt",
     "repository_deleted": "Repository gelöscht",

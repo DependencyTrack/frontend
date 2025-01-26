@@ -209,7 +209,6 @@
     "remove_api_key": "remove_api_key",
     "repositories": "リポジトリ",
     "repository_advisory_alias_sync_enabled": "セキュリティ アドバイザリのエイリアス同期を有効にする",
-    "repository_advisory_mirroring_enabled": "セキュリティ アドバイザリのミラーリングを有効にする",
     "repository_authentication": "認証が必要",
     "repository_created": "リポジトリが作成されました",
     "repository_deleted": "リポジトリが削除されました",

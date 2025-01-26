@@ -209,7 +209,6 @@
     "remove_api_key": "remove_api_key",
     "repositories": "Repozytoria",
     "repository_advisory_alias_sync_enabled": "Włącz synchronizację aliasów Security Advisory",
-    "repository_advisory_mirroring_enabled": "Włącz dublowanie porad dotyczących bezpieczeństwa",
     "repository_authentication": "Wymagane uwierzytelnienie",
     "repository_created": "Repozytorium zostało utworzone",
     "repository_deleted": "Repozytorium usunięte",

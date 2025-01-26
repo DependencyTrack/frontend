@@ -209,7 +209,6 @@
     "remove_api_key": "Удалить API-ключ",
     "repositories": "Репозитории",
     "repository_advisory_alias_sync_enabled": "Включить синхронизацию псевдонимов рекомендаций по безопасности",
-    "repository_advisory_mirroring_enabled": "Включить зеркалирование рекомендаций по безопасности",
     "repository_authentication": "Требуется аутентификация",
     "repository_created": "Репозиторий создан",
     "repository_deleted": "Репозиторий удален",
