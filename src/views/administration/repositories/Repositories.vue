@@ -34,6 +34,8 @@ import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import common from '../../../shared/common';
 import EventBus from '../../../shared/eventbus';
 import RepositoryCreateRepositoryModal from './RepositoryCreateRepositoryModal';
+import { parseAdvisoryMirroringEnabled } from '@/shared/utils';
+import { parseAdvisoryAliasSyncEnabled } from '@/shared/utils';
 
 export default {
   props: {
@@ -123,6 +125,30 @@ export default {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
+        {
+          title: this.$t('admin.repository_advisory_mirroring_enabled'),
+          field: 'advisoryMirroringEnabled',
+          class: 'tight',
+          sortable: true,
+          visible: this.type === 'COMPOSER',
+          formatter(value, row, index) {
+            return parseAdvisoryMirroringEnabled(row) === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
+          },
+        },
+        {
+          title: this.$t('admin.repository_advisory_alias_sync_enabled'),
+          field: 'advisoryAliasSyncEnabled',
+          class: 'tight',
+          sortable: true,
+          visible: this.type === 'COMPOSER',
+          formatter(value, row, index) {
+            return parseAdvisoryAliasSyncEnabled(row) === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
+          },
+        },
       ],
       data: [],
       options: {
@@ -170,10 +196,10 @@ export default {
                       <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
                     </div>
                     <div v-if="this.type === 'COMPOSER'">
-                      <c-switch color="primary" v-model="advisoryMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_mirroring_enabled')}}
+                      <c-switch color="primary" v-model="advisoryMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_mirroring_toggle')}}
                     </div>
                     <div v-show="advisoryMirroringEnabled" v-if="this.type === 'COMPOSER'">
-                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_alias_sync_enabled')}}
+                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_alias_sync_toggle')}}
                     </div>
 
                     <div>
@@ -222,10 +248,8 @@ export default {
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
-                advisoryMirroringEnabled:
-                  this.parseAdvisoryMirroringEnabled(row),
-                advisoryAliasSyncEnabled:
-                  this.parseAdvisoryAliasSyncEnabled(row),
+                advisoryMirroringEnabled: parseAdvisoryMirroringEnabled(row),
+                advisoryAliasSyncEnabled: parseAdvisoryAliasSyncEnabled(row),
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -233,11 +257,6 @@ export default {
                 },
               };
             },
-            // TODO remove this dead code
-            // created() {
-            //   this.parseAdvisoryMirroringEnabled(this.repository);
-            //   this.parseAdvisoryAliasSyncEnabled(this.repository);
-            // },
             watch: {
               internal() {
                 this.updateRepository();
@@ -256,24 +275,6 @@ export default {
               },
             },
             methods: {
-              parseAdvisoryMirroringEnabled: function (repo) {
-                if (repo.config) {
-                  let value = JSON.parse(repo.config);
-                  if (value) {
-                    return value.advisoryMirroringEnabled;
-                  }
-                  return null;
-                }
-              },
-              parseAdvisoryAliasSyncEnabled: function (repo) {
-                if (repo.config) {
-                  let value = JSON.parse(repo.config);
-                  if (value) {
-                    return value.advisoryAliasSyncEnabled;
-                  }
-                  return null;
-                }
-              },
               deleteRepository: function () {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
                 this.axios

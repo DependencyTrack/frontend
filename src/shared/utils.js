@@ -128,6 +128,34 @@ export function loadUserPreferencesForBootstrapTable(_this, id, columns) {
   });
 }
 
+/**
+ * Parses advisoryMirroringEnabled from repository.config.
+ * Needed in multiple places, so extracted to a common function.
+ */
+export function parseAdvisoryMirroringEnabled(repo) {
+  if (repo.config) {
+    let value = JSON.parse(repo.config);
+    if (value) {
+      return value.advisoryMirroringEnabled;
+    }
+    return false;
+  }
+}
+
+/**
+ * Parses parseAdvisoryAliasSyncEnabled from repository.config.
+ * Needed in multiple places, so extracted to a common function.
+ */
+export function parseAdvisoryAliasSyncEnabled(repo) {
+  if (repo.config) {
+    let value = JSON.parse(repo.config);
+    if (value) {
+      return value.advisoryAliasSyncEnabled;
+    }
+    return false;
+  }
+}
+
 export function compareVersions(v1, v2) {
   if (!v1) {
     return 1;
