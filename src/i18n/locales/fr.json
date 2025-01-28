@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "URL de base OSV",
     "welcome_message": "Message de bienvenue",
     "welcome_message_desc": "Personnalisez le message de bienvenue qui apparaît sur la page de démarrage de Dependency-Track avant que les utilisateurs ne se connectent.",
-    "welcome_message_enable": "Activer le message de bienvenue"
+    "welcome_message_enable": "Activer le message de bienvenue",
+    "composer_advisories": "Conseils des compositeurs (bêta)",
+    "composer_repositories": "Référentiels des compositeurs",
+    "description": "Description",
+    "documentation": "Documentation",
+    "repository_advisory_alias_sync_toggle": "Activer la synchronisation des alias consultatifs de la sécurité",
+    "repository_advisory_mirroring_enabled": "Synchronisation consultative",
+    "repository_advisory_mirroring_toggle": "Activer le reflétement des avis de sécurité (bêta)",
+    "vulnsource_composer_advisories_desc": "L'écosystème du compositeur fournit des avis de sécurité via ses référentiels de compositeurs. \nLes exemples sont https://packagist.org et https://packages.drupal.org/8. \nCes avis de sécurité sont utilisés par le compositeur pour fournir la commande d'audit compositeur.",
+    "vulnsource_composer_to_enable": "La mise en miroir consultative des compositeurs peut être activée pour un référentiel via sa configuration:"
   },
   "condition": {
     "forbidden": "Interdit (403)",

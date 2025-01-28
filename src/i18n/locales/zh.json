@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "OSV 基本 URL",
     "welcome_message": "欢迎辞",
     "welcome_message_desc": "自定义用户登录前 Dependency-Track 起始页上显示的欢迎消息。",
-    "welcome_message_enable": "启用欢迎消息"
+    "welcome_message_enable": "启用欢迎消息",
+    "composer_advisories": "作曲家咨询（Beta）",
+    "composer_repositories": "作曲家存储库",
+    "description": "描述",
+    "documentation": "文档",
+    "repository_advisory_alias_sync_toggle": "启用安全咨询别名同步",
+    "repository_advisory_mirroring_enabled": "咨询同步",
+    "repository_advisory_mirroring_toggle": "启用安全咨询的镜像（Beta）",
+    "vulnsource_composer_advisories_desc": "作曲家生态系统通过其作曲家存储库提供安全咨询。\n示例是https://packagist.org和https://packages.drupal.org/8。\n作曲家使用这些安全咨询来提供作曲家审计命令。",
+    "vulnsource_composer_to_enable": "可以通过其配置来启用Composer Advisory Rimeroring的镜像："
   },
   "condition": {
     "forbidden": "禁止 (403)",

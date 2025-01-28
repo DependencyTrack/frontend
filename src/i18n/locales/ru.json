@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "Базовый URL OSV",
     "welcome_message": "Приветственное сообщение",
     "welcome_message_desc": "Настройте приветственное сообщение, которое отображается на стартовой странице Dependency-Track перед входом пользователей.",
-    "welcome_message_enable": "Включить приветственное сообщение"
+    "welcome_message_enable": "Включить приветственное сообщение",
+    "composer_advisories": "Консультанты композиторов (бета)",
+    "composer_repositories": "Репозитории композитора",
+    "description": "Описание",
+    "documentation": "Документация",
+    "repository_advisory_alias_sync_toggle": "Включить синхронизацию консультативных консультаций по обеспечению безопасности",
+    "repository_advisory_mirroring_enabled": "Консультативная синхронизация",
+    "repository_advisory_mirroring_toggle": "Включить зеркалирование консультаций по безопасности (бета)",
+    "vulnsource_composer_advisories_desc": "Композиторная экосистема предоставляет рекомендации по обеспечению безопасности через свои репозитории композитора. \nПримерами являются https://packagist.org и https://packages.drupal.org/8. \nЭти рекомендации по безопасности используются композитором для предоставления команды аудита композитора.",
+    "vulnsource_composer_to_enable": "Консультативное зеркалирование композитора может быть включено для репозитория через его конфигурацию:"
   },
   "condition": {
     "forbidden": "Запрещено (403)",

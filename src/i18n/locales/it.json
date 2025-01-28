@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "URL di base OSV",
     "welcome_message": "Messaggio di benvenuto",
     "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
-    "welcome_message_enable": "Abilita il messaggio di benvenuto"
+    "welcome_message_enable": "Abilita il messaggio di benvenuto",
+    "composer_advisories": "Composir Advisories (beta)",
+    "composer_repositories": "Repository del compositore",
+    "description": "Descrizione",
+    "documentation": "Documentazione",
+    "repository_advisory_alias_sync_toggle": "Abilita la sincronizzazione alias di consulenza sulla sicurezza",
+    "repository_advisory_mirroring_enabled": "Sincronizzazione consultiva",
+    "repository_advisory_mirroring_toggle": "Abilita Mirroring of Security Advisories (Beta)",
+    "vulnsource_composer_advisories_desc": "L'ecosistema compositore fornisce consulenze sulla sicurezza tramite i suoi repository compositori. \nEsempi sono https://packagist.org e https://packages.drupal.org/8. \nQuesti avvisi di sicurezza vengono utilizzati dal compositore per fornire il comando di audit compositore.",
+    "vulnsource_composer_to_enable": "Il mirroring di consulenza compositore può essere abilitato per un repository tramite la sua configurazione:"
   },
   "condition": {
     "forbidden": "Proibito (403)",

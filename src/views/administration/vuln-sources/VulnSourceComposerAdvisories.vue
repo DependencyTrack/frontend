@@ -10,7 +10,7 @@
         {{ $t('admin.composer_repositories') }} </a
       >.
       <hr />
-      {{ $t('admin.documentation') }}
+      {{ $t('admin.documentation') }}:
       <a href="https://docs.dependencytrack.org/datasources/composer/"
         >https://docs.dependencytrack.org/datasources/composer/</a
       >.

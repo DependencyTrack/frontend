@@ -282,7 +282,14 @@
     "vulnsource_osv_base_url": "Базовий URL OSV",
     "welcome_message": "Вітальне повідомлення",
     "welcome_message_desc": "Налаштуйте вітальне повідомлення, яке з’являється на початковій сторінці Dependency-Track перед входом користувачів.",
-    "welcome_message_enable": "Увімкнути вітальне повідомлення"
+    "welcome_message_enable": "Увімкнути вітальне повідомлення",
+    "composer_advisories": "Консультації композитора (бета)",
+    "composer_repositories": "Сховища композитора",
+    "description": "Опис",
+    "documentation": "Документація",
+    "repository_advisory_alias_sync_toggle": "Увімкнути консультаційну синхронізацію консультацій з безпеки",
+    "repository_advisory_mirroring_enabled": "Консультативна синхронізація",
+    "vulnsource_composer_to_enable": "Консультаційне дзеркальне відображення композитора може бути включене для сховища за допомогою його конфігурації:"
   },
   "condition": {
     "forbidden": "Заборонено (403)",

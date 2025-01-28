@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "OSV बेस यूआरएल",
     "welcome_message": "स्वागत संदेश",
     "welcome_message_desc": "उपयोगकर्ताओं के साइन इन करने से पहले डिपेंडेंसी-ट्रैक के आरंभ पृष्ठ पर दिखाई देने वाले स्वागत संदेश को अनुकूलित करें।",
-    "welcome_message_enable": "स्वागत संदेश सक्षम करें"
+    "welcome_message_enable": "स्वागत संदेश सक्षम करें",
+    "composer_advisories": "संगीतकार सलाह (बीटा)",
+    "composer_repositories": "संगीतकार रिपॉजिटरी",
+    "description": "विवरण",
+    "documentation": "प्रलेखन",
+    "repository_advisory_alias_sync_toggle": "सुरक्षा सलाहकार उपनाम सिंक्रनाइज़ेशन सक्षम करें",
+    "repository_advisory_mirroring_enabled": "सलाहकार सिंक",
+    "repository_advisory_mirroring_toggle": "सुरक्षा सलाह (बीटा) के मिररिंग को सक्षम करें",
+    "vulnsource_composer_advisories_desc": "संगीतकार पारिस्थितिकी तंत्र अपने संगीतकार रिपॉजिटरी के माध्यम से सुरक्षा सलाह प्रदान करता है। \nउदाहरण हैं https://packagist.org और https://packages.drupal.org/8। \nइन सुरक्षा सलाहकारों का उपयोग संगीतकार द्वारा संगीतकार ऑडिट कमांड प्रदान करने के लिए किया जाता है।",
+    "vulnsource_composer_to_enable": "संगीतकार सलाहकार मिररिंग को इसके कॉन्फ़िगरेशन के माध्यम से एक रिपॉजिटरी के लिए सक्षम किया जा सकता है:"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",

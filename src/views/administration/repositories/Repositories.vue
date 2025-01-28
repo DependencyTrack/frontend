@@ -34,8 +34,7 @@ import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import common from '../../../shared/common';
 import EventBus from '../../../shared/eventbus';
 import RepositoryCreateRepositoryModal from './RepositoryCreateRepositoryModal';
-import { parseAdvisoryMirroringEnabled } from '@/shared/utils';
-import { parseAdvisoryAliasSyncEnabled } from '@/shared/utils';
+import { parseRepositoryConfig } from '@/shared/utils';
 
 export default {
   props: {
@@ -132,7 +131,7 @@ export default {
           sortable: true,
           visible: this.type === 'COMPOSER',
           formatter(value, row, index) {
-            return parseAdvisoryMirroringEnabled(row) === true
+            return parseRepositoryConfig(row).advisoryMirroringEnabled === true
               ? '<i class="fa fa-check-square-o" />'
               : '';
           },
@@ -144,7 +143,7 @@ export default {
           sortable: true,
           visible: this.type === 'COMPOSER',
           formatter(value, row, index) {
-            return parseAdvisoryAliasSyncEnabled(row) === true
+            return parseRepositoryConfig(row).advisoryAliasSyncEnabled === true
               ? '<i class="fa fa-check-square-o" />'
               : '';
           },
@@ -248,8 +247,10 @@ export default {
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
-                advisoryMirroringEnabled: parseAdvisoryMirroringEnabled(row),
-                advisoryAliasSyncEnabled: parseAdvisoryAliasSyncEnabled(row),
+                advisoryMirroringEnabled:
+                  parseRepositoryConfig(row).advisoryMirroringEnabled,
+                advisoryAliasSyncEnabled:
+                  parseRepositoryConfig(row).advisoryAliasSyncEnabled,
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',

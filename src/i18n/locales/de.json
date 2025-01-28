@@ -282,7 +282,16 @@
     "vulnsource_osv_base_url": "OSV-Basis-URL",
     "welcome_message": "Willkommensnachricht",
     "welcome_message_desc": "Passen Sie die Willkommensnachricht an, die auf der Startseite von Dependency-Track angezeigt wird, bevor sich Benutzer anmelden.",
-    "welcome_message_enable": "Willkommensnachricht aktivieren"
+    "welcome_message_enable": "Willkommensnachricht aktivieren",
+    "composer_advisories": "Komponisten -Ratschläge (Beta)",
+    "composer_repositories": "Komponisten -Repositories",
+    "description": "Beschreibung",
+    "documentation": "Dokumentation",
+    "repository_advisory_alias_sync_toggle": "Aktivieren Sie die Alias ​​-Synchronisation von Sicherheitsberatungen",
+    "repository_advisory_mirroring_enabled": "Beratungssynchronisation",
+    "repository_advisory_mirroring_toggle": "Aktivieren Sie die Spiegelung von Sicherheitsanwälten (Beta)",
+    "vulnsource_composer_advisories_desc": "Das Komponist -Ökosystem bietet Sicherheitsberatungen über seine Komponisten -Repositorys an. \nBeispiele sind https://packagist.org und https://packages.drupal.org/8. \nDiese Sicherheitsanwälte werden vom Komponisten verwendet, um den Befehl Composer Audit bereitzustellen.",
+    "vulnsource_composer_to_enable": "Die Komponisten -Beratungsspiegelung kann für ein Repository über seine Konfiguration aktiviert werden:"
   },
   "condition": {
     "forbidden": "Verboten (403)",
