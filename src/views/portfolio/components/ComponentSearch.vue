@@ -279,7 +279,7 @@ export default {
         },
         {
           title: this.$t('message.swid_tagid'),
-          field: 'swid',
+          field: 'swidTagId',
           sortable: true,
           formatter(value, row, index) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
