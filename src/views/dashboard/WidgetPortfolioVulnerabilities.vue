@@ -16,7 +16,7 @@ export default {
       let chartLabels = [];
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
-        chartLabels.push(common.formatTimestamp(metrics[i].firstOccurrence));
+        chartLabels.push(metrics[i].firstOccurrence);
         chartData.push(metrics[i].vulnerabilities);
       }
 
@@ -39,6 +39,14 @@ export default {
           tooltips: {
             enabled: false,
             custom: CustomTooltips,
+            callbacks: {
+              title: function (tooltipItems, data) {
+                return common.formatTimestamp(
+                  data.labels[tooltipItems[0].index],
+                  true,
+                );
+              },
+            },
           },
           maintainAspectRatio: false,
           legend: {

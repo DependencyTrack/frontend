@@ -21,7 +21,7 @@ export default {
       let nonAffectedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
-        labels.push(common.formatTimestamp(metrics[i].firstOccurrence));
+        labels.push(metrics[i].firstOccurrence);
         totalData.push(metrics[i].projects);
         affectedData.push(metrics[i].vulnerableProjects);
         nonAffectedData.push(
@@ -29,7 +29,7 @@ export default {
         );
 
         if (i === metrics.length - 1) {
-          labels.push(common.formatTimestamp(metrics[i].lastOccurrence));
+          labels.push(metrics[i].lastOccurrence);
           totalData.push(metrics[i].projects);
           affectedData.push(metrics[i].vulnerableProjects);
           nonAffectedData.push(
@@ -79,6 +79,12 @@ export default {
                     chart.data.datasets[tooltipItem.datasetIndex].borderColor,
                 };
               },
+              title: function (tooltipItems, data) {
+                return common.formatTimestamp(
+                  data.labels[tooltipItems[0].index],
+                  true,
+                );
+              },
             },
           },
           maintainAspectRatio: false,
@@ -90,6 +96,13 @@ export default {
               {
                 gridLines: {
                   drawOnChartArea: false,
+                },
+                ticks: {
+                  callback: function (value, index) {
+                    return common.formatTimestamp(
+                      this.chart.data.labels[index],
+                    );
+                  },
                 },
               },
             ],
