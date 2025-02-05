@@ -1,11 +1,34 @@
 <template>
   <b-list-group-item class="flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
-      <span class="text-monospace">{{ apiKey.key }}</span>
+      <span class="text-monospace">{{ apiKey.maskedKey }}</span>
       <div class="d-flex">
+        <div v-if="apiKey.legacy">
+          <span
+            class="ml-3"
+            style="float: right"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            v-b-tooltip.hover
+            :title="$t('admin.old_key_format')"
+            ><i
+              class="fa fa-exclamation-triangle status-warning"
+              aria-hidden="true"
+            ></i
+          ></span>
+        </div>
         <b-button
           size="sm"
-          class="action-icon"
+          class="action-icon ml-3"
+          v-on:click="$emit('regenerateClicked')"
+          v-b-tooltip.hover
+          :title="$t('admin.regenerate_api_key_title')"
+        >
+          <span class="fa fa-repeat"></span>
+        </b-button>
+        <b-button
+          size="sm"
+          class="action-icon ml-3"
           v-b-tooltip.hover
           v-b-modal="`editApiKeyCommentModal-${keyId}`"
           :title="$t('admin.edit_api_key_comment')"
@@ -58,7 +81,7 @@ export default {
   },
   computed: {
     keyId: function () {
-      return MurmurHash2(this.apiKey.key).result();
+      return this.apiKey.publicId;
     },
     comment: function () {
       return this.apiKey.comment ? this.apiKey.comment : 'No comment';
@@ -97,6 +120,10 @@ export default {
 }
 
 .action-icon .fa-edit {
+  color: var(--secondary);
+}
+
+.action-icon .fa-repeat {
   color: var(--secondary);
 }
 
