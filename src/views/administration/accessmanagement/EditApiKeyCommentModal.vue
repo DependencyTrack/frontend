@@ -53,7 +53,7 @@ export default {
     updateComment: function () {
       this.axios
         .post(
-          `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${this.apiKey.key}/comment`,
+          `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${this.apiKey.publicId}/comment`,
           this.comment,
           {
             headers: {
