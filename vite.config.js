@@ -13,4 +13,16 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
+  test: {
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/**/*.{js,vue}'],
+      exclude: [
+        '**/*.{spec,test,cy}.js',
+        'cypress/**/*.*',
+        'node_modules/**/*.*',
+      ],
+    },
+  },
 });

@@ -34,12 +34,12 @@
     />
 
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button size="md" variant="primary" @click="updateUser()">{{
-        $t('message.update')
-      }}</b-button>
+      <b-button size="md" variant="secondary" @click="cancel()"
+        >{{ $t('message.close') }}
+      </b-button>
+      <b-button size="md" variant="primary" @click="updateUser()"
+        >{{ $t('message.update') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
@@ -48,12 +48,15 @@
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
 import globalVarsMixin from '@/mixins/globalVarsMixin';
 import EventBus from '@/shared/eventbus';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
   name: 'ProfileEditModal',
   mixins: [globalVarsMixin],
   components: {
     BInputGroupFormInput,
+    BModal,
+    BButton,
   },
   data: () => {
     return {
