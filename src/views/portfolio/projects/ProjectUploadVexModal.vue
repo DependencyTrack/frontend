@@ -11,10 +11,10 @@
       v-model="file"
       class="mb-2"
       :placeholder="$t('message.no_file_chosen')"
-      :browseText="$t('message.browse')"
+      :browse-text="$t('message.browse')"
     ></b-form-file>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -33,8 +33,14 @@
 </template>
 
 <script>
+import { BButton, BFormFile, BModal } from 'bootstrap-vue';
+
 export default {
-  name: 'ProjectUploadVexModal',
+  components: {
+    BModal,
+    BFormFile,
+    BButton,
+  },
   props: {
     uuid: String,
   },

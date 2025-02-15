@@ -59,8 +59,8 @@
                           variant="primary"
                           class="px-4"
                           type="submit"
-                          >{{ $t('message.password_change') }}</b-button
-                        >
+                          >{{ $t('message.password_change') }}
+                        </b-button>
                       </b-col>
                     </b-row>
                   </b-form>
@@ -85,24 +85,38 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="passwordChangeError" />
+    <informational-modal :message="passwordChangeError" />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import { ValidationObserver } from 'vee-validate';
-import InformationalModal from '../modals/InformationalModal';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import InformationalModal from '@/views/modals/InformationalModal';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 import { getRedirectUrl } from '@/shared/utils';
 import queryString from 'query-string';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardGroup,
+  BCol,
+  BForm,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
-  name: 'PasswordForceChange',
   components: {
     BValidatedInputGroupFormInput,
     InformationalModal,
     ValidationObserver,
+    BRow,
+    BCol,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BForm,
+    BButton,
   },
   data() {
     return {
@@ -129,7 +143,7 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       };
-      axios
+      this.axios
         .post(url, queryString.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {

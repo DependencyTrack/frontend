@@ -69,7 +69,7 @@
         buttons
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -81,10 +81,25 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import axios from 'axios';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import {
+  BButton,
+  BFormGroup,
+  BFormInput,
+  BFormRadioGroup,
+  BFormSelect,
+  BModal,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BModal,
+    BFormGroup,
+    BFormInput,
+    BFormSelect,
+    BFormRadioGroup,
+    BButton,
+  },
   mixins: [permissionsMixin],
   data() {
     return {
@@ -110,7 +125,7 @@ export default {
     };
   },
   created() {
-    axios
+    this.axios
       .get(`${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`)
       .then((result) => {
         for (let i = 0; i < result.data.length; i++) {

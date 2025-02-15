@@ -205,7 +205,7 @@
           <b-col v-if="project.externalReferences" md="auto">
             <b-row class="d-none d-md-flex float-right">
               <ExternalReferencesDropdown
-                :externalReferences="project.externalReferences"
+                :external-references="project.externalReferences"
               />
             </b-row>
           </b-col>
@@ -223,7 +223,7 @@
         style="border-left: 0; border-right: 0; border-top: 0"
         active
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
@@ -239,7 +239,7 @@
         @click="routeTo('components')"
         v-if="isShowComponents"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cubes"></i> {{ $t('message.components') }}
           <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template
         >
@@ -247,7 +247,7 @@
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalComponents = $event"
+          @total="totalComponents = $event"
         />
       </b-tab>
       <b-tab
@@ -256,7 +256,7 @@
         v-if="isShowCollectionProjects"
         lazy
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-sitemap"></i>
           {{ $t('message.collection_projects') }}</template
         >
@@ -267,14 +267,14 @@
         />
       </b-tab>
       <b-tab ref="services" @click="routeTo('services')" v-if="isShowServices">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-exchange"></i> {{ $t('message.services') }}
           <b-badge variant="tab-total">{{ totalServices }}</b-badge></template
         >
         <project-services
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:total="totalServices = $event"
+          @total="totalServices = $event"
         />
       </b-tab>
       <b-tab
@@ -282,7 +282,7 @@
         @click="routeTo('dependencyGraph')"
         v-if="isShowDependencyGraph"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }}
           <b-badge variant="tab-total">{{
             totalDependencyGraphs
@@ -292,11 +292,11 @@
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalDependencyGraphs = $event"
+          @total="totalDependencyGraphs = $event"
         />
       </b-tab>
       <b-tab ref="findings" v-if="isShowFindings" @click="routeTo('findings')">
-        <template v-slot:title>
+        <template #title>
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
           <b-badge
             variant="tab-total"
@@ -314,18 +314,18 @@
         <project-findings
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:total="totalFindingsIncludingAliases = $event"
+          @total="totalFindingsIncludingAliases = $event"
         />
       </b-tab>
       <b-tab ref="epss" v-if="isShowFindings" @click="routeTo('epss')">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }}
           <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template
         >
         <project-epss
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:total="totalEpss = $event"
+          @total="totalEpss = $event"
         />
       </b-tab>
       <b-tab
@@ -333,7 +333,7 @@
         v-if="isShowPolicyViolations"
         @click="routeTo('policyViolations')"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
           <b-badge
             variant="tab-total"
@@ -383,14 +383,14 @@
         <project-policy-violations
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:showSuppressedViolations="showSuppressedViolations = $event"
+          @showSuppressedViolations="showSuppressedViolations = $event"
         />
       </b-tab>
     </b-tabs>
     <project-details-modal
       :project="cloneDeep(project)"
       :uuid="this.uuid"
-      v-on:projectUpdated="syncProjectFields"
+      @projectUpdated="syncProjectFields"
     />
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
@@ -399,7 +399,7 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
@@ -408,8 +408,8 @@ import ProjectCollectionProjects from './ProjectCollectionProjects';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
 import ProjectServices from './ProjectServices';
 import ProjectDashboard from './ProjectDashboard';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import ProjectPropertiesModal from './ProjectPropertiesModal';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
@@ -417,11 +417,22 @@ import ProjectAddVersionModal from './ProjectAddVersionModal';
 import ProjectFindings from './ProjectFindings';
 import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
-import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import ExternalReferencesDropdown from '@/views/components/ExternalReferencesDropdown.vue';
 import xssFilters from 'xss-filters';
+import {
+  BBadge,
+  BCard,
+  BCardBody,
+  BCol,
+  BDropdownGroup,
+  BDropdownItem,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     ProjectPolicyViolations,
     ProjectFindings,
@@ -437,8 +448,57 @@ export default {
     VueEasyPieChart,
     ProjectEpss,
     ExternalReferencesDropdown,
+    BCard,
+    BCardBody,
+    BCol,
+    BRow,
+    BDropdownItem,
+    BDropdownGroup,
+    BBadge,
+    BTabs,
+    BTab,
+    BLink,
   },
+  mixins: [permissionsMixin],
   title: '',
+  data() {
+    return {
+      severityCritical: this.getStyle('--severity-critical'),
+      severityHigh: this.getStyle('--severity-high'),
+      severityMedium: this.getStyle('--severity-medium'),
+      severityLow: this.getStyle('--severity-low'),
+      severityUnassigned: this.getStyle('--severity-unassigned'),
+      severityInfo: this.getStyle('--severity-info'),
+      trackColor: this.getStyle('--component-active-color'),
+      uuid: null,
+      project: {},
+      currentCritical: 0,
+      currentHigh: 0,
+      currentMedium: 0,
+      currentLow: 0,
+      currentUnassigned: 0,
+      currentRiskScore: 0,
+      totalComponents: 0,
+      totalServices: 0,
+      totalDependencyGraphs: 0,
+      totalFindings: 0,
+      totalFindingsIncludingAliases: 0,
+      totalEpss: 0,
+      showSuppressedViolations: false,
+      policyViolationsTotal: 0,
+      policyViolationsUnaudited: 0,
+      policyViolationsFailTotal: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsFailUnaudited: 0,
+      policyViolationsWarnTotal: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsWarnUnaudited: 0,
+      policyViolationsInfoTotal: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsInfoUnaudited: 0,
+      tabIndex: 0,
+    };
+  },
   computed: {
     projectLabel() {
       if (this.project.name && this.project.version) {
@@ -481,43 +541,39 @@ export default {
       );
     },
   },
-  data() {
-    return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
-      uuid: null,
-      project: {},
-      currentCritical: 0,
-      currentHigh: 0,
-      currentMedium: 0,
-      currentLow: 0,
-      currentUnassigned: 0,
-      currentRiskScore: 0,
-      totalComponents: 0,
-      totalServices: 0,
-      totalDependencyGraphs: 0,
-      totalFindings: 0,
-      totalFindingsIncludingAliases: 0,
-      totalEpss: 0,
-      showSuppressedViolations: false,
-      policyViolationsTotal: 0,
-      policyViolationsUnaudited: 0,
-      policyViolationsFailTotal: 0,
-      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
-      // policyViolationsFailUnaudited: 0,
-      policyViolationsWarnTotal: 0,
-      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
-      // policyViolationsWarnUnaudited: 0,
-      policyViolationsInfoTotal: 0,
-      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
-      // policyViolationsInfoUnaudited: 0,
-      tabIndex: 0,
-    };
+  watch: {
+    $route(to, from) {
+      this.uuid = this.$route.params.uuid;
+      if (to.params.uuid !== from.params.uuid) {
+        this.initialize();
+      } else if (this.$route.params.componentUuids) {
+        this.initialize();
+        this.$refs.dependencygraph.activate();
+      }
+      this.getTabFromRoute().activate();
+    },
+  },
+  beforeMount() {
+    this.uuid = this.$route.params.uuid;
+    this.initialize()
+      .then(() => {
+        this.$nextTick(() => {
+          if (this.$route.params.componentUuids) {
+            this.$refs.dependencygraph.active = true;
+          } else {
+            this.getTabFromRoute().active = true;
+          }
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+        this.$toastr.e(this.$t('condition.forbidden'));
+        this.$router.replace({ path: '/projects/' + this.uuid });
+        this.$refs.overview.active = true;
+      });
+  },
+  destroyed() {
+    EventBus.$emit('crumble');
   },
   methods: {
     cloneDeep: function (component) {
@@ -661,40 +717,6 @@ export default {
       }
       return '';
     },
-  },
-  beforeMount() {
-    this.uuid = this.$route.params.uuid;
-    this.initialize()
-      .then(() => {
-        this.$nextTick(() => {
-          if (this.$route.params.componentUuids) {
-            this.$refs.dependencygraph.active = true;
-          } else {
-            this.getTabFromRoute().active = true;
-          }
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-        this.$toastr.e(this.$t('condition.forbidden'));
-        this.$router.replace({ path: '/projects/' + this.uuid });
-        this.$refs.overview.active = true;
-      });
-  },
-  watch: {
-    $route(to, from) {
-      this.uuid = this.$route.params.uuid;
-      if (to.params.uuid !== from.params.uuid) {
-        this.initialize();
-      } else if (this.$route.params.componentUuids) {
-        this.initialize();
-        this.$refs.dependencygraph.activate();
-      }
-      this.getTabFromRoute().activate();
-    },
-  },
-  destroyed() {
-    EventBus.$emit('crumble');
   },
 };
 </script>

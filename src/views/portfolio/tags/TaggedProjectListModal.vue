@@ -14,7 +14,7 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()"
         >{{ $t('message.cancel') }}
       </b-button>
@@ -24,48 +24,23 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 import router from '@/router';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import { BButton, BModal } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BModal,
+    BButton,
+    BootstrapTable,
+  },
+  mixins: [bootstrapTableMixin, permissionsMixin],
   props: {
     tag: String,
     index: Number,
-  },
-  mixins: [bootstrapTableMixin, permissionsMixin],
-  methods: {
-    apiUrl: function () {
-      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/project`;
-    },
-    untag: function (projectUuids) {
-      return this.axios.delete(this.apiUrl(), {
-        data: projectUuids,
-      });
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        pageNumber: 1,
-        silent: true,
-      });
-    },
-  },
-  mounted() {
-    // NB: Because this modal is loaded dynamically from TagList,
-    // this.$refs.table may still be undefined when mounted() is called.
-    // https://jefrydco.id/en/blog/safe-access-vue-refs-undefined
-    const interval = setInterval(() => {
-      if (this.$refs.table) {
-        this.$refs.table.refreshOptions({
-          showBtnDeleteSelected: this.isPermitted(
-            this.PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          ),
-        });
-        clearInterval(interval);
-      }
-    }, 50);
   },
   data() {
     return {
@@ -148,6 +123,38 @@ export default {
         url: this.apiUrl(),
       },
     };
+  },
+  mounted() {
+    // NB: Because this modal is loaded dynamically from TagList,
+    // this.$refs.table may still be undefined when mounted() is called.
+    // https://jefrydco.id/en/blog/safe-access-vue-refs-undefined
+    const interval = setInterval(() => {
+      if (this.$refs.table) {
+        this.$refs.table.refreshOptions({
+          showBtnDeleteSelected: this.isPermitted(
+            this.PERMISSIONS.PORTFOLIO_MANAGEMENT,
+          ),
+        });
+        clearInterval(interval);
+      }
+    }, 50);
+  },
+  methods: {
+    apiUrl: function () {
+      return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/project`;
+    },
+    untag: function (projectUuids) {
+      return this.axios.delete(this.apiUrl(), {
+        data: projectUuids,
+      });
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        pageNumber: 1,
+        silent: true,
+      });
+    },
   },
 };
 </script>

@@ -54,18 +54,35 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
 import { Switch as cSwitch } from '@coreui/vue';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BCardGroup,
+  BCol,
+  BFormGroup,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    cSwitch,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BCardFooter,
+    BFormGroup,
+    BButton,
+    BRow,
+    BCol,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {
@@ -73,17 +90,17 @@ export default {
       welcomeMessage: '',
     };
   },
+  computed: {},
   created() {
     let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
     let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
-    axios.get(message_url).then((response) => {
+    this.axios.get(message_url).then((response) => {
       this.welcomeMessage = decodeURIComponent(response.data.propertyValue);
     });
-    axios.get(enabled_url).then((response) => {
+    this.axios.get(enabled_url).then((response) => {
       this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
     });
   },
-  computed: {},
   methods: {
     updateCode() {
       const editor = this.$refs.editor;

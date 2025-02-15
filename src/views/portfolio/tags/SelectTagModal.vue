@@ -14,7 +14,7 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -30,31 +30,20 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
+import { BButton, BModal } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    policy: Object,
+  components: {
+    BModal,
+    BButton,
+    BootstrapTable,
   },
   mixins: [permissionsMixin],
-  methods: {
-    apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
-      return url;
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        pageNumber: 1,
-        silent: true,
-      });
-    },
-  },
-  watch: {
-    showInactiveTags() {
-      this.refreshTable();
-    },
+  props: {
+    policy: Object,
   },
   data() {
     return {
@@ -100,6 +89,24 @@ export default {
         url: this.apiUrl(),
       },
     };
+  },
+  watch: {
+    showInactiveTags() {
+      this.refreshTable();
+    },
+  },
+  methods: {
+    apiUrl: function () {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
+      return url;
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        pageNumber: 1,
+        silent: true,
+      });
+    },
   },
 };
 </script>

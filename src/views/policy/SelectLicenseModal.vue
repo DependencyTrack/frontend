@@ -13,7 +13,7 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -29,10 +29,17 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import common from '../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
+import { BButton, BModal } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BModal,
+    BButton,
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
   data() {
     return {

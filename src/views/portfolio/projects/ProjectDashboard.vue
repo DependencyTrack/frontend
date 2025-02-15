@@ -23,7 +23,7 @@
                   v-permission="'PORTFOLIO_MANAGEMENT'"
                   class="font-weight-bold"
                   style="margin-left: 6px"
-                  v-on:click="refreshMetrics"
+                  @click="refreshMetrics"
                 >
                   <i class="fa fa-refresh"></i>
                 </b-link>
@@ -35,7 +35,7 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartProjectVulnerabilities"
-        chartId="chartProjectVulnerabilities"
+        chart-id="chartProjectVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
         :height="200"
@@ -119,7 +119,7 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
+            chart-id="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -141,7 +141,7 @@
           </b-row>
           <chart-policy-violation-breakdown
             ref="chartPolicyViolationBreakdown"
-            chartId="chartPolicyViolationBreakdown"
+            chart-id="chartPolicyViolationBreakdown"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -162,7 +162,7 @@
           </b-row>
           <chart-component-vulnerabilities
             ref="chartComponentVulnerabilities"
-            chartId="chartComponentVulnerabilities"
+            chart-id="chartComponentVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -181,7 +181,7 @@
           </b-row>
           <chart-auditing-findings-progress
             ref="chartAuditingFindingsProgress"
-            chartId="chartAuditingFindingsProgress"
+            chart-id="chartAuditingFindingsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -193,16 +193,16 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { Callout } from '@coreui/vue';
-import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
+import ChartAuditingFindingsProgress from '@/views/dashboard/ChartAuditingFindingsProgress';
+import ChartComponentVulnerabilities from '@/views/dashboard/ChartComponentVulnerabilities';
+import ChartPortfolioVulnerabilities from '@/views/dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import { BCard, BCol, BLink, BRow } from 'bootstrap-vue';
 
 export default {
-  name: 'project-dashboard',
   components: {
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
@@ -210,6 +210,10 @@ export default {
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
     Callout,
+    BCard,
+    BRow,
+    BCol,
+    BLink,
   },
   props: {
     uuid: String,
@@ -234,6 +238,41 @@ export default {
       lastBomImport: 'n/a',
       lastVulnAnalysis: 'n/a',
     };
+  },
+  watch: {
+    project(newProject) {
+      // Project is loaded asynchronously in the parent component and may not be
+      // initialized yet when the dashboard is mounted. Thus, initialize lastBomImport lazily.
+      if (newProject && newProject.lastBomImport) {
+        this.lastBomImport = common.formatTimestamp(
+          newProject.lastBomImport,
+          true,
+        );
+      } else {
+        this.lastBomImport = 'n/a';
+      }
+
+      if (newProject && newProject.lastVulnerabilityAnalysis) {
+        this.lastVulnAnalysis = common.formatTimestamp(
+          newProject.lastVulnerabilityAnalysis,
+          true,
+        );
+      } else {
+        this.lastVulnAnalysis = 'n/a';
+      }
+    },
+  },
+  mounted() {
+    const daysBack = 90;
+    let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
+    this.axios.get(url).then((response) => {
+      this.$refs.chartProjectVulnerabilities.render(response.data);
+      this.$refs.chartPolicyViolationsState.render(response.data);
+      this.$refs.chartPolicyViolationBreakdown.render(response.data);
+      this.$refs.chartAuditingFindingsProgress.render(response.data);
+      this.$refs.chartComponentVulnerabilities.render(response.data);
+      this.extractStats(response.data);
+    });
   },
   methods: {
     extractStats(metrics) {
@@ -276,41 +315,6 @@ export default {
       this.axios.get(url).then((response) => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
-    },
-  },
-  mounted() {
-    const daysBack = 90;
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
-    this.axios.get(url).then((response) => {
-      this.$refs.chartProjectVulnerabilities.render(response.data);
-      this.$refs.chartPolicyViolationsState.render(response.data);
-      this.$refs.chartPolicyViolationBreakdown.render(response.data);
-      this.$refs.chartAuditingFindingsProgress.render(response.data);
-      this.$refs.chartComponentVulnerabilities.render(response.data);
-      this.extractStats(response.data);
-    });
-  },
-  watch: {
-    project(newProject) {
-      // Project is loaded asynchronously in the parent component and may not be
-      // initialized yet when the dashboard is mounted. Thus, initialize lastBomImport lazily.
-      if (newProject && newProject.lastBomImport) {
-        this.lastBomImport = common.formatTimestamp(
-          newProject.lastBomImport,
-          true,
-        );
-      } else {
-        this.lastBomImport = 'n/a';
-      }
-
-      if (newProject && newProject.lastVulnerabilityAnalysis) {
-        this.lastVulnAnalysis = common.formatTimestamp(
-          newProject.lastVulnerabilityAnalysis,
-          true,
-        );
-      } else {
-        this.lastVulnAnalysis = 'n/a';
-      }
     },
   },
 };

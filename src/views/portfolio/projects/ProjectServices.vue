@@ -14,13 +14,17 @@
 <script>
 import $ from 'jquery';
 import Vue from 'vue';
-import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import common from '@/shared/common';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
   props: {
     uuid: String,

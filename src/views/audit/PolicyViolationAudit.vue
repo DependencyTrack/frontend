@@ -10,8 +10,8 @@
             style="float: right"
             @click="clearAllFilters()"
           >
-            {{ this.$t('message.clear_all') }}</b-button
-          >
+            {{ this.$t('message.clear_all') }}
+          </b-button>
           <br /><br />
           <b-form-group
             id="showInactive-form-group"
@@ -79,18 +79,18 @@
             id="occurred-on-date-form-group"
             :label="this.$t('message.occurred_on')"
           >
-            <b-datepicker
+            <b-form-datepicker
               id="occurred-on-datepicker-from"
               v-model="occurredOnDateFrom"
               :max="occurredOnDateTo"
               :placeholder="this.$t('message.from')"
-            ></b-datepicker>
-            <b-datepicker
+            ></b-form-datepicker>
+            <b-form-datepicker
               id="occurred-on-datepicker-to"
               v-model="occurredOnDateTo"
               :min="occurredOnDateFrom"
               :placeholder="this.$t('message.to')"
-            ></b-datepicker>
+            ></b-form-datepicker>
           </b-form-group>
           <b-form-group
             id="text-search-form-group"
@@ -141,146 +141,37 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import { hasPermission } from '@/shared/permissions';
 import * as permissions from '@/shared/permissions';
+import { hasPermission } from '@/shared/permissions';
+import {
+  BButton,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormDatepicker,
+  BFormGroup,
+  BFormInput,
+  BRow,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BRow,
+    BCol,
+    BButton,
+    BFormGroup,
+    BFormCheckbox,
+    BFormCheckboxGroup,
+    BFormDatepicker,
+    BFormInput,
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
-  computed: {
-    watchers() {
-      return [
-        this.showInactive,
-        this.showSuppressed,
-        this.violationStateSelected,
-        this.riskTypeSelected,
-        this.policySelected,
-        this.analysisStateSelected,
-        this.occurredOnDateFrom,
-        this.occurredOnDateTo,
-      ];
-    },
-  },
-  beforeMount() {
-    this.initializeWatchers();
-    this.initializePolicies();
-    this.textSearchSelected = this.textSearchOptions.map(
-      (option) => option.value,
-    );
-  },
-  methods: {
-    initializePolicies: function () {
-      let policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
-      if (
-        hasPermission(permissions.POLICY_MANAGEMENT, this.decodedToken) ||
-        hasPermission(permissions.ACCESS_MANAGEMENT, this.decodedToken)
-      ) {
-        this.axios
-          .get(policyUrl)
-          .then((response) => {
-            if (response.data) {
-              response.data.forEach((policy) =>
-                this.policyOptions.push({
-                  text: policy.name,
-                  value: policy.uuid,
-                }),
-              );
-            }
-          })
-          .catch((error) => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          });
-      }
-    },
-    initializeWatchers: function () {
-      this.simpleWatcher = this.$watch('watchers', () => this.refreshTable());
-      this.textSearchSelectedWatcher = this.$watch('textSearchSelected', () => {
-        if (this.textSearchInput.trim().length !== 0) {
-          this.refreshTable();
-        }
-      });
-      this.textSearchInputWatcher = this.$watch(
-        'textSearchInput',
-        (newInput, oldInput) => {
-          if (!(newInput.trim().length === 0 && oldInput.trim().length === 0)) {
-            this.refreshTable();
-          }
-        },
-      );
-    },
-    apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}`;
-      url +=
-        '?showInactive=' +
-        (this.showInactive === 'true') +
-        '&suppressed=' +
-        (this.showSuppressed === 'true');
-      if (
-        this.violationStateSelected &&
-        this.violationStateSelected.length > 0
-      ) {
-        url += '&violationState=' + this.violationStateSelected;
-      }
-      if (this.riskTypeSelected && this.riskTypeSelected.length > 0) {
-        url += '&riskType=' + this.riskTypeSelected;
-      }
-      if (this.policySelected && this.policySelected.length > 0) {
-        url += '&policy=' + this.policySelected;
-      }
-      if (this.analysisStateSelected && this.analysisStateSelected.length > 0) {
-        url += '&analysisState=' + this.analysisStateSelected;
-      }
-      if (this.occurredOnDateFrom && this.occurredOnDateFrom.length > 0) {
-        url += '&occurredOnDateFrom=' + this.occurredOnDateFrom;
-      }
-      if (this.occurredOnDateTo && this.occurredOnDateTo.length > 0) {
-        url += '&occurredOnDateTo=' + this.occurredOnDateTo;
-      }
-      if (this.textSearchInput && this.textSearchInput.trim().length > 0) {
-        url +=
-          '&textSearchField=' +
-          this.textSearchSelected +
-          '&textSearchInput=' +
-          this.textSearchInput.trim();
-      }
-      return url;
-    },
-    clearAllFilters: function () {
-      this.simpleWatcher();
-      this.textSearchSelectedWatcher();
-      this.textSearchInputWatcher();
-      this.showInactive = false;
-      this.showSuppressed = false;
-      this.violationStateSelected = [];
-      this.riskTypeSelected = [];
-      this.policySelected = [];
-      this.analysisStateSelected = [];
-      this.occurredOnDateFrom = '';
-      this.occurredOnDateTo = '';
-      this.textSearchInput = '';
-      this.textSearchSelected = this.textSearchOptions.map(
-        (option) => option.value,
-      );
-      this.refreshTable();
-      this.initializeWatchers();
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        silent: true,
-      });
-    },
-    onLoadSuccess: function () {
-      loadUserPreferencesForBootstrapTable(
-        this,
-        'PolicyViolationAudit',
-        this.$refs.table.columns,
-      );
-    },
-  },
   data() {
     return {
       simpleWatcher: null,
@@ -500,6 +391,137 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    watchers() {
+      return [
+        this.showInactive,
+        this.showSuppressed,
+        this.violationStateSelected,
+        this.riskTypeSelected,
+        this.policySelected,
+        this.analysisStateSelected,
+        this.occurredOnDateFrom,
+        this.occurredOnDateTo,
+      ];
+    },
+  },
+  beforeMount() {
+    this.initializeWatchers();
+    this.initializePolicies();
+    this.textSearchSelected = this.textSearchOptions.map(
+      (option) => option.value,
+    );
+  },
+  methods: {
+    initializePolicies: function () {
+      let policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+      if (
+        hasPermission(permissions.POLICY_MANAGEMENT, this.decodedToken) ||
+        hasPermission(permissions.ACCESS_MANAGEMENT, this.decodedToken)
+      ) {
+        this.axios
+          .get(policyUrl)
+          .then((response) => {
+            if (response.data) {
+              response.data.forEach((policy) =>
+                this.policyOptions.push({
+                  text: policy.name,
+                  value: policy.uuid,
+                }),
+              );
+            }
+          })
+          .catch((error) => {
+            this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          });
+      }
+    },
+    initializeWatchers: function () {
+      this.simpleWatcher = this.$watch('watchers', () => this.refreshTable());
+      this.textSearchSelectedWatcher = this.$watch('textSearchSelected', () => {
+        if (this.textSearchInput.trim().length !== 0) {
+          this.refreshTable();
+        }
+      });
+      this.textSearchInputWatcher = this.$watch(
+        'textSearchInput',
+        (newInput, oldInput) => {
+          if (!(newInput.trim().length === 0 && oldInput.trim().length === 0)) {
+            this.refreshTable();
+          }
+        },
+      );
+    },
+    apiUrl: function () {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}`;
+      url +=
+        '?showInactive=' +
+        (this.showInactive === 'true') +
+        '&suppressed=' +
+        (this.showSuppressed === 'true');
+      if (
+        this.violationStateSelected &&
+        this.violationStateSelected.length > 0
+      ) {
+        url += '&violationState=' + this.violationStateSelected;
+      }
+      if (this.riskTypeSelected && this.riskTypeSelected.length > 0) {
+        url += '&riskType=' + this.riskTypeSelected;
+      }
+      if (this.policySelected && this.policySelected.length > 0) {
+        url += '&policy=' + this.policySelected;
+      }
+      if (this.analysisStateSelected && this.analysisStateSelected.length > 0) {
+        url += '&analysisState=' + this.analysisStateSelected;
+      }
+      if (this.occurredOnDateFrom && this.occurredOnDateFrom.length > 0) {
+        url += '&occurredOnDateFrom=' + this.occurredOnDateFrom;
+      }
+      if (this.occurredOnDateTo && this.occurredOnDateTo.length > 0) {
+        url += '&occurredOnDateTo=' + this.occurredOnDateTo;
+      }
+      if (this.textSearchInput && this.textSearchInput.trim().length > 0) {
+        url +=
+          '&textSearchField=' +
+          this.textSearchSelected +
+          '&textSearchInput=' +
+          this.textSearchInput.trim();
+      }
+      return url;
+    },
+    clearAllFilters: function () {
+      this.simpleWatcher();
+      this.textSearchSelectedWatcher();
+      this.textSearchInputWatcher();
+      this.showInactive = false;
+      this.showSuppressed = false;
+      this.violationStateSelected = [];
+      this.riskTypeSelected = [];
+      this.policySelected = [];
+      this.analysisStateSelected = [];
+      this.occurredOnDateFrom = '';
+      this.occurredOnDateTo = '';
+      this.textSearchInput = '';
+      this.textSearchSelected = this.textSearchOptions.map(
+        (option) => option.value,
+      );
+      this.refreshTable();
+      this.initializeWatchers();
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        silent: true,
+      });
+    },
+    onLoadSuccess: function () {
+      loadUserPreferencesForBootstrapTable(
+        this,
+        'PolicyViolationAudit',
+        this.$refs.table.columns,
+      );
+    },
   },
 };
 </script>

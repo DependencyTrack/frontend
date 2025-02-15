@@ -121,16 +121,21 @@
 </template>
 
 <script>
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    BValidatedInputGroupFormInput,
   },
   data() {
     return {
@@ -146,6 +151,62 @@ export default {
       repositoryMetadataFetch: { value: '0', description: '' },
       internalComponentIdentification: { value: '0', description: '' },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'task-scheduler';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'ldap.sync.cadence':
+            this.ldapSync.value = item.propertyValue;
+            this.ldapSync.description = item.description;
+            break;
+          case 'ghsa.mirror.cadence':
+            this.ghsaMirror.value = item.propertyValue;
+            this.ghsaMirror.description = item.description;
+            break;
+          case 'osv.mirror.cadence':
+            this.osvMirror.value = item.propertyValue;
+            this.osvMirror.description = item.description;
+            break;
+          case 'nist.mirror.cadence':
+            this.nistMirror.value = item.propertyValue;
+            this.nistMirror.description = item.description;
+            break;
+          case 'vulndb.mirror.cadence':
+            this.vulndbMirror.value = item.propertyValue;
+            this.vulndbMirror.description = item.description;
+            break;
+          case 'portfolio.metrics.update.cadence':
+            this.portfolioMetricsUpdate.value = item.propertyValue;
+            this.portfolioMetricsUpdate.description = item.description;
+            break;
+          case 'vulnerability.metrics.update.cadence':
+            this.vulnerabilityMetricsUpdate.value = item.propertyValue;
+            this.vulnerabilityMetricsUpdate.description = item.description;
+            break;
+          case 'portfolio.vulnerability.analysis.cadence':
+            this.portfolioVulnerabilityAnalysis.value = item.propertyValue;
+            this.portfolioVulnerabilityAnalysis.description = item.description;
+            break;
+          case 'repository.metadata.fetch.cadence':
+            this.repositoryMetadataFetch.value = item.propertyValue;
+            this.repositoryMetadataFetch.description = item.description;
+            break;
+          case 'internal.components.identification.cadence':
+            this.internalComponentIdentification.value = item.propertyValue;
+            this.internalComponentIdentification.description = item.description;
+            break;
+          case 'component.analysis.cache.clear.cadence':
+            this.analysisCacheClear.value = item.propertyValue;
+            this.analysisCacheClear.description = item.description;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -207,62 +268,6 @@ export default {
         },
       ]);
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'task-scheduler';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'ldap.sync.cadence':
-            this.ldapSync.value = item.propertyValue;
-            this.ldapSync.description = item.description;
-            break;
-          case 'ghsa.mirror.cadence':
-            this.ghsaMirror.value = item.propertyValue;
-            this.ghsaMirror.description = item.description;
-            break;
-          case 'osv.mirror.cadence':
-            this.osvMirror.value = item.propertyValue;
-            this.osvMirror.description = item.description;
-            break;
-          case 'nist.mirror.cadence':
-            this.nistMirror.value = item.propertyValue;
-            this.nistMirror.description = item.description;
-            break;
-          case 'vulndb.mirror.cadence':
-            this.vulndbMirror.value = item.propertyValue;
-            this.vulndbMirror.description = item.description;
-            break;
-          case 'portfolio.metrics.update.cadence':
-            this.portfolioMetricsUpdate.value = item.propertyValue;
-            this.portfolioMetricsUpdate.description = item.description;
-            break;
-          case 'vulnerability.metrics.update.cadence':
-            this.vulnerabilityMetricsUpdate.value = item.propertyValue;
-            this.vulnerabilityMetricsUpdate.description = item.description;
-            break;
-          case 'portfolio.vulnerability.analysis.cadence':
-            this.portfolioVulnerabilityAnalysis.value = item.propertyValue;
-            this.portfolioVulnerabilityAnalysis.description = item.description;
-            break;
-          case 'repository.metadata.fetch.cadence':
-            this.repositoryMetadataFetch.value = item.propertyValue;
-            this.repositoryMetadataFetch.description = item.description;
-            break;
-          case 'internal.components.identification.cadence':
-            this.internalComponentIdentification.value = item.propertyValue;
-            this.internalComponentIdentification.description = item.description;
-            break;
-          case 'component.analysis.cache.clear.cadence':
-            this.analysisCacheClear.value = item.propertyValue;
-            this.analysisCacheClear.description = item.description;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

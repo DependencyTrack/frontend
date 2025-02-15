@@ -12,17 +12,21 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BootstrapTable,
+  },
+  mixins: [bootstrapTableMixin, permissionsMixin],
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
   data() {
     return {
       columns: [

@@ -98,20 +98,25 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
 import EmailTestConfigurationModal from './EmailTestConfigurationModal';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
     EmailTestConfigurationModal,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -125,6 +130,47 @@ export default {
       isSmtpSslTlsEnabled: false,
       isEmailSmtpTrustCertEnabled: false,
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'email';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'smtp.enabled':
+            this.isEmailEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'smtp.from.address':
+            this.emailFromAddress = item.propertyValue;
+            break;
+          case 'subject.prefix':
+            this.emailPrefix = item.propertyValue;
+            break;
+          case 'smtp.server.hostname':
+            this.emailSmtpServer = item.propertyValue;
+            break;
+          case 'smtp.server.port':
+            this.emailSmtpPort = item.propertyValue;
+            break;
+          case 'smtp.username':
+            this.emailSmtpUsername = item.propertyValue;
+            break;
+          case 'smtp.password':
+            this.emailSmtpPassword = item.propertyValue;
+            break; // "HiddenDecryptedPropertyPlaceholder"
+          case 'smtp.ssltls':
+            this.isSmtpSslTlsEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'smtp.trustcert':
+            this.isEmailSmtpTrustCertEnabled = common.toBoolean(
+              item.propertyValue,
+            );
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -181,47 +227,6 @@ export default {
         this.updateConfigProperty('email', 'subject.prefix', ' ');
       }
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'email';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'smtp.enabled':
-            this.isEmailEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'smtp.from.address':
-            this.emailFromAddress = item.propertyValue;
-            break;
-          case 'subject.prefix':
-            this.emailPrefix = item.propertyValue;
-            break;
-          case 'smtp.server.hostname':
-            this.emailSmtpServer = item.propertyValue;
-            break;
-          case 'smtp.server.port':
-            this.emailSmtpPort = item.propertyValue;
-            break;
-          case 'smtp.username':
-            this.emailSmtpUsername = item.propertyValue;
-            break;
-          case 'smtp.password':
-            this.emailSmtpPassword = item.propertyValue;
-            break; // "HiddenDecryptedPropertyPlaceholder"
-          case 'smtp.ssltls':
-            this.isSmtpSslTlsEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'smtp.trustcert':
-            this.isEmailSmtpTrustCertEnabled = common.toBoolean(
-              item.propertyValue,
-            );
-            break;
-        }
-      }
-    });
   },
 };
 </script>

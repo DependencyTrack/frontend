@@ -116,35 +116,20 @@ import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import FindingAudit from './FindingAudit';
 import ProjectUploadVexModal from './ProjectUploadVexModal';
+import { BButton, BTooltip } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    uuid: String,
-  },
-  mixins: [bootstrapTableMixin, permissionsMixin],
   components: {
     cSwitch,
     ProjectUploadVexModal,
+    BTooltip,
+    BButton,
+    BootstrapTable,
   },
-  beforeCreate() {
-    this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectFindingsShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
-          'true'
-        : false;
-
-    if (this.$route.params.vulnerability) {
-      if (this.$route.params.affectedComponent) {
-        // search for the last portion of the finding's matrix ID
-        this.initialSearchText =
-          this.$route.params.affectedComponent +
-          ':' +
-          this.$route.params.vulnerability;
-      } else {
-        this.initialSearchText = this.$route.params.vulnerability;
-      } // the route doesn't allow a component to be specified without a vulnerability
-    }
+  mixins: [bootstrapTableMixin, permissionsMixin],
+  props: {
+    uuid: String,
   },
   data() {
     return {
@@ -427,6 +412,37 @@ export default {
       },
     };
   },
+  watch: {
+    showSuppressedFindings() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectFindingsShowSuppressedFindings',
+          this.showSuppressedFindings.toString(),
+        );
+      }
+      this.refreshTable();
+    },
+  },
+  beforeCreate() {
+    this.showSuppressedFindings =
+      localStorage &&
+      localStorage.getItem('ProjectFindingsShowSuppressedFindings') !== null
+        ? localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
+          'true'
+        : false;
+
+    if (this.$route.params.vulnerability) {
+      if (this.$route.params.affectedComponent) {
+        // search for the last portion of the finding's matrix ID
+        this.initialSearchText =
+          this.$route.params.affectedComponent +
+          ':' +
+          this.$route.params.vulnerability;
+      } else {
+        this.initialSearchText = this.$route.params.vulnerability;
+      } // the route doesn't allow a component to be specified without a vulnerability
+    }
+  },
   methods: {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
@@ -532,17 +548,6 @@ export default {
       $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
-    },
-  },
-  watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectFindingsShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
     },
   },
 };

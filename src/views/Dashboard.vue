@@ -13,7 +13,7 @@
               v-permission="'PORTFOLIO_MANAGEMENT'"
               class="font-weight-bold"
               style="margin-left: 6px"
-              v-on:click="refreshMetrics"
+              @click="refreshMetrics"
               ><i class="fa fa-refresh"></i
             ></b-link>
           </div>
@@ -22,7 +22,7 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartPortfolioVulnerabilities"
-        chartId="chartPortfolioVulnerabilities"
+        chart-id="chartPortfolioVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
         :height="200"
@@ -36,7 +36,7 @@
               height="{}"
               class="progress-xs mt-2 severity-critical"
               :precision="1"
-              v-bind:value="criticalPercent"
+              :value="criticalPercent"
             ></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
@@ -46,7 +46,7 @@
               height="{}"
               class="progress-xs mt-2 severity-high"
               :precision="1"
-              v-bind:value="highPercent"
+              :value="highPercent"
             ></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
@@ -56,7 +56,7 @@
               height="{}"
               class="progress-xs mt-2 severity-medium"
               :precision="1"
-              v-bind:value="mediumPercent"
+              :value="mediumPercent"
             ></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
@@ -66,7 +66,7 @@
               height="{}"
               class="progress-xs mt-2 severity-low"
               :precision="1"
-              v-bind:value="lowPercent"
+              :value="lowPercent"
             ></b-progress>
           </b-col>
           <b-col class="mb-sm-2 mb-0">
@@ -76,7 +76,7 @@
               height="{}"
               class="progress-xs mt-2 status-failed"
               :precision="1"
-              v-bind:value="unassignedPercent"
+              :value="unassignedPercent"
             ></b-progress>
           </b-col>
         </b-row>
@@ -99,7 +99,7 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
+            chart-id="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -115,7 +115,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-failed"
                   :precision="1"
-                  v-bind:value="failViolationsPercent"
+                  :value="failViolationsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -127,7 +127,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-warning"
                   :precision="1"
-                  v-bind:value="warnViolationsPercent"
+                  :value="warnViolationsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -139,7 +139,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-info"
                   :precision="1"
-                  v-bind:value="infoViolationsPercent"
+                  :value="infoViolationsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -164,7 +164,7 @@
           </b-row>
           <chart-policy-violations-classification
             ref="chartPolicyViolationsClassification"
-            chartId="chartPolicyViolationsClassification"
+            chart-id="chartPolicyViolationsClassification"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -184,7 +184,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-failed"
                   :precision="1"
-                  v-bind:value="securityViolationsPercent"
+                  :value="securityViolationsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -200,7 +200,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-warning"
                   :precision="1"
-                  v-bind:value="operationalViolationsPercent"
+                  :value="operationalViolationsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -216,7 +216,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-info"
                   :precision="1"
-                  v-bind:value="licenseViolationsPercent"
+                  :value="licenseViolationsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -239,7 +239,7 @@
           </b-row>
           <chart-auditing-findings-progress
             ref="chartAuditingFindingsProgress"
-            chartId="chartAuditingFindingsProgress"
+            chart-id="chartAuditingFindingsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -259,7 +259,7 @@
                   height="{}"
                   class="progress-xs mt-2 severity-unassigned"
                   :precision="1"
-                  v-bind:value="unauditedFindingsPercent"
+                  :value="unauditedFindingsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -273,7 +273,7 @@
                   height="{}"
                   class="progress-xs mt-2 severity-low"
                   :precision="1"
-                  v-bind:value="auditedFindingsPercent"
+                  :value="auditedFindingsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -298,7 +298,7 @@
           </b-row>
           <chart-auditing-violations-progress
             ref="chartAuditingViolationsProgress"
-            chartId="chartAuditingViolationsProgress"
+            chart-id="chartAuditingViolationsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -318,7 +318,7 @@
                   height="{}"
                   class="progress-xs mt-2 severity-unassigned"
                   :precision="1"
-                  v-bind:value="unauditedViolationsPercent"
+                  :value="unauditedViolationsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -334,7 +334,7 @@
                   height="{}"
                   class="progress-xs mt-2 severity-low"
                   :precision="1"
-                  v-bind:value="auditedViolationsPercent"
+                  :value="auditedViolationsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -356,7 +356,7 @@
           </b-row>
           <chart-project-vulnerabilities
             ref="chartProjectVulnerabilities"
-            chartId="chartProjectVulnerabilities"
+            chart-id="chartProjectVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -374,7 +374,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-passed"
                   :precision="1"
-                  v-bind:value="nonVulnerableProjectsPercent"
+                  :value="nonVulnerableProjectsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -388,7 +388,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-warning"
                   :precision="1"
-                  v-bind:value="vulnerableProjectsPercent"
+                  :value="vulnerableProjectsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -407,7 +407,7 @@
           </b-row>
           <chart-component-vulnerabilities
             ref="chartComponentVulnerabilities"
-            chartId="chartComponentVulnerabilities"
+            chart-id="chartComponentVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -425,7 +425,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-passed"
                   :precision="1"
-                  v-bind:value="nonVulnerableComponentsPercent"
+                  :value="nonVulnerableComponentsPercent"
                 ></b-progress>
               </b-col>
               <b-col class="mb-sm-2 mb-0">
@@ -439,7 +439,7 @@
                   height="{}"
                   class="progress-xs mt-2 status-warning"
                   :precision="1"
-                  v-bind:value="vulnerableComponentsPercent"
+                  :value="vulnerableComponentsPercent"
                 ></b-progress>
               </b-col>
             </b-row>
@@ -450,7 +450,7 @@
 
     <b-row>
       <b-col md="12">
-        <b-card v-bind:header="$t('message.portfolio_statistics')">
+        <b-card :header="$t('message.portfolio_statistics')">
           <b-row>
             <b-col sm="12" lg="4">
               <b-row>
@@ -572,7 +572,7 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
 import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow';
 import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities';
 import ChartProjectVulnerabilities from './dashboard/ChartProjectVulnerabilities';
@@ -582,11 +582,10 @@ import ChartPolicyViolationsState from './dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationsClassification from './dashboard/ChartPolicyViolationsClassification';
 import ChartComponentVulnerabilities from './dashboard/ChartComponentVulnerabilities';
 import { Callout } from '@coreui/vue';
-import permissionsMixin from '../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import { BCard, BCol, BLink, BProgress, BRow } from 'bootstrap-vue';
 
 export default {
-  name: 'dashboard',
-  mixins: [permissionsMixin],
   components: {
     Callout,
     PortfolioWidgetRow,
@@ -597,7 +596,13 @@ export default {
     ChartPolicyViolationsState,
     ChartPolicyViolationsClassification,
     ChartComponentVulnerabilities,
+    BRow,
+    BCol,
+    BCard,
+    BProgress,
+    BLink,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       totalProjects: 0,
@@ -650,6 +655,23 @@ export default {
       unassignedPercent: 0,
       lastMeasurement: '',
     };
+  },
+  mounted() {
+    if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
+      const daysBack = 90;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
+      this.axios.get(url).then((response) => {
+        this.$refs.portfolioWidgetRow.render(response.data);
+        this.$refs.chartPortfolioVulnerabilities.render(response.data);
+        this.$refs.chartProjectVulnerabilities.render(response.data);
+        this.$refs.chartAuditingFindingsProgress.render(response.data);
+        this.$refs.chartAuditingViolationsProgress.render(response.data);
+        this.$refs.chartPolicyViolationsState.render(response.data);
+        this.$refs.chartPolicyViolationsClassification.render(response.data);
+        this.$refs.chartComponentVulnerabilities.render(response.data);
+        this.extractStats(response.data);
+      });
+    }
   },
   methods: {
     extractStats(metrics) {
@@ -813,23 +835,6 @@ export default {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-  },
-  mounted() {
-    if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
-      const daysBack = 90;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
-      this.axios.get(url).then((response) => {
-        this.$refs.portfolioWidgetRow.render(response.data);
-        this.$refs.chartPortfolioVulnerabilities.render(response.data);
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartAuditingFindingsProgress.render(response.data);
-        this.$refs.chartAuditingViolationsProgress.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationsClassification.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.extractStats(response.data);
-      });
-    }
   },
 };
 </script>

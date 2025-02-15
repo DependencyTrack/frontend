@@ -9,7 +9,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
         <b-card>
@@ -75,7 +75,7 @@
             :label="$t('message.collectionLogic')"
             :tooltip="$t('message.project_collection_logic_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            v-on:change="syncCollectionTagsVisibility"
+            @change="syncCollectionTagsVisibility"
           />
           <vue-tags-input
             id="input-collectionTags"
@@ -109,8 +109,8 @@
               @search-change="asyncFind"
               :internal-search="false"
               :close-on-select="true"
-              selectLabel=""
-              deselectLabel=""
+              select-label=""
+              deselect-label=""
             ></multiselect>
           </div>
           <b-form-group
@@ -143,7 +143,7 @@
         </b-card>
       </b-tab>
       <b-tab class="body-bg-color" style="border: 0; padding: 0">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -230,7 +230,7 @@
       </b-tab>
       -->
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -242,30 +242,49 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import VueTagsInput from '@johmun/vue-tags-input';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
+import {
+  BButton,
+  BCard,
+  BCol,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  name: 'ProjectCreateProjectModal',
-  mixins: [
-    permissionsMixin,
-    availableClassifiersMixin,
-    availableCollectionLogicsMixin,
-  ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
     Multiselect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BRow,
+    BCol,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
   },
+  mixins: [
+    permissionsMixin,
+    availableClassifiersMixin,
+    availableCollectionLogicsMixin,
+  ],
   data() {
     return {
       requiresTeam: true,
@@ -293,6 +312,15 @@ export default {
       isLoading: false,
     };
   },
+  computed: {},
+  watch: {
+    tag(input) {
+      this.searchTags(input);
+    },
+    collectionTagTyping(input) {
+      this.searchTags(input);
+    },
+  },
   created() {
     this.getACLEnabled().then(() => {
       this.getAvailableTeams();
@@ -311,15 +339,6 @@ export default {
       await this.retrieveLicenses();
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
-  },
-  computed: {},
-  watch: {
-    tag(input) {
-      this.searchTags(input);
-    },
-    collectionTagTyping(input) {
-      this.searchTags(input);
-    },
   },
   methods: {
     async getACLEnabled() {
@@ -489,7 +508,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>
 
 <style scoped>

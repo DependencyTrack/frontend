@@ -36,22 +36,45 @@
 </template>
 
 <script>
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    BValidatedInputGroupFormInput,
   },
   data() {
     return {
       namespaceRegex: '',
       nameRegex: '',
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'internal-components';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'groups.regex':
+            this.namespaceRegex = item.propertyValue;
+            break;
+          case 'names.regex':
+            this.nameRegex = item.propertyValue;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -79,24 +102,6 @@ export default {
           this.$toastr.s(this.$t('admin.internal_identification_error'));
         });
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'internal-components';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'groups.regex':
-            this.namespaceRegex = item.propertyValue;
-            break;
-          case 'names.regex':
-            this.nameRegex = item.propertyValue;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

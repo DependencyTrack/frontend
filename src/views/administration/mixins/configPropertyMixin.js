@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import axios from 'axios';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 
 export default {
   data() {

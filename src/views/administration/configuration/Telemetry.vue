@@ -44,11 +44,38 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BFormGroup,
+  BFormTextarea,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    cSwitch,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
+  },
+  data() {
+    return {
+      isSubmissionEnabled: null,
+      lastSubmissionEpochSeconds: null,
+      lastSubmissionData: null,
+    };
+  },
   computed: {
     common() {
       return common;
@@ -67,32 +94,6 @@ export default {
             ),
           })
         : '';
-    },
-  },
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
-  components: {
-    cSwitch,
-    BValidatedInputGroupFormInput,
-  },
-  data() {
-    return {
-      isSubmissionEnabled: null,
-      lastSubmissionEpochSeconds: null,
-      lastSubmissionData: null,
-    };
-  },
-  methods: {
-    saveChanges: function () {
-      this.updateConfigProperties([
-        {
-          groupName: 'telemetry',
-          propertyName: 'submission.enabled',
-          propertyValue: this.isSubmissionEnabled,
-        },
-      ]);
     },
   },
   created() {
@@ -119,6 +120,17 @@ export default {
         }
       }
     });
+  },
+  methods: {
+    saveChanges: function () {
+      this.updateConfigProperties([
+        {
+          groupName: 'telemetry',
+          propertyName: 'submission.enabled',
+          propertyValue: this.isSubmissionEnabled,
+        },
+      ]);
+    },
   },
 };
 </script>

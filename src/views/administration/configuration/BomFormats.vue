@@ -91,18 +91,38 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import VueTagsInput from '@johmun/vue-tags-input';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BFormGroup,
+  BFormRadio,
+  BFormRadioGroup,
+  BInputGroup,
+  BInputGroupText,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     VueTagsInput,
+    BCard,
+    BCardBody,
+    BFormGroup,
+    BFormRadioGroup,
+    BInputGroup,
+    BInputGroupText,
+    BFormRadio,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -114,6 +134,38 @@ export default {
       bomValidationTagsInclusive: [],
       addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'artifact';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'cyclonedx.enabled':
+            this.isCycloneDXEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'bom.validation.mode':
+            this.bomValidationMode = item.propertyValue;
+            break;
+          case 'bom.validation.tags.exclusive':
+            this.bomValidationTagsExclusive = JSON.parse(
+              item.propertyValue,
+            ).map((tagName) => {
+              return { text: tagName };
+            });
+            break;
+          case 'bom.validation.tags.inclusive':
+            this.bomValidationTagsInclusive = JSON.parse(
+              item.propertyValue,
+            ).map((tagName) => {
+              return { text: tagName };
+            });
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -149,41 +201,9 @@ export default {
       ]);
     },
   },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'artifact';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'cyclonedx.enabled':
-            this.isCycloneDXEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'bom.validation.mode':
-            this.bomValidationMode = item.propertyValue;
-            break;
-          case 'bom.validation.tags.exclusive':
-            this.bomValidationTagsExclusive = JSON.parse(
-              item.propertyValue,
-            ).map((tagName) => {
-              return { text: tagName };
-            });
-            break;
-          case 'bom.validation.tags.inclusive':
-            this.bomValidationTagsInclusive = JSON.parse(
-              item.propertyValue,
-            ).map((tagName) => {
-              return { text: tagName };
-            });
-            break;
-        }
-      }
-    });
-  },
 };
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>

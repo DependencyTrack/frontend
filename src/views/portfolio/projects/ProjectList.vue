@@ -42,7 +42,7 @@
       @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
-    <project-create-project-modal v-on:refreshTable="refreshTable" />
+    <project-create-project-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
@@ -52,188 +52,29 @@ import { Switch as cSwitch } from '@coreui/vue';
 import MurmurHash2 from 'imurmurhash';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
-import common from '../../../shared/common';
-import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
+import common from '@/shared/common';
+import PolicyViolationProgressBar from '@/views/components/PolicyViolationProgressBar';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
+import { BButton } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin, routerMixin],
   components: {
     cSwitch,
     ProjectCreateProjectModal,
+    BButton,
+    BootstrapTable,
   },
+  mixins: [permissionsMixin, routerMixin],
   props: {
     /**
      * If only children from a specific project shall be shown this must be set to the corresponding project
      */
     parentProject: Object,
     uuid: String,
-  },
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('ProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
-        : false;
-    this.showFlatView =
-      localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
-        ? localStorage.getItem('ProjectListShowFlatView') === 'true'
-        : false;
-  },
-  methods: {
-    initializeProjectCreateProjectModal: function () {
-      this.$root.$emit('initializeProjectCreateProjectModal');
-    },
-    apiUrl: function (uuid) {
-      // if we only want to show children of a specific parent we force the base call to fetch its children
-      if (this.uuid && !uuid) {
-        uuid = this.uuid;
-      }
-
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-      if (uuid) {
-        url += `/${uuid}/children`;
-      }
-      let tag = this.$route.query.tag;
-      if (tag) {
-        url += '/tag/' + encodeURIComponent(tag);
-      }
-      let classifier = this.$route.query.classifier;
-      if (classifier) {
-        url += '/classifier/' + encodeURIComponent(classifier);
-      }
-      if (this.showInactiveProjects === undefined) {
-        url += '?excludeInactive=true';
-      } else {
-        url += '?excludeInactive=' + !this.showInactiveProjects;
-      }
-      if (this.isSearching) {
-        url += '&onlyRoot=false';
-      } else {
-        if (this.showFlatView === undefined) {
-          url += '&onlyRoot=true';
-        } else {
-          url += '&onlyRoot=' + !this.showFlatView;
-        }
-      }
-      return url;
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        silent: true,
-        pageNumber: 1,
-      });
-    },
-    onLoadSuccess: function () {
-      loadUserPreferencesForBootstrapTable(
-        this,
-        'ProjectList',
-        this.$refs.table.columns,
-      );
-    },
-    onPreBody: function () {
-      this.$refs.table.getData().forEach((project) => {
-        project.id = MurmurHash2(project.uuid).result();
-      });
-    },
-    onPostBody: function () {
-      if (!this.showFlatView && !this.isSearching) {
-        let columns = this.$refs.table.getOptions().columns;
-
-        if (columns && columns[0][0].visible) {
-          this.$refs.table.$table.treegrid({
-            treeColumn: 0,
-            initialState: 'collapsed',
-          });
-        }
-        this.$refs.table.getData().forEach((project) => {
-          if (
-            project.children &&
-            !project.fetchedChildren &&
-            (this.showInactiveProjects ||
-              project.children.some((child) => child.active)) &&
-            (!this.$route.query.classifier ||
-              project.children.some(
-                (child) => child.classifier === this.$route.query.classifier,
-              )) &&
-            (!this.$route.query.tag ||
-              project.children.some(
-                (child) => child.tag === this.$route.query.tag,
-              ))
-          ) {
-            this.$refs.table.$table
-              .find('tbody')
-              .find('tr.treegrid-' + project.id.toString())
-              .addClass('treegrid-collapsed');
-            this.$refs.table.$table
-              .find('tbody')
-              .find('tr.treegrid-' + project.id.toString())
-              .treegrid('renderExpander');
-          }
-        });
-        this.$refs.table.getData().forEach((row) => {
-          if (row.expanded) {
-            this.$refs.table.$table
-              .find('tbody')
-              .find('tr.treegrid-' + row.id.toString())
-              .treegrid('expand');
-          } else if (row.expanded === false) {
-            this.$refs.table.$table
-              .find('tbody')
-              .find('tr.treegrid-' + row.id.toString())
-              .treegrid('collapse');
-          }
-        });
-      }
-      this.$refs.table.hideLoading();
-    },
-    getChildren: async function (project) {
-      let url = this.apiUrl(project.uuid);
-      await this.axios.get(url).then((response) => {
-        for (let project of response.data) {
-          if (project.parent) {
-            project.pid = MurmurHash2(project.parent.uuid).result();
-          }
-        }
-        this.$refs.table.append(response.data);
-      });
-    },
-    saveViewState: function () {
-      this.savedViewState = this.showFlatView;
-    },
-  },
-  watch: {
-    $route(to, from) {
-      this.refreshTable();
-    },
-    showInactiveProjects() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectListShowInactiveProjects',
-          this.showInactiveProjects.toString(),
-        );
-      }
-      this.$refs.table.showLoading();
-      this.currentPage = 1;
-      this.refreshTable();
-    },
-    showFlatView() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectListShowFlatView',
-          this.showFlatView.toString(),
-        );
-      }
-      this.$refs.table.showLoading();
-      this.refreshTable();
-    },
-    isSearching() {
-      this.refreshTable();
-    },
   },
   data() {
     return {
@@ -542,6 +383,169 @@ export default {
         },
       },
     };
+  },
+  watch: {
+    $route(to, from) {
+      this.refreshTable();
+    },
+    showInactiveProjects() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectListShowInactiveProjects',
+          this.showInactiveProjects.toString(),
+        );
+      }
+      this.$refs.table.showLoading();
+      this.currentPage = 1;
+      this.refreshTable();
+    },
+    showFlatView() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectListShowFlatView',
+          this.showFlatView.toString(),
+        );
+      }
+      this.$refs.table.showLoading();
+      this.refreshTable();
+    },
+    isSearching() {
+      this.refreshTable();
+    },
+  },
+  beforeCreate() {
+    this.showInactiveProjects =
+      localStorage &&
+      localStorage.getItem('ProjectListShowInactiveProjects') !== null
+        ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
+        : false;
+    this.showFlatView =
+      localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
+        ? localStorage.getItem('ProjectListShowFlatView') === 'true'
+        : false;
+  },
+  methods: {
+    initializeProjectCreateProjectModal: function () {
+      this.$root.$emit('initializeProjectCreateProjectModal');
+    },
+    apiUrl: function (uuid) {
+      // if we only want to show children of a specific parent we force the base call to fetch its children
+      if (this.uuid && !uuid) {
+        uuid = this.uuid;
+      }
+
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+      if (uuid) {
+        url += `/${uuid}/children`;
+      }
+      let tag = this.$route.query.tag;
+      if (tag) {
+        url += '/tag/' + encodeURIComponent(tag);
+      }
+      let classifier = this.$route.query.classifier;
+      if (classifier) {
+        url += '/classifier/' + encodeURIComponent(classifier);
+      }
+      if (this.showInactiveProjects === undefined) {
+        url += '?excludeInactive=true';
+      } else {
+        url += '?excludeInactive=' + !this.showInactiveProjects;
+      }
+      if (this.isSearching) {
+        url += '&onlyRoot=false';
+      } else {
+        if (this.showFlatView === undefined) {
+          url += '&onlyRoot=true';
+        } else {
+          url += '&onlyRoot=' + !this.showFlatView;
+        }
+      }
+      return url;
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        silent: true,
+        pageNumber: 1,
+      });
+    },
+    onLoadSuccess: function () {
+      loadUserPreferencesForBootstrapTable(
+        this,
+        'ProjectList',
+        this.$refs.table.columns,
+      );
+    },
+    onPreBody: function () {
+      this.$refs.table.getData().forEach((project) => {
+        project.id = MurmurHash2(project.uuid).result();
+      });
+    },
+    onPostBody: function () {
+      if (!this.showFlatView && !this.isSearching) {
+        let columns = this.$refs.table.getOptions().columns;
+
+        if (columns && columns[0][0].visible) {
+          this.$refs.table.$table.treegrid({
+            treeColumn: 0,
+            initialState: 'collapsed',
+          });
+        }
+        this.$refs.table.getData().forEach((project) => {
+          if (
+            project.children &&
+            !project.fetchedChildren &&
+            (this.showInactiveProjects ||
+              project.children.some((child) => child.active)) &&
+            (!this.$route.query.classifier ||
+              project.children.some(
+                (child) => child.classifier === this.$route.query.classifier,
+              )) &&
+            (!this.$route.query.tag ||
+              project.children.some(
+                (child) => child.tag === this.$route.query.tag,
+              ))
+          ) {
+            this.$refs.table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + project.id.toString())
+              .addClass('treegrid-collapsed');
+            this.$refs.table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + project.id.toString())
+              .treegrid('renderExpander');
+          }
+        });
+        this.$refs.table.getData().forEach((row) => {
+          if (row.expanded) {
+            this.$refs.table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + row.id.toString())
+              .treegrid('expand');
+          } else if (row.expanded === false) {
+            this.$refs.table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + row.id.toString())
+              .treegrid('collapse');
+          }
+        });
+      }
+      this.$refs.table.hideLoading();
+    },
+    getChildren: async function (project) {
+      let url = this.apiUrl(project.uuid);
+      await this.axios.get(url).then((response) => {
+        for (let project of response.data) {
+          if (project.parent) {
+            project.pid = MurmurHash2(project.parent.uuid).result();
+          }
+        }
+        this.$refs.table.append(response.data);
+      });
+    },
+    saveViewState: function () {
+      this.savedViewState = this.showFlatView;
+    },
   },
 };
 </script>

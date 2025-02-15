@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-/coverage
 
 /tests/e2e/reports/
 selenium-debug.log
@@ -29,3 +28,11 @@ src/version.json
 # IntelliJ
 .idea/*
 !.idea/icon.svg
+
+# Test files
+/coverage
+/cypress/screenshots
+/cypress/videos
+/cypress/downloads
+/.nyc_output
+.output.txt

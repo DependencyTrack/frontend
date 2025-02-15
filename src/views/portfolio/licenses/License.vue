@@ -11,7 +11,7 @@
         active
         @click="routeTo()"
       >
-        <template v-slot:title>{{ $t('message.overview') }}</template>
+        <template #title>{{ $t('message.overview') }}</template>
         <table>
           <tr>
             <td class="heading">{{ $t('message.license_name') }}:</td>
@@ -66,7 +66,7 @@
             <td>
               <img
                 v-if="license.isOsiApproved"
-                src="@/assets/img//osi-logo.svg"
+                src="@/assets/img/osi-logo.svg"
                 alt="OSI logo"
                 width="80"
               />
@@ -75,19 +75,19 @@
         </table>
       </b-tab>
       <b-tab ref="licensetext" @click="routeTo('licenseText')">
-        <template v-slot:title>{{ $t('message.license_text') }}</template>
+        <template #title>{{ $t('message.license_text') }}</template>
         <div class="licenseText formattedLicenseContent">
           {{ license.licenseText }}
         </div>
       </b-tab>
       <b-tab ref="template" @click="routeTo('template')">
-        <template v-slot:title>{{ $t('message.template') }}</template>
+        <template #title>{{ $t('message.template') }}</template>
         <div class="templateText formattedLicenseContent">
           {{ license.standardLicenseTemplate }}
         </div>
       </b-tab>
       <b-tab ref="header" @click="routeTo('header')">
-        <template v-slot:title>{{ $t('message.source_header') }}</template>
+        <template #title>{{ $t('message.source_header') }}</template>
         <div class="headerText formattedLicenseContent">
           {{ license.standardLicenseHeader }}
         </div>
@@ -104,15 +104,25 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BTab, BTabs } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BTabs,
+    BTab,
+    BButton,
+  },
   mixins: [permissionsMixin],
-  components: {},
   title: '',
+  data() {
+    return {
+      licenseId: null,
+      license: {},
+    };
+  },
   computed: {
     licenseLabel() {
       if (this.license.name) {
@@ -122,11 +132,25 @@ export default {
       }
     },
   },
-  data() {
-    return {
-      licenseId: null,
-      license: {},
-    };
+  watch: {
+    $route() {
+      this.getTabFromRoute().activate();
+    },
+  },
+  beforeMount() {
+    this.licenseId = this.$route.params.licenseId;
+  },
+  mounted() {
+    let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
+    this.axios.get(url).then((response) => {
+      this.license = response.data;
+      EventBus.$emit('addCrumb', this.licenseLabel);
+      this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
+    });
+    this.getTabFromRoute().active = true;
+  },
+  destroyed() {
+    EventBus.$emit('crumble');
   },
   methods: {
     getStyle: function (style) {
@@ -168,26 +192,6 @@ export default {
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
-  },
-  beforeMount() {
-    this.licenseId = this.$route.params.licenseId;
-  },
-  mounted() {
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
-    this.axios.get(url).then((response) => {
-      this.license = response.data;
-      EventBus.$emit('addCrumb', this.licenseLabel);
-      this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
-    });
-    this.getTabFromRoute().active = true;
-  },
-  watch: {
-    $route() {
-      this.getTabFromRoute().activate();
-    },
-  },
-  destroyed() {
-    EventBus.$emit('crumble');
   },
 };
 </script>

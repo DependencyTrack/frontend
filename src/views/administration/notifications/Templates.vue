@@ -26,46 +26,36 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-template-modal v-on:refreshTable="refreshTable" />
-    <general-template-configuration-modal v-on:refreshTable="refreshTable" />
+    <create-template-modal @refreshTable="refreshTable" />
+    <general-template-configuration-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
-import EventBus from '../../../shared/eventbus';
+import common from '@/shared/common';
+import i18n from '@/i18n';
+import EventBus from '@/shared/eventbus';
 import BootstrapToggle from 'vue-bootstrap-toggle';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import CreateTemplateModal from './CreateTemplateModal';
 import GeneralTemplateConfigurationModal from './GeneralTemplateConfigurationModal';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateTemplateModal,
     GeneralTemplateConfigurationModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:templates:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:templates:rowDeleted', () => {
-      this.refreshTable();
-    });
-    EventBus.$on('admin:templates:cloneTemplate', () => {
-      this.$bvModal.show('createTemplateModal');
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:templates:rowUpdate');
-    EventBus.$off('admin:templates:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -141,7 +131,7 @@ export default {
                       <b-button variant="outline-primary" @click="cloneNotificationPublisher">{{ $t('admin.clone_template') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-primary" @click="updateNotificationPublisher">{{ $t('message.update') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-danger" @click="deleteNotificationPublisher">{{ $t('admin.delete_template') }}</b-button>
-                    </div>    
+                    </div>
                   </b-col>
                 </b-row>
               `,
@@ -207,6 +197,22 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:templates:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:templates:rowDeleted', () => {
+      this.refreshTable();
+    });
+    EventBus.$on('admin:templates:cloneTemplate', () => {
+      this.$bvModal.show('createTemplateModal');
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:templates:rowUpdate');
+    EventBus.$off('admin:templates:rowDeleted');
   },
   methods: {
     refreshTable: function () {

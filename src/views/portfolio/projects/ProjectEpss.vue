@@ -2,7 +2,7 @@
   <div>
     <chart-epss-vs-cvss
       ref="chartEpssVsCvss"
-      chartId="chartEpssVsCvss"
+      chart-id="chartEpssVsCvss"
       class="chart-wrapper"
       style="height: 400px; margin-top: 40px"
       :height="400"
@@ -44,25 +44,20 @@ import {
 import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import common from '../../../shared/common';
-import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import ChartEpssVsCvss from '@/views/dashboard/ChartEpssVsCvss';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    uuid: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     cSwitch,
     ChartEpssVsCvss,
+    BootstrapTable,
   },
-  beforeCreate() {
-    this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true'
-        : false;
+  mixins: [bootstrapTableMixin],
+  props: {
+    uuid: String,
   },
   data() {
     return {
@@ -250,6 +245,24 @@ export default {
       },
     };
   },
+  watch: {
+    showSuppressedFindings() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectEpssShowSuppressedFindings',
+          this.showSuppressedFindings.toString(),
+        );
+      }
+      this.refreshTable();
+    },
+  },
+  beforeCreate() {
+    this.showSuppressedFindings =
+      localStorage &&
+      localStorage.getItem('ProjectEpssShowSuppressedFindings') !== null
+        ? localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true'
+        : false;
+  },
   methods: {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
@@ -279,17 +292,6 @@ export default {
       $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
-    },
-  },
-  watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectEpssShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
     },
   },
 };

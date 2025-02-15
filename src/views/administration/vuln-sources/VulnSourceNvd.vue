@@ -122,18 +122,36 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BFormDatepicker,
+  BFormGroup,
+  BFormTimepicker,
+  BInputGroup,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BFormGroup,
+    BInputGroup,
+    BFormDatepicker,
+    BFormTimepicker,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -159,6 +177,49 @@ export default {
         dataOff: '\u2715',
       },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'vuln-source';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'nvd.enabled':
+            this.vulnsourceEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'nvd.feeds.url':
+            this.nvdFeedsUrl = item.propertyValue;
+            break;
+          case 'nvd.api.enabled':
+            this.nvdApiEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'nvd.api.download.feeds':
+            this.nvdApiDownloadFeeds = common.toBoolean(item.propertyValue);
+            break;
+          case 'nvd.api.url':
+            this.nvdApiEndpoint = item.propertyValue;
+            break;
+          case 'nvd.api.key':
+            this.nvdApiKey = item.propertyValue;
+            break;
+          case 'nvd.api.last.modified.epoch.seconds':
+            let epochSeconds = parseInt(item.propertyValue);
+            if (!epochSeconds) {
+              continue;
+            }
+            let date = new Date(0);
+            date.setUTCSeconds(epochSeconds);
+            this.nvdApiLastModifiedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+            this.nvdApiLastModifiedTime = date
+              .toISOString()
+              .split('T')[1]
+              .split('.')[0]; // HH:mm:SS
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -214,49 +275,6 @@ export default {
       );
       return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'vuln-source';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'nvd.enabled':
-            this.vulnsourceEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'nvd.feeds.url':
-            this.nvdFeedsUrl = item.propertyValue;
-            break;
-          case 'nvd.api.enabled':
-            this.nvdApiEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'nvd.api.download.feeds':
-            this.nvdApiDownloadFeeds = common.toBoolean(item.propertyValue);
-            break;
-          case 'nvd.api.url':
-            this.nvdApiEndpoint = item.propertyValue;
-            break;
-          case 'nvd.api.key':
-            this.nvdApiKey = item.propertyValue;
-            break;
-          case 'nvd.api.last.modified.epoch.seconds':
-            let epochSeconds = parseInt(item.propertyValue);
-            if (!epochSeconds) {
-              continue;
-            }
-            let date = new Date(0);
-            date.setUTCSeconds(epochSeconds);
-            this.nvdApiLastModifiedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
-            this.nvdApiLastModifiedTime = date
-              .toISOString()
-              .split('T')[1]
-              .split('.')[0]; // HH:mm:SS
-            break;
-        }
-      }
-    });
   },
 };
 </script>

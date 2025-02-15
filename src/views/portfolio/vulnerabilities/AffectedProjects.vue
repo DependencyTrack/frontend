@@ -26,22 +26,16 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     cSwitch,
+    BootstrapTable,
   },
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
-          'true'
-        : false;
-  },
+  mixins: [permissionsMixin],
   props: {
     source: String,
     vulnId: String,
@@ -116,6 +110,31 @@ export default {
       },
     };
   },
+  watch: {
+    showInactiveProjects() {
+      if (localStorage) {
+        localStorage.setItem(
+          'AffectedProjectListShowInactiveProjects',
+          this.showInactiveProjects.toString(),
+        );
+      }
+      this.$refs.table.showLoading();
+      this.currentPage = 1;
+      this.refreshTable();
+    },
+    vulnId() {
+      // update url when vulnId changes, will trigger table refresh
+      this.$refs.table.refreshOptions({ ...this.options, url: this.apiUrl() });
+    },
+  },
+  beforeCreate() {
+    this.showInactiveProjects =
+      localStorage &&
+      localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
+        ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
+          'true'
+        : false;
+  },
   methods: {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_VULNERABILITY}/source/${this.source}/vuln/${encodeURIComponent(this.vulnId)}/projects`;
@@ -138,23 +157,6 @@ export default {
     },
     onPostBody: function () {
       this.$refs.table.hideLoading();
-    },
-  },
-  watch: {
-    showInactiveProjects() {
-      if (localStorage) {
-        localStorage.setItem(
-          'AffectedProjectListShowInactiveProjects',
-          this.showInactiveProjects.toString(),
-        );
-      }
-      this.$refs.table.showLoading();
-      this.currentPage = 1;
-      this.refreshTable();
-    },
-    vulnId() {
-      // update url when vulnId changes, will trigger table refresh
-      this.$refs.table.refreshOptions({ ...this.options, url: this.apiUrl() });
     },
   },
 };

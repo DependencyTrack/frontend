@@ -58,40 +58,24 @@
 
 <script lang="jsx">
 import Vue2OrgTree from 'vue2-org-tree';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import { Switch as cSwitch } from '@coreui/vue';
+import { BTooltip } from 'bootstrap-vue';
+
 let pos = { top: 0, left: 0, x: 0, y: 0 };
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     Vue2OrgTree,
     cSwitch,
+    // eslint-disable-next-line vue/no-unused-components
+    BTooltip,
   },
+  mixins: [permissionsMixin],
   props: {
     project: Object,
     uuid: String,
-  },
-  beforeCreate() {
-    this.highlightOutdatedComponents =
-      localStorage &&
-      localStorage.getItem(
-        'ProjectDependencyGraphHighlightOutdatedComponents',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectDependencyGraphHighlightOutdatedComponents',
-          ) === 'true'
-        : false;
-    this.showCompleteGraph =
-      localStorage &&
-      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
-        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
-          'true'
-        : false;
-  },
-  mounted() {
-    this.computeData();
   },
   data() {
     return {
@@ -187,6 +171,26 @@ export default {
       // build map of searched components for later fast lookup
       this.createSearchedComponentLookupTable(to.params.componentUuids);
     },
+  },
+  beforeCreate() {
+    this.highlightOutdatedComponents =
+      localStorage &&
+      localStorage.getItem(
+        'ProjectDependencyGraphHighlightOutdatedComponents',
+      ) !== null
+        ? localStorage.getItem(
+            'ProjectDependencyGraphHighlightOutdatedComponents',
+          ) === 'true'
+        : false;
+    this.showCompleteGraph =
+      localStorage &&
+      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
+        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
+          'true'
+        : false;
+  },
+  mounted() {
+    this.computeData();
   },
   methods: {
     computeData: function () {

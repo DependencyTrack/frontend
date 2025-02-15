@@ -8,7 +8,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -77,7 +77,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-caret-square-o-right"></i>
           {{ $t('message.extended') }}</template
         >
@@ -113,7 +113,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-balance-scale"></i>
           {{ $t('message.legal') }}</template
         >
@@ -158,7 +158,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-barcode"></i> {{ $t('message.hashes') }}</template
         >
         <b-card>
@@ -219,7 +219,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-file-text-o"></i> {{ $t('message.notes') }}</template
         >
         <b-card>
@@ -237,7 +237,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -253,18 +253,33 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import {
+  BButton,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  name: 'ProjectAddComponentModal',
-  mixins: [permissionsMixin, availableClassifiersMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
   },
+  mixins: [permissionsMixin, availableClassifiersMixin],
   props: {
     uuid: String,
   },

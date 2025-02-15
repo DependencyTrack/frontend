@@ -18,54 +18,31 @@
       :options="options"
       @on-load-success="tableLoaded"
     />
-    <create-license-group-modal v-on:refreshTable="refreshTable" />
+    <create-license-group-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreateLicenseGroupModal from './CreateLicenseGroupModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import SelectLicenseModal from './SelectLicenseModal';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin, bootstrapTableMixin],
   components: {
     CreateLicenseGroupModal,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('policyManagement:licenseGroups:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('policyManagement:licenseGroups:rowUpdate');
-    EventBus.$off('policyManagement:licenseGroups:rowDeleted');
-  },
-  methods: {
-    tableLoaded: function (data) {
-      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
-        this.$emit('total', data.total);
-      } else {
-        this.$emit('total', '?');
-      }
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        silent: true,
-      });
-    },
-  },
+  mixins: [permissionsMixin, bootstrapTableMixin],
   data() {
     return {
       columns: [
@@ -237,6 +214,33 @@ export default {
         },
       },
     };
+  },
+  mounted() {
+    EventBus.$on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('policyManagement:licenseGroups:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('policyManagement:licenseGroups:rowUpdate');
+    EventBus.$off('policyManagement:licenseGroups:rowDeleted');
+  },
+  methods: {
+    tableLoaded: function (data) {
+      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
+        this.$emit('total', data.total);
+      } else {
+        this.$emit('total', '?');
+      }
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        silent: true,
+      });
+    },
   },
 };
 </script>

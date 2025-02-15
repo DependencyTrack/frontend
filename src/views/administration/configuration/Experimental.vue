@@ -19,21 +19,22 @@
 </template>
 
 <script>
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
   },
   data() {
     return {};
-  },
-  methods: {
-    saveChanges: function () {
-      this.updateConfigProperties([]);
-    },
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
@@ -46,6 +47,11 @@ export default {
         }
       }
     });
+  },
+  methods: {
+    saveChanges: function () {
+      this.updateConfigProperties([]);
+    },
   },
 };
 </script>

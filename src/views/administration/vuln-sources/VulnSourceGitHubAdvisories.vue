@@ -50,18 +50,23 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -73,27 +78,6 @@ export default {
         dataOff: '\u2715',
       },
     };
-  },
-  methods: {
-    saveChanges: function () {
-      this.updateConfigProperties([
-        {
-          groupName: 'vuln-source',
-          propertyName: 'github.advisories.enabled',
-          propertyValue: this.vulnsourceEnabled,
-        },
-        {
-          groupName: 'vuln-source',
-          propertyName: 'github.advisories.alias.sync.enabled',
-          propertyValue: this.aliasSyncEnabled,
-        },
-        {
-          groupName: 'vuln-source',
-          propertyName: 'github.advisories.access.token',
-          propertyValue: this.apitoken,
-        },
-      ]);
-    },
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
@@ -115,6 +99,27 @@ export default {
         }
       }
     });
+  },
+  methods: {
+    saveChanges: function () {
+      this.updateConfigProperties([
+        {
+          groupName: 'vuln-source',
+          propertyName: 'github.advisories.enabled',
+          propertyValue: this.vulnsourceEnabled,
+        },
+        {
+          groupName: 'vuln-source',
+          propertyName: 'github.advisories.alias.sync.enabled',
+          propertyValue: this.aliasSyncEnabled,
+        },
+        {
+          groupName: 'vuln-source',
+          propertyName: 'github.advisories.access.token',
+          propertyValue: this.apitoken,
+        },
+      ]);
+    },
   },
 };
 </script>

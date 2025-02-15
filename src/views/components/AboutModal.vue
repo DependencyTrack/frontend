@@ -110,23 +110,29 @@
         </ul>
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <div class="mx-auto">
         Copyright &copy; OWASP Foundation. All Rights Reserved.
       </div>
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
+      <b-button size="md" variant="outline-primary" @click="cancel()"
+        >{{ $t('message.close') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import common from '../../shared/common';
-import globalVarsMixin from '../../mixins/globalVarsMixin';
+import common from '@/shared/common';
+import globalVarsMixin from '@/mixins/globalVarsMixin';
+import { BButton, BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {
-  name: 'AboutModal',
+  components: {
+    BModal,
+    BRow,
+    BCol,
+    BButton,
+  },
   mixins: [globalVarsMixin],
   computed: {
     serverTimestamp: function () {

@@ -1,6 +1,6 @@
 <script>
-import common from '../../shared/common';
-import i18n from '../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import { Scatter } from 'vue-chartjs';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 

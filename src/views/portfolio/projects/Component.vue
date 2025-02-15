@@ -118,7 +118,7 @@
           <b-col v-if="component.externalReferences" md="auto">
             <b-row class="d-none d-md-flex float-right">
               <ExternalReferencesDropdown
-                :externalReferences="component.externalReferences"
+                :external-references="component.externalReferences"
               />
             </b-row>
           </b-col>
@@ -136,7 +136,7 @@
         active
         @click="routeTo()"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
@@ -145,7 +145,7 @@
         />
       </b-tab>
       <b-tab ref="vulnerabilities" @click="routeTo('vulnerabilities')">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-shield"></i> {{ $t('message.vulnerabilities') }}
           <b-badge variant="tab-total">{{
             totalVulnerabilities
@@ -154,7 +154,7 @@
         <component-vulnerabilities
           :key="this.uuid"
           :uuid="this.uuid"
-          v-on:total="totalVulnerabilities = $event"
+          @total="totalVulnerabilities = $event"
         />
       </b-tab>
       <b-tab
@@ -162,7 +162,7 @@
           $router.push(`/components#/search/PACKAGE_URL/${component.purl}`)
         "
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cubes"></i>
           {{ $t('message.projects_also_used_in') }}</template
         >
@@ -170,7 +170,7 @@
     </b-tabs>
     <component-details-modal
       :component="cloneDeep(component)"
-      v-on:componentUpdated="syncComponentFields"
+      @componentUpdated="syncComponentFields"
     />
     <component-properties-modal :uuid="this.uuid" />
     <component-create-property-modal :uuid="this.uuid" />
@@ -178,21 +178,30 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
 import ComponentDashboard from './ComponentDashboard';
 import ComponentVulnerabilities from './ComponentVulnerabilities';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
-import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import ExternalReferencesDropdown from '@/views/components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import {
+  BBadge,
+  BCard,
+  BCardBody,
+  BCol,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
@@ -201,8 +210,38 @@ export default {
     VueEasyPieChart,
     ComponentDetailsModal,
     ExternalReferencesDropdown,
+    BCard,
+    BCardBody,
+    BRow,
+    BCol,
+    BBadge,
+    BLink,
+    BTabs,
+    BTab,
   },
+  mixins: [permissionsMixin],
   title: '',
+  data() {
+    return {
+      severityCritical: this.getStyle('--severity-critical'),
+      severityHigh: this.getStyle('--severity-high'),
+      severityMedium: this.getStyle('--severity-medium'),
+      severityLow: this.getStyle('--severity-low'),
+      severityUnassigned: this.getStyle('--severity-unassigned'),
+      severityInfo: this.getStyle('--severity-info'),
+      trackColor: this.getStyle('--component-active-color'),
+      uuid: null,
+      component: {},
+      currentCritical: 0,
+      currentHigh: 0,
+      currentMedium: 0,
+      currentLow: 0,
+      currentUnassigned: 0,
+      currentRiskScore: 0,
+      totalVulnerabilities: 0,
+      totalProjects: 0,
+    };
+  },
   computed: {
     projectLabel() {
       if (this.component.hasOwnProperty('project')) {
@@ -231,26 +270,48 @@ export default {
       return label;
     },
   },
-  data() {
-    return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
-      uuid: null,
-      component: {},
-      currentCritical: 0,
-      currentHigh: 0,
-      currentMedium: 0,
-      currentLow: 0,
-      currentUnassigned: 0,
-      currentRiskScore: 0,
-      totalVulnerabilities: 0,
-      totalProjects: 0,
-    };
+  watch: {
+    $route() {
+      this.getTabFromRoute().activate();
+    },
+  },
+  beforeMount() {
+    this.uuid = this.$route.params.uuid;
+  },
+  mounted() {
+    let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
+    this.axios.get(componentUrl).then((response) => {
+      this.component = response.data;
+      EventBus.$emit(
+        'addCrumb',
+        this.componentLabel,
+        'Project',
+        this.component.project.uuid,
+        this.projectLabel,
+      );
+      this.$title = this.componentLabel;
+    });
+
+    let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
+    this.axios.get(metricsUrl).then((response) => {
+      this.currentCritical = common.valueWithDefault(response.data.critical, 0);
+      this.currentHigh = common.valueWithDefault(response.data.high, 0);
+      this.currentMedium = common.valueWithDefault(response.data.medium, 0);
+      this.currentLow = common.valueWithDefault(response.data.low, 0);
+      this.currentUnassigned = common.valueWithDefault(
+        response.data.unassigned,
+        0,
+      );
+      this.currentRiskScore = common.valueWithDefault(
+        response.data.inheritedRiskScore,
+        0,
+      );
+    });
+
+    this.getTabFromRoute().active = true;
+  },
+  destroyed() {
+    EventBus.$emit('crumble');
   },
   methods: {
     cloneDeep: function (component) {
@@ -294,49 +355,6 @@ export default {
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
-  },
-  beforeMount() {
-    this.uuid = this.$route.params.uuid;
-  },
-  mounted() {
-    let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
-    this.axios.get(componentUrl).then((response) => {
-      this.component = response.data;
-      EventBus.$emit(
-        'addCrumb',
-        this.componentLabel,
-        'Project',
-        this.component.project.uuid,
-        this.projectLabel,
-      );
-      this.$title = this.componentLabel;
-    });
-
-    let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
-    this.axios.get(metricsUrl).then((response) => {
-      this.currentCritical = common.valueWithDefault(response.data.critical, 0);
-      this.currentHigh = common.valueWithDefault(response.data.high, 0);
-      this.currentMedium = common.valueWithDefault(response.data.medium, 0);
-      this.currentLow = common.valueWithDefault(response.data.low, 0);
-      this.currentUnassigned = common.valueWithDefault(
-        response.data.unassigned,
-        0,
-      );
-      this.currentRiskScore = common.valueWithDefault(
-        response.data.inheritedRiskScore,
-        0,
-      );
-    });
-
-    this.getTabFromRoute().active = true;
-  },
-  watch: {
-    $route() {
-      this.getTabFromRoute().activate();
-    },
-  },
-  destroyed() {
-    EventBus.$emit('crumble');
   },
 };
 </script>

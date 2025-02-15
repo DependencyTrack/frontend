@@ -56,7 +56,7 @@
     >
       <b-form-textarea id="input-5" v-model="description" trim />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -68,8 +68,24 @@
 </template>
 
 <script>
+import {
+  BButton,
+  BFormGroup,
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+  BModal,
+} from 'bootstrap-vue';
+
 export default {
-  name: 'ProjectCreatePropertyModal',
+  components: {
+    BModal,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BFormSelect,
+    BButton,
+  },
   props: {
     uuid: String,
   },
@@ -124,5 +140,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>

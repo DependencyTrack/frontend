@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import EventBus from '../../shared/eventbus';
+import EventBus from '@/shared/eventbus';
 import AdminMenu from './AdminMenu';
 
 // Configuration plugins
@@ -67,60 +67,99 @@ import OidcUsers from './accessmanagement/OidcUsers';
 import Permissions from './accessmanagement/Permissions';
 import PortfolioAccessControl from './accessmanagement/PortfolioAccessControl';
 import Teams from './accessmanagement/Teams';
+import { BCol, BRow } from 'bootstrap-vue';
+import { RouterView } from 'vue-router';
 
 export default {
   components: {
     AdminMenu,
+    // eslint-disable-next-line vue/no-unused-components
     General,
+    // eslint-disable-next-line vue/no-unused-components
     WelcomeMessage,
+    // eslint-disable-next-line vue/no-unused-components
     BomFormats,
+    // eslint-disable-next-line vue/no-unused-components
     Email,
+    // eslint-disable-next-line vue/no-unused-components
     Jira,
+    // eslint-disable-next-line vue/no-unused-components
     InternalComponents,
+    // eslint-disable-next-line vue/no-unused-components
     TaskScheduler,
+    // eslint-disable-next-line vue/no-unused-components
     Search,
+    // eslint-disable-next-line vue/no-unused-components
     Experimental,
+    // eslint-disable-next-line vue/no-unused-components
     InternalAnalyzer,
+    // eslint-disable-next-line vue/no-unused-components
     OssIndexAnalyzer,
+    // eslint-disable-next-line vue/no-unused-components
     VulnDbAnalyzer,
+    // eslint-disable-next-line vue/no-unused-components
     SnykAnalyzer,
+    // eslint-disable-next-line vue/no-unused-components
     TrivyAnalyzer,
+    // eslint-disable-next-line vue/no-unused-components
     VulnSourceNvd,
+    // eslint-disable-next-line vue/no-unused-components
     VulnSourceGitHubAdvisories,
+    // eslint-disable-next-line vue/no-unused-components
     VulnSourceOSVAdvisories,
+    // eslint-disable-next-line vue/no-unused-components
     Cargo,
+    // eslint-disable-next-line vue/no-unused-components
     Composer,
+    // eslint-disable-next-line vue/no-unused-components
     Gem,
+    // eslint-disable-next-line vue/no-unused-components
     GitHub,
+    // eslint-disable-next-line vue/no-unused-components
     GoModules,
+    // eslint-disable-next-line vue/no-unused-components
     Hackage,
+    // eslint-disable-next-line vue/no-unused-components
     Hex,
+    // eslint-disable-next-line vue/no-unused-components
     Maven,
+    // eslint-disable-next-line vue/no-unused-components
     Nixpkgs,
+    // eslint-disable-next-line vue/no-unused-components
     Npm,
+    // eslint-disable-next-line vue/no-unused-components
     Cpan,
+    // eslint-disable-next-line vue/no-unused-components
     Nuget,
+    // eslint-disable-next-line vue/no-unused-components
     Python,
+    // eslint-disable-next-line vue/no-unused-components
     Alerts,
+    // eslint-disable-next-line vue/no-unused-components
     Templates,
+    // eslint-disable-next-line vue/no-unused-components
     FortifySsc,
+    // eslint-disable-next-line vue/no-unused-components
     DefectDojo,
+    // eslint-disable-next-line vue/no-unused-components
     KennaSecurity,
+    // eslint-disable-next-line vue/no-unused-components
     LdapUsers,
+    // eslint-disable-next-line vue/no-unused-components
     ManagedUsers,
+    // eslint-disable-next-line vue/no-unused-components
     OidcUsers,
+    // eslint-disable-next-line vue/no-unused-components
     OidcGroups,
+    // eslint-disable-next-line vue/no-unused-components
     Teams,
+    // eslint-disable-next-line vue/no-unused-components
     Permissions,
+    // eslint-disable-next-line vue/no-unused-components
     PortfolioAccessControl,
-  },
-  created() {
-    // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
-    EventBus.$on('admin:plugin', (plugin) => {
-      this.selectedComponent = plugin.component;
-      this.header = plugin.name;
-      this.href = plugin.href;
-    });
+    BRow,
+    BCol,
+    RouterView,
   },
   data() {
     // Default to loading the General plugin first
@@ -129,6 +168,14 @@ export default {
       header: this.$t('admin.general'),
       href: '#generalConfigTab',
     };
+  },
+  created() {
+    // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
+    EventBus.$on('admin:plugin', (plugin) => {
+      this.selectedComponent = plugin.component;
+      this.header = plugin.name;
+      this.href = plugin.href;
+    });
   },
 };
 </script>

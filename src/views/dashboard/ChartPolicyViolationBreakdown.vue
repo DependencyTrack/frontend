@@ -60,9 +60,13 @@
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
+import { BProgress } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BProgress,
+  },
   data() {
     return {
       securityCount: 0,

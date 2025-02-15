@@ -8,10 +8,10 @@ import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { getToken } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import VueRouter from 'vue-router';
+import VueRouter, { RouterView } from 'vue-router';
 
 export default {
-  name: 'app',
+  components: { RouterView },
   created() {
     const setJwtForAjax = (jwt) => {
       if (jwt) {

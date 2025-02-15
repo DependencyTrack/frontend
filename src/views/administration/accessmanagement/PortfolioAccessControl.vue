@@ -23,25 +23,29 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import common from '@/shared/common';
+import i18n from '@/i18n';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import SelectProjectModal from './SelectProjectModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import router from '@/router';
+import { BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin, configPropertyMixin],
   components: {
     cSwitch,
+    BCard,
+    BCardBody,
+    BootstrapTable,
+  },
+  mixins: [bootstrapTableMixin, configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -209,6 +213,26 @@ export default {
       },
     };
   },
+  watch: {
+    isAclEnabled() {
+      this.updateProperties();
+    },
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'access-management';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'acl.enabled':
+            this.isAclEnabled = common.toBoolean(item.propertyValue);
+            break;
+        }
+      }
+    });
+  },
   methods: {
     refreshTable: function () {
       this.$refs.table.refresh({
@@ -241,26 +265,6 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-  },
-  watch: {
-    isAclEnabled() {
-      this.updateProperties();
-    },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'access-management';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'acl.enabled':
-            this.isAclEnabled = common.toBoolean(item.propertyValue);
-            break;
-        }
-      }
-    });
   },
 };
 </script>

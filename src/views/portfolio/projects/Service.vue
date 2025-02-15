@@ -108,7 +108,7 @@
         style="border-left: 0; border-right: 0; border-top: 0"
         active
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
@@ -119,7 +119,7 @@
     </b-tabs>
     <service-details-modal
       :service="cloneDeep(service)"
-      v-on:serviceUpdated="syncServiceFields"
+      @serviceUpdated="syncServiceFields"
     />
   </div>
 </template>
@@ -129,16 +129,59 @@ import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
 import ServiceDashboard from './ServiceDashboard';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal';
+import {
+  BCard,
+  BCardBody,
+  BCol,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     ServiceDashboard,
     VueEasyPieChart,
     ServiceDetailsModal,
+    BCard,
+    BCardBody,
+    BRow,
+    BCol,
+    BLink,
+    BTabs,
+    BTab,
+  },
+  mixins: [permissionsMixin],
+  data() {
+    return {
+      severityCritical: this.getStyle('--severity-critical'),
+      severityHigh: this.getStyle('--severity-high'),
+      severityMedium: this.getStyle('--severity-medium'),
+      severityLow: this.getStyle('--severity-low'),
+      severityUnassigned: this.getStyle('--severity-unassigned'),
+      severityInfo: this.getStyle('--severity-info'),
+      trackColor: this.getStyle('--component-active-color'),
+      uuid: null,
+      service: {
+        provider: {
+          name: '',
+          urls: [],
+          contacts: [],
+        },
+      },
+      currentCritical: 0,
+      currentHigh: 0,
+      currentMedium: 0,
+      currentLow: 0,
+      currentUnassigned: 0,
+      currentRiskScore: 0,
+      totalVulnerabilities: 0,
+      totalProjects: 0,
+    };
   },
   computed: {
     projectLabel() {
@@ -160,40 +203,6 @@ export default {
       } else {
         return this.service.name;
       }
-    },
-  },
-  data() {
-    return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
-      uuid: null,
-      service: {},
-      currentCritical: 0,
-      currentHigh: 0,
-      currentMedium: 0,
-      currentLow: 0,
-      currentUnassigned: 0,
-      currentRiskScore: 0,
-      totalVulnerabilities: 0,
-      totalProjects: 0,
-    };
-  },
-  methods: {
-    cloneDeep: function (service) {
-      return cloneDeep(service);
-    },
-    getStyle: function (style) {
-      return getStyle(style);
-    },
-    syncServiceFields: function (service) {
-      this.service = service;
-      EventBus.$emit('addCrumb', this.serviceLabel);
-      this.$title = this.serviceLabel;
     },
   },
   beforeMount() {
@@ -226,6 +235,19 @@ export default {
   },
   destroyed() {
     EventBus.$emit('crumble');
+  },
+  methods: {
+    cloneDeep: function (service) {
+      return cloneDeep(service);
+    },
+    getStyle: function (style) {
+      return getStyle(style);
+    },
+    syncServiceFields: function (service) {
+      this.service = service;
+      EventBus.$emit('addCrumb', this.serviceLabel);
+      this.$title = this.serviceLabel;
+    },
   },
 };
 </script>

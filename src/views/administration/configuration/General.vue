@@ -72,18 +72,38 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BFormGroup,
+  BFormSelect,
+  BFormSelectOption,
+  BInputGroup,
+  BInputGroupPrepend,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BFormGroup,
+    BInputGroup,
+    BInputGroupPrepend,
+    BFormSelect,
+    BFormSelectOption,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -96,6 +116,32 @@ export default {
         dataOff: '\u2715',
       },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'general';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'base.url':
+            this.baseUrl = item.propertyValue;
+            break;
+          case 'badge.enabled':
+            this.isBadgesEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'default.locale':
+            this.isDefaultLanguageEnabled = !!common.trimToNull(
+              item.propertyValue,
+            );
+            this.defaultLanguage = this.isDefaultLanguageEnabled
+              ? item.propertyValue
+              : '';
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -139,32 +185,6 @@ export default {
         .map((charCode) => String.fromCodePoint(charCode))
         .join('');
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'general';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'base.url':
-            this.baseUrl = item.propertyValue;
-            break;
-          case 'badge.enabled':
-            this.isBadgesEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'default.locale':
-            this.isDefaultLanguageEnabled = !!common.trimToNull(
-              item.propertyValue,
-            );
-            this.defaultLanguage = this.isDefaultLanguageEnabled
-              ? item.propertyValue
-              : '';
-            break;
-        }
-      }
-    });
   },
 };
 </script>

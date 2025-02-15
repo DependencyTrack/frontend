@@ -30,7 +30,7 @@
       v-model="templateBasedir"
       :tooltip="$t('admin.template_basedir_tooltip')"
     />
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -46,18 +46,23 @@
     </template>
   </b-modal>
 </template>
+
 <script>
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { BButton, BFormGroup, BModal } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BModal,
+    BFormGroup,
+    BButton,
   },
+  mixins: [configPropertyMixin],
   data() {
     return {
       enableDefaultTemplatesOverride: null,

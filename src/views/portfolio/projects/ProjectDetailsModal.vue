@@ -10,7 +10,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
         <b-card>
@@ -26,7 +26,7 @@
             :label="$t('message.project_name')"
             :tooltip="this.$t('message.project_name_desc')"
             :feedback-text="$t('message.required_project_name')"
-            v-on:change="syncReadOnlyNameField"
+            @change="syncReadOnlyNameField"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-row align-v="stretch">
@@ -40,7 +40,7 @@
                 required="false"
                 feedback="false"
                 autofocus="false"
-                v-on:change="syncReadOnlyVersionField"
+                @change="syncReadOnlyVersionField"
                 :label="$t('message.version')"
                 :tooltip="this.$t('message.component_version_desc')"
                 :readonly="
@@ -77,7 +77,7 @@
             :label="$t('message.collectionLogic')"
             :tooltip="$t('message.project_collection_logic_desc')"
             :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            v-on:change="syncCollectionTagsVisibility"
+            @change="syncCollectionTagsVisibility"
           />
           <vue-tags-input
             id="input-collectionTags"
@@ -110,8 +110,8 @@
               @search-change="asyncFind"
               :internal-search="false"
               :close-on-select="true"
-              selectLabel=""
-              deselectLabel=""
+              select-label=""
+              deselect-label=""
             ></multiselect>
           </div>
           <b-form-group
@@ -172,7 +172,7 @@
         </b-card>
       </b-tab>
       <b-tab class="body-bg-color" style="border: 0; padding: 0">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -251,7 +251,7 @@
         style="border: 0; padding: 0"
         v-if="project.manufacturer"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-industry"></i>
           {{ $t('message.manufacturer') }}</template
         >
@@ -302,7 +302,7 @@
         style="border: 0; padding: 0"
         v-if="project.supplier"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.supplier') }}</template
         >
@@ -349,7 +349,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-external-link"></i>
           {{ $t('message.external_references') }}</template
         >
@@ -370,7 +370,7 @@
           (project.metadata.authors || project.metadata.supplier)
         "
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template
         >
         <b-card>
@@ -444,7 +444,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button
         size="md"
         variant="outline-danger"
@@ -481,32 +481,52 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import VueTagsInput from '@johmun/vue-tags-input';
-import { Switch as cSwitch } from '@coreui/vue';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
+import {
+  BButton,
+  BCard,
+  BCol,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ProjectDetailsModal',
-  mixins: [
-    permissionsMixin,
-    availableClassifiersMixin,
-    availableCollectionLogicsMixin,
-  ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
     Multiselect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BRow,
+    BCol,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
+    BootstrapTable,
   },
+  mixins: [
+    permissionsMixin,
+    availableClassifiersMixin,
+    availableCollectionLogicsMixin,
+  ],
   props: {
     project: Object,
     uuid: String,
@@ -654,6 +674,14 @@ export default {
       },
     };
   },
+  watch: {
+    tag(input) {
+      this.searchTags(input);
+    },
+    collectionTagTyping(input) {
+      this.searchTags(input);
+    },
+  },
   beforeUpdate() {
     this.readOnlyProjectName = this.project.name;
     this.readOnlyProjectVersion = this.project.version;
@@ -672,14 +700,6 @@ export default {
       }
       this.$root.$emit('bv::show::modal', 'projectDetailsModal');
     });
-  },
-  watch: {
-    tag(input) {
-      this.searchTags(input);
-    },
-    collectionTagTyping(input) {
-      this.searchTags(input);
-    },
   },
   methods: {
     initializeTags: function () {
@@ -826,7 +846,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>
 
 <style scoped>

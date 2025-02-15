@@ -3,34 +3,28 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue';
 import App from './App';
 import router from './router';
 import i18n from './i18n';
 import './validation';
-import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import vueDebounce from 'vue-debounce';
-import VuePageTitle from 'vue-page-title';
 import '@/directives/VuePermission';
-import VueToastr from 'vue-toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
+import {
+  installBootstrap,
+  installBootstrapPageTitlePlugin,
+} from '@/plugins/bootstrap';
+import installPermissionDirective from '@/directives/VuePermission';
 
-Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
-Vue.use(VueToastr, {
-  defaultTimeout: 5000,
-  defaultProgressBar: false,
-  defaultProgressBarValue: 0,
-  defaultPosition: 'toast-top-right',
-  defaultCloseOnHover: false,
-});
-Vue.use(vueDebounce, { defaultTime: '750ms' });
-Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
+
+installBootstrap(Vue);
+installBootstrapPageTitlePlugin(Vue, router);
+installPermissionDirective(Vue);
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
@@ -101,10 +95,10 @@ function createVueApp() {
   new Vue({
     el: '#app',
     router,
-    template: '<App/>',
     components: {
       App,
     },
+    template: '<App/>',
     i18n,
   });
 }

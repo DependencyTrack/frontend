@@ -15,7 +15,7 @@
       @on-uncheck="onRowSelectionChange"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button
         size="md"
         variant="outline-danger"
@@ -39,12 +39,18 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BModal } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ComponentPropertiesModal',
+  components: {
+    BModal,
+    BButton,
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
   props: {
     uuid: String,
@@ -145,5 +151,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>

@@ -9,7 +9,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -116,7 +116,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-caret-square-o-right"></i>
           {{ $t('message.extended') }}</template
         >
@@ -155,7 +155,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-balance-scale"></i>
           {{ $t('message.legal') }}</template
         >
@@ -204,7 +204,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-barcode"></i> {{ $t('message.hashes') }}</template
         >
         <b-card>
@@ -275,7 +275,7 @@
         style="border: 0; padding: 0"
         v-if="component.supplier"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.supplier') }}</template
         >
@@ -321,7 +321,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-external-link"></i>
           {{ $t('message.external_references') }}</template
         >
@@ -336,7 +336,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-file-text-o"></i> {{ $t('message.notes') }}</template
         >
         <b-card>
@@ -355,7 +355,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button
         size="md"
         variant="outline-danger"
@@ -385,20 +385,39 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import {
+  BBadge,
+  BButton,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ComponentDetailsModal',
-  mixins: [permissionsMixin, availableClassifiersMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BBadge,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
+    BootstrapTable,
   },
+  mixins: [permissionsMixin, availableClassifiersMixin],
   props: {
     component: Object,
   },
