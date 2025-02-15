@@ -59,17 +59,18 @@
   </b-card>
 </template>
 <script>
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import { Switch as cSwitch } from '@coreui/vue';
+
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -78,6 +79,28 @@ export default {
       jiraUsername: '',
       jiraPassword: '',
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'integrations';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'jira.url':
+            this.jiraUrl = item.propertyValue;
+            break;
+          case 'jira.username':
+            this.jiraUsername = item.propertyValue;
+            this.enabled = this.jiraUsername === undefined;
+            break;
+          case 'jira.password':
+            this.jiraPassword = item.propertyValue;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -105,28 +128,6 @@ export default {
         );
       }
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'integrations';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'jira.url':
-            this.jiraUrl = item.propertyValue;
-            break;
-          case 'jira.username':
-            this.jiraUsername = item.propertyValue;
-            this.enabled = this.jiraUsername === undefined;
-            break;
-          case 'jira.password':
-            this.jiraPassword = item.propertyValue;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

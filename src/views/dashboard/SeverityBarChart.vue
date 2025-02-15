@@ -4,14 +4,14 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 
 export default {
+  components: {
+    hexToRgba,
+    CustomTooltips,
+  },
   extends: HorizontalBar,
   props: {
     height: Number,
     width: Number,
-  },
-  components: {
-    hexToRgba,
-    CustomTooltips,
   },
   data() {
     return {

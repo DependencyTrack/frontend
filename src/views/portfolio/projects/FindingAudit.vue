@@ -255,6 +255,10 @@ import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
+  components: {
+    BootstrapToggle,
+  },
+  mixins: [permissionsMixin],
   props: {
     finding: Object,
     projectUuid: String,
@@ -342,7 +346,9 @@ export default {
       }
     },
   },
-  mixins: [permissionsMixin],
+  beforeMount() {
+    this.finding && this.getAnalysis();
+  },
   methods: {
     resolveVulnAliases: function (aliases, vulnSource) {
       return common.resolveVulnAliases(
@@ -461,12 +467,6 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-  },
-  beforeMount() {
-    this.finding && this.getAnalysis();
-  },
-  components: {
-    BootstrapToggle,
   },
 };
 </script>

@@ -15,7 +15,7 @@
       v-model="name"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -27,15 +27,15 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   name: 'createPolicyModal',
-  mixins: [permissionsMixin],
   components: {
     BValidatedInputGroupFormInput,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       name: null,

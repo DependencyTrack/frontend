@@ -1,12 +1,12 @@
-import { extend, configure } from 'vee-validate';
+import { configure, extend } from 'vee-validate';
 import {
-  required,
   confirmed,
-  min_value,
   max_value,
+  min_value,
+  required,
 } from 'vee-validate/dist/rules';
 
-import i18n from '../i18n';
+import i18n from '@/i18n';
 
 // Get rule localization based on the rule name
 configure({

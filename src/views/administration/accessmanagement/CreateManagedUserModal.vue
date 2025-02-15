@@ -89,7 +89,7 @@
         />{{ $t('admin.password_never_expires') }}
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -101,16 +101,20 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
     cSwitch,
+    BModal,
+    BRow,
+    BCol,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       username: null,

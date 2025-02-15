@@ -110,7 +110,7 @@
       {{ $t('message.include_policy_violations') }}</b-form-checkbox
     >
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -201,7 +201,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 .custom-control {
   padding-bottom: 0.3rem;
 }

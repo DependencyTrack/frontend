@@ -113,7 +113,7 @@
     <project-upload-bom-modal :uuid="this.uuid" />
     <project-add-component-modal
       :uuid="this.uuid"
-      v-on:refreshTable="refreshTable"
+      @refreshTable="refreshTable"
     />
   </div>
 </template>
@@ -129,22 +129,22 @@ import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import { get } from 'lodash-es';
 
 export default {
+  comments: {
+    ProjectAddComponentModal,
+    ProjectUploadBomModal,
+  },
   components: {
     cSwitch,
     ProjectUploadBomModal,
     ProjectAddComponentModal,
   },
   mixins: [permissionsMixin],
-  comments: {
-    ProjectAddComponentModal,
-    ProjectUploadBomModal,
-  },
   props: {
     uuid: String,
     project: Object,
@@ -377,6 +377,16 @@ export default {
       },
     };
   },
+  watch: {
+    onlyOutdated() {
+      this.$refs.table.showLoading();
+      this.refreshTable();
+    },
+    onlyDirect() {
+      this.$refs.table.showLoading();
+      this.refreshTable();
+    },
+  },
   methods: {
     initializeTooltips: function () {
       $('[data-toggle="tooltip"]').tooltip({
@@ -506,16 +516,6 @@ export default {
         pageNumber: 1,
         silent: true,
       });
-    },
-  },
-  watch: {
-    onlyOutdated() {
-      this.$refs.table.showLoading();
-      this.refreshTable();
-    },
-    onlyDirect() {
-      this.$refs.table.showLoading();
-      this.refreshTable();
     },
   },
 };

@@ -6,9 +6,9 @@
     :label-class="labelClasses"
   >
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"
-        ><b-input-group-text><i :class="icon"></i></b-input-group-text
-      ></b-input-group-prepend>
+      <b-input-group-prepend v-if="icon">
+        <b-input-group-text><i :class="icon"></i></b-input-group-text>
+      </b-input-group-prepend>
       <b-form-datepicker
         :id="`${id}-input`"
         :class="inputClasses"
@@ -25,12 +25,13 @@
           month: '2-digit',
           day: '2-digit',
         }"
-        v-on:blur="hadFocus = true"
+        @blur="hadFocus = true"
       />
-      <b-input-group-append v-if="tooltip"
-        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
-      ></b-input-group-append>
+      <b-input-group-append v-if="tooltip">
+        <b-input-group-text v-b-tooltip.hover :title="tooltip"
+          ><i class="cui-info font-lg"></i
+        ></b-input-group-text>
+      </b-input-group-append>
     </b-input-group>
     <b-form-invalid-feedback
       v-if="this.feedback === 'true'"
@@ -42,9 +43,27 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
+import {
+  BFormDatepicker,
+  BFormGroup,
+  BFormInvalidFeedback,
+  BInputGroup,
+  BInputGroupAppend,
+  BInputGroupPrepend,
+  BInputGroupText,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BFormGroup,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupText,
+    BFormDatepicker,
+    BInputGroupAppend,
+    BFormInvalidFeedback,
+  },
   props: {
     id: String,
     label: String,
@@ -74,12 +93,6 @@ export default {
       hadFocus: false,
     };
   },
-  beforeMount() {
-    this.isFocused = common.toBoolean(this.autofocus);
-    this.isRequired = common.toBoolean(this.required);
-    this.isDisabled = common.toBoolean(this.disabled);
-    this.readonly = common.toBoolean(this.readonly);
-  },
   computed: {
     innerValue: {
       get: function () {
@@ -106,6 +119,12 @@ export default {
     labelClasses: function () {
       return this.isRequired ? 'required' : null;
     },
+  },
+  beforeMount() {
+    this.isFocused = common.toBoolean(this.autofocus);
+    this.isRequired = common.toBoolean(this.required);
+    this.isDisabled = common.toBoolean(this.disabled);
+    this.readonly = common.toBoolean(this.readonly);
   },
   methods: {
     feedbackState: function () {

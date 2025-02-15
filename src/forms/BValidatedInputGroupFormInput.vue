@@ -8,9 +8,9 @@
   >
     <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
       <b-input-group :class="inputGroupSize">
-        <b-input-group-prepend v-if="icon"
-          ><b-input-group-text><i :class="icon"></i></b-input-group-text
-        ></b-input-group-prepend>
+        <b-input-group-prepend v-if="icon">
+          <b-input-group-text><i :class="icon"></i></b-input-group-text>
+        </b-input-group-prepend>
         <b-form-input
           :id="`${id}-input`"
           :type="type"
@@ -22,10 +22,11 @@
           :autofocus="isFocused"
           v-on="inputListeners"
         />
-        <b-input-group-append v-if="tooltip"
-          ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-            ><i class="cui-info font-lg"></i></b-input-group-text
-        ></b-input-group-append>
+        <b-input-group-append v-if="tooltip">
+          <b-input-group-text v-b-tooltip.hover :title="tooltip"
+            ><i class="cui-info font-lg"></i
+          ></b-input-group-text>
+        </b-input-group-append>
       </b-input-group>
       <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
         {{ errors[0] }}
@@ -36,12 +37,28 @@
 
 <script>
 import { ValidationProvider } from 'vee-validate';
-import common from '../shared/common';
+import common from '@/shared/common';
+import {
+  BFormGroup,
+  BFormInput,
+  BFormInvalidFeedback,
+  BInputGroup,
+  BInputGroupAppend,
+  BInputGroupPrepend,
+  BInputGroupText,
+} from 'bootstrap-vue';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
   components: {
     ValidationProvider,
+    BFormGroup,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupText,
+    BFormInput,
+    BInputGroupAppend,
+    BFormInvalidFeedback,
   },
   props: {
     id: String,
@@ -61,11 +78,6 @@ export default {
     return {
       isFocused: false,
     };
-  },
-  beforeMount() {
-    if (this.autofocus === true || this.autofocus === 'true') {
-      this.isFocused = true;
-    }
   },
   computed: {
     innerValue: {
@@ -96,6 +108,11 @@ export default {
       }
       return classes;
     },
+  },
+  beforeMount() {
+    if (this.autofocus === true || this.autofocus === 'true') {
+      this.isFocused = true;
+    }
   },
   methods: {
     errorHandlingMethod: function (errors, valid) {

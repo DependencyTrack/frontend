@@ -1,5 +1,5 @@
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import { Line } from 'vue-chartjs';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';

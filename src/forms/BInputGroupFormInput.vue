@@ -6,9 +6,9 @@
     :label-class="labelClasses"
   >
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"
-        ><b-input-group-text><i :class="icon"></i></b-input-group-text
-      ></b-input-group-prepend>
+      <b-input-group-prepend v-if="icon">
+        <b-input-group-text><i :class="icon"></i></b-input-group-text>
+      </b-input-group-prepend>
       <b-form-input
         :id="`${id}-input`"
         :type="type"
@@ -22,13 +22,14 @@
         :readonly="readonly"
         :disabled="isDisabled"
         v-on="inputListeners"
-        v-on:blur="hadFocus = true"
+        @blur="hadFocus = true"
         trim
       />
-      <b-input-group-append v-if="tooltip"
-        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
-      ></b-input-group-append>
+      <b-input-group-append v-if="tooltip">
+        <b-input-group-text v-b-tooltip.hover :title="tooltip"
+          ><i class="cui-info font-lg"></i
+        ></b-input-group-text>
+      </b-input-group-append>
     </b-input-group>
     <b-form-invalid-feedback
       v-if="this.feedback === 'true'"
@@ -40,11 +41,29 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
+import {
+  BFormGroup,
+  BFormInput,
+  BFormInvalidFeedback,
+  BInputGroup,
+  BInputGroupAppend,
+  BInputGroupPrepend,
+  BInputGroupText,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BFormGroup,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupText,
+    BFormInput,
+    BInputGroupAppend,
+    BFormInvalidFeedback,
+  },
   props: {
-    id: String,
+    String,
     label: String,
     value: String,
     inputGroupSize: String,
@@ -72,11 +91,6 @@ export default {
       hadFocus: false,
     };
   },
-  beforeMount() {
-    this.isFocused = common.toBoolean(this.autofocus);
-    this.isRequired = common.toBoolean(this.required);
-    this.isDisabled = common.toBoolean(this.disabled);
-  },
   computed: {
     innerValue: {
       get: function () {
@@ -103,6 +117,11 @@ export default {
     labelClasses: function () {
       return this.isRequired ? 'required' : null;
     },
+  },
+  beforeMount() {
+    this.isFocused = common.toBoolean(this.autofocus);
+    this.isRequired = common.toBoolean(this.required);
+    this.isDisabled = common.toBoolean(this.disabled);
   },
   methods: {
     feedbackState: function () {

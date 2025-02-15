@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import EventBus from '../../shared/eventbus';
+import EventBus from '@/shared/eventbus';
 import AdminMenu from './AdminMenu';
 
 // Configuration plugins
@@ -114,14 +114,6 @@ export default {
     Permissions,
     PortfolioAccessControl,
   },
-  created() {
-    // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
-    EventBus.$on('admin:plugin', (plugin) => {
-      this.selectedComponent = plugin.component;
-      this.header = plugin.name;
-      this.href = plugin.href;
-    });
-  },
   data() {
     // Default to loading the General plugin first
     return {
@@ -129,6 +121,14 @@ export default {
       header: this.$t('admin.general'),
       href: '#generalConfigTab',
     };
+  },
+  created() {
+    // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
+    EventBus.$on('admin:plugin', (plugin) => {
+      this.selectedComponent = plugin.component;
+      this.header = plugin.name;
+      this.href = plugin.href;
+    });
   },
 };
 </script>

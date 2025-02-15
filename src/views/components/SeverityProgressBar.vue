@@ -50,7 +50,14 @@
 </template>
 
 <script>
+import { BProgress, BProgressBar, BTooltip } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BProgressBar,
+    BProgress,
+    BTooltip,
+  },
   props: {
     vulnerabilities: Number,
     critical: Number,
@@ -58,7 +65,6 @@ export default {
     medium: Number,
     low: Number,
     unassigned: Number,
-    $t: Function,
   },
   data() {
     return {

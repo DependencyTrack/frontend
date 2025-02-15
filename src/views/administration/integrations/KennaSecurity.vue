@@ -49,18 +49,18 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -73,6 +73,30 @@ export default {
         dataOff: '\u2715',
       },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      let configItems = response.data.filter(function (item) {
+        return item.groupName === 'integrations';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        let item = configItems[i];
+        switch (item.propertyName) {
+          case 'kenna.enabled':
+            this.enabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'kenna.sync.cadence':
+            this.cadence = item.propertyValue;
+            break;
+          case 'kenna.connector.id':
+            this.connectorId = item.propertyValue;
+            break;
+          case 'kenna.token':
+            this.token = item.propertyValue;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -99,30 +123,6 @@ export default {
         },
       ]);
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'integrations';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'kenna.enabled':
-            this.enabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'kenna.sync.cadence':
-            this.cadence = item.propertyValue;
-            break;
-          case 'kenna.connector.id':
-            this.connectorId = item.propertyValue;
-            break;
-          case 'kenna.token':
-            this.token = item.propertyValue;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

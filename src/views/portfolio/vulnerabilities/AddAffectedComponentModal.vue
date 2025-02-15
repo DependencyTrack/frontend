@@ -77,7 +77,7 @@
       </b-col>
     </b-row>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -89,16 +89,21 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import { BButton, BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
+    BModal,
+    BRow,
+    BCol,
+    BButton,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       okButton: this.$t('message.add'),
