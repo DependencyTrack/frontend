@@ -8,7 +8,6 @@ import App from './App';
 import router from './router';
 import i18n from './i18n';
 import './validation';
-import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import vueDebounce from 'vue-debounce';
@@ -19,6 +18,8 @@ import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
+import installBootstrapTableComponent from '@/plugins/table';
+import installPermissionDirective from '@/directives/VuePermission';
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -31,6 +32,9 @@ Vue.use(VueToastr, {
 });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
+
+installBootstrapTableComponent(Vue);
+installPermissionDirective(Vue);
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;

@@ -6,9 +6,9 @@
     :label-class="labelClasses"
   >
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"
-        ><b-input-group-text><i :class="icon"></i></b-input-group-text
-      ></b-input-group-prepend>
+      <b-input-group-prepend v-if="icon">
+        <b-input-group-text><i :class="icon"></i></b-input-group-text>
+      </b-input-group-prepend>
       <b-form-datepicker
         :id="`${id}-input`"
         :class="inputClasses"
@@ -27,10 +27,11 @@
         }"
         v-on:blur="hadFocus = true"
       />
-      <b-input-group-append v-if="tooltip"
-        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
-      ></b-input-group-append>
+      <b-input-group-append v-if="tooltip">
+        <b-input-group-text v-b-tooltip.hover :title="tooltip"
+          ><i class="cui-info font-lg"></i
+        ></b-input-group-text>
+      </b-input-group-append>
     </b-input-group>
     <b-form-invalid-feedback
       v-if="this.feedback === 'true'"
@@ -43,8 +44,26 @@
 
 <script>
 import common from '../shared/common';
+import {
+  BFormDatepicker,
+  BFormGroup,
+  BFormInvalidFeedback,
+  BInputGroup,
+  BInputGroupAppend,
+  BInputGroupPrepend,
+  BInputGroupText,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BFormGroup,
+    BInputGroup,
+    BInputGroupPrepend,
+    BInputGroupText,
+    BFormDatepicker,
+    BInputGroupAppend,
+    BFormInvalidFeedback,
+  },
   props: {
     id: String,
     label: String,

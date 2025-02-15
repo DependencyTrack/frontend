@@ -8,7 +8,12 @@
 </template>
 
 <script>
+import { BButton } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BButton,
+  },
   props: {
     variant: String,
     label: String,

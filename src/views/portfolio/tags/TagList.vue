@@ -25,11 +25,16 @@ import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListMo
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
+import { BLink } from 'bootstrap-vue';
 
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
     PortfolioWidgetRow,
+    // eslint-disable-next-line vue/no-unused-components
+    BLink,
+    // eslint-disable-next-line vue/no-unused-components
+    TaggedProjectListModal,
   },
   methods: {
     deleteTags: function (tagNames) {

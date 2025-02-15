@@ -10,8 +10,8 @@
             style="float: right"
             @click="clearAllFilters()"
           >
-            {{ this.$t('message.clear_all') }}</b-button
-          >
+            {{ this.$t('message.clear_all') }}
+          </b-button>
           <br /><br />
           <b-form-group
             id="showInactive-form-group"
@@ -141,15 +141,33 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import { hasPermission } from '@/shared/permissions';
 import * as permissions from '@/shared/permissions';
+import { hasPermission } from '@/shared/permissions';
+import {
+  BButton,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormGroup,
+  BRow,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table';
 
 export default {
   mixins: [permissionsMixin],
+  components: {
+    BRow,
+    BCol,
+    BButton,
+    BFormGroup,
+    BFormCheckbox,
+    BFormCheckboxGroup,
+    BootstrapTable,
+  },
   computed: {
     watchers() {
       return [

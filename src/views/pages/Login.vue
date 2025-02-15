@@ -44,12 +44,9 @@
                     />
                     <b-row style="margin-bottom: 1rem">
                       <b-col cols="6" v-show="showLoginForm">
-                        <b-button
-                          variant="primary"
-                          type="submit"
-                          class="px-4"
-                          >{{ $t('message.login') }}</b-button
-                        >
+                        <b-button variant="primary" type="submit" class="px-4"
+                          >{{ $t('message.login') }}
+                        </b-button>
                       </b-col>
                       <b-col cols="6" v-show="oidcAvailable">
                         <b-button
@@ -71,8 +68,8 @@
                     <b-link
                       v-show="oidcAvailable && !showLoginForm"
                       v-on:click="showLoginForm = true"
-                      >{{ $t('message.login_more_options') }}</b-link
-                    >
+                      >{{ $t('message.login_more_options') }}
+                    </b-link>
                   </b-form>
                 </validation-observer>
               </b-card-body>
@@ -102,15 +99,23 @@
 <script>
 import axios from 'axios';
 import Oidc from 'oidc-client';
-// bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import $ from 'jquery';
 import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import InformationalModal from '../modals/InformationalModal';
 import EventBus from '../../shared/eventbus';
-import { getRedirectUrl, getContextPath } from '@/shared/utils';
+import { getContextPath, getRedirectUrl } from '@/shared/utils';
 import queryString from 'query-string';
 import common from '../../shared/common';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardGroup,
+  BCol,
+  BForm,
+  BLink,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
   name: 'Login',
@@ -118,6 +123,14 @@ export default {
     InformationalModal,
     BValidatedInputGroupFormInput,
     ValidationObserver,
+    BRow,
+    BCol,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BForm,
+    BButton,
+    BLink,
   },
   data() {
     return {

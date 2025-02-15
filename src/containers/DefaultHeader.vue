@@ -18,6 +18,7 @@
 <script>
 import { Header as AppHeader, SidebarToggler } from '@coreui/vue';
 import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
+import { BNavbarNav } from 'bootstrap-vue';
 
 export default {
   name: 'DefaultHeader',
@@ -25,6 +26,7 @@ export default {
     AppHeader,
     DefaultHeaderProfileDropdown,
     SidebarToggler,
+    BNavbarNav,
   },
 };
 </script>

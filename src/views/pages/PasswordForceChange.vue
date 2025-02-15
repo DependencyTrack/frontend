@@ -59,8 +59,8 @@
                           variant="primary"
                           class="px-4"
                           type="submit"
-                          >{{ $t('message.password_change') }}</b-button
-                        >
+                          >{{ $t('message.password_change') }}
+                        </b-button>
                       </b-col>
                     </b-row>
                   </b-form>
@@ -96,6 +96,15 @@ import InformationalModal from '../modals/InformationalModal';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import { getRedirectUrl } from '@/shared/utils';
 import queryString from 'query-string';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardGroup,
+  BCol,
+  BForm,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
   name: 'PasswordForceChange',
@@ -103,6 +112,13 @@ export default {
     BValidatedInputGroupFormInput,
     InformationalModal,
     ValidationObserver,
+    BRow,
+    BCol,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BForm,
+    BButton,
   },
   data() {
     return {
