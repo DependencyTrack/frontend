@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script>
+<script lang="jsx">
 import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
@@ -665,7 +665,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~vue2-org-tree/dist/style.css';
+@import 'vue2-org-tree/dist/style.css';
 .org-tree-container {
   background-color: inherit;
 }

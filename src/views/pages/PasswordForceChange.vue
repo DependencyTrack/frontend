@@ -94,8 +94,8 @@ import axios from 'axios';
 import { ValidationObserver } from 'vee-validate';
 import InformationalModal from '../modals/InformationalModal';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import { getRedirectUrl } from '../../shared/utils';
-const qs = require('querystring');
+import { getRedirectUrl } from '@/shared/utils';
+import queryString from 'query-string';
 
 export default {
   name: 'PasswordForceChange',
@@ -130,7 +130,7 @@ export default {
         },
       };
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, queryString.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             this.$toastr.s(this.$t('message.password_change_success'));

@@ -34,10 +34,14 @@ Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
+
+console.log('Loading DT...');
+
 const contextPath = getContextPath();
 axios
   .get(contextPath + '/static/config.json')
   .then((response) => {
+    console.log('Loaded config.json', response);
     if (response.data.API_BASE_URL && response.data.API_BASE_URL !== '') {
       Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
     } else {
@@ -67,6 +71,9 @@ axios
       'Cannot retrieve static/config.json from host. This is expected behavior in development environments.',
     );
     createVueApp();
+  })
+  .catch((error) => {
+    console.error('Failed to load config.json', error);
   });
 
 /**
@@ -74,6 +81,7 @@ axios
  * https://github.com/DependencyTrack/frontend/issues/34
  */
 function createVueApp() {
+  console.log('Creating Vue App');
   /*
   Register global $dtrack variable which will be the response body from /api/version.
   $dtrack can then be used anywhere in the app to get information about the server,
@@ -83,6 +91,9 @@ function createVueApp() {
     .get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
     .then((result) => {
       Vue.prototype.$dtrack = result.data;
+    })
+    .catch((error) => {
+      console.error('Failed to load about URL', error);
     });
 
   Vue.prototype.$version = version;
