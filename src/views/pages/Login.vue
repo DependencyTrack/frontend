@@ -87,6 +87,7 @@
                   <img
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
                     width="100%"
+                    alt="DependencyTrack Logo"
                   />
                 </div>
               </b-card-body>

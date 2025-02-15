@@ -8,7 +8,11 @@
   >
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          width="200"
+          alt="DependencyTrack Logo"
+        />
       </b-col>
     </b-row>
     <hr />
