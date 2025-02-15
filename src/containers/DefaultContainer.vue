@@ -30,10 +30,8 @@ import {
   SidebarHeader,
   SidebarMinimizer,
   SidebarNav,
-  Aside as AppAside,
   Breadcrumb,
 } from '@coreui/vue';
-import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
 import DefaultHeader from './DefaultHeader';
 import DefaultFooter from './DefaultFooter';
 import EventBus from '../shared/eventbus';
@@ -47,9 +45,7 @@ export default {
     ProfileEditModal,
     SnapshotModal,
     AppSidebar,
-    AppAside,
     Breadcrumb,
-    DefaultHeaderProfileDropdown,
     SidebarForm,
     SidebarFooter,
     SidebarHeader,

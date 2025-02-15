@@ -46,7 +46,6 @@ export default {
   mixins: [bootstrapTableMixin],
   components: {
     cSwitch,
-    BootstrapToggle,
   },
   beforeCreate() {
     this.showSuppressedViolations =

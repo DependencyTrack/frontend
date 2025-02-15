@@ -123,7 +123,6 @@
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import BInputGroupFormDatepicker from '../../../forms/BInputGroupFormDatepicker';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
@@ -135,7 +134,6 @@ export default {
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
-    BInputGroupFormDatepicker,
   },
   data() {
     return {

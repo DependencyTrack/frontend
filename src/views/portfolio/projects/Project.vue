@@ -39,7 +39,10 @@
                         ></i
                       ></a>
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in activeProjectVersions">
+                        <span
+                          v-for="projectVersion in activeProjectVersions"
+                          :key="projectVersion.uuid"
+                        >
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
@@ -56,6 +59,7 @@
                         >
                           <span
                             v-for="projectVersion in inactiveProjectVersions"
+                            :key="projectVersion.uuid"
                           >
                             <b-dropdown-item
                               :to="{
@@ -97,7 +101,7 @@
             </div>
             <div class="text-muted font-xs">
               <span class="text-lowercase font-weight-bold">
-                <span v-for="tag in project.tags">
+                <span v-for="tag in project.tags" :key="tag.name">
                   <b-badge
                     :to="{ name: 'Projects', query: { tag: tag.name } }"
                     variant="tag"
@@ -403,9 +407,7 @@ import ProjectComponents from './ProjectComponents';
 import ProjectCollectionProjects from './ProjectCollectionProjects';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
 import ProjectServices from './ProjectServices';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ProjectDashboard from './ProjectDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal';
@@ -431,9 +433,7 @@ export default {
     ProjectCollectionProjects,
     ProjectDependencyGraph,
     ProjectServices,
-    SeverityBarChart,
     ProjectDashboard,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ProjectEpss,
     ExternalReferencesDropdown,

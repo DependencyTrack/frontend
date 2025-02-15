@@ -505,7 +505,6 @@ export default {
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
-    cSwitch,
     Multiselect,
   },
   props: {

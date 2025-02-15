@@ -43,7 +43,6 @@ import {
 } from '@/shared/utils';
 import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import common from '../../../shared/common';
@@ -56,7 +55,6 @@ export default {
   mixins: [bootstrapTableMixin],
   components: {
     cSwitch,
-    BootstrapToggle,
     ChartEpssVsCvss,
   },
   beforeCreate() {

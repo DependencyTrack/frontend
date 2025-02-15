@@ -15,7 +15,6 @@
 import common from '../../../shared/common';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import xssFilters from 'xss-filters';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
@@ -24,9 +23,6 @@ export default {
     uuid: String,
   },
   mixins: [bootstrapTableMixin, permissionsMixin],
-  components: {
-    BootstrapToggle,
-  },
   data() {
     return {
       columns: [

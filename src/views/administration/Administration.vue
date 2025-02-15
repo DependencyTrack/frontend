@@ -26,7 +26,6 @@ import InternalComponents from './configuration/InternalComponents';
 import Jira from './configuration/JiraConfig';
 import Search from './configuration/Search.vue';
 import TaskScheduler from './configuration/TaskScheduler.vue';
-import Telemetry from './configuration/Telemetry.vue';
 import Experimental from './configuration/Experimental.vue';
 import WelcomeMessage from './configuration/WelcomeMessage.vue';
 // Analyzer plugins
@@ -71,7 +70,6 @@ import Teams from './accessmanagement/Teams';
 
 export default {
   components: {
-    EventBus,
     AdminMenu,
     General,
     WelcomeMessage,
@@ -80,7 +78,6 @@ export default {
     Jira,
     InternalComponents,
     TaskScheduler,
-    Telemetry,
     Search,
     Experimental,
     InternalAnalyzer,
@@ -140,12 +137,15 @@ export default {
 .tab-content {
   border: 0;
 }
+
 .tab-content .tab-pane {
   padding: 0;
 }
+
 .card-header {
   font-weight: 700;
 }
+
 @media only screen and (min-device-width: 600px) {
   #admin-menu-column {
     max-width: 280px;

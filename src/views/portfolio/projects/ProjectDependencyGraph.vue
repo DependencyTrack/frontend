@@ -726,7 +726,7 @@ export default {
   padding: 0;
 }
 .horizontal .org-tree-node-label {
-  padding: 5px 0px 5px 10px;
+  padding: 5px 0 5px 10px;
 }
 // Button size and position
 .horizontal .org-tree-node-btn {

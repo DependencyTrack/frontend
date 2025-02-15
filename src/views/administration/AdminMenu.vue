@@ -44,16 +44,10 @@
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
 import EventBus from '../../shared/eventbus';
-import {
-  ACCESS_MANAGEMENT,
-  SYSTEM_CONFIGURATION,
-} from '../../shared/permissions';
+import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from '@/shared/permissions';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
-  },
   methods: {
     emitEvent: function (plugin) {
       EventBus.$emit('admin:plugin', plugin);

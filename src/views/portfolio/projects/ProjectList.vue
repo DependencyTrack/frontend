@@ -57,7 +57,6 @@ import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
 import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
 import SeverityProgressBar from '../../components/SeverityProgressBar';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
 
 export default {
@@ -65,7 +64,6 @@ export default {
   components: {
     cSwitch,
     ProjectCreateProjectModal,
-    PortfolioWidgetRow,
   },
   props: {
     /**
