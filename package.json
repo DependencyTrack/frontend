@@ -68,6 +68,7 @@
     "@babel/eslint-parser": "7.24.1",
     "@cyclonedx/cyclonedx-npm": "1.16.2",
     "@cyclonedx/webpack-plugin": "2.0.2",
+    "@types/xss-filters": "^1.2.0",
     "@vitejs/plugin-vue": "^1.10.2",
     "@vitejs/plugin-vue2-jsx": "^1.1.1",
     "@vue/babel-helper-vue-jsx-merge-props": "1.4.0",
