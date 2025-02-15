@@ -66,7 +66,6 @@
 <script>
 import Vue from 'vue';
 import common from '../../../shared/common';
-import { Switch as cSwitch } from '@coreui/vue';
 import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
@@ -78,7 +77,6 @@ import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 export default {
   mixins: [permissionsMixin],
   components: {
-    cSwitch,
     PortfolioWidgetRow,
     BInputGroupFormSelect,
     BInputGroupFormInput,

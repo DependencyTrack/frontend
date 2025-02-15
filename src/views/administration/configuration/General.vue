@@ -71,9 +71,7 @@
 </template>
 
 <script>
-import LocalePicker from '@/views/components/LocalePicker.vue';
 import { Switch as cSwitch } from '@coreui/vue';
-import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -84,9 +82,7 @@ export default {
     header: String,
   },
   components: {
-    LocalePicker,
     cSwitch,
-    ValidationObserver,
     BValidatedInputGroupFormInput,
   },
   data() {
