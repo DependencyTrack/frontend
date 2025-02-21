@@ -176,6 +176,11 @@ export default {
               name: this.$t('admin.osv_advisories'),
               route: 'vulnerabilitySources/osv',
             },
+            {
+              component: 'VulnSourceComposerAdvisories',
+              name: this.$t('admin.composer_advisories'),
+              route: 'vulnerabilitySources/composer',
+            },
           ],
         },
         {
