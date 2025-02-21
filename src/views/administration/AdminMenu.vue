@@ -112,6 +112,11 @@ export default {
               route: 'configuration/taskScheduler',
             },
             {
+              component: 'Telemetry',
+              name: this.$t('admin.telemetry'),
+              route: 'configuration/telemetry',
+            },
+            {
               component: 'Search',
               name: this.$t('message.search'),
               route: 'configuration/search',
