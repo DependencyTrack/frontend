@@ -309,7 +309,7 @@ export default {
                     this.popup(
                       this.$t('admin.new_api_key_title'),
                       this.$t('admin.new_api_key'),
-                      response.data.clearTextKey,
+                      response.data.key,
                     );
                     this.$toastr.s(this.$t('message.updated'));
                   })
@@ -333,7 +333,7 @@ export default {
                     this.popup(
                       this.$t('admin.regenerate_api_key_title'),
                       this.$t('admin.regenerate_api_key'),
-                      response.data.clearTextKey,
+                      response.data.key,
                     );
                     this.$toastr.s(this.$t('message.updated'));
                   })

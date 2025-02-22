@@ -3,7 +3,7 @@
     <div class="d-flex w-100 justify-content-between">
       <span class="text-monospace">{{ apiKey.maskedKey }}</span>
       <div class="d-flex">
-        <div v-if="apiKey.legacy">
+        <div v-show="apiKey.legacy">
           <span
             class="ml-3"
             style="float: right"
