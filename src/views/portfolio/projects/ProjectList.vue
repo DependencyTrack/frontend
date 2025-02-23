@@ -39,6 +39,7 @@
       :options="options"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody"
+      @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
     <project-create-project-modal v-on:refreshTable="refreshTable" />
