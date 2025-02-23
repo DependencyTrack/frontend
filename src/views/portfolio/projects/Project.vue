@@ -313,9 +313,10 @@
             v-b-tooltip.hover
             :title="$t('policy_violation.total')"
             >{{
-              showSuppressedViolations
+              policyViolationsTotal
+              /*showSuppressedViolations
                 ? policyViolationsTotal
-                : policyViolationsUnaudited
+                : policyViolationsUnaudited*/
             }}</b-badge
           >
           <b-badge
@@ -323,9 +324,10 @@
             v-b-tooltip.hover
             :title="$t('policy_violation.infos')"
             >{{
-              showSuppressedViolations
+              policyViolationsInfoTotal
+              /*showSuppressedViolations
                 ? policyViolationsInfoTotal
-                : policyViolationsInfoUnaudited
+                : policyViolationsInfoUnaudited*/
             }}</b-badge
           >
           <b-badge
@@ -333,9 +335,10 @@
             v-b-tooltip.hover
             :title="$t('policy_violation.warns')"
             >{{
-              showSuppressedViolations
+              policyViolationsWarnTotal
+              /*showSuppressedViolations
                 ? policyViolationsWarnTotal
-                : policyViolationsWarnUnaudited
+                : policyViolationsWarnUnaudited*/
             }}</b-badge
           >
           <b-badge
@@ -343,9 +346,10 @@
             v-b-tooltip.hover
             :title="$t('policy_violation.fails')"
             >{{
-              showSuppressedViolations
+              policyViolationsFailTotal
+              /*showSuppressedViolations
                 ? policyViolationsFailTotal
-                : policyViolationsFailUnaudited
+                : policyViolationsFailUnaudited*/
             }}</b-badge
           >
         </template>
@@ -451,11 +455,14 @@ export default {
       policyViolationsTotal: 0,
       policyViolationsUnaudited: 0,
       policyViolationsFailTotal: 0,
-      policyViolationsFailUnaudited: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsFailUnaudited: 0,
       policyViolationsWarnTotal: 0,
-      policyViolationsWarnUnaudited: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsWarnUnaudited: 0,
       policyViolationsInfoTotal: 0,
-      policyViolationsInfoUnaudited: 0,
+      // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+      // policyViolationsInfoUnaudited: 0,
       tabIndex: 0,
     };
   },
@@ -522,26 +529,29 @@ export default {
             this.project.metrics.policyViolationsFail,
             0,
           );
-          this.policyViolationsFailUnaudited = common.valueWithDefault(
-            this.project.metrics.policyViolationsFailUnaudited,
-            0,
-          );
+          // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+          // this.policyViolationsFailUnaudited = common.valueWithDefault(
+          //   this.project.metrics.policyViolationsFailUnaudited,
+          //   0,
+          // );
           this.policyViolationsWarnTotal = common.valueWithDefault(
             this.project.metrics.policyViolationsWarn,
             0,
           );
-          this.policyViolationsWarnUnaudited = common.valueWithDefault(
-            this.project.metrics.policyViolationsWarnUnaudited,
-            0,
-          );
+          // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+          // this.policyViolationsWarnUnaudited = common.valueWithDefault(
+          //   this.project.metrics.policyViolationsWarnUnaudited,
+          //   0,
+          // );
           this.policyViolationsInfoTotal = common.valueWithDefault(
             this.project.metrics.policyViolationsInfo,
             0,
           );
-          this.policyViolationsInfoUnaudited = common.valueWithDefault(
-            this.project.metrics.policyViolationsInfoUnaudited,
-            0,
-          );
+          // TODO: Requires https://github.com/DependencyTrack/dependency-track/pull/3615.
+          // this.policyViolationsInfoUnaudited = common.valueWithDefault(
+          //   this.project.metrics.policyViolationsInfoUnaudited,
+          //   0,
+          // );
           EventBus.$emit('addCrumb', this.projectLabel);
           this.$title = this.projectLabel;
         });
