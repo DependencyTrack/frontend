@@ -519,7 +519,7 @@ export default {
             0,
           );
           this.policyViolationsFailTotal = common.valueWithDefault(
-            this.project.metrics.policyViolationsFailTotal,
+            this.project.metrics.policyViolationsFail,
             0,
           );
           this.policyViolationsFailUnaudited = common.valueWithDefault(
@@ -527,7 +527,7 @@ export default {
             0,
           );
           this.policyViolationsWarnTotal = common.valueWithDefault(
-            this.project.metrics.policyViolationsWarnTotal,
+            this.project.metrics.policyViolationsWarn,
             0,
           );
           this.policyViolationsWarnUnaudited = common.valueWithDefault(
@@ -535,7 +535,7 @@ export default {
             0,
           );
           this.policyViolationsInfoTotal = common.valueWithDefault(
-            this.project.metrics.policyViolationsInfoTotal,
+            this.project.metrics.policyViolationsInfo,
             0,
           );
           this.policyViolationsInfoUnaudited = common.valueWithDefault(
