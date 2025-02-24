@@ -38,6 +38,8 @@ import VulnDbAnalyzer from './analyzers/VulnDbAnalyzer';
 import VulnSourceGitHubAdvisories from './vuln-sources/VulnSourceGitHubAdvisories';
 import VulnSourceNvd from './vuln-sources/VulnSourceNvd';
 import VulnSourceOSVAdvisories from './vuln-sources/VulnSourceOSVAdvisories';
+import VulnSourceComposerAdvisories from './vuln-sources/VulnSourceComposerAdvisories';
+
 // Repositories
 import Cargo from './repositories/Cargo';
 import Composer from './repositories/Composer';
@@ -89,6 +91,7 @@ export default {
     VulnSourceNvd,
     VulnSourceGitHubAdvisories,
     VulnSourceOSVAdvisories,
+    VulnSourceComposerAdvisories,
     Cargo,
     Composer,
     Gem,
