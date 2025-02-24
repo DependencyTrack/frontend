@@ -37,6 +37,8 @@ const InternalComponents = () =>
   import('@/views/administration/configuration/InternalComponents');
 const TaskScheduler = () =>
   import('@/views/administration/configuration/TaskScheduler');
+const Telemetry = () =>
+  import('@/views/administration/configuration/Telemetry');
 const Search = () => import('@/views/administration/configuration/Search');
 const Experimental = () =>
   import('@/views/administration/configuration/Experimental');
@@ -432,6 +434,17 @@ function configRoutes() {
             {
               path: 'configuration/taskScheduler',
               component: TaskScheduler,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/telemetry',
+              component: Telemetry,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
