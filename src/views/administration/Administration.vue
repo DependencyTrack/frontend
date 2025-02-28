@@ -26,6 +26,7 @@ import InternalComponents from './configuration/InternalComponents';
 import Jira from './configuration/JiraConfig';
 import Search from './configuration/Search.vue';
 import TaskScheduler from './configuration/TaskScheduler.vue';
+import Telemetry from './configuration/Telemetry.vue';
 import Experimental from './configuration/Experimental.vue';
 import WelcomeMessage from './configuration/WelcomeMessage.vue';
 // Analyzer plugins
@@ -79,6 +80,7 @@ export default {
     Jira,
     InternalComponents,
     TaskScheduler,
+    Telemetry,
     Search,
     Experimental,
     InternalAnalyzer,
