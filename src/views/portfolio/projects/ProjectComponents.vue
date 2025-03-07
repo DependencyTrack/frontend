@@ -33,6 +33,15 @@
         <b-tooltip target="upload-button" triggers="hover focus">{{
           $t('message.upload_bom_tooltip')
         }}</b-tooltip>
+        <b-button
+                  size="md"
+                  variant="outline-primary"
+                  @click="removeBom"
+                  v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+                  style="margin-left: 0px"
+                >
+                  <span class="fa fa-minus"></span> {{ $t('message.remove_bom') }}
+                </b-button>
         <b-dropdown
           variant="outline-primary"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
@@ -400,6 +409,29 @@ export default {
       }
       this.$refs.table.uncheckAll();
     },
+    removeBom: function () {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}`;
+      console.log("DELETE request to:", url); // Debugging step
+      console.log(this.apiUrl());
+
+      this.axios
+        .delete(url)
+        .then((response) => {
+          console.log("DELETE response:", response);
+          console.log("After DELETE, is BOM still there?:", response.data);
+          this.$toastr.s(this.$t('message.bom_deleted'));
+          //this.$refs.table.refresh({ silent: true });
+          //this.$refs.table.removeAll();
+          this.refreshTableBom();
+          //this.tableData = response.data;
+
+        })
+        .catch((error) => {
+          console.error("Error deleting BOM:", error.response); // Log error details
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+    },
+
     downloadBom: function (data) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
@@ -500,6 +532,21 @@ export default {
       }
       return url;
     },
+    apiUrlBom: function () {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}/bom`;
+      //if (this.onlyOutdated === undefined) {
+      //  url += '?onlyOutdated=false';
+      //} else {
+      //  url += '?onlyOutdated=' + this.onlyOutdated;
+      //}
+      //if (this.onlyDirect === undefined) {
+      //  url += '&onlyDirect=false';
+      //} else {
+      //  url += '&onlyDirect=' + this.onlyDirect;
+      //}
+      return url;
+    },
+
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
@@ -507,6 +554,16 @@ export default {
         silent: true,
       });
     },
+    refreshTableBom: function () {
+      console.log("Current apiUrl: ", this.apiUrl());
+      console.log("Current apiUrlBom: ", this.apiUrlBom());
+      this.$refs.table.refresh({
+        url: this.apiUrlBom(),
+        pageNumber: 1,
+        silent: true,
+      });
+    },
+
   },
   watch: {
     onlyOutdated() {
