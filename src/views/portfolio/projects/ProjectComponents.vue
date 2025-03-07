@@ -33,6 +33,7 @@
         <b-tooltip target="upload-button" triggers="hover focus">{{
           $t('message.upload_bom_tooltip')
         }}</b-tooltip>
+
         <b-button
                   size="md"
                   variant="outline-primary"
@@ -397,6 +398,7 @@ export default {
       if (selections.length === 0) return;
       for (let i = 0; i < selections.length; i++) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
+        console.log("URL is:", url);
         this.axios
           .delete(url)
           .then((response) => {
@@ -409,28 +411,48 @@ export default {
       }
       this.$refs.table.uncheckAll();
     },
-    removeBom: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}`;
-      console.log("DELETE request to:", url); // Debugging step
-      console.log(this.apiUrl());
 
+    removeBom: function () {
+      let getDependenciesUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
+      let deleteBomUrl = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}`;
+
+      console.log("Fetching all bom dependencies before deleting BOM:", getDependenciesUrl);
+
+      // Step 1: Fetch all dependencies
       this.axios
-        .delete(url)
+        .get(getDependenciesUrl)
+        .then((response) => {
+          let dependencies = response.data;
+          console.log("Dependencies to delete:", dependencies);
+
+          if (dependencies.length > 0) {
+            let deletePromises = dependencies.map((dep) => {
+              let deleteUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`;
+              console.log("Deleting dependency:", deleteUrl);
+              return this.axios.delete(deleteUrl);
+            });
+
+            // Step 2: Delete all dependencies first
+            return Promise.all(deletePromises);
+          }
+        })
+        .then(() => {
+          console.log("All dependencies deleted, now deleting BOM:", deleteBomUrl);
+          return this.axios.delete(deleteBomUrl); // Step 3: Delete BOM
+        })
         .then((response) => {
           console.log("DELETE response:", response);
-          console.log("After DELETE, is BOM still there?:", response.data);
-          this.$toastr.s(this.$t('message.bom_deleted'));
-          //this.$refs.table.refresh({ silent: true });
-          //this.$refs.table.removeAll();
-          this.refreshTableBom();
-          //this.tableData = response.data;
+          this.$toastr.s(this.$t("message.bom_deleted"));
 
+          // Step 4: Refresh the table
+          this.$refs.table.removeAll();
         })
         .catch((error) => {
-          console.error("Error deleting BOM:", error.response); // Log error details
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+          console.error("Error during BOM deletion:", error);
+          this.$toastr.w(this.$t("condition.unsuccessful_action"));
         });
     },
+
 
     downloadBom: function (data) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
@@ -532,6 +554,7 @@ export default {
       }
       return url;
     },
+
     apiUrlBom: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}/bom`;
       //if (this.onlyOutdated === undefined) {
@@ -554,6 +577,7 @@ export default {
         silent: true,
       });
     },
+
     refreshTableBom: function () {
       console.log("Current apiUrl: ", this.apiUrl());
       console.log("Current apiUrlBom: ", this.apiUrlBom());
