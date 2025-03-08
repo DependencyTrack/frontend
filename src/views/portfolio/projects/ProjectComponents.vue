@@ -33,16 +33,15 @@
         <b-tooltip target="upload-button" triggers="hover focus">{{
           $t('message.upload_bom_tooltip')
         }}</b-tooltip>
-
         <b-button
-                  size="md"
-                  variant="outline-primary"
-                  @click="removeBom"
-                  v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-                  style="margin-left: 0px"
-                >
-                  <span class="fa fa-minus"></span> {{ $t('message.remove_bom') }}
-                </b-button>
+          size="md"
+          variant="outline-primary"
+          @click="removeBom"
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          style="margin-left: 0px"
+        >
+        <span class="fa fa-minus"></span> {{ $t('message.remove_bom') }}
+        </b-button>
         <b-dropdown
           variant="outline-primary"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
@@ -398,7 +397,6 @@ export default {
       if (selections.length === 0) return;
       for (let i = 0; i < selections.length; i++) {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
-        console.log("URL is:", url);
         this.axios
           .delete(url)
           .then((response) => {
@@ -411,49 +409,39 @@ export default {
       }
       this.$refs.table.uncheckAll();
     },
-
-    removeBom: function () {
+    removeBom: async function () {
       let getDependenciesUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
       let deleteBomUrl = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}`;
-
-      console.log("Fetching all bom dependencies before deleting BOM:", getDependenciesUrl);
-
-      // Step 1: Fetch all dependencies
-      this.axios
-        .get(getDependenciesUrl)
-        .then((response) => {
+      try {
+        let allDependencies = [];
+        let page = 1;
+        let pageSize = 100; // Adjust based on API limits
+        //Step 1: Fetch all dependencies and handling pagination
+        while (true) {
+          let response = await this.axios.get(`${getDependenciesUrl}?page=${page}&size=${pageSize}`);
           let dependencies = response.data;
-          console.log("Dependencies to delete:", dependencies);
-
-          if (dependencies.length > 0) {
-            let deletePromises = dependencies.map((dep) => {
-              let deleteUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`;
-              console.log("Deleting dependency:", deleteUrl);
-              return this.axios.delete(deleteUrl);
-            });
-
-            // Step 2: Delete all dependencies first
-            return Promise.all(deletePromises);
-          }
-        })
-        .then(() => {
-          console.log("All dependencies deleted, now deleting BOM:", deleteBomUrl);
-          return this.axios.delete(deleteBomUrl); // Step 3: Delete BOM
-        })
-        .then((response) => {
-          console.log("DELETE response:", response);
-          this.$toastr.s(this.$t("message.bom_deleted"));
-
-          // Step 4: Refresh the table
-          this.$refs.table.removeAll();
-        })
-        .catch((error) => {
-          console.error("Error during BOM deletion:", error);
-          this.$toastr.w(this.$t("condition.unsuccessful_action"));
-        });
+          if (!dependencies || dependencies.length === 0) break;
+          allDependencies = allDependencies.concat(dependencies);
+          page++;
+        }
+        //Step 2: Delete dependencies in batches
+        let batchSize = 50;
+        for (let i = 0; i < allDependencies.length; i += batchSize) {
+          let batch = allDependencies.slice(i, i + batchSize);
+          let deletePromises = batch.map(dep =>
+            this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`)
+          );
+          await Promise.all(deletePromises);
+        }
+        //Step 3: Delete the BOM after all its components are removed
+        await this.axios.delete(deleteBomUrl);
+        this.$toastr.s(this.$t("message.bom_deleted"));
+        //Step 4: Refresh the table
+        this.$refs.table.removeAll();
+      } catch (error) {
+        this.$toastr.w(this.$t("condition.unsuccessful_action"));
+      }
     },
-
-
     downloadBom: function (data) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
@@ -554,22 +542,6 @@ export default {
       }
       return url;
     },
-
-    apiUrlBom: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/project/${this.uuid}/bom`;
-      //if (this.onlyOutdated === undefined) {
-      //  url += '?onlyOutdated=false';
-      //} else {
-      //  url += '?onlyOutdated=' + this.onlyOutdated;
-      //}
-      //if (this.onlyDirect === undefined) {
-      //  url += '&onlyDirect=false';
-      //} else {
-      //  url += '&onlyDirect=' + this.onlyDirect;
-      //}
-      return url;
-    },
-
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
@@ -577,17 +549,6 @@ export default {
         silent: true,
       });
     },
-
-    refreshTableBom: function () {
-      console.log("Current apiUrl: ", this.apiUrl());
-      console.log("Current apiUrlBom: ", this.apiUrlBom());
-      this.$refs.table.refresh({
-        url: this.apiUrlBom(),
-        pageNumber: 1,
-        silent: true,
-      });
-    },
-
   },
   watch: {
     onlyOutdated() {
