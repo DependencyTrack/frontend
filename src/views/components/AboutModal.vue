@@ -63,8 +63,10 @@
             >)
           </li>
           <li>
-            <i class="fa-li fa fa-twitter" aria-hidden="true"></i
-            ><a href="https://twitter.com/dependencytrack">Twitter</a>
+            <i class="fa-li fa fa-link" aria-hidden="true"></i
+            ><a href="https://bsky.app/profile/dependencytrack.bsky.social"
+              >Bluesky</a
+            >
           </li>
           <li>
             <i class="fa-li fa fa-link" aria-hidden="true"></i
