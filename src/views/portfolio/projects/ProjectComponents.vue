@@ -428,6 +428,7 @@ export default {
         let batchSize = 50;
         for (let i = 0; i < allDependencies.length; i += batchSize) {
           let batch = allDependencies.slice(i, i + batchSize);
+          this.$toastr.s(this.$t("message.removing_dependencies"));
           let deletePromises = batch.map(dep =>
             this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`)
           );

@@ -782,6 +782,7 @@
     "rejected": "Rejected",
     "remove_component": "Remove Component",
     "remove_bom": "Remove BOM",
+    "removing_dependencies":"Removing dependencies.",
     "bom_deleted": "BOM successfully deleted",
     "reported_by": "Reported By",
     "required_component_identifier": "A component identifier is required",
