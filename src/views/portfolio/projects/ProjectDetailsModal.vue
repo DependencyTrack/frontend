@@ -85,6 +85,7 @@
             :tags="collectionTags"
             :add-on-key="addOnKeys"
             :placeholder="$t('message.project_add_collection_tag')"
+            :autocomplete-items="tagsAutoCompleteItems"
             @tags-changed="
               (newCollectionTags) => (this.collectionTags = newCollectionTags)
             "
@@ -674,7 +675,12 @@ export default {
     });
   },
   watch: {
-    tag: 'searchTags',
+    tag(input) {
+      this.searchTags(input);
+    },
+    collectionTagTyping(input) {
+      this.searchTags(input);
+    },
   },
   methods: {
     initializeTags: function () {
@@ -797,14 +803,14 @@ export default {
         });
       }
     },
-    searchTags: function () {
-      if (!this.tag) {
+    searchTags: function (input) {
+      if (!input) {
         return;
       }
 
       clearTimeout(this.tagsAutoCompleteDebounce);
       this.tagsAutoCompleteDebounce = setTimeout(() => {
-        const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?searchText=${encodeURIComponent(this.tag)}&pageNumber=1&pageSize=6`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?searchText=${encodeURIComponent(input)}&pageNumber=1&pageSize=6`;
         this.axios.get(url).then((response) => {
           this.tagsAutoCompleteItems = response.data.map((tag) => {
             return { text: tag.name };
