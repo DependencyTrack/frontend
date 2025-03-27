@@ -37,6 +37,24 @@
         v-bind="labelIcon"
       />
       {{ $t('admin.analyzer_trivy_ignore_unfixed') }}
+      <br />
+      <c-switch
+        id="ignoreUnfixed"
+        color="primary"
+        v-model="scanLibrary"
+        label
+        v-bind="labelIcon"
+      />
+      {{ $t('admin.analyzer_trivy_scan_library') }}
+      <br />
+      <c-switch
+        id="ignoreUnfixed"
+        color="primary"
+        v-model="scanOs"
+        label
+        v-bind="labelIcon"
+      />
+      {{ $t('admin.analyzer_trivy_scan_os') }}
     </b-card-body>
     <b-card-footer>
       <b-button
@@ -71,6 +89,8 @@ export default {
       apitoken: '',
       baseUrl: '',
       ignoreUnfixed: false,
+      scanLibrary: true,
+      scanOs: true,
     };
   },
   methods: {
@@ -96,6 +116,16 @@ export default {
           propertyName: 'trivy.ignore.unfixed',
           propertyValue: this.ignoreUnfixed,
         },
+        {
+          groupName: 'scanner',
+          propertyName: 'trivy.scanner.scanLibrary',
+          propertyValue: this.scanLibrary,
+        },
+        {
+          groupName: 'scanner',
+          propertyName: 'trivy.scanner.scanOs',
+          propertyValue: this.scanOs,
+        },
       ]);
     },
   },
@@ -118,6 +148,12 @@ export default {
             break;
           case 'trivy.ignore.unfixed':
             this.ignoreUnfixed = common.toBoolean(item.propertyValue);
+            break;
+          case 'trivy.scanner.scanLibrary':
+            this.scanLibrary = common.toBoolean(item.propertyValue);
+            break;
+          case 'trivy.scanner.scanOs':
+            this.scanOs = common.toBoolean(item.propertyValue);
             break;
         }
       }
