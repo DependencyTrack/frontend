@@ -31,6 +31,8 @@
     "analyzer_snyk_why_multiple_cvss": "为什么同一漏洞有多个 CVSS 评分？",
     "analyzer_trivy_enable": "启用 Trivy 分析器",
     "analyzer_trivy_ignore_unfixed": "忽略未修复的漏洞",
+    "analyzer_trivy_scan_library": "扫描特定语言的软件包（例如通过 pip、npm 或 gem 安装的软件包",
+    "analyzer_trivy_scan_os": "扫描由操作系统软件包管理器（如 dpkg、yum、apk）管理的操作系统软件包",
     "analyzer_vulndb_desc": "VulnDB 是 Risk Based Security 提供的一项商业服务，可识别第三方组件中的漏洞。Dependency-Track 与 VulnDB 服务原生集成，可提供高度准确的结果。使用此分析器需要被分析组件的有效 CPE。",
     "analyzer_vulndb_enable": "启用 VulnDB 分析器",
     "analyzers": "分析器",

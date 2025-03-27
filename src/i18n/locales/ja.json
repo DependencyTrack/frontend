@@ -31,6 +31,8 @@
     "analyzer_snyk_why_multiple_cvss": "同じ脆弱性に対して複数の CVSS スコアがあるのはなぜですか?",
     "analyzer_trivy_enable": "Trivyアナライザーを有効にする",
     "analyzer_trivy_ignore_unfixed": "未修正の脆弱性を無視する",
+    "analyzer_trivy_scan_library": "Eseguire la scansione di pacchetti specifici per la lingua (ad esempio pacchetti installati da pip, npm o gem)",
+    "analyzer_trivy_scan_os": "Eseguire la scansione dei pacchetti del sistema operativo gestiti dal gestore di pacchetti del sistema operativo (ad es. dpkg, yum, apk)",
     "analyzer_vulndb_desc": "VulnDB は、サードパーティ コンポーネントの脆弱性を特定する Risk Based Security の商用サービスです。Dependency-Track は VulnDB サービスとネイティブに統合され、非常に正確な結果を提供します。このアナライザーを使用するには、分析対象のコンポーネントの有効な CPE が必要です。",
     "analyzer_vulndb_enable": "VulnDBアナライザーを有効にする",
     "analyzers": "アナライザー",
