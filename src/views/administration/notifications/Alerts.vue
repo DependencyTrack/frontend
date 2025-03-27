@@ -285,10 +285,6 @@ export default {
             },
             created() {
               this.initializeTags();
-              this.parseDestination(this.alert);
-              this.parseToken(this.alert);
-              this.parseTokenHeader(this.alert);
-              this.parseJiraTicketType(this.alert);
             },
             watch: {
               alert() {
