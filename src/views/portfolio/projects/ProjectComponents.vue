@@ -426,9 +426,11 @@ export default {
         }
         //Step 2: Delete dependencies in batches
         let batchSize = 50;
+        let lengthAllDependencies = allDependencies.length;
         for (let i = 0; i < allDependencies.length; i += batchSize) {
           let batch = allDependencies.slice(i, i + batchSize);
-          this.$toastr.s(this.$t("message.removing_dependencies"));
+          this.$toastr.s(this.$t("message.removing_dependencies", { n: lengthAllDependencies }));
+          lengthAllDependencies -= batch.length;
           let deletePromises = batch.map(dep =>
             this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`)
           );
