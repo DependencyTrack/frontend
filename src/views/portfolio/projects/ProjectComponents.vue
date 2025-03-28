@@ -36,7 +36,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          @click="removeBom"
+          @click="$refs.confirmModal.show()"
           v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
           style="margin-left: 0px"
         >
@@ -124,6 +124,16 @@
       :uuid="this.uuid"
       v-on:refreshTable="refreshTable"
     />
+    <b-modal
+      ref="confirmModal"
+      title="Confirm Removal"
+    >
+      <p>Are you sure you want to remove the BOM and all its components?</p>
+      <div slot="modal-footer">
+        <b-button variant="outline-primary" @click="$refs.confirmModal.hide()">Cancel</b-button>
+        <b-button variant="outline-danger" @click="handleRemoveBom">Remove</b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -408,6 +418,10 @@ export default {
           });
       }
       this.$refs.table.uncheckAll();
+    },
+    handleRemoveBom() {
+      this.$refs.confirmModal.hide();
+      this.removeBom();
     },
     removeBom: async function () {
       let getDependenciesUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
