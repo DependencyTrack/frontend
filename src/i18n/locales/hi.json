@@ -31,6 +31,8 @@
     "analyzer_snyk_why_multiple_cvss": "एक ही भेद्यता के लिए अनेक CVSS स्कोर क्यों होते हैं?",
     "analyzer_trivy_enable": "ट्रिवी विश्लेषक सक्षम करें",
     "analyzer_trivy_ignore_unfixed": "अज्ञात कमजोरियों पर ध्यान न दें",
+    "analyzer_trivy_scan_library": "Analyser les paquets spécifiques à une langue (par exemple, les paquets installés par pip, npm ou gem)",
+    "analyzer_trivy_scan_os": "Analyse des paquets du système d'exploitation gérés par le gestionnaire de paquets du système d'exploitation (par exemple, dpkg, yum, apk)",
     "analyzer_vulndb_desc": "VulnDB जोखिम आधारित सुरक्षा से एक वाणिज्यिक सेवा है जो तीसरे पक्ष के घटकों में कमजोरियों की पहचान करती है। निर्भरता-ट्रैक अत्यधिक सटीक परिणाम प्रदान करने के लिए VulnDB सेवा के साथ मूल रूप से एकीकृत होता है। इस विश्लेषक के उपयोग के लिए विश्लेषण किए जा रहे घटकों के लिए एक वैध CPE की आवश्यकता होती है।",
     "analyzer_vulndb_enable": "VulnDB विश्लेषक सक्षम करें",
     "analyzers": "विश्लेषक",
