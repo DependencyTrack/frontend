@@ -25,7 +25,7 @@
 }
 
 /* some stylings for the autocomplete layer */
-.vue-tags-input .ti-autocomplete {
+.vue-tags-input div.ti-autocomplete {
   background: #283944;
   border: 1px solid $tags-input-border-color;
   border-top: none;
