@@ -10,6 +10,15 @@
     "alert_deleted": "Alerta eliminada",
     "alert_log_successful_publish": "Registrar publicación exitosa",
     "alert_log_successful_publish_help": "Emita un mensaje de registro tras la publicación exitosa de la alerta en el destino, en lugar de solo emitir registros cuando se encuentren problemas. Ayuda a depurar alertas faltantes o hacer que la publicación de alertas sea auditable.",
+    "alert_schedule_cron_expression": "Expresión cron",
+    "alert_schedule_last_triggered_at": "Última activación en",
+    "alert_schedule_next_trigger_at": "Siguiente activador en",
+    "alert_schedule_skip_publish_if_unchanged": "Skip Public si no cambia",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "No envíe una alerta si nada ha cambiado desde la última vez que se envió la alerta.",
+    "alert_schedule_summary_warning": "La alerta debe limitarse a uno o más proyectos para que funcionen resúmenes. \nAl seleccionar proyectos para limitar la alerta, considere que elegir demasiados proyectos puede hacer que los resúmenes sean demasiado grandes para ciertos destinos, lo que lleva a que sean rechazados.",
+    "alert_trigger_type": "Tipo de activación",
+    "alert_trigger_type_event": "Evento",
+    "alert_trigger_type_schedule": "Cronograma",
     "alerts": "Alertas",
     "analyzer_internal_desc": "El analizador interno evalúa los componentes comparándolos con una base de datos de vulnerabilidad interna derivada de la Base de datos nacional de vulnerabilidad, los Avisos de GitHub (si están habilitados) y VulnDB (si está habilitado). Este analizador utiliza la enumeración de plataforma común (CPE) definida en los componentes. Los componentes con un CPE válido se evaluarán con este analizador.",
     "analyzer_internal_enable": "Habilitar analizador interno",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Prohibido (403)",
     "http_request_error": "Error de solicitud HTTP",
+    "request_validation_failed": "Validación de solicitud fallida",
     "server_error": "Error del Servidor",
     "successful": "exitoso",
     "unsuccessful_action": "No se pudo realizar la acción solicitada"

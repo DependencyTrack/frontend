@@ -10,6 +10,15 @@
     "alert_deleted": "Alarm gelöscht",
     "alert_log_successful_publish": "Erfolgreiche Alarmierung protokollieren",
     "alert_log_successful_publish_help": "Protokolliert die erfolgreiche Alarmierung, anstatt nur bei Problemen zu protokollieren. Dies hilft beim Debuggen fehlender Alarme und macht die Alarmierung überprüfbar.",
+    "alert_schedule_cron_expression": "Cron-Ausdruck",
+    "alert_schedule_last_triggered_at": "Zuletzt ausgelöst um",
+    "alert_schedule_next_trigger_at": "Nächste Auslösung um",
+    "alert_schedule_skip_publish_if_unchanged": "Alarmierung aussetzen, wenn keine neuen Daten vorhanden",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "Setzt die Alarmierung aus, wenn sich seit der letzten Auslösung keine neuen Daten ergeben haben.",
+    "alert_schedule_summary_warning": "Die Alarmierung muss auf mindestens ein Projekt beschränkt sein, damit die Zusammenfassungen funktionieren. Beachten Sie, dass die Auswahl von zu vielen Projekten dazu führen kann, dass Zusammenfassungen für bestimmte Alarmierungs-Ziele zu groß werden, was dazu führen könnte, dass sie abgelehnt werden.",
+    "alert_trigger_type": "Auslösungs-Typ",
+    "alert_trigger_type_event": "Ereignis",
+    "alert_trigger_type_schedule": "Geplant",
     "alerts": "Alarme",
     "analyzer_internal_desc": "Der interne Analyzer bewertet Komponenten mithilfe einer internen Schwachstellendatenbank, die aus der National Vulnerability Database, GitHub Advisories (falls aktiviert) und VulnDB (falls aktiviert) abgeleitet wird. Dieser Analyzer verwendet die in Komponenten definierte Common Platform Enumeration (CPE). Komponenten mit einer gültigen CPE werden mit diesem Analyzer ausgewertet.",
     "analyzer_internal_enable": "Internen Analyzer aktivieren",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Verboten (403)",
     "http_request_error": "HTTP-Anforderungsfehler",
+    "request_validation_failed": "Anforderungsvalidierung fehlgeschlagen",
     "server_error": "Serverfehler",
     "successful": "erfolgreich",
     "unsuccessful_action": "Die angeforderte Aktion konnte nicht ausgeführt werden"

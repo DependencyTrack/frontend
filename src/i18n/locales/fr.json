@@ -10,6 +10,15 @@
     "alert_deleted": "Alerte supprimée",
     "alert_log_successful_publish": "Journaliser les publications réussies",
     "alert_log_successful_publish_help": "Émettre un message dans le journal lors d'une publication réussie d'une alerte vers la destination, au lieu d'émettre uniquement des journaux lorsque des problèmes sont rencontrés. Aide au débogage des alertes manquantes ou à rendre la publication des alertes auditable.",
+    "alert_schedule_cron_expression": "Expression cron",
+    "alert_schedule_last_triggered_at": "Dernière déclenché à",
+    "alert_schedule_next_trigger_at": "Prochain déclencheur à",
+    "alert_schedule_skip_publish_if_unchanged": "Sauter public si inchangé",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "N'envoyez pas d'alerte si rien n'a changé depuis la dernière fois que l'alerte a été envoyée.",
+    "alert_schedule_summary_warning": "L'alerte doit être limitée à un ou plusieurs projets pour que les résumés fonctionnent. \nLors de la sélection de projets pour limiter l'alerte, considérez que le choix trop de projets peut entraîner une croissance trop importante pour certaines destinations, ce qui les a conduits.",
+    "alert_trigger_type": "Type de déclenchement",
+    "alert_trigger_type_event": "Événement",
+    "alert_trigger_type_schedule": "Calendrier",
     "alerts": "Alertes",
     "analyzer_internal_desc": "L'analyseur interne évalue les composants par rapport à une base de données de vulnérabilités interne dérivée de la National Vulnerability Database (NVD), des GitHub Advisories (si activés) et de VulnDB (si activé). Cet analyseur utilise la Common Platform Enumeration (CPE) définie dans les composants. Les composants avec un CPE valide seront évalués avec cet analyseur.",
     "analyzer_internal_enable": "Activer l'analyseur interne",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Interdit (403)",
     "http_request_error": "Erreur de requête HTTP",
+    "request_validation_failed": "Échec de la validation de la demande",
     "server_error": "erreur du serveur",
     "successful": "réussi",
     "unsuccessful_action": "Impossible d'effectuer l'action demandée"

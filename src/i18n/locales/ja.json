@@ -10,6 +10,15 @@
     "alert_deleted": "アラートを削除しました",
     "alert_log_successful_publish": "発行成功のログ",
     "alert_log_successful_publish_help": "問題が発生したときにのみログを出力するのではなく、アラートが宛先に正常に発行されたときにもログ メッセージを生成します。欠落しているアラートのデバッグや、アラートの発行を検査するのに役立ちます。",
+    "alert_schedule_cron_expression": "クロンの表現",
+    "alert_schedule_last_triggered_at": "最後にトリガーされました",
+    "alert_schedule_next_trigger_at": "次のトリガー",
+    "alert_schedule_skip_publish_if_unchanged": "変更されていない場合はパブリックをスキップします",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "アラートが最後に送信されてから何も変更されていない場合は、アラートを送らないでください。",
+    "alert_schedule_summary_warning": "アラートは、要約が機能するためには、1つ以上のプロジェクトに限定されなければなりません。\nアラートを制限するプロジェクトを選択するときは、あまりにも多くのプロジェクトを選択することで、特定の目的地のために概要が大きくなりすぎて拒否される可能性があることを考慮してください。",
+    "alert_trigger_type": "トリガータイプ",
+    "alert_trigger_type_event": "イベント",
+    "alert_trigger_type_schedule": "スケジュール",
     "alerts": "アラート",
     "analyzer_internal_desc": "内部アナライザーは、National Vulnerability Database、GitHub Advisories (有効な場合)、および VulnDB (有効な場合) から取得した内部脆弱性データベースに対してコンポーネントを評価します。このアナライザーは、コンポーネントで定義されている Common Platform Enumeration (CPE) を使用します。有効な CPE を持つコンポーネントは、このアナライザーで評価されます。",
     "analyzer_internal_enable": "内部アナライザーを有効にする",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "禁止 (403)",
     "http_request_error": "HTTP リクエスト エラー",
+    "request_validation_failed": "リクエストの検証に失敗しました",
     "server_error": "サーバーエラー",
     "successful": "成功",
     "unsuccessful_action": "要求されたアクションを実行できませんでした"
