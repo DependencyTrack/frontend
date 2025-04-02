@@ -450,12 +450,15 @@ export default {
             this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`)
           );
           await Promise.all(deletePromises);
+          this.$refs.table.refresh({ silent: true });
         }
         //Step 3: Delete the BOM after all its components are removed
         await this.axios.delete(deleteBomUrl);
         this.$toastr.s(this.$t("message.bom_deleted"));
         //Step 4: Refresh the table
         this.$refs.table.removeAll();
+        //Step 5: Refresh the metrics
+        await this.axios.get(`/api/v1/metrics/project/${this.uuid}/refresh`);
       }
       else {
         this.$toastr.w(this.$t("message.no_bom_available"));
