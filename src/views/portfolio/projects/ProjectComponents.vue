@@ -441,6 +441,7 @@ export default {
         //Step 2: Delete dependencies in batches
         let batchSize = 50;
         let lengthAllDependencies = allDependencies.length;
+        if (lengthAllDependencies !== 0) {
         for (let i = 0; i < allDependencies.length; i += batchSize) {
           let batch = allDependencies.slice(i, i + batchSize);
           this.$toastr.s(this.$t("message.removing_dependencies", { n: lengthAllDependencies }));
@@ -455,6 +456,10 @@ export default {
         this.$toastr.s(this.$t("message.bom_deleted"));
         //Step 4: Refresh the table
         this.$refs.table.removeAll();
+      }
+      else {
+        this.$toastr.w(this.$t("message.no_bom_available"));
+      }
       } catch (error) {
         this.$toastr.w(this.$t("condition.unsuccessful_action"));
       }

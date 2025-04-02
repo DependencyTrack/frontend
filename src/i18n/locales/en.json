@@ -784,6 +784,7 @@
     "remove_bom": "Remove BOM",
     "removing_dependencies": "Removing dependencies, {n} left",
     "bom_deleted": "BOM successfully deleted",
+    "no_bom_available": "No BOM exists for project",
     "reported_by": "Reported By",
     "required_component_identifier": "A component identifier is required",
     "required_component_name": "The component name is required",
