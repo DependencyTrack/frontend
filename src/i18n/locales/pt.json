@@ -10,6 +10,15 @@
     "alert_deleted": "Alerta excluído",
     "alert_log_successful_publish": "Registrar publicação bem-sucedida",
     "alert_log_successful_publish_help": "Emita uma mensagem de log após a publicação bem-sucedida do alerta no destino, em vez de emitir logs apenas quando forem encontrados problemas. Ajuda a depurar alertas ausentes ou a tornar a publicação de alertas auditável.",
+    "alert_schedule_cron_expression": "Expressão de Cron",
+    "alert_schedule_last_triggered_at": "Último desencadeado em",
+    "alert_schedule_next_trigger_at": "Próximo gatilho em",
+    "alert_schedule_skip_publish_if_unchanged": "Pule o público se inalterado",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "Não envie um alerta se nada mudar desde a última vez que o alerta foi enviado.",
+    "alert_schedule_summary_warning": "O alerta deve estar limitado a um ou mais projetos para que os resumos funcionem. \nAo selecionar projetos para limitar o alerta, considere que a escolha de muitos projetos pode causar resumos para crescer demais para certos destinos, levando -os a serem rejeitados.",
+    "alert_trigger_type": "Tipo de gatilho",
+    "alert_trigger_type_event": "Evento",
+    "alert_trigger_type_schedule": "Agendar",
     "alerts": "Alertas",
     "analyzer_internal_desc": "O analisador interno avalia os componentes em relação a um banco de dados de vulnerabilidades interno derivado do National Vulnerability Database, GitHub Advisories (se habilitado) e VulnDB (se habilitado). Este analisador faz uso da Common Platform Enumeration (CPE) definida em componentes. Componentes com CPE válido serão avaliados com este analisador.",
     "analyzer_internal_enable": "Habilitar analisador interno",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Proibido (403)",
     "http_request_error": "Erro de solicitação HTTP",
+    "request_validation_failed": "Solicitar validação falhou",
     "server_error": "erro de servidor",
     "successful": "bem sucedido",
     "unsuccessful_action": "Não foi possível realizar a ação solicitada"

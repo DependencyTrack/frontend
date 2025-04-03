@@ -10,6 +10,15 @@
     "alert_deleted": "Alert usunięty",
     "alert_log_successful_publish": "Zaloguj pomyślną publikację",
     "alert_log_successful_publish_help": "Emituj komunikat dziennika po pomyślnym opublikowaniu alertu w miejscu docelowym, zamiast emitować dzienniki tylko w przypadku napotkania problemów. Pomaga w debugowaniu brakujących alertów lub umożliwieniu audytu publikowania alertów.",
+    "alert_schedule_cron_expression": "Wyrażenie cron",
+    "alert_schedule_last_triggered_at": "Ostatnim uruchomiony",
+    "alert_schedule_next_trigger_at": "Następny spust",
+    "alert_schedule_skip_publish_if_unchanged": "Pomiń publicznie, jeśli jest niezmieniony",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "Nie wysyłaj ostrzeżenia, jeśli nic się nie zmieniło, odkąd ostatnio wysłano ostrzeżenie.",
+    "alert_schedule_summary_warning": "Alert musi być ograniczony do jednego lub większej liczby projektów, aby działało podsumowania. \nWybierając projekty, aby ograniczyć ostrzeżenie, zastanów się, że wybór zbyt wielu projektów może spowodować, że podsumowania rosną zbyt duże dla niektórych miejsc, co doprowadziło do odrzucenia.",
+    "alert_trigger_type": "Typ wyzwalacza",
+    "alert_trigger_type_event": "Wydarzenie",
+    "alert_trigger_type_schedule": "Harmonogram",
     "alerts": "Alerty",
     "analyzer_internal_desc": "Wewnętrzny analizator ocenia komponenty w oparciu o wewnętrzną bazę danych podatności pochodzącą z Krajowej bazy danych o podatnościach, GitHub Advisories (jeśli są włączone) i VulnDB (jeśli są włączone). Analizator ten wykorzystuje wyliczenie wspólnej platformy (CPE) zdefiniowane w komponentach. Za pomocą tego analizatora będą oceniane komponenty posiadające ważny CPE.",
     "analyzer_internal_enable": "Włącz analizator wewnętrzny",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Zabronione (403)",
     "http_request_error": "Błąd żądania HTTP",
+    "request_validation_failed": "Walidacja żądania nie powiodła się",
     "server_error": "błąd serwera",
     "successful": "udany",
     "unsuccessful_action": "Nie można wykonać żądanej akcji"

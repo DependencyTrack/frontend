@@ -10,6 +10,15 @@
     "alert_deleted": "已删除告警",
     "alert_log_successful_publish": "告警日志成功发送",
     "alert_log_successful_publish_help": "成功将告警发布到目标后发送日志消息（而不是仅在遇到问题时才发送日志），便于调试丢失的告警以及审计告警消息。",
+    "alert_schedule_cron_expression": "cron表达",
+    "alert_schedule_last_triggered_at": "最后触发",
+    "alert_schedule_next_trigger_at": "下一个触发",
+    "alert_schedule_skip_publish_if_unchanged": "如果不变，则跳过公众",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "自从上次发送警报以来，如果什么都没有更改，请勿发送警报。",
+    "alert_schedule_summary_warning": "警报必须仅限于一个或多个项目才能进行摘要。\n在选择限制警报的项目时，请考虑选择太多项目会导致摘要在某些目的地中成长太大，从而导致他们被拒绝。",
+    "alert_trigger_type": "触发类型",
+    "alert_trigger_type_event": "事件",
+    "alert_trigger_type_schedule": "日程",
     "alerts": "告警",
     "analyzer_internal_desc": "内部分析器根据来自 National Vulnerability Database、GitHub Advisories（如果已启用）和 VulnDB（如果已启用）的内部漏洞数据库评估组件。此分析器使用组件中定义的 Common Platform Enumeration (CPE)。具有有效 CPE 的组件将使用此分析器进行评估。",
     "analyzer_internal_enable": "启用内部分析器",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "禁止 (403)",
     "http_request_error": "HTTP 请求错误",
+    "request_validation_failed": "请求验证失败",
     "server_error": "服务器错误",
     "successful": "成功",
     "unsuccessful_action": "未成功执行该请求"

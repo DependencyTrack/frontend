@@ -48,6 +48,7 @@
       id="fieldset-4"
       :label="this.$t('admin.publisher')"
       label-for="input-4"
+      label-class="required"
     >
       <b-form-select
         id="input-4"
@@ -55,6 +56,18 @@
         :options="availablePublishers"
         required
       ></b-form-select>
+    </b-form-group>
+    <b-form-group :label="$t('admin.alert_trigger_type')">
+      <b-form-radio-group
+        v-model="triggerType"
+        :options="[
+          { text: $t('admin.alert_trigger_type_event'), value: 'EVENT' },
+          { text: $t('admin.alert_trigger_type_schedule'), value: 'SCHEDULE' },
+        ]"
+        name="radios-btn-default"
+        button-variant="outline-primary"
+        buttons
+      />
     </b-form-group>
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
@@ -70,7 +83,6 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import axios from 'axios';
-import Vue from 'vue';
 
 export default {
   mixins: [permissionsMixin],
@@ -80,6 +92,7 @@ export default {
       scope: 'PORTFOLIO',
       notificationLevel: 'INFORMATIONAL',
       publisher: null,
+      triggerType: 'EVENT',
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -112,6 +125,9 @@ export default {
     createAlert: function () {
       this.$root.$emit('bv::hide::modal', 'createAlertModal');
       let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+      if (this.triggerType === 'SCHEDULE') {
+        url = `${url}/scheduled`;
+      }
       this.axios
         .put(url, {
           name: this.name,
@@ -133,6 +149,7 @@ export default {
       this.scope = 'PORTFOLIO';
       this.notificationLevel = 'INFORMATIONAL';
       this.publisher = null;
+      this.triggerType = 'EVENT';
     },
   },
 };

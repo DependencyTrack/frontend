@@ -10,6 +10,15 @@
     "alert_deleted": "Avviso eliminato",
     "alert_log_successful_publish": "Registra la pubblicazione riuscita",
     "alert_log_successful_publish_help": "Emetti un messaggio di registro dopo la pubblicazione corretta dell'avviso nella destinazione, invece di emettere registri solo quando si verificano problemi. Aiuta nel debug degli avvisi mancanti o nel rendere controllabile la pubblicazione degli avvisi.",
+    "alert_schedule_cron_expression": "Espressione di cron",
+    "alert_schedule_last_triggered_at": "Ultimo attivato a",
+    "alert_schedule_next_trigger_at": "Successivo trigger a",
+    "alert_schedule_skip_publish_if_unchanged": "Salta pubblico se invariato",
+    "alert_schedule_skip_publish_if_unchanged_tooltip": "Non inviare un avviso se nulla è cambiato dall'ultima volta che è stato inviato l'allerta.",
+    "alert_schedule_summary_warning": "L'avviso deve essere limitato a uno o più progetti per far funzionare i riepiloghi. \nQuando si selezionano progetti a cui limitare l'avviso, considerare che la scelta di troppi progetti può far crescere troppo i riassunti per determinate destinazioni, portandole a essere respinte.",
+    "alert_trigger_type": "Tipo di trigger",
+    "alert_trigger_type_event": "Evento",
+    "alert_trigger_type_schedule": "Programma",
     "alerts": "Avvisi",
     "analyzer_internal_desc": "L'analizzatore interno valuta i componenti rispetto a un database delle vulnerabilità interno derivato dal National Vulnerability Database, GitHub Advisories (se abilitato) e VulnDB (se abilitato). Questo analizzatore utilizza la Common Platform Enumeration (CPE) definita nei componenti. I componenti con un CPE valido verranno valutati con questo analizzatore.",
     "analyzer_internal_enable": "Abilita l'analizzatore interno",
@@ -299,6 +308,7 @@
   "condition": {
     "forbidden": "Proibito (403)",
     "http_request_error": "Errore richiesta HTTP",
+    "request_validation_failed": "Convalida della richiesta non riuscita",
     "server_error": "Errore del server",
     "successful": "di successo",
     "unsuccessful_action": "Impossibile eseguire l'azione richiesta"

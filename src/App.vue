@@ -79,6 +79,20 @@ export default {
           error.response.headers['content-type'] === 'application/problem+json'
         ) {
           this.$toastr.w(error.response.data.detail, error.response.data.title);
+        } else if (
+          error.response.status === 400 &&
+          error.response.headers['content-type'] === 'application/json' &&
+          error.response.data &&
+          Array.isArray(error.response.data) &&
+          error.response.data[0].hasOwnProperty('invalidValue')
+        ) {
+          let validationError = error.response.data
+            .map((failure) => `${failure.path}: ${failure.message}`)
+            .join('\n');
+          this.$toastr.w(
+            validationError,
+            this.$t('condition.request_validation_failed'),
+          );
         } else {
           this.$toastr.e(
             error.response.statusText + ' (' + error.response.status + ')',
