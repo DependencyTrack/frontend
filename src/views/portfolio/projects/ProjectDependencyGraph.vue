@@ -90,6 +90,9 @@ export default {
           'true'
         : false;
   },
+  mounted() {
+    this.computeData();
+  },
   data() {
     return {
       data: {},
@@ -111,7 +114,82 @@ export default {
     };
   },
   watch: {
-    project: async function (newVal, oldVal) {
+    project: function () {
+      this.computeData();
+    },
+    showCompleteGraph: function () {
+      if (this.$route.params.componentUuids && localStorage) {
+        localStorage.setItem(
+          'ProjectDependencyGraphShowCompleteGraph',
+          this.showCompleteGraph.toString(),
+        );
+      }
+      if (this.showCompleteGraph) {
+        this.data = {
+          id: this.nodeId,
+          label: this.createNodeLabel(this.project),
+          objectType: 'PROJECT',
+          children: this.transformDependenciesToOrgTreeWithSearchedDependency(
+            this.response.data,
+            { gatheredKeys: [] },
+            false,
+          ),
+          fetchedChildren: true,
+          expand: !!this.$route.params.componentUuids,
+        };
+        if (this.$route.params.componentUuids) {
+          new Promise((resolve) => setTimeout(resolve, 50)).then(() => {
+            document.getElementsByClassName('searched').item(0).scrollIntoView({
+              behavior: 'smooth',
+              inline: 'center',
+              block: 'center',
+            });
+          });
+        }
+      } else {
+        this.data = {
+          id: this.nodeId,
+          label: this.createNodeLabel(this.project),
+          objectType: 'PROJECT',
+          children: this.transformDependenciesToOrgTreeWithSearchedDependency(
+            this.response.data,
+            { gatheredKeys: [] },
+            true,
+          ),
+          fetchedChildren: true,
+          expand: true,
+        };
+      }
+    },
+    highlightOutdatedComponents: function () {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectDependencyGraphHighlightOutdatedComponents',
+          this.highlightOutdatedComponents.toString(),
+        );
+      }
+    },
+    $route: function (to, from) {
+      if (!to.params.componentUuids && from.params.componentUuids) {
+        this.showCompleteGraph = true;
+        this.collapse(this.data.children);
+        this.data.expand = false;
+      } else if (to.params.componentUuids && !from.params.componentUuids) {
+        this.showCompleteGraph =
+          localStorage &&
+          localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !==
+            null
+            ? localStorage.getItem(
+                'ProjectDependencyGraphShowCompleteGraph',
+              ) === 'true'
+            : false;
+      }
+      // build map of searched components for later fast lookup
+      this.createSearchedComponentLookupTable(to.params.componentUuids);
+    },
+  },
+  methods: {
+    computeData: function () {
       // prepare base object
       const data = {
         id: this.nodeId,
@@ -198,78 +276,6 @@ export default {
         }
       });
     },
-    showCompleteGraph: function () {
-      if (this.$route.params.componentUuids && localStorage) {
-        localStorage.setItem(
-          'ProjectDependencyGraphShowCompleteGraph',
-          this.showCompleteGraph.toString(),
-        );
-      }
-      if (this.showCompleteGraph) {
-        this.data = {
-          id: this.nodeId,
-          label: this.createNodeLabel(this.project),
-          objectType: 'PROJECT',
-          children: this.transformDependenciesToOrgTreeWithSearchedDependency(
-            this.response.data,
-            { gatheredKeys: [] },
-            false,
-          ),
-          fetchedChildren: true,
-          expand: !!this.$route.params.componentUuids,
-        };
-        if (this.$route.params.componentUuids) {
-          new Promise((resolve) => setTimeout(resolve, 50)).then(() => {
-            document.getElementsByClassName('searched').item(0).scrollIntoView({
-              behavior: 'smooth',
-              inline: 'center',
-              block: 'center',
-            });
-          });
-        }
-      } else {
-        this.data = {
-          id: this.nodeId,
-          label: this.createNodeLabel(this.project),
-          objectType: 'PROJECT',
-          children: this.transformDependenciesToOrgTreeWithSearchedDependency(
-            this.response.data,
-            { gatheredKeys: [] },
-            true,
-          ),
-          fetchedChildren: true,
-          expand: true,
-        };
-      }
-    },
-    highlightOutdatedComponents: function () {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectDependencyGraphHighlightOutdatedComponents',
-          this.highlightOutdatedComponents.toString(),
-        );
-      }
-    },
-    $route: function (to, from) {
-      if (!to.params.componentUuids && from.params.componentUuids) {
-        this.showCompleteGraph = true;
-        this.collapse(this.data.children);
-        this.data.expand = false;
-      } else if (to.params.componentUuids && !from.params.componentUuids) {
-        this.showCompleteGraph =
-          localStorage &&
-          localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !==
-            null
-            ? localStorage.getItem(
-                'ProjectDependencyGraphShowCompleteGraph',
-              ) === 'true'
-            : false;
-      }
-      // build map of searched components for later fast lookup
-      this.createSearchedComponentLookupTable(to.params.componentUuids);
-    },
-  },
-  methods: {
     mouseDownHandler: function (event) {
       if (
         event.button === 0 &&
