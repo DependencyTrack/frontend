@@ -72,7 +72,7 @@
                   </ol>
                   {{ project.version }}
                   <i
-                    v-if="isCollectionProject()"
+                    v-if="isCollectionProject"
                     class="fa fa-calculator fa-fw collectionlogic-icon"
                     v-b-tooltip.hover="{
                       title: getCollectionLogicText(project),
@@ -233,7 +233,7 @@
       <b-tab
         ref="components"
         @click="routeTo('components')"
-        v-if="isShowComponents()"
+        v-if="isShowComponents"
       >
         <template v-slot:title
           ><i class="fa fa-cubes"></i> {{ $t('message.components') }}
@@ -249,7 +249,7 @@
       <b-tab
         ref="collectionprojects"
         @click="routeTo('collectionprojects')"
-        v-if="isShowCollectionProjects()"
+        v-if="isShowCollectionProjects"
         lazy
       >
         <template v-slot:title
@@ -262,11 +262,7 @@
           :project="this.project"
         />
       </b-tab>
-      <b-tab
-        ref="services"
-        @click="routeTo('services')"
-        v-if="isShowServices()"
-      >
+      <b-tab ref="services" @click="routeTo('services')" v-if="isShowServices">
         <template v-slot:title
           ><i class="fa fa-exchange"></i> {{ $t('message.services') }}
           <b-badge variant="tab-total">{{ totalServices }}</b-badge></template
@@ -280,7 +276,7 @@
       <b-tab
         ref="dependencygraph"
         @click="routeTo('dependencyGraph')"
-        v-if="isShowDependencyGraph()"
+        v-if="isShowDependencyGraph"
       >
         <template v-slot:title
           ><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }}
@@ -295,11 +291,7 @@
           v-on:total="totalDependencyGraphs = $event"
         />
       </b-tab>
-      <b-tab
-        ref="findings"
-        v-if="isShowFindings()"
-        @click="routeTo('findings')"
-      >
+      <b-tab ref="findings" v-if="isShowFindings" @click="routeTo('findings')">
         <template v-slot:title>
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
           <b-badge
@@ -321,7 +313,7 @@
           v-on:total="totalFindingsIncludingAliases = $event"
         />
       </b-tab>
-      <b-tab ref="epss" v-if="isShowFindings()" @click="routeTo('epss')">
+      <b-tab ref="epss" v-if="isShowFindings" @click="routeTo('epss')">
         <template v-slot:title
           ><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }}
           <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template
@@ -334,7 +326,7 @@
       </b-tab>
       <b-tab
         ref="policyviolations"
-        v-if="isShowPolicyViolations()"
+        v-if="isShowPolicyViolations"
         @click="routeTo('policyViolations')"
       >
         <template v-slot:title
@@ -461,6 +453,33 @@ export default {
     inactiveProjectVersions() {
       return this.project.versions.filter((version) => !version.active);
     },
+    isCollectionProject() {
+      return this.project.collectionLogic !== 'NONE';
+    },
+    isShowComponents() {
+      return !this.isCollectionProject;
+    },
+    isShowCollectionProjects() {
+      return this.isCollectionProject;
+    },
+    isShowServices() {
+      return !this.isCollectionProject;
+    },
+    isShowDependencyGraph() {
+      return !this.isCollectionProject;
+    },
+    isShowFindings() {
+      return (
+        !this.isCollectionProject &&
+        this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)
+      );
+    },
+    isShowPolicyViolations() {
+      return (
+        !this.isCollectionProject &&
+        this.isPermitted(this.PERMISSIONS.VIEW_POLICY_VIOLATION)
+      );
+    },
   },
   data() {
     return {
@@ -514,7 +533,7 @@ export default {
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
-      this.axios
+      return this.axios
         .get(projectUrl)
         .catch((error) => {
           if (error.response.status === 403) {
@@ -642,50 +661,25 @@ export default {
       }
       return '';
     },
-    isCollectionProject: function () {
-      return this.project.collectionLogic !== 'NONE';
-    },
-    isShowComponents: function () {
-      return !this.isCollectionProject();
-    },
-    isShowCollectionProjects: function () {
-      return this.isCollectionProject();
-    },
-    isShowServices: function () {
-      return !this.isCollectionProject();
-    },
-    isShowDependencyGraph: function () {
-      return !this.isCollectionProject();
-    },
-    isShowFindings: function () {
-      return (
-        !this.isCollectionProject() &&
-        this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)
-      );
-    },
-    isShowPolicyViolations: function () {
-      return (
-        !this.isCollectionProject() &&
-        this.isPermitted(this.PERMISSIONS.VIEW_POLICY_VIOLATION)
-      );
-    },
   },
   beforeMount() {
     this.uuid = this.$route.params.uuid;
-    this.initialize();
-  },
-  mounted() {
-    try {
-      if (this.$route.params.componentUuids) {
-        this.$refs.dependencygraph.active = true;
-      } else {
-        this.getTabFromRoute().active = true;
-      }
-    } catch (e) {
-      this.$toastr.e(this.$t('condition.forbidden'));
-      this.$router.replace({ path: '/projects/' + this.uuid });
-      this.$refs.overview.active = true;
-    }
+    this.initialize()
+      .then(() => {
+        this.$nextTick(() => {
+          if (this.$route.params.componentUuids) {
+            this.$refs.dependencygraph.active = true;
+          } else {
+            this.getTabFromRoute().active = true;
+          }
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+        this.$toastr.e(this.$t('condition.forbidden'));
+        this.$router.replace({ path: '/projects/' + this.uuid });
+        this.$refs.overview.active = true;
+      });
   },
   watch: {
     $route(to, from) {
