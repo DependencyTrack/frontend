@@ -7,9 +7,13 @@
             {{ $t('message.project_vulnerabilities') }}
           </h4>
           <table class="small text-muted" style="border: 0">
-            <tr>
+            <tr v-if="this.project.collectionLogic === 'NONE'">
               <td>{{ $t('message.last_bom_import') }}:</td>
               <td>{{ lastBomImport }}</td>
+            </tr>
+            <tr v-if="this.project.collectionLogic === 'NONE'">
+              <td>{{ $t('message.last_vulnerability_analysis') }}:</td>
+              <td>{{ lastVulnAnalysis }}</td>
             </tr>
             <tr>
               <td>{{ $t('message.last_measurement') }}:</td>
@@ -228,6 +232,7 @@ export default {
       suppressed: 0,
       lastMeasurement: 'n/a',
       lastBomImport: 'n/a',
+      lastVulnAnalysis: 'n/a',
     };
   },
   methods: {
@@ -296,6 +301,15 @@ export default {
         );
       } else {
         this.lastBomImport = 'n/a';
+      }
+
+      if (newProject && newProject.lastVulnerabilityAnalysis) {
+        this.lastVulnAnalysis = common.formatTimestamp(
+          newProject.lastVulnerabilityAnalysis,
+          true,
+        );
+      } else {
+        this.lastVulnAnalysis = 'n/a';
       }
     },
   },
