@@ -246,7 +246,7 @@ export default {
                     <b-form-group id="fieldset-9" v-if="this.isPermitted(this.PERMISSIONS.POLICY_VIOLATION_ANALYSIS)" :label="this.$t('message.analysis')" label-for="input-9">
                     <b-input-group id="input-9">
                       <b-form-select v-model="analysisState" :options="analysisChoices" @change="makeAnalysis" style="flex:0 1 auto; width:auto; margin-right:2rem;"/>
-                      <bootstrap-toggle v-model="isSuppressed" :options="{ on: 'Suppressed', off: 'Suppress', onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
+                      <bootstrap-toggle v-model="isSuppressed" :options="{ on: this.$t('message.suppressed'), off: this.$t('message.suppress'), onstyle: 'warning', offstyle: 'outline-disabled'}" :disabled="false" />
                     </b-input-group>
                     </b-form-group>
                   </b-col>
