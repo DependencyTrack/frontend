@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "Metryki projektu kolekcji są obliczane poprzez agregację liczby bezpośrednich elementów podrzędnych ze znacznikiem „{tag}”.",
     "collection_logic_metrics_by_aggregate_latest_version": "Metryki projektu kolekcji są obliczane poprzez agregację liczby najnowszych wersji bezpośrednich elementów podrzędnych.",
     "collection_projects": "Projekty kolekcji",
+    "collection_projects_using_tag": "Projekty kolekcyjne za pomocą tag {tag}",
     "comment": "Komentarz",
     "comments": "Uwagi",
     "component": "Część",
