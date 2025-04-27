@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "Metrics of collection project are calculated by aggregating numbers of direct children with tag '{tag}'.",
     "collection_logic_metrics_by_aggregate_latest_version": "Metrics of collection project are calculated by aggregating numbers of latest versions of direct children.",
     "collection_projects": "Collection Projects",
+    "collection_projects_using_tag": "Collection projects using tag {tag}",
     "comment": "Comment",
     "comments": "Comments",
     "component": "Component",

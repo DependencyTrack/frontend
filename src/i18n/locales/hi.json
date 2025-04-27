@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "संग्रह परियोजना के मेट्रिक्स की गणना '{टैग}' टैग वाले प्रत्यक्ष बच्चों की संख्या को एकत्रित करके की जाती है।",
     "collection_logic_metrics_by_aggregate_latest_version": "संग्रह परियोजना के मेट्रिक्स की गणना प्रत्यक्ष बच्चों के नवीनतम संस्करणों की संख्या को एकत्रित करके की जाती है।",
     "collection_projects": "संग्रह परियोजनाएँ",
+    "collection_projects_using_tag": "टैग {tag} का उपयोग करके संग्रह परियोजनाएं",
     "comment": "टिप्पणी",
     "comments": "टिप्पणियाँ",
     "component": "अवयव",
