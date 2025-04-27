@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "收集项目的指标是通过聚合带有标签“{tag}”的直接子项的数量来计算的。",
     "collection_logic_metrics_by_aggregate_latest_version": "收集项目的指标是通过汇总直接子项的最新版本的数量来计算的。",
     "collection_projects": "收藏项目",
+    "collection_projects_using_tag": "使用标签{tag}收集项目",
     "comment": "评论",
     "comments": "评论",
     "component": "组件",

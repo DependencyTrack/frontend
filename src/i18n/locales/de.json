@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "Die Metriken des Sammlungsprojekts werden berechnet, indem die Zahlen aller direkten untergeordneten Elemente mit dem Tag „{tag}“ aggregiert werden.",
     "collection_logic_metrics_by_aggregate_latest_version": "Die Metriken des Sammlungsprojekts werden durch die Aggregation der Anzahl der neuesten Versionen direkter untergeordneter Elemente berechnet.",
     "collection_projects": "Projekte in Sammlung",
+    "collection_projects_using_tag": "Projektsammlungen mit Tag {tag}",
     "comment": "Kommentar",
     "comments": "Kommentare",
     "component": "Komponente",

@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "Метрики проекта сбора рассчитываются путем агрегирования количества прямых дочерних элементов с тегом «{tag}».",
     "collection_logic_metrics_by_aggregate_latest_version": "Метрики проекта сбора рассчитываются путем агрегирования количества последних версий прямых дочерних элементов.",
     "collection_projects": "Коллекционные проекты",
+    "collection_projects_using_tag": "Коллекционные проекты с использованием тега {tag}",
     "comment": "Комментарий",
     "comments": "Комментарии",
     "component": "Компонент",
