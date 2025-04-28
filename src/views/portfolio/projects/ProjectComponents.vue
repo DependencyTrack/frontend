@@ -40,7 +40,7 @@
           v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
           style="margin-left: 0px"
         >
-        <span class="fa fa-minus"></span> {{ $t('message.remove_bom') }}
+          <span class="fa fa-minus"></span> {{ $t('message.remove_bom') }}
         </b-button>
         <b-dropdown
           variant="outline-primary"
@@ -124,14 +124,15 @@
       :uuid="this.uuid"
       v-on:refreshTable="refreshTable"
     />
-    <b-modal
-      ref="confirmModal"
-      title="Confirm Removal"
-    >
+    <b-modal ref="confirmModal" title="Confirm Removal">
       <p>Are you sure you want to remove the BOM and all its components?</p>
       <div slot="modal-footer">
-        <b-button variant="outline-primary" @click="$refs.confirmModal.hide()">Cancel</b-button>
-        <b-button variant="outline-danger" @click="handleRemoveBom">Remove</b-button>
+        <b-button variant="outline-primary" @click="$refs.confirmModal.hide()"
+          >Cancel</b-button
+        >
+        <b-button variant="outline-danger" @click="handleRemoveBom"
+          >Remove</b-button
+        >
       </div>
     </b-modal>
   </div>
@@ -429,42 +430,44 @@ export default {
       try {
         let allDependencies = [];
         let page = 1;
-        let pageSize = 100; // Adjust based on API limits
-        //Step 1: Fetch all dependencies and handling pagination
+        let pageSize = 100;
         while (true) {
-          let response = await this.axios.get(`${getDependenciesUrl}?page=${page}&size=${pageSize}`);
+          let response = await this.axios.get(
+            `${getDependenciesUrl}?page=${page}&size=${pageSize}`,
+          );
           let dependencies = response.data;
           if (!dependencies || dependencies.length === 0) break;
           allDependencies = allDependencies.concat(dependencies);
           page++;
         }
-        //Step 2: Delete dependencies in batches
         let batchSize = 50;
         let lengthAllDependencies = allDependencies.length;
         if (lengthAllDependencies !== 0) {
-        for (let i = 0; i < allDependencies.length; i += batchSize) {
-          let batch = allDependencies.slice(i, i + batchSize);
-          this.$toastr.s(this.$t("message.removing_dependencies", { n: lengthAllDependencies }));
-          lengthAllDependencies -= batch.length;
-          let deletePromises = batch.map(dep =>
-            this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`)
-          );
-          await Promise.all(deletePromises);
-          this.$refs.table.refresh({ silent: true });
+          for (let i = 0; i < allDependencies.length; i += batchSize) {
+            let batch = allDependencies.slice(i, i + batchSize);
+            this.$toastr.s(
+              this.$t('message.removing_dependencies', {
+                n: lengthAllDependencies,
+              }),
+            );
+            lengthAllDependencies -= batch.length;
+            let deletePromises = batch.map((dep) =>
+              this.axios.delete(
+                `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${dep.uuid}`,
+              ),
+            );
+            await Promise.all(deletePromises);
+            this.$refs.table.refresh({ silent: true });
+          }
+          await this.axios.delete(deleteBomUrl);
+          this.$toastr.s(this.$t('message.bom_deleted'));
+          this.$refs.table.removeAll();
+          await this.axios.get(`/api/v1/metrics/project/${this.uuid}/refresh`);
+        } else {
+          this.$toastr.w(this.$t('message.no_bom_available'));
         }
-        //Step 3: Delete the BOM after all its components are removed
-        await this.axios.delete(deleteBomUrl);
-        this.$toastr.s(this.$t("message.bom_deleted"));
-        //Step 4: Refresh the table
-        this.$refs.table.removeAll();
-        //Step 5: Refresh the metrics
-        await this.axios.get(`/api/v1/metrics/project/${this.uuid}/refresh`);
-      }
-      else {
-        this.$toastr.w(this.$t("message.no_bom_available"));
-      }
       } catch (error) {
-        this.$toastr.w(this.$t("condition.unsuccessful_action"));
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
     downloadBom: function (data) {
