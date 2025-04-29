@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="projectsToolbar" class="bs-table-custom-toolbar">
+    <div id="projectsToolbar" class="bs-table-custom-toolbar" style="display: flex; align-items: center;">
       <c-switch
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
@@ -8,9 +8,19 @@
         v-model="showInactiveProjects"
         label
         v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
+      />
+      <span class="text-muted" style="margin-right: 1rem;">
+        {{ $t('message.show_inactive_projects') }}
+      </span>
+      <b-button
+        size="md"
+        variant="outline-primary"
+        v-b-modal.bulkUpdateModal
+        v-permission="PERMISSIONS.SYSTEM_CONFIGURATION"
+        @click="getSelectedRows"
+      >
+        {{ $t('Bulk-Update') }}
+      </b-button>
     </div>
     <bootstrap-table
       ref="table"
@@ -21,6 +31,12 @@
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
+
+    <bulk-update-modal
+      :selected-projects="selectedProjects"
+      @submit-bulk-analysis="handleBulkApply"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
@@ -28,18 +44,20 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
+import BulkUpdateModal from '@/views/portfolio/vulnerabilities/BulkUpdateModal.vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
     cSwitch,
+    BulkUpdateModal,
   },
   beforeCreate() {
     this.showInactiveProjects =
       localStorage &&
       localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
         ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
-          'true'
+        'true'
         : false;
   },
   props: {
@@ -50,11 +68,17 @@ export default {
   data() {
     return {
       showInactiveProjects: this.showInactiveProjects,
+      selectedProjects: [],
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
       },
       columns: [
+        {
+          field: 'state',
+          checkbox: true,
+          align: 'center',
+        },
         {
           title: this.$t('message.name'),
           field: 'name',
@@ -139,7 +163,19 @@ export default {
     onPostBody: function () {
       this.$refs.table.hideLoading();
     },
+
+    getSelectedRows() {
+      const selectedRows = this.$refs.table.getSelections(); // Get the selected rows
+      this.selectedProjects = selectedRows;
+    },
+
+    // Method for receiving update from modal and calling API.
+    handleBulkApply(payload) {
+
+      this.refreshTable();
+    },
   },
+
   watch: {
     showInactiveProjects() {
       if (localStorage) {
