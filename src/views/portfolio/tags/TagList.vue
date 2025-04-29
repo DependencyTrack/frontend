@@ -19,6 +19,7 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import TaggedCollectionProjectListModal from '@/views/portfolio/tags/TaggedCollectionProjectListModal.vue';
 import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotificationRuleListModal.vue';
 import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListModal.vue';
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
@@ -84,6 +85,37 @@ export default {
                 <div>
                   <b-link v-b-modal="\`taggedProjectListModal-${index}\`">{{ value }}</b-link>
                   <tagged-project-list-modal :tag="tagName" :index="index"/>
+                </div>`,
+              data() {
+                return {
+                  index: index,
+                  tagName: row.name,
+                  error: row.error,
+                  value: value,
+                };
+              },
+            });
+          },
+        },
+        {
+          title: this.$t('message.collection_projects'),
+          field: 'collectionProjectCount',
+          sortable: true,
+          formatter: (value, row, index) => {
+            if (value === 0) {
+              return value;
+            }
+
+            return this.vueFormatter({
+              i18n,
+              components: {
+                TaggedCollectionProjectListModal,
+              },
+              mixins: [permissionsMixin],
+              template: `
+                <div>
+                  <b-link v-b-modal="\`taggedCollectionProjectListModal-${index}\`">{{ value }}</b-link>
+                  <tagged-collection-project-list-modal :tag="tagName" :index="index"/>
                 </div>`,
               data() {
                 return {

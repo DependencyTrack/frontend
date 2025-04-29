@@ -392,6 +392,7 @@
     "collection_logic_metrics_by_aggregate_direct_children_with_tags": "コレクション プロジェクトのメトリクスは、タグ「{tag}」を持つ直接の子の数を集計することによって計算されます。",
     "collection_logic_metrics_by_aggregate_latest_version": "コレクション プロジェクトのメトリックは、直接の子の最新バージョンの数を集計することによって計算されます。",
     "collection_projects": "コレクションプロジェクト",
+    "collection_projects_using_tag": "タグ{tag}を使用したコレクションプロジェクト",
     "comment": "コメント",
     "comments": "コメント",
     "component": "コンポーネント",
