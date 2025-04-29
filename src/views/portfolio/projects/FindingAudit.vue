@@ -20,7 +20,7 @@
               <b-link
                 style="margin-right: 1rem"
                 :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId"
-                >{{ alias.vulnId }}</b-link
+              >{{ alias.vulnId }}</b-link
               >
             </span>
           </b-card-text>
@@ -143,7 +143,7 @@
         />
         <div class="pull-right">
           <b-button size="sm" variant="outline-primary" @click="addComment"
-            ><span class="fa fa-comment-o"></span>
+          ><span class="fa fa-comment-o"></span>
             {{ this.$t('message.add_comment') }}</b-button
           >
         </div>
@@ -240,7 +240,7 @@
             size="sm"
             variant="outline-primary"
             @click="makeAnalysis"
-            ><span class="fa fa-comment-o"></span>
+          ><span class="fa fa-comment-o"></span>
             {{ this.$t('message.update_details') }}</b-button
           >
         </div>
