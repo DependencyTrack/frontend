@@ -167,21 +167,25 @@ export default {
       this.selectedProjects = this.$refs.table.getSelections();
     },
 
-    getSelectedRows() {
-      this.selectedProjects = this.$refs.table.getSelections();
-      return this.selectedProjects;
-    },
     // Method for receiving update from modal and calling API.
     handleBulkApply(output) {
-      console.log('halloj');
-      console.log(this.getSelectedRows());
+      console.log('Vulnerability:');
+      console.log(this.vulnerability);
       // Iterate over each selected project
-      for (let project of this.getSelectedRows()) {
-        for (let component of project.affectedComponents) {
+      for (let i = 0; i < output.selectedProjects.length; i += 1) {
+        for (
+          let j = 0;
+          j < output.selectedProjects[i].affectedComponentUuids.length;
+          j += 1
+        ) {
+          console.log('Project:');
+          console.log(output.selectedProjects[i].uuid);
+          console.log('Component:');
+          console.log(output.selectedProjects[0].affectedComponentUuids[j]);
           this.callRestEndpoint(
-            project.uuid,
-            component.uuid,
-            this.vulnId,
+            output.selectedProjects[i].uuid,
+            output.selectedProjects[i].affectedComponentUuids[j],
+            this.vulnerability,
             output.analysisState,
             output.analysisJustification,
             null,

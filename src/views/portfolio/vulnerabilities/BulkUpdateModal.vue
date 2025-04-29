@@ -22,18 +22,10 @@
       label-for="comment-field"
       class="mt-3"
     >
-      <b-form-textarea
-        id="comment-field"
-        v-model="comment"
-        rows="4"
-        trim
-      />
+      <b-form-textarea id="comment-field" v-model="comment" rows="4" trim />
     </b-form-group>
 
-    <b-form-group
-      :label="$t('message.analysis')"
-      label-for="analysis-select"
-    >
+    <b-form-group :label="$t('message.analysis')" label-for="analysis-select">
       <b-form-select
         id="analysis-select"
         v-model="analysisState"
@@ -98,15 +90,42 @@ export default {
       ],
       justificationChoices: [
         { value: 'NOT_SET', text: this.$t('message.not_set') },
-        { value: 'CODE_NOT_PRESENT', text: this.$t('message.code_not_present') },
-        { value: 'CODE_NOT_REACHABLE', text: this.$t('message.code_not_reachable') },
-        { value: 'REQUIRES_CONFIGURATION', text: this.$t('message.requires_configuration') },
-        { value: 'REQUIRES_DEPENDENCY', text: this.$t('message.requires_dependency') },
-        { value: 'REQUIRES_ENVIRONMENT', text: this.$t('message.requires_environment') },
-        { value: 'PROTECTED_BY_COMPILER', text: this.$t('message.protected_by_compiler') },
-        { value: 'PROTECTED_AT_RUNTIME', text: this.$t('message.protected_at_runtime') },
-        { value: 'PROTECTED_AT_PERIMETER', text: this.$t('message.protected_at_perimeter') },
-        { value: 'PROTECTED_BY_MITIGATING_CONTROL', text: this.$t('message.protected_by_mitigating_control') },
+        {
+          value: 'CODE_NOT_PRESENT',
+          text: this.$t('message.code_not_present'),
+        },
+        {
+          value: 'CODE_NOT_REACHABLE',
+          text: this.$t('message.code_not_reachable'),
+        },
+        {
+          value: 'REQUIRES_CONFIGURATION',
+          text: this.$t('message.requires_configuration'),
+        },
+        {
+          value: 'REQUIRES_DEPENDENCY',
+          text: this.$t('message.requires_dependency'),
+        },
+        {
+          value: 'REQUIRES_ENVIRONMENT',
+          text: this.$t('message.requires_environment'),
+        },
+        {
+          value: 'PROTECTED_BY_COMPILER',
+          text: this.$t('message.protected_by_compiler'),
+        },
+        {
+          value: 'PROTECTED_AT_RUNTIME',
+          text: this.$t('message.protected_at_runtime'),
+        },
+        {
+          value: 'PROTECTED_AT_PERIMETER',
+          text: this.$t('message.protected_at_perimeter'),
+        },
+        {
+          value: 'PROTECTED_BY_MITIGATING_CONTROL',
+          text: this.$t('message.protected_by_mitigating_control'),
+        },
       ],
     };
   },
@@ -118,7 +137,7 @@ export default {
     },
     submit() {
       this.$emit('submit-bulk-analysis', {
-        projects: this.selectedProjects,
+        selectedProjects: this.selectedProjects,
         comment: this.comment,
         analysisState: this.analysisState,
         analysisJustification: this.analysisJustification,
