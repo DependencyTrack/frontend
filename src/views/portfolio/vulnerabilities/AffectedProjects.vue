@@ -169,22 +169,12 @@ export default {
 
     // Method for receiving update from modal and calling API.
     handleBulkApply(output) {
-      console.log('Vulnerability:');
-      console.log(this.vulnerability);
       // Iterate over each selected project
-      for (let i = 0; i < output.selectedProjects.length; i += 1) {
-        for (
-          let j = 0;
-          j < output.selectedProjects[i].affectedComponentUuids.length;
-          j += 1
-        ) {
-          console.log('Project:');
-          console.log(output.selectedProjects[i].uuid);
-          console.log('Component:');
-          console.log(output.selectedProjects[0].affectedComponentUuids[j]);
+      for (const project of output.selectedProjects) {
+        for (const component of project.affectedComponentUuids) {
           this.callRestEndpoint(
-            output.selectedProjects[i].uuid,
-            output.selectedProjects[i].affectedComponentUuids[j],
+            project.uuid,
+            component,
             this.vulnerability,
             output.analysisState,
             output.analysisJustification,
