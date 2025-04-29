@@ -82,6 +82,7 @@ export default {
       required: true,
     },
   },
+
   data() {
     return {
       comment: '',

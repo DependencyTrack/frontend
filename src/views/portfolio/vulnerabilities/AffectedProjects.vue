@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="projectsToolbar" class="bs-table-custom-toolbar" style="display: flex; align-items: center;">
+    <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <c-switch
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
@@ -8,16 +8,15 @@
         v-model="showInactiveProjects"
         label
         v-bind="labelIcon"
-      />
-      <span class="text-muted" style="margin-right: 1rem;">
-        {{ $t('message.show_inactive_projects') }}
-      </span>
+      /><span class="text-muted">{{
+        $t('message.show_inactive_projects')
+      }}</span>
       <b-button
         size="md"
         variant="outline-primary"
         v-b-modal.bulkUpdateModal
-        v-permission="PERMISSIONS.SYSTEM_CONFIGURATION"
-        @click="getSelectedRows"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="updateSelectedRows"
       >
         {{ $t('Bulk-Update') }}
       </b-button>
@@ -57,7 +56,7 @@ export default {
       localStorage &&
       localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
         ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
-        'true'
+          'true'
         : false;
   },
   props: {
@@ -164,15 +163,67 @@ export default {
       this.$refs.table.hideLoading();
     },
 
-    getSelectedRows() {
-      const selectedRows = this.$refs.table.getSelections(); // Get the selected rows
-      this.selectedProjects = selectedRows;
+    updateSelectedRows() {
+      this.selectedProjects = this.$refs.table.getSelections();
     },
 
+    getSelectedRows() {
+      this.selectedProjects = this.$refs.table.getSelections();
+      return this.selectedProjects;
+    },
     // Method for receiving update from modal and calling API.
-    handleBulkApply(payload) {
-
+    handleBulkApply(output) {
+      console.log('halloj');
+      console.log(this.getSelectedRows());
+      // Iterate over each selected project
+      for (let project of this.getSelectedRows()) {
+        for (let component of project.affectedComponents) {
+          this.callRestEndpoint(
+            project.uuid,
+            component.uuid,
+            this.vulnId,
+            output.analysisState,
+            output.analysisJustification,
+            null,
+            null,
+            output.comment,
+            null,
+          );
+        }
+      }
       this.refreshTable();
+    },
+
+    callRestEndpoint: function (
+      projectUuid,
+      componentUuid,
+      vulnerabilityUuid,
+      analysisState,
+      analysisJustification,
+      analysisResponse,
+      analysisDetails,
+      comment,
+    ) {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+      this.axios
+        .put(url, {
+          project: projectUuid,
+          component: componentUuid,
+          vulnerability: vulnerabilityUuid,
+          analysisState: analysisState,
+          analysisJustification: analysisJustification,
+          analysisResponse: analysisResponse,
+          analysisDetails: analysisDetails,
+          comment: comment,
+          isSuppressed: null,
+        })
+        .then((response) => {
+          this.$toastr.s(this.$t('message.updated'));
+          this.updateAnalysisData(response.data);
+        })
+        .catch(() => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
     },
   },
 
