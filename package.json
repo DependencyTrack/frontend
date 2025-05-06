@@ -28,7 +28,7 @@
     "@coreui/vue": "2.1.2",
     "@johmun/vue-tags-input": "2.1.0",
     "axios": "1.8.3",
-    "bootstrap": "4.6.2",
+    "bootstrap": "5.3.6",
     "bootstrap-table": "1.22.6",
     "bootstrap-vue": "2.23.1",
     "chart.js": "2.9.4",
