@@ -18,15 +18,21 @@
       <b-button
         class="btn btn-primary"
         @click="$bvModal.hide('modal-informational')"
-        >Close</b-button
-      >
+        >Close
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+import { BButton, BModal } from 'bootstrap-vue';
+
 export default {
   name: 'InformationalModal',
+  components: {
+    BModal,
+    BButton,
+  },
   props: {
     message: String,
   },

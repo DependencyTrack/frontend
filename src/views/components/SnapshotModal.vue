@@ -8,7 +8,11 @@
   >
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          width="200"
+          alt="DependencyTrack Logo"
+        />
       </b-col>
     </b-row>
     <hr />
@@ -32,15 +36,20 @@
     </p>
     <p><strong>Do not use snapshot releases on production data.</strong></p>
     <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
+      <b-button size="md" variant="outline-primary" @click="cancel()"
+        >{{ $t('message.close') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+import { BModal } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BModal,
+  },
   name: 'SnapshotModal',
 };
 </script>

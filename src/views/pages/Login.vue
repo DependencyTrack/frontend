@@ -87,6 +87,7 @@
                   <img
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
                     width="100%"
+                    alt="DependencyTrack Logo"
                   />
                 </div>
               </b-card-body>
@@ -108,8 +109,8 @@ import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import InformationalModal from '../modals/InformationalModal';
 import EventBus from '../../shared/eventbus';
-import { getRedirectUrl, getContextPath } from '../../shared/utils';
-const qs = require('querystring');
+import { getRedirectUrl, getContextPath } from '@/shared/utils';
+import queryString from 'query-string';
 import common from '../../shared/common';
 
 export default {
@@ -178,7 +179,7 @@ export default {
       // redirect to url from query param but only if it is save for redirection
       const redirectTo = getRedirectUrl(this.$router);
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, queryString.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             EventBus.$emit('authenticated', result.data);
@@ -280,7 +281,7 @@ export default {
           };
 
           this.axios
-            .post(url, qs.stringify(requestBody), config)
+            .post(url, queryString.stringify(requestBody), config)
             .then((result) => {
               if (result.status === 200) {
                 EventBus.$emit('authenticated', result.data);
