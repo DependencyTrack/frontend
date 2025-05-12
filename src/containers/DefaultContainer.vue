@@ -24,20 +24,20 @@
 
 <script>
 import {
+  Breadcrumb,
   Sidebar as AppSidebar,
   SidebarFooter,
   SidebarForm,
   SidebarHeader,
   SidebarMinimizer,
   SidebarNav,
-  Breadcrumb,
 } from '@coreui/vue';
 import DefaultHeader from './DefaultHeader';
 import DefaultFooter from './DefaultFooter';
-import EventBus from '../shared/eventbus';
-import ProfileEditModal from '../views/components/ProfileEditModal';
-import SnapshotModal from '../views/components/SnapshotModal';
-import * as permissions from '../shared/permissions';
+import EventBus from '@/shared/eventbus';
+import ProfileEditModal from '@/views/components/ProfileEditModal';
+import SnapshotModal from '@/views/components/SnapshotModal';
+import * as permissions from '@/shared/permissions';
 
 export default {
   name: 'DefaultContainer',

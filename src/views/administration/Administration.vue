@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import EventBus from '../../shared/eventbus';
+import EventBus from '@/shared/eventbus';
 import AdminMenu from './AdminMenu';
 
 // Configuration plugins

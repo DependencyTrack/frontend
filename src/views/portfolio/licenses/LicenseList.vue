@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import common from '@/shared/common';
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
 import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 

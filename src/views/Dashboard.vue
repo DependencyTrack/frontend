@@ -572,7 +572,7 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
 import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow';
 import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities';
 import ChartProjectVulnerabilities from './dashboard/ChartProjectVulnerabilities';
@@ -582,7 +582,7 @@ import ChartPolicyViolationsState from './dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationsClassification from './dashboard/ChartPolicyViolationsClassification';
 import ChartComponentVulnerabilities from './dashboard/ChartComponentVulnerabilities';
 import { Callout } from '@coreui/vue';
-import permissionsMixin from '../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
   name: 'dashboard',

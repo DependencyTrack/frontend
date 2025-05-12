@@ -23,16 +23,16 @@
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreateLicenseGroupModal from './CreateLicenseGroupModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import SelectLicenseModal from './SelectLicenseModal';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 
 export default {
   mixins: [permissionsMixin, bootstrapTableMixin],

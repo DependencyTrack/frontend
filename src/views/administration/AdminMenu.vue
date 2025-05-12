@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
-import EventBus from '../../shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
 import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from '@/shared/permissions';
 
 export default {

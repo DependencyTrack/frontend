@@ -90,8 +90,8 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import EventBus from '../../../shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
 
 export default {
   mixins: [permissionsMixin],

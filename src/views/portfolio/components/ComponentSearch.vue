@@ -65,11 +65,11 @@
 
 <script>
 import Vue from 'vue';
-import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import common from '@/shared/common';
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import xssFilters from 'xss-filters';
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';

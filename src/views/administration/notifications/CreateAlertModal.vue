@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import axios from 'axios';
 
 export default {

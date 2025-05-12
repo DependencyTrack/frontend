@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
 import {
   BFormGroup,
   BFormInvalidFeedback,

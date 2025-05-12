@@ -33,12 +33,12 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
-import EventBus from '../../../shared/eventbus';
+import common from '@/shared/common';
+import i18n from '@/i18n';
+import EventBus from '@/shared/eventbus';
 import BootstrapToggle from 'vue-bootstrap-toggle';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import CreateTemplateModal from './CreateTemplateModal';
 import GeneralTemplateConfigurationModal from './GeneralTemplateConfigurationModal';
 
@@ -141,7 +141,7 @@ export default {
                       <b-button variant="outline-primary" @click="cloneNotificationPublisher">{{ $t('admin.clone_template') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-primary" @click="updateNotificationPublisher">{{ $t('message.update') }}</b-button>
                       <b-button v-if="!template.defaultPublisher" variant="outline-danger" @click="deleteNotificationPublisher">{{ $t('admin.delete_template') }}</b-button>
-                    </div>    
+                    </div>
                   </b-col>
                 </b-row>
               `,

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
 import { Switch as cSwitch } from '@coreui/vue';
 import { BFormGroup, BInputGroup } from 'bootstrap-vue';
 

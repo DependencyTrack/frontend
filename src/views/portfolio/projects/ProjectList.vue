@@ -52,11 +52,11 @@ import { Switch as cSwitch } from '@coreui/vue';
 import MurmurHash2 from 'imurmurhash';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
-import common from '../../../shared/common';
-import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
+import common from '@/shared/common';
+import PolicyViolationProgressBar from '@/views/components/PolicyViolationProgressBar';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
 
 export default {

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import globalVarsMixin from '@/mixins/globalVarsMixin';
 import EventBus from '@/shared/eventbus';
 import { BButton, BModal } from 'bootstrap-vue';

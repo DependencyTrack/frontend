@@ -193,11 +193,11 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { Callout } from '@coreui/vue';
-import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
+import ChartAuditingFindingsProgress from '@/views/dashboard/ChartAuditingFindingsProgress';
+import ChartComponentVulnerabilities from '@/views/dashboard/ChartComponentVulnerabilities';
+import ChartPortfolioVulnerabilities from '@/views/dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
 

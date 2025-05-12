@@ -93,8 +93,8 @@
 <script>
 import axios from 'axios';
 import { ValidationObserver } from 'vee-validate';
-import InformationalModal from '../modals/InformationalModal';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import InformationalModal from '@/views/modals/InformationalModal';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 import { getRedirectUrl } from '@/shared/utils';
 import queryString from 'query-string';
 import {

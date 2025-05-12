@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {

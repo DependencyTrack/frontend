@@ -59,9 +59,10 @@
   </b-card>
 </template>
 <script>
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import { Switch as cSwitch } from '@coreui/vue';
+
 export default {
   mixins: [configPropertyMixin],
   props: {

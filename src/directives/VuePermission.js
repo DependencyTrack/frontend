@@ -1,7 +1,7 @@
 /*
  * Permissions Vue Directive
  */
-import { hasPermission, decodeToken, getToken } from '../shared/permissions';
+import { decodeToken, getToken, hasPermission } from '@/shared/permissions';
 
 export default function installPermissionDirective(Vue) {
   Vue.directive('permission', function (el, binding) {

@@ -47,10 +47,10 @@
   </b-modal>
 </template>
 <script>
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   mixins: [configPropertyMixin],

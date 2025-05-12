@@ -30,11 +30,11 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import common from '@/shared/common';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
-import i18n from '../../../i18n';
+import i18n from '@/i18n';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import $ from 'jquery';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';

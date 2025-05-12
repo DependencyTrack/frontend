@@ -130,8 +130,8 @@
 </template>
 
 <script>
-import common from '../../shared/common';
-import globalVarsMixin from '../../mixins/globalVarsMixin';
+import common from '@/shared/common';
+import globalVarsMixin from '@/mixins/globalVarsMixin';
 import { BButton, BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {

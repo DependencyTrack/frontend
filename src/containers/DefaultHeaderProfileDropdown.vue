@@ -31,9 +31,9 @@
 
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue';
-import EventBus from '../shared/eventbus';
-import { decodeToken, getToken } from '../shared/permissions';
-import globalVarsMixin from '../mixins/globalVarsMixin';
+import EventBus from '@/shared/eventbus';
+import { decodeToken, getToken } from '@/shared/permissions';
+import globalVarsMixin from '@/mixins/globalVarsMixin';
 import LocalePicker from '@/views/components/LocalePicker.vue';
 import {
   BDropdownDivider,

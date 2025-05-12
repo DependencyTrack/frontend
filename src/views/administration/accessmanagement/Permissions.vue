@@ -14,7 +14,7 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 
 export default {
   props: {

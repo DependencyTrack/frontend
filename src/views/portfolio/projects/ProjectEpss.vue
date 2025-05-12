@@ -44,9 +44,9 @@ import {
 import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import common from '../../../shared/common';
-import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import ChartEpssVsCvss from '@/views/dashboard/ChartEpssVsCvss';
 
 export default {
   props: {

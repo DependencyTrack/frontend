@@ -1,8 +1,9 @@
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import { Line } from 'vue-chartjs';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+
 export default {
   extends: Line,
   props: {

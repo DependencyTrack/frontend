@@ -73,11 +73,11 @@
 </template>
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import EcosystemModal from './EcosystemModal';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem.vue';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   mixins: [configPropertyMixin],

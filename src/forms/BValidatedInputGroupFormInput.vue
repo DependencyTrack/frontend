@@ -37,7 +37,7 @@
 
 <script>
 import { ValidationProvider } from 'vee-validate';
-import common from '../shared/common';
+import common from '@/shared/common';
 import {
   BFormGroup,
   BFormInput,

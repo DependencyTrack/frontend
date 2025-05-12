@@ -23,16 +23,15 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import common from '@/shared/common';
+import i18n from '@/i18n';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import SelectProjectModal from './SelectProjectModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import router from '@/router';
 
 export default {

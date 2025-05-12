@@ -32,8 +32,7 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   name: 'ProjectPropertiesModal',

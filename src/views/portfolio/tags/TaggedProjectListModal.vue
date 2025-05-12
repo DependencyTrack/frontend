@@ -24,8 +24,8 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 import router from '@/router';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 

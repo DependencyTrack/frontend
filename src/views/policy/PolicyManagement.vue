@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import PolicyList from './PolicyList';
 import LicenseGroupList from './LicenseGroupList';
 

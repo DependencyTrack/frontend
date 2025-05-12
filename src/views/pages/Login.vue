@@ -101,12 +101,12 @@
 import axios from 'axios';
 import Oidc from 'oidc-client';
 import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import InformationalModal from '../modals/InformationalModal';
-import EventBus from '../../shared/eventbus';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import InformationalModal from '@/views/modals/InformationalModal';
+import EventBus from '@/shared/eventbus';
 import { getContextPath, getRedirectUrl } from '@/shared/utils';
 import queryString from 'query-string';
-import common from '../../shared/common';
+import common from '@/shared/common';
 import {
   BButton,
   BCard,
