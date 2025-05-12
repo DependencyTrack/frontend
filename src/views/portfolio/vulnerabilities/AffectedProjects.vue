@@ -18,7 +18,7 @@
         v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
         @click="updateSelectedRows"
       >
-        {{ $t('Bulk-Update') }}
+        {{ $t('message.bulk_update') }}
       </b-button>
     </div>
     <bootstrap-table
@@ -44,6 +44,7 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 import BulkUpdateModal from '@/views/portfolio/vulnerabilities/BulkUpdateModal.vue';
+import common from '@/shared/common';
 
 export default {
   mixins: [permissionsMixin],
@@ -178,14 +179,57 @@ export default {
             this.vulnerability,
             output.analysisState,
             output.analysisJustification,
-            null,
-            null,
+            output.analysisResponse,
+            output.analysisDetails,
             output.comment,
-            null,
+            output.isSuppressed,
           );
         }
       }
       this.refreshTable();
+    },
+
+    updateAnalysisData: function (analysis) {
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisComments')) {
+        let trail = '';
+        for (let i = 0; i < analysis.analysisComments.length; i++) {
+          if (
+            Object.prototype.hasOwnProperty.call(
+              analysis.analysisComments[i],
+              'commenter',
+            )
+          ) {
+            trail += analysis.analysisComments[i].commenter + ' - ';
+          }
+          trail += common.formatTimestamp(
+            analysis.analysisComments[i].timestamp,
+            true,
+          );
+          trail += '\n';
+          trail += analysis.analysisComments[i].comment;
+          trail += '\n\n';
+        }
+        this.auditTrail = trail;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisState')) {
+        this.analysisState = analysis.analysisState;
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(analysis, 'analysisJustification')
+      ) {
+        this.analysisJustification = analysis.analysisJustification;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisResponse')) {
+        this.analysisResponse = analysis.analysisResponse;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisDetails')) {
+        this.analysisDetails = analysis.analysisDetails;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'isSuppressed')) {
+        this.isSuppressed = analysis.isSuppressed;
+      } else {
+        this.isSuppressed = false;
+      }
     },
 
     callRestEndpoint: function (
@@ -197,6 +241,7 @@ export default {
       analysisResponse,
       analysisDetails,
       comment,
+      isSuppressed,
     ) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
       this.axios
@@ -209,13 +254,15 @@ export default {
           analysisResponse: analysisResponse,
           analysisDetails: analysisDetails,
           comment: comment,
-          isSuppressed: null,
+          isSuppressed: isSuppressed,
         })
         .then((response) => {
           this.$toastr.s(this.$t('message.updated'));
           this.updateAnalysisData(response.data);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.warn('Fel vid API-anrop:', error); // Loggar hela felobjektet
+          console.warn('Responsdata:', error.response?.data); // Loggar svar från servern om det finns
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

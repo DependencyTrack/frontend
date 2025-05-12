@@ -913,7 +913,11 @@
     "weakness": "Weakness",
     "will_not_fix": "Will not fix",
     "workaround_available": "Workaround available",
-    "x_trust_boundary": "Cross Trust Boundary"
+    "x_trust_boundary": "Cross Trust Boundary",
+    "apply": "Apply",
+    "bulk_update": "Bulk-Update",
+    "projects_selected": "projects selected",
+    "no_projects_selected": "No projects selected"
   },
   "operator": {
     "contains_all": "contains all",

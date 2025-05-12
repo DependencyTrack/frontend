@@ -4,17 +4,17 @@
     size="md"
     hide-header-close
     no-stacking
-    :title="$t('bulk_update')"
+    :title="$t('message.bulk_update')"
     @hide="resetValues"
   >
     <div v-if="selectedProjects.length">
       <p>
         <strong>{{ selectedProjects.length }}</strong>
-        {{ $t('projects selected') }}
+        {{ $t('message.projects_selected') }}
       </p>
     </div>
     <div v-else>
-      <p>{{ $t('No projects selected') }}</p>
+      <p>{{ $t('message.no_projects_selected') }}</p>
     </div>
 
     <b-form-group
@@ -49,6 +49,41 @@
       />
     </b-form-group>
 
+    <b-form-group
+      id="fieldset-11"
+      :label="this.$t('message.response')"
+      label-for="input-11"
+    >
+      <b-input-group id="input-11">
+        <b-form-select
+          v-model="analysisResponse"
+          :options="responseChoices"
+          :disabled="analysisState === null"
+          v-b-tooltip.hover
+          :title="this.$t('message.response_tooltip')"
+        />
+      </b-input-group>
+    </b-form-group>
+
+    <b-form-group
+      v-if="this.isPermitted(this.PERMISSIONS.VIEW_VULNERABILITY)"
+      :label="$t('message.details')"
+      label-for="analysisDetailsField"
+    >
+      <b-form-textarea
+        id="analysisDetailsField"
+        v-model="analysisDetails"
+        rows="4"
+        class="form-control"
+        :disabled="
+            analysisState === null ||
+            !this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)
+          "
+        v-b-tooltip.hover
+        :title="this.$t('message.analysis_details_tooltip')"
+      />
+    </b-form-group>
+
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">
         {{ $t('message.close') }}
@@ -59,13 +94,14 @@
         :disabled="!analysisState"
         @click="submit"
       >
-        {{ $t('Apply') }}
+        {{ $t('message.apply') }}
       </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+import permissionsMixin from '@/mixins/permissionsMixin';
 export default {
   name: 'BulkUpdateModal',
   props: {
@@ -80,6 +116,9 @@ export default {
       comment: '',
       analysisState: null,
       analysisJustification: null,
+      analysisResponse: null,
+      analysisDetails: '',
+      isSuppressed: !!this.finding?.analysis?.isSuppressed,
       analysisChoices: [
         { value: 'NOT_SET', text: this.$t('message.not_set') },
         { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
@@ -127,13 +166,28 @@ export default {
           text: this.$t('message.protected_by_mitigating_control'),
         },
       ],
+      responseChoices: [
+        { value: 'NOT_SET', text: this.$t('message.not_set') },
+        { value: 'CAN_NOT_FIX', text: this.$t('message.can_not_fix') },
+        { value: 'WILL_NOT_FIX', text: this.$t('message.will_not_fix') },
+        { value: 'UPDATE', text: this.$t('message.update') },
+        { value: 'ROLLBACK', text: this.$t('message.rollback') },
+        {
+          value: 'WORKAROUND_AVAILABLE',
+          text: this.$t('message.workaround_available'),
+        },
+      ],
     };
   },
+  mixins: [permissionsMixin],
   methods: {
     resetValues() {
       this.comment = '';
       this.analysisState = null;
       this.analysisJustification = null;
+      this.analysisResponse = null;
+      this.analysisDetails = '';
+      this.isSuppressed = !!this.finding?.analysis?.isSuppressed;
     },
     submit() {
       this.$emit('submit-bulk-analysis', {
@@ -141,6 +195,9 @@ export default {
         comment: this.comment,
         analysisState: this.analysisState,
         analysisJustification: this.analysisJustification,
+        analysisResponse: this.analysisResponse,
+        analysisDetails: this.analysisDetails,
+        isSuppressed: this.isSuppressed,
       });
     },
   },
