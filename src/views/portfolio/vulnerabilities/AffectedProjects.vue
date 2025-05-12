@@ -261,8 +261,6 @@ export default {
           this.updateAnalysisData(response.data);
         })
         .catch((error) => {
-          console.warn('Fel vid API-anrop:', error); // Loggar hela felobjektet
-          console.warn('Responsdata:', error.response?.data); // Loggar svar från servern om det finns
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
