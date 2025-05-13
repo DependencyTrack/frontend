@@ -22,6 +22,12 @@
       type="url"
       v-model="url"
     />
+    <b-validated-input-group-form-input
+      id="description"
+      :label="$t('admin.description')"
+      input-group-size="mb-3"
+      v-model="description"
+    />
     <b-input-group-form-select
       id="input-repository-type"
       required="true"
@@ -100,6 +106,7 @@ export default {
   data() {
     return {
       identifier: null,
+      description: null,
       url: null,
       repositoryType: null,
       initialRepositoryType: null,
@@ -133,6 +140,7 @@ export default {
         .put(url, {
           type: this.repositoryType,
           identifier: this.identifier,
+          description: this.description,
           url: this.url,
           internal: this.internal,
           authenticationRequired: this.repository_authentication,
@@ -160,6 +168,7 @@ export default {
     resetValues: function () {
       this.repositoryType = this.initialRepositoryType;
       this.identifier = null;
+      this.description = null;
       this.url = null;
       this.internal = false;
       this.username = null;
