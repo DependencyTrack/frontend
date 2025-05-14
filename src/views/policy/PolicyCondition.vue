@@ -152,10 +152,10 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
-import common from '../../shared/common';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import common from '@/shared/common';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 
 export default {
   props: {

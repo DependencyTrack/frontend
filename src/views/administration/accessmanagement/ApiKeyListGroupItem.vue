@@ -66,8 +66,7 @@
 </template>
 
 <script>
-import MurmurHash2 from 'imurmurhash';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import EditApiKeyCommentModal from './EditApiKeyCommentModal.vue';
 
 export default {

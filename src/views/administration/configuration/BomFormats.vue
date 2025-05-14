@@ -91,9 +91,9 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import VueTagsInput from '@johmun/vue-tags-input';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 
 export default {
   mixins: [configPropertyMixin],

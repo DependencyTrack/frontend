@@ -80,8 +80,8 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   name: 'RepositoryCreateRepositoryModal',

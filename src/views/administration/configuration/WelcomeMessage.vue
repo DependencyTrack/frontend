@@ -56,8 +56,8 @@
 <script>
 import axios from 'axios';
 import { Switch as cSwitch } from '@coreui/vue';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
 
 export default {
   mixins: [configPropertyMixin],

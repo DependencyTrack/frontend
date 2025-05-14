@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-informational" hide-header-close>
+  <b-modal id="modal-informational" hide-header-close :static="staticModal">
     <template v-slot:modal-title>Information</template>
     <div class="row">
       <div class="col-sm-12 col-md-12">
@@ -18,17 +18,24 @@
       <b-button
         class="btn btn-primary"
         @click="$bvModal.hide('modal-informational')"
-        >Close</b-button
-      >
+        >Close
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+import { BButton, BModal } from 'bootstrap-vue';
+
 export default {
   name: 'InformationalModal',
+  components: {
+    BModal,
+    BButton,
+  },
   props: {
     message: String,
+    staticModal: Boolean,
   },
 };
 </script>

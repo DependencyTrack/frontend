@@ -104,10 +104,9 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
   mixins: [permissionsMixin],

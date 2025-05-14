@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import i18n from '../i18n';
-import EventBus from '../shared/eventbus';
-import { getToken, hasPermission } from '../shared/permissions';
-import { getContextPath } from '../shared/utils';
+import i18n from '@/i18n';
+import EventBus from '@/shared/eventbus';
+import { getToken, hasPermission } from '@/shared/permissions';
+import { getContextPath } from '@/shared/utils';
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer');

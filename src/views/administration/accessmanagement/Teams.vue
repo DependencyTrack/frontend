@@ -20,19 +20,19 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateTeamModal from './CreateTeamModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import ApiKeyListGroupItem from './ApiKeyListGroupItem.vue';
 import SelectLdapGroupModal from './SelectLdapGroupModal';
 import SelectOidcGroupModal from './SelectOidcGroupModal';
 import SelectPermissionModal from './SelectPermissionModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 
 export default {
   props: {

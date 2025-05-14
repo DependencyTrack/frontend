@@ -28,11 +28,11 @@
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
 import xssFilters from 'xss-filters';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import i18n from '../../../i18n';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import common from '../../../shared/common';
-import EventBus from '../../../shared/eventbus';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import i18n from '@/i18n';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import EventBus from '@/shared/eventbus';
 import RepositoryCreateRepositoryModal from './RepositoryCreateRepositoryModal';
 
 export default {

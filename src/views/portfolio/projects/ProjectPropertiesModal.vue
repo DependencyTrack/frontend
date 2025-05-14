@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 
 export default {

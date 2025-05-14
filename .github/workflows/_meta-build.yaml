@@ -35,11 +35,23 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Run Npm Build
+      - name: Install Dependencies
         env:
           CI: true
         run: |-
           npm ci
+
+      - name: Run Cypress Tests
+        env:
+          CI: true
+        run: |-
+          npm ci
+          npm run cy:run:coverage --if-present
+
+      - name: Run Npm Build
+        env:
+          CI: true
+        run: |-
           npm run build --if-present
 
       - name: Upload Artifacts

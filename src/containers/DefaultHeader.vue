@@ -16,16 +16,17 @@
   </AppHeader>
 </template>
 <script>
-import { Header as AppHeader, SidebarToggler, AsideToggler } from '@coreui/vue';
+import { Header as AppHeader, SidebarToggler } from '@coreui/vue';
 import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
+import { BNavbarNav } from 'bootstrap-vue';
 
 export default {
   name: 'DefaultHeader',
   components: {
-    AsideToggler,
     AppHeader,
     DefaultHeaderProfileDropdown,
     SidebarToggler,
+    BNavbarNav,
   },
 };
 </script>

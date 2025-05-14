@@ -129,9 +129,9 @@ import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import { get } from 'lodash-es';
 
 export default {

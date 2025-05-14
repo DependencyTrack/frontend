@@ -24,17 +24,17 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateAlertModal from './CreateAlertModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
-import SelectProjectModal from '../../portfolio/projects/SelectProjectModal';
-import SelectTeamModal from '../../administration/accessmanagement/SelectTeamModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BToggleableDisplayButton from '../../components/BToggleableDisplayButton';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
+import SelectTeamModal from '@/views/administration/accessmanagement/SelectTeamModal';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
 

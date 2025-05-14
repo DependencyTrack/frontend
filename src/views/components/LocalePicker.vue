@@ -22,7 +22,18 @@
 </template>
 
 <script>
+import {
+  BFormSelect,
+  BFormSelectOption,
+  BInputGroupPrepend,
+} from 'bootstrap-vue';
+
 export default {
+  components: {
+    BInputGroupPrepend,
+    BFormSelect,
+    BFormSelectOption,
+  },
   data() {
     return {
       selectedItem: null,

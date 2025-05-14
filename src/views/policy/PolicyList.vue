@@ -22,17 +22,17 @@
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreatePolicyModal from './CreatePolicyModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import routerMixin from '../../mixins/routerMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import PolicyCondition from './PolicyCondition';
 import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
 import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
@@ -42,7 +42,6 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 export default {
   mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   components: {
-    BInputGroupFormSwitch,
     CreatePolicyModal,
   },
   mounted() {

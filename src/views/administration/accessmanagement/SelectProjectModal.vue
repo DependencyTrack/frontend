@@ -41,8 +41,8 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 import { Switch as cSwitch } from '@coreui/vue';
 import router from '@/router';
 

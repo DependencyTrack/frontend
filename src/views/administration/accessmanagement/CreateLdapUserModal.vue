@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 
 export default {
   mixins: [permissionsMixin],

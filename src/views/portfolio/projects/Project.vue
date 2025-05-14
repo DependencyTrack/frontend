@@ -39,7 +39,10 @@
                         ></i
                       ></a>
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in activeProjectVersions">
+                        <span
+                          v-for="projectVersion in activeProjectVersions"
+                          :key="projectVersion.uuid"
+                        >
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
@@ -56,6 +59,7 @@
                         >
                           <span
                             v-for="projectVersion in inactiveProjectVersions"
+                            :key="projectVersion.uuid"
                           >
                             <b-dropdown-item
                               :to="{
@@ -97,7 +101,7 @@
             </div>
             <div class="text-muted font-xs">
               <span class="text-lowercase font-weight-bold">
-                <span v-for="tag in project.tags">
+                <span v-for="tag in project.tags" :key="tag.name">
                   <b-badge
                     :to="{ name: 'Projects', query: { tag: tag.name } }"
                     variant="tag"
@@ -395,7 +399,7 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
@@ -403,11 +407,9 @@ import ProjectComponents from './ProjectComponents';
 import ProjectCollectionProjects from './ProjectCollectionProjects';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
 import ProjectServices from './ProjectServices';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ProjectDashboard from './ProjectDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import ProjectPropertiesModal from './ProjectPropertiesModal';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
@@ -415,7 +417,7 @@ import ProjectAddVersionModal from './ProjectAddVersionModal';
 import ProjectFindings from './ProjectFindings';
 import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
-import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
+import ExternalReferencesDropdown from '@/views/components/ExternalReferencesDropdown.vue';
 import xssFilters from 'xss-filters';
 
 export default {
@@ -431,9 +433,7 @@ export default {
     ProjectCollectionProjects,
     ProjectDependencyGraph,
     ProjectServices,
-    SeverityBarChart,
     ProjectDashboard,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ProjectEpss,
     ExternalReferencesDropdown,

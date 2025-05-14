@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import common from '@/shared/common';
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import TaggedCollectionProjectListModal from '@/views/portfolio/tags/TaggedCollectionProjectListModal.vue';
 import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotificationRuleListModal.vue';
@@ -25,11 +25,16 @@ import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListMo
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
+import { BLink } from 'bootstrap-vue';
 
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
     PortfolioWidgetRow,
+    // eslint-disable-next-line vue/no-unused-components
+    BLink,
+    // eslint-disable-next-line vue/no-unused-components
+    TaggedProjectListModal,
   },
   methods: {
     deleteTags: function (tagNames) {

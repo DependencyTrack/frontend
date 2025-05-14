@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   name: 'createLicenseGroupModal',
