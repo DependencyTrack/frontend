@@ -850,6 +850,7 @@
     "supplier_name": "Supplier name",
     "suppress": "Suppress",
     "suppressed": "Suppressed",
+    "unsuppress": "Unsuppress",
     "swid": "swid",
     "swid_tagid": "SWID Tag ID",
     "switch_view": "Cannot switch view while searching",

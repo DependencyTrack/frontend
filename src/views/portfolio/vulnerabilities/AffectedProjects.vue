@@ -20,6 +20,24 @@
       >
         {{ $t('message.bulk_update') }}
       </b-button>
+
+      <b-button
+        size="md"
+        variant="outline-warning"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="suppressSelected(true)"
+      >
+        {{ $t('message.suppress') }}
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="outline-success"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="suppressSelected(false)"
+      >
+        {{ $t('message.unsuppress') }}
+      </b-button>
     </div>
     <bootstrap-table
       ref="table"
@@ -183,6 +201,30 @@ export default {
             output.analysisDetails,
             output.comment,
             output.isSuppressed,
+          );
+        }
+      }
+      this.refreshTable();
+    },
+
+    suppressSelected(suppress) {
+      const selected = this.$refs.table.getSelections();
+      if (!selected || selected.length === 0) {
+        this.$toastr.w(this.$t('message.no_project_selected'));
+        return;
+      }
+      for (const project of selected) {
+        for (const component of project.affectedComponentUuids) {
+          this.callRestEndpoint(
+            project.uuid,
+            component,
+            this.vulnerability,
+            null, // analysisState
+            null, // justification
+            null, // response
+            null, // details
+            null, // comment
+            suppress
           );
         }
       }
