@@ -175,34 +175,6 @@
           />
         </b-input-group>
       </b-form-group>
-      <b-button @click="$refs.confirmSuppression.show()">Suppress all</b-button>
-      <b-modal ref="confirmSuppression" title="Confirm Suppression">
-        <p>Do you want to suppress the vulnerability in all projects?</p>
-        <div slot="modal-footer">
-          <b-button variant="outline-primary" @click="suppressForAllProjects"
-          >Yes</b-button
-          >
-          <b-button
-            variant="outline-danger"
-            @click="$refs.confirmSuppression.hide()"
-          >No</b-button
-          >
-        </div>
-      </b-modal>
-      <b-button @click="$refs.confirmUnSuppression.show()">Unsuppress all</b-button>
-      <b-modal ref="confirmUnSuppression" title="Confirm Unsuppression">
-        <p>Do you want to unsuppress the vulnerability in all projects?</p>
-        <div slot="modal-footer">
-          <b-button variant="outline-primary" @click="unSuppressForAllProjects"
-          >Yes</b-button
-          >
-          <b-button
-            variant="outline-danger"
-            @click="$refs.confirmUnSuppression.hide()"
-          >No</b-button
-          >
-        </div>
-      </b-modal>
       <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
         <b-col sm="6">
           <b-form-group
@@ -354,7 +326,6 @@ export default {
       analysisJustification: null,
       analysisResponse: null,
       analysisDetails: null,
-      suppressAllFlag: false,
     };
   },
   watch: {
@@ -367,35 +338,12 @@ export default {
           null,
           null,
           currentValue,
-          false,
         );
       }
     },
   },
   mixins: [permissionsMixin],
   methods: {
-    suppressForAllProjects() {
-      this.callRestEndpoint(
-        this.analysisState,
-        this.analysisJustification,
-        this.analysisResponse,
-        this.analysisDetails,
-        null,
-        true,
-        true,
-      );
-    },
-    unSuppressForAllProjects() {
-      this.callRestEndpoint(
-        this.analysisState,
-        this.analysisJustification,
-        this.analysisResponse,
-        this.analysisDetails,
-        null,
-        false,
-        true,
-      );
-    },
     resolveVulnAliases: function (aliases, vulnSource) {
       return common.resolveVulnAliases(
         vulnSource ? vulnSource : this.source,
@@ -460,13 +408,6 @@ export default {
       } else {
         this.isSuppressed = false;
       }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'suppressAllFlag')) {
-        this.suppressAllFlag = analysis.suppressAllFlag;
-      } else {
-        this.suppressAllFlag = false;
-      }
-      this.$refs.confirmSuppression.hide();
-      this.$refs.confirmUnSuppression.hide();
     },
     makeAnalysis: function () {
       this.callRestEndpoint(
@@ -474,7 +415,6 @@ export default {
         this.analysisJustification,
         this.analysisResponse,
         this.analysisDetails,
-        null,
         null,
         null,
       );
@@ -488,7 +428,6 @@ export default {
           this.analysisDetails,
           this.comment,
           null,
-          null,
         );
       }
       this.comment = null;
@@ -500,7 +439,6 @@ export default {
       analysisDetails,
       comment,
       isSuppressed,
-      suppressAllFlag,
     ) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
       this.axios
@@ -514,7 +452,6 @@ export default {
           analysisDetails: analysisDetails,
           comment: comment,
           isSuppressed: isSuppressed,
-          suppressAllFlag: suppressAllFlag,
         })
         .then((response) => {
           this.$toastr.s(this.$t('message.updated'));
