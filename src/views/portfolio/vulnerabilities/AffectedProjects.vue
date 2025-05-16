@@ -210,7 +210,7 @@ export default {
     suppressSelected(suppress) {
       const selected = this.$refs.table.getSelections();
       if (!selected || selected.length === 0) {
-        this.$toastr.w(this.$t('message.no_project_selected'));
+        this.$toastr.w(this.$t('message.no_projects_selected'));
         return;
       }
       for (const project of selected) {
