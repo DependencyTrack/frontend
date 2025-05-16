@@ -917,7 +917,8 @@
     "apply": "申请",
     "bulk_update": "散装",
     "no_projects_selected": "没有选择项目",
-    "projects_selected": "选择的项目"
+    "projects_selected": "选择的项目",
+    "unsuppress": "取消抑制"
   },
   "operator": {
     "contains_all": "包含全部",

@@ -917,7 +917,8 @@
     "apply": "Stosować",
     "bulk_update": "Zakład",
     "no_projects_selected": "Nie wybrano projektów",
-    "projects_selected": "Wybrane projekty"
+    "projects_selected": "Wybrane projekty",
+    "unsuppress": "Unsuppress"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

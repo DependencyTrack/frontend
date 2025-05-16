@@ -917,7 +917,8 @@
     "apply": "Применять",
     "bulk_update": "Насыпный обрыв",
     "no_projects_selected": "Никаких проектов не выбрано",
-    "projects_selected": "Проекты выбраны"
+    "projects_selected": "Проекты выбраны",
+    "unsuppress": "Неспособность"
   },
   "operator": {
     "contains_all": "содержит все",

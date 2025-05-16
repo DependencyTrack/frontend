@@ -917,7 +917,8 @@
     "apply": "適用する",
     "bulk_update": "バルクアップデート",
     "no_projects_selected": "選択されたプロジェクトはありません",
-    "projects_selected": "選択されたプロジェクト"
+    "projects_selected": "選択されたプロジェクト",
+    "unsuppress": "サプレスを抑制します"
   },
   "operator": {
     "contains_all": "すべてを含む",

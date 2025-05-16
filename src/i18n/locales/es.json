@@ -917,7 +917,8 @@
     "apply": "Aplicar",
     "bulk_update": "A granel-actualización",
     "no_projects_selected": "No hay proyectos seleccionados",
-    "projects_selected": "Proyectos seleccionados"
+    "projects_selected": "Proyectos seleccionados",
+    "unsuppress": "No compresión"
   },
   "operator": {
     "contains_all": "contiene todo",

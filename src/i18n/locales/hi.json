@@ -917,7 +917,8 @@
     "apply": "आवेदन करना",
     "bulk_update": "उकसाने वाला",
     "no_projects_selected": "कोई परियोजना नहीं चुनी",
-    "projects_selected": "चयनित परियोजनाएं"
+    "projects_selected": "चयनित परियोजनाएं",
+    "unsuppress": "बेकार"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

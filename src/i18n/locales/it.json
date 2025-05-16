@@ -917,7 +917,8 @@
     "apply": "Fare domanda a",
     "bulk_update": "Aggiornamento in blocco",
     "no_projects_selected": "Nessun progetto selezionato",
-    "projects_selected": "progetti selezionati"
+    "projects_selected": "progetti selezionati",
+    "unsuppress": "Non sopprimere"
   },
   "operator": {
     "contains_all": "contiene tutto",

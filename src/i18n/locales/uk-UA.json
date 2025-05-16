@@ -917,7 +917,8 @@
     "apply": "Застосовувати",
     "bulk_update": "Об'ємний",
     "no_projects_selected": "Жодних проектів не вибрано",
-    "projects_selected": "Вибрані проекти"
+    "projects_selected": "Вибрані проекти",
+    "unsuppress": "Невимушений"
   },
   "operator": {
     "contains_all": "містить усе",

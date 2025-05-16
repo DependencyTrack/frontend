@@ -917,7 +917,8 @@
     "apply": "Aplicar",
     "bulk_update": "Update em massa",
     "no_projects_selected": "Nenhum projeto selecionado",
-    "projects_selected": "projetos selecionados"
+    "projects_selected": "projetos selecionados",
+    "unsuppress": "Não suprimido"
   },
   "operator": {
     "contains_all": "contém tudo",
