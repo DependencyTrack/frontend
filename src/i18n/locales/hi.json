@@ -913,7 +913,11 @@
     "weakness": "कमजोरी",
     "will_not_fix": "ठीक नहीं होगा",
     "workaround_available": "वैकल्पिक उपाय उपलब्ध है",
-    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा"
+    "x_trust_boundary": "क्रॉस ट्रस्ट सीमा",
+    "apply": "आवेदन करना",
+    "bulk_update": "उकसाने वाला",
+    "no_projects_selected": "कोई परियोजना नहीं चुनी",
+    "projects_selected": "चयनित परियोजनाएं"
   },
   "operator": {
     "contains_all": "इसमें सभी शामिल हैं",

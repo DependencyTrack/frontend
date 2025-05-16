@@ -913,7 +913,11 @@
     "weakness": "Debilidad",
     "will_not_fix": "No se reparara",
     "workaround_available": "Solución alternativa disponible",
-    "x_trust_boundary": "Cruzar el límite de confianza"
+    "x_trust_boundary": "Cruzar el límite de confianza",
+    "apply": "Aplicar",
+    "bulk_update": "A granel-actualización",
+    "no_projects_selected": "No hay proyectos seleccionados",
+    "projects_selected": "Proyectos seleccionados"
   },
   "operator": {
     "contains_all": "contiene todo",

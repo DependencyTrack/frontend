@@ -913,7 +913,11 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle"
+    "x_trust_boundary": "Limte de confiance mutuelle",
+    "apply": "Appliquer",
+    "bulk_update": "Mettre à jour",
+    "no_projects_selected": "Aucun projet sélectionné",
+    "projects_selected": "Projets sélectionnés"
   },
   "operator": {
     "contains_all": "contient tous",

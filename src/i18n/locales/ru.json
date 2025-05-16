@@ -913,7 +913,11 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступно обходное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "apply": "Применять",
+    "bulk_update": "Насыпный обрыв",
+    "no_projects_selected": "Никаких проектов не выбрано",
+    "projects_selected": "Проекты выбраны"
   },
   "operator": {
     "contains_all": "содержит все",

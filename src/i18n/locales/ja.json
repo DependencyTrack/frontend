@@ -913,7 +913,11 @@
     "weakness": "弱点",
     "will_not_fix": "修正しない",
     "workaround_available": "回避策あり",
-    "x_trust_boundary": "信頼境界を越える"
+    "x_trust_boundary": "信頼境界を越える",
+    "apply": "適用する",
+    "bulk_update": "バルクアップデート",
+    "no_projects_selected": "選択されたプロジェクトはありません",
+    "projects_selected": "選択されたプロジェクト"
   },
   "operator": {
     "contains_all": "すべてを含む",
