@@ -913,7 +913,12 @@
     "weakness": "Debolezza",
     "will_not_fix": "Non risolverà",
     "workaround_available": "Soluzione disponibile",
-    "x_trust_boundary": "Confine di fiducia incrociata"
+    "x_trust_boundary": "Confine di fiducia incrociata",
+    "apply": "Fare domanda a",
+    "bulk_update": "Aggiornamento in blocco",
+    "no_projects_selected": "Nessun progetto selezionato",
+    "projects_selected": "progetti selezionati",
+    "unsuppress": "Non sopprimere"
   },
   "operator": {
     "contains_all": "contiene tutto",

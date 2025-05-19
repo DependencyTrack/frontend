@@ -913,7 +913,12 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenze überschreiten"
+    "x_trust_boundary": "Vertrauensgrenze überschreiten",
+    "apply": "Anwenden",
+    "bulk_update": "Bulk-Update",
+    "no_projects_selected": "Keine Projekte ausgewählt",
+    "projects_selected": "Projekte ausgewählt",
+    "unsuppress": "Unsuppression"
   },
   "operator": {
     "contains_all": "enthält alle",
