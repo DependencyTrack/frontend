@@ -14,9 +14,8 @@
       <b-button
         size="md"
         variant="outline-primary"
-        v-b-modal.bulkUpdateModal
         v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
-        @click="updateSelectedRows"
+        @click="openModal"
       >
         {{ $t('message.bulk_update') }}
       </b-button>
@@ -182,8 +181,15 @@ export default {
       this.$refs.table.hideLoading();
     },
 
-    updateSelectedRows() {
+    openModal() {
       this.selectedProjects = this.$refs.table.getSelections();
+      const selected = this.$refs.table.getSelections();
+      if (!selected || selected.length === 0) {
+        this.$toastr.w(this.$t('message.no_projects_selected'));
+        return;
+      }
+
+      this.$bvModal.show('bulkUpdateModal');
     },
 
     // Method for receiving update from modal and calling API.
