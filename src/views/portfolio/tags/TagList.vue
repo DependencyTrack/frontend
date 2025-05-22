@@ -26,7 +26,6 @@ import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModa
 import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
 import { BLink } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

@@ -59,7 +59,6 @@ import PolicyViolationProgressBar from '@/views/components/PolicyViolationProgre
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
 import { BButton } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

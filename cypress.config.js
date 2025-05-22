@@ -1,6 +1,5 @@
 const { defineConfig } = require('cypress');
 const path = require('path');
-const fs = require('fs');
 
 module.exports = defineConfig({
   video: true,
@@ -10,6 +9,9 @@ module.exports = defineConfig({
     devServer: {
       framework: 'vue2',
       bundler: 'vite',
+      warmup: {
+        clientFiles: ['cypress/support/component.ts', 'src/**/*.cy.js'],
+      },
       viteConfig: (viteConfig) => {
         // Use the coverage config if VITE_COVERAGE is true
         if (process.env.VITE_COVERAGE === 'true') {

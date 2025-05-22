@@ -38,7 +38,6 @@ import i18n from '@/i18n';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import $ from 'jquery';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

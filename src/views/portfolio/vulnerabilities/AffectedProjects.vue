@@ -28,7 +28,6 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

@@ -27,7 +27,6 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import { BButton, BModal } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

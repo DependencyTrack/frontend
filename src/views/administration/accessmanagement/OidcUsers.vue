@@ -33,7 +33,6 @@ import ActionableListGroupItem from '@/views/components/ActionableListGroupItem'
 import SelectTeamModal from './SelectTeamModal';
 import SelectPermissionModal from './SelectPermissionModal';
 import permissionsMixin from '@/mixins/permissionsMixin';
-import BootstrapTable from 'bootstrap-table';
 import { BButton, BCard, BCardBody } from 'bootstrap-vue';
 
 export default {

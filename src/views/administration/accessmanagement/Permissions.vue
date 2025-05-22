@@ -15,7 +15,6 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
-import BootstrapTable from 'bootstrap-table';
 import { BCard, BCardBody } from 'bootstrap-vue';
 
 export default {

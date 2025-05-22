@@ -33,7 +33,6 @@ import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import router from '@/router';
-import BootstrapTable from 'bootstrap-table';
 import { BCard, BCardBody } from 'bootstrap-vue';
 
 export default {

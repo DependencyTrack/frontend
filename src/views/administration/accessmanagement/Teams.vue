@@ -34,7 +34,6 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import { BButton, BCard, BCardBody } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

@@ -74,7 +74,6 @@ import xssFilters from 'xss-filters';
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 import { BButton, BCol, BFormInput, BInputGroup, BRow } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {
@@ -87,6 +86,8 @@ export default {
     BFormInput,
     BButton,
     BootstrapTable,
+    // eslint-disable-next-line vue/no-unused-components
+    SeverityProgressBar,
   },
   mixins: [permissionsMixin],
   data() {

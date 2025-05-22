@@ -33,7 +33,6 @@ import SelectTeamModal from './SelectTeamModal';
 import SelectPermissionModal from './SelectPermissionModal';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import { BButton, BCard, BCardBody } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

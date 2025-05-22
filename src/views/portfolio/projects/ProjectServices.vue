@@ -19,7 +19,6 @@ import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

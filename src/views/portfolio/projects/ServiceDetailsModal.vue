@@ -199,7 +199,6 @@ import {
   BTab,
   BTabs,
 } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   name: 'ServiceDetailsModal',

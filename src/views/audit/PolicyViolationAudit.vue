@@ -155,7 +155,6 @@ import {
   BFormGroup,
   BRow,
 } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   components: {

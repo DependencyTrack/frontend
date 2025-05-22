@@ -34,7 +34,6 @@
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { BButton, BModal } from 'bootstrap-vue';
-import BootstrapTable from 'bootstrap-table';
 
 export default {
   name: 'ProjectPropertiesModal',
