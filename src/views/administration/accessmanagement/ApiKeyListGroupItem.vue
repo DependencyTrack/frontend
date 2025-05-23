@@ -68,13 +68,16 @@
 <script>
 import common from '@/shared/common';
 import EditApiKeyCommentModal from './EditApiKeyCommentModal.vue';
-import { BButton, BListGroupItem } from 'bootstrap-vue';
+import { BButton, BListGroupItem, VBModal } from 'bootstrap-vue';
 
 export default {
   components: {
     EditApiKeyCommentModal,
     BListGroupItem,
     BButton,
+  },
+  directives: {
+    VBModal,
   },
   props: {
     apiKey: Object,

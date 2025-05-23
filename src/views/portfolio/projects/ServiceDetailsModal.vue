@@ -210,7 +210,6 @@ export default {
     BFormGroup,
     BFormTextarea,
     BButton,
-    BootstrapTable,
     BCard,
   },
   mixins: [permissionsMixin],

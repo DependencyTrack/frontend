@@ -67,8 +67,25 @@
 </template>
 
 <script>
+import {
+  BButton,
+  BFormGroup,
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+  BModal,
+} from 'bootstrap-vue';
+
 export default {
   name: 'ComponentCreatePropertyModal',
+  components: {
+    BModal,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BFormSelect,
+    BButton,
+  },
   props: {
     uuid: String,
   },

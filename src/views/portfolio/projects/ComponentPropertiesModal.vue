@@ -42,9 +42,14 @@
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
   name: 'ComponentPropertiesModal',
+  components: {
+    BModal,
+    BButton,
+  },
   mixins: [permissionsMixin],
   props: {
     uuid: String,

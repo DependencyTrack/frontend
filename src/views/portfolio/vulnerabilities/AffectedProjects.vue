@@ -32,7 +32,6 @@ import { Switch as cSwitch } from '@coreui/vue';
 export default {
   components: {
     cSwitch,
-    BootstrapTable,
   },
   mixins: [permissionsMixin],
   props: {

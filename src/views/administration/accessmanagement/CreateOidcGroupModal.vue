@@ -34,12 +34,13 @@
 <script>
 import permissionsMixin from '@/mixins/permissionsMixin';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
-import { BButton } from 'bootstrap-vue';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
   components: {
     BInputGroupFormInput,
     BButton,
+    BModal,
   },
   mixins: [permissionsMixin],
   data() {

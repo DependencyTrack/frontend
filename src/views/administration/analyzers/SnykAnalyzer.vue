@@ -142,6 +142,7 @@ import {
   BCardFooter,
   BCol,
   BFormGroup,
+  BFormRadioGroup,
   BRow,
 } from 'bootstrap-vue';
 
@@ -156,6 +157,7 @@ export default {
     BCol,
     BFormGroup,
     BButton,
+    BFormRadioGroup,
   },
   mixins: [configPropertyMixin],
   props: {

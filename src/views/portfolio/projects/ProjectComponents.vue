@@ -133,6 +133,7 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import { get } from 'lodash-es';
+import { BButton, BDropdown, BDropdownItem, BTooltip } from 'bootstrap-vue';
 
 export default {
   comments: {
@@ -143,6 +144,10 @@ export default {
     cSwitch,
     ProjectUploadBomModal,
     ProjectAddComponentModal,
+    BButton,
+    BTooltip,
+    BDropdown,
+    BDropdownItem,
   },
   mixins: [permissionsMixin],
   props: {

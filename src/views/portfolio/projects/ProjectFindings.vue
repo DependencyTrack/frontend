@@ -116,11 +116,14 @@ import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import FindingAudit from './FindingAudit';
 import ProjectUploadVexModal from './ProjectUploadVexModal';
+import { BButton, BTooltip } from 'bootstrap-vue';
 
 export default {
   components: {
     cSwitch,
     ProjectUploadVexModal,
+    BTooltip,
+    BButton,
   },
   mixins: [bootstrapTableMixin, permissionsMixin],
   props: {

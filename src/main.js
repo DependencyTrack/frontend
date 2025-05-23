@@ -18,7 +18,7 @@ import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
-import installBootstrapTableComponent from '@/plugins/table';
+import installExtraBootstrapComponentsAndDirectives from '@/plugins/bootstrap';
 import installPermissionDirective from '@/directives/VuePermission';
 
 Vue.use(BootstrapVue);
@@ -33,7 +33,7 @@ Vue.use(VueToastr, {
 Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 
-installBootstrapTableComponent(Vue);
+installExtraBootstrapComponentsAndDirectives(Vue);
 installPermissionDirective(Vue);
 
 Vue.prototype.$api = api;

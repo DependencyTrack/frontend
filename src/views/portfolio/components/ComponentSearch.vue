@@ -85,7 +85,6 @@ export default {
     BInputGroup,
     BFormInput,
     BButton,
-    BootstrapTable,
     // eslint-disable-next-line vue/no-unused-components
     SeverityProgressBar,
   },

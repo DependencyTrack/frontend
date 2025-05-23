@@ -164,7 +164,6 @@ export default {
     BFormGroup,
     BFormCheckbox,
     BFormCheckboxGroup,
-    BootstrapTable,
   },
   mixins: [permissionsMixin],
   data() {

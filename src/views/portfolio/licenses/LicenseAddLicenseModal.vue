@@ -146,12 +146,28 @@
 <script>
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import { Switch as cSwitch } from '@coreui/vue';
+import {
+  BButton,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
   name: 'LicenseAddLicenseModal',
   components: {
     BInputGroupFormInput,
     cSwitch,
+    BModal,
+    BTabs,
+    BTab,
+    BButton,
+    BCard,
+    BFormGroup,
+    BFormTextarea,
   },
   data() {
     return {

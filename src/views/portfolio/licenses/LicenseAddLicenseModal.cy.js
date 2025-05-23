@@ -1,4 +1,5 @@
 import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal.vue';
+import { shouldShowModal } from '../../../../cypress/support/utils';
 
 describe('LicenseAddLicenseModal', () => {
   it('mounts successfully', () => {
@@ -11,6 +12,6 @@ describe('LicenseAddLicenseModal', () => {
       },
     });
 
-    cy.get('div').should('exist');
+    shouldShowModal('licenseAddLicenseModal');
   });
 });

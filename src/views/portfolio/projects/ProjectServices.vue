@@ -21,9 +21,6 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
-  components: {
-    BootstrapTable,
-  },
   mixins: [permissionsMixin],
   props: {
     uuid: String,

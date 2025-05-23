@@ -35,7 +35,6 @@ import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
   components: {
-    BootstrapTable,
     BModal,
     BButton,
   },

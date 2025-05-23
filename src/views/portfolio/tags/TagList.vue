@@ -25,12 +25,14 @@ import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListMo
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
-import { BLink } from 'bootstrap-vue';
+import { BLink, VBModal } from 'bootstrap-vue';
 
 export default {
   components: {
     PortfolioWidgetRow,
-    BootstrapTable,
+  },
+  directives: {
+    VBModal,
   },
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   data() {

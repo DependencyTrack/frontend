@@ -391,12 +391,28 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import {
+  BBadge,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
   name: 'ComponentDetailsModal',
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BBadge,
+    BFormGroup,
+    BFormTextarea,
   },
   mixins: [permissionsMixin, availableClassifiersMixin],
   props: {

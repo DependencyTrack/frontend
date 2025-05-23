@@ -65,7 +65,6 @@ export default {
     cSwitch,
     ProjectCreateProjectModal,
     BButton,
-    BootstrapTable,
   },
   mixins: [permissionsMixin, routerMixin],
   props: {

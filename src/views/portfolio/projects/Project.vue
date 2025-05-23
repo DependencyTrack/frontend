@@ -419,6 +419,18 @@ import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
 import ExternalReferencesDropdown from '@/views/components/ExternalReferencesDropdown.vue';
 import xssFilters from 'xss-filters';
+import {
+  BBadge,
+  BCard,
+  BCardBody,
+  BCol,
+  BDropdownGroup,
+  BDropdownItem,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
   components: {
@@ -436,6 +448,16 @@ export default {
     VueEasyPieChart,
     ProjectEpss,
     ExternalReferencesDropdown,
+    BCard,
+    BCardBody,
+    BCol,
+    BRow,
+    BDropdownItem,
+    BDropdownGroup,
+    BBadge,
+    BTabs,
+    BTab,
+    BLink,
   },
   mixins: [permissionsMixin],
   title: '',

@@ -190,6 +190,16 @@ import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '@/views/components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import {
+  BBadge,
+  BCard,
+  BCardBody,
+  BCol,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
   components: {
@@ -200,6 +210,14 @@ export default {
     VueEasyPieChart,
     ComponentDetailsModal,
     ExternalReferencesDropdown,
+    BCard,
+    BCardBody,
+    BRow,
+    BCol,
+    BBadge,
+    BLink,
+    BTabs,
+    BTab,
   },
   mixins: [permissionsMixin],
   title: '',

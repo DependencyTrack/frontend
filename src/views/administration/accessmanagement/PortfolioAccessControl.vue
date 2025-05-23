@@ -40,7 +40,6 @@ export default {
     cSwitch,
     BCard,
     BCardBody,
-    BootstrapTable,
   },
   mixins: [bootstrapTableMixin, configPropertyMixin],
   props: {

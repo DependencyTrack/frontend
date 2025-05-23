@@ -107,9 +107,14 @@
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import EventBus from '@/shared/eventbus';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BTab, BTabs } from 'bootstrap-vue';
 
 export default {
-  components: {},
+  components: {
+    BTabs,
+    BTab,
+    BButton,
+  },
   mixins: [permissionsMixin],
   title: '',
   data() {

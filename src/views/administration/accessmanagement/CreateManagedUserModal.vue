@@ -104,7 +104,7 @@
 import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
-import { BCol, BModal, BRow } from 'bootstrap-vue';
+import { BButton, BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {
   components: {
@@ -113,6 +113,7 @@ export default {
     BModal,
     BRow,
     BCol,
+    BButton,
   },
   mixins: [permissionsMixin],
   data() {

@@ -40,7 +40,6 @@ export default {
     BCard,
     BCardBody,
     BButton,
-    BootstrapTable,
   },
   mixins: [bootstrapTableMixin],
   props: {

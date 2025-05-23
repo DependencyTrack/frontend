@@ -33,7 +33,6 @@ import { BButton, BModal } from 'bootstrap-vue';
 export default {
   components: {
     BModal,
-    BootstrapTable,
     BButton,
   },
   mixins: [bootstrapTableMixin, permissionsMixin],

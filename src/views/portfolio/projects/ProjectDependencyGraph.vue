@@ -61,6 +61,7 @@ import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import { Switch as cSwitch } from '@coreui/vue';
+import { BTooltip } from 'bootstrap-vue';
 
 let pos = { top: 0, left: 0, x: 0, y: 0 };
 
@@ -68,6 +69,7 @@ export default {
   components: {
     Vue2OrgTree,
     cSwitch,
+    BTooltip,
   },
   mixins: [permissionsMixin],
   props: {

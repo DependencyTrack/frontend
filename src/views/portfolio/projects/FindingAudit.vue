@@ -253,10 +253,34 @@
 import common from '@/shared/common';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import {
+  BButton,
+  BCard,
+  BCardText,
+  BCol,
+  BFormGroup,
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+  BInputGroup,
+  BLink,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
   components: {
     BootstrapToggle,
+    BRow,
+    BCol,
+    BCard,
+    BCardText,
+    BLink,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BButton,
+    BInputGroup,
+    BFormSelect,
   },
   mixins: [permissionsMixin],
   props: {

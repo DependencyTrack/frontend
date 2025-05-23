@@ -45,7 +45,6 @@ export default {
     BCard,
     BCardBody,
     BButton,
-    BootstrapTable,
   },
   directives: { vueDebounce },
   mixins: [bootstrapTableMixin],

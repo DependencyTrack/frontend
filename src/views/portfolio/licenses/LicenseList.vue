@@ -31,11 +31,13 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import routerMixin from '@/mixins/routerMixin';
 import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import { BButton } from 'bootstrap-vue';
 
 export default {
   components: {
     LicenseAddLicenseModal,
     PortfolioWidgetRow,
+    BButton,
   },
   mixins: [permissionsMixin, routerMixin],
   data() {

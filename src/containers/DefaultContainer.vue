@@ -38,6 +38,7 @@ import EventBus from '@/shared/eventbus';
 import ProfileEditModal from '@/views/components/ProfileEditModal';
 import SnapshotModal from '@/views/components/SnapshotModal';
 import * as permissions from '@/shared/permissions';
+import { RouterView } from 'vue-router';
 
 export default {
   name: 'DefaultContainer',
@@ -53,6 +54,7 @@ export default {
     SidebarMinimizer,
     DefaultFooter,
     DefaultHeader,
+    RouterView,
   },
   data() {
     return {

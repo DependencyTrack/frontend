@@ -47,7 +47,7 @@
 import { Switch as cSwitch } from '@coreui/vue';
 import common from '@/shared/common';
 import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
-import { BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
   components: {
@@ -55,6 +55,7 @@ export default {
     BCard,
     BCardBody,
     BCardFooter,
+    BButton,
   },
   mixins: [configPropertyMixin],
   props: {

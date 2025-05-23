@@ -6,7 +6,7 @@ import api from '@/shared/api.json';
 import oidc from '@/shared/oidc.json';
 import version from '@/version';
 import '@/validation';
-import installBootstrapTableComponent from '@/plugins/table';
+import installExtraBootstrapComponentsAndDirectives from '@/plugins/bootstrap';
 import installPermissionDirective from '@/directives/VuePermission';
 
 Vue.prototype.$api = api;
@@ -62,7 +62,7 @@ Cypress.Commands.add('mount', (component, options = {}) => {
   };
 
   const localVue = Vue.extend();
-  installBootstrapTableComponent(localVue);
+  installExtraBootstrapComponentsAndDirectives(localVue);
   installPermissionDirective(localVue);
   Object.keys(prototypeMocks).forEach((key) => {
     Object.defineProperty(localVue.prototype, key, {

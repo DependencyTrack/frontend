@@ -45,10 +45,13 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import { Switch as cSwitch } from '@coreui/vue';
 import router from '@/router';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
   components: {
     cSwitch,
+    BModal,
+    BButton,
   },
   mixins: [permissionsMixin],
   props: {

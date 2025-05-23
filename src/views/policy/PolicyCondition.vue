@@ -156,12 +156,18 @@ import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import common from '@/shared/common';
 import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import { BCol, BFormInput, BInputGroup, BRow, BTooltip } from 'bootstrap-vue';
 
 export default {
   components: {
+    BRow,
+    BCol,
+    BInputGroup,
+    BFormInput,
     ActionableListGroupItem,
     BInputGroupFormSelect,
     BInputGroupFormInput,
+    BTooltip,
   },
   props: {
     policy: Object,

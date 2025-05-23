@@ -42,7 +42,6 @@ import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 export default {
   components: {
     cSwitch,
-    BootstrapTable,
   },
   mixins: [bootstrapTableMixin],
   props: {

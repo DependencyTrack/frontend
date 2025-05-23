@@ -144,6 +144,7 @@ import { Callout } from '@coreui/vue';
 import ChartPortfolioVulnerabilities from '@/views/dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import { BCard, BCol, BLink, BRow } from 'bootstrap-vue';
 
 export default {
   name: 'ComponentDashboard',
@@ -152,6 +153,10 @@ export default {
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
     Callout,
+    BCard,
+    BRow,
+    BCol,
+    BLink,
   },
   data() {
     return {

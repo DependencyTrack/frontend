@@ -21,7 +21,6 @@ export default {
   components: {
     BCard,
     BCardBody,
-    BootstrapTable,
   },
   props: {
     header: String,

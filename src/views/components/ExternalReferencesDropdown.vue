@@ -27,7 +27,13 @@
 </template>
 
 <script>
+import { BDropdown, BDropdownItem } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BDropdown,
+    BDropdownItem,
+  },
   props: {
     externalReferences: Array,
   },

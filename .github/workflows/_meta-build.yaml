@@ -51,6 +51,7 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           CI: true
+        timeout-minutes: 15
         with:
           component: true
           command: npm run cy:run:coverage --if-present

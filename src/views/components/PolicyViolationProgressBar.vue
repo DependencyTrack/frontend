@@ -59,7 +59,14 @@
 </template>
 
 <script>
+import { BProgress, BProgressBar, BTooltip } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BProgress,
+    BProgressBar,
+    BTooltip,
+  },
   props: {
     metrics: Object,
   },

@@ -39,7 +39,6 @@ export default {
   name: 'ProjectPropertiesModal',
   components: {
     BModal,
-    BootstrapTable,
     BButton,
   },
   props: {
