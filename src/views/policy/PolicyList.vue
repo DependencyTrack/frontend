@@ -17,22 +17,22 @@
       :options="options"
       @on-load-success="tableLoaded"
     />
-    <create-policy-modal v-on:refreshTable="refreshTable" />
+    <create-policy-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreatePolicyModal from './CreatePolicyModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import routerMixin from '../../mixins/routerMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import PolicyCondition from './PolicyCondition';
 import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
 import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
@@ -40,38 +40,10 @@ import SelectTagModal from '@/views/portfolio/tags/SelectTagModal';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {
-  mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   components: {
-    BInputGroupFormSwitch,
     CreatePolicyModal,
   },
-  mounted() {
-    EventBus.$on('policyManagement:policies:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('policyManagement:policies:rowUpdate');
-    EventBus.$off('policyManagement:policies:rowDeleted');
-  },
-  methods: {
-    tableLoaded: function (data) {
-      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
-        this.$emit('total', data.total);
-      } else {
-        this.$emit('total', '?');
-      }
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        silent: true,
-      });
-    },
-  },
+  mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   data() {
     return {
       columns: [
@@ -419,6 +391,33 @@ export default {
         },
       },
     };
+  },
+  mounted() {
+    EventBus.$on('policyManagement:policies:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('policyManagement:policies:rowUpdate');
+    EventBus.$off('policyManagement:policies:rowDeleted');
+  },
+  methods: {
+    tableLoaded: function (data) {
+      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
+        this.$emit('total', data.total);
+      } else {
+        this.$emit('total', '?');
+      }
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        silent: true,
+      });
+    },
   },
 };
 </script>

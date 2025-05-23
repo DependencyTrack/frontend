@@ -44,17 +44,14 @@
                     />
                     <b-row style="margin-bottom: 1rem">
                       <b-col cols="6" v-show="showLoginForm">
-                        <b-button
-                          variant="primary"
-                          type="submit"
-                          class="px-4"
-                          >{{ $t('message.login') }}</b-button
-                        >
+                        <b-button variant="primary" type="submit" class="px-4"
+                          >{{ $t('message.login') }}
+                        </b-button>
                       </b-col>
                       <b-col cols="6" v-show="oidcAvailable">
                         <b-button
                           :style="{ float: showLoginForm ? 'right' : 'none' }"
-                          v-on:click="oidcLogin()"
+                          @click="oidcLogin()"
                         >
                           <span v-if="oidcCheckLoginButtonTextSetted()">{{
                             oidcLoginButtonText()
@@ -70,9 +67,9 @@
                     </b-row>
                     <b-link
                       v-show="oidcAvailable && !showLoginForm"
-                      v-on:click="showLoginForm = true"
-                      >{{ $t('message.login_more_options') }}</b-link
-                    >
+                      @click="showLoginForm = true"
+                      >{{ $t('message.login_more_options') }}
+                    </b-link>
                   </b-form>
                 </validation-observer>
               </b-card-body>
@@ -87,6 +84,7 @@
                   <img
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
                     width="100%"
+                    alt="DependencyTrack Logo"
                   />
                 </div>
               </b-card-body>
@@ -95,22 +93,30 @@
         </b-col>
       </b-row>
     </div>
-    <informational-modal v-bind:message="loginError" />
+    <informational-modal :message="loginError" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Oidc from 'oidc-client';
-// bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import $ from 'jquery';
 import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import InformationalModal from '../modals/InformationalModal';
-import EventBus from '../../shared/eventbus';
-import { getRedirectUrl, getContextPath } from '../../shared/utils';
-const qs = require('querystring');
-import common from '../../shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import InformationalModal from '@/views/modals/InformationalModal';
+import EventBus from '@/shared/eventbus';
+import { getContextPath, getRedirectUrl } from '@/shared/utils';
+import queryString from 'query-string';
+import common from '@/shared/common';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardGroup,
+  BCol,
+  BForm,
+  BLink,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
   name: 'Login',
@@ -118,6 +124,14 @@ export default {
     InformationalModal,
     BValidatedInputGroupFormInput,
     ValidationObserver,
+    BRow,
+    BCol,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BForm,
+    BButton,
+    BLink,
   },
   data() {
     return {
@@ -163,6 +177,66 @@ export default {
         }
       });
   },
+  mounted() {
+    this.checkOidcAvailability()
+      .then((oidcAvailable) => {
+        this.oidcAvailable = oidcAvailable;
+        this.showLoginForm = !oidcAvailable;
+
+        if (!oidcAvailable) {
+          return;
+        }
+
+        this.oidcUserManager.getUser().then((oidcUser) => {
+          // oidcUser will only be set when coming from oidc-callback.html
+          if (oidcUser === null) {
+            return;
+          }
+
+          // Exchange OAuth2 Access Token for a JWT issued by Dependency-Track
+          const url = this.$api.BASE_URL + '/' + this.$api.URL_USER_OIDC_LOGIN;
+          const requestBody = {
+            accessToken: oidcUser.access_token,
+            idToken: oidcUser.id_token,
+          };
+          const config = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          };
+
+          this.axios
+            .post(url, queryString.stringify(requestBody), config)
+            .then((result) => {
+              if (result.status === 200) {
+                EventBus.$emit('authenticated', result.data);
+                // redirect to url from query param but only if it is save for redirection
+                const redirectTo = getRedirectUrl(this.$router);
+                redirectTo
+                  ? this.$router.replace(redirectTo)
+                  : this.$router.replace({ name: 'Dashboard' });
+              }
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                this.$bvModal.show('modal-informational');
+                this.loginError = this.$t('message.login_unauthorized');
+              } else if (err.response.status === 403) {
+                this.$bvModal.show('modal-informational');
+                this.loginError = this.$t('message.login_forbidden');
+              }
+            })
+            .finally(() => {
+              this.oidcUserManager.removeUser();
+            });
+        });
+      })
+      .catch((err) => {
+        // automatic fallback to login form when oidc availability check failed
+        this.showLoginForm = true;
+        this.$toastr.e(this.$t('message.oidc_availability_check_failed'));
+      });
+  },
   methods: {
     login() {
       const url = this.$api.BASE_URL + '/' + this.$api.URL_LOGIN;
@@ -178,7 +252,7 @@ export default {
       // redirect to url from query param but only if it is save for redirection
       const redirectTo = getRedirectUrl(this.$router);
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, queryString.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             EventBus.$emit('authenticated', result.data);
@@ -250,66 +324,6 @@ export default {
     goToLogin() {
       this.isWelcomeMessage = false;
     },
-  },
-  mounted() {
-    this.checkOidcAvailability()
-      .then((oidcAvailable) => {
-        this.oidcAvailable = oidcAvailable;
-        this.showLoginForm = !oidcAvailable;
-
-        if (!oidcAvailable) {
-          return;
-        }
-
-        this.oidcUserManager.getUser().then((oidcUser) => {
-          // oidcUser will only be set when coming from oidc-callback.html
-          if (oidcUser === null) {
-            return;
-          }
-
-          // Exchange OAuth2 Access Token for a JWT issued by Dependency-Track
-          const url = this.$api.BASE_URL + '/' + this.$api.URL_USER_OIDC_LOGIN;
-          const requestBody = {
-            accessToken: oidcUser.access_token,
-            idToken: oidcUser.id_token,
-          };
-          const config = {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          };
-
-          this.axios
-            .post(url, qs.stringify(requestBody), config)
-            .then((result) => {
-              if (result.status === 200) {
-                EventBus.$emit('authenticated', result.data);
-                // redirect to url from query param but only if it is save for redirection
-                const redirectTo = getRedirectUrl(this.$router);
-                redirectTo
-                  ? this.$router.replace(redirectTo)
-                  : this.$router.replace({ name: 'Dashboard' });
-              }
-            })
-            .catch((err) => {
-              if (err.response.status === 401) {
-                this.$bvModal.show('modal-informational');
-                this.loginError = this.$t('message.login_unauthorized');
-              } else if (err.response.status === 403) {
-                this.$bvModal.show('modal-informational');
-                this.loginError = this.$t('message.login_forbidden');
-              }
-            })
-            .finally(() => {
-              this.oidcUserManager.removeUser();
-            });
-        });
-      })
-      .catch((err) => {
-        // automatic fallback to login form when oidc availability check failed
-        this.showLoginForm = true;
-        this.$toastr.e(this.$t('message.oidc_availability_check_failed'));
-      });
   },
 };
 </script>

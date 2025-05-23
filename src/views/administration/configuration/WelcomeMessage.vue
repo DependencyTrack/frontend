@@ -56,16 +56,16 @@
 <script>
 import axios from 'axios';
 import { Switch as cSwitch } from '@coreui/vue';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
 
 export default {
+  components: {
+    cSwitch,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {
@@ -73,6 +73,7 @@ export default {
       welcomeMessage: '',
     };
   },
+  computed: {},
   created() {
     let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
     let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
@@ -83,7 +84,6 @@ export default {
       this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
     });
   },
-  computed: {},
   methods: {
     updateCode() {
       const editor = this.$refs.editor;

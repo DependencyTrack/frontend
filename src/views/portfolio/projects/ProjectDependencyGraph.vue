@@ -56,42 +56,25 @@
   </div>
 </template>
 
-<script>
+<script lang="jsx">
 import Vue2OrgTree from 'vue2-org-tree';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import { Switch as cSwitch } from '@coreui/vue';
+import { BTooltip } from 'bootstrap-vue';
+
 let pos = { top: 0, left: 0, x: 0, y: 0 };
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     Vue2OrgTree,
     cSwitch,
+    BTooltip,
   },
+  mixins: [permissionsMixin],
   props: {
     project: Object,
     uuid: String,
-  },
-  beforeCreate() {
-    this.highlightOutdatedComponents =
-      localStorage &&
-      localStorage.getItem(
-        'ProjectDependencyGraphHighlightOutdatedComponents',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectDependencyGraphHighlightOutdatedComponents',
-          ) === 'true'
-        : false;
-    this.showCompleteGraph =
-      localStorage &&
-      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
-        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
-          'true'
-        : false;
-  },
-  mounted() {
-    this.computeData();
   },
   data() {
     return {
@@ -187,6 +170,26 @@ export default {
       // build map of searched components for later fast lookup
       this.createSearchedComponentLookupTable(to.params.componentUuids);
     },
+  },
+  beforeCreate() {
+    this.highlightOutdatedComponents =
+      localStorage &&
+      localStorage.getItem(
+        'ProjectDependencyGraphHighlightOutdatedComponents',
+      ) !== null
+        ? localStorage.getItem(
+            'ProjectDependencyGraphHighlightOutdatedComponents',
+          ) === 'true'
+        : false;
+    this.showCompleteGraph =
+      localStorage &&
+      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
+        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
+          'true'
+        : false;
+  },
+  mounted() {
+    this.computeData();
   },
   methods: {
     computeData: function () {
@@ -665,7 +668,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~vue2-org-tree/dist/style.css';
+@import 'vue2-org-tree/dist/style.css';
 .org-tree-container {
   background-color: inherit;
 }
@@ -726,7 +729,7 @@ export default {
   padding: 0;
 }
 .horizontal .org-tree-node-label {
-  padding: 5px 0px 5px 10px;
+  padding: 5px 0 5px 10px;
 }
 // Button size and position
 .horizontal .org-tree-node-btn {

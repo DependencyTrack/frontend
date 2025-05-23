@@ -69,7 +69,7 @@
         buttons
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import axios from 'axios';
 
 export default {

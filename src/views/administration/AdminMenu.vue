@@ -4,7 +4,7 @@
       no-body
       class="admin-menu"
       v-for="section in menu"
-      v-bind:key="section.id"
+      :key="section.id"
     >
       <div
         slot="header"
@@ -42,37 +42,12 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
-import EventBus from '../../shared/eventbus';
-import {
-  ACCESS_MANAGEMENT,
-  SYSTEM_CONFIGURATION,
-} from '../../shared/permissions';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import { ACCESS_MANAGEMENT, SYSTEM_CONFIGURATION } from '@/shared/permissions';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
-  },
-  methods: {
-    emitEvent: function (plugin) {
-      EventBus.$emit('admin:plugin', plugin);
-    },
-    getMenuFromRoute: function () {
-      let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
-      return tab && tab[1] ? tab[1].toLowerCase() : 'configuration';
-    },
-  },
-  mounted() {
-    this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
-  },
-  watch: {
-    $route() {
-      this.$refs.accordion.forEach((menu) => (menu.show = false));
-      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
-    },
-  },
   data() {
     return {
       menu: [
@@ -343,6 +318,25 @@ export default {
         },
       ],
     };
+  },
+  watch: {
+    $route() {
+      this.$refs.accordion.forEach((menu) => (menu.show = false));
+      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+    },
+  },
+  mounted() {
+    this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+  },
+  methods: {
+    emitEvent: function (plugin) {
+      EventBus.$emit('admin:plugin', plugin);
+    },
+    getMenuFromRoute: function () {
+      let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
+      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      return tab && tab[1] ? tab[1].toLowerCase() : 'configuration';
+    },
   },
 };
 </script>

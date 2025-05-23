@@ -17,7 +17,7 @@
       tooltip="Enter an email address you control to test your send configuration."
       lazy="true"
     />
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -32,8 +32,7 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
 
 export default {
   name: 'ProjectPropertiesModal',

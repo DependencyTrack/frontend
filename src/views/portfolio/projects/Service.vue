@@ -108,7 +108,7 @@
         style="border-left: 0; border-right: 0; border-top: 0"
         active
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
@@ -119,52 +119,43 @@
     </b-tabs>
     <service-details-modal
       :service="cloneDeep(service)"
-      v-on:serviceUpdated="syncServiceFields"
+      @serviceUpdated="syncServiceFields"
     />
   </div>
 </template>
 
 <script>
-import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ServiceDashboard from './ServiceDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
-import EventBus from '../../../shared/eventbus';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal';
+import {
+  BCard,
+  BCardBody,
+  BCol,
+  BLink,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
-    SeverityBarChart,
     ServiceDashboard,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ServiceDetailsModal,
+    BCard,
+    BCardBody,
+    BRow,
+    BCol,
+    BLink,
+    BTabs,
+    BTab,
   },
-  computed: {
-    projectLabel() {
-      if (this.service.hasOwnProperty('project')) {
-        if (this.service.project.name && this.service.project.version) {
-          return (
-            this.service.project.name + ' ▸ ' + this.service.project.version
-          );
-        } else {
-          return this.service.project.name;
-        }
-      }
-    },
-    serviceLabel() {
-      if (this.service.name && this.service.version) {
-        return this.service.name + ' ▸ ' + this.service.version;
-      } else {
-        return this.service.name;
-      }
-    },
-  },
+  mixins: [permissionsMixin],
   data() {
     return {
       severityCritical: this.getStyle('--severity-critical'),
@@ -186,17 +177,26 @@ export default {
       totalProjects: 0,
     };
   },
-  methods: {
-    cloneDeep: function (service) {
-      return cloneDeep(service);
+  computed: {
+    projectLabel() {
+      if (this.service.hasOwnProperty('project')) {
+        if (this.service.project.name && this.service.project.version) {
+          return (
+            this.service.project.name + ' ▸ ' + this.service.project.version
+          );
+        } else {
+          return this.service.project.name;
+        }
+      }
+
+      return null;
     },
-    getStyle: function (style) {
-      return getStyle(style);
-    },
-    syncServiceFields: function (service) {
-      this.service = service;
-      EventBus.$emit('addCrumb', this.serviceLabel);
-      this.$title = this.serviceLabel;
+    serviceLabel() {
+      if (this.service.name && this.service.version) {
+        return this.service.name + ' ▸ ' + this.service.version;
+      } else {
+        return this.service.name;
+      }
     },
   },
   beforeMount() {
@@ -229,6 +229,19 @@ export default {
   },
   destroyed() {
     EventBus.$emit('crumble');
+  },
+  methods: {
+    cloneDeep: function (service) {
+      return cloneDeep(service);
+    },
+    getStyle: function (style) {
+      return getStyle(style);
+    },
+    syncServiceFields: function (service) {
+      this.service = service;
+      EventBus.$emit('addCrumb', this.serviceLabel);
+      this.$title = this.serviceLabel;
+    },
   },
 };
 </script>

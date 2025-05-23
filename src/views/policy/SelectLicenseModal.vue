@@ -13,7 +13,7 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -29,8 +29,8 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import common from '../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 
 export default {
   mixins: [permissionsMixin],

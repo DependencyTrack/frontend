@@ -1,14 +1,14 @@
 <template>
   <actionable-list-group-item
     :delete-icon="true"
-    v-on:actionClicked="removeCondition()"
+    @actionClicked="removeCondition()"
   >
     <b-row>
       <b-col md="4" lg="3">
         <b-input-group-form-select
           id="input-subject"
           required="true"
-          v-on:change="subjectChanged"
+          @change="subjectChanged"
           v-model="subject"
           :options="subjects"
         />
@@ -30,7 +30,7 @@
           "
           id="input-value"
           required="true"
-          v-on:change="saveCondition"
+          @change="saveCondition"
           v-model="value"
           :options="possibleValues"
         />
@@ -152,29 +152,26 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
-import common from '../../shared/common';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import common from '@/shared/common';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import { BCol, BFormInput, BInputGroup, BRow, BTooltip } from 'bootstrap-vue';
 
 export default {
-  props: {
-    policy: Object,
-    condition: Object,
-  },
   components: {
+    BRow,
+    BCol,
+    BInputGroup,
+    BFormInput,
     ActionableListGroupItem,
     BInputGroupFormSelect,
     BInputGroupFormInput,
+    BTooltip,
   },
-  created() {
-    if (this.condition) {
-      this.uuid = this.condition.uuid;
-      this.subject = this.condition.subject;
-      this.subjectChanged();
-      this.operator = this.condition.operator;
-      this.value = this.condition.value;
-    }
+  props: {
+    policy: Object,
+    condition: Object,
   },
   data() {
     return {
@@ -292,6 +289,15 @@ export default {
           return false;
       }
     },
+  },
+  created() {
+    if (this.condition) {
+      this.uuid = this.condition.uuid;
+      this.subject = this.condition.subject;
+      this.subjectChanged();
+      this.operator = this.condition.operator;
+      this.value = this.condition.value;
+    }
   },
   beforeMount() {
     if (this.subject === 'COORDINATES') {

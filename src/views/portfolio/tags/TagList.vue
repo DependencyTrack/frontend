@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import common from '@/shared/common';
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import TaggedCollectionProjectListModal from '@/views/portfolio/tags/TaggedCollectionProjectListModal.vue';
 import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotificationRuleListModal.vue';
@@ -25,30 +25,16 @@ import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListMo
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
+import { BLink, VBModal } from 'bootstrap-vue';
 
 export default {
-  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
     PortfolioWidgetRow,
   },
-  methods: {
-    deleteTags: function (tagNames) {
-      return this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_TAG}`, {
-        data: tagNames,
-      });
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: `${this.$api.BASE_URL}/${this.$api.URL_TAG}`,
-        silent: true,
-      });
-    },
+  directives: {
+    VBModal,
   },
-  mounted() {
-    this.$refs.table.refreshOptions({
-      showBtnDeleteSelected: this.isPermitted(this.PERMISSIONS.TAG_MANAGEMENT),
-    });
-  },
+  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   data() {
     return {
       errorsByTagName: {},
@@ -257,6 +243,24 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_TAG}`,
       },
     };
+  },
+  mounted() {
+    this.$refs.table.refreshOptions({
+      showBtnDeleteSelected: this.isPermitted(this.PERMISSIONS.TAG_MANAGEMENT),
+    });
+  },
+  methods: {
+    deleteTags: function (tagNames) {
+      return this.axios.delete(`${this.$api.BASE_URL}/${this.$api.URL_TAG}`, {
+        data: tagNames,
+      });
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: `${this.$api.BASE_URL}/${this.$api.URL_TAG}`,
+        silent: true,
+      });
+    },
   },
 };
 </script>

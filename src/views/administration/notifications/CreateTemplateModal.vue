@@ -78,7 +78,7 @@
         trim
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -90,11 +90,20 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import EventBus from '../../../shared/eventbus';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import EventBus from '@/shared/eventbus';
 
 export default {
   mixins: [permissionsMixin],
+  data() {
+    return {
+      name: null,
+      publisherClass: null,
+      description: null,
+      mimeType: null,
+      template: null,
+    };
+  },
   mounted() {
     EventBus.$on('admin:templates:cloneTemplate', (template) => {
       this.name = `${template.name} - clone`;
@@ -108,15 +117,6 @@ export default {
         this.resetValues();
       }
     });
-  },
-  data() {
-    return {
-      name: null,
-      publisherClass: null,
-      description: null,
-      mimeType: null,
-      template: null,
-    };
   },
   methods: {
     createTemplate: function () {

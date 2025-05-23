@@ -17,7 +17,7 @@
       :label="$t('admin.api_key_comment')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -29,14 +29,17 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
+    BButton,
+    BModal,
   },
+  mixins: [permissionsMixin],
   props: {
     keyId: String,
     apiKey: Object,

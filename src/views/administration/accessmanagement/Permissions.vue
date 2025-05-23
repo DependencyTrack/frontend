@@ -14,9 +14,14 @@
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
+import common from '@/shared/common';
+import { BCard, BCardBody } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BCard,
+    BCardBody,
+  },
   props: {
     header: String,
   },

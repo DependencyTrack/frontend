@@ -30,34 +30,22 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import common from '@/shared/common';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
-import i18n from '../../../i18n';
+import i18n from '@/i18n';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import $ from 'jquery';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
-  props: {
-    uuid: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     cSwitch,
-    BootstrapToggle,
   },
-  beforeCreate() {
-    this.showSuppressedViolations =
-      localStorage &&
-      localStorage.getItem(
-        'ProjectPolicyViolationsShowSuppressedViolations',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectPolicyViolationsShowSuppressedViolations',
-          ) === 'true'
-        : false;
+  mixins: [bootstrapTableMixin],
+  props: {
+    uuid: String,
   },
   data() {
     return {
@@ -415,6 +403,28 @@ export default {
       },
     };
   },
+  watch: {
+    showSuppressedViolations() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectPolicyViolationsShowSuppressedViolations',
+          this.showSuppressedViolations.toString(),
+        );
+      }
+      this.refreshTable();
+    },
+  },
+  beforeCreate() {
+    this.showSuppressedViolations =
+      localStorage &&
+      localStorage.getItem(
+        'ProjectPolicyViolationsShowSuppressedViolations',
+      ) !== null
+        ? localStorage.getItem(
+            'ProjectPolicyViolationsShowSuppressedViolations',
+          ) === 'true'
+        : false;
+  },
   methods: {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`;
@@ -444,17 +454,6 @@ export default {
       $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
-    },
-  },
-  watch: {
-    showSuppressedViolations() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectPolicyViolationsShowSuppressedViolations',
-          this.showSuppressedViolations.toString(),
-        );
-      }
-      this.refreshTable();
     },
   },
 };

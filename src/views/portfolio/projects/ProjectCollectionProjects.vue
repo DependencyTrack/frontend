@@ -1,5 +1,5 @@
 <template>
-  <project-list :parentProject="this.project" :uuid="this.uuid"></project-list>
+  <project-list :parent-project="this.project" :uuid="this.uuid"></project-list>
 </template>
 
 <script>

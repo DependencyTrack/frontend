@@ -59,8 +59,8 @@
                           variant="primary"
                           class="px-4"
                           type="submit"
-                          >{{ $t('message.password_change') }}</b-button
-                        >
+                          >{{ $t('message.password_change') }}
+                        </b-button>
                       </b-col>
                     </b-row>
                   </b-form>
@@ -77,6 +77,7 @@
                   <img
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
                     width="100%"
+                    alt="DependencyTrack Logo"
                   />
                 </div>
               </b-card-body>
@@ -85,17 +86,26 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="passwordChangeError" />
+    <InformationalModal :message="passwordChangeError" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { ValidationObserver } from 'vee-validate';
-import InformationalModal from '../modals/InformationalModal';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import { getRedirectUrl } from '../../shared/utils';
-const qs = require('querystring');
+import InformationalModal from '@/views/modals/InformationalModal';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { getRedirectUrl } from '@/shared/utils';
+import queryString from 'query-string';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardGroup,
+  BCol,
+  BForm,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
   name: 'PasswordForceChange',
@@ -103,6 +113,13 @@ export default {
     BValidatedInputGroupFormInput,
     InformationalModal,
     ValidationObserver,
+    BRow,
+    BCol,
+    BCard,
+    BCardGroup,
+    BCardBody,
+    BForm,
+    BButton,
   },
   data() {
     return {
@@ -130,7 +147,7 @@ export default {
         },
       };
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, queryString.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             this.$toastr.s(this.$t('message.password_change_success'));

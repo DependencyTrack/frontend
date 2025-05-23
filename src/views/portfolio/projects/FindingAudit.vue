@@ -253,8 +253,36 @@
 import common from '@/shared/common';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import {
+  BButton,
+  BCard,
+  BCardText,
+  BCol,
+  BFormGroup,
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+  BInputGroup,
+  BLink,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BootstrapToggle,
+    BRow,
+    BCol,
+    BCard,
+    BCardText,
+    BLink,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BButton,
+    BInputGroup,
+    BFormSelect,
+  },
+  mixins: [permissionsMixin],
   props: {
     finding: Object,
     projectUuid: String,
@@ -342,7 +370,9 @@ export default {
       }
     },
   },
-  mixins: [permissionsMixin],
+  beforeMount() {
+    this.finding && this.getAnalysis();
+  },
   methods: {
     resolveVulnAliases: function (aliases, vulnSource) {
       return common.resolveVulnAliases(
@@ -461,12 +491,6 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-  },
-  beforeMount() {
-    this.finding && this.getAnalysis();
-  },
-  components: {
-    BootstrapToggle,
   },
 };
 </script>
