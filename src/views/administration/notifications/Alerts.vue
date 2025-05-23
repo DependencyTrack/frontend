@@ -232,7 +232,8 @@ export default {
                         </b-form-checkbox-group>
                       </div>
                       <div style="text-align:left">
-                         <b-form-group v-if="this.scope === 'PORTFOLIO'" id="fieldset-7" :label="this.$t('admin.trigger_notifications_on_severities')" label-for="input-7">
+                         <b-form-group v-if="this.scope === 'PORTFOLIO' && (notifyOn.includes('NEW_VULNERABILITY') || notifyOn.includes('NEW_VULNERABLE_DEPENDENCY'))"
+                                       id="fieldset-7" :label="this.$t('admin.notification_severity')" label-for="input-7">
                            <div class="list-group">
                              <b-form-checkbox-group id="checkbox-group-severities" v-model="notifySeverities">
                                <div class="list-group-item"><b-form-checkbox value="LOW">LOW_SEVERITY</b-form-checkbox></div>
