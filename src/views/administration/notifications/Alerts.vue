@@ -231,6 +231,21 @@ export default {
                           <div class="list-group-item"><b-form-checkbox value="USER_DELETED">USER_DELETED</b-form-checkbox></div>
                         </b-form-checkbox-group>
                       </div>
+                      <div style="text-align:left">
+                         <b-form-group v-if="this.scope === 'PORTFOLIO' && (notifyOn.includes('NEW_VULNERABILITY') || notifyOn.includes('NEW_VULNERABLE_DEPENDENCY'))"
+                                       id="fieldset-7" :label="this.$t('admin.notification_severity')" label-for="input-7">
+                           <div class="list-group">
+                             <b-form-checkbox-group id="checkbox-group-severities" v-model="notifySeverities">
+                               <div class="list-group-item"><b-form-checkbox value="LOW">LOW_SEVERITY</b-form-checkbox></div>
+                               <div class="list-group-item"><b-form-checkbox value="MEDIUM">MEDIUM_SEVERITY</b-form-checkbox></div>
+                               <div class="list-group-item"><b-form-checkbox value="HIGH">HIGH_SEVERITY</b-form-checkbox></div>
+                               <div class="list-group-item"><b-form-checkbox value="CRITICAL">CRITICAL_SEVERITY</b-form-checkbox></div>
+                               <div class="list-group-item"><b-form-checkbox value="INFO">INFO_SEVERITY</b-form-checkbox></div>
+                               <div class="list-group-item"><b-form-checkbox value="UNASSIGNED">UNASSIGNED_SEVERITY</b-form-checkbox></div>
+                             </b-form-checkbox-group>
+                           </div>
+                         </b-form-group>
+                       </div>
                     </b-form-group>
                     <p v-show="isScheduled && (notifyOn.includes('NEW_POLICY_VIOLATIONS_SUMMARY') || notifyOn.includes('NEW_VULNERABILITIES_SUMMARY'))" class="font-sm text-warning">
                       <span class="fa fa-warning"></span> {{ $t('admin.alert_schedule_summary_warning') }}
@@ -280,6 +295,7 @@ export default {
                 jiraTicketType: this.parseJiraTicketType(row),
                 scope: row.scope,
                 notifyOn: row.notifyOn,
+                notifySeverities: row.notifySeverities,
                 projects: row.projects,
                 teams: row.teams,
                 scheduleLastTriggeredAt: common.formatTimestamp(
@@ -407,6 +423,7 @@ export default {
                     tokenHeader: this.tokenHeader,
                   }),
                   notifyOn: this.notifyOn,
+                  notifySeverities: this.notifySeverities,
                   tags: this.tags.map((tag) => {
                     return { name: tag.text };
                   }),

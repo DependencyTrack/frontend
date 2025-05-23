@@ -303,7 +303,8 @@
     "vulnsource_osv_base_url": "Базовий URL OSV",
     "welcome_message": "Вітальне повідомлення",
     "welcome_message_desc": "Налаштуйте вітальне повідомлення, яке з’являється на початковій сторінці Dependency-Track перед входом користувачів.",
-    "welcome_message_enable": "Увімкнути вітальне повідомлення"
+    "welcome_message_enable": "Увімкнути вітальне повідомлення",
+    "trigger_notifications_on_severities": "Тригерні сповіщення про суворість"
   },
   "condition": {
     "forbidden": "Заборонено (403)",

@@ -303,7 +303,8 @@
     "vulnsource_osv_base_url": "OSV ベース URL",
     "welcome_message": "ウェルカムメッセージ",
     "welcome_message_desc": "ユーザーがサインインする前に、Dependency-Track の開始ページに表示されるウェルカム メッセージをカスタマイズします。",
-    "welcome_message_enable": "ウェルカムメッセージを有効にする"
+    "welcome_message_enable": "ウェルカムメッセージを有効にする",
+    "trigger_notifications_on_severities": "重大度に関するトリガー通知"
   },
   "condition": {
     "forbidden": "禁止 (403)",
