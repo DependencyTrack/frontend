@@ -356,6 +356,7 @@
     "affected_projects": "Affected Projects",
     "age": "Age",
     "age_tooltip": "Age in ISO-8601 period format (e.g. P1Y = 1 Year; P2Y3M = 2 Years, 3 Months)",
+    "attributed_on_tooltip": "Attributed On in ISO-8601 period format (e.g. P1Y = 1 Year; P2Y3M = 2 Years, 3 Months)",
     "alerts_tagged_with": "Alerts tagged with {tag}",
     "aliases": "Aliases",
     "analysis": "Analysis",

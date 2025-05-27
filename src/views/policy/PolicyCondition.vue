@@ -214,6 +214,7 @@ export default {
           value: 'VERSION_DISTANCE',
           text: this.$t('message.version_distance'),
         },
+        { value: 'ATTRIBUTED_ON', text: this.$t('message.attributed_on') },
       ],
       objectOperators: [
         { value: 'IS', text: this.$t('operator.is') },
@@ -288,6 +289,8 @@ export default {
           return false;
         case 'EPSS':
           return false;
+        case 'ATTRIBUTED_ON':
+          return false;
         default:
           return false;
       }
@@ -360,6 +363,9 @@ export default {
           this.operators = this.numericOperators;
           break;
         case 'EPSS':
+          this.operators = this.numericOperators;
+          break;
+        case 'ATTRIBUTED_ON':
           this.operators = this.numericOperators;
           break;
         default:
@@ -535,6 +541,8 @@ export default {
       switch (this.subject) {
         case 'AGE':
           return this.$t('message.age_tooltip');
+        case 'ATTRIBUTED_ON':
+          return this.$t('message.attributed_on_tooltip');
         default:
           return '';
       }
