@@ -173,6 +173,17 @@
             }"
             :disabled="analysisState === null"
           />
+          <b-datepicker
+            v-model="suppressionExpiration"
+            type="date"
+            format="YYYY-MM-DD"
+            placeholder="Suppression Expiration"
+            :disabled="!isSuppressed"
+            :clearable="true"
+            @input="makeAnalysis"
+            :min="today"
+            style="margin-left: 2rem;"
+          />
         </b-input-group>
       </b-form-group>
       <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
@@ -264,6 +275,8 @@ export default {
       auditTrail: null,
       comment: null,
       isSuppressed: !!this.finding?.analysis?.isSuppressed,
+      suppressionExpiration: null,
+      today: this.getToday(),
       analysisChoices: [
         { value: 'NOT_SET', text: this.$t('message.not_set') },
         { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
@@ -338,6 +351,7 @@ export default {
           null,
           null,
           currentValue,
+          null,
         );
       }
     },
@@ -349,6 +363,13 @@ export default {
         vulnSource ? vulnSource : this.source,
         aliases,
       );
+    },
+    getToday() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = (today.getMonth() + 1).toString().padStart(2, '0');
+      const dd = today.getDate().toString().padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
     },
     getAnalysis: function () {
       let queryString =
@@ -408,6 +429,9 @@ export default {
       } else {
         this.isSuppressed = false;
       }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'suppressionExpiration')) {
+        this.suppressionExpiration = analysis.suppressionExpiration;
+      }
     },
     makeAnalysis: function () {
       this.callRestEndpoint(
@@ -417,6 +441,7 @@ export default {
         this.analysisDetails,
         null,
         null,
+        this.suppressionExpiration,
       );
     },
     addComment: function () {
@@ -428,6 +453,7 @@ export default {
           this.analysisDetails,
           this.comment,
           null,
+          this.suppressionExpiration,
         );
       }
       this.comment = null;
@@ -439,6 +465,7 @@ export default {
       analysisDetails,
       comment,
       isSuppressed,
+      suppressionExpiration
     ) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
       this.axios
@@ -452,6 +479,7 @@ export default {
           analysisDetails: analysisDetails,
           comment: comment,
           isSuppressed: isSuppressed,
+          suppressionExpiration: suppressionExpiration,
         })
         .then((response) => {
           this.$toastr.s(this.$t('message.updated'));
