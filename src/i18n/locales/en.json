@@ -40,6 +40,7 @@
     "analyzer_snyk_why_multiple_cvss": "Why are there multiple CVSS Scores for the same vulnerability?",
     "analyzer_trivy_enable": "Enable Trivy analyzer",
     "analyzer_trivy_ignore_unfixed": "Ignore unfixed vulnerabilities",
+    "analyzer_trivy_ignore_severity": "Ignore severity reported by Trivy scan",
     "analyzer_trivy_scan_library": "Scan language-specific packages (e.g. packages installed by pip, npm, or gem)",
     "analyzer_trivy_scan_os": "Scan OS packages managed by the OS package manager (e.g. dpkg, yum, apk)",
     "analyzer_vulndb_desc": "VulnDB is a commercial service from Risk Based Security which identifies vulnerabilities in third-party components. Dependency-Track integrates natively with the VulnDB service to provide highly accurate results. Use of this analyzer requires a valid CPE for the components being analyzed.",
