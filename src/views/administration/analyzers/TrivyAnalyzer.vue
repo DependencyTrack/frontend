@@ -55,6 +55,15 @@
         v-bind="labelIcon"
       />
       {{ $t('admin.analyzer_trivy_scan_os') }}
+      <br />
+      <c-switch
+        id="ignoreSeverity"
+        color="primary"
+        v-model="ignoreSeverity"
+        label
+        v-bind="labelIcon"
+      />
+      {{ $t('admin.analyzer_trivy_ignore_severity') }}
     </b-card-body>
     <b-card-footer>
       <b-button
@@ -91,6 +100,7 @@ export default {
       ignoreUnfixed: false,
       scanLibrary: true,
       scanOs: true,
+      ignoreSeverity: true,
     };
   },
   methods: {
@@ -126,6 +136,11 @@ export default {
           propertyName: 'trivy.scanner.scanOs',
           propertyValue: this.scanOs,
         },
+        {
+          groupName: 'scanner',
+          propertyName: 'trivy.ignore.severity',
+          propertyValue: this.ignoreSeverity,
+        },
       ]);
     },
   },
@@ -154,6 +169,9 @@ export default {
             break;
           case 'trivy.scanner.scanOs':
             this.scanOs = common.toBoolean(item.propertyValue);
+            break;
+          case 'trivy.ignore.severity':
+            this.ignoreSeverity = common.toBoolean(item.propertyValue);
             break;
         }
       }
