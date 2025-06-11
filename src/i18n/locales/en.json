@@ -161,6 +161,8 @@
     "limit_to": "Limit To",
     "limit_to_projects": "Limit to projects",
     "limit_to_tags": "Limit to tags",
+    "exclude_tags":"Excluded Tags",
+    "invert_tag_match": "Exclude selected tags",
     "managed_users": "Managed Users",
     "mapped_ldap_groups": "Mapped LDAP groups",
     "mapped_oidc_groups": "Mapped OpenID Connect Groups",
