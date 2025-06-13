@@ -961,10 +961,10 @@
     "warn": "Ostrzegać"
   },
   "vulnerability": {
-    "critical": "Luki o krytycznym znaczeniu",
-    "high": "Luki o dużej wadze",
-    "low": "Luki w zabezpieczeniach o niskiej wadze",
-    "medium": "Luki o średniej wadze",
-    "unassigned": "Nieprzypisane luki w zabezpieczeniach"
+    "critical": "Luki o krytycznym znaczeniu (z wyłączeniem aliasów)",
+    "high": "Luki o dużej wadze (z wyłączeniem aliasów)",
+    "low": "Luki w zabezpieczeniach o niskiej wadze (z wyłączeniem aliasów)",
+    "medium": "Luki o średniej wadze (z wyłączeniem aliasów)",
+    "unassigned": "Nieprzypisane luki w zabezpieczeniach (z wyłączeniem aliasów)"
   }
 }

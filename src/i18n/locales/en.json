@@ -961,10 +961,10 @@
     "warn": "Warn"
   },
   "vulnerability": {
-    "critical": "Critical Severity Vulnerabilities",
-    "high": "High Severity Vulnerabilities",
-    "low": "Low Severity Vulnerabilities",
-    "medium": "Medium Severity Vulnerabilities",
-    "unassigned": "Unassigned Vulnerabilities"
+    "critical": "Critical Severity Vulnerabilities (excluding aliases)",
+    "high": "High Severity Vulnerabilities (excluding aliases)",
+    "low": "Low Severity Vulnerabilities (excluding aliases)",
+    "medium": "Medium Severity Vulnerabilities (excluding aliases)",
+    "unassigned": "Unassigned Vulnerabilities (excluding aliases)"
   }
 }

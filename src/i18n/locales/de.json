@@ -961,10 +961,10 @@
     "warn": "Warnung"
   },
   "vulnerability": {
-    "critical": "Schwachstellen mit kritischem Schweregrad",
-    "high": "Schwachstellen mit hohem Schweregrad",
-    "low": "Schwachstellen mit geringem Schweregrad",
-    "medium": "Schwachstellen mit mittlerem Schweregrad",
-    "unassigned": "Nicht zugewiesene Schwachstellen"
+    "critical": "Schwachstellen mit kritischem Schweregrad (ohne Aliase)",
+    "high": "Schwachstellen mit hohem Schweregrad (ohne Aliase)",
+    "low": "Schwachstellen mit geringem Schweregrad (ohne Aliase)",
+    "medium": "Schwachstellen mit mittlerem Schweregrad (ohne Aliase)",
+    "unassigned": "Nicht zugewiesene Schwachstellen (ohne Aliase)"
   }
 }

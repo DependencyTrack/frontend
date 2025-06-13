@@ -961,10 +961,10 @@
     "warn": "Advertir"
   },
   "vulnerability": {
-    "critical": "Vulnerabilidades de gravedad crítica",
-    "high": "Vulnerabilidades de alta gravedad",
-    "low": "Vulnerabilidades de baja gravedad",
-    "medium": "Vulnerabilidades de gravedad media",
-    "unassigned": "Vulnerabilidades no asignadas"
+    "critical": "Vulnerabilidades de gravedad crítica (excluyendo alias)",
+    "high": "Vulnerabilidades de alta gravedad (excluyendo alias)",
+    "low": "Vulnerabilidades de baja gravedad (excluyendo alias)",
+    "medium": "Vulnerabilidades de gravedad media (excluyendo alias)",
+    "unassigned": "Vulnerabilidades no asignadas (excluyendo alias)"
   }
 }

@@ -961,10 +961,10 @@
     "warn": "Avertissement"
   },
   "vulnerability": {
-    "critical": "Vulnérabilités critiques",
-    "high": "Vulnérabilités de haute criticité",
-    "low": "Vulnérabilités de faible criticité",
-    "medium": "Vulnérabilités de criticité moyenne",
-    "unassigned": "Vulnérabilités non attribuées"
+    "critical": "Vulnérabilités critiques (alias exclus)",
+    "high": "Vulnérabilités de haute criticité (alias exclus)",
+    "low": "Vulnérabilités de faible criticité (alias exclus)",
+    "medium": "Vulnérabilités de criticité moyenne (alias exclus)",
+    "unassigned": "Vulnérabilités non attribuées (alias exclus)"
   }
 }
