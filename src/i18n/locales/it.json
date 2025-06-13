@@ -961,10 +961,10 @@
     "warn": "Avvisare"
   },
   "vulnerability": {
-    "critical": "Vulnerabilità di gravità critica",
-    "high": "Vulnerabilità di gravità elevata",
-    "low": "Vulnerabilità di bassa gravità",
-    "medium": "Vulnerabilità di media gravità",
-    "unassigned": "Vulnerabilità non assegnate"
+    "critical": "Vulnerabilità di gravità critica (alias esclusi)",
+    "high": "Vulnerabilità di gravità elevata (alias esclusi)",
+    "low": "Vulnerabilità di bassa gravità (alias esclusi)",
+    "medium": "Vulnerabilità di media gravità (alias esclusi)",
+    "unassigned": "Vulnerabilità non assegnate (alias esclusi)"
   }
 }
