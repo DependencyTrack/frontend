@@ -192,7 +192,7 @@ export default {
             },
             methods: {
               updateUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
                 this.axios
                   .post(url, {
                     username: this.username,
@@ -218,7 +218,7 @@ export default {
                   });
               },
               deleteUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -236,8 +236,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                   this.axios
                     .post(url, {
                       uuid: selection.uuid,
@@ -263,7 +263,7 @@ export default {
                 }
               },
               removeTeamMembership: function (teamUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                 this.axios
                   .delete(url, { data: { uuid: teamUuid } })
                   .then((response) => {
@@ -282,8 +282,8 @@ export default {
               updatePermissionSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -302,7 +302,7 @@ export default {
                 }
               },
               removePermission: function (permission) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
                 this.axios
                   .delete(url)
                   .then((response) => {

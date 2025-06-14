@@ -196,7 +196,7 @@ export default {
               title: this.$t('message.delete_selected'),
             },
             event: () => {
-              let selected = this.$refs.table.getSelections();
+              const selected = this.$refs.table.getSelections();
               if (
                 !selected ||
                 (Array.isArray(selected) && selected.length === 0)
@@ -244,7 +244,7 @@ export default {
           refresh: 'fa-refresh',
         },
         responseHandler: function (res, xhr) {
-          for (let tag of res) {
+          for (const tag of res) {
             // Tag names with special characters can break table rendering.
             // https://github.com/DependencyTrack/dependency-track/issues/4357
             tag.nameHash = MurmurHash2(tag.name).result();

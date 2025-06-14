@@ -146,7 +146,7 @@ export default {
             },
             methods: {
               updateNotificationPublisher: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
                 this.axios
                   .post(url, {
                     uuid: this.template.uuid,
@@ -170,7 +170,7 @@ export default {
                   });
               },
               deleteNotificationPublisher: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/${this.template.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/${this.template.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {

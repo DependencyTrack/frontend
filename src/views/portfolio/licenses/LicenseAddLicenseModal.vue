@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     addLicense: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`;
       this.axios
         .put(url, {
           name: this.license.name,

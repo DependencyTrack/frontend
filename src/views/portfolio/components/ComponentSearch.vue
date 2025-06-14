@@ -110,8 +110,10 @@ export default {
           field: 'name',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr('../components/' + row.uuid);
-            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
+              '../components/' + row.uuid,
+            );
+            const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
               '../../../projects/' +
                 row.project.uuid +
                 '/dependencyGraph/' +
@@ -179,10 +181,10 @@ export default {
           field: 'project.name',
           sortable: false,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../projects/' + row.project.uuid,
             );
-            let name = common.concatenateComponentName(
+            const name = common.concatenateComponentName(
               null,
               row.project.name,
               row.project.version,
@@ -200,7 +202,7 @@ export default {
               return '-'; // No resolvedLicense info available
             }
 
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' +
                 encodeURIComponent(row.resolvedLicense.licenseId),
             );
@@ -225,8 +227,8 @@ export default {
             }
 
             // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
+            const ComponentClass = Vue.extend(SeverityProgressBar);
+            const progressBar = new ComponentClass({
               propsData: {
                 vulnerabilities: metrics.vulnerabilities,
                 critical: metrics.critical,
@@ -342,46 +344,46 @@ export default {
   methods: {
     createQueryParams: function () {
       if (this.subject === 'COORDINATES') {
-        let params = {
+        const params = {
           group: common.trimToNull(this.coordinatesGroup),
           name: common.trimToNull(this.coordinatesName),
           version: common.trimToNull(this.coordinatesVersion),
         };
-        let esc = encodeURIComponent;
+        const esc = encodeURIComponent;
         return Object.keys(params)
           .filter((k) => params[k])
           .map((k) => esc(k) + '=' + esc(params[k]))
           .join('&');
       } else if (this.subject === 'PACKAGE_URL') {
-        let v = common.trimToNull(this.value);
+        const v = common.trimToNull(this.value);
         return v != null ? 'purl=' + encodeURIComponent(v) : '';
       } else if (this.subject === 'CPE') {
-        let v = common.trimToNull(this.value);
+        const v = common.trimToNull(this.value);
         return v != null ? 'cpe=' + encodeURIComponent(v) : '';
       } else if (this.subject === 'SWID_TAGID') {
-        let v = common.trimToNull(this.value);
+        const v = common.trimToNull(this.value);
         return v != null ? 'swidTagId=' + encodeURIComponent(v) : '';
       }
     },
     performSearch: function () {
       if (this.subject === 'HASH') {
-        let hash = encodeURIComponent(common.trimToNull(this.value));
+        const hash = encodeURIComponent(common.trimToNull(this.value));
         this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/hash/${hash}`;
         this.$refs.table.refresh({ silent: true });
       } else {
-        let queryParams = this.createQueryParams();
+        const queryParams = this.createQueryParams();
         this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity?${queryParams}`;
         this.$refs.table.refresh({ silent: true });
       }
       if (this.changeSearchUrl) {
         if (this.subject === 'COORDINATES') {
-          let urlCoordinatesGroup = this.coordinatesGroup
+          const urlCoordinatesGroup = this.coordinatesGroup
             ? encodeURIComponent(this.coordinatesGroup)
             : '';
-          let urlCoordinatesName = this.coordinatesName
+          const urlCoordinatesName = this.coordinatesName
             ? encodeURIComponent(this.coordinatesName)
             : '';
-          let urlCoordinatesVersion = this.coordinatesVersion
+          const urlCoordinatesVersion = this.coordinatesVersion
             ? encodeURIComponent(this.coordinatesVersion)
             : '';
           this.$router.replace({
@@ -397,7 +399,7 @@ export default {
               urlCoordinatesVersion,
           });
         } else {
-          let urlValue = this.value ? encodeURIComponent(this.value) : '';
+          const urlValue = this.value ? encodeURIComponent(this.value) : '';
           this.$router.replace({
             path: 'components',
             hash: '#/search/' + this.subject + '/' + urlValue,

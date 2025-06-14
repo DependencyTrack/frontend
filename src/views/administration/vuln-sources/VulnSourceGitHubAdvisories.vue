@@ -81,11 +81,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'vuln-source';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'github.advisories.enabled':
             this.vulnsourceEnabled = common.toBoolean(item.propertyValue);

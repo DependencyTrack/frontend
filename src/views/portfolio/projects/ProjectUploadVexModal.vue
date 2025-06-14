@@ -54,15 +54,15 @@ export default {
       this.file = null;
     },
     upload: function () {
-      let data = new FormData();
+      const data = new FormData();
       data.set('project', this.uuid);
       data.set('vex', this.file);
-      let config = {
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}`;
       this.axios.post(url, data, config).then(() => {
         this.$root.$emit('bv::hide::modal', 'projectUploadVexModal');
         this.$toastr.s(this.$t('message.vex_uploaded'));

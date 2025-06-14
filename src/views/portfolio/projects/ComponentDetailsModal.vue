@@ -503,7 +503,7 @@ export default {
           field: 'url',
           sortable: false,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(
@@ -557,7 +557,7 @@ export default {
   methods: {
     updateComponent: function () {
       this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
       this.axios
         .post(url, {
           uuid: this.component.uuid,
@@ -594,7 +594,7 @@ export default {
     },
     deleteComponent: function () {
       this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
-      let url =
+      const url =
         `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` +
         this.component.uuid;
       this.axios
@@ -610,14 +610,14 @@ export default {
         });
     },
     retrieveLicenses: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
       this.axios
         .get(url)
         .then((response) => {
           // Allow for license to be un-selected.
           this.selectableLicenses.push({ value: '', text: '' });
           for (let i = 0; i < response.data.length; i++) {
-            let license = response.data[i];
+            const license = response.data[i];
             this.selectableLicenses.push({
               value: license.licenseId,
               text: license.name,

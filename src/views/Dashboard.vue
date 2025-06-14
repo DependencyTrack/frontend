@@ -659,7 +659,7 @@ export default {
   mounted() {
     if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
       const daysBack = 90;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
         this.$refs.portfolioWidgetRow.render(response.data);
         this.$refs.chartPortfolioVulnerabilities.render(response.data);
@@ -678,7 +678,7 @@ export default {
       if (!metrics || metrics.length === 0) {
         return;
       }
-      let metric = metrics[metrics.length - 1]; //Use the most recent metric
+      const metric = metrics[metrics.length - 1]; //Use the most recent metric
       this.totalProjects = common.valueWithDefault(metric.projects, '0');
       this.vulnerableProjects = common.valueWithDefault(
         metric.vulnerableProjects,
@@ -830,7 +830,7 @@ export default {
       );
     },
     refreshMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/refresh`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/refresh`;
       this.axios.get(url).then((response) => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });

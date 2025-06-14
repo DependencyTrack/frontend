@@ -85,7 +85,7 @@ export default {
               title: this.$t('message.unassign_tag_from_selection'),
             },
             event: () => {
-              let selected = this.$refs.table.getSelections();
+              const selected = this.$refs.table.getSelections();
               if (
                 !selected ||
                 (Array.isArray(selected) && selected.length === 0)

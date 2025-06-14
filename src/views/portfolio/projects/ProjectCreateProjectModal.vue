@@ -342,16 +342,16 @@ export default {
   },
   methods: {
     async getACLEnabled() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
-      let response = await this.axios.get(url);
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
+      const response = await this.axios.get(url);
       this.requiresTeam = common.toBoolean(
         response.data.propertyValue.toString(),
       );
     },
     async getAvailableTeams() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
-      let response = await this.axios.get(url);
-      let convertedTeams = response.data.map((team) => {
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
+      const response = await this.axios.get(url);
+      const convertedTeams = response.data.map((team) => {
         return { text: team.name, value: team.uuid };
       });
       this.availableTeams = convertedTeams;
@@ -374,12 +374,12 @@ export default {
       this.showCollectionTags = value === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
     },
     createProject: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-      let tagsNode = [];
-      let choosenTeams = this.teams.filter((team) => {
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+      const tagsNode = [];
+      const choosenTeams = this.teams.filter((team) => {
         return this.project.team.includes(team.uuid);
       });
-      let choosenTeamswithoutAPIKeys = choosenTeams.map((team) => {
+      const choosenTeamswithoutAPIKeys = choosenTeams.map((team) => {
         team.apiKeys = [];
         return team;
       });
@@ -429,12 +429,12 @@ export default {
     },
     retrieveLicenses: function () {
       return new Promise((resolve) => {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
         this.axios
           .get(url)
           .then((response) => {
             for (let i = 0; i < response.data.length; i++) {
-              let license = response.data[i];
+              const license = response.data[i];
               this.selectableLicenses.push({
                 value: license.licenseId,
                 text: license.name,
@@ -477,7 +477,7 @@ export default {
     asyncFind: function (query) {
       if (query) {
         this.isLoading = true;
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=true`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=true`;
         this.axios.get(url).then((response) => {
           if (response.data) {
             this.availableParents = response.data;

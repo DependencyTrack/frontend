@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     createProperty: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
       this.axios
         .put(url, {
           groupName: this.groupName,

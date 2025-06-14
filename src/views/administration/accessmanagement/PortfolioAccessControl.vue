@@ -138,8 +138,8 @@ export default {
               updateProjectSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}`;
                   this.axios
                     .put(url, {
                       team: this.team.uuid,
@@ -172,11 +172,11 @@ export default {
                 }
               },
               removeProjectMapping: function (projectUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}/team/${this.team.uuid}/project/${projectUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}/team/${this.team.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let k = [];
+                    const k = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
                         k.push(this.projects[i]);
@@ -191,7 +191,7 @@ export default {
               },
             },
             mounted() {
-              let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_TEAM}/${this.team.uuid}`;
+              const url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_TEAM}/${this.team.uuid}`;
               this.axios
                 .get(url)
                 .then((response) => {
@@ -220,11 +220,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'access-management';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'acl.enabled':
             this.isAclEnabled = common.toBoolean(item.propertyValue);
@@ -249,13 +249,13 @@ export default {
       ]);
     },
     updateConfigProperties: function (configProperties) {
-      let props = [];
+      const props = [];
       for (let i = 0; i < configProperties.length; i++) {
-        let prop = configProperties[i];
+        const prop = configProperties[i];
         prop.propertyValue = common.trimToNull(prop.propertyValue);
         props.push(prop);
       }
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
       this.axios
         .post(url, props)
         .then((response) => {

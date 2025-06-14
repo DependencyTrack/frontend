@@ -171,10 +171,10 @@ export default {
           field: 'name',
           sortable: true,
           formatter: (value, row, index) => {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.uuid,
             );
-            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+            const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
               '../../../projects/' + this.uuid + '/dependencyGraph/' + row.uuid,
             );
             return (
@@ -270,7 +270,7 @@ export default {
           sortable: false,
           formatter(value, row, index) {
             if (Object.prototype.hasOwnProperty.call(row, 'resolvedLicense')) {
-              let licenseurl =
+              const licenseurl =
                 '../../../licenses/' + row.resolvedLicense.licenseId;
               return (
                 '<a href="' +
@@ -306,8 +306,8 @@ export default {
             }
 
             // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
+            const ComponentClass = Vue.extend(SeverityProgressBar);
+            const progressBar = new ComponentClass({
               propsData: {
                 vulnerabilities: metrics.vulnerabilities,
                 critical: metrics.critical,
@@ -397,10 +397,10 @@ export default {
       });
     },
     removeDependencies: function () {
-      let selections = this.$refs.table.getSelections();
+      const selections = this.$refs.table.getSelections();
       if (selections.length === 0) return;
       for (let i = 0; i < selections.length; i++) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
         this.axios
           .delete(url)
           .then((response) => {
@@ -414,7 +414,7 @@ export default {
       this.$refs.table.uncheckAll();
     },
     downloadBom: function (data) {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
           responseType: 'blob',
@@ -431,10 +431,10 @@ export default {
           const link = document.createElement('a');
           link.href = url;
           let filename = 'bom.json';
-          let disposition = response.headers['content-disposition'];
+          const disposition = response.headers['content-disposition'];
           if (disposition && disposition.indexOf('attachment') !== -1) {
-            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            let matches = filenameRegex.exec(disposition);
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
             if (matches != null && matches[1]) {
               filename = matches[1].replace(/['"]/g, '');
             }
@@ -466,7 +466,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([csv]));
         const link = document.createElement('a');
         link.href = url;
-        let filename = 'componentTable.csv';
+        const filename = 'componentTable.csv';
         link.setAttribute('download', filename);
         document.body.appendChild(link);
         link.click();
@@ -477,9 +477,9 @@ export default {
       this.buildTableFile(result, fileType);
     },
     downloadTableJson: async function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}?limit=1000000&offset=0`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}?limit=1000000&offset=0`;
       try {
-        let response = await this.axios.get(url);
+        const response = await this.axios.get(url);
         return response;
       } catch (e) {
         console.log(e);

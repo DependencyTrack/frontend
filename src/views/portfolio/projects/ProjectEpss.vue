@@ -72,10 +72,10 @@ export default {
           field: 'component.name',
           sortable: true,
           formatter: (value, row, index) => {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
-            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+            const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
               '../../../projects/' +
                 this.uuid +
                 '/dependencyGraph/' +
@@ -147,7 +147,7 @@ export default {
           field: 'vulnerability.vulnId',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
                 '/' +

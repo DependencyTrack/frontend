@@ -144,10 +144,10 @@ export default {
           field: 'component.name',
           sortable: true,
           formatter: (value, row, index) => {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
-            let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+            const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
               '../../../projects/' +
                 this.uuid +
                 '/dependencyGraph/' +
@@ -219,7 +219,7 @@ export default {
           field: 'vulnerability.vulnId',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
                 '/' +
@@ -243,8 +243,8 @@ export default {
                 value,
               );
               for (let i = 0; i < aliases.length; i++) {
-                let alias = aliases[i];
-                let url = xssFilters.uriInUnQuotedAttr(
+                const alias = aliases[i];
+                const url = xssFilters.uriInUnQuotedAttr(
                   '../../../vulnerabilities/' +
                     alias.source +
                     '/' +
@@ -454,7 +454,7 @@ export default {
       return url;
     },
     downloadVex: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
           responseType: 'blob',
@@ -469,10 +469,10 @@ export default {
           const link = document.createElement('a');
           link.href = url;
           let filename = 'vex.json';
-          let disposition = response.headers['content-disposition'];
+          const disposition = response.headers['content-disposition'];
           if (disposition && disposition.indexOf('attachment') !== -1) {
-            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            let matches = filenameRegex.exec(disposition);
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
             if (matches != null && matches[1]) {
               filename = matches[1].replace(/['"]/g, '');
             }
@@ -483,7 +483,7 @@ export default {
         });
     },
     downloadVdr: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
           responseType: 'blob',
@@ -500,10 +500,10 @@ export default {
           const link = document.createElement('a');
           link.href = url;
           let filename = 'bom.json';
-          let disposition = response.headers['content-disposition'];
+          const disposition = response.headers['content-disposition'];
           if (disposition && disposition.indexOf('attachment') !== -1) {
-            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            let matches = filenameRegex.exec(disposition);
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
             if (matches != null && matches[1]) {
               filename = matches[1].replace(/['"]/g, '');
             }
@@ -514,7 +514,7 @@ export default {
         });
     },
     reAnalyze: function (data) {
-      let analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
+      const analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
       this.axios.post(analyzeUrl).then((response) => {
         this.$toastr.s(this.$t('message.project_reanalyze_requested'));
         //ignore token from response, don't wait for completion

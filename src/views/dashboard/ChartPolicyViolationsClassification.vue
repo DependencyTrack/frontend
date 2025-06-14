@@ -14,10 +14,10 @@ export default {
       const securityStyle = getStyle('--notification-fail');
       const operationalStyle = getStyle('--notification-warn');
       const licenseStyle = getStyle('--notification-info');
-      let labels = [];
-      let securityData = [];
-      let operationalData = [];
-      let licenseData = [];
+      const labels = [];
+      const securityData = [];
+      const operationalData = [];
+      const licenseData = [];
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);
         securityData.push(metrics[i].policyViolationsSecurityTotal);

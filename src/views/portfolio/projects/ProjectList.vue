@@ -94,7 +94,7 @@ export default {
           routerFunc: () => this.$router,
           $t: (key, values) => this.$t(key, values),
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
                 name: 'Project',
                 params: { uuid: row.uuid },
@@ -220,12 +220,12 @@ export default {
           title: this.$t('message.policy_violations'),
           field: 'metrics.policyViolationsTotal', // this column uses other fields, but the field id must be unique
           formatter: function (_, row) {
-            let metrics = row.metrics;
+            const metrics = row.metrics;
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
-            let ComponentClass = Vue.extend(PolicyViolationProgressBar);
-            let progressBar = new ComponentClass({
+            const ComponentClass = Vue.extend(PolicyViolationProgressBar);
+            const progressBar = new ComponentClass({
               propsData: {
                 metrics,
                 $t: this.$t.bind(this),
@@ -240,14 +240,14 @@ export default {
           field: 'metrics.vulnerabilities', // this column uses other fields, but the field id must be unique
           sortable: false,
           formatter: function (_, row) {
-            let metrics = row.metrics;
+            const metrics = row.metrics;
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
 
             // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
+            const ComponentClass = Vue.extend(SeverityProgressBar);
+            const progressBar = new ComponentClass({
               propsData: {
                 vulnerabilities: metrics.vulnerabilities,
                 critical: metrics.critical,
@@ -438,11 +438,11 @@ export default {
       if (uuid) {
         url += `/${uuid}/children`;
       }
-      let tag = this.$route.query.tag;
+      const tag = this.$route.query.tag;
       if (tag) {
         url += '/tag/' + encodeURIComponent(tag);
       }
-      let classifier = this.$route.query.classifier;
+      const classifier = this.$route.query.classifier;
       if (classifier) {
         url += '/classifier/' + encodeURIComponent(classifier);
       }
@@ -483,7 +483,7 @@ export default {
     },
     onPostBody: function () {
       if (!this.showFlatView && !this.isSearching) {
-        let columns = this.$refs.table.getOptions().columns;
+        const columns = this.$refs.table.getOptions().columns;
 
         if (columns && columns[0][0].visible) {
           this.$refs.table.$table.treegrid({
@@ -533,9 +533,9 @@ export default {
       this.$refs.table.hideLoading();
     },
     getChildren: async function (project) {
-      let url = this.apiUrl(project.uuid);
+      const url = this.apiUrl(project.uuid);
       await this.axios.get(url).then((response) => {
-        for (let project of response.data) {
+        for (const project of response.data) {
           if (project.parent) {
             project.pid = MurmurHash2(project.parent.uuid).result();
           }

@@ -13,8 +13,8 @@ export default {
   methods: {
     render: function (metrics) {
       const widgetColor = getStyle('--widget-4');
-      let chartLabels = [];
-      let chartData = [];
+      const chartLabels = [];
+      const chartData = [];
       for (let i = 0; i < metrics.length; i++) {
         chartLabels.push(metrics[i].firstOccurrence); // Store raw timestamp
         chartData.push(metrics[i].inheritedRiskScore);

@@ -132,11 +132,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'vuln-source';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'google.osv.enabled':
             this.ecosystemConfig = item.propertyValue;
@@ -165,7 +165,7 @@ export default {
     updateEcosystem: function (ecosystems) {
       this.$root.$emit('bv::hide::modal', 'ecosystemModal');
       for (let i = 0; i < ecosystems.length; i++) {
-        let ecosystem = ecosystems[i];
+        const ecosystem = ecosystems[i];
         this.enabledEcosystems.push(ecosystem.name);
       }
       this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;

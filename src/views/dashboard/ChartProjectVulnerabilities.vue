@@ -15,10 +15,10 @@ export default {
       const affectedStyle = getStyle('--notification-warn');
       const nonAffectedStyle = getStyle('--notification-pass');
 
-      let labels = [];
-      let totalData = [];
-      let affectedData = [];
-      let nonAffectedData = [];
+      const labels = [];
+      const totalData = [];
+      const affectedData = [];
+      const nonAffectedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);

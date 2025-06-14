@@ -93,15 +93,15 @@ export default {
           sortable: true,
           formatter: (value, row, index) => {
             if (row.component) {
-              let url = xssFilters.uriInUnQuotedAttr(
+              const url = xssFilters.uriInUnQuotedAttr(
                 '../../../components/' + row.component.uuid,
               );
-              let name = common.concatenateComponentName(
+              const name = common.concatenateComponentName(
                 null,
                 row.component.name,
                 row.component.version,
               );
-              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+              const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
                 '../../../projects/' +
                   this.uuid +
                   '/dependencyGraph/' +
@@ -175,7 +175,7 @@ export default {
         detailViewIcon: true,
         detailViewByClick: false,
         detailFormatter: (index, row) => {
-          let projectUuid = this.uuid;
+          const projectUuid = this.uuid;
           return this.vueFormatter({
             i18n,
             template: `
@@ -279,12 +279,12 @@ export default {
             mixins: [permissionsMixin],
             methods: {
               getAnalysis: function () {
-                let queryString =
+                const queryString =
                   '?policyViolation=' +
                   this.violation.uuid +
                   '&component=' +
                   this.violation.component.uuid;
-                let url =
+                const url =
                   `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}` +
                   queryString;
                 this.axios.get(url).then((response) => {
@@ -347,7 +347,7 @@ export default {
                 comment,
                 isSuppressed,
               ) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION_ANALYSIS}`;
                 this.axios
                   .put(url, {
                     policyViolation: this.violation.uuid,

@@ -117,7 +117,7 @@ export default {
             },
             methods: {
               updateOidcGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.oidcGroup.uuid,
@@ -137,7 +137,7 @@ export default {
                   });
               },
               deleteOidcGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -149,7 +149,7 @@ export default {
                   });
               },
               getMappedTeams: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
                 this.axios
                   .get(url)
                   .then((response) => {
@@ -162,8 +162,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
                   this.axios
                     .put(url, {
                       group: this.oidcGroup.uuid,
@@ -180,11 +180,11 @@ export default {
                 }
               },
               removeOidcGroupMapping: function (team) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let remainingTeams = [];
+                    const remainingTeams = [];
                     for (let i = 0; i < this.mappedTeams.length; i++) {
                       if (this.mappedTeams[i].uuid !== team.uuid) {
                         remainingTeams.push(this.mappedTeams[i]);

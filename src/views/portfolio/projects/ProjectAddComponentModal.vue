@@ -297,7 +297,7 @@ export default {
   methods: {
     createComponent: function () {
       this.$root.$emit('bv::hide::modal', 'projectAddComponentModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
       this.axios
         .put(url, {
           name: this.component.name,
@@ -355,14 +355,14 @@ export default {
       };
     },
     retrieveLicenses: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
       this.axios
         .get(url)
         .then((response) => {
           // Allow for license to be un-selected.
           this.selectableLicenses.push({ value: '', text: '' });
           for (let i = 0; i < response.data.length; i++) {
-            let license = response.data[i];
+            const license = response.data[i];
             this.selectableLicenses.push({
               value: license.licenseId,
               text: license.name,

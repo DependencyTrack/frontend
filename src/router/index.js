@@ -869,9 +869,9 @@ function configRoutes() {
           path: 'project',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            const { hash, params, query } = to;
             if (query.uuid) {
-              let uuid = query.uuid;
+              const uuid = query.uuid;
               return { path: '/projects/' + uuid, query: null };
             }
           },
@@ -882,9 +882,9 @@ function configRoutes() {
           path: 'component',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            const { hash, params, query } = to;
             if (query.uuid) {
-              let uuid = query.uuid;
+              const uuid = query.uuid;
               return { path: '/components/' + uuid, query: null };
             }
           },
@@ -898,7 +898,7 @@ function configRoutes() {
             vulnId: route.query.vulnId,
           }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            const { hash, params, query } = to;
             if (query.source && query.vulnId) {
               return {
                 path: '/vulnerabilities/' + query.source + '/' + query.vulnId,
@@ -913,9 +913,9 @@ function configRoutes() {
           path: 'license',
           props: (route) => ({ licenseId: route.query.licenseId }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            const { hash, params, query } = to;
             if (query.licenseId) {
-              let licenseId = query.licenseId;
+              const licenseId = query.licenseId;
               return { path: '/licenses/' + licenseId, query: null };
             }
           },

@@ -60,11 +60,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'internal-components';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'groups.regex':
             this.namespaceRegex = item.propertyValue;
@@ -92,7 +92,7 @@ export default {
       ]);
     },
     identifyInternalComponents: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/internal/identify`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/internal/identify`;
       this.axios
         .get(url)
         .then((response) => {

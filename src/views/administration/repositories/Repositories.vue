@@ -201,7 +201,7 @@ export default {
             },
             methods: {
               deleteRepository: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -213,7 +213,7 @@ export default {
                   });
               },
               updateRepository: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
                 this.axios
                   .post(url, {
                     identifier: this.identifier,

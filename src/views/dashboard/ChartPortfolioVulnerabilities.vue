@@ -20,13 +20,13 @@ export default {
         '--collection-logic-changed',
       );
 
-      let labels = [];
-      let criticalData = [];
-      let highData = [];
-      let mediumData = [];
-      let lowData = [];
-      let unassignedData = [];
-      let collectionLogicChangedData = [];
+      const labels = [];
+      const criticalData = [];
+      const highData = [];
+      const mediumData = [];
+      const lowData = [];
+      const unassignedData = [];
+      const collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);

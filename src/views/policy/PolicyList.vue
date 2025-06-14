@@ -219,7 +219,7 @@ export default {
                 //this.conditions.splice(conditionIndex, 1);
               },
               refreshPolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios.get(url).then((response) => {
                   this.policy = response.data;
                   EventBus.$emit(
@@ -230,8 +230,8 @@ export default {
                 });
               },
               updatePolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
-                let refreshTableRow =
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+                const refreshTableRow =
                   this.policy.uuid === null || this.name !== this.policy.name;
                 this.axios
                   .post(url, {
@@ -259,7 +259,7 @@ export default {
                   });
               },
               deletePolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -283,11 +283,11 @@ export default {
                 this.onlyLatestProjectVersion = policy.onlyLatestProjectVersion;
               },
               deleteProjectLimiter: function (projectUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let p = [];
+                    const p = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
                         p.push(this.projects[i]);
@@ -301,11 +301,11 @@ export default {
                   });
               },
               deleteTagLimiter: function (tagName) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(tagName)}/policy`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(tagName)}/policy`;
                 this.axios
                   .delete(url, { data: [this.policy.uuid] })
                   .then(() => {
-                    let p = [];
+                    const p = [];
                     for (let i = 0; i < this.tags.length; i++) {
                       if (this.tags[i].name !== tagName) {
                         p.push(this.tags[i]);
@@ -318,8 +318,8 @@ export default {
               updateProjectSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -340,10 +340,10 @@ export default {
               updateTagSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTagModal');
 
-                let promises = [];
+                const promises = [];
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(selection.name)}/policy`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(selection.name)}/policy`;
                   promises.push(
                     this.axios
                       .post(url, [this.policy.uuid])

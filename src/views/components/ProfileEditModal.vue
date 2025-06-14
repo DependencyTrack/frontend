@@ -71,7 +71,7 @@ export default {
       this.email = this.currentUser.email;
     },
     updateUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
       this.axios
         .post(url, {
           username: this.username,

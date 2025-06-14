@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     testConfiguration: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/smtp`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/smtp`;
       const params = new URLSearchParams();
       params.append('destination', this.emailAddress);
       this.axios

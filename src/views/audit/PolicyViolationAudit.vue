@@ -246,15 +246,15 @@ export default {
           sortable: true,
           formatter: (value, row, index) => {
             if (row.component) {
-              let url = xssFilters.uriInUnQuotedAttr(
+              const url = xssFilters.uriInUnQuotedAttr(
                 '../../../components/' + row.component.uuid,
               );
-              let name = common.concatenateComponentName(
+              const name = common.concatenateComponentName(
                 null,
                 row.component.name,
                 row.component.version,
               );
-              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+              const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
                 '../../../projects/' +
                   row.project.uuid +
                   '/dependencyGraph/' +
@@ -274,10 +274,10 @@ export default {
           field: 'project.name',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../projects/' + row.project.uuid,
             );
-            let name = common.concatenateComponentName(
+            const name = common.concatenateComponentName(
               null,
               row.project.name,
               row.project.version,
@@ -319,7 +319,7 @@ export default {
                 'resolvedLicense',
               )
             ) {
-              let licenseurl =
+              const licenseurl =
                 '../../../licenses/' + row.component.resolvedLicense.licenseId;
               return (
                 '<a href="' +
@@ -415,7 +415,7 @@ export default {
   },
   methods: {
     initializePolicies: function () {
-      let policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+      const policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
       if (
         hasPermission(permissions.POLICY_MANAGEMENT, this.decodedToken) ||
         hasPermission(permissions.ACCESS_MANAGEMENT, this.decodedToken)

@@ -78,7 +78,7 @@ export default {
         },
         responseHandler: function (res, xhr) {
           if (res) {
-            let resObj = []; // res is an array of strings. We need to return an array of simple objects with a 'dn' property.
+            const resObj = []; // res is an array of strings. We need to return an array of simple objects with a 'dn' property.
             for (let i = 0; i < res.length; i++) {
               resObj[i] = { dn: res[i] };
             }

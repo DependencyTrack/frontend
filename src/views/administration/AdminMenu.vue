@@ -340,8 +340,8 @@ export default {
       EventBus.$emit('admin:plugin', plugin);
     },
     getMenuFromRoute: function () {
-      let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return tab && tab[1] ? tab[1].toLowerCase() : 'configuration';
     },
   },

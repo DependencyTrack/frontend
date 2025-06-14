@@ -180,11 +180,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'vuln-source';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'nvd.enabled':
             this.vulnsourceEnabled = common.toBoolean(item.propertyValue);
@@ -205,11 +205,11 @@ export default {
             this.nvdApiKey = item.propertyValue;
             break;
           case 'nvd.api.last.modified.epoch.seconds':
-            let epochSeconds = parseInt(item.propertyValue);
+            const epochSeconds = parseInt(item.propertyValue);
             if (!epochSeconds) {
               continue;
             }
-            let date = new Date(0);
+            const date = new Date(0);
             date.setUTCSeconds(epochSeconds);
             this.nvdApiLastModifiedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
             this.nvdApiLastModifiedTime = date
@@ -265,12 +265,12 @@ export default {
       if (!this.nvdApiLastModifiedDate) {
         return 0;
       } else if (!this.nvdApiLastModifiedTime) {
-        let lastModifiedDateTime = Date.parse(
+        const lastModifiedDateTime = Date.parse(
           `${this.nvdApiLastModifiedDate}T00:00:00Z`,
         );
         return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;
       }
-      let lastModifiedDateTime = Date.parse(
+      const lastModifiedDateTime = Date.parse(
         `${this.nvdApiLastModifiedDate}T${this.nvdApiLastModifiedTime}Z`,
       );
       return lastModifiedDateTime ? lastModifiedDateTime / 1000 : 0;

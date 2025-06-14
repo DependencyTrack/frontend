@@ -122,7 +122,7 @@ export default {
       return `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
     },
     deleteProperty: function () {
-      let selections = this.$refs.table.getSelections();
+      const selections = this.$refs.table.getSelections();
       for (let i = 0; i < selections.length; i++) {
         this.axios
           .delete(this.apiUrl(), {

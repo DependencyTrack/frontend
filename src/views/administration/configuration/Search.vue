@@ -162,11 +162,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'search-indexes';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'consistency.check.enabled':
             this.consistencyCheck.enabled = common.toBoolean(
@@ -206,8 +206,8 @@ export default {
       ]);
     },
     reindex: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_SEARCH}/reindex`;
-      let params = new URLSearchParams();
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_SEARCH}/reindex`;
+      const params = new URLSearchParams();
       Object.entries(this.type).forEach(([key, value]) => {
         if (value) {
           params.append('type', key.toUpperCase());

@@ -86,7 +86,7 @@ export default {
           Array.isArray(error.response.data) &&
           error.response.data[0].hasOwnProperty('invalidValue')
         ) {
-          let validationError = error.response.data
+          const validationError = error.response.data
             .map((failure) => `${failure.path}: ${failure.message}`)
             .join('\n');
           this.$toastr.w(

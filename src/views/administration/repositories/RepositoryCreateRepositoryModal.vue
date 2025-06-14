@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     createRepository: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
       this.axios
         .put(url, {
           type: this.repositoryType,

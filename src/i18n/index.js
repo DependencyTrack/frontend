@@ -7,8 +7,8 @@ Vue.use(VueI18n);
 
 async function getDefaultLanguage() {
   try {
-    let url = `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}/public/general/default.locale`;
-    let response = await axios.get(url);
+    const url = `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}/public/general/default.locale`;
+    const response = await axios.get(url);
     return decodeURIComponent(response.data.propertyValue);
   } catch (error) {
     console.error('Error fetching default language:', error);
@@ -37,7 +37,7 @@ const localeMessages = loadLocaleMessages();
 
 function matchLocale(requestedLocale) {
   console.log(localeMessages);
-  let exactMatch = Object.keys(localeMessages).find(
+  const exactMatch = Object.keys(localeMessages).find(
     (locale) => requestedLocale === locale,
   );
   if (exactMatch) {
@@ -45,7 +45,7 @@ function matchLocale(requestedLocale) {
     return exactMatch;
   }
 
-  let localeParts = requestedLocale.split('-');
+  const localeParts = requestedLocale.split('-');
   if (localeParts.length !== 2) {
     console.debug(
       `Found no matching locale for ${requestedLocale}, falling back to en`,
@@ -53,8 +53,8 @@ function matchLocale(requestedLocale) {
     return 'en';
   }
 
-  let baseLocale = localeParts[0];
-  let baseLocaleMatch = Object.keys(localeMessages).find(
+  const baseLocale = localeParts[0];
+  const baseLocaleMatch = Object.keys(localeMessages).find(
     (locale) => baseLocale === locale,
   );
   if (baseLocaleMatch) {

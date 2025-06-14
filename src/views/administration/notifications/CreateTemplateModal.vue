@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     createTemplate: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
       this.axios
         .put(url, {
           name: this.name,

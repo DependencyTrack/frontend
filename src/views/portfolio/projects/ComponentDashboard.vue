@@ -177,8 +177,8 @@ export default {
   },
   mounted() {
     const daysBack = 90;
-    let uuid = this.$route.params.uuid;
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${daysBack}`;
+    const uuid = this.$route.params.uuid;
+    const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${daysBack}`;
     this.axios.get(url).then((response) => {
       this.$refs.chartComponentVulnerabilities.render(response.data);
       this.$refs.chartPolicyViolationsState.render(response.data);
@@ -191,7 +191,7 @@ export default {
       if (!metrics || metrics.length === 0) {
         return;
       }
-      let metric = metrics[metrics.length - 1]; //Use the most recent metric
+      const metric = metrics[metrics.length - 1]; //Use the most recent metric
       this.currentCritical = common.valueWithDefault(metric.critical, 0);
       this.currentHigh = common.valueWithDefault(metric.high, 0);
       this.currentMedium = common.valueWithDefault(metric.medium, 0);
@@ -223,8 +223,8 @@ export default {
       );
     },
     refreshMetrics() {
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/refresh`;
+      const uuid = this.$route.params.uuid;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/refresh`;
       this.axios.get(url).then((response) => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });

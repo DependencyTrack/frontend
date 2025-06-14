@@ -35,7 +35,7 @@ export default {
           field: 'vulnId',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../vulnerabilities/' + row.source + '/' + value,
             );
             return (
@@ -53,8 +53,8 @@ export default {
               let label = '';
               const aliases = common.resolveVulnAliases(row.source, value);
               for (let i = 0; i < aliases.length; i++) {
-                let alias = aliases[i];
-                let url = xssFilters.uriInUnQuotedAttr(
+                const alias = aliases[i];
+                const url = xssFilters.uriInUnQuotedAttr(
                   '../../vulnerabilities/' + alias.source + '/' + alias.vulnId,
                 );
                 label +=
@@ -86,7 +86,7 @@ export default {
             if (typeof value !== 'undefined') {
               let s = '';
               for (let i = 0; i < value.length; i++) {
-                let cwe = value[i];
+                const cwe = value[i];
                 if (i > 0) {
                   s += ',&nbsp;&nbsp;&nbsp;';
                 }

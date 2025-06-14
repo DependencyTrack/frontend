@@ -301,14 +301,14 @@ export default {
   },
   beforeMount() {
     if (this.subject === 'COORDINATES') {
-      let v = JSON.parse(this.value);
+      const v = JSON.parse(this.value);
       if (v) {
         this.coordinatesGroup = v.group;
         this.coordinatesName = v.name;
         this.coordinatesVersion = v.version;
       }
     } else if (this.subject === 'VERSION_DISTANCE') {
-      let v = JSON.parse(this.value);
+      const v = JSON.parse(this.value);
       if (v) {
         this.versionDistance = v;
       }
@@ -386,7 +386,7 @@ export default {
           value: common.trimToNull(this.value),
         });
       } else if (this.subject === 'VERSION_DISTANCE') {
-        let result = {
+        const result = {
           epoch: this.parseIntNull(
             common.trimToNull(this.versionDistance.epoch),
           ),
@@ -423,12 +423,12 @@ export default {
       }
     },
     saveCondition: function () {
-      let dynamicValue = this.createDynamicValue();
+      const dynamicValue = this.createDynamicValue();
       if (!this.subject || !this.operator || !dynamicValue) {
         return;
       }
       if (this.uuid) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
         this.axios
           .post(url, {
             uuid: this.uuid,
@@ -447,7 +447,7 @@ export default {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       } else {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
         this.axios
           .put(url, {
             subject: this.subject,
@@ -468,7 +468,7 @@ export default {
     },
     removeCondition: function () {
       if (this.uuid) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
         this.axios
           .delete(url)
           .then((response) => {
@@ -490,9 +490,9 @@ export default {
       this.axios
         .get(`${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}?limit=9999`)
         .then((response) => {
-          let vals = [];
+          const vals = [];
           for (let i = 0; i < response.data.length; i++) {
-            let object = response.data[i];
+            const object = response.data[i];
             vals.push({ value: object.uuid, text: object.name });
           }
           this.possibleValues = vals;
@@ -511,10 +511,10 @@ export default {
           `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}?limit=9999`,
         )
         .then((response) => {
-          let vals = [];
+          const vals = [];
           vals.push({ value: 'unresolved', text: 'unresolved' });
           for (let i = 0; i < response.data.length; i++) {
-            let object = response.data[i];
+            const object = response.data[i];
             vals.push({ value: object.uuid, text: object.name });
           }
           this.possibleValues = vals;

@@ -66,7 +66,7 @@ export default {
           field: 'licenseId',
           sortable: true,
           formatter: function (value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;

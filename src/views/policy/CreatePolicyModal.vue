@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     createPolicy: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
       this.axios
         .put(url, {
           name: this.name,

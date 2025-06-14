@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     createLicenseGroup: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
       this.axios
         .put(url, {
           name: this.name,

@@ -588,7 +588,7 @@ export default {
       this.$title = this.projectLabel;
     },
     initialize: function () {
-      let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
+      const projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
       return this.axios
         .get(projectUrl)
         .catch((error) => {
@@ -687,11 +687,11 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp(
+      const pattern = new RegExp(
         '/projects\\/' + this.uuid + '\\/([^\\/]*)',
         'gi',
       );
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
     getCollectionLogicText: function (project) {

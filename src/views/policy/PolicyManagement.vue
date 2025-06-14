@@ -76,8 +76,8 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp('/policy\/([^\\/]*)', 'gi');
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const pattern = new RegExp('/policy\/([^\\/]*)', 'gi');
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
     },
   },

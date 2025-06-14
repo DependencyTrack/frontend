@@ -209,7 +209,7 @@ export default {
     this.uuid = this.$route.params.uuid;
   },
   mounted() {
-    let serviceUrl = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${this.uuid}`;
+    const serviceUrl = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${this.uuid}`;
     this.axios.get(serviceUrl).then((response) => {
       this.service = response.data;
       EventBus.$emit(

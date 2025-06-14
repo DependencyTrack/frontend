@@ -264,7 +264,7 @@ export default {
   },
   mounted() {
     const daysBack = 90;
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
+    const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${daysBack}`;
     this.axios.get(url).then((response) => {
       this.$refs.chartProjectVulnerabilities.render(response.data);
       this.$refs.chartPolicyViolationsState.render(response.data);
@@ -279,7 +279,7 @@ export default {
       if (!metrics || metrics.length === 0) {
         return;
       }
-      let metric = metrics[metrics.length - 1]; //Use the most recent metric
+      const metric = metrics[metrics.length - 1]; //Use the most recent metric
       this.currentCritical = common.valueWithDefault(metric.critical, 0);
       this.currentHigh = common.valueWithDefault(metric.high, 0);
       this.currentMedium = common.valueWithDefault(metric.medium, 0);
@@ -311,7 +311,7 @@ export default {
       );
     },
     refreshMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/refresh`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/refresh`;
       this.axios.get(url).then((response) => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });

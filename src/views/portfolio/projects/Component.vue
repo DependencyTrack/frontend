@@ -279,7 +279,7 @@ export default {
     this.uuid = this.$route.params.uuid;
   },
   mounted() {
-    let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
+    const componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
     this.axios.get(componentUrl).then((response) => {
       this.component = response.data;
       EventBus.$emit(
@@ -292,7 +292,7 @@ export default {
       this.$title = this.componentLabel;
     });
 
-    let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
+    const metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
     this.axios.get(metricsUrl).then((response) => {
       this.currentCritical = common.valueWithDefault(response.data.critical, 0);
       this.currentHigh = common.valueWithDefault(response.data.high, 0);
@@ -348,11 +348,11 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp(
+      const pattern = new RegExp(
         '/components\\/' + this.uuid + '\\/([^\\/]*)',
         'gi',
       );
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
   },

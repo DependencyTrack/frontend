@@ -168,8 +168,8 @@ export default {
       }
     },
     permissibleNav() {
-      let decodedToken = permissions.decodeToken(permissions.getToken());
-      let array = [];
+      const decodedToken = permissions.decodeToken(permissions.getToken());
+      const array = [];
       for (const item of this.nav) {
         if (
           (item.permission !== null &&
@@ -236,9 +236,9 @@ export default {
       subSectionUuid,
       subSectionLabel,
     ) {
-      let sectionName = this.$route.meta.sectionName;
-      let sectionLabel = this.$t(this.$route.meta.i18n);
-      let sectionPath = this.$route.meta.sectionPath;
+      const sectionName = this.$route.meta.sectionName;
+      const sectionLabel = this.$t(this.$route.meta.i18n);
+      const sectionPath = this.$route.meta.sectionPath;
       if (crumbName && subSectionName && subSectionUuid && subSectionLabel) {
         return [
           { path: '', name: 'Home', meta: { label: this.$t('message.home') } },

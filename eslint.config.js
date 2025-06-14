@@ -23,6 +23,8 @@ export default [
   ...pluginVue.configs['flat/vue2-essential'],
   {
     rules: {
+      'no-var': 'error',
+      'prefer-const': 'warn',
       'vue/component-tags-order': 'warn',
       'vue/order-in-components': 'warn',
       'vue/attribute-hyphenation': 'warn',

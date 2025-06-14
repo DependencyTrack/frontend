@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     createUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
       this.axios
         .put(url, {
           username: this.username,

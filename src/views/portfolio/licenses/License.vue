@@ -141,7 +141,7 @@ export default {
     this.licenseId = this.$route.params.licenseId;
   },
   mounted() {
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
+    const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
     this.axios.get(url).then((response) => {
       this.license = response.data;
       EventBus.$emit('addCrumb', this.licenseLabel);
@@ -157,7 +157,7 @@ export default {
       return getStyle(style);
     },
     removeCustomLicense: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
       this.axios
         .delete(url)
         .then((response) => {
@@ -185,11 +185,11 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp(
+      const pattern = new RegExp(
         '/licenses\\/' + this.licenseId + '\\/([^\\/]*)',
         'gi',
       );
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
   },

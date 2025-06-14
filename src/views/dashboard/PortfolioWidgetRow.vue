@@ -98,7 +98,7 @@ export default {
   beforeMount() {
     if (this.fetch) {
       const daysBack = 90;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
         this.render(response.data);
       });

@@ -349,7 +349,7 @@ export default {
               },
               parseDestination: function (alert) {
                 if (alert.publisherConfig) {
-                  let value = JSON.parse(alert.publisherConfig);
+                  const value = JSON.parse(alert.publisherConfig);
                   if (value) {
                     return value.destination;
                   }
@@ -358,7 +358,7 @@ export default {
               },
               parseToken: function (alert) {
                 if (alert.publisherConfig) {
-                  let value = JSON.parse(alert.publisherConfig);
+                  const value = JSON.parse(alert.publisherConfig);
                   if (value) {
                     return value.token;
                   }
@@ -367,7 +367,7 @@ export default {
               },
               parseTokenHeader: function (alert) {
                 if (alert.publisherConfig) {
-                  let value = JSON.parse(alert.publisherConfig);
+                  const value = JSON.parse(alert.publisherConfig);
                   if (value) {
                     return value.tokenHeader;
                   }
@@ -376,7 +376,7 @@ export default {
               },
               parseJiraTicketType: function (alert) {
                 if (alert.publisherConfig) {
-                  let value = JSON.parse(alert.publisherConfig);
+                  const value = JSON.parse(alert.publisherConfig);
                   if (value) {
                     return value.jiraTicketType;
                   }
@@ -384,8 +384,8 @@ export default {
                 }
               },
               updateNotificationRule: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
-                let payload = {
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+                const payload = {
                   uuid: this.uuid,
                   name: this.name,
                   enabled: this.enabled,
@@ -419,7 +419,7 @@ export default {
                 });
               },
               deleteNotificationRule: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -435,11 +435,11 @@ export default {
                   });
               },
               deleteLimiter: function (projectUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${projectUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let p = [];
+                    const p = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
                         p.push(this.projects[i]);
@@ -453,9 +453,9 @@ export default {
                   });
               },
               testNotification: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${this.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/${this.uuid}`;
 
-                let params = new URLSearchParams();
+                const params = new URLSearchParams();
                 params.append('destination', this.destination);
 
                 this.axios
@@ -475,8 +475,8 @@ export default {
               updateProjectSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -497,8 +497,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -506,7 +506,7 @@ export default {
                         this.teams.push(selection);
                       } else {
                         this.teams = [];
-                        let team = {
+                        const team = {
                           uuid: selection.uuid,
                           name: selection.name,
                         };
@@ -525,11 +525,11 @@ export default {
                 }
               },
               removeSelectedTeam: function (teamUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${teamUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${teamUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let newTeams = [];
+                    const newTeams = [];
                     for (let i = 0; i < this.teams.length; i++) {
                       if (this.teams[i].uuid !== teamUuid) {
                         newTeams.push(this.teams[i]);

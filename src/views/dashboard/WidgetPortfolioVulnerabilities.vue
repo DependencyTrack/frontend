@@ -13,8 +13,8 @@ export default {
   methods: {
     render: function (metrics) {
       const widgetColor = getStyle('--widget-1');
-      let chartLabels = [];
-      let chartData = [];
+      const chartLabels = [];
+      const chartData = [];
       for (let i = 0; i < metrics.length; i++) {
         chartLabels.push(metrics[i].firstOccurrence);
         chartData.push(metrics[i].vulnerabilities);

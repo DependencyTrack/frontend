@@ -54,15 +54,15 @@ export default {
       this.file = null;
     },
     upload: function () {
-      let data = new FormData();
+      const data = new FormData();
       data.set('project', this.uuid);
       data.set('bom', this.file);
-      let config = {
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
       this.axios.post(url, data, config).then(() => {
         this.$root.$emit('bv::hide::modal', 'projectUploadBomModal');
         this.$toastr.s(this.$t('message.bom_uploaded'));

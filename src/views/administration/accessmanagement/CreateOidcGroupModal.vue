@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     createGroup: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
       this.axios
         .put(url, {
           name: this.name,

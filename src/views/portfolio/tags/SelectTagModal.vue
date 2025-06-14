@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
       return url;
     },
     refreshTable: function () {

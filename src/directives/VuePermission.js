@@ -5,7 +5,7 @@ import { decodeToken, getToken, hasPermission } from '@/shared/permissions';
 
 export default function installPermissionDirective(vue) {
   vue.directive('permission', function (el, binding) {
-    let decodedToken = decodeToken(getToken());
+    const decodedToken = decodeToken(getToken());
     if (Array.isArray(binding.value)) {
       let permitted = false;
       if (binding.arg === 'and') {

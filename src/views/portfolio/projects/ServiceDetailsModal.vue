@@ -360,7 +360,7 @@ export default {
           field: 'url',
           sortable: false,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(
@@ -408,7 +408,7 @@ export default {
   methods: {
     updateService: function () {
       this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
       console.log(this.service);
       this.axios
         .post(url, this.service)
@@ -422,7 +422,7 @@ export default {
     },
     deleteService: function () {
       this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
-      let url =
+      const url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios
         .delete(url)

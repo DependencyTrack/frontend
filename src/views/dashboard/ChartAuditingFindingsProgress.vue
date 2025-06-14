@@ -17,10 +17,10 @@ export default {
         '--collection-logic-changed',
       );
 
-      let labels = [];
-      let totalData = [];
-      let auditedData = [];
-      let collectionLogicChangedData = [];
+      const labels = [];
+      const totalData = [];
+      const auditedData = [];
+      const collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);

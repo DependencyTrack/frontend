@@ -136,7 +136,7 @@ export default {
       this.hasRowsSelected = this.$refs.table.getSelections().length > 0;
     },
     deleteProperty: function () {
-      let selections = this.$refs.table.getSelections();
+      const selections = this.$refs.table.getSelections();
       for (let i = 0; i < selections.length; i++) {
         this.axios.delete(`${this.apiUrl()}/${selections[i].uuid}`).then(() => {
           this.$refs.table.refresh({ silent: true });

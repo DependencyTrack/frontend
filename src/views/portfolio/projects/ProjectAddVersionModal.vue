@@ -180,7 +180,7 @@ export default {
   },
   methods: {
     createVersion: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
       this.axios
         .put(url, {
           project: this.uuid,

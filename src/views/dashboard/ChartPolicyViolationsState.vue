@@ -18,11 +18,11 @@ export default {
         '--collection-logic-changed',
       );
 
-      let labels = [];
-      let failData = [];
-      let warnData = [];
-      let infoData = [];
-      let collectionLogicChangedData = [];
+      const labels = [];
+      const failData = [];
+      const warnData = [];
+      const infoData = [];
+      const collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);

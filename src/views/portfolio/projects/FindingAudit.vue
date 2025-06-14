@@ -381,14 +381,15 @@ export default {
       );
     },
     getAnalysis: function () {
-      let queryString =
+      const queryString =
         '?project=' +
         this.projectUuid +
         '&component=' +
         this.finding.component.uuid +
         '&vulnerability=' +
         this.finding.vulnerability.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
+      const url =
+        `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
       this.axios
         .get(url, {
           validateStatus: (status) => status === 200 || status === 404,
@@ -470,7 +471,7 @@ export default {
       comment,
       isSuppressed,
     ) {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
       this.axios
         .put(url, {
           project: this.projectUuid,

@@ -124,7 +124,7 @@ export default {
             },
             methods: {
               updateLicenseGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.licenseGroup.uuid,
@@ -144,7 +144,7 @@ export default {
                   });
               },
               deleteLicenseGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -159,7 +159,7 @@ export default {
                   });
               },
               removeLicense: function (license) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${license.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${license.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -173,8 +173,8 @@ export default {
               updateLicenseSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectLicenseModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {

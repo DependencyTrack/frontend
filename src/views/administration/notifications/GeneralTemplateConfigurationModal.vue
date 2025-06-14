@@ -87,7 +87,7 @@ export default {
     },
     restoreDefaultTemplates: function () {
       this.$root.$emit('bv::hide::modal', 'generalTemplateConfigurationModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/restoreDefaultTemplates`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/restoreDefaultTemplates`;
       this.axios
         .post(url)
         .then(() => {
@@ -100,11 +100,11 @@ export default {
     },
     loadConfigProperties() {
       this.axios.get(this.configUrl).then((response) => {
-        let configItems = response.data.filter(function (item) {
+        const configItems = response.data.filter(function (item) {
           return item.groupName === 'notification';
         });
         for (let i = 0; i < configItems.length; i++) {
-          let item = configItems[i];
+          const item = configItems[i];
           switch (item.propertyName) {
             case 'template.baseDir':
               this.templateBasedir = item.propertyValue;

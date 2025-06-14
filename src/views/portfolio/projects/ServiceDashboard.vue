@@ -193,7 +193,7 @@ export default {
       if (!metrics || metrics.length === 0) {
         return;
       }
-      let metric = metrics[metrics.length - 1]; //Use the most recent metric
+      const metric = metrics[metrics.length - 1]; //Use the most recent metric
       this.currentCritical = common.valueWithDefault(metric.critical, 0);
       this.currentHigh = common.valueWithDefault(metric.high, 0);
       this.currentMedium = common.valueWithDefault(metric.medium, 0);
