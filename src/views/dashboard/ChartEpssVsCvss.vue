@@ -1,6 +1,6 @@
 <script>
-import common from '../../shared/common';
-import i18n from '../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import { Scatter } from 'vue-chartjs';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
@@ -11,12 +11,12 @@ export default {
   },
   methods: {
     render: function (findings) {
-      let labels = [];
-      let cveData = [];
+      const labels = [];
+      const cveData = [];
       if (findings && findings.length > 0) {
         for (let i = 0; i < findings.length; i++) {
-          let finding = findings[i];
-          let componentLabel = common.concatenateComponentName(
+          const finding = findings[i];
+          const componentLabel = common.concatenateComponentName(
             null,
             finding.component.name,
             finding.component.version,
@@ -25,7 +25,7 @@ export default {
             vulnId: finding.vulnerability.vulnId,
             componentLabel: componentLabel,
           });
-          let cvssScore = finding.vulnerability.cvssV3BaseScore
+          const cvssScore = finding.vulnerability.cvssV3BaseScore
             ? finding.vulnerability.cvssV3BaseScore
             : finding.vulnerability.cvssV2BaseScore;
           cveData.push({ x: cvssScore, y: finding.vulnerability.epssScore });
@@ -98,9 +98,9 @@ export default {
             position: 'nearest',
             callbacks: {
               label: function (tooltipItem, data) {
-                let label = data.labels[tooltipItem.index];
-                let vulnId = label.vulnId;
-                let componentLabel = label.componentLabel;
+                const label = data.labels[tooltipItem.index];
+                const vulnId = label.vulnId;
+                const componentLabel = label.componentLabel;
                 return (
                   `${i18n.t('message.component')}<br>` +
                   `${i18n.t('message.vulnerability')}<br/>` +

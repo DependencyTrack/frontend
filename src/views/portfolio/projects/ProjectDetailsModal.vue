@@ -10,7 +10,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
         <b-card>
@@ -26,8 +26,8 @@
             :label="$t('message.project_name')"
             :tooltip="this.$t('message.project_name_desc')"
             :feedback-text="$t('message.required_project_name')"
-            v-on:change="syncReadOnlyNameField"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            @change="syncReadOnlyNameField"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-row align-v="stretch">
             <b-col>
@@ -40,12 +40,10 @@
                 required="false"
                 feedback="false"
                 autofocus="false"
-                v-on:change="syncReadOnlyVersionField"
+                @change="syncReadOnlyVersionField"
                 :label="$t('message.version')"
                 :tooltip="this.$t('message.component_version_desc')"
-                :readonly="
-                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
-                "
+                :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
               />
             </b-col>
             <b-col cols="auto">
@@ -54,9 +52,7 @@
                 :label="$t('message.project_is_latest')"
                 v-model="project.isLatest"
                 :show-placeholder-label="true"
-                :readonly="
-                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
-                "
+                :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
               />
             </b-col>
           </b-row>
@@ -67,7 +63,7 @@
             :options="sortAvailableClassifiers"
             :label="$t('message.classifier')"
             :tooltip="$t('message.component_classifier_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-input-group-form-select
             id="v-collection-logic-input"
@@ -76,8 +72,8 @@
             :options="availableCollectionLogics"
             :label="$t('message.collectionLogic')"
             :tooltip="$t('message.project_collection_logic_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            v-on:change="syncCollectionTagsVisibility"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            @change="syncCollectionTagsVisibility"
           />
           <vue-tags-input
             id="input-collectionTags"
@@ -92,7 +88,7 @@
             class="mw-100 bg-transparent text-lowercase"
             :max-tags="1"
             v-show="showCollectionTags"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <div style="margin-bottom: 1rem">
             <label>Parent</label>
@@ -110,8 +106,8 @@
               @search-change="asyncFind"
               :internal-search="false"
               :close-on-select="true"
-              selectLabel=""
-              deselectLabel=""
+              select-label=""
+              deselect-label=""
             ></multiselect>
           </div>
           <b-form-group
@@ -123,7 +119,7 @@
               id="project-description-description"
               v-model="project.description"
               rows="3"
-              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             />
           </b-form-group>
           <b-form-group
@@ -140,7 +136,7 @@
               :autocomplete-items="tagsAutoCompleteItems"
               @tags-changed="(newTags) => (this.tags = newTags)"
               class="mw-100 bg-transparent text-lowercase"
-              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             />
           </b-form-group>
           <b-input-group-form-switch
@@ -150,7 +146,7 @@
             v-model="project.active"
             :tooltip="$t('message.inactive_active_children')"
             :disabled="
-              this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) ||
+              isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) ||
               (project.active && this.hasActiveChild(project))
             "
           />
@@ -172,7 +168,7 @@
         </b-card>
       </b-tab>
       <b-tab class="body-bg-color" style="border: 0; padding: 0">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -212,7 +208,7 @@
             required="false"
             :label="$t('message.component_namespace_group_vendor')"
             :tooltip="this.$t('message.component_group_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-input-group-form-input
             id="project-purl-input"
@@ -222,7 +218,7 @@
             required="false"
             :label="$t('message.package_url_full')"
             :tooltip="this.$t('message.component_package_url_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-input-group-form-input
             id="project-cpe-input"
@@ -232,7 +228,7 @@
             required="false"
             :label="$t('message.cpe_full')"
             :tooltip="$t('message.component_cpe_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
           <b-input-group-form-input
             id="project-swidTagId-input"
@@ -242,7 +238,7 @@
             required="false"
             :label="$t('message.swid_tagid')"
             :tooltip="$t('message.component_swid_tagid_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            :readonly="isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
           />
         </b-card>
       </b-tab>
@@ -251,7 +247,7 @@
         style="border: 0; padding: 0"
         v-if="project.manufacturer"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-industry"></i>
           {{ $t('message.manufacturer') }}</template
         >
@@ -302,7 +298,7 @@
         style="border: 0; padding: 0"
         v-if="project.supplier"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.supplier') }}</template
         >
@@ -349,7 +345,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-external-link"></i>
           {{ $t('message.external_references') }}</template
         >
@@ -370,7 +366,7 @@
           (project.metadata.authors || project.metadata.supplier)
         "
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template
         >
         <b-card>
@@ -444,7 +440,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button
         size="md"
         variant="outline-danger"
@@ -481,33 +477,52 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import VueTagsInput from '@johmun/vue-tags-input';
-import { Switch as cSwitch } from '@coreui/vue';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import common from '../../../shared/common';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import common from '@/shared/common';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
+import {
+  BButton,
+  BCard,
+  BCol,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BRow,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ProjectDetailsModal',
-  mixins: [
-    permissionsMixin,
-    availableClassifiersMixin,
-    availableCollectionLogicsMixin,
-  ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
     VueTagsInput,
-    cSwitch,
     Multiselect,
+    BModal,
+    BTabs,
+    BTab,
+    BCard,
+    BRow,
+    BCol,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
+    BootstrapTable,
   },
+  mixins: [
+    permissionsMixin,
+    availableClassifiersMixin,
+    availableCollectionLogicsMixin,
+  ],
   props: {
     project: Object,
     uuid: String,
@@ -610,7 +625,7 @@ export default {
           field: 'url',
           sortable: false,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(
@@ -655,6 +670,14 @@ export default {
       },
     };
   },
+  watch: {
+    tag(input) {
+      this.searchTags(input);
+    },
+    collectionTagTyping(input) {
+      this.searchTags(input);
+    },
+  },
   beforeUpdate() {
     this.readOnlyProjectName = this.project.name;
     this.readOnlyProjectVersion = this.project.version;
@@ -674,14 +697,6 @@ export default {
       this.$root.$emit('bv::show::modal', 'projectDetailsModal');
     });
   },
-  watch: {
-    tag(input) {
-      this.searchTags(input);
-    },
-    collectionTagTyping(input) {
-      this.searchTags(input);
-    },
-  },
   methods: {
     initializeTags: function () {
       this.tags = (this.project.tags || []).map((tag) => ({ text: tag.name }));
@@ -700,8 +715,8 @@ export default {
       this.showCollectionTags = value === 'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
     },
     updateProject: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-      let tagsNode = [];
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+      const tagsNode = [];
       let parent = null;
       if (this.selectedParent) {
         parent = { uuid: this.selectedParent.uuid };
@@ -749,14 +764,14 @@ export default {
     },
     deleteProject: async function () {
       this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-      let confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$bvModal.msgBoxConfirm(
         this.$t('message.project_delete_message'),
         {
           title: this.$t('message.project_delete_title'),
         },
       );
       if (confirmed) {
-        let url =
+        const url =
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
         this.axios
           .delete(url)
@@ -787,7 +802,7 @@ export default {
     asyncFind: function (query) {
       if (query) {
         this.isLoading = true;
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}?searchText=${query}&excludeInactive=true`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/withoutDescendantsOf/${this.uuid}?searchText=${query}&excludeInactive=true`;
         this.axios.get(url).then((response) => {
           if (response.data) {
             this.availableParents = response.data;
@@ -827,7 +842,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>
 
 <style scoped>

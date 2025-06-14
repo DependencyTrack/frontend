@@ -3,7 +3,7 @@
     <b-button
       size="sm"
       class="pull-right action-icon"
-      v-on:click="$emit('actionClicked')"
+      @click="$emit('actionClicked')"
       v-b-tooltip.hover
       :title="tooltip"
     >
@@ -20,7 +20,12 @@
 </template>
 
 <script>
+import { BButton } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BButton,
+  },
   props: {
     value: String,
     tooltip: String,
@@ -39,21 +44,26 @@ export default {
   margin-top: 0;
   margin-bottom: 0;
 }
+
 .action-icon {
   padding: 0;
   margin: 0;
   border: 0;
   background-color: transparent;
 }
+
 .action-icon .fa {
   font-size: 1.2rem;
 }
+
 .action-icon .fa-plus-square {
   color: var(--primary);
 }
+
 .action-icon .fa-trash-o {
   color: var(--danger);
 }
+
 .list-group-item:last-child {
   margin-bottom: -1px;
 }

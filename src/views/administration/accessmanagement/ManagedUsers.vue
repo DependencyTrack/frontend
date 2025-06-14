@@ -18,45 +18,38 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-managed-user-modal v-on:refreshTable="refreshTable" />
+    <create-managed-user-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateManagedUserModal from './CreateManagedUserModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import ChangePasswordModal from './ChangePasswordModal';
 import SelectTeamModal from './SelectTeamModal';
 import SelectPermissionModal from './SelectPermissionModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateManagedUserModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:managedusers:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:managedusers:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:managedusers:rowUpdate');
-    EventBus.$off('admin:managedusers:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -199,7 +192,7 @@ export default {
             },
             methods: {
               updateUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
                 this.axios
                   .post(url, {
                     username: this.username,
@@ -225,7 +218,7 @@ export default {
                   });
               },
               deleteUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -243,8 +236,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                   this.axios
                     .post(url, {
                       uuid: selection.uuid,
@@ -270,7 +263,7 @@ export default {
                 }
               },
               removeTeamMembership: function (teamUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                 this.axios
                   .delete(url, { data: { uuid: teamUuid } })
                   .then((response) => {
@@ -289,8 +282,8 @@ export default {
               updatePermissionSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -309,7 +302,7 @@ export default {
                 }
               },
               removePermission: function (permission) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -343,6 +336,19 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:managedusers:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:managedusers:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:managedusers:rowUpdate');
+    EventBus.$off('admin:managedusers:rowDeleted');
   },
   methods: {
     refreshTable: function () {

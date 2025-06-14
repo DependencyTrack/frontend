@@ -253,8 +253,36 @@
 import common from '@/shared/common';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import {
+  BButton,
+  BCard,
+  BCardText,
+  BCol,
+  BFormGroup,
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+  BInputGroup,
+  BLink,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
+  components: {
+    BootstrapToggle,
+    BRow,
+    BCol,
+    BCard,
+    BCardText,
+    BLink,
+    BFormGroup,
+    BFormInput,
+    BFormTextarea,
+    BButton,
+    BInputGroup,
+    BFormSelect,
+  },
+  mixins: [permissionsMixin],
   props: {
     finding: Object,
     projectUuid: String,
@@ -342,7 +370,9 @@ export default {
       }
     },
   },
-  mixins: [permissionsMixin],
+  beforeMount() {
+    this.finding && this.getAnalysis();
+  },
   methods: {
     resolveVulnAliases: function (aliases, vulnSource) {
       return common.resolveVulnAliases(
@@ -351,14 +381,15 @@ export default {
       );
     },
     getAnalysis: function () {
-      let queryString =
+      const queryString =
         '?project=' +
         this.projectUuid +
         '&component=' +
         this.finding.component.uuid +
         '&vulnerability=' +
         this.finding.vulnerability.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
+      const url =
+        `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
       this.axios
         .get(url, {
           validateStatus: (status) => status === 200 || status === 404,
@@ -440,7 +471,7 @@ export default {
       comment,
       isSuppressed,
     ) {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
       this.axios
         .put(url, {
           project: this.projectUuid,
@@ -461,12 +492,6 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-  },
-  beforeMount() {
-    this.finding && this.getAnalysis();
-  },
-  components: {
-    BootstrapToggle,
   },
 };
 </script>

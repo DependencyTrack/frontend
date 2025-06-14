@@ -13,7 +13,7 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="outline-danger" @click="deleteProperty">{{
         $t('message.delete')
       }}</b-button>
@@ -31,11 +31,17 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
+import { BButton, BModal } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ProjectPropertiesModal',
+  components: {
+    BModal,
+    BButton,
+    BootstrapTable,
+  },
   props: {
     uuid: String,
   },
@@ -116,7 +122,7 @@ export default {
       return `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
     },
     deleteProperty: function () {
-      let selections = this.$refs.table.getSelections();
+      const selections = this.$refs.table.getSelections();
       for (let i = 0; i < selections.length; i++) {
         this.axios
           .delete(this.apiUrl(), {
@@ -140,5 +146,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 </style>

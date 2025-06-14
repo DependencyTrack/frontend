@@ -8,7 +8,6 @@ import showdown from 'showdown';
 import * as showdownHtmlEscape from 'showdown-htmlescape';
 
 export default {
-  name: 'Showdown',
   props: {
     markdown: String,
     allowHtml: {

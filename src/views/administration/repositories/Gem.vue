@@ -4,12 +4,13 @@
 
 <script>
 import Repositories from './Repositories';
+
 export default {
-  props: {
-    header: String,
-  },
   components: {
     Repositories,
+  },
+  props: {
+    header: String,
   },
 };
 </script>

@@ -8,7 +8,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
         <b-card>
@@ -75,7 +75,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.provider') }}</template
         >
@@ -120,7 +120,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-globe"></i> {{ $t('message.endpoints') }}</template
         >
         <b-card>
@@ -134,7 +134,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-server"></i> {{ $t('message.data') }}</template
         >
         <b-card>
@@ -148,7 +148,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-external-link"></i>
           {{ $t('message.external_references') }}</template
         >
@@ -163,7 +163,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button
         size="md"
         variant="outline-danger"
@@ -186,19 +186,34 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
+import {
+  BButton,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  name: 'ServiceDetailsModal',
-  mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
-    BInputGroupFormSelect,
+    BModal,
+    BTabs,
+    BTab,
+    BFormGroup,
+    BFormTextarea,
+    BButton,
+    BCard,
+    BootstrapTable,
   },
+  mixins: [permissionsMixin],
   props: {
     service: Object,
   },
@@ -345,7 +360,7 @@ export default {
           field: 'url',
           sortable: false,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(
@@ -393,7 +408,7 @@ export default {
   methods: {
     updateService: function () {
       this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
       console.log(this.service);
       this.axios
         .post(url, this.service)
@@ -407,7 +422,7 @@ export default {
     },
     deleteService: function () {
       this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
-      let url =
+      const url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios
         .delete(url)

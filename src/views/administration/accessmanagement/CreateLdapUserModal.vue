@@ -20,7 +20,7 @@
       :feedback-text="$t('admin.required_username')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -32,14 +32,17 @@
 </template>
 
 <script>
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
+    BModal,
+    BButton,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       username: null,
@@ -47,7 +50,7 @@ export default {
   },
   methods: {
     createUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
       this.axios
         .put(url, {
           username: this.username,

@@ -11,42 +11,54 @@
         active
         @click="routeTo()"
       >
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-list-alt"></i> {{ $t('message.policies') }}
           <b-badge variant="tab-total">{{ totalPolicies }}</b-badge></template
         >
-        <policy-list v-on:total="totalPolicies = $event" />
+        <policy-list @total="totalPolicies = $event" />
       </b-tab>
       <b-tab ref="licensegroups" @click="routeTo('licenseGroups')">
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-balance-scale"></i>
           {{ $t('message.license_groups') }}
           <b-badge variant="tab-total">{{
             totalLicenseGroups
           }}</b-badge></template
         >
-        <license-group-list v-on:total="totalLicenseGroups = $event" />
+        <license-group-list @total="totalLicenseGroups = $event" />
       </b-tab>
     </b-tabs>
   </div>
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import PolicyList from './PolicyList';
 import LicenseGroupList from './LicenseGroupList';
+import { BBadge, BTab, BTabs } from 'bootstrap-vue';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     LicenseGroupList,
     PolicyList,
+    BTabs,
+    BTab,
+    BBadge,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       totalPolicies: 0,
       totalLicenseGroups: 0,
     };
+  },
+  watch: {
+    $route() {
+      this.getTabFromRoute().activate();
+    },
+  },
+  mounted() {
+    this.getTabFromRoute().active = true;
   },
   methods: {
     routeTo(path) {
@@ -64,17 +76,9 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp('/policy\/([^\\/]*)', 'gi');
-      let tab = pattern.exec(this.$route.fullPath.toLowerCase());
+      const pattern = new RegExp('/policy\/([^\\/]*)', 'gi');
+      const tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
-    },
-  },
-  mounted() {
-    this.getTabFromRoute().active = true;
-  },
-  watch: {
-    $route() {
-      this.getTabFromRoute().activate();
     },
   },
 };

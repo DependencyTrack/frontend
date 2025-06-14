@@ -11,10 +11,10 @@
       v-model="file"
       class="mb-2"
       :placeholder="$t('message.no_file_chosen')"
-      :browseText="$t('message.browse')"
+      :browse-text="$t('message.browse')"
     ></b-form-file>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -33,8 +33,14 @@
 </template>
 
 <script>
+import { BButton, BFormFile, BModal } from 'bootstrap-vue';
+
 export default {
-  name: 'ProjectUploadBomModal',
+  components: {
+    BModal,
+    BFormFile,
+    BButton,
+  },
   props: {
     uuid: String,
   },
@@ -48,15 +54,15 @@ export default {
       this.file = null;
     },
     upload: function () {
-      let data = new FormData();
+      const data = new FormData();
       data.set('project', this.uuid);
       data.set('bom', this.file);
-      let config = {
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}`;
       this.axios.post(url, data, config).then(() => {
         this.$root.$emit('bv::hide::modal', 'projectUploadBomModal');
         this.$toastr.s(this.$t('message.bom_uploaded'));
