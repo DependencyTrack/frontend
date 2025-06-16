@@ -61,7 +61,7 @@ export default {
       localStorage.removeItem('sessionInvalidate');
       // Removes the token from session storage and reload
       EventBus.$emit('authenticated', null);
-      this.$router.replace({ name: 'Login' });
+      this.$router.replace({ name: 'Login', query: { "fromLogout": "true" }});
     },
     canChangePassword: function () {
       return this.identityProvider == 'LOCAL';

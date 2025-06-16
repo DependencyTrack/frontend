@@ -601,6 +601,7 @@
     "login_more_options": "Więcej możliwości",
     "login_unauthorized": "Nieprawidłowa nazwa użytkownika lub hasło",
     "logout": "Wyloguj",
+    "logout_confirmation": "Wylogowano pomyślnie.",
     "manufacturer": "Producent",
     "manufacturer_name": "Nazwa producenta",
     "manufacturer_name_desc": "Organizacja, która wyprodukowała komponent opisany w projekcie",

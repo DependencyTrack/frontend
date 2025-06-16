@@ -601,6 +601,7 @@
     "login_more_options": "Більше варіантів",
     "login_unauthorized": "Неправильне ім'я користувача або пароль",
     "logout": "Вийти",
+    "logout_confirmation": "Ви успішно вийшли з системи.",
     "manufacturer": "Виробник",
     "manufacturer_name": "Назва виробника",
     "manufacturer_name_desc": "Організація, яка виготовила компонент, описаний у проекті",
