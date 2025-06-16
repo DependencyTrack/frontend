@@ -1,8 +1,11 @@
+import {
+  genAxiosResponse,
+  shouldShowModal,
+} from '../../../../cypress/support/utils';
+import GeneralTemplateConfigurationModal from './GeneralTemplateConfigurationModal.vue';
+
 describe('GeneralTemplateConfigurationModal', () => {
   it('mounts successfully', () => {
-    /*
-    FIXME this test just hangs after execution
-
     cy.mount(GeneralTemplateConfigurationModal, {
       attachTo: document.body,
       stubs: {
@@ -29,6 +32,5 @@ describe('GeneralTemplateConfigurationModal', () => {
     });
 
     shouldShowModal('generalTemplateConfigurationModal');
-    */
   });
 });

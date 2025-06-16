@@ -1,8 +1,8 @@
+import LicenseList from './LicenseList.vue';
+import { genAxiosResponse } from '../../../../cypress/support/utils';
+
 describe('LicenseList', () => {
   it('mounts successfully', () => {
-    /*
-    FIXME this test just hangs after execution
-
     cy.setToken();
 
     cy.mount(LicenseList, {
@@ -27,6 +27,5 @@ describe('LicenseList', () => {
     });
 
     cy.get('.animated').should('exist');
-    */
   });
 });

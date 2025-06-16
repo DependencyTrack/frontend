@@ -1,5 +1,5 @@
 /*
-TODO this test hangs after execution
+FIXME this test hangs after execution
 import Project from './Project.vue';
 import { genAxiosResponse } from '../../../../cypress/support/utils';
 

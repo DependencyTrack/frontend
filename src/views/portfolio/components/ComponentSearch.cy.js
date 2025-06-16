@@ -1,8 +1,8 @@
+import ComponentSearch from './ComponentSearch.vue';
+import { genAxiosResponse } from '../../../../cypress/support/utils';
+
 describe('ComponentSearch', () => {
   it('mounts successfully', () => {
-    /*
-    FIXME this test just hangs after execution
-
     cy.setToken();
 
     cy.mount(ComponentSearch, {
@@ -27,6 +27,5 @@ describe('ComponentSearch', () => {
     });
 
     cy.get('.componentSearch').should('exist');
-    */
   });
 });

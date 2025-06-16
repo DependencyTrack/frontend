@@ -36,7 +36,7 @@ function loadLocaleMessages() {
 const localeMessages = loadLocaleMessages();
 
 function matchLocale(requestedLocale) {
-  console.log(localeMessages);
+  console.debug(localeMessages);
   const exactMatch = Object.keys(localeMessages).find(
     (locale) => requestedLocale === locale,
   );
