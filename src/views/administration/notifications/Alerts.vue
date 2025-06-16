@@ -37,7 +37,17 @@ import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButto
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
-import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormGroup,
+  BFormInput,
+  BRow,
+} from 'bootstrap-vue';
 import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
@@ -254,6 +264,13 @@ export default {
               BInputGroupFormInput,
               VueTagsInput,
               cSwitch,
+              BRow,
+              BCol,
+              BFormGroup,
+              BFormInput,
+              BFormCheckboxGroup,
+              BFormCheckbox,
+              BButton,
             },
             data() {
               return {
