@@ -913,7 +913,8 @@
     "weakness": "Слабость",
     "will_not_fix": "Не будет исправлено",
     "workaround_available": "Доступно обходное решение",
-    "x_trust_boundary": "Пересечение границы доверия"
+    "x_trust_boundary": "Пересечение границы доверия",
+    "show_aliased_findings": "Показывать псевдонированные выводы"
   },
   "operator": {
     "contains_all": "содержит все",

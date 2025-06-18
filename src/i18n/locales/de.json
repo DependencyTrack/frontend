@@ -913,7 +913,8 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenze überschreiten"
+    "x_trust_boundary": "Vertrauensgrenze überschreiten",
+    "show_aliased_findings": "Aliased Erkenntnisse zeigen"
   },
   "operator": {
     "contains_all": "enthält alle",

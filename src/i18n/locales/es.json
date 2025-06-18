@@ -913,7 +913,8 @@
     "weakness": "Debilidad",
     "will_not_fix": "No se reparara",
     "workaround_available": "Solución alternativa disponible",
-    "x_trust_boundary": "Cruzar el límite de confianza"
+    "x_trust_boundary": "Cruzar el límite de confianza",
+    "show_aliased_findings": "Mostrar hallazgos alias"
   },
   "operator": {
     "contains_all": "contiene todo",

@@ -913,7 +913,8 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego"
+    "x_trust_boundary": "Granica zaufania krzyżowego",
+    "show_aliased_findings": "Pokaż aliasowe ustalenia"
   },
   "operator": {
     "contains_all": "zawiera wszystko",

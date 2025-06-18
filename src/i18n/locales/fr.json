@@ -913,7 +913,8 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle"
+    "x_trust_boundary": "Limte de confiance mutuelle",
+    "show_aliased_findings": "Montrer des résultats aliasés"
   },
   "operator": {
     "contains_all": "contient tous",

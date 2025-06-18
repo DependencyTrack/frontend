@@ -913,7 +913,8 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри"
+    "x_trust_boundary": "Перетнути кордон довіри",
+    "show_aliased_findings": "Показати псевдонім висновків"
   },
   "operator": {
     "contains_all": "містить усе",
