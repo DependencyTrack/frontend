@@ -12,6 +12,15 @@
         v-model="namespaceRegex"
         :tooltip="$t('admin.namespace_regex_desc')"
       />
+      <b-form-select
+        id="internalComponentsConfigMatchMode"
+        v-model="matchMode"
+        :options="[
+          { value: 'OR', text: 'match group OR name (default)' },
+          { value: 'AND', text: 'match both group AND name' }
+        ]"
+      />
+      {{ $t('admin.match_mode_label') }}
       <b-validated-input-group-form-input
         id="internalComponentsConfigNamesRegex"
         :label="$t('admin.name_regex')"
@@ -53,6 +62,7 @@ export default {
     return {
       namespaceRegex: '',
       nameRegex: '',
+      matchMode: 'OR',
     };
   },
   methods: {
@@ -67,6 +77,11 @@ export default {
           groupName: 'internal-components',
           propertyName: 'names.regex',
           propertyValue: this.nameRegex,
+        },
+       {
+          groupName: 'internal-components',
+          propertyName: 'match-mode',
+          propertyValue: this.matchMode,
         },
       ]);
     },
@@ -92,6 +107,9 @@ export default {
         switch (item.propertyName) {
           case 'groups.regex':
             this.namespaceRegex = item.propertyValue;
+            break;
+          case 'match-mode':
+            this.matchMode = item.propertyValue || 'OR';
             break;
           case 'names.regex':
             this.nameRegex = item.propertyValue;
