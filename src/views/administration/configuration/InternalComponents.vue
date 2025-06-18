@@ -16,8 +16,8 @@
         id="internalComponentsConfigMatchMode"
         v-model="matchMode"
         :options="[
-          { value: 'OR', text: 'OR — match group OR name (default)' },
-          { value: 'AND', text: 'AND — match both group AND name' }
+          { value: 'OR', text: 'match group OR name (default)' },
+          { value: 'AND', text: 'match both group AND name' }
         ]"
       />
       {{ $t('admin.match_mode_label') }}
