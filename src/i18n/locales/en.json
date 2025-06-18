@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Mapped LDAP groups",
     "mapped_oidc_groups": "Mapped OpenID Connect Groups",
     "mapped_teams": "Mapped Teams",
+    "match_mode": {
+      "label": "Component matching mode",
+      "or": "Match namespace OR name",
+      "and": "Match both namespace AND name"
+    },
     "maven": "Maven",
     "members": "Members",
     "mime_type": "Mime type",
