@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Dienstschwachstellen",
     "services": "Services",
     "severity": "Schweregrad",
+    "show_aliased_findings": "Aliased Erkenntnisse zeigen",
     "show_complete_graph": "Vollständige Grafik anzeigen",
     "show_flat_view": "Flache Projektansicht anzeigen",
     "show_in_dependency_graph": "Im Abhängigkeitsdiagramm anzeigen",
@@ -913,8 +914,7 @@
     "weakness": "Schwäche",
     "will_not_fix": "Wird nicht repariert",
     "workaround_available": "Problemumgehung verfügbar",
-    "x_trust_boundary": "Vertrauensgrenze überschreiten",
-    "show_aliased_findings": "Aliased Erkenntnisse zeigen"
+    "x_trust_boundary": "Vertrauensgrenze überschreiten"
   },
   "operator": {
     "contains_all": "enthält alle",

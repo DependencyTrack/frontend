@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Уразливості служби",
     "services": "Послуги",
     "severity": "Суворість",
+    "show_aliased_findings": "Показати псевдонім висновків",
     "show_complete_graph": "Показати повний графік",
     "show_flat_view": "Показати плоский вигляд проекту",
     "show_in_dependency_graph": "Показати в графі залежностей",
@@ -913,8 +914,7 @@
     "weakness": "Слабкість",
     "will_not_fix": "Не виправить",
     "workaround_available": "Доступний обхідний шлях",
-    "x_trust_boundary": "Перетнути кордон довіри",
-    "show_aliased_findings": "Показати псевдонім висновків"
+    "x_trust_boundary": "Перетнути кордон довіри"
   },
   "operator": {
     "contains_all": "містить усе",

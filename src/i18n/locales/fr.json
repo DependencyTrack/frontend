@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Vulnérabilités des services",
     "services": "Services",
     "severity": "Criticité",
+    "show_aliased_findings": "Montrer des résultats aliasés",
     "show_complete_graph": "Afficher le graph complet",
     "show_flat_view": "Afficher les projets à plat",
     "show_in_dependency_graph": "Afficher dans le graph de dépendance",
@@ -913,8 +914,7 @@
     "weakness": "Faiblesse",
     "will_not_fix": "Ne sera pas corrigée",
     "workaround_available": "Solution de contournement disponible",
-    "x_trust_boundary": "Limte de confiance mutuelle",
-    "show_aliased_findings": "Montrer des résultats aliasés"
+    "x_trust_boundary": "Limte de confiance mutuelle"
   },
   "operator": {
     "contains_all": "contient tous",

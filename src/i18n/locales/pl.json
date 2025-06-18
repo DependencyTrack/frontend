@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Luki w zabezpieczeniach usług",
     "services": "Usługi",
     "severity": "Powaga",
+    "show_aliased_findings": "Pokaż aliasowe ustalenia",
     "show_complete_graph": "Pokaż cały wykres",
     "show_flat_view": "Pokaż płaski widok projektu",
     "show_in_dependency_graph": "Pokaż na wykresie zależności",
@@ -913,8 +914,7 @@
     "weakness": "Słabość",
     "will_not_fix": "Nie naprawi",
     "workaround_available": "Dostępne obejście",
-    "x_trust_boundary": "Granica zaufania krzyżowego",
-    "show_aliased_findings": "Pokaż aliasowe ustalenia"
+    "x_trust_boundary": "Granica zaufania krzyżowego"
   },
   "operator": {
     "contains_all": "zawiera wszystko",
