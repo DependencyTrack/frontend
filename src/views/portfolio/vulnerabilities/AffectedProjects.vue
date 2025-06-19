@@ -11,6 +11,32 @@
       /><span class="text-muted">{{
         $t('message.show_inactive_projects')
       }}</span>
+      <b-button
+        size="md"
+        variant="outline-primary"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="openModal"
+      >
+        {{ $t('message.bulk_update') }}
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="outline-warning"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="suppressSelected(true)"
+      >
+        {{ $t('message.suppress') }}
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="outline-success"
+        v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+        @click="suppressSelected(false)"
+      >
+        {{ $t('message.unsuppress') }}
+      </b-button>
     </div>
     <bootstrap-table
       ref="table"
@@ -21,6 +47,12 @@
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
+
+    <bulk-update-modal
+      :selected-projects="selectedProjects"
+      @submit-bulk-analysis="handleBulkApply"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
@@ -28,11 +60,14 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
+import BulkUpdateModal from '@/views/portfolio/vulnerabilities/BulkUpdateModal.vue';
+import common from '@/shared/common';
 
 export default {
   mixins: [permissionsMixin],
   components: {
     cSwitch,
+    BulkUpdateModal,
   },
   beforeCreate() {
     this.showInactiveProjects =
@@ -50,11 +85,17 @@ export default {
   data() {
     return {
       showInactiveProjects: this.showInactiveProjects,
+      selectedProjects: [],
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
       },
       columns: [
+        {
+          field: 'state',
+          checkbox: true,
+          align: 'center',
+        },
         {
           title: this.$t('message.name'),
           field: 'name',
@@ -139,7 +180,140 @@ export default {
     onPostBody: function () {
       this.$refs.table.hideLoading();
     },
+
+    openModal() {
+      this.selectedProjects = this.$refs.table.getSelections();
+      const selected = this.$refs.table.getSelections();
+      if (!selected || selected.length === 0) {
+        this.$toastr.w(this.$t('message.no_projects_selected'));
+        return;
+      }
+
+      this.$bvModal.show('bulkUpdateModal');
+    },
+
+    // Method for receiving update from modal and calling API.
+    handleBulkApply(output) {
+      // Iterate over each selected project
+      for (const project of output.selectedProjects) {
+        for (const component of project.affectedComponentUuids) {
+          this.callRestEndpoint(
+            project.uuid,
+            component,
+            this.vulnerability,
+            output.analysisState,
+            output.analysisJustification,
+            output.analysisResponse,
+            output.analysisDetails,
+            output.comment,
+            output.isSuppressed,
+          );
+        }
+      }
+      this.refreshTable();
+    },
+
+    suppressSelected(suppress) {
+      const selected = this.$refs.table.getSelections();
+      if (!selected || selected.length === 0) {
+        this.$toastr.w(this.$t('message.no_projects_selected'));
+        return;
+      }
+      for (const project of selected) {
+        for (const component of project.affectedComponentUuids) {
+          this.callRestEndpoint(
+            project.uuid,
+            component,
+            this.vulnerability,
+            null, // analysisState
+            null, // justification
+            null, // response
+            null, // details
+            null, // comment
+            suppress
+          );
+        }
+      }
+      this.refreshTable();
+    },
+
+    updateAnalysisData: function (analysis) {
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisComments')) {
+        let trail = '';
+        for (let i = 0; i < analysis.analysisComments.length; i++) {
+          if (
+            Object.prototype.hasOwnProperty.call(
+              analysis.analysisComments[i],
+              'commenter',
+            )
+          ) {
+            trail += analysis.analysisComments[i].commenter + ' - ';
+          }
+          trail += common.formatTimestamp(
+            analysis.analysisComments[i].timestamp,
+            true,
+          );
+          trail += '\n';
+          trail += analysis.analysisComments[i].comment;
+          trail += '\n\n';
+        }
+        this.auditTrail = trail;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisState')) {
+        this.analysisState = analysis.analysisState;
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(analysis, 'analysisJustification')
+      ) {
+        this.analysisJustification = analysis.analysisJustification;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisResponse')) {
+        this.analysisResponse = analysis.analysisResponse;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisDetails')) {
+        this.analysisDetails = analysis.analysisDetails;
+      }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'isSuppressed')) {
+        this.isSuppressed = analysis.isSuppressed;
+      } else {
+        this.isSuppressed = false;
+      }
+    },
+
+    callRestEndpoint: function (
+      projectUuid,
+      componentUuid,
+      vulnerabilityUuid,
+      analysisState,
+      analysisJustification,
+      analysisResponse,
+      analysisDetails,
+      comment,
+      isSuppressed,
+    ) {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+      this.axios
+        .put(url, {
+          project: projectUuid,
+          component: componentUuid,
+          vulnerability: vulnerabilityUuid,
+          analysisState: analysisState,
+          analysisJustification: analysisJustification,
+          analysisResponse: analysisResponse,
+          analysisDetails: analysisDetails,
+          comment: comment,
+          isSuppressed: isSuppressed,
+        })
+        .then((response) => {
+          this.$toastr.s(this.$t('message.updated'));
+          this.updateAnalysisData(response.data);
+        })
+        .catch((error) => {
+          this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        });
+    },
   },
+
   watch: {
     showInactiveProjects() {
       if (localStorage) {
