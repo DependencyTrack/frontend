@@ -17,6 +17,7 @@
         <b-input-group-form-select
           id="input-operator"
           required="true"
+          v-on:change="saveCondition"
           v-model="operator"
           :options="operators"
         />
