@@ -282,6 +282,7 @@
     "templates": "Templates",
     "test_notification_queued": "A test notification has been queued",
     "token": "Token",
+    "trigger_notifications_on_severities":  "Trigger notifications on CVE-severities",
     "trivy": "Trivy",
     "url": "URL",
     "user_created": "User created",

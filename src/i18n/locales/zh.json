@@ -303,7 +303,8 @@
     "vulnsource_osv_base_url": "OSV 基本 URL",
     "welcome_message": "欢迎辞",
     "welcome_message_desc": "自定义用户登录前 Dependency-Track 起始页上显示的欢迎消息。",
-    "welcome_message_enable": "启用欢迎消息"
+    "welcome_message_enable": "启用欢迎消息",
+    "trigger_notifications_on_severities": "触发严重性通知"
   },
   "condition": {
     "forbidden": "禁止 (403)",
