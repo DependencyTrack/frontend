@@ -11,8 +11,8 @@ export function random(min, max) {
  */
 export const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    let temp = array[i];
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
     array[i] = array[j];
     array[j] = temp;
   }
@@ -141,8 +141,8 @@ export function compareVersions(v1, v2) {
   if (v2 && v2.toLowerCase().startsWith('v')) {
     v2 = v2.substring(1);
   }
-  let v1parts = v1.split(':');
-  let v2parts = v2.split(':');
+  const v1parts = v1.split(':');
+  const v2parts = v2.split(':');
   if (v1parts.length > 1 || v2parts.length > 1) {
     return compareEpochVersions(v1parts, v2parts);
   }
@@ -151,11 +151,11 @@ export function compareVersions(v1, v2) {
 
 function compareEpochVersions(v1parts, v2parts) {
   // compare epoch
-  let v1epoch = v1parts.length > 1 ? v1parts[0] : '0';
-  let v1version = v1parts.length > 1 ? v1parts[1] : v1parts[0];
-  let v2epoch = v2parts.length > 1 ? v2parts[0] : '0';
-  let v2version = v2parts.length > 1 ? v2parts[1] : v2parts[0];
-  let epochCompare = flexVerCompare(v1epoch, v2epoch);
+  const v1epoch = v1parts.length > 1 ? v1parts[0] : '0';
+  const v1version = v1parts.length > 1 ? v1parts[1] : v1parts[0];
+  const v2epoch = v2parts.length > 1 ? v2parts[0] : '0';
+  const v2version = v2parts.length > 1 ? v2parts[1] : v2parts[0];
+  const epochCompare = flexVerCompare(v1epoch, v2epoch);
   if (epochCompare == 0) {
     return flexVerCompare(v1version, v2version);
   } else {

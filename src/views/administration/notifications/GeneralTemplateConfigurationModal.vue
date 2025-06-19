@@ -30,7 +30,7 @@
       v-model="templateBasedir"
       :tooltip="$t('admin.template_basedir_tooltip')"
     />
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -46,18 +46,23 @@
     </template>
   </b-modal>
 </template>
+
 <script>
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { BButton, BFormGroup, BModal } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BModal,
+    BFormGroup,
+    BButton,
   },
+  mixins: [configPropertyMixin],
   data() {
     return {
       enableDefaultTemplatesOverride: null,
@@ -82,7 +87,7 @@ export default {
     },
     restoreDefaultTemplates: function () {
       this.$root.$emit('bv::hide::modal', 'generalTemplateConfigurationModal');
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/restoreDefaultTemplates`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/restoreDefaultTemplates`;
       this.axios
         .post(url)
         .then(() => {
@@ -95,11 +100,11 @@ export default {
     },
     loadConfigProperties() {
       this.axios.get(this.configUrl).then((response) => {
-        let configItems = response.data.filter(function (item) {
+        const configItems = response.data.filter(function (item) {
           return item.groupName === 'notification';
         });
         for (let i = 0; i < configItems.length; i++) {
-          let item = configItems[i];
+          const item = configItems[i];
           switch (item.propertyName) {
             case 'template.baseDir':
               this.templateBasedir = item.propertyValue;

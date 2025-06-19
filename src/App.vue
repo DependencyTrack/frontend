@@ -8,10 +8,10 @@ import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { getToken } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import VueRouter from 'vue-router';
+import VueRouter, { RouterView } from 'vue-router';
 
 export default {
-  name: 'app',
+  components: { RouterView },
   created() {
     const setJwtForAjax = (jwt) => {
       if (jwt) {
@@ -86,7 +86,7 @@ export default {
           Array.isArray(error.response.data) &&
           error.response.data[0].hasOwnProperty('invalidValue')
         ) {
-          let validationError = error.response.data
+          const validationError = error.response.data
             .map((failure) => `${failure.path}: ${failure.message}`)
             .join('\n');
           this.$toastr.w(
@@ -168,11 +168,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@coreui/icons/css/free.min.css';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome.scss';
-$simple-line-font-path: '~simple-line-icons/fonts/';
-@import '~simple-line-icons/scss/simple-line-icons.scss';
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
+@import '@coreui/icons/css/free.min.css';
+$fa-font-path: 'font-awesome/fonts/';
+@import 'font-awesome/scss/font-awesome.scss';
+$simple-line-font-path: 'simple-line-icons/fonts/';
+@import 'simple-line-icons/scss/simple-line-icons.scss';
+@import 'bootstrap-vue/dist/bootstrap-vue.css';
 @import 'assets/scss/style';
 </style>

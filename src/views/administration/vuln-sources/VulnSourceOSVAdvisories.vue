@@ -68,27 +68,39 @@
         {{ $t('message.update') }}
       </b-button>
     </b-card-footer>
-    <ecosystem-modal v-on:selection="updateEcosystem" />
+    <ecosystem-modal @selection="updateEcosystem" />
   </b-card>
 </template>
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
 import EcosystemModal from './EcosystemModal';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem.vue';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BFormGroup,
+} from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     EcosystemModal,
     ActionableListGroupItem,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BFormGroup,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -118,6 +130,31 @@ export default {
       }
     },
   },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      const configItems = response.data.filter(function (item) {
+        return item.groupName === 'vuln-source';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        const item = configItems[i];
+        switch (item.propertyName) {
+          case 'google.osv.enabled':
+            this.ecosystemConfig = item.propertyValue;
+            this.vulnsourceEnabled = this.ecosystemConfig != null;
+            break;
+          case 'google.osv.alias.sync.enabled':
+            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'google.osv.base.url':
+            this.osvBaseUrl = item.propertyValue;
+            break;
+        }
+      }
+      this.enabledEcosystems = this.ecosystemConfig
+        .split(';')
+        .map((ecosystem) => ecosystem.trim());
+    });
+  },
   methods: {
     removeEcosystem: function (ecosystem) {
       this.enabledEcosystems = this.enabledEcosystems.filter(
@@ -128,7 +165,7 @@ export default {
     updateEcosystem: function (ecosystems) {
       this.$root.$emit('bv::hide::modal', 'ecosystemModal');
       for (let i = 0; i < ecosystems.length; i++) {
-        let ecosystem = ecosystems[i];
+        const ecosystem = ecosystems[i];
         this.enabledEcosystems.push(ecosystem.name);
       }
       this.vulnsourceEnabled = this.enabledEcosystems.length !== 0;
@@ -152,31 +189,6 @@ export default {
         },
       ]);
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'vuln-source';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'google.osv.enabled':
-            this.ecosystemConfig = item.propertyValue;
-            this.vulnsourceEnabled = this.ecosystemConfig != null;
-            break;
-          case 'google.osv.alias.sync.enabled':
-            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'google.osv.base.url':
-            this.osvBaseUrl = item.propertyValue;
-            break;
-        }
-      }
-      this.enabledEcosystems = this.ecosystemConfig
-        .split(';')
-        .map((ecosystem) => ecosystem.trim());
-    });
   },
 };
 </script>

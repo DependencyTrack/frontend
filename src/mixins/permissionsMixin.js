@@ -1,4 +1,4 @@
-import * as permissions from '../shared/permissions';
+import * as permissions from '@/shared/permissions';
 
 export default {
   data() {

@@ -1,12 +1,8 @@
 module.exports = {
-  presets: [
-    ['@vue/babel-preset-jsx'],
-    [
-      '@babel/preset-env',
-      {
-        useBuiltIns: 'entry',
-        corejs: '3.33',
-      },
-    ],
-  ],
+  presets: [['@vue/babel-preset-jsx']],
+  env: {
+    test: {
+      plugins: process.env.VITE_COVERAGE === 'true' ? ['istanbul'] : [],
+    },
+  },
 };

@@ -20,7 +20,7 @@
     </b-card-body>
     <repository-create-repository-modal
       :type="type"
-      v-on:refreshTable="refreshTable"
+      @refreshTable="refreshTable"
     />
   </b-card>
 </template>
@@ -28,46 +28,27 @@
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
 import xssFilters from 'xss-filters';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import i18n from '../../../i18n';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import common from '../../../shared/common';
-import EventBus from '../../../shared/eventbus';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import i18n from '@/i18n';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import common from '@/shared/common';
+import EventBus from '@/shared/eventbus';
 import RepositoryCreateRepositoryModal from './RepositoryCreateRepositoryModal';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    RepositoryCreateRepositoryModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
+  },
+  mixins: [bootstrapTableMixin],
   props: {
     header: String,
     type: String,
-  },
-  mixins: [bootstrapTableMixin],
-  components: {
-    RepositoryCreateRepositoryModal,
-  },
-  methods: {
-    apiUrl: function () {
-      return `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.type}?orderBy=resolutionOrder&sort=asc`;
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        pageNumber: 1,
-        silent: true,
-      });
-    },
-  },
-  mounted() {
-    EventBus.$on('admin:repository:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:repository:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:repository:rowUpdate');
-    EventBus.$off('admin:repository:rowDeleted');
   },
   data() {
     return {
@@ -220,7 +201,7 @@ export default {
             },
             methods: {
               deleteRepository: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -232,7 +213,7 @@ export default {
                   });
               },
               updateRepository: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
                 this.axios
                   .post(url, {
                     identifier: this.identifier,
@@ -270,6 +251,31 @@ export default {
         url: this.apiUrl(),
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:repository:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:repository:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:repository:rowUpdate');
+    EventBus.$off('admin:repository:rowDeleted');
+  },
+  methods: {
+    apiUrl: function () {
+      return `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.type}?orderBy=resolutionOrder&sort=asc`;
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        pageNumber: 1,
+        silent: true,
+      });
+    },
   },
 };
 </script>

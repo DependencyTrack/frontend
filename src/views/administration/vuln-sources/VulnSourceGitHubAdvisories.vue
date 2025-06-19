@@ -50,18 +50,23 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -73,6 +78,27 @@ export default {
         dataOff: '\u2715',
       },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      const configItems = response.data.filter(function (item) {
+        return item.groupName === 'vuln-source';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        const item = configItems[i];
+        switch (item.propertyName) {
+          case 'github.advisories.enabled':
+            this.vulnsourceEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'github.advisories.alias.sync.enabled':
+            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'github.advisories.access.token':
+            this.apitoken = item.propertyValue;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -94,27 +120,6 @@ export default {
         },
       ]);
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'vuln-source';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'github.advisories.enabled':
-            this.vulnsourceEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'github.advisories.alias.sync.enabled':
-            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'github.advisories.access.token':
-            this.apitoken = item.propertyValue;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

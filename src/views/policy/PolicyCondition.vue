@@ -1,14 +1,14 @@
 <template>
   <actionable-list-group-item
     :delete-icon="true"
-    v-on:actionClicked="removeCondition()"
+    @actionClicked="removeCondition()"
   >
     <b-row>
       <b-col md="4" lg="3">
         <b-input-group-form-select
           id="input-subject"
           required="true"
-          v-on:change="subjectChanged"
+          @change="subjectChanged"
           v-model="subject"
           :options="subjects"
         />
@@ -30,7 +30,7 @@
           "
           id="input-value"
           required="true"
-          v-on:change="saveCondition"
+          @change="saveCondition"
           v-model="value"
           :options="possibleValues"
         />
@@ -152,29 +152,26 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
-import common from '../../shared/common';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import common from '@/shared/common';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import { BCol, BFormInput, BInputGroup, BRow, BTooltip } from 'bootstrap-vue';
 
 export default {
-  props: {
-    policy: Object,
-    condition: Object,
-  },
   components: {
+    BRow,
+    BCol,
+    BInputGroup,
+    BFormInput,
     ActionableListGroupItem,
     BInputGroupFormSelect,
     BInputGroupFormInput,
+    BTooltip,
   },
-  created() {
-    if (this.condition) {
-      this.uuid = this.condition.uuid;
-      this.subject = this.condition.subject;
-      this.subjectChanged();
-      this.operator = this.condition.operator;
-      this.value = this.condition.value;
-    }
+  props: {
+    policy: Object,
+    condition: Object,
   },
   data() {
     return {
@@ -293,16 +290,25 @@ export default {
       }
     },
   },
+  created() {
+    if (this.condition) {
+      this.uuid = this.condition.uuid;
+      this.subject = this.condition.subject;
+      this.subjectChanged();
+      this.operator = this.condition.operator;
+      this.value = this.condition.value;
+    }
+  },
   beforeMount() {
     if (this.subject === 'COORDINATES') {
-      let v = JSON.parse(this.value);
+      const v = JSON.parse(this.value);
       if (v) {
         this.coordinatesGroup = v.group;
         this.coordinatesName = v.name;
         this.coordinatesVersion = v.version;
       }
     } else if (this.subject === 'VERSION_DISTANCE') {
-      let v = JSON.parse(this.value);
+      const v = JSON.parse(this.value);
       if (v) {
         this.versionDistance = v;
       }
@@ -380,7 +386,7 @@ export default {
           value: common.trimToNull(this.value),
         });
       } else if (this.subject === 'VERSION_DISTANCE') {
-        let result = {
+        const result = {
           epoch: this.parseIntNull(
             common.trimToNull(this.versionDistance.epoch),
           ),
@@ -417,12 +423,12 @@ export default {
       }
     },
     saveCondition: function () {
-      let dynamicValue = this.createDynamicValue();
+      const dynamicValue = this.createDynamicValue();
       if (!this.subject || !this.operator || !dynamicValue) {
         return;
       }
       if (this.uuid) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition`;
         this.axios
           .post(url, {
             uuid: this.uuid,
@@ -441,7 +447,7 @@ export default {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       } else {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
         this.axios
           .put(url, {
             subject: this.subject,
@@ -462,7 +468,7 @@ export default {
     },
     removeCondition: function () {
       if (this.uuid) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/condition/${this.uuid}`;
         this.axios
           .delete(url)
           .then((response) => {
@@ -484,9 +490,9 @@ export default {
       this.axios
         .get(`${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}?limit=9999`)
         .then((response) => {
-          let vals = [];
+          const vals = [];
           for (let i = 0; i < response.data.length; i++) {
-            let object = response.data[i];
+            const object = response.data[i];
             vals.push({ value: object.uuid, text: object.name });
           }
           this.possibleValues = vals;
@@ -505,10 +511,10 @@ export default {
           `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}?limit=9999`,
         )
         .then((response) => {
-          let vals = [];
+          const vals = [];
           vals.push({ value: 'unresolved', text: 'unresolved' });
           for (let i = 0; i < response.data.length; i++) {
-            let object = response.data[i];
+            const object = response.data[i];
             vals.push({ value: object.uuid, text: object.name });
           }
           this.possibleValues = vals;

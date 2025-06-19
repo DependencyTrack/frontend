@@ -9,7 +9,7 @@
   >
     <b-tabs class="body-bg-color" style="border: 0; padding: 0">
       <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
         <b-card>
@@ -80,7 +80,7 @@
         </b-card>
       </b-tab>
       <b-tab>
-        <template v-slot:title
+        <template #title
           ><i class="fa fa-newspaper-o"></i>
           {{ $t('message.extended') }}</template
         >
@@ -132,7 +132,7 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -146,12 +146,27 @@
 <script>
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import { Switch as cSwitch } from '@coreui/vue';
+import {
+  BButton,
+  BCard,
+  BFormGroup,
+  BFormTextarea,
+  BModal,
+  BTab,
+  BTabs,
+} from 'bootstrap-vue';
 
 export default {
-  name: 'LicenseAddLicenseModal',
   components: {
     BInputGroupFormInput,
     cSwitch,
+    BModal,
+    BTabs,
+    BTab,
+    BButton,
+    BCard,
+    BFormGroup,
+    BFormTextarea,
   },
   data() {
     return {
@@ -164,7 +179,7 @@ export default {
   },
   methods: {
     addLicense: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`;
       this.axios
         .put(url, {
           name: this.license.name,

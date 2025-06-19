@@ -1,13 +1,13 @@
 <template>
   <div class="app">
-    <DefaultHeader />
+    <default-header />
     <div class="app-body">
       <AppSidebar ref="sidebar" fixed>
         <SidebarHeader />
         <SidebarForm />
-        <SidebarNav :navItems="permissibleNav"></SidebarNav>
+        <SidebarNav :nav-items="permissibleNav"></SidebarNav>
         <SidebarFooter />
-        <SidebarMinimizer />
+        <SidebarMinimizer @click.native="handleMinimizedUpdate" />
       </AppSidebar>
       <main class="main">
         <Breadcrumb :list="list" />
@@ -16,7 +16,7 @@
         </div>
       </main>
     </div>
-    <DefaultFooter />
+    <default-footer />
     <profile-edit-modal />
     <snapshot-modal />
   </div>
@@ -24,32 +24,28 @@
 
 <script>
 import {
+  Breadcrumb,
   Sidebar as AppSidebar,
   SidebarFooter,
   SidebarForm,
   SidebarHeader,
   SidebarMinimizer,
   SidebarNav,
-  Aside as AppAside,
-  Breadcrumb,
 } from '@coreui/vue';
-import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
 import DefaultHeader from './DefaultHeader';
 import DefaultFooter from './DefaultFooter';
-import EventBus from '../shared/eventbus';
-import ProfileEditModal from '../views/components/ProfileEditModal';
-import SnapshotModal from '../views/components/SnapshotModal';
-import * as permissions from '../shared/permissions';
+import EventBus from '@/shared/eventbus';
+import ProfileEditModal from '@/views/components/ProfileEditModal';
+import SnapshotModal from '@/views/components/SnapshotModal';
+import * as permissions from '@/shared/permissions';
+import { RouterView } from 'vue-router';
 
 export default {
-  name: 'DefaultContainer',
   components: {
     ProfileEditModal,
     SnapshotModal,
     AppSidebar,
-    AppAside,
     Breadcrumb,
-    DefaultHeaderProfileDropdown,
     SidebarForm,
     SidebarFooter,
     SidebarHeader,
@@ -57,6 +53,7 @@ export default {
     SidebarMinimizer,
     DefaultFooter,
     DefaultHeader,
+    RouterView,
   },
   data() {
     return {
@@ -159,6 +156,73 @@ export default {
       ],
     };
   },
+  computed: {
+    name() {
+      return this.$route.name;
+    },
+    list() {
+      if (this.breadcrumbs.length === 0) {
+        return this.generateBreadcrumbs();
+      } else {
+        return this.breadcrumbs;
+      }
+    },
+    permissibleNav() {
+      const decodedToken = permissions.decodeToken(permissions.getToken());
+      const array = [];
+      for (const item of this.nav) {
+        if (
+          (item.permission !== null &&
+            permissions.hasPermission(item.permission, decodedToken)) ||
+          (Object.prototype.hasOwnProperty.call(item, 'permissions') &&
+            item.permissions.some((permission) =>
+              permissions.hasPermission(permission, decodedToken),
+            ))
+        ) {
+          array.push(item);
+        }
+      }
+      return array;
+    },
+  },
+  mounted() {
+    if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
+      this.$root.$emit('bv::show::modal', 'snapshotModal');
+    }
+
+    this.isSidebarMinimized =
+      localStorage && localStorage.getItem('isSidebarMinimized') !== null
+        ? localStorage.getItem('isSidebarMinimized') === 'true'
+        : false;
+    const sidebar = document.body;
+    if (sidebar) {
+      if (this.isSidebarMinimized) {
+        sidebar.classList.add('sidebar-minimized');
+      } else {
+        sidebar.classList.remove('sidebar-minimized');
+      }
+    }
+  },
+  created() {
+    EventBus.$on('crumble', () => {
+      this.breadcrumbs = [];
+    });
+    EventBus.$on(
+      'addCrumb',
+      (crumb, subSectionName, subSectionUuid, subsectionLabel) => {
+        if (crumb) {
+          this.breadcrumbs = this.generateBreadcrumbs(
+            crumb,
+            subSectionName,
+            subSectionUuid,
+            subsectionLabel,
+          );
+        } else {
+          this.breadcrumbs = [];
+        }
+      },
+    );
+  },
   methods: {
     handleMinimizedUpdate() {
       this.isSidebarMinimized = !this.isSidebarMinimized;
@@ -166,15 +230,15 @@ export default {
         localStorage.setItem('isSidebarMinimized', this.isSidebarMinimized);
       }
     },
-    generateBreadcrumbs: function generateBreadcrumbs(
+    generateBreadcrumbs(
       crumbName,
       subSectionName,
       subSectionUuid,
       subSectionLabel,
     ) {
-      let sectionName = this.$route.meta.sectionName;
-      let sectionLabel = this.$t(this.$route.meta.i18n);
-      let sectionPath = this.$route.meta.sectionPath;
+      const sectionName = this.$route.meta.sectionName;
+      const sectionLabel = this.$t(this.$route.meta.i18n);
+      const sectionPath = this.$route.meta.sectionPath;
       if (crumbName && subSectionName && subSectionUuid && subSectionLabel) {
         return [
           { path: '', name: 'Home', meta: { label: this.$t('message.home') } },
@@ -211,79 +275,6 @@ export default {
         ];
       }
     },
-  },
-  mounted() {
-    if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
-      this.$root.$emit('bv::show::modal', 'snapshotModal');
-    }
-
-    this.isSidebarMinimized =
-      localStorage && localStorage.getItem('isSidebarMinimized') !== null
-        ? localStorage.getItem('isSidebarMinimized') === 'true'
-        : false;
-    const sidebar = document.body;
-    if (sidebar) {
-      if (this.isSidebarMinimized) {
-        sidebar.classList.add('sidebar-minimized');
-      } else {
-        sidebar.classList.remove('sidebar-minimized');
-      }
-    }
-    this.$nextTick(() => {
-      const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
-      if (sidebarMinimizer) {
-        sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
-      }
-    });
-  },
-  computed: {
-    name() {
-      return this.$route.name;
-    },
-    list() {
-      if (this.breadcrumbs.length === 0) {
-        return this.generateBreadcrumbs();
-      } else {
-        return this.breadcrumbs;
-      }
-    },
-    permissibleNav() {
-      let decodedToken = permissions.decodeToken(permissions.getToken());
-      let array = [];
-      for (const item of this.nav) {
-        if (
-          (item.permission !== null &&
-            permissions.hasPermission(item.permission, decodedToken)) ||
-          (Object.prototype.hasOwnProperty.call(item, 'permissions') &&
-            item.permissions.some((permission) =>
-              permissions.hasPermission(permission, decodedToken),
-            ))
-        ) {
-          array.push(item);
-        }
-      }
-      return array;
-    },
-  },
-  created() {
-    EventBus.$on('crumble', () => {
-      this.breadcrumbs = [];
-    });
-    EventBus.$on(
-      'addCrumb',
-      (crumb, subSectionName, subSectionUuid, subsectionLabel) => {
-        if (crumb) {
-          this.breadcrumbs = this.generateBreadcrumbs(
-            crumb,
-            subSectionName,
-            subSectionUuid,
-            subsectionLabel,
-          );
-        } else {
-          this.breadcrumbs = [];
-        }
-      },
-    );
   },
 };
 </script>

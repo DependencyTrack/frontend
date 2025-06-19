@@ -14,13 +14,17 @@
 <script>
 import $ from 'jquery';
 import Vue from 'vue';
-import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import common from '@/shared/common';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
   props: {
     uuid: String,
@@ -38,7 +42,7 @@ export default {
           field: 'name',
           sortable: true,
           formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../../../services/' + row.uuid,
             );
             return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
@@ -88,8 +92,8 @@ export default {
             }
 
             // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
+            const ComponentClass = Vue.extend(SeverityProgressBar);
+            const progressBar = new ComponentClass({
               propsData: {
                 vulnerabilities: metrics.vulnerabilities,
                 critical: metrics.critical,
@@ -167,10 +171,10 @@ export default {
       $('[data-toggle="tooltip"]').tooltip();
     },
     removeServices: function () {
-      let selections = this.$refs.table.getSelections();
+      const selections = this.$refs.table.getSelections();
       if (selections.length === 0) return;
       for (let i = 0; i < selections.length; i++) {
-        let url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${selections[i].uuid}`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${selections[i].uuid}`;
         this.axios
           .delete(url)
           .then((response) => {

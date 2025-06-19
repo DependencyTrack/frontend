@@ -1,7 +1,7 @@
 export default {
   methods: {
     setSearchTextQuery(searchText) {
-      let queries = JSON.parse(JSON.stringify(this.$route.query));
+      const queries = JSON.parse(JSON.stringify(this.$route.query));
       if (searchText === '') {
         delete queries.searchText;
       } else {

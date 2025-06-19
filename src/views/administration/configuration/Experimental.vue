@@ -19,10 +19,16 @@
 </template>
 
 <script>
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
+  components: {
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
   mixins: [configPropertyMixin],
   props: {
     header: String,
@@ -30,22 +36,22 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    saveChanges: function () {
-      this.updateConfigProperties([]);
-    },
-  },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'experimental';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
         }
       }
     });
+  },
+  methods: {
+    saveChanges: function () {
+      this.updateConfigProperties([]);
+    },
   },
 };
 </script>

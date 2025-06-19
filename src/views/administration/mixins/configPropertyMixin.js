@@ -1,6 +1,4 @@
-import Vue from 'vue';
-import axios from 'axios';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 
 export default {
   data() {
@@ -14,13 +12,13 @@ export default {
   },
   methods: {
     updateConfigProperties: function (configProperties) {
-      let props = [];
+      const props = [];
       for (let i = 0; i < configProperties.length; i++) {
-        let prop = configProperties[i];
+        const prop = configProperties[i];
         prop.propertyValue = common.trimToNull(prop.propertyValue);
         props.push(prop);
       }
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
       this.axios
         .post(url, props)
         .then((response) => {
@@ -54,7 +52,7 @@ export default {
      */
     updateConfigProperty: function (groupName, propertyName, propertyValue) {
       propertyValue = common.trimToNull(propertyValue);
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`;
       this.axios
         .post(url, {
           groupName: groupName,

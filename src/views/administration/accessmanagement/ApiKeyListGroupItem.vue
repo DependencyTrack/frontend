@@ -20,7 +20,7 @@
         <b-button
           size="sm"
           class="action-icon ml-3"
-          v-on:click="$emit('regenerateClicked')"
+          @click="$emit('regenerateClicked')"
           v-b-tooltip.hover
           :title="$t('admin.regenerate_api_key_title')"
         >
@@ -38,7 +38,7 @@
         <b-button
           size="sm"
           class="action-icon ml-3"
-          v-on:click="$emit('removeClicked')"
+          @click="$emit('removeClicked')"
           v-b-tooltip.hover
           :title="$t('admin.remove_api_key')"
         >
@@ -66,18 +66,23 @@
 </template>
 
 <script>
-import MurmurHash2 from 'imurmurhash';
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import EditApiKeyCommentModal from './EditApiKeyCommentModal.vue';
+import { BButton, BListGroupItem, VBModal } from 'bootstrap-vue';
 
 export default {
+  components: {
+    EditApiKeyCommentModal,
+    BListGroupItem,
+    BButton,
+  },
+  directives: {
+    VBModal,
+  },
   props: {
     apiKey: Object,
     variant: String,
     href: String,
-  },
-  components: {
-    EditApiKeyCommentModal,
   },
   computed: {
     keyId: function () {

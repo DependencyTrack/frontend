@@ -8,7 +8,7 @@
         </b-card-body>
         <widget-portfolio-vulnerabilities
           ref="widgetPortfolioVulnerabilities"
-          chartId="card-chart-01"
+          chart-id="card-chart-01"
           class="chart-wrapper px-3"
           style="height: 70px"
           :height="70"
@@ -23,7 +23,7 @@
         </b-card-body>
         <widget-projects-at-risk
           ref="widgetPortfolioVulnerableProjects"
-          chartId="card-chart-02"
+          chart-id="card-chart-02"
           class="chart-wrapper px-3"
           style="height: 70px"
           :height="70"
@@ -38,7 +38,7 @@
         </b-card-body>
         <widget-vulnerable-components
           ref="widgetPortfolioVulnerableComponents"
-          chartId="card-chart-03"
+          chart-id="card-chart-03"
           class="chart-wrapper px-3"
           style="height: 70px"
           :height="70"
@@ -53,7 +53,7 @@
         </b-card-body>
         <widget-inherited-risk-score
           ref="widgetPortfolioInheritedRisk"
-          chartId="card-chart-04"
+          chart-id="card-chart-04"
           class="chart-wrapper px-3"
           style="height: 70px"
           :height="70"
@@ -68,9 +68,14 @@ import WidgetPortfolioVulnerabilities from './WidgetPortfolioVulnerabilities';
 import WidgetProjectsAtRisk from './WidgetProjectsAtRisk';
 import WidgetVulnerableComponents from './WidgetVulnerableComponents';
 import WidgetInheritedRiskScore from './WidgetInheritedRiskScore';
+import { BCard, BCardBody, BCol, BRow } from 'bootstrap-vue';
 
 export default {
   components: {
+    BRow,
+    BCol,
+    BCard,
+    BCardBody,
     WidgetPortfolioVulnerabilities,
     WidgetProjectsAtRisk,
     WidgetVulnerableComponents,
@@ -93,7 +98,7 @@ export default {
   beforeMount() {
     if (this.fetch) {
       const daysBack = 90;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${daysBack}/days`;
       this.axios.get(url).then((response) => {
         this.render(response.data);
       });
@@ -108,10 +113,12 @@ export default {
         metrics[metrics.length - 1].vulnerableComponents;
       this.inheritedRiskScore = metrics[metrics.length - 1].inheritedRiskScore;
 
-      this.$refs.widgetPortfolioVulnerabilities.render(metrics);
-      this.$refs.widgetPortfolioVulnerableProjects.render(metrics);
-      this.$refs.widgetPortfolioVulnerableComponents.render(metrics);
-      this.$refs.widgetPortfolioInheritedRisk.render(metrics);
+      this.$nextTick(() => {
+        this.$refs.widgetPortfolioVulnerabilities.render(metrics);
+        this.$refs.widgetPortfolioVulnerableProjects.render(metrics);
+        this.$refs.widgetPortfolioVulnerableComponents.render(metrics);
+        this.$refs.widgetPortfolioInheritedRisk.render(metrics);
+      });
     },
   },
 };
