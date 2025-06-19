@@ -834,6 +834,7 @@
     "service_vulnerabilities": "सेवा की कमज़ोरियाँ",
     "services": "सेवाएं",
     "severity": "तीव्रता",
+    "show_aliased_findings": "अलियास्ड निष्कर्ष दिखाएं",
     "show_complete_graph": "पूरा ग्राफ़ दिखाएं",
     "show_flat_view": "फ्लैट प्रोजेक्ट दृश्य दिखाएं",
     "show_in_dependency_graph": "निर्भरता ग्राफ में दिखाएं",

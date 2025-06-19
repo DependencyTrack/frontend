@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Service Vulnerabilities",
     "services": "Services",
     "severity": "Severity",
+    "show_aliased_findings": "Show aliased findings",
     "show_complete_graph": "Show complete graph",
     "show_flat_view": "Show flat project view",
     "show_in_dependency_graph": "Show in dependency graph",

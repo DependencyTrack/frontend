@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Vulnerabilidades de serviço",
     "services": "Serviços",
     "severity": "Gravidade",
+    "show_aliased_findings": "Mostrar descobertas alias",
     "show_complete_graph": "Mostrar gráfico completo",
     "show_flat_view": "Mostrar visualização plana do projeto",
     "show_in_dependency_graph": "Mostrar no gráfico de dependência",

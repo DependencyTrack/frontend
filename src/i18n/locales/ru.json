@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Уязвимости сервиса",
     "services": "Сервисы",
     "severity": "Степень серьёзности",
+    "show_aliased_findings": "Показывать псевдонированные выводы",
     "show_complete_graph": "Показать полный график",
     "show_flat_view": "Показать плоский вид проекта",
     "show_in_dependency_graph": "Показать в графе зависимостей",

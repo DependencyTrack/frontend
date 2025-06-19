@@ -834,6 +834,7 @@
     "service_vulnerabilities": "Уразливості служби",
     "services": "Послуги",
     "severity": "Суворість",
+    "show_aliased_findings": "Показати псевдонім висновків",
     "show_complete_graph": "Показати повний графік",
     "show_flat_view": "Показати плоский вигляд проекту",
     "show_in_dependency_graph": "Показати в графі залежностей",
