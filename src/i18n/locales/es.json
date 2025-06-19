@@ -601,6 +601,7 @@
     "login_more_options": "Mas opciones",
     "login_unauthorized": "usuario o contraseña invalido",
     "logout": "Cerrar sesión",
+    "logout_confirmation": "Has cerrado sesión exitosamente.",
     "manufacturer": "Fabricante",
     "manufacturer_name": "Nombre del Fabricante",
     "manufacturer_name_desc": "La organización que fabricó el componente que describe el proyecto.",

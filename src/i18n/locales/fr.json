@@ -601,6 +601,7 @@
     "login_more_options": "Plus d'options",
     "login_unauthorized": "Nom d'utilisateur ou mot de passe invalide",
     "logout": "Se déconnecter",
+    "logout_confirmation": "Vous vous êtes déconnecté avec succès.",
     "manufacturer": "Fabricant",
     "manufacturer_name": "Nom du Fabricant",
     "manufacturer_name_desc": "L'organisation qui a fabriqué le composant décrit par le projet",

@@ -121,6 +121,7 @@ export default {
   },
   data() {
     return {
+      isFromLogout: false,
       isWelcomeMessage: true,
       welcomeMessage: '',
       loginError: '',
@@ -146,6 +147,7 @@ export default {
     };
   },
   beforeMount() {
+    this.isFromLogout = this.$route.query.fromLogout === 'true';
     let enabled_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.enabled`;
     axios
       .get(enabled_url)
@@ -252,6 +254,9 @@ export default {
     },
   },
   mounted() {
+    if (this.isFromLogout) {
+      this.$toastr.s(this.$t('message.logout_confirmation'));
+    }
     this.checkOidcAvailability()
       .then((oidcAvailable) => {
         this.oidcAvailable = oidcAvailable;

@@ -601,6 +601,7 @@
     "login_more_options": "अधिक विकल्प",
     "login_unauthorized": "अमान्य उपयोगकर्ता नाम या पासवर्ड",
     "logout": "लॉग आउट",
+    "logout_confirmation": "आपने सफलतापूर्वक लॉग आउट कर लिया है।",
     "manufacturer": "उत्पादक",
     "manufacturer_name": "निर्माता नाम",
     "manufacturer_name_desc": "वह संगठन जिसने परियोजना में वर्णित घटक का निर्माण किया",
