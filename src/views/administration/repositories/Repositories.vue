@@ -34,6 +34,7 @@ import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import common from '../../../shared/common';
 import EventBus from '../../../shared/eventbus';
 import RepositoryCreateRepositoryModal from './RepositoryCreateRepositoryModal';
+import { parseRepositoryConfig } from '@/shared/utils';
 
 export default {
   props: {
@@ -89,6 +90,14 @@ export default {
           },
         },
         {
+          title: this.$t('admin.description'),
+          field: 'description',
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
           title: this.$t('admin.internal'),
           field: 'internal',
           class: 'tight',
@@ -113,6 +122,30 @@ export default {
           sortable: true,
           formatter(value, row, index) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
+        {
+          title: this.$t('admin.repository_advisory_mirroring_enabled'),
+          field: 'advisoryMirroringEnabled',
+          class: 'tight',
+          sortable: true,
+          visible: this.type === 'COMPOSER',
+          formatter(value, row, index) {
+            return parseRepositoryConfig(row).advisoryMirroringEnabled === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
+          },
+        },
+        {
+          title: this.$t('admin.repository_advisory_alias_sync_enabled'),
+          field: 'advisoryAliasSyncEnabled',
+          class: 'tight',
+          sortable: true,
+          visible: this.type === 'COMPOSER',
+          formatter(value, row, index) {
+            return parseRepositoryConfig(row).advisoryAliasSyncEnabled === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
           },
         },
       ],
@@ -145,16 +178,32 @@ export default {
                       type="url" v-model="url"
                       autofocus="true"
                       v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+                    <b-validated-input-group-form-input
+                      id="description" :label="$t('admin.description')"
+                      input-group-size="mb-3"
+                      type="text" v-model="description"
+                      autofocus="true"
+                      v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
+
                   </b-col>
                   <b-col sm="6">
 
                     <div>
-                      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                      <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
                     </div>
                     <div>
-                     <c-switch color="primary" v-model="authenticationRequired" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+                      <c-switch color="primary" v-model="internal" label v-bind="labelIcon" />{{$t('admin.internal')}}
+                    </div>
+                    <div v-if="this.type === 'COMPOSER'">
+                      <c-switch color="primary" v-model="advisoryMirroringEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_mirroring_toggle')}}
+                    </div>
+                    <div v-show="advisoryMirroringEnabled" v-if="this.type === 'COMPOSER'">
+                      <c-switch color="primary" v-model="advisoryAliasSyncEnabled" label v-bind="labelIcon" />{{$t('admin.repository_advisory_alias_sync_toggle')}}
                     </div>
 
+                    <div>
+                      <c-switch color="primary" v-model="authenticationRequired" label v-bind="labelIcon" />{{$t('admin.repository_authentication')}}
+                    </div>
                     <div>
                       <b-validated-input-group-form-input
                         id="username" :label="$t('admin.username')"
@@ -176,10 +225,6 @@ export default {
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
 
-                    <div>
-                      <c-switch color="primary" v-model="enabled" label v-bind="labelIcon" />{{$t('admin.enabled')}}
-                    </div>
-
                     <div style="text-align:right">
                        <b-button variant="outline-danger" @click="deleteRepository">{{ $t('admin.delete_repository') }}</b-button>
                     </div>
@@ -193,13 +238,19 @@ export default {
             data() {
               return {
                 repository: row,
+                type: row.type,
                 identifier: row.identifier,
+                description: row.description,
                 url: row.url,
                 internal: row.internal,
                 authenticationRequired: row.authenticationRequired,
                 username: row.username,
                 password: row.password || 'HiddenDecryptedPropertyPlaceholder',
                 enabled: row.enabled,
+                advisoryMirroringEnabled:
+                  parseRepositoryConfig(row).advisoryMirroringEnabled,
+                advisoryAliasSyncEnabled:
+                  parseRepositoryConfig(row).advisoryAliasSyncEnabled,
                 uuid: row.uuid,
                 labelIcon: {
                   dataOn: '\u2713',
@@ -215,6 +266,12 @@ export default {
                 this.updateRepository();
               },
               authenticationRequired() {
+                this.updateRepository();
+              },
+              advisoryMirroringEnabled() {
+                this.updateRepository();
+              },
+              advisoryAliasSyncEnabled() {
                 this.updateRepository();
               },
             },
@@ -236,9 +293,14 @@ export default {
                 this.axios
                   .post(url, {
                     identifier: this.identifier,
+                    description: this.description,
                     url: this.url,
                     internal: this.internal,
                     authenticationRequired: this.authenticationRequired,
+                    config: JSON.stringify({
+                      advisoryMirroringEnabled: this.advisoryMirroringEnabled,
+                      advisoryAliasSyncEnabled: this.advisoryAliasSyncEnabled,
+                    }),
                     username: this.username,
                     password:
                       this.password || 'HiddenDecryptedPropertyPlaceholder',
