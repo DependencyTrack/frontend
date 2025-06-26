@@ -88,7 +88,7 @@ export default {
           propertyName: 'names.regex',
           propertyValue: this.nameRegex,
         },
-       {
+        {
           groupName: 'internal-components',
           propertyName: 'match-mode',
           propertyValue: this.matchMode,
