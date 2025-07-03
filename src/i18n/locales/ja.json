@@ -834,6 +834,7 @@
     "service_vulnerabilities": "サービスの脆弱性",
     "services": "サービス",
     "severity": "重大度",
+    "show_aliased_findings": "エイリアスの調査結果を表示します",
     "show_complete_graph": "完全なグラフを表示",
     "show_flat_view": "フラットプロジェクトビューを表示",
     "show_in_dependency_graph": "依存関係グラフに表示",

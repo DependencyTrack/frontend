@@ -834,6 +834,7 @@
     "service_vulnerabilities": "服务漏洞",
     "services": "服务",
     "severity": "严重程度",
+    "show_aliased_findings": "显示混叠的发现",
     "show_complete_graph": "显示完整图表",
     "show_flat_view": "展示单位项目视图",
     "show_in_dependency_graph": "在依赖图中显示",

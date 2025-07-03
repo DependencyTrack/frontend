@@ -86,6 +86,17 @@
       /><span class="text-muted">{{
         $t('message.show_suppressed_findings')
       }}</span>
+
+      <c-switch
+        style="margin-left: 1rem; margin-right: 0.5rem"
+        id="showAliasedFindings"
+        color="primary"
+        v-model="showAliasedFindings"
+        label
+        v-bind="labelIcon"
+      /><span class="text-muted">{{
+        $t('message.show_aliased_findings')
+      }}</span>
     </div>
 
     <bootstrap-table
@@ -134,6 +145,12 @@ export default {
           'true'
         : false;
 
+    this.showAliasedFindings =
+      localStorage &&
+      localStorage.getItem('ProjectFindingsShowAliasedFindings') !== null
+        ? localStorage.getItem('ProjectFindingsShowAliasedFindings') === 'true'
+        : true;
+
     if (this.$route.params.vulnerability) {
       if (this.$route.params.affectedComponent) {
         // search for the last portion of the finding's matrix ID
@@ -149,6 +166,7 @@ export default {
   data() {
     return {
       showSuppressedFindings: this.showSuppressedFindings,
+      showAliasedFindings: this.showAliasedFindings,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -400,8 +418,14 @@ export default {
           );
         },
         onExpandRow: this.vueFormatterInit,
-        responseHandler: function (res, xhr) {
+        responseHandler: (res, xhr) => {
+          // Apply alias filtering if showAliasedFindings is false
+          if (!this.showAliasedFindings) {
+            res = this.filterAliasedFindings(res);
+          }
+
           res.total = xhr.getResponseHeader('X-Total-Count');
+
           return res;
         },
         url: this.apiUrl(),
@@ -505,6 +529,56 @@ export default {
         this.refreshTable();
       });
     },
+    filterAliasedFindings: function (findings) {
+      if (!Array.isArray(findings) || findings.length === 0) {
+        return findings;
+      }
+
+      const seen = new Set();
+      const filtered = [];
+
+      for (const finding of findings) {
+        const component = finding.component;
+        const vulnId = finding.vulnerability.vulnId;
+        const primaryFindingKey = this.componentVulnCompoundKey(
+          component,
+          vulnId,
+        );
+
+        // Check if the primary finding has already been seen
+        if (seen.has(primaryFindingKey)) {
+          continue;
+        }
+
+        const aliases = common.resolveVulnAliases(
+          finding.vulnerability.source,
+          finding.vulnerability.aliases,
+        );
+
+        // Check if any of the aliased findings have been seen
+        const aliasedFindingKeys = aliases.map((alias) =>
+          this.componentVulnCompoundKey(component, alias.vulnId),
+        );
+        const hasSeenAlias = aliasedFindingKeys.some((aliasKey) =>
+          seen.has(aliasKey),
+        );
+
+        if (hasSeenAlias) {
+          continue;
+        }
+
+        // Add the primary finding and its aliases to the seen set
+        seen.add(primaryFindingKey);
+        aliasedFindingKeys.forEach((aliasKey) => seen.add(aliasKey));
+
+        filtered.push(finding);
+      }
+
+      return filtered;
+    },
+    componentVulnCompoundKey: function (component, vulnId) {
+      return `${component.name}:${component.version}:${vulnId}`;
+    },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
@@ -540,6 +614,15 @@ export default {
         localStorage.setItem(
           'ProjectFindingsShowSuppressedFindings',
           this.showSuppressedFindings.toString(),
+        );
+      }
+      this.refreshTable();
+    },
+    showAliasedFindings() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectFindingsShowAliasedFindings',
+          this.showAliasedFindings.toString(),
         );
       }
       this.refreshTable();
