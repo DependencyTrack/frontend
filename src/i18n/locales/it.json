@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Gruppi LDAP mappati",
     "mapped_oidc_groups": "Gruppi OpenID Connect mappati",
     "mapped_teams": "Squadre mappate",
+    "match_mode": {
+      "and": "Abbinare sia lo spazio dei nomi che il nome",
+      "label": "Modalità di corrispondenza componente",
+      "or": "Abbina lo spazio dei nomi o il nome"
+    },
     "maven": "Esperto di",
     "members": "Membri",
     "mime_type": "Tipo mimo",

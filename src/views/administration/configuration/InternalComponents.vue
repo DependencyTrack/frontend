@@ -5,14 +5,6 @@
         {{ $t('admin.internal_component_desc') }}
       </p>
       <b-validated-input-group-form-input
-        id="internalComponentsConfigGroupsRegex"
-        :label="$t('admin.namespace_regex')"
-        input-group-size="mb-3"
-        type="text"
-        v-model="namespaceRegex"
-        :tooltip="$t('admin.namespace_regex_desc')"
-      />
-      <b-validated-input-group-form-input
         id="internalComponentsConfigNamesRegex"
         :label="$t('admin.name_regex')"
         input-group-size="mb-3"
@@ -20,6 +12,25 @@
         v-model="nameRegex"
         :tooltip="$t('admin.name_regex_desc')"
       />
+      <b-validated-input-group-form-input
+        id="internalComponentsConfigGroupsRegex"
+        :label="$t('admin.namespace_regex')"
+        input-group-size="mb-3"
+        type="text"
+        v-model="namespaceRegex"
+        :tooltip="$t('admin.namespace_regex_desc')"
+      />
+      <b-form-group
+        :label="$t('admin.match_mode.label')"
+        label-for="internalComponentsConfigMatchMode"
+        class="mb-3"
+      >
+        <b-form-select
+          id="internalComponentsConfigMatchMode"
+          v-model="matchMode"
+          :options="matchModeOptions"
+        />
+      </b-form-group>
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -53,7 +64,16 @@ export default {
     return {
       namespaceRegex: '',
       nameRegex: '',
+      matchMode: 'OR',
     };
+  },
+  computed: {
+    matchModeOptions() {
+      return [
+        { value: 'OR', text: this.$t('admin.match_mode.or') },
+        { value: 'AND', text: this.$t('admin.match_mode.and') },
+      ];
+    },
   },
   methods: {
     saveChanges: function () {
@@ -67,6 +87,11 @@ export default {
           groupName: 'internal-components',
           propertyName: 'names.regex',
           propertyValue: this.nameRegex,
+        },
+        {
+          groupName: 'internal-components',
+          propertyName: 'match-mode',
+          propertyValue: this.matchMode,
         },
       ]);
     },
@@ -92,6 +117,9 @@ export default {
         switch (item.propertyName) {
           case 'groups.regex':
             this.namespaceRegex = item.propertyValue;
+            break;
+          case 'match-mode':
+            this.matchMode = item.propertyValue || 'OR';
             break;
           case 'names.regex':
             this.nameRegex = item.propertyValue;

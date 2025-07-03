@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Зіставлені групи LDAP",
     "mapped_oidc_groups": "Зіставлені групи OpenID Connect",
     "mapped_teams": "Зіставлені команди",
+    "match_mode": {
+      "and": "Відповідати як простору імен, так і імені",
+      "label": "Режим відповідності компонентів",
+      "or": "Простір імен відповідності"
+    },
     "maven": "Maven",
     "members": "Учасники",
     "mime_type": "Тип MIME",

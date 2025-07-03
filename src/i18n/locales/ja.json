@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "マッピングされたLDAPグループ",
     "mapped_oidc_groups": "マッピングされた OpenID Connect グループ",
     "mapped_teams": "マッピングされたチーム",
+    "match_mode": {
+      "and": "名前空間と名前の両方を一致させます",
+      "label": "コンポーネントマッチングモード",
+      "or": "名前空間または名前を一致させます"
+    },
     "maven": "Maven",
     "members": "メンバー",
     "mime_type": "MIMEタイプ",
