@@ -601,6 +601,7 @@
     "login_more_options": "Mehr Optionen",
     "login_unauthorized": "ungültiger Benutzername oder Passwort",
     "logout": "Ausloggen",
+    "logout_confirmation": "Sie haben sich erfolgreich abgemeldet.",
     "manufacturer": "Hersteller",
     "manufacturer_name": "Herstellername",
     "manufacturer_name_desc": "Die Organisation, die die im Projekt beschriebene Komponente hergestellt hat",

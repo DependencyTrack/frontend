@@ -601,6 +601,7 @@
     "login_more_options": "More options",
     "login_unauthorized": "Invalid username or password",
     "logout": "Logout",
+    "logout_confirmation": "You have logged out successfully.",
     "manufacturer": "Manufacturer",
     "manufacturer_name": "Manufacturer name",
     "manufacturer_name_desc": "The organization that manufactured the component that the project describes",

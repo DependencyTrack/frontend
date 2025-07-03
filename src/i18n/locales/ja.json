@@ -601,6 +601,7 @@
     "login_more_options": "より多くのオプション",
     "login_unauthorized": "ユーザー名かパスワードが無効",
     "logout": "ログアウト",
+    "logout_confirmation": "ログアウトに成功しました。",
     "manufacturer": "メーカー",
     "manufacturer_name": "メーカー名",
     "manufacturer_name_desc": "プロジェクトで説明されているコンポーネントを製造した組織",

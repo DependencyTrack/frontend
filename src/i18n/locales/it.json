@@ -601,6 +601,7 @@
     "login_more_options": "Più opzioni",
     "login_unauthorized": "Nome utente o password errati",
     "logout": "Disconnettersi",
+    "logout_confirmation": "Hai effettuato correttamente il logout.",
     "manufacturer": "Produttore",
     "manufacturer_name": "Nome del produttore",
     "manufacturer_name_desc": "L'organizzazione che ha prodotto il componente descritto dal progetto",
