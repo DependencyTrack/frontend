@@ -17,61 +17,37 @@
       :options="options"
       @on-load-success="tableLoaded"
     />
-    <create-policy-modal v-on:refreshTable="refreshTable" />
+    <create-policy-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreatePolicyModal from './CreatePolicyModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import routerMixin from '../../mixins/routerMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
 import PolicyCondition from './PolicyCondition';
 import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
 import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
 import SelectTagModal from '@/views/portfolio/tags/SelectTagModal';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import { BButton } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   components: {
-    BInputGroupFormSwitch,
     CreatePolicyModal,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('policyManagement:policies:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('policyManagement:policies:rowUpdate');
-    EventBus.$off('policyManagement:policies:rowDeleted');
-  },
-  methods: {
-    tableLoaded: function (data) {
-      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
-        this.$emit('total', data.total);
-      } else {
-        this.$emit('total', '?');
-      }
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        silent: true,
-      });
-    },
-  },
+  mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   data() {
     return {
       columns: [
@@ -243,7 +219,7 @@ export default {
                 //this.conditions.splice(conditionIndex, 1);
               },
               refreshPolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios.get(url).then((response) => {
                   this.policy = response.data;
                   EventBus.$emit(
@@ -254,8 +230,8 @@ export default {
                 });
               },
               updatePolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
-                let refreshTableRow =
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+                const refreshTableRow =
                   this.policy.uuid === null || this.name !== this.policy.name;
                 this.axios
                   .post(url, {
@@ -283,7 +259,7 @@ export default {
                   });
               },
               deletePolicy: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -307,11 +283,11 @@ export default {
                 this.onlyLatestProjectVersion = policy.onlyLatestProjectVersion;
               },
               deleteProjectLimiter: function (projectUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let p = [];
+                    const p = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
                         p.push(this.projects[i]);
@@ -325,11 +301,11 @@ export default {
                   });
               },
               deleteTagLimiter: function (tagName) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(tagName)}/policy`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(tagName)}/policy`;
                 this.axios
                   .delete(url, { data: [this.policy.uuid] })
                   .then(() => {
-                    let p = [];
+                    const p = [];
                     for (let i = 0; i < this.tags.length; i++) {
                       if (this.tags[i].name !== tagName) {
                         p.push(this.tags[i]);
@@ -342,8 +318,8 @@ export default {
               updateProjectSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectProjectModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -364,10 +340,10 @@ export default {
               updateTagSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTagModal');
 
-                let promises = [];
+                const promises = [];
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(selection.name)}/policy`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(selection.name)}/policy`;
                   promises.push(
                     this.axios
                       .post(url, [this.policy.uuid])
@@ -419,6 +395,33 @@ export default {
         },
       },
     };
+  },
+  mounted() {
+    EventBus.$on('policyManagement:policies:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('policyManagement:policies:rowUpdate');
+    EventBus.$off('policyManagement:policies:rowDeleted');
+  },
+  methods: {
+    tableLoaded: function (data) {
+      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
+        this.$emit('total', data.total);
+      } else {
+        this.$emit('total', '?');
+      }
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        silent: true,
+      });
+    },
   },
 };
 </script>

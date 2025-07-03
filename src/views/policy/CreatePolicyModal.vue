@@ -15,7 +15,7 @@
       v-model="name"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -27,15 +27,17 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  name: 'createPolicyModal',
-  mixins: [permissionsMixin],
   components: {
     BValidatedInputGroupFormInput,
+    BModal,
+    BButton,
   },
+  mixins: [permissionsMixin],
   data() {
     return {
       name: null,
@@ -43,7 +45,7 @@ export default {
   },
   methods: {
     createPolicy: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
       this.axios
         .put(url, {
           name: this.name,

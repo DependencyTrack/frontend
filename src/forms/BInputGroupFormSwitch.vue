@@ -26,12 +26,15 @@
 </template>
 
 <script>
-import common from '../shared/common';
+import common from '@/shared/common';
 import { Switch as cSwitch } from '@coreui/vue';
+import { BFormGroup, BInputGroup } from 'bootstrap-vue';
 
 export default {
   components: {
     cSwitch,
+    BFormGroup,
+    BInputGroup,
   },
   props: {
     id: String,
@@ -83,9 +86,11 @@ export default {
   margin-right: 0;
   margin-top: 0.25rem;
 }
+
 .form-group {
   flex-direction: row-reverse;
 }
+
 .form-group >>> label.col-form-label {
   padding-left: 0 !important;
 }

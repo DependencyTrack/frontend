@@ -18,42 +18,35 @@
         :options="options"
       ></bootstrap-table>
     </b-card-body>
-    <create-oidc-group-modal v-on:refreshTable="refreshTable" />
+    <create-oidc-group-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateOidcGroupModal from './CreateOidcGroupModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import SelectTeamModal from './SelectTeamModal';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateOidcGroupModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:oidcgroups:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:oidcgroups:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:oidcgroups:rowUpdate');
-    EventBus.$off('admin:oidcgroups:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -124,7 +117,7 @@ export default {
             },
             methods: {
               updateOidcGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.oidcGroup.uuid,
@@ -144,7 +137,7 @@ export default {
                   });
               },
               deleteOidcGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -156,7 +149,7 @@ export default {
                   });
               },
               getMappedTeams: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team`;
                 this.axios
                   .get(url)
                   .then((response) => {
@@ -169,8 +162,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
                   this.axios
                     .put(url, {
                       group: this.oidcGroup.uuid,
@@ -187,11 +180,11 @@ export default {
                 }
               },
               removeOidcGroupMapping: function (team) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let remainingTeams = [];
+                    const remainingTeams = [];
                     for (let i = 0; i < this.mappedTeams.length; i++) {
                       if (this.mappedTeams[i].uuid !== team.uuid) {
                         remainingTeams.push(this.mappedTeams[i]);
@@ -219,6 +212,19 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:oidcgroups:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:oidcgroups:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:oidcgroups:rowUpdate');
+    EventBus.$off('admin:oidcgroups:rowDeleted');
   },
   methods: {
     refreshTable: function () {

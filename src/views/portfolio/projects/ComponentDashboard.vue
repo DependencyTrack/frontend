@@ -12,7 +12,7 @@
               v-permission="'PORTFOLIO_MANAGEMENT'"
               class="font-weight-bold"
               style="margin-left: 6px"
-              v-on:click="refreshMetrics"
+              @click="refreshMetrics"
               ><i class="fa fa-refresh"></i
             ></b-link>
           </div>
@@ -21,7 +21,7 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartComponentVulnerabilities"
-        chartId="chartComponentVulnerabilities"
+        chart-id="chartComponentVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
         :height="200"
@@ -105,7 +105,7 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
+            chart-id="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -127,7 +127,7 @@
           </b-row>
           <chart-policy-violation-breakdown
             ref="chartPolicyViolationBreakdown"
-            chartId="chartPolicyViolationBreakdown"
+            chart-id="chartPolicyViolationBreakdown"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
             :height="200"
@@ -139,21 +139,23 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
+import common from '@/shared/common';
 import { Callout } from '@coreui/vue';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
+import ChartPortfolioVulnerabilities from '@/views/dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import { BCard, BCol, BLink, BRow } from 'bootstrap-vue';
 
 export default {
-  name: 'ComponentDashboard',
   components: {
-    ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
     Callout,
+    BCard,
+    BRow,
+    BCol,
+    BLink,
   },
   data() {
     return {
@@ -173,12 +175,23 @@ export default {
       lastMeasurement: '',
     };
   },
+  mounted() {
+    const daysBack = 90;
+    const uuid = this.$route.params.uuid;
+    const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${daysBack}`;
+    this.axios.get(url).then((response) => {
+      this.$refs.chartComponentVulnerabilities.render(response.data);
+      this.$refs.chartPolicyViolationsState.render(response.data);
+      this.$refs.chartPolicyViolationBreakdown.render(response.data);
+      this.extractStats(response.data);
+    });
+  },
   methods: {
     extractStats(metrics) {
       if (!metrics || metrics.length === 0) {
         return;
       }
-      let metric = metrics[metrics.length - 1]; //Use the most recent metric
+      const metric = metrics[metrics.length - 1]; //Use the most recent metric
       this.currentCritical = common.valueWithDefault(metric.critical, 0);
       this.currentHigh = common.valueWithDefault(metric.high, 0);
       this.currentMedium = common.valueWithDefault(metric.medium, 0);
@@ -210,23 +223,12 @@ export default {
       );
     },
     refreshMetrics() {
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/refresh`;
+      const uuid = this.$route.params.uuid;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/refresh`;
       this.axios.get(url).then((response) => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-  },
-  mounted() {
-    const daysBack = 90;
-    let uuid = this.$route.params.uuid;
-    let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${daysBack}`;
-    this.axios.get(url).then((response) => {
-      this.$refs.chartComponentVulnerabilities.render(response.data);
-      this.$refs.chartPolicyViolationsState.render(response.data);
-      this.$refs.chartPolicyViolationBreakdown.render(response.data);
-      this.extractStats(response.data);
-    });
   },
 };
 </script>

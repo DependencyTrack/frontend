@@ -110,7 +110,7 @@
       {{ $t('message.include_policy_violations') }}</b-form-checkbox
     >
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
@@ -127,10 +127,27 @@
 
 <script>
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import {
+  BButton,
+  BCol,
+  BFormCheckbox,
+  BFormGroup,
+  BFormInput,
+  BModal,
+  BRow,
+} from 'bootstrap-vue';
 
 export default {
-  name: 'ProjectAddVersionModal',
-  components: { BInputGroupFormSwitch },
+  components: {
+    BInputGroupFormSwitch,
+    BModal,
+    BRow,
+    BCol,
+    BFormGroup,
+    BFormInput,
+    BFormCheckbox,
+    BButton,
+  },
   props: {
     uuid: String,
   },
@@ -163,7 +180,7 @@ export default {
   },
   methods: {
     createVersion: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/clone`;
       this.axios
         .put(url, {
           project: this.uuid,
@@ -201,7 +218,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
+@import '@/assets/scss/vendors/vue-tags-input/vue-tags-input';
 .custom-control {
   padding-bottom: 0.3rem;
 }

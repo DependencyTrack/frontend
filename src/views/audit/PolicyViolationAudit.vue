@@ -10,8 +10,8 @@
             style="float: right"
             @click="clearAllFilters()"
           >
-            {{ this.$t('message.clear_all') }}</b-button
-          >
+            {{ this.$t('message.clear_all') }}
+          </b-button>
           <br /><br />
           <b-form-group
             id="showInactive-form-group"
@@ -79,18 +79,18 @@
             id="occurred-on-date-form-group"
             :label="this.$t('message.occurred_on')"
           >
-            <b-datepicker
+            <b-form-datepicker
               id="occurred-on-datepicker-from"
               v-model="occurredOnDateFrom"
               :max="occurredOnDateTo"
               :placeholder="this.$t('message.from')"
-            ></b-datepicker>
-            <b-datepicker
+            ></b-form-datepicker>
+            <b-form-datepicker
               id="occurred-on-datepicker-to"
               v-model="occurredOnDateTo"
               :min="occurredOnDateFrom"
               :placeholder="this.$t('message.to')"
-            ></b-datepicker>
+            ></b-form-datepicker>
           </b-form-group>
           <b-form-group
             id="text-search-form-group"
@@ -141,15 +141,257 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import { hasPermission } from '@/shared/permissions';
 import * as permissions from '@/shared/permissions';
+import { hasPermission } from '@/shared/permissions';
+import {
+  BButton,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormDatepicker,
+  BFormGroup,
+  BFormInput,
+  BRow,
+} from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
+  components: {
+    BRow,
+    BCol,
+    BButton,
+    BFormGroup,
+    BFormCheckbox,
+    BFormCheckboxGroup,
+    BFormDatepicker,
+    BFormInput,
+    BootstrapTable,
+  },
   mixins: [permissionsMixin],
+  data() {
+    return {
+      simpleWatcher: null,
+      textSearchSelectedWatcher: null,
+      textSearchInputWatcher: null,
+      showInactive: false,
+      showSuppressed: false,
+      violationStateSelected: [],
+      violationStateOptions: [
+        { text: 'Fail', value: 'FAIL' },
+        { text: 'Warn', value: 'WARN' },
+        { text: 'Info', value: 'INFO' },
+      ],
+      riskTypeSelected: [],
+      riskTypeOptions: [
+        { text: 'License', value: 'LICENSE' },
+        { text: 'Security', value: 'SECURITY' },
+        { text: 'Operational', value: 'OPERATIONAL' },
+      ],
+      policySelected: [],
+      policyOptions: [],
+      analysisStateSelected: [],
+      analysisStateOptions: [
+        { text: 'Not Set', value: 'NOT_SET' },
+        { text: 'Rejected', value: 'REJECTED' },
+        { text: 'Approved', value: 'APPROVED' },
+      ],
+      occurredOnDateFrom: '',
+      occurredOnDateTo: '',
+      textSearchInput: '',
+      textSearchOptions: [
+        { text: 'Policy Name', value: 'policy_name' },
+        { text: 'Component', value: 'component' },
+        { text: 'License', value: 'license' },
+        { text: 'Project Name', value: 'project_name' },
+      ],
+      textSearchSelected: [],
+      columns: [
+        {
+          title: this.$t('message.state'),
+          field: 'policyCondition.policy.violationState',
+          sortable: true,
+          class: 'tight',
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return common.formatViolationStateLabel(value);
+            }
+          },
+        },
+        {
+          title: this.$t('message.risk_type'),
+          field: 'type',
+          sortable: true,
+          class: 'tight',
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(
+              common.capitalize(common.valueWithDefault(value, '')),
+            );
+          },
+        },
+        {
+          title: this.$t('message.policy_name'),
+          field: 'policyCondition.policy.name',
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
+          title: this.$t('message.component'),
+          field: 'component.name',
+          sortable: true,
+          formatter: (value, row, index) => {
+            if (row.component) {
+              const url = xssFilters.uriInUnQuotedAttr(
+                '../../../components/' + row.component.uuid,
+              );
+              const name = common.concatenateComponentName(
+                null,
+                row.component.name,
+                row.component.version,
+              );
+              const dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
+                '../../../projects/' +
+                  row.project.uuid +
+                  '/dependencyGraph/' +
+                  row.component.uuid,
+              );
+              return (
+                `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+                `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`
+              );
+            } else {
+              return '';
+            }
+          },
+        },
+        {
+          title: this.$t('message.project_name'),
+          field: 'project.name',
+          sortable: true,
+          formatter(value, row, index) {
+            const url = xssFilters.uriInUnQuotedAttr(
+              '../projects/' + row.project.uuid,
+            );
+            const name = common.concatenateComponentName(
+              null,
+              row.project.name,
+              row.project.version,
+            );
+            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+          },
+        },
+        {
+          title: this.$t('message.occurred_on'),
+          field: 'timestamp',
+          sortable: true,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.formatTimestamp(value));
+          },
+        },
+        {
+          title: this.$t('message.analysis'),
+          field: 'analysis.analysisState',
+          sortable: false,
+          formatter: common.makeAnalysisStateLabelFormatter(this),
+        },
+        {
+          title: this.$t('message.suppressed'),
+          field: 'analysis.isSuppressed',
+          sortable: false,
+          class: 'tight',
+          formatter(value, row, index) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
+        {
+          title: this.$t('message.license'),
+          field: 'component.license',
+          sortable: true,
+          formatter(value, row, index) {
+            if (
+              Object.prototype.hasOwnProperty.call(
+                row.component,
+                'resolvedLicense',
+              )
+            ) {
+              const licenseurl =
+                '../../../licenses/' + row.component.resolvedLicense.licenseId;
+              return (
+                '<a href="' +
+                licenseurl +
+                '">' +
+                xssFilters.inHTMLData(row.component.resolvedLicense.licenseId) +
+                '</a>'
+              );
+            } else {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+            }
+          },
+        },
+      ],
+      data: [],
+      options: {
+        search: false,
+        showColumns: true,
+        showRefresh: true,
+        pagination: true,
+        silentSort: false,
+        sidePagination: 'server',
+        queryParamsType: 'pageSize',
+        pageList: '[10, 25, 50, 100]',
+        pageSize:
+          localStorage &&
+          localStorage.getItem('PolicyViolationAuditPageSize') !== null
+            ? Number(localStorage.getItem('PolicyViolationAuditPageSize'))
+            : 10,
+        sortName:
+          localStorage &&
+          localStorage.getItem('PolicyViolationAuditSortName') !== null
+            ? localStorage.getItem('PolicyViolationAuditSortName')
+            : 'timestamp',
+        sortOrder:
+          localStorage &&
+          localStorage.getItem('PolicyViolationAuditSortOrder') !== null
+            ? localStorage.getItem('PolicyViolationAuditSortOrder')
+            : 'desc',
+        icons: {
+          refresh: 'fa-refresh',
+        },
+        responseHandler: function (res, xhr) {
+          res.total = xhr.getResponseHeader('X-Total-Count');
+          return res;
+        },
+        url: this.apiUrl(),
+        onPageChange: (number, size) => {
+          if (localStorage) {
+            localStorage.setItem(
+              'PolicyViolationAuditPageSize',
+              size.toString(),
+            );
+          }
+        },
+        onColumnSwitch: (field, checked) => {
+          if (localStorage) {
+            localStorage.setItem(
+              'PolicyViolationAuditShow' + common.capitalize(field),
+              checked.toString(),
+            );
+          }
+        },
+        onSort: (name, order) => {
+          if (localStorage) {
+            localStorage.setItem('PolicyViolationAuditSortName', name);
+            localStorage.setItem('PolicyViolationAuditSortOrder', order);
+          }
+        },
+      },
+    };
+  },
   computed: {
     watchers() {
       return [
@@ -173,7 +415,7 @@ export default {
   },
   methods: {
     initializePolicies: function () {
-      let policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
+      const policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
       if (
         hasPermission(permissions.POLICY_MANAGEMENT, this.decodedToken) ||
         hasPermission(permissions.ACCESS_MANAGEMENT, this.decodedToken)
@@ -280,226 +522,6 @@ export default {
         this.$refs.table.columns,
       );
     },
-  },
-  data() {
-    return {
-      simpleWatcher: null,
-      textSearchSelectedWatcher: null,
-      textSearchInputWatcher: null,
-      showInactive: false,
-      showSuppressed: false,
-      violationStateSelected: [],
-      violationStateOptions: [
-        { text: 'Fail', value: 'FAIL' },
-        { text: 'Warn', value: 'WARN' },
-        { text: 'Info', value: 'INFO' },
-      ],
-      riskTypeSelected: [],
-      riskTypeOptions: [
-        { text: 'License', value: 'LICENSE' },
-        { text: 'Security', value: 'SECURITY' },
-        { text: 'Operational', value: 'OPERATIONAL' },
-      ],
-      policySelected: [],
-      policyOptions: [],
-      analysisStateSelected: [],
-      analysisStateOptions: [
-        { text: 'Not Set', value: 'NOT_SET' },
-        { text: 'Rejected', value: 'REJECTED' },
-        { text: 'Approved', value: 'APPROVED' },
-      ],
-      occurredOnDateFrom: '',
-      occurredOnDateTo: '',
-      textSearchInput: '',
-      textSearchOptions: [
-        { text: 'Policy Name', value: 'policy_name' },
-        { text: 'Component', value: 'component' },
-        { text: 'License', value: 'license' },
-        { text: 'Project Name', value: 'project_name' },
-      ],
-      textSearchSelected: [],
-      columns: [
-        {
-          title: this.$t('message.state'),
-          field: 'policyCondition.policy.violationState',
-          sortable: true,
-          class: 'tight',
-          formatter(value, row, index) {
-            if (typeof value !== 'undefined') {
-              return common.formatViolationStateLabel(value);
-            }
-          },
-        },
-        {
-          title: this.$t('message.risk_type'),
-          field: 'type',
-          sortable: true,
-          class: 'tight',
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(
-              common.capitalize(common.valueWithDefault(value, '')),
-            );
-          },
-        },
-        {
-          title: this.$t('message.policy_name'),
-          field: 'policyCondition.policy.name',
-          sortable: true,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
-          },
-        },
-        {
-          title: this.$t('message.component'),
-          field: 'component.name',
-          sortable: true,
-          formatter: (value, row, index) => {
-            if (row.component) {
-              let url = xssFilters.uriInUnQuotedAttr(
-                '../../../components/' + row.component.uuid,
-              );
-              let name = common.concatenateComponentName(
-                null,
-                row.component.name,
-                row.component.version,
-              );
-              let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
-                '../../../projects/' +
-                  row.project.uuid +
-                  '/dependencyGraph/' +
-                  row.component.uuid,
-              );
-              return (
-                `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
-                `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`
-              );
-            } else {
-              return '';
-            }
-          },
-        },
-        {
-          title: this.$t('message.project_name'),
-          field: 'project.name',
-          sortable: true,
-          formatter(value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
-              '../projects/' + row.project.uuid,
-            );
-            let name = common.concatenateComponentName(
-              null,
-              row.project.name,
-              row.project.version,
-            );
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
-          },
-        },
-        {
-          title: this.$t('message.occurred_on'),
-          field: 'timestamp',
-          sortable: true,
-          formatter(value, row, index) {
-            return xssFilters.inHTMLData(common.formatTimestamp(value));
-          },
-        },
-        {
-          title: this.$t('message.analysis'),
-          field: 'analysis.analysisState',
-          sortable: false,
-          formatter: common.makeAnalysisStateLabelFormatter(this),
-        },
-        {
-          title: this.$t('message.suppressed'),
-          field: 'analysis.isSuppressed',
-          sortable: false,
-          class: 'tight',
-          formatter(value, row, index) {
-            return value === true ? '<i class="fa fa-check-square-o" />' : '';
-          },
-        },
-        {
-          title: this.$t('message.license'),
-          field: 'component.license',
-          sortable: true,
-          formatter(value, row, index) {
-            if (
-              Object.prototype.hasOwnProperty.call(
-                row.component,
-                'resolvedLicense',
-              )
-            ) {
-              let licenseurl =
-                '../../../licenses/' + row.component.resolvedLicense.licenseId;
-              return (
-                '<a href="' +
-                licenseurl +
-                '">' +
-                xssFilters.inHTMLData(row.component.resolvedLicense.licenseId) +
-                '</a>'
-              );
-            } else {
-              return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
-            }
-          },
-        },
-      ],
-      data: [],
-      options: {
-        search: false,
-        showColumns: true,
-        showRefresh: true,
-        pagination: true,
-        silentSort: false,
-        sidePagination: 'server',
-        queryParamsType: 'pageSize',
-        pageList: '[10, 25, 50, 100]',
-        pageSize:
-          localStorage &&
-          localStorage.getItem('PolicyViolationAuditPageSize') !== null
-            ? Number(localStorage.getItem('PolicyViolationAuditPageSize'))
-            : 10,
-        sortName:
-          localStorage &&
-          localStorage.getItem('PolicyViolationAuditSortName') !== null
-            ? localStorage.getItem('PolicyViolationAuditSortName')
-            : 'timestamp',
-        sortOrder:
-          localStorage &&
-          localStorage.getItem('PolicyViolationAuditSortOrder') !== null
-            ? localStorage.getItem('PolicyViolationAuditSortOrder')
-            : 'desc',
-        icons: {
-          refresh: 'fa-refresh',
-        },
-        responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
-        },
-        url: this.apiUrl(),
-        onPageChange: (number, size) => {
-          if (localStorage) {
-            localStorage.setItem(
-              'PolicyViolationAuditPageSize',
-              size.toString(),
-            );
-          }
-        },
-        onColumnSwitch: (field, checked) => {
-          if (localStorage) {
-            localStorage.setItem(
-              'PolicyViolationAuditShow' + common.capitalize(field),
-              checked.toString(),
-            );
-          }
-        },
-        onSort: (name, order) => {
-          if (localStorage) {
-            localStorage.setItem('PolicyViolationAuditSortName', name);
-            localStorage.setItem('PolicyViolationAuditSortOrder', order);
-          }
-        },
-      },
-    };
   },
 };
 </script>

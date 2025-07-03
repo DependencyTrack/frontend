@@ -35,12 +35,26 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Run Npm Build
+      - name: Install Dependencies
         env:
           CI: true
         run: |-
           npm ci
+
+      - name: Run Npm Build
+        env:
+          CI: true
+        run: |-
           npm run build --if-present
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        env:
+          CI: true
+        timeout-minutes: 15
+        with:
+          component: true
+          command: npm run cy:run:coverage --if-present
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4.6.2

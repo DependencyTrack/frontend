@@ -8,10 +8,18 @@
   >
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          width="200"
+          alt="DependencyTrack Logo"
+        />
       </b-col>
       <b-col align="right">
-        <img src="@/assets/img/brand/owasp-logo-white.svg" width="120" />
+        <img
+          src="@/assets/img/brand/owasp-logo-white.svg"
+          width="120"
+          alt="OWASP Logo"
+        />
       </b-col>
     </b-row>
     <hr />
@@ -110,23 +118,29 @@
         </ul>
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <div class="mx-auto">
         Copyright &copy; OWASP Foundation. All Rights Reserved.
       </div>
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
+      <b-button size="md" variant="outline-primary" @click="cancel()"
+        >{{ $t('message.close') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import common from '../../shared/common';
-import globalVarsMixin from '../../mixins/globalVarsMixin';
+import common from '@/shared/common';
+import globalVarsMixin from '@/mixins/globalVarsMixin';
+import { BButton, BCol, BModal, BRow } from 'bootstrap-vue';
 
 export default {
-  name: 'AboutModal',
+  components: {
+    BModal,
+    BRow,
+    BCol,
+    BButton,
+  },
   mixins: [globalVarsMixin],
   computed: {
     serverTimestamp: function () {

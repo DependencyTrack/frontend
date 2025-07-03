@@ -18,54 +18,31 @@
       :options="options"
       @on-load-success="tableLoaded"
     />
-    <create-license-group-modal v-on:refreshTable="refreshTable" />
+    <create-license-group-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import CreateLicenseGroupModal from './CreateLicenseGroupModal';
-import permissionsMixin from '../../mixins/permissionsMixin';
-import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import EventBus from '../../shared/eventbus';
-import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import i18n from '@/i18n';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
+import EventBus from '@/shared/eventbus';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import SelectLicenseModal from './SelectLicenseModal';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin, bootstrapTableMixin],
   components: {
     CreateLicenseGroupModal,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('policyManagement:licenseGroups:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('policyManagement:licenseGroups:rowUpdate');
-    EventBus.$off('policyManagement:licenseGroups:rowDeleted');
-  },
-  methods: {
-    tableLoaded: function (data) {
-      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
-        this.$emit('total', data.total);
-      } else {
-        this.$emit('total', '?');
-      }
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        silent: true,
-      });
-    },
-  },
+  mixins: [permissionsMixin, bootstrapTableMixin],
   data() {
     return {
       columns: [
@@ -147,7 +124,7 @@ export default {
             },
             methods: {
               updateLicenseGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`;
                 this.axios
                   .post(url, {
                     uuid: this.licenseGroup.uuid,
@@ -167,7 +144,7 @@ export default {
                   });
               },
               deleteLicenseGroup: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -182,7 +159,7 @@ export default {
                   });
               },
               removeLicense: function (license) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${license.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${license.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -196,8 +173,8 @@ export default {
               updateLicenseSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectLicenseModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${selection.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${selection.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -237,6 +214,33 @@ export default {
         },
       },
     };
+  },
+  mounted() {
+    EventBus.$on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('policyManagement:licenseGroups:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('policyManagement:licenseGroups:rowUpdate');
+    EventBus.$off('policyManagement:licenseGroups:rowDeleted');
+  },
+  methods: {
+    tableLoaded: function (data) {
+      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
+        this.$emit('total', data.total);
+      } else {
+        this.$emit('total', '?');
+      }
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        silent: true,
+      });
+    },
   },
 };
 </script>

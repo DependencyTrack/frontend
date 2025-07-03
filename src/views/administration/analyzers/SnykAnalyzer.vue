@@ -99,7 +99,6 @@
               :options="cvssOptions"
               :aria-describedby="cvssSource"
               name="radios-btn-default"
-              v-on:change="generateCvssV2Vector"
               button-variant="outline-primary"
               class="cvss-calc cvss-calc-3-btn"
               buttons
@@ -133,17 +132,36 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import common from '../../../shared/common';
-import configPropertyMixin from '../mixins/configPropertyMixin';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import common from '@/shared/common';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import {
+  BButton,
+  BCard,
+  BCardBody,
+  BCardFooter,
+  BCol,
+  BFormGroup,
+  BFormRadioGroup,
+  BRow,
+} from 'bootstrap-vue';
+
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BRow,
+    BCol,
+    BFormGroup,
+    BButton,
+    BFormRadioGroup,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -167,6 +185,39 @@ export default {
         dataOff: '\u2715',
       },
     };
+  },
+  created() {
+    this.axios.get(this.configUrl).then((response) => {
+      const configItems = response.data.filter(function (item) {
+        return item.groupName === 'scanner';
+      });
+      for (let i = 0; i < configItems.length; i++) {
+        const item = configItems[i];
+        switch (item.propertyName) {
+          case 'snyk.enabled':
+            this.scannerEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'snyk.alias.sync.enabled':
+            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'snyk.api.token':
+            this.apitoken = item.propertyValue;
+            break;
+          case 'snyk.org.id':
+            this.orgId = item.propertyValue;
+            break;
+          case 'snyk.base.url':
+            this.baseUrl = item.propertyValue;
+            break;
+          case 'snyk.cvss.source':
+            this.cvssSourceSelected = item.propertyValue;
+            break;
+          case 'snyk.api.version':
+            this.apiVersion = item.propertyValue;
+            break;
+        }
+      }
+    });
   },
   methods: {
     saveChanges: function () {
@@ -208,39 +259,6 @@ export default {
         },
       ]);
     },
-  },
-  created() {
-    this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'scanner';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        switch (item.propertyName) {
-          case 'snyk.enabled':
-            this.scannerEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'snyk.alias.sync.enabled':
-            this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
-            break;
-          case 'snyk.api.token':
-            this.apitoken = item.propertyValue;
-            break;
-          case 'snyk.org.id':
-            this.orgId = item.propertyValue;
-            break;
-          case 'snyk.base.url':
-            this.baseUrl = item.propertyValue;
-            break;
-          case 'snyk.cvss.source':
-            this.cvssSourceSelected = item.propertyValue;
-            break;
-          case 'snyk.api.version':
-            this.apiVersion = item.propertyValue;
-            break;
-        }
-      }
-    });
   },
 };
 </script>

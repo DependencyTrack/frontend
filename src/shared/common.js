@@ -7,6 +7,7 @@
 'use strict';
 
 import xssFilters from 'xss-filters';
+
 const $common = function () {};
 
 /**
@@ -16,7 +17,7 @@ $common.formatSourceLabel = function formatSourceLabel(source) {
   if (!source) {
     return null;
   }
-  let sourceClass = 'label-source-' + source.toLowerCase();
+  const sourceClass = 'label-source-' + source.toLowerCase();
   return `<span class="label label-source ${sourceClass}">${source}</span>`;
 };
 
@@ -29,7 +30,7 @@ $common.formatNotificationLabel = function formatNotificationLabel(
   if (!violationState) {
     return null;
   }
-  let violationStateClass =
+  const violationStateClass =
     'label-notification-' + violationState.toLowerCase();
   return `<span class="label label-notification ${violationStateClass}">${violationState}</span>`;
 };
@@ -67,8 +68,8 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
   if (!severity) {
     return '';
   }
-  let severityLabel = $common.capitalize(severity);
-  let severityClass = 'severity-' + severity.toLowerCase() + '-bg';
+  const severityLabel = $common.capitalize(severity);
+  const severityClass = 'severity-' + severity.toLowerCase() + '-bg';
 
   return `
      <div style="height:24px;margin:-4px;">
@@ -90,7 +91,7 @@ $common.formatViolationStateLabel = function formatViolationStateLabel(
   if (!violationState) {
     return null;
   }
-  let sourceClass = 'label-notification-' + violationState.toLowerCase();
+  const sourceClass = 'label-notification-' + violationState.toLowerCase();
   return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
 };
 
@@ -194,7 +195,7 @@ $common.resolveSourceVulnInfo = function resolveSourceVulnInfo(
   vulnSource,
   vulnId,
 ) {
-  let sourceInfo = {};
+  const sourceInfo = {};
   sourceInfo.source = vulnSource;
   sourceInfo.vulnId = vulnId;
   switch (vulnSource) {
@@ -408,7 +409,7 @@ $common.componentClassifierLabelFormatter = (i18n) => {
 $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
   return function (value) {
     // if column defines a routerFunc returning the router we use a more robust solution
-    let url = !this.routerFunc
+    const url = !this.routerFunc
       ? '../projects/?classifier=' + value
       : this.routerFunc().resolve({
           name: 'Projects',
@@ -438,8 +439,8 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
  * i.e. 15 Jan 2017
  */
 $common.formatTimestamp = function formatTimestamp(timestamp, includeTime) {
-  let date = new Date(timestamp);
-  let months = [
+  const date = new Date(timestamp);
+  const months = [
     'Jan',
     'Feb',
     'Mar',
@@ -485,9 +486,9 @@ $common.concatenateComponentName = function concatenateComponentName(
   name,
   version,
 ) {
-  let g = $common.trimToNull(group);
-  let n = $common.trimToNull(name);
-  let v = $common.trimToNull(version);
+  const g = $common.trimToNull(group);
+  const n = $common.trimToNull(name);
+  const v = $common.trimToNull(version);
   return (
     (g != null ? g + ' ' : '') +
     (n != null ? n : '') +
@@ -521,7 +522,7 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
     return 100;
   }
 
-  let percentage = (completed / total) * 100;
+  const percentage = (completed / total) * 100;
   return Math.round(percentage * 10) / 10;
 };
 

@@ -33,28 +33,30 @@
       :feedback-text="$t('admin.required_email')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button size="md" variant="primary" @click="updateUser()">{{
-        $t('message.update')
-      }}</b-button>
+    <template #modal-footer="{ cancel }">
+      <b-button size="md" variant="secondary" @click="cancel()"
+        >{{ $t('message.close') }}
+      </b-button>
+      <b-button size="md" variant="primary" @click="updateUser()"
+        >{{ $t('message.update') }}
+      </b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
 import globalVarsMixin from '@/mixins/globalVarsMixin';
 import EventBus from '@/shared/eventbus';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  name: 'ProfileEditModal',
-  mixins: [globalVarsMixin],
   components: {
     BInputGroupFormInput,
+    BModal,
+    BButton,
   },
+  mixins: [globalVarsMixin],
   data: () => {
     return {
       username: null,
@@ -69,7 +71,7 @@ export default {
       this.email = this.currentUser.email;
     },
     updateUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
       this.axios
         .post(url, {
           username: this.username,

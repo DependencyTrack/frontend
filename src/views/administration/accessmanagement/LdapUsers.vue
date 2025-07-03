@@ -18,42 +18,34 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-ldap-user-modal v-on:refreshTable="refreshTable" />
+    <create-ldap-user-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
 import CreateLdapUserModal from './CreateLdapUserModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import SelectTeamModal from './SelectTeamModal';
 import SelectPermissionModal from './SelectPermissionModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateLdapUserModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:ldapusers:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:ldapusers:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:ldapusers:rowUpdate');
-    EventBus.$off('admin:ldapusers:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -106,7 +98,7 @@ export default {
         detailViewByClick: true,
         detailFormatter: (index, row) => {
           return this.vueFormatter({
-            i18n,
+            i18n: this.$i18n,
             template: `
                 <b-row class="expanded-row">
                   <b-col sm="6">
@@ -152,7 +144,7 @@ export default {
             },
             methods: {
               deleteUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -170,8 +162,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                   this.axios
                     .post(url, {
                       uuid: selection.uuid,
@@ -197,7 +189,7 @@ export default {
                 }
               },
               removeTeamMembership: function (teamUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                 this.axios
                   .delete(url, { data: { uuid: teamUuid } })
                   .then((response) => {
@@ -216,8 +208,8 @@ export default {
               updatePermissionSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -237,7 +229,7 @@ export default {
                 }
               },
               removePermission: function (permission) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -266,6 +258,19 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_USER_LDAP}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:ldapusers:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:ldapusers:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:ldapusers:rowUpdate');
+    EventBus.$off('admin:ldapusers:rowDeleted');
   },
   methods: {
     refreshTable: function () {

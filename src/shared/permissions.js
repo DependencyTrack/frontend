@@ -27,8 +27,8 @@ export const hasPermission = function hasPermission(permission, decodedToken) {
  * Returns the decoded token as a JSON object.
  */
 export const decodeToken = function decodeToken(token) {
-  let base64Url = token.split('.')[1];
-  let base64 = base64Url.replace('-', '+').replace('_', '/');
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace('-', '+').replace('_', '/');
   return JSON.parse(window.atob(base64));
 };
 

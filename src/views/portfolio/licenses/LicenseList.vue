@@ -19,40 +19,29 @@
       @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
-    <license-add-license-modal v-on:refreshTable="refreshTable" />
+    <license-add-license-modal @refreshTable="refreshTable" />
   </div>
 </template>
 
 <script>
-import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import common from '@/shared/common';
+import PortfolioWidgetRow from '@/views/dashboard/PortfolioWidgetRow';
 import xssFilters from 'xss-filters';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import routerMixin from '@/mixins/routerMixin';
 import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import { BButton } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  mixins: [permissionsMixin, routerMixin],
   components: {
     LicenseAddLicenseModal,
     PortfolioWidgetRow,
+    BButton,
+    BootstrapTable,
   },
-  methods: {
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`,
-        silent: true,
-      });
-    },
-    onLoadSuccess: function () {
-      loadUserPreferencesForBootstrapTable(
-        this,
-        'LicenseList',
-        this.$refs.table.columns,
-      );
-    },
-  },
+  mixins: [permissionsMixin, routerMixin],
   data() {
     return {
       columns: [
@@ -69,7 +58,7 @@ export default {
           field: 'licenseId',
           sortable: true,
           formatter: function (value, row, index) {
-            let url = xssFilters.uriInUnQuotedAttr(
+            const url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );
             return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
@@ -175,6 +164,21 @@ export default {
         },
       },
     };
+  },
+  methods: {
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`,
+        silent: true,
+      });
+    },
+    onLoadSuccess: function () {
+      loadUserPreferencesForBootstrapTable(
+        this,
+        'LicenseList',
+        this.$refs.table.columns,
+      );
+    },
   },
 };
 </script>

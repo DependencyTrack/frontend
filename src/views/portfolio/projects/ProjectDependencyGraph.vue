@@ -56,42 +56,26 @@
   </div>
 </template>
 
-<script>
+<script lang="jsx">
 import Vue2OrgTree from 'vue2-org-tree';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import { Switch as cSwitch } from '@coreui/vue';
-let pos = { top: 0, left: 0, x: 0, y: 0 };
+import { BTooltip } from 'bootstrap-vue';
+
+const pos = { top: 0, left: 0, x: 0, y: 0 };
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     Vue2OrgTree,
     cSwitch,
+    // eslint-disable-next-line vue/no-unused-components
+    BTooltip,
   },
+  mixins: [permissionsMixin],
   props: {
     project: Object,
     uuid: String,
-  },
-  beforeCreate() {
-    this.highlightOutdatedComponents =
-      localStorage &&
-      localStorage.getItem(
-        'ProjectDependencyGraphHighlightOutdatedComponents',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectDependencyGraphHighlightOutdatedComponents',
-          ) === 'true'
-        : false;
-    this.showCompleteGraph =
-      localStorage &&
-      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
-        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
-          'true'
-        : false;
-  },
-  mounted() {
-    this.computeData();
   },
   data() {
     return {
@@ -188,6 +172,26 @@ export default {
       this.createSearchedComponentLookupTable(to.params.componentUuids);
     },
   },
+  beforeCreate() {
+    this.highlightOutdatedComponents =
+      localStorage &&
+      localStorage.getItem(
+        'ProjectDependencyGraphHighlightOutdatedComponents',
+      ) !== null
+        ? localStorage.getItem(
+            'ProjectDependencyGraphHighlightOutdatedComponents',
+          ) === 'true'
+        : false;
+    this.showCompleteGraph =
+      localStorage &&
+      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
+        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
+          'true'
+        : false;
+  },
+  mounted() {
+    this.computeData();
+  },
   methods: {
     computeData: function () {
       // prepare base object
@@ -227,7 +231,7 @@ export default {
         this.$route.params.componentUuids,
       );
       this.loading = true;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${
         this.project.uuid
       }/dependencyGraph/${encodeURIComponent(
         this.$route.params.componentUuids,
@@ -342,8 +346,8 @@ export default {
       if (dependencies && dependencies.length > 0) {
         children = [];
         for (let i = 0; i < dependencies.length; i++) {
-          let dependency = dependencies[i];
-          let childNode = this.transformDependencyToOrgTree(dependency);
+          const dependency = dependencies[i];
+          const childNode = this.transformDependencyToOrgTree(dependency);
           for (const gatheredKey of treeNode.gatheredKeys) {
             childNode.gatheredKeys.push(gatheredKey);
           }
@@ -368,9 +372,9 @@ export default {
       treeNode,
       onlySearched,
     ) {
-      let children = [];
+      const children = [];
       if (dependencies) {
-        let directDependencies = JSON.parse(this.project.directDependencies);
+        const directDependencies = JSON.parse(this.project.directDependencies);
         directDependencies.forEach((directDependency) => {
           if (
             dependencies[directDependency.uuid] &&
@@ -378,7 +382,7 @@ export default {
               dependencies[directDependency.uuid].expandDependencyGraph ||
               this.searchedComponentUuids[directDependency.uuid])
           ) {
-            let childNode = this.transformDependencyToOrgTree(
+            const childNode = this.transformDependencyToOrgTree(
               dependencies[directDependency.uuid],
             );
             childNode.gatheredKeys.push(childNode.label);
@@ -420,7 +424,7 @@ export default {
       treeNode,
       onlySearched,
     ) {
-      let children = [];
+      const children = [];
       if (component.dependencyGraph) {
         component.dependencyGraph.forEach((dependency) => {
           if (
@@ -429,7 +433,7 @@ export default {
               dependencies[dependency].expandDependencyGraph ||
               this.searchedComponentUuids[dependency] !== -1)
           ) {
-            let childNode = this.transformDependencyToOrgTree(
+            const childNode = this.transformDependencyToOrgTree(
               dependencies[dependency],
             );
             for (const gatheredKey of treeNode.gatheredKeys) {
@@ -488,25 +492,25 @@ export default {
       };
     },
     getChildrens: function (treeNodes, parentUuid, objectType) {
-      let dependenciesFunc = async () => {
-        let url = this.getDependenciesUrl(parentUuid, objectType);
+      const dependenciesFunc = async () => {
+        const url = this.getDependenciesUrl(parentUuid, objectType);
 
-        let treeNodeMap = new Map();
+        const treeNodeMap = new Map();
 
-        for (let treeNode of treeNodes) {
+        for (const treeNode of treeNodes) {
           treeNodeMap.set(treeNode.uuid, treeNode);
         }
 
-        let response = await this.axios.get(url);
-        let data = response.data;
-        let dependencies = [...data];
+        const response = await this.axios.get(url);
+        const data = response.data;
+        const dependencies = [...data];
         if (dependencies.length > 0) {
-          for (let dependency of dependencies) {
+          for (const dependency of dependencies) {
             if (dependency) {
-              let treeNode = treeNodeMap.get(dependency.uuid);
+              const treeNode = treeNodeMap.get(dependency.uuid);
               treeNode.latestVersion = dependency.latestVersion;
               if (dependency.directDependencies) {
-                let jsonObject = JSON.parse(dependency.directDependencies);
+                const jsonObject = JSON.parse(dependency.directDependencies);
                 this.$set(
                   treeNode,
                   'children',
@@ -623,7 +627,7 @@ export default {
       }
     },
     collapse: function (list) {
-      var _this = this;
+      const _this = this;
       list.forEach(function (child) {
         if (child.expand) {
           child.expand = false;
@@ -636,7 +640,7 @@ export default {
       this.toggleExpand(this.data, this.expandAll);
     },
     toggleExpand: function (data, val) {
-      var _this = this;
+      const _this = this;
       if (Array.isArray(data)) {
         data.forEach(function (item) {
           _this.$set(item, 'expand', val);
@@ -665,7 +669,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~vue2-org-tree/dist/style.css';
+@import 'vue2-org-tree/dist/style.css';
 .org-tree-container {
   background-color: inherit;
 }
@@ -726,7 +730,7 @@ export default {
   padding: 0;
 }
 .horizontal .org-tree-node-label {
-  padding: 5px 0px 5px 10px;
+  padding: 5px 0 5px 10px;
 }
 // Button size and position
 .horizontal .org-tree-node-btn {

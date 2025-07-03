@@ -22,7 +22,20 @@
 </template>
 
 <script>
+import {
+  BFormSelect,
+  BFormSelectOption,
+  BInputGroup,
+  BInputGroupPrepend,
+} from 'bootstrap-vue';
+
 export default {
+  components: {
+    BInputGroup,
+    BInputGroupPrepend,
+    BFormSelect,
+    BFormSelectOption,
+  },
   data() {
     return {
       selectedItem: null,
@@ -30,7 +43,6 @@ export default {
   },
   beforeMount() {
     this.selectedItem = this.$i18n.locale;
-    console.log(this.selectedItem);
   },
   methods: {
     onLocaleSelected: function (value) {

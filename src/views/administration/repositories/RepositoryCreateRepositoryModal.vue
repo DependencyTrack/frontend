@@ -67,7 +67,7 @@
         $t('admin.enabled')
       }}
     </div>
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -80,22 +80,20 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BInputGroupFormSelect from '@/forms/BInputGroupFormSelect';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  name: 'RepositoryCreateRepositoryModal',
-  props: {
-    type: String,
-  },
   components: {
     cSwitch,
     BInputGroupFormSelect,
     BValidatedInputGroupFormInput,
+    BModal,
+    BButton,
   },
-  created() {
-    this.initialRepositoryType = this.type;
-    this.repositoryType = this.type;
+  props: {
+    type: String,
   },
   data() {
     return {
@@ -126,9 +124,13 @@ export default {
       ],
     };
   },
+  created() {
+    this.initialRepositoryType = this.type;
+    this.repositoryType = this.type;
+  },
   methods: {
     createRepository: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}`;
       this.axios
         .put(url, {
           type: this.repositoryType,

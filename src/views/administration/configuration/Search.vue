@@ -118,18 +118,23 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
-import configPropertyMixin from '../mixins/configPropertyMixin';
-import common from '../../../shared/common';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import configPropertyMixin from '@/views/administration/mixins/configPropertyMixin';
+import common from '@/shared/common';
+import { BButton, BCard, BCardBody, BCardFooter } from 'bootstrap-vue';
 
 export default {
-  mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
   components: {
     cSwitch,
     BValidatedInputGroupFormInput,
+    BCard,
+    BCardBody,
+    BCardFooter,
+    BButton,
+  },
+  mixins: [configPropertyMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -157,11 +162,11 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
+      const configItems = response.data.filter(function (item) {
         return item.groupName === 'search-indexes';
       });
       for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
+        const item = configItems[i];
         switch (item.propertyName) {
           case 'consistency.check.enabled':
             this.consistencyCheck.enabled = common.toBoolean(
@@ -201,8 +206,8 @@ export default {
       ]);
     },
     reindex: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_SEARCH}/reindex`;
-      let params = new URLSearchParams();
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_SEARCH}/reindex`;
+      const params = new URLSearchParams();
       Object.entries(this.type).forEach(([key, value]) => {
         if (value) {
           params.append('type', key.toUpperCase());

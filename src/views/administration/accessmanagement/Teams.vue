@@ -14,46 +14,39 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-team-modal v-on:refreshTable="refreshTable" />
+    <create-team-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateTeamModal from './CreateTeamModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import ApiKeyListGroupItem from './ApiKeyListGroupItem.vue';
 import SelectLdapGroupModal from './SelectLdapGroupModal';
 import SelectOidcGroupModal from './SelectOidcGroupModal';
 import SelectPermissionModal from './SelectPermissionModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateTeamModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:teams:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:teams:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:teams:rowUpdate');
-    EventBus.$off('admin:teams:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -233,7 +226,7 @@ export default {
                 return dict;
               },
               updateTeam: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
                 this.axios
                   .post(url, {
                     uuid: this.team.uuid,
@@ -249,7 +242,7 @@ export default {
                   });
               },
               deleteTeam: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -294,7 +287,7 @@ export default {
                 });
               },
               createApiKey: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
                 this.axios
                   .put(url)
                   .then((response) => {
@@ -319,7 +312,7 @@ export default {
                   });
               },
               regenerateApiKey: function (apiKey) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
                 this.axios
                   .post(url)
                   .then((response) => {
@@ -343,7 +336,7 @@ export default {
                   });
               },
               removeApiKey: function (apiKey) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -358,8 +351,8 @@ export default {
               updateLdapGroupSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectLdapGroupModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}`;
                   this.axios
                     .put(url, {
                       team: this.team.uuid,
@@ -388,11 +381,11 @@ export default {
                 }
               },
               removeLdapGroupMapping: function (mappingUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}/${mappingUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}/${mappingUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let k = [];
+                    const k = [];
                     for (let i = 0; i < this.ldapGroups.length; i++) {
                       if (this.ldapGroups[i].uuid !== mappingUuid) {
                         k.push(this.ldapGroups[i]);
@@ -409,8 +402,8 @@ export default {
               updateOidcGroupSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectOidcGroupModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
                   this.axios
                     .put(url, {
                       team: this.team.uuid,
@@ -439,11 +432,11 @@ export default {
                 }
               },
               removeOidcGroupMapping: function (mappingUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}/${mappingUuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}/${mappingUuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
-                    let k = [];
+                    const k = [];
                     for (let i = 0; i < this.mappedOidcGroups.length; i++) {
                       if (this.mappedOidcGroups[i].uuid !== mappingUuid) {
                         k.push(this.mappedOidcGroups[i]);
@@ -460,8 +453,8 @@ export default {
               updatePermissionSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/team/${this.team.uuid}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/team/${this.team.uuid}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -480,7 +473,7 @@ export default {
                 }
               },
               removePermission: function (permission) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/team/${this.team.uuid}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/team/${this.team.uuid}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -492,7 +485,7 @@ export default {
                   });
               },
               removeUser: function (user) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${user.username}/membership`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${user.username}/membership`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -501,7 +494,7 @@ export default {
                   })
                   .then((response) => {
                     if (this.managedUsers) {
-                      let k = [];
+                      const k = [];
                       for (let i = 0; i < this.managedUsers.length; i++) {
                         if (this.managedUsers[i].username !== user.username) {
                           k.push(this.managedUsers[i]);
@@ -510,7 +503,7 @@ export default {
                       this.managedUsers = k;
                     }
                     if (this.ldapUsers) {
-                      let k = [];
+                      const k = [];
                       for (let i = 0; i < this.ldapUsers.length; i++) {
                         if (this.ldapUsers[i].username !== user.username) {
                           k.push(this.ldapUsers[i]);
@@ -519,7 +512,7 @@ export default {
                       this.ldapUsers = k;
                     }
                     if (this.oidcUsers) {
-                      let k = [];
+                      const k = [];
                       for (let i = 0; i < this.oidcUsers.length; i++) {
                         if (this.oidcUsers[i].username !== user.username) {
                           k.push(this.oidcUsers[i]);
@@ -555,6 +548,19 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:teams:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:teams:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:teams:rowUpdate');
+    EventBus.$off('admin:teams:rowDeleted');
   },
   methods: {
     refreshTable: function () {

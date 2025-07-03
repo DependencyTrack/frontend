@@ -17,7 +17,7 @@
       tooltip="Enter an email address you control to test your send configuration."
       lazy="true"
     />
-    <template v-slot:modal-footer="{ cancel }">
+    <template #modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -32,13 +32,14 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '@/forms/BValidatedInputGroupFormInput';
+import { BButton, BModal } from 'bootstrap-vue';
 
 export default {
-  name: 'ProjectPropertiesModal',
   components: {
     BValidatedInputGroupFormInput,
+    BModal,
+    BButton,
   },
   data() {
     return {
@@ -47,7 +48,7 @@ export default {
   },
   methods: {
     testConfiguration: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/smtp`;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/test/smtp`;
       const params = new URLSearchParams();
       params.append('destination', this.emailAddress);
       this.axios

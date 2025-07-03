@@ -18,42 +18,35 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-oidc-user-modal v-on:refreshTable="refreshTable" />
+    <create-oidc-user-modal @refreshTable="refreshTable" />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
-import common from '../../../shared/common';
-import i18n from '../../../i18n';
+import common from '@/shared/common';
+import i18n from '@/i18n';
 import CreateOidcUserModal from './CreateOidcUserModal';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import EventBus from '@/shared/eventbus';
+import ActionableListGroupItem from '@/views/components/ActionableListGroupItem';
 import SelectTeamModal from './SelectTeamModal';
 import SelectPermissionModal from './SelectPermissionModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
+import permissionsMixin from '@/mixins/permissionsMixin';
+import { BButton, BCard, BCardBody } from 'bootstrap-vue';
+import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 
 export default {
-  props: {
-    header: String,
-  },
-  mixins: [bootstrapTableMixin],
   components: {
     CreateOidcUserModal,
+    BCard,
+    BCardBody,
+    BButton,
+    BootstrapTable,
   },
-  mounted() {
-    EventBus.$on('admin:oidcusers:rowUpdate', (index, row) => {
-      this.$refs.table.updateRow({ index: index, row: row });
-      this.$refs.table.expandRow(index);
-    });
-    EventBus.$on('admin:oidcusers:rowDeleted', (index, row) => {
-      this.refreshTable();
-    });
-  },
-  beforeDestroy() {
-    EventBus.$off('admin:oidcusers:rowUpdate');
-    EventBus.$off('admin:oidcusers:rowDeleted');
+  mixins: [bootstrapTableMixin],
+  props: {
+    header: String,
   },
   data() {
     return {
@@ -152,7 +145,7 @@ export default {
             },
             methods: {
               deleteUser: function () {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_OIDC}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_OIDC}`;
                 this.axios
                   .delete(url, {
                     data: {
@@ -170,8 +163,8 @@ export default {
               updateTeamSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectTeamModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                   this.axios
                     .post(url, {
                       uuid: selection.uuid,
@@ -197,7 +190,7 @@ export default {
                 }
               },
               removeTeamMembership: function (teamUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_USER}/${this.username}/membership`;
                 this.axios
                   .delete(url, { data: { uuid: teamUuid } })
                   .then((response) => {
@@ -216,8 +209,8 @@ export default {
               updatePermissionSelection: function (selections) {
                 this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
                 for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
+                  const selection = selections[i];
+                  const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${selection.name}/user/${this.username}`;
                   this.axios
                     .post(url)
                     .then((response) => {
@@ -237,7 +230,7 @@ export default {
                 }
               },
               removePermission: function (permission) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
+                const url = `${this.$api.BASE_URL}/${this.$api.URL_PERMISSION}/${permission.name}/user/${this.username}`;
                 this.axios
                   .delete(url)
                   .then((response) => {
@@ -266,6 +259,19 @@ export default {
         url: `${this.$api.BASE_URL}/${this.$api.URL_USER_OIDC}`,
       },
     };
+  },
+  mounted() {
+    EventBus.$on('admin:oidcusers:rowUpdate', (index, row) => {
+      this.$refs.table.updateRow({ index: index, row: row });
+      this.$refs.table.expandRow(index);
+    });
+    EventBus.$on('admin:oidcusers:rowDeleted', (index, row) => {
+      this.refreshTable();
+    });
+  },
+  beforeDestroy() {
+    EventBus.$off('admin:oidcusers:rowUpdate');
+    EventBus.$off('admin:oidcusers:rowDeleted');
   },
   methods: {
     refreshTable: function () {

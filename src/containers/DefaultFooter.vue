@@ -12,17 +12,16 @@
   </TheFooter>
 </template>
 <script>
-import AboutModal from '../views/components/AboutModal';
+import AboutModal from '@/views/components/AboutModal';
 import { Footer as TheFooter } from '@coreui/vue';
-import globalVarsMixin from '../mixins/globalVarsMixin';
+import globalVarsMixin from '@/mixins/globalVarsMixin';
 
 export default {
-  name: 'DefaultFooter',
-  mixins: [globalVarsMixin],
   components: {
     AboutModal,
     TheFooter,
   },
+  mixins: [globalVarsMixin],
 };
 </script>
 <style scoped>

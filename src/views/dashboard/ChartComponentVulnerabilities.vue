@@ -1,5 +1,5 @@
 <script>
-import common from '../../shared/common';
+import common from '@/shared/common';
 import { Line } from 'vue-chartjs';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
@@ -18,11 +18,11 @@ export default {
         '--collection-logic-changed',
       );
 
-      let labels = [];
-      let totalData = [];
-      let affectedData = [];
-      let nonAffectedData = [];
-      let collectionLogicChangedData = [];
+      const labels = [];
+      const totalData = [];
+      const affectedData = [];
+      const nonAffectedData = [];
+      const collectionLogicChangedData = [];
 
       for (let i = 0; i < metrics.length; i++) {
         labels.push(metrics[i].firstOccurrence);
