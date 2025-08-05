@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      comment: null,
+      comment: '',
     };
   },
   mounted() {
@@ -71,7 +71,7 @@ export default {
         });
     },
     resetValues: function () {
-      this.comment = null;
+      this.comment = '';
     },
   },
 };
