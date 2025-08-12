@@ -168,14 +168,6 @@ export default {
                 licenseGroup: row,
                 name: row.name,
                 licenses: row.licenses,
-                licenseTableOptions: {
-                  search: false,
-                  showColumns: false,
-                  showRefresh: false,
-                  pagination: false,
-                  sortName: 'name',
-                  sortOrder: 'asc',
-                },
               };
             },
             methods: {
