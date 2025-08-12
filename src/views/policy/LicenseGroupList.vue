@@ -162,8 +162,6 @@ export default {
               ActionableListGroupItem,
               BInputGroupFormInput,
               SelectLicenseModal,
-              'bootstrap-table':
-                require('bootstrap-vue').BTable || window['bootstrap-table'],
             },
             data() {
               return {
