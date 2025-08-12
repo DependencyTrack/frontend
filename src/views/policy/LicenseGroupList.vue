@@ -168,32 +168,6 @@ export default {
                 licenseGroup: row,
                 name: row.name,
                 licenses: row.licenses,
-                licenseColumns: [
-                  {
-                    title: this.$t('message.name'),
-                    field: 'name',
-                    sortable: true,
-                    formatter(value) {
-                      return xssFilters.inHTMLData(value);
-                    },
-                  },
-                  {
-                    title: this.$t('message.license_id') || 'SPDX ID',
-                    field: 'spdxId',
-                    sortable: true,
-                    formatter(value) {
-                      return xssFilters.inHTMLData(value || '-');
-                    },
-                  },
-                  {
-                    title: this.$t('message.action'),
-                    field: 'action',
-                    align: 'center',
-                    formatter: (value, row) => {
-                      return `<button class='btn btn-sm btn-outline-danger' @click='removeLicense(row)'><span class='fa fa-trash'></span></button>`;
-                    },
-                  },
-                ],
                 licenseTableOptions: {
                   search: false,
                   showColumns: false,
