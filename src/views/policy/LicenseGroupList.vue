@@ -116,12 +116,37 @@ export default {
                 </b-row>
                 <b-row class="expanded-row">
                   <b-col sm="12">
-                    <b-form-group :label="this.$t('message.licenses')">
-                      <div class="list-group">
-                        <span v-for="license in licenses">
-                          <actionable-list-group-item :value="license.name" :delete-icon="true" v-on:actionClicked="removeLicense(license)"/>
-                        </span>
-                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLicenseModal')"/>
+                    <b-form-group>
+                      <div>
+                        <div class="font-weight-bold mb-2">
+                          <b-row>
+                            <b-col md="8">{{$t('message.name')}}</b-col>
+                            <b-col md="3">{{$t('message.spdx_license_id')}}</b-col>
+                            <b-col md="1"></b-col>
+                          </b-row>
+                        </div>
+                        <div v-for="license in licenses" :key="license.uuid" class="mb-2">
+                          <b-row class="align-items-center">
+                            <b-col md="8" class="d-flex align-items-center">{{ license.name }}</b-col>
+                            <b-col md="3" class="d-flex align-items-center text-muted">
+                              <a
+                                v-if="license.licenseId"
+                                :href="'/portfolio/licenses/' + encodeURIComponent(license.licenseId)"
+                              >
+                                {{ license.licenseId }}
+                              </a>
+                              <span v-else>-</span>
+                            </b-col>
+                            <b-col md="1" class="d-flex align-items-center justify-content-end">
+                              <b-button size="sm" variant="outline-danger" @click="removeLicense(license)">
+                                <span class="fa fa-trash"></span>
+                              </b-button>
+                            </b-col>
+                          </b-row>
+                        </div>
+                        <div>
+                          <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLicenseModal')" />
+                        </div>
                       </div>
                     </b-form-group>
                     <div style="text-align:right">
@@ -129,7 +154,7 @@ export default {
                     </div>
                   </b-col>
                 </b-row>
-                  <select-license-modal v-on:selection="updateLicenseSelection" />
+                <select-license-modal v-on:selection="updateLicenseSelection" />
                 </div>
               `,
             mixins: [permissionsMixin],
@@ -137,12 +162,48 @@ export default {
               ActionableListGroupItem,
               BInputGroupFormInput,
               SelectLicenseModal,
+              'bootstrap-table':
+                require('bootstrap-vue').BTable || window['bootstrap-table'],
             },
             data() {
               return {
                 licenseGroup: row,
                 name: row.name,
                 licenses: row.licenses,
+                licenseColumns: [
+                  {
+                    title: this.$t('message.name'),
+                    field: 'name',
+                    sortable: true,
+                    formatter(value) {
+                      return xssFilters.inHTMLData(value);
+                    },
+                  },
+                  {
+                    title: this.$t('message.license_id') || 'SPDX ID',
+                    field: 'spdxId',
+                    sortable: true,
+                    formatter(value) {
+                      return xssFilters.inHTMLData(value || '-');
+                    },
+                  },
+                  {
+                    title: this.$t('message.action'),
+                    field: 'action',
+                    align: 'center',
+                    formatter: (value, row) => {
+                      return `<button class='btn btn-sm btn-outline-danger' @click='removeLicense(row)'><span class='fa fa-trash'></span></button>`;
+                    },
+                  },
+                ],
+                licenseTableOptions: {
+                  search: false,
+                  showColumns: false,
+                  showRefresh: false,
+                  pagination: false,
+                  sortName: 'name',
+                  sortOrder: 'asc',
+                },
               };
             },
             methods: {
