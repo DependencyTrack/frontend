@@ -252,6 +252,15 @@ export default {
           },
         },
         {
+          title: this.$t('message.scope'),
+          field: 'scope',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
           title: this.$t('message.internal'),
           field: 'isInternal',
           sortable: false,
