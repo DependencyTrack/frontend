@@ -387,6 +387,7 @@
     "change_password": "पासवर्ड बदलें",
     "classification": "वर्गीकरण",
     "classifier": "वर्गीकरणकर्ता",
+    "scope":"दायरा",
     "clear_all": "सभी साफ करें",
     "close": "बंद करना",
     "code_not_present": "कोड मौजूद नहीं है",

@@ -387,6 +387,7 @@
     "change_password": "更改密码",
     "classification": "分类",
     "classifier": "分类器",
+    "scope":"范围",
     "clear_all": "清除全部",
     "close": "关闭",
     "code_not_present": "代码不存在",
