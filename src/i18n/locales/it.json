@@ -303,7 +303,9 @@
     "vulnsource_osv_base_url": "URL di base OSV",
     "welcome_message": "Messaggio di benvenuto",
     "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
-    "welcome_message_enable": "Abilita il messaggio di benvenuto"
+    "welcome_message_enable": "Abilita il messaggio di benvenuto",
+    "exclude_tags": "Tag esclusi",
+    "invert_tag_match": "Escludi i tag selezionati"
   },
   "condition": {
     "forbidden": "Proibito (403)",

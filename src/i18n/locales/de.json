@@ -303,7 +303,9 @@
     "vulnsource_osv_base_url": "OSV-Basis-URL",
     "welcome_message": "Willkommensnachricht",
     "welcome_message_desc": "Passen Sie die Willkommensnachricht an, die auf der Startseite von Dependency-Track angezeigt wird, bevor sich Benutzer anmelden.",
-    "welcome_message_enable": "Willkommensnachricht aktivieren"
+    "welcome_message_enable": "Willkommensnachricht aktivieren",
+    "exclude_tags": "Ausgeschlossene Tags",
+    "invert_tag_match": "Ausgewählte Tags ausschließen"
   },
   "condition": {
     "forbidden": "Verboten (403)",
