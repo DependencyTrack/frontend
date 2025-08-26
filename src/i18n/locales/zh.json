@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "映射 LDAP 组",
     "mapped_oidc_groups": "映射的 OpenID 连接组",
     "mapped_teams": "映射团队",
+    "match_mode": {
+      "and": "匹配命名空间和名称",
+      "label": "元件匹配方式",
+      "or": "匹配命名空间或名称"
+    },
     "maven": "Maven",
     "members": "成员",
     "mime_type": "Mime 类型",
@@ -963,10 +968,10 @@
     "warn": "警告"
   },
   "vulnerability": {
-    "critical": "严重程度极高的漏洞",
-    "high": "高严重性漏洞",
-    "low": "低严重程度漏洞",
-    "medium": "中等严重程度漏洞",
-    "unassigned": "未指派的漏洞"
+    "critical": "严重程度极高的漏洞（不包括别名）",
+    "high": "高严重性漏洞（不包括别名）",
+    "low": "低严重程度漏洞（不包括别名）",
+    "medium": "中等严重程度漏洞（不包括别名）",
+    "unassigned": "未指派的漏洞（不包括别名）"
   }
 }

@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "マッピングされたLDAPグループ",
     "mapped_oidc_groups": "マッピングされた OpenID Connect グループ",
     "mapped_teams": "マッピングされたチーム",
+    "match_mode": {
+      "and": "名前空間と名前の両方を一致させます",
+      "label": "コンポーネントマッチングモード",
+      "or": "名前空間または名前を一致させます"
+    },
     "maven": "Maven",
     "members": "メンバー",
     "mime_type": "MIMEタイプ",
@@ -963,10 +968,10 @@
     "warn": "警告"
   },
   "vulnerability": {
-    "critical": "重大な脆弱性",
-    "high": "重大度の高い脆弱性",
-    "low": "重大度が低い脆弱性",
-    "medium": "中程度の重大度の脆弱性",
-    "unassigned": "未割り当ての脆弱性"
+    "critical": "重大な脆弱性（別名を除く）",
+    "high": "重大度の高い脆弱性（別名を除く）",
+    "low": "重大度が低い脆弱性（別名を除く）",
+    "medium": "中程度の重大度の脆弱性（別名を除く）",
+    "unassigned": "未割り当ての脆弱性（別名を除く）"
   }
 }
