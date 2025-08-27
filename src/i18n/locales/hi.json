@@ -373,6 +373,7 @@
     "apply_vex_tooltip": "इस परियोजना पर भेद्यता शोषण एक्सचेंज (VEX) दस्तावेज़ से विश्लेषण लागू करें।",
     "approved": "अनुमत",
     "attributed_on": "पर जिम्मेदार ठहराया",
+    "attributed_on_tooltip": "ISO-8601 अवधि के प्रारूप में जिम्मेदार (जैसे P1Y = 1 वर्ष; P2Y3M = 2 वर्ष, 3 महीने)",
     "audit_trail": "लेखापरीक्षा",
     "audit_vulnerabilities": "ऑडिट कमजोरियाँ",
     "auditing_progress": "लेखापरीक्षा प्रगति",
