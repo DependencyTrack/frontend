@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Mapped LDAP groups",
     "mapped_oidc_groups": "Mapped OpenID Connect Groups",
     "mapped_teams": "Mapped Teams",
+    "match_mode": {
+      "and": "Match both namespace AND name",
+      "label": "Component matching mode",
+      "or": "Match namespace OR name"
+    },
     "maven": "Maven",
     "members": "Members",
     "mime_type": "Mime type",
@@ -962,10 +967,10 @@
     "warn": "Warn"
   },
   "vulnerability": {
-    "critical": "Critical Severity Vulnerabilities",
-    "high": "High Severity Vulnerabilities",
-    "low": "Low Severity Vulnerabilities",
-    "medium": "Medium Severity Vulnerabilities",
-    "unassigned": "Unassigned Vulnerabilities"
+    "critical": "Critical Severity Vulnerabilities (excluding aliases)",
+    "high": "High Severity Vulnerabilities (excluding aliases)",
+    "low": "Low Severity Vulnerabilities (excluding aliases)",
+    "medium": "Medium Severity Vulnerabilities (excluding aliases)",
+    "unassigned": "Unassigned Vulnerabilities (excluding aliases)"
   }
 }
