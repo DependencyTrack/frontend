@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: Set up NodeJs
         uses: actions/setup-node@v4.4.0
@@ -57,10 +57,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4.3.0
+        uses: actions/download-artifact@v5.0.0
         with:
           name: assembled-frontend
 
