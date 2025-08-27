@@ -114,6 +114,7 @@
     "enable_telemetry_submission": "टेलीमेट्री सबमिशन सक्षम करें",
     "enabled": "सक्रिय",
     "enabled_for_tags": "टैग के लिए सक्षम",
+    "exclude_tags": "बाहर रखा टैग",
     "experimental": "प्रयोगात्मक",
     "experimental_info": "निम्नलिखित विकल्प प्रायोगिक विकल्प हैं और इनका उपयोग सावधानी के साथ किया जाना चाहिए।",
     "fortify_ssc": "फोर्टिफाई एसएससी",
@@ -148,6 +149,7 @@
     "internal_components": "आंतरिक घटक",
     "internal_identification_error": "आंतरिक घटक पहचान को कतारबद्ध करते समय त्रुटि हुई। विवरण के लिए सर्वर लॉग देखें",
     "internal_identification_queued": "आंतरिक घटक पहचान पंक्तिबद्ध",
+    "invert_tag_match": "चयनित टैग को बाहर करें",
     "jira": "Jira",
     "jira_auth_with_token": "जिरा व्यक्तिगत एक्सेस टोकन",
     "jira_desc": "जिरा सेवा प्रमाणीकरण",
@@ -308,9 +310,7 @@
     "vulnsource_osv_base_url": "OSV बेस यूआरएल",
     "welcome_message": "स्वागत संदेश",
     "welcome_message_desc": "उपयोगकर्ताओं के साइन इन करने से पहले डिपेंडेंसी-ट्रैक के आरंभ पृष्ठ पर दिखाई देने वाले स्वागत संदेश को अनुकूलित करें।",
-    "welcome_message_enable": "स्वागत संदेश सक्षम करें",
-    "exclude_tags": "बाहर रखा टैग",
-    "invert_tag_match": "चयनित टैग को बाहर करें"
+    "welcome_message_enable": "स्वागत संदेश सक्षम करें"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",

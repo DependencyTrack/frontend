@@ -114,6 +114,7 @@
     "enable_telemetry_submission": "Übermittlung von Telemetriedaten aktivieren",
     "enabled": "Aktiviert",
     "enabled_for_tags": "Aktiviert für Tags",
+    "exclude_tags": "Ausgeschlossene Tags",
     "experimental": "Experimentell",
     "experimental_info": "Die folgenden Optionen sind experimentelle Optionen und sollten mit Vorsicht verwendet werden.",
     "fortify_ssc": "Fortify SSC",
@@ -148,6 +149,7 @@
     "internal_components": "Interne Komponenten",
     "internal_identification_error": "Beim Warteschlangenvorgang für die interne Komponentenidentifikation ist ein Fehler aufgetreten. Weitere Informationen finden Sie in den Serverprotokollen.",
     "internal_identification_queued": "Interne Komponentenidentifikation in der Warteschlange",
+    "invert_tag_match": "Ausgewählte Tags ausschließen",
     "jira": "Jira",
     "jira_auth_with_token": "Persönlicher Jira-Zugriffstoken",
     "jira_desc": "Jira-Authentifizierung",
@@ -308,9 +310,7 @@
     "vulnsource_osv_base_url": "OSV-Basis-URL",
     "welcome_message": "Willkommensnachricht",
     "welcome_message_desc": "Passen Sie die Willkommensnachricht an, die auf der Startseite von Dependency-Track angezeigt wird, bevor sich Benutzer anmelden.",
-    "welcome_message_enable": "Willkommensnachricht aktivieren",
-    "exclude_tags": "Ausgeschlossene Tags",
-    "invert_tag_match": "Ausgewählte Tags ausschließen"
+    "welcome_message_enable": "Willkommensnachricht aktivieren"
   },
   "condition": {
     "forbidden": "Verboten (403)",

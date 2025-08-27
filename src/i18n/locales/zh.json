@@ -114,6 +114,7 @@
     "enable_telemetry_submission": "启用遥测提交",
     "enabled": "已启用",
     "enabled_for_tags": "为标签启用",
+    "exclude_tags": "排除标签",
     "experimental": "实验性的",
     "experimental_info": "以下选项是实验性选项，应谨慎使用。",
     "fortify_ssc": "Fortify SSC",
@@ -148,6 +149,7 @@
     "internal_components": "内部组件",
     "internal_identification_error": "排队内部组件识别时发生错误。请查看服务器日志了解详细信息",
     "internal_identification_queued": "内部组件识别排队",
+    "invert_tag_match": "排除选定的标签",
     "jira": "Jira",
     "jira_auth_with_token": "Jira 个人访问令牌",
     "jira_desc": "Jira 服务身份验证",
@@ -308,9 +310,7 @@
     "vulnsource_osv_base_url": "OSV 基本 URL",
     "welcome_message": "欢迎辞",
     "welcome_message_desc": "自定义用户登录前 Dependency-Track 起始页上显示的欢迎消息。",
-    "welcome_message_enable": "启用欢迎消息",
-    "exclude_tags": "排除标签",
-    "invert_tag_match": "排除选定的标签"
+    "welcome_message_enable": "启用欢迎消息"
   },
   "condition": {
     "forbidden": "禁止 (403)",

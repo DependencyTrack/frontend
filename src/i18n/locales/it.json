@@ -114,6 +114,7 @@
     "enable_telemetry_submission": "Abilita l'invio della telemetria",
     "enabled": "Abilitato",
     "enabled_for_tags": "Abilitato per i tag",
+    "exclude_tags": "Tag esclusi",
     "experimental": "Sperimentale",
     "experimental_info": "Le seguenti opzioni sono opzioni sperimentali e devono essere utilizzate con precauzione.",
     "fortify_ssc": "Fortifica la SSC",
@@ -148,6 +149,7 @@
     "internal_components": "Componenti interni",
     "internal_identification_error": "Si è verificato un errore nell'accodamento dell'identificazione del componente interno. Controlla i log del server per i dettagli",
     "internal_identification_queued": "Identificazione del componente interno in coda",
+    "invert_tag_match": "Escludi i tag selezionati",
     "jira": "Jira",
     "jira_auth_with_token": "Token di accesso personale Jira",
     "jira_desc": "Autenticazione del servizio Jira",
@@ -308,9 +310,7 @@
     "vulnsource_osv_base_url": "URL di base OSV",
     "welcome_message": "Messaggio di benvenuto",
     "welcome_message_desc": "Personalizza il messaggio di benvenuto che appare nella pagina iniziale di Dependency-Track prima che gli utenti accedano.",
-    "welcome_message_enable": "Abilita il messaggio di benvenuto",
-    "exclude_tags": "Tag esclusi",
-    "invert_tag_match": "Escludi i tag selezionati"
+    "welcome_message_enable": "Abilita il messaggio di benvenuto"
   },
   "condition": {
     "forbidden": "Proibito (403)",

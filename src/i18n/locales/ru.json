@@ -114,6 +114,7 @@
     "enable_telemetry_submission": "Включить подчинение телеметрии",
     "enabled": "Включено",
     "enabled_for_tags": "Включено для тегов",
+    "exclude_tags": "Исключены теги",
     "experimental": "Экспериментально",
     "experimental_info": "Следующие параметры являются экспериментальными и должны использоваться с осторожностью.",
     "fortify_ssc": "Fortify SSC",
@@ -148,6 +149,7 @@
     "internal_components": "Внутренние компоненты",
     "internal_identification_error": "Произошла ошибка при постановке задачи по идентификации внутренних компонентов в очередь. Проверьте логи сервера для получения деталей.",
     "internal_identification_queued": "Идентификация внутренних компонентов поставлена в очередь",
+    "invert_tag_match": "Исключить выбранные теги",
     "jira": "Jira",
     "jira_auth_with_token": "Личный токен доступа Jira",
     "jira_desc": "Аутентификация сервиса Jira",
@@ -308,9 +310,7 @@
     "vulnsource_osv_base_url": "Базовый URL OSV",
     "welcome_message": "Приветственное сообщение",
     "welcome_message_desc": "Настройте приветственное сообщение, которое отображается на стартовой странице Dependency-Track перед входом пользователей.",
-    "welcome_message_enable": "Включить приветственное сообщение",
-    "exclude_tags": "Исключены теги",
-    "invert_tag_match": "Исключить выбранные теги"
+    "welcome_message_enable": "Включить приветственное сообщение"
   },
   "condition": {
     "forbidden": "Запрещено (403)",
