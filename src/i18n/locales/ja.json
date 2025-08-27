@@ -373,6 +373,7 @@
     "apply_vex_tooltip": "Vulnerability Exploitability eXchange (VEX) ドキュメントからの分析をこのプロジェクトに適用します。",
     "approved": "承認された",
     "attributed_on": "帰属先",
+    "attributed_on_tooltip": "ISO-8601期間形式で帰属します（例：P1Y = 1年; P2Y3M = 2年、3か月）",
     "audit_trail": "監査証跡",
     "audit_vulnerabilities": "監査の脆弱性",
     "auditing_progress": "監査の進捗",
