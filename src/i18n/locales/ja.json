@@ -819,6 +819,7 @@
     "risk_score": "リスクスコア",
     "risk_type": "リスクの種類",
     "rollback": "ロールバック",
+    "scope": "範囲",
     "search": "検索",
     "search_parent": "親を検索するには入力してください",
     "security_risk": "セキュリティリスク",
