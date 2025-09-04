@@ -1,8 +1,8 @@
 <template>
   <b-list-group-item class="flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
-      <span class="text-monospace">{{ apiKey.maskedKey }}</span>
-      <div class="d-flex">
+      <span class="text-monospace">{{ apiKey.maskedKey.split('*')[0] }}</span>
+      <div class="align-left">
         <div v-show="apiKey.legacy">
           <span
             class="ml-3"
