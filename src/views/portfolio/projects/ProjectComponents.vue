@@ -262,6 +262,38 @@ export default {
           },
         },
         {
+          title: this.$t('message.issue_tracker'),
+          field: 'externalReferences',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            if (
+              Object.prototype.hasOwnProperty.call(row, 'externalReferences')
+            ) {
+              let issueTrackerRefs = '';
+              row.externalReferences.forEach((externalRef) => {
+                if (
+                  Object.prototype.hasOwnProperty.call(externalRef, 'type') &&
+                  externalRef.type == 'issue-tracker'
+                ) {
+                  if (issueTrackerRefs.length > 0) {
+                    issueTrackerRefs += '<br/>';
+                  }
+                  issueTrackerRefs +=
+                    '<a href="' +
+                    xssFilters.inHTMLData(externalRef.url) +
+                    '">' +
+                    xssFilters.inHTMLData(externalRef.url) +
+                    '</a>';
+                }
+              });
+              return issueTrackerRefs;
+            } else {
+              return '';
+            }
+          },
+        },
+        {
           title: this.$t('message.license'),
           field: 'license',
           sortable: false,
