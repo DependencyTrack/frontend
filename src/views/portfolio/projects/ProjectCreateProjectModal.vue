@@ -254,7 +254,7 @@
     <div v-if="!isAddingAuthor">
       <b-table
         :items="project.authors"
-        :fileds="authorFields"
+        :fields="authorFields"
         striped
         hover
         small
@@ -270,7 +270,7 @@
         {{ this.newAuthor.name }}
       </div>
       <b-button variant="primary" class="mt-3" @click="isAddingAuthor = true">
-        Add Author
+        {{ $t('message.add_author') }}
       </b-button>
 
       <b-button variant="outline-secondary" class="mt-3 ml-2" @click="goBackToProjectModal">
@@ -293,7 +293,7 @@
 
           <b-button type="submit" variant="success">Save</b-button>
           <b-button variant="secondary" @click="cancelAddAuthor" class="ml-2">
-            Cancel
+            $t('message.cancel')
           </b-button>
         </b-form>
       </div>
@@ -313,6 +313,8 @@ import common from '../../../shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 import { BTable, BTableLite } from 'bootstrap-vue';
+import ProjectAddVersionModal  from './ProjectAddVersionModal.vue';
+import ProjectAddAuthorModal from './ProjectAddAuthorModal.vue';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -569,7 +571,7 @@ export default {
         return project.name;
       }
     },
-    asyncFind: function (query) {4
+    asyncFind: function (query) {
       if (query) {
         this.isLoading = true;
         let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}?searchText=${query}&excludeInactive=true`;

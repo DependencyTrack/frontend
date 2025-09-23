@@ -114,6 +114,10 @@
               deselectLabel=""
             ></multiselect>
           </div>
+          <label> Authors</label>
+          <b-table
+            :items="project.authors"
+            />
           <b-form-group
             id="project-description-form-group"
             :label="this.$t('message.description')"
@@ -367,7 +371,7 @@
         style="border: 0; padding: 0"
         v-if="
           project.metadata &&
-          (project.metadata.authors || project.metadata.supplier)
+          (project.authors || project.metadata.supplier)
         "
       >
         <template v-slot:title
@@ -385,7 +389,7 @@
                     id="authorsTable"
                     ref="authorsTable"
                     :columns="contactsTableColumns"
-                    :data="project.metadata.authors"
+                    :data="project.authors"
                     :options="contactsTableOptions"
                   >
                   </bootstrap-table>
@@ -466,6 +470,13 @@
         v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
         >{{ $t('message.add_version') }}</b-button
       >
+      <b-button
+        size="md"
+        variant="outline-primary"
+        v-b-modal.projectAddAuthorModal
+        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+        >{{ $t('message.add_author') }}</b-button
+      >
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
@@ -492,7 +503,7 @@ import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
-
+import ProjectAddAuthorModal  from './ProjectAddAuthorModal.vue';
 export default {
   name: 'ProjectDetailsModal',
   mixins: [
@@ -507,6 +518,7 @@ export default {
     VueTagsInput,
     cSwitch,
     Multiselect,
+    ProjectAddAuthorModal
   },
   props: {
     project: Object,
