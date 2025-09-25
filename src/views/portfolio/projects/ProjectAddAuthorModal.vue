@@ -43,11 +43,12 @@ export default {
   },
   methods: {
     handleSubmit() {
-      console.log("Form submitted with:", {
+      const newAuthor = {
         name: this.name,
         email: this.email,
         phone: this.phone,
-      });
+      };
+      this.$emit("author-added", newAuthor);
       this.name = "";
       this.email = "";  
       this.phone = "";

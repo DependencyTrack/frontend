@@ -1,494 +1,497 @@
 <template>
-  <b-modal
-    id="projectDetailsModal"
-    size="lg"
-    hide-header-close
-    no-stacking
-    :title="$t('message.project_details')"
-    @show="initializeTags"
-    @hide="resetValues()"
-  >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
-          ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
-        >
-        <b-card>
-          <b-input-group-form-input
-            id="project-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.name"
-            lazy="true"
-            required="true"
-            feedback="true"
-            autofocus="false"
-            :label="$t('message.project_name')"
-            :tooltip="this.$t('message.project_name_desc')"
-            :feedback-text="$t('message.required_project_name')"
-            v-on:change="syncReadOnlyNameField"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <b-row align-v="stretch">
-            <b-col>
-              <b-input-group-form-input
-                id="project-version-input"
-                input-group-size="mb-3"
-                type="text"
-                v-model="project.version"
-                lazy="true"
-                required="false"
-                feedback="false"
-                autofocus="false"
-                v-on:change="syncReadOnlyVersionField"
-                :label="$t('message.version')"
-                :tooltip="this.$t('message.component_version_desc')"
-                :readonly="
-                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
-                "
-              />
-            </b-col>
-            <b-col cols="auto">
-              <b-input-group-form-switch
-                id="project-details-islatest"
-                :label="$t('message.project_is_latest')"
-                v-model="project.isLatest"
-                :show-placeholder-label="true"
-                :readonly="
-                  this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
-                "
-              />
-            </b-col>
-          </b-row>
-          <b-input-group-form-select
-            id="v-classifier-input"
-            required="true"
-            v-model="project.classifier"
-            :options="sortAvailableClassifiers"
-            :label="$t('message.classifier')"
-            :tooltip="$t('message.component_classifier_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <b-input-group-form-select
-            id="v-collection-logic-input"
-            required="true"
-            v-model="project.collectionLogic"
-            :options="availableCollectionLogics"
-            :label="$t('message.collectionLogic')"
-            :tooltip="$t('message.project_collection_logic_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            v-on:change="syncCollectionTagsVisibility"
-          />
-          <vue-tags-input
-            id="input-collectionTags"
-            v-model="collectionTagTyping"
-            :tags="collectionTags"
-            :add-on-key="addOnKeys"
-            :placeholder="$t('message.project_add_collection_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="
-              (newCollectionTags) => (this.collectionTags = newCollectionTags)
-            "
-            class="mw-100 bg-transparent text-lowercase"
-            :max-tags="1"
-            v-show="showCollectionTags"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <div style="margin-bottom: 1rem">
-            <label>Parent</label>
-            <multiselect
-              v-model="selectedParent"
-              id="multiselect"
-              :custom-label="createProjectLabel"
-              :placeholder="this.$t('message.search_parent')"
-              open-direction="bottom"
-              :options="availableParents"
-              :multiple="false"
-              :searchable="true"
-              track-by="uuid"
-              :loading="isLoading"
-              @search-change="asyncFind"
-              :internal-search="false"
-              :close-on-select="true"
-              selectLabel=""
-              deselectLabel=""
-            ></multiselect>
-          </div>
-          <label> Authors</label>
-          <b-table
-            :items="project.authors"
-            />
-          <b-form-group
-            id="project-description-form-group"
-            :label="this.$t('message.description')"
-            label-for="project-description-input"
+  <div>
+    <b-modal
+      id="projectDetailsModal"
+      size="lg"
+      hide-header-close
+      no-stacking
+      :title="$t('message.project_details')"
+      @show="initializeTags"
+      @hide="resetValues()"
+    >
+      <b-tabs class="body-bg-color" style="border: 0; padding: 0">
+        <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+          <template v-slot:title
+            ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
           >
-            <b-form-textarea
-              id="project-description-description"
-              v-model="project.description"
-              rows="3"
+          <b-card>
+            <b-input-group-form-input
+              id="project-name-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.name"
+              lazy="true"
+              required="true"
+              feedback="true"
+              autofocus="false"
+              :label="$t('message.project_name')"
+              :tooltip="this.$t('message.project_name_desc')"
+              :feedback-text="$t('message.required_project_name')"
+              v-on:change="syncReadOnlyNameField"
               :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             />
-          </b-form-group>
-          <b-form-group
-            id="project-classifier-form-group"
-            :label="this.$t('message.tags')"
-            label-for="input-4"
-          >
-            <vue-tags-input
-              id="input-4"
-              v-model="tag"
-              :tags="tags"
-              :add-on-key="addOnKeys"
-              :placeholder="$t('message.add_tag')"
-              :autocomplete-items="tagsAutoCompleteItems"
-              @tags-changed="(newTags) => (this.tags = newTags)"
-              class="mw-100 bg-transparent text-lowercase"
-              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            />
-          </b-form-group>
-          <b-input-group-form-switch
-            id="project-details-active"
-            :label-on="$t('message.active')"
-            :label-off="$t('message.inactive')"
-            v-model="project.active"
-            :tooltip="$t('message.inactive_active_children')"
-            :disabled="
-              this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) ||
-              (project.active && this.hasActiveChild(project))
-            "
-          />
-          <p></p>
-          <b-input-group-form-input
-            id="project-uuid"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.uuid"
-            lazy="false"
-            required="false"
-            feedback="false"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.object_identifier')"
-            :tooltip="this.$t('message.object_identifier_desc')"
-            :readonly="true"
-          />
-        </b-card>
-      </b-tab>
-      <b-tab class="body-bg-color" style="border: 0; padding: 0">
-        <template v-slot:title
-          ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
-        >
-        <b-card>
-          <b-input-group-form-input
-            id="project-name-input-identify"
-            input-group-size="mb-3"
-            type="text"
-            v-model="readOnlyProjectName"
-            lazy="true"
-            required="false"
-            feedback="true"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.project_name')"
-            :tooltip="this.$t('message.project_name_desc')"
-            :readonly="true"
-          />
-          <b-input-group-form-input
-            id="project-version-input-identify"
-            input-group-size="mb-3"
-            type="text"
-            v-model="readOnlyProjectVersion"
-            lazy="true"
-            required="false"
-            feedback="true"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.version')"
-            :tooltip="this.$t('message.component_version_desc')"
-            :readonly="true"
-          />
-          <b-input-group-form-input
-            id="project-group-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.group"
-            required="false"
-            :label="$t('message.component_namespace_group_vendor')"
-            :tooltip="this.$t('message.component_group_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <b-input-group-form-input
-            id="project-purl-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.purl"
-            required="false"
-            :label="$t('message.package_url_full')"
-            :tooltip="this.$t('message.component_package_url_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <b-input-group-form-input
-            id="project-cpe-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.cpe"
-            required="false"
-            :label="$t('message.cpe_full')"
-            :tooltip="$t('message.component_cpe_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-          <b-input-group-form-input
-            id="project-swidTagId-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.swidTagId"
-            required="false"
-            :label="$t('message.swid_tagid')"
-            :tooltip="$t('message.component_swid_tagid_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
-        </b-card>
-      </b-tab>
-      <b-tab
-        class="body-bg-color"
-        style="border: 0; padding: 0"
-        v-if="project.manufacturer"
-      >
-        <template v-slot:title
-          ><i class="fa fa-industry"></i>
-          {{ $t('message.manufacturer') }}</template
-        >
-        <b-card>
-          <b-input-group-form-input
-            id="project-manufacturer-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.manufacturer.name"
-            required="false"
-            readonly
-            :label="$t('message.manufacturer_name')"
-            disabled="true"
-            :tooltip="this.$t('message.manufacturer_name_desc')"
-          />
-          <b-form-group
-            id="manufacturerUrlsTable-Fieldset"
-            :label="this.$t('message.urls')"
-            label-for="manufacturerUrlsTable"
-          >
-            <bootstrap-table
-              id="manufacturerUrlsTable"
-              ref="manufacturerUrlsTable"
-              :columns="urlsTableColumns"
-              :data="project.manufacturer.urls"
-              :options="urlsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-          <b-form-group
-            id="manufacturerContactsTable-Fieldset"
-            :label="this.$t('message.contacts')"
-            label-for="contactsTable"
-          >
-            <bootstrap-table
-              id="manufacturerContactsTable"
-              ref="manufacturerContactsTable"
-              :columns="contactsTableColumns"
-              :data="project.manufacturer.contacts"
-              :options="contactsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-        </b-card>
-      </b-tab>
-      <b-tab
-        class="body-bg-color"
-        style="border: 0; padding: 0"
-        v-if="project.supplier"
-      >
-        <template v-slot:title
-          ><i class="fa fa-building-o"></i>
-          {{ $t('message.supplier') }}</template
-        >
-        <b-card>
-          <b-input-group-form-input
-            id="project-supplier-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.supplier.name"
-            required="false"
-            readonly
-            :label="$t('message.supplier_name')"
-            disabled="true"
-            :tooltip="this.$t('message.project_supplier_name_desc')"
-          />
-          <b-form-group
-            id="supplierUrlsTable-Fieldset"
-            :label="this.$t('message.urls')"
-            label-for="supplierUrlsTable"
-          >
-            <bootstrap-table
-              id="supplierUrlsTable"
-              ref="supplierUrlsTable"
-              :columns="urlsTableColumns"
-              :data="project.supplier.urls"
-              :options="urlsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-          <b-form-group
-            id="supplierContactsTable-Fieldset"
-            :label="this.$t('message.contacts')"
-            label-for="contactsTable"
-          >
-            <bootstrap-table
-              id="supplierContactsTable"
-              ref="supplierContactsTable"
-              :columns="contactsTableColumns"
-              :data="project.supplier.contacts"
-              :options="contactsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-        </b-card>
-      </b-tab>
-      <b-tab>
-        <template v-slot:title
-          ><i class="fa fa-external-link"></i>
-          {{ $t('message.external_references') }}</template
-        >
-        <b-card>
-          <bootstrap-table
-            ref="referencesTable"
-            :columns="referencesTableColumns"
-            :data="project.externalReferences"
-            :options="referencesTableOptions"
-          >
-          </bootstrap-table>
-        </b-card>
-      </b-tab>
-      <b-tab
-        style="border: 0; padding: 0"
-        v-if="
-          project.metadata &&
-          (project.authors || project.metadata.supplier)
-        "
-      >
-        <template v-slot:title
-          ><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template
-        >
-        <b-card>
-          <b-tabs pills card vertical>
-            <b-tab
-              :title="$t('message.authors')"
-              v-if="project.metadata.authors"
-            >
-              <b-card>
-                <b-form-group id="authorsTable-Fieldset">
-                  <bootstrap-table
-                    id="authorsTable"
-                    ref="authorsTable"
-                    :columns="contactsTableColumns"
-                    :data="project.authors"
-                    :options="contactsTableOptions"
-                  >
-                  </bootstrap-table>
-                </b-form-group>
-              </b-card>
-            </b-tab>
-            <b-tab
-              :title="$t('message.supplier')"
-              v-if="project.metadata.supplier"
-            >
-              <b-card>
+            <b-row align-v="stretch">
+              <b-col>
                 <b-input-group-form-input
-                  id="project-metadata-supplier-name-input"
+                  id="project-version-input"
                   input-group-size="mb-3"
                   type="text"
-                  v-model="project.metadata.supplier.name"
+                  v-model="project.version"
+                  lazy="true"
                   required="false"
-                  readonly
-                  :label="$t('message.supplier_name')"
-                  disabled="true"
-                  :tooltip="
-                    this.$t('message.project_metadata_supplier_name_desc')
+                  feedback="false"
+                  autofocus="false"
+                  v-on:change="syncReadOnlyVersionField"
+                  :label="$t('message.version')"
+                  :tooltip="this.$t('message.component_version_desc')"
+                  :readonly="
+                    this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
                   "
                 />
-                <b-form-group
-                  id="supplierUrlsTable-Fieldset"
-                  :label="this.$t('message.urls')"
-                  label-for="supplierUrlsTable"
-                >
-                  <bootstrap-table
-                    id="supplierUrlsTable"
-                    ref="supplierUrlsTable"
-                    :columns="urlsTableColumns"
-                    :data="project.metadata.supplier.urls"
-                    :options="urlsTableOptions"
+              </b-col>
+              <b-col cols="auto">
+                <b-input-group-form-switch
+                  id="project-details-islatest"
+                  :label="$t('message.project_is_latest')"
+                  v-model="project.isLatest"
+                  :show-placeholder-label="true"
+                  :readonly="
+                    this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)
+                  "
+                />
+              </b-col>
+            </b-row>
+            <b-input-group-form-select
+              id="v-classifier-input"
+              required="true"
+              v-model="project.classifier"
+              :options="sortAvailableClassifiers"
+              :label="$t('message.classifier')"
+              :tooltip="$t('message.component_classifier_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+            <b-input-group-form-select
+              id="v-collection-logic-input"
+              required="true"
+              v-model="project.collectionLogic"
+              :options="availableCollectionLogics"
+              :label="$t('message.collectionLogic')"
+              :tooltip="$t('message.project_collection_logic_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              v-on:change="syncCollectionTagsVisibility"
+            />
+            <vue-tags-input
+              id="input-collectionTags"
+              v-model="collectionTagTyping"
+              :tags="collectionTags"
+              :add-on-key="addOnKeys"
+              :placeholder="$t('message.project_add_collection_tag')"
+              :autocomplete-items="tagsAutoCompleteItems"
+              @tags-changed="
+                (newCollectionTags) => (this.collectionTags = newCollectionTags)
+              "
+              class="mw-100 bg-transparent text-lowercase"
+              :max-tags="1"
+              v-show="showCollectionTags"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+            <div style="margin-bottom: 1rem">
+              <label>Parent</label>
+              <multiselect
+                v-model="selectedParent"
+                id="multiselect"
+                :custom-label="createProjectLabel"
+                :placeholder="this.$t('message.search_parent')"
+                open-direction="bottom"
+                :options="availableParents"
+                :multiple="false"
+                :searchable="true"
+                track-by="uuid"
+                :loading="isLoading"
+                @search-change="asyncFind"
+                :internal-search="false"
+                :close-on-select="true"
+                selectLabel=""
+                deselectLabel=""
+              ></multiselect>
+            </div>
+            <label> Authors</label>
+            <b-table
+              :items="project.authors"
+              />
+            <b-form-group
+              id="project-description-form-group"
+              :label="this.$t('message.description')"
+              label-for="project-description-input"
+            >
+              <b-form-textarea
+                id="project-description-description"
+                v-model="project.description"
+                rows="3"
+                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              />
+            </b-form-group>
+            <b-form-group
+              id="project-classifier-form-group"
+              :label="this.$t('message.tags')"
+              label-for="input-4"
+            >
+              <vue-tags-input
+                id="input-4"
+                v-model="tag"
+                :tags="tags"
+                :add-on-key="addOnKeys"
+                :placeholder="$t('message.add_tag')"
+                :autocomplete-items="tagsAutoCompleteItems"
+                @tags-changed="(newTags) => (this.tags = newTags)"
+                class="mw-100 bg-transparent text-lowercase"
+                :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              />
+            </b-form-group>
+            <b-input-group-form-switch
+              id="project-details-active"
+              :label-on="$t('message.active')"
+              :label-off="$t('message.inactive')"
+              v-model="project.active"
+              :tooltip="$t('message.inactive_active_children')"
+              :disabled="
+                this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT) ||
+                (project.active && this.hasActiveChild(project))
+              "
+            />
+            <p></p>
+            <b-input-group-form-input
+              id="project-uuid"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.uuid"
+              lazy="false"
+              required="false"
+              feedback="false"
+              autofocus="false"
+              disabled="true"
+              :label="$t('message.object_identifier')"
+              :tooltip="this.$t('message.object_identifier_desc')"
+              :readonly="true"
+            />
+          </b-card>
+        </b-tab>
+        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+          <template v-slot:title
+            ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
+          >
+          <b-card>
+            <b-input-group-form-input
+              id="project-name-input-identify"
+              input-group-size="mb-3"
+              type="text"
+              v-model="readOnlyProjectName"
+              lazy="true"
+              required="false"
+              feedback="true"
+              autofocus="false"
+              disabled="true"
+              :label="$t('message.project_name')"
+              :tooltip="this.$t('message.project_name_desc')"
+              :readonly="true"
+            />
+            <b-input-group-form-input
+              id="project-version-input-identify"
+              input-group-size="mb-3"
+              type="text"
+              v-model="readOnlyProjectVersion"
+              lazy="true"
+              required="false"
+              feedback="true"
+              autofocus="false"
+              disabled="true"
+              :label="$t('message.version')"
+              :tooltip="this.$t('message.component_version_desc')"
+              :readonly="true"
+            />
+            <b-input-group-form-input
+              id="project-group-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.group"
+              required="false"
+              :label="$t('message.component_namespace_group_vendor')"
+              :tooltip="this.$t('message.component_group_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+            <b-input-group-form-input
+              id="project-purl-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.purl"
+              required="false"
+              :label="$t('message.package_url_full')"
+              :tooltip="this.$t('message.component_package_url_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+            <b-input-group-form-input
+              id="project-cpe-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.cpe"
+              required="false"
+              :label="$t('message.cpe_full')"
+              :tooltip="$t('message.component_cpe_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+            <b-input-group-form-input
+              id="project-swidTagId-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.swidTagId"
+              required="false"
+              :label="$t('message.swid_tagid')"
+              :tooltip="$t('message.component_swid_tagid_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+            />
+          </b-card>
+        </b-tab>
+        <b-tab
+          class="body-bg-color"
+          style="border: 0; padding: 0"
+          v-if="project.manufacturer"
+        >
+          <template v-slot:title
+            ><i class="fa fa-industry"></i>
+            {{ $t('message.manufacturer') }}</template
+          >
+          <b-card>
+            <b-input-group-form-input
+              id="project-manufacturer-name-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.manufacturer.name"
+              required="false"
+              readonly
+              :label="$t('message.manufacturer_name')"
+              disabled="true"
+              :tooltip="this.$t('message.manufacturer_name_desc')"
+            />
+            <b-form-group
+              id="manufacturerUrlsTable-Fieldset"
+              :label="this.$t('message.urls')"
+              label-for="manufacturerUrlsTable"
+            >
+              <bootstrap-table
+                id="manufacturerUrlsTable"
+                ref="manufacturerUrlsTable"
+                :columns="urlsTableColumns"
+                :data="project.manufacturer.urls"
+                :options="urlsTableOptions"
+              >
+              </bootstrap-table>
+            </b-form-group>
+            <b-form-group
+              id="manufacturerContactsTable-Fieldset"
+              :label="this.$t('message.contacts')"
+              label-for="contactsTable"
+            >
+              <bootstrap-table
+                id="manufacturerContactsTable"
+                ref="manufacturerContactsTable"
+                :columns="contactsTableColumns"
+                :data="project.manufacturer.contacts"
+                :options="contactsTableOptions"
+              >
+              </bootstrap-table>
+            </b-form-group>
+          </b-card>
+        </b-tab>
+        <b-tab
+          class="body-bg-color"
+          style="border: 0; padding: 0"
+          v-if="project.supplier"
+        >
+          <template v-slot:title
+            ><i class="fa fa-building-o"></i>
+            {{ $t('message.supplier') }}</template
+          >
+          <b-card>
+            <b-input-group-form-input
+              id="project-supplier-name-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.supplier.name"
+              required="false"
+              readonly
+              :label="$t('message.supplier_name')"
+              disabled="true"
+              :tooltip="this.$t('message.project_supplier_name_desc')"
+            />
+            <b-form-group
+              id="supplierUrlsTable-Fieldset"
+              :label="this.$t('message.urls')"
+              label-for="supplierUrlsTable"
+            >
+              <bootstrap-table
+                id="supplierUrlsTable"
+                ref="supplierUrlsTable"
+                :columns="urlsTableColumns"
+                :data="project.supplier.urls"
+                :options="urlsTableOptions"
+              >
+              </bootstrap-table>
+            </b-form-group>
+            <b-form-group
+              id="supplierContactsTable-Fieldset"
+              :label="this.$t('message.contacts')"
+              label-for="contactsTable"
+            >
+              <bootstrap-table
+                id="supplierContactsTable"
+                ref="supplierContactsTable"
+                :columns="contactsTableColumns"
+                :data="project.supplier.contacts"
+                :options="contactsTableOptions"
+              >
+              </bootstrap-table>
+            </b-form-group>
+          </b-card>
+        </b-tab>
+        <b-tab>
+          <template v-slot:title
+            ><i class="fa fa-external-link"></i>
+            {{ $t('message.external_references') }}</template
+          >
+          <b-card>
+            <bootstrap-table
+              ref="referencesTable"
+              :columns="referencesTableColumns"
+              :data="project.externalReferences"
+              :options="referencesTableOptions"
+            >
+            </bootstrap-table>
+          </b-card>
+        </b-tab>
+        <b-tab
+          style="border: 0; padding: 0"
+          v-if="
+            project.metadata &&
+            (project.authors || project.metadata.supplier)
+          "
+        >
+          <template v-slot:title
+            ><i class="fa fa-file-text-o"></i> {{ $t('message.bom') }}</template
+          >
+          <b-card>
+            <b-tabs pills card vertical>
+              <b-tab
+                :title="$t('message.authors')"
+                v-if="project.metadata.authors"
+              >
+                <b-card>
+                  <b-form-group id="authorsTable-Fieldset">
+                    <bootstrap-table
+                      id="authorsTable"
+                      ref="authorsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.authors"
+                      :options="contactsTableOptions"
+                    >
+                    </bootstrap-table>
+                  </b-form-group>
+                </b-card>
+              </b-tab>
+              <b-tab
+                :title="$t('message.supplier')"
+                v-if="project.metadata.supplier"
+              >
+                <b-card>
+                  <b-input-group-form-input
+                    id="project-metadata-supplier-name-input"
+                    input-group-size="mb-3"
+                    type="text"
+                    v-model="project.metadata.supplier.name"
+                    required="false"
+                    readonly
+                    :label="$t('message.supplier_name')"
+                    disabled="true"
+                    :tooltip="
+                      this.$t('message.project_metadata_supplier_name_desc')
+                    "
+                  />
+                  <b-form-group
+                    id="supplierUrlsTable-Fieldset"
+                    :label="this.$t('message.urls')"
+                    label-for="supplierUrlsTable"
                   >
-                  </bootstrap-table>
-                </b-form-group>
-                <b-form-group
-                  id="supplierContactsTable-Fieldset"
-                  :label="this.$t('message.contacts')"
-                  label-for="contactsTable"
-                >
-                  <bootstrap-table
-                    id="supplierContactsTable"
-                    ref="supplierContactsTable"
-                    :columns="contactsTableColumns"
-                    :data="project.metadata.supplier.contacts"
-                    :options="contactsTableOptions"
+                    <bootstrap-table
+                      id="supplierUrlsTable"
+                      ref="supplierUrlsTable"
+                      :columns="urlsTableColumns"
+                      :data="project.metadata.supplier.urls"
+                      :options="urlsTableOptions"
+                    >
+                    </bootstrap-table>
+                  </b-form-group>
+                  <b-form-group
+                    id="supplierContactsTable-Fieldset"
+                    :label="this.$t('message.contacts')"
+                    label-for="contactsTable"
                   >
-                  </bootstrap-table>
-                </b-form-group>
-              </b-card>
-            </b-tab>
-          </b-tabs>
-        </b-card>
-      </b-tab>
-    </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button
-        size="md"
-        variant="outline-danger"
-        @click="deleteProject()"
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-        >{{ $t('message.delete') }}</b-button
-      >
-      <b-button
-        size="md"
-        variant="outline-primary"
-        v-b-modal.projectPropertiesModal
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-        >{{ $t('message.properties') }}</b-button
-      >
-      <b-button
-        size="md"
-        variant="outline-primary"
-        v-b-modal.projectAddVersionModal
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-        >{{ $t('message.add_version') }}</b-button
-      >
-      <b-button
-        size="md"
-        variant="outline-primary"
-        v-b-modal.projectAddAuthorModal
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-        >{{ $t('message.add_author') }}</b-button
-      >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button
-        size="md"
-        variant="primary"
-        @click="updateProject()"
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
-        >{{ $t('message.update') }}</b-button
-      >
-    </template>
-  </b-modal>
+                    <bootstrap-table
+                      id="supplierContactsTable"
+                      ref="supplierContactsTable"
+                      :columns="contactsTableColumns"
+                      :data="project.metadata.supplier.contacts"
+                      :options="contactsTableOptions"
+                    >
+                    </bootstrap-table>
+                  </b-form-group>
+                </b-card>
+              </b-tab>
+            </b-tabs>
+          </b-card>
+        </b-tab>
+      </b-tabs>
+      <template v-slot:modal-footer="{ cancel }">
+        <b-button
+          size="md"
+          variant="outline-danger"
+          @click="deleteProject()"
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          >{{ $t('message.delete') }}</b-button
+        >
+        <b-button
+          size="md"
+          variant="outline-primary"
+          v-b-modal.projectPropertiesModal
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          >{{ $t('message.properties') }}</b-button
+        >
+        <b-button
+          size="md"
+          variant="outline-primary"
+          v-b-modal.projectAddVersionModal
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          >{{ $t('message.add_version') }}</b-button
+        >
+        <b-button
+          size="md"
+          variant="outline-primary"
+          v-b-modal.projectAddAuthorModal
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          >{{ $t('message.add_author') }}</b-button
+        >
+        <b-button size="md" variant="secondary" @click="cancel()">{{
+          $t('message.close')
+        }}</b-button>
+        <b-button
+          size="md"
+          variant="primary"
+          @click="updateProject()"
+          v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+          >{{ $t('message.update') }}</b-button
+        >
+      </template>
+    </b-modal>
+    <ProjectAddAuthorModal @author-added="addAuthor"/>
+  </div>
 </template>
 
 <script>
@@ -504,6 +507,7 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 import ProjectAddAuthorModal  from './ProjectAddAuthorModal.vue';
+
 export default {
   name: 'ProjectDetailsModal',
   mixins: [
@@ -695,6 +699,12 @@ export default {
     },
   },
   methods: {
+    addAuthor(author) {
+      if (!this.project.authors) {
+        this.project.authors = [];
+      }
+      this.project.authors.push(author);
+    },
     initializeTags: function () {
       this.tags = (this.project.tags || []).map((tag) => ({ text: tag.name }));
       this.collectionTags = this.project.collectionTag
@@ -722,7 +732,7 @@ export default {
       this.axios
         .post(url, {
           uuid: this.project.uuid,
-          author: this.project.author,
+          authors: this.project.authors,
           publisher: this.project.publisher,
           supplier: this.project.supplier,
           group: this.project.group,

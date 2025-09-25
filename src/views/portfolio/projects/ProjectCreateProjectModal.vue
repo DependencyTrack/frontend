@@ -293,7 +293,7 @@
 
           <b-button type="submit" variant="success">Save</b-button>
           <b-button variant="secondary" @click="cancelAddAuthor" class="ml-2">
-            $t('message.cancel')
+            Cancel
           </b-button>
         </b-form>
       </div>
