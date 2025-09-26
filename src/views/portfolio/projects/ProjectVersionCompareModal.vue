@@ -219,11 +219,16 @@ export default {
         let niceKeyName = key
           .replace(/([A-Z])/g, ' $1')
           .replace(/^./, (first) => first.toUpperCase());
-        this.consolidatedMetrics.push({
-          metric: niceKeyName,
-          original: this.project.metrics[key],
-          compare: this.comparisonProject.metrics[key],
-        });
+        try {
+          this.consolidatedMetrics.push({
+            metric: niceKeyName,
+            original: this.project.metrics?.[key] ?? 0,
+            compare: this.comparisonProject.metrics?.[key] ?? 0,
+          });
+        } catch (e) {
+          console.log(e);
+          return e;
+        }
       });
     },
     consolidateComponents() {
