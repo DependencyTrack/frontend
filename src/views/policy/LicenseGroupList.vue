@@ -105,30 +105,55 @@ export default {
             i18n,
             template: `
                 <div>
-                <b-row class="expanded-row">
-                  <b-col sm="6">
-                    <b-input-group-form-input id="input-license-group-name" :label="$t('message.name')" input-group-size="mb-3"
-                                              required="true" type="text" v-model="name" lazy="true" autofocus="true"
-                                              v-debounce:750ms="updateLicenseGroup" :debounce-events="'keyup'" />
-                  </b-col>
-                  <b-col sm="6">
-                  </b-col>
-                </b-row>
-                <b-row class="expanded-row">
-                  <b-col sm="12">
-                    <b-form-group :label="this.$t('message.licenses')">
-                      <div class="list-group">
-                        <span v-for="license in licenses">
-                          <actionable-list-group-item :value="license.name" :delete-icon="true" v-on:actionClicked="removeLicense(license)"/>
-                        </span>
-                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLicenseModal')"/>
+                  <b-row class="expanded-row">
+                    <b-col sm="6">
+                      <b-input-group-form-input id="input-license-group-name" :label="$t('message.name')" input-group-size="mb-3"
+                                                required="true" type="text" v-model="name" lazy="true" autofocus="true"
+                                                v-debounce:750ms="updateLicenseGroup" :debounce-events="'keyup'" />
+                    </b-col>
+                    <b-col sm="6">
+                    </b-col>
+                  </b-row>
+                  <b-row class="expanded-row">
+                    <b-col sm="12">
+                      <b-form-group>
+                        <div>
+                          <div class="font-weight-bold mb-2">
+                            <b-row>
+                              <b-col md="8">{{$t('message.name')}}</b-col>
+                              <b-col md="3">{{$t('message.spdx_license_id')}}</b-col>
+                              <b-col md="1"></b-col>
+                            </b-row>
+                          </div>
+                          <div v-for="license in licenses" :key="license.uuid" class="mb-2">
+                            <b-row class="align-items-center">
+                              <b-col md="8" class="d-flex align-items-center">{{ license.name }}</b-col>
+                              <b-col md="3" class="d-flex align-items-center text-muted">
+                                <a
+                                  v-if="license.licenseId"
+                                  :href="'/portfolio/licenses/' + encodeURIComponent(license.licenseId)"
+                                >
+                                  {{ license.licenseId }}
+                                </a>
+                                <span v-else>-</span>
+                              </b-col>
+                              <b-col md="1" class="d-flex align-items-center justify-content-end">
+                                <b-button size="sm" variant="outline-danger" @click="removeLicense(license)">
+                                  <span class="fa fa-trash"></span>
+                                </b-button>
+                              </b-col>
+                            </b-row>
+                          </div>
+                          <div>
+                            <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectLicenseModal')" />
+                          </div>
+                        </div>
+                      </b-form-group>
+                      <div style="text-align:right">
+                        <b-button variant="outline-danger" @click="deleteLicenseGroup">{{ $t('message.delete_license_group') }}</b-button>
                       </div>
-                    </b-form-group>
-                    <div style="text-align:right">
-                       <b-button variant="outline-danger" @click="deleteLicenseGroup">{{ $t('message.delete_license_group') }}</b-button>
-                    </div>
-                  </b-col>
-                </b-row>
+                    </b-col>
+                  </b-row>
                   <select-license-modal v-on:selection="updateLicenseSelection" />
                 </div>
               `,
