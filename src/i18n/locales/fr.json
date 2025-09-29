@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Groupes LDAP associés",
     "mapped_oidc_groups": "Groupes OpenID Connect associés",
     "mapped_teams": "Équipes associées",
+    "match_mode": {
+      "and": "Faire correspondre à la fois l'espace de noms et le nom",
+      "label": "Mode de correspondance des composants",
+      "or": "Correspondre à l'espace de noms ou au nom"
+    },
     "maven": "Maven",
     "members": "Membres",
     "mime_type": "Type MIME",
@@ -961,10 +966,10 @@
     "warn": "Avertissement"
   },
   "vulnerability": {
-    "critical": "Vulnérabilités critiques",
-    "high": "Vulnérabilités de haute criticité",
-    "low": "Vulnérabilités de faible criticité",
-    "medium": "Vulnérabilités de criticité moyenne",
-    "unassigned": "Vulnérabilités non attribuées"
+    "critical": "Vulnérabilités critiques (alias exclus)",
+    "high": "Vulnérabilités de haute criticité (alias exclus)",
+    "low": "Vulnérabilités de faible criticité (alias exclus)",
+    "medium": "Vulnérabilités de criticité moyenne (alias exclus)",
+    "unassigned": "Vulnérabilités non attribuées (alias exclus)"
   }
 }
