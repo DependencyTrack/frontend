@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Zugeordnete LDAP-Gruppen",
     "mapped_oidc_groups": "Zugeordnete OpenID Connect-Gruppen",
     "mapped_teams": "Zugeordnete Teams",
+    "match_mode": {
+      "and": "Stimmen Sie sowohl den Namespace als auch den Namen an",
+      "label": "Komponentenanpassungsmodus",
+      "or": "Stimmen Sie den Namespace oder den Namen überein"
+    },
     "maven": "Maven",
     "members": "Mitglieder",
     "mime_type": "Mime Typ",
@@ -961,10 +966,10 @@
     "warn": "Warnung"
   },
   "vulnerability": {
-    "critical": "Schwachstellen mit kritischem Schweregrad",
-    "high": "Schwachstellen mit hohem Schweregrad",
-    "low": "Schwachstellen mit geringem Schweregrad",
-    "medium": "Schwachstellen mit mittlerem Schweregrad",
-    "unassigned": "Nicht zugewiesene Schwachstellen"
+    "critical": "Schwachstellen mit kritischem Schweregrad (ohne Aliase)",
+    "high": "Schwachstellen mit hohem Schweregrad (ohne Aliase)",
+    "low": "Schwachstellen mit geringem Schweregrad (ohne Aliase)",
+    "medium": "Schwachstellen mit mittlerem Schweregrad (ohne Aliase)",
+    "unassigned": "Nicht zugewiesene Schwachstellen (ohne Aliase)"
   }
 }
