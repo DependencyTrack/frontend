@@ -819,6 +819,7 @@
     "risk_score": "Оценка риска",
     "risk_type": "Тип риска",
     "rollback": "Откат",
+    "scope": "Объем",
     "search": "Поиск",
     "search_parent": "Введите для поиска родителя",
     "security_risk": "Риск безопасности",
