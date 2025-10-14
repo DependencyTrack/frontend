@@ -373,6 +373,7 @@
     "apply_vex_tooltip": "Wenden Sie Analysen aus einem Vulnerability Exploitability eXchange (VEX)-Dokument auf dieses Projekt an.",
     "approved": "Genehmigt",
     "attributed_on": "Zugeordnet am",
+    "attributed_on_tooltip": "Zugeschrieben in ISO-8601 Periodenformat (z. B. P1Y = 1 Jahr; P2Y3m = 2 Jahre, 3 Monate)",
     "audit_trail": "Prüfprotokoll",
     "audit_vulnerabilities": "Schwachstellen prüfen",
     "auditing_progress": "Prüfungsfortschritt",
