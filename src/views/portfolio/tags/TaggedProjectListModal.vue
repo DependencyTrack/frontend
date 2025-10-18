@@ -88,7 +88,7 @@ export default {
             const href = router.resolve({
               name: 'Project',
               params: { uuid: row.uuid },
-            }).href;
+            }).route.fullPath;
             return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
           },
         },

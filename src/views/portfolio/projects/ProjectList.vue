@@ -259,7 +259,7 @@ export default {
               this.routerFunc().resolve({
                 name: 'Project',
                 params: { uuid: row.uuid },
-              }).href,
+              }).route.fullPath,
             );
             let collectionIcon = '';
             if (row.collectionLogic !== 'NONE') {
