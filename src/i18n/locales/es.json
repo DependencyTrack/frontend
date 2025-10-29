@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Siguiente activador en",
     "alert_schedule_skip_publish_if_unchanged": "Skip Public si no cambia",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "No envíe una alerta si nada ha cambiado desde la última vez que se envió la alerta.",
+    "alert_schedule_ignore_suppressed": "Ignorar hallazgos suprimidos",
+    "alert_schedule_ignore_suppressed_tooltip": "Ignorar los hallazgos suprimidos en los resúmenes de alertas.",
     "alert_schedule_summary_warning": "La alerta debe limitarse a uno o más proyectos para que funcionen resúmenes. \nAl seleccionar proyectos para limitar la alerta, considere que elegir demasiados proyectos puede hacer que los resúmenes sean demasiado grandes para ciertos destinos, lo que lleva a que sean rechazados.",
     "alert_trigger_type": "Tipo de activación",
     "alert_trigger_type_event": "Evento",
