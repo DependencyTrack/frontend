@@ -228,6 +228,7 @@ export default {
               apiKeysToDict: function (apiKeys) {
                 const dict = {};
                 apiKeys.forEach((item) => {
+                  item.comment = item.comment ? item.comment : '';
                   dict[item.publicId] = item;
                 });
                 return dict;
@@ -301,6 +302,7 @@ export default {
                     if (!this.apiKeys) {
                       this.apiKeys = {};
                     }
+                    response.data.comment = '';
                     this.$set(
                       this.apiKeys,
                       response.data.publicId,
@@ -324,6 +326,9 @@ export default {
                   .post(url)
                   .then((response) => {
                     this.$delete(this.apiKeys, apiKey.publicId);
+                    response.data.comment = response.data.comment
+                      ? response.data.comment
+                      : '';
                     this.$set(
                       this.apiKeys,
                       response.data.publicId,
