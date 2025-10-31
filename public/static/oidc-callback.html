@@ -47,8 +47,19 @@
                 return oidcUserManager.signinRedirectCallback();
             })
             .then((user) => {
-                const redirectTo = user.state;
-                window.location.href = redirectTo && isUrlSaveForRedirect(redirectTo) ? redirectTo : "../";
+                    const redirectTo = user.state;
+                    // Verhindere Redirect auf Callback- oder Login-Seite
+                    const forbiddenRedirects = [window.location.pathname, '/login', 'oidc-callback.html'];
+                    function isRedirectAllowed(url) {
+                        if (!url) return false;
+                        try {
+                            const parsedUrl = new URL(url, window.location.origin);
+                            return !forbiddenRedirects.some(f => parsedUrl.pathname.endsWith(f));
+                        } catch (e) {
+                            return false;
+                        }
+                    }
+                    window.location.href = redirectTo && isUrlSaveForRedirect(redirectTo) && isRedirectAllowed(redirectTo) ? redirectTo : "../";
             })
             .catch((err) => {
                 console.log(err);
