@@ -111,6 +111,7 @@ import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
 const qs = require('querystring');
 import common from '../../shared/common';
+import DOMPurify from 'dompurify';
 
 export default {
   name: 'Login',
@@ -156,8 +157,8 @@ export default {
         if (this.isWelcomeMessage) {
           let message_url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/general/welcome.message.html`;
           axios.get(message_url).then((response) => {
-            this.welcomeMessage = decodeURIComponent(
-              response.data.propertyValue,
+            this.welcomeMessage = DOMPurify.sanitize(
+              decodeURIComponent(response.data.propertyValue),
             );
           });
         }
