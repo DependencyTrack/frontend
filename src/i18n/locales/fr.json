@@ -604,6 +604,7 @@
     "login_desc": "Connectez-vous à votre compte",
     "login_forbidden": "Ce compte est inactif ou a été suspendu",
     "login_more_options": "Plus d'options",
+    "login_permission_required": "Connexion réussie, mais vous ne semblez pas encore disposer des autorisations nécessaires. Veuillez contacter vos administrateurs pour obtenir de l'aide.",
     "login_unauthorized": "Nom d'utilisateur ou mot de passe invalide",
     "logout": "Se déconnecter",
     "manufacturer": "Fabricant",
