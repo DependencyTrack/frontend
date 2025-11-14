@@ -262,6 +262,28 @@ export default {
           },
         },
         {
+          title: this.$t('message.supplier'),
+          field: 'supplier',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            if (
+              Object.prototype.hasOwnProperty.call(row, 'supplier') &&
+              Object.prototype.hasOwnProperty.call(row.supplier, 'name')
+            ) {
+              return xssFilters.inHTMLData(row.supplier.name);
+            } else if (value) {
+              return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+            } else if (row.licenseExpression) {
+              return xssFilters.inHTMLData(
+                common.valueWithDefault(row.licenseExpression, ''),
+              );
+            } else {
+              return '';
+            }
+          },
+        },
+        {
           title: this.$t('message.license'),
           field: 'license',
           sortable: false,
