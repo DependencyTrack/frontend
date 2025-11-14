@@ -104,6 +104,7 @@
     "email_smtp_port": "SMTP 服务器端口",
     "email_smtp_server": "SMTP 服务器",
     "email_smtp_username": "SMTP 用户名",
+    "email_subject_show_level": "Show notification level in subject",
     "email_trust_cert": "信任 SMTP 服务器提供的证书",
     "enable_acl": "启用访问控制（测试版）",
     "enable_bom_cyclonedx": "启用 CycloneDX",
