@@ -599,6 +599,7 @@
     "login_desc": "Zaloguj się",
     "login_forbidden": "To konto jest nieaktywne lub zostało zawieszone",
     "login_more_options": "Więcej możliwości",
+    "login_permission_required": "Logowanie powiodło się, ale prawdopodobnie nie masz jeszcze żadnych uprawnień. Skontaktuj się z administratorami, aby uzyskać pomoc.",
     "login_unauthorized": "Nieprawidłowa nazwa użytkownika lub hasło",
     "logout": "Wyloguj",
     "manufacturer": "Producent",

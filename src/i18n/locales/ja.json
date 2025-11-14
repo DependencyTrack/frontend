@@ -599,6 +599,7 @@
     "login_desc": "アカウントにサインイン",
     "login_forbidden": "このアカウントは非アクティブまたは停止されています",
     "login_more_options": "より多くのオプション",
+    "login_permission_required": "ログインは成功しましたが、まだ権限がないようです。管理者にお問い合わせください。",
     "login_unauthorized": "ユーザー名かパスワードが無効",
     "logout": "ログアウト",
     "manufacturer": "メーカー",
