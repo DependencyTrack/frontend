@@ -599,6 +599,7 @@
     "login_desc": "Accedi al tuo account",
     "login_forbidden": "Questo account è inattivo o è stato sospeso",
     "login_more_options": "Più opzioni",
+    "login_permission_required": "Accesso riuscito, ma sembra che tu non abbia ancora i permessi necessari. Contatta gli amministratori per assistenza.",
     "login_unauthorized": "Nome utente o password errati",
     "logout": "Disconnettersi",
     "manufacturer": "Produttore",

@@ -599,6 +599,7 @@
     "login_desc": "Faça login em sua conta",
     "login_forbidden": "Esta conta está inativa ou foi suspensa",
     "login_more_options": "Mais opções",
+    "login_permission_required": "O login foi efetuado com sucesso, mas você parece não ter permissões ainda. Entre em contato com seus administradores para obter ajuda.",
     "login_unauthorized": "nome de usuário ou senha inválidos",
     "logout": "Sair",
     "manufacturer": "Fabricante",

@@ -112,6 +112,7 @@ import { getRedirectUrl, getContextPath } from '../../shared/utils';
 const qs = require('querystring');
 import common from '../../shared/common';
 import DOMPurify from 'dompurify';
+import * as permissions from '../../shared/permissions';
 
 export default {
   name: 'Login',
@@ -182,10 +183,21 @@ export default {
         .post(url, qs.stringify(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
-            EventBus.$emit('authenticated', result.data);
-            redirectTo
-              ? this.$router.replace(redirectTo)
-              : this.$router.replace({ name: 'Dashboard' });
+            let decodedToken = permissions.decodeToken(result.data);
+            if (
+              permissions.hasPermission(
+                permissions.VIEW_PORTFOLIO,
+                decodedToken,
+              )
+            ) {
+              EventBus.$emit('authenticated', result.data);
+              redirectTo
+                ? this.$router.replace(redirectTo)
+                : this.$router.replace({ name: 'Dashboard' });
+            } else {
+              this.$bvModal.show('modal-informational');
+              this.loginError = this.$t('message.login_permission_required');
+            }
           }
         })
         .catch((err) => {
@@ -284,12 +296,25 @@ export default {
             .post(url, qs.stringify(requestBody), config)
             .then((result) => {
               if (result.status === 200) {
-                EventBus.$emit('authenticated', result.data);
-                // redirect to url from query param but only if it is save for redirection
-                const redirectTo = getRedirectUrl(this.$router);
-                redirectTo
-                  ? this.$router.replace(redirectTo)
-                  : this.$router.replace({ name: 'Dashboard' });
+                let decodedToken = permissions.decodeToken(result.data);
+                if (
+                  permissions.hasPermission(
+                    permissions.VIEW_PORTFOLIO,
+                    decodedToken,
+                  )
+                ) {
+                  EventBus.$emit('authenticated', result.data);
+                  // redirect to url from query param but only if it is save for redirection
+                  const redirectTo = getRedirectUrl(this.$router);
+                  redirectTo
+                    ? this.$router.replace(redirectTo)
+                    : this.$router.replace({ name: 'Dashboard' });
+                } else {
+                  this.$bvModal.show('modal-informational');
+                  this.loginError = this.$t(
+                    'message.login_permission_required',
+                  );
+                }
               }
             })
             .catch((err) => {

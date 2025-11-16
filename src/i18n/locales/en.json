@@ -599,6 +599,7 @@
     "login_desc": "Sign In to your account",
     "login_forbidden": "This account is inactive or has been suspended",
     "login_more_options": "More options",
+    "login_permission_required": "Login succeeded, but you don’t seem to have any permissions yet. Please contact your administrators for help.",
     "login_unauthorized": "Invalid username or password",
     "logout": "Logout",
     "manufacturer": "Manufacturer",
