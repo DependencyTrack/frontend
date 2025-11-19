@@ -27,7 +27,7 @@
     "@coreui/icons": "0.4.1",
     "@coreui/vue": "2.1.2",
     "@johmun/vue-tags-input": "2.1.0",
-    "axios": "1.8.3",
+    "axios": "1.13.2",
     "bootstrap": "4.6.2",
     "bootstrap-table": "1.22.6",
     "bootstrap-vue": "2.23.1",
