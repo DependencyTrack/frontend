@@ -3,6 +3,7 @@
     <b-modal
       id="projectCreateProjectModal"
       @ok="resetValues()"
+      @cancel="resetValues()"
       size="md"
       hide-header-close
       no-stacking
@@ -262,13 +263,11 @@
         >
         <template #cell(actions)="row">
           <b-button size="sm" variant="danger" @click="removeAuthor(row.index)">
-            removeAuthor
+            {{$t('message.remove_author')}}
           </b-button>
         </template>
       </b-table>
-      <div>
-        {{ this.newAuthor.name }}
-      </div>
+
       <b-button variant="primary" class="mt-3" @click="isAddingAuthor = true">
         {{ $t('message.add_author') }}
       </b-button>
@@ -312,9 +311,7 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import common from '../../../shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
-import { BTable, BTableLite } from 'bootstrap-vue';
-import ProjectAddVersionModal  from './ProjectAddVersionModal.vue';
-import ProjectAddAuthorModal from './ProjectAddAuthorModal.vue';
+import { BTable } from 'bootstrap-vue';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -562,7 +559,6 @@ export default {
       this.availableParents = [];
       this.collectionTags = [];
       this.showCollectionTags = false;
-      this.project.authors = [];
     },
     createProjectLabel: function (project) {
       if (project.version) {

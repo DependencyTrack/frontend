@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     isFormValid() {
-      return this.name && this.email && this.phone;
+      return this.name && this.email;
     },
   },
   methods: {

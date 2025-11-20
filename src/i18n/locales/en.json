@@ -803,6 +803,7 @@
     "references": "References",
     "reindex": "Rebuild index(es)",
     "rejected": "Rejected",
+    "remove_author": "Remove Author",
     "remove_component": "Remove Component",
     "reported_by": "Reported By",
     "required_component_identifier": "A component identifier is required",
