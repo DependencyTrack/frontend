@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Zugeordnete LDAP-Gruppen",
     "mapped_oidc_groups": "Zugeordnete OpenID Connect-Gruppen",
     "mapped_teams": "Zugeordnete Teams",
+    "match_mode": {
+      "and": "Stimmen Sie sowohl den Namespace als auch den Namen an",
+      "label": "Komponentenanpassungsmodus",
+      "or": "Stimmen Sie den Namespace oder den Namen überein"
+    },
     "maven": "Maven",
     "members": "Mitglieder",
     "mime_type": "Mime Typ",
@@ -599,6 +604,7 @@
     "login_desc": "Melden Sie sich bei Ihrem Konto an",
     "login_forbidden": "Dieses Konto ist inaktiv oder wurde gesperrt",
     "login_more_options": "Mehr Optionen",
+    "login_permission_required": "Die Anmeldung war erfolgreich, aber Sie verfügen anscheinend noch nicht über die erforderlichen Berechtigungen. Bitte wenden Sie sich an Ihren Administrator.",
     "login_unauthorized": "ungültiger Benutzername oder Passwort",
     "logout": "Ausloggen",
     "manufacturer": "Hersteller",
@@ -814,6 +820,7 @@
     "risk_score": "Risiko-Score",
     "risk_type": "Risikoart",
     "rollback": "Rollback",
+    "scope": "Umfang",
     "search": "Suchen",
     "search_parent": "Geben Sie zur Suche nach dem übergeordnetem Element etwas ein",
     "security_risk": "Sicherheitsrisiko",

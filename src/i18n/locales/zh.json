@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "映射 LDAP 组",
     "mapped_oidc_groups": "映射的 OpenID 连接组",
     "mapped_teams": "映射团队",
+    "match_mode": {
+      "and": "匹配命名空间和名称",
+      "label": "元件匹配方式",
+      "or": "匹配命名空间或名称"
+    },
     "maven": "Maven",
     "members": "成员",
     "mime_type": "Mime 类型",
@@ -599,6 +604,7 @@
     "login_desc": "登录到您的帐户",
     "login_forbidden": "此帐户处于非活动状态或已被暂停",
     "login_more_options": "更多的选择",
+    "login_permission_required": "登录成功，但您似乎还没有任何权限。请联系您的管理员寻求帮助。",
     "login_unauthorized": "用户名或密码无效",
     "logout": "登出",
     "manufacturer": "厂商",
@@ -814,6 +820,7 @@
     "risk_score": "风险评分",
     "risk_type": "风险类型",
     "rollback": "回滚",
+    "scope": "范围",
     "search": "搜索",
     "search_parent": "键入以搜索父项",
     "security_risk": "安全风险",

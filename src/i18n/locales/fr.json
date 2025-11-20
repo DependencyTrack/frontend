@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Groupes LDAP associés",
     "mapped_oidc_groups": "Groupes OpenID Connect associés",
     "mapped_teams": "Équipes associées",
+    "match_mode": {
+      "and": "Faire correspondre à la fois l'espace de noms et le nom",
+      "label": "Mode de correspondance des composants",
+      "or": "Correspondre à l'espace de noms ou au nom"
+    },
     "maven": "Maven",
     "members": "Membres",
     "mime_type": "Type MIME",
@@ -599,6 +604,7 @@
     "login_desc": "Connectez-vous à votre compte",
     "login_forbidden": "Ce compte est inactif ou a été suspendu",
     "login_more_options": "Plus d'options",
+    "login_permission_required": "Connexion réussie, mais vous ne semblez pas encore disposer des autorisations nécessaires. Veuillez contacter vos administrateurs pour obtenir de l'aide.",
     "login_unauthorized": "Nom d'utilisateur ou mot de passe invalide",
     "logout": "Se déconnecter",
     "manufacturer": "Fabricant",
@@ -814,6 +820,7 @@
     "risk_score": "Score de risque",
     "risk_type": "Type de risque",
     "rollback": "Retour en arriere",
+    "scope": "Porté",
     "search": "Recherche",
     "search_parent": "Rechercher un parent",
     "security_risk": "Risque de sécurité",

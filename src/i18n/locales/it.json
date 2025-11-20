@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Gruppi LDAP mappati",
     "mapped_oidc_groups": "Gruppi OpenID Connect mappati",
     "mapped_teams": "Squadre mappate",
+    "match_mode": {
+      "and": "Abbinare sia lo spazio dei nomi che il nome",
+      "label": "Modalità di corrispondenza componente",
+      "or": "Abbina lo spazio dei nomi o il nome"
+    },
     "maven": "Esperto di",
     "members": "Membri",
     "mime_type": "Tipo mimo",
@@ -599,6 +604,7 @@
     "login_desc": "Accedi al tuo account",
     "login_forbidden": "Questo account è inattivo o è stato sospeso",
     "login_more_options": "Più opzioni",
+    "login_permission_required": "Accesso riuscito, ma sembra che tu non abbia ancora i permessi necessari. Contatta gli amministratori per assistenza.",
     "login_unauthorized": "Nome utente o password errati",
     "logout": "Disconnettersi",
     "manufacturer": "Produttore",
@@ -814,6 +820,7 @@
     "risk_score": "Punteggio di rischio",
     "risk_type": "Tipo di rischio",
     "rollback": "Rollback",
+    "scope": "Ambito",
     "search": "Ricerca",
     "search_parent": "Digita per cercare genitore",
     "security_risk": "Rischio per la sicurezza",

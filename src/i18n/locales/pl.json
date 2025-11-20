@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Mapowane grupy LDAP",
     "mapped_oidc_groups": "Mapowane grupy połączeń OpenID",
     "mapped_teams": "Mapowane zespoły",
+    "match_mode": {
+      "and": "Dopasuj zarówno przestrzeń nazw, jak i nazwę",
+      "label": "Tryb dopasowywania komponentów",
+      "or": "Dopasuj przestrzeń nazw lub nazwę"
+    },
     "maven": "Mavena",
     "members": "Członkowie",
     "mime_type": "Typ mima",
@@ -599,6 +604,7 @@
     "login_desc": "Zaloguj się",
     "login_forbidden": "To konto jest nieaktywne lub zostało zawieszone",
     "login_more_options": "Więcej możliwości",
+    "login_permission_required": "Logowanie powiodło się, ale prawdopodobnie nie masz jeszcze żadnych uprawnień. Skontaktuj się z administratorami, aby uzyskać pomoc.",
     "login_unauthorized": "Nieprawidłowa nazwa użytkownika lub hasło",
     "logout": "Wyloguj",
     "manufacturer": "Producent",
@@ -814,6 +820,7 @@
     "risk_score": "Ocena ryzyka",
     "risk_type": "Rodzaj ryzyka",
     "rollback": "Wycofanie",
+    "scope": "Zakres",
     "search": "Szukaj",
     "search_parent": "Wpisz, aby wyszukać element nadrzędny",
     "security_risk": "Zagrożenie dla bezpieczeństwa",

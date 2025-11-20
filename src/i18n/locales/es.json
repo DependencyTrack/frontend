@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Grupos LDAP asignados",
     "mapped_oidc_groups": "Grupos de OpenID Connect asignados",
     "mapped_teams": "Equipos mapeados",
+    "match_mode": {
+      "and": "Coincidir con el espacio de nombres y el nombre",
+      "label": "Modo de coincidencia de componentes",
+      "or": "Espacio de nombres o nombre de coincidencia"
+    },
     "maven": "Maven",
     "members": "Miembros",
     "mime_type": "Tipo de Mimica",
@@ -599,6 +604,7 @@
     "login_desc": "Iniciar sesión en su cuenta",
     "login_forbidden": "Esta cuenta está inactiva o ha sido suspendida",
     "login_more_options": "Mas opciones",
+    "login_permission_required": "El inicio de sesión se realizó correctamente, pero parece que aún no tienes permisos. Contacta con tus administradores para obtener ayuda.",
     "login_unauthorized": "usuario o contraseña invalido",
     "logout": "Cerrar sesión",
     "manufacturer": "Fabricante",
@@ -814,6 +820,7 @@
     "risk_score": "Puntuación de riesgo",
     "risk_type": "Tipo de riesgo",
     "rollback": "Retroceder",
+    "scope": "Alcance",
     "search": "Buscar",
     "search_parent": "Escriba para buscar padre",
     "security_risk": "Riesgo de seguridad",

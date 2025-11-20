@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "Mapped LDAP groups",
     "mapped_oidc_groups": "Mapped OpenID Connect Groups",
     "mapped_teams": "Mapped Teams",
+    "match_mode": {
+      "and": "Match both namespace AND name",
+      "label": "Component matching mode",
+      "or": "Match namespace OR name"
+    },
     "maven": "Maven",
     "members": "Members",
     "mime_type": "Mime type",
@@ -600,6 +605,7 @@
     "login_desc": "Sign In to your account",
     "login_forbidden": "This account is inactive or has been suspended",
     "login_more_options": "More options",
+    "login_permission_required": "Login succeeded, but you don’t seem to have any permissions yet. Please contact your administrators for help.",
     "login_unauthorized": "Invalid username or password",
     "logout": "Logout",
     "manufacturer": "Manufacturer",
@@ -817,6 +823,7 @@
     "risk_score": "Risk Score",
     "risk_type": "Risk Type",
     "rollback": "Rollback",
+    "scope": "Scope",
     "search": "Search",
     "search_parent": "Type to search parent",
     "security_risk": "Security Risk",

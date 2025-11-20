@@ -14,7 +14,7 @@
     "start": "npm run serve",
     "serve": "npm run prebuild && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "prebuild": "cross-env NODE_OPTIONS=--openssl-legacy-provider node update-embedded-version.js",
-    "build": "npm run prebuild && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "eslint": "eslint . --ext .js,.vue,.json,.md,.yaml --report-unused-disable-directives",
     "eslint-fix": "eslint --ext .js,.vue,.json,.md,.yaml --fix . --report-unused-disable-directives",
     "prettier": "prettier --check --cache '**/*.{js,vue,json,md,yaml}'",

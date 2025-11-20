@@ -165,6 +165,11 @@
     "mapped_ldap_groups": "マッピングされたLDAPグループ",
     "mapped_oidc_groups": "マッピングされた OpenID Connect グループ",
     "mapped_teams": "マッピングされたチーム",
+    "match_mode": {
+      "and": "名前空間と名前の両方を一致させます",
+      "label": "コンポーネントマッチングモード",
+      "or": "名前空間または名前を一致させます"
+    },
     "maven": "Maven",
     "members": "メンバー",
     "mime_type": "MIMEタイプ",
@@ -599,6 +604,7 @@
     "login_desc": "アカウントにサインイン",
     "login_forbidden": "このアカウントは非アクティブまたは停止されています",
     "login_more_options": "より多くのオプション",
+    "login_permission_required": "ログインは成功しましたが、まだ権限がないようです。管理者にお問い合わせください。",
     "login_unauthorized": "ユーザー名かパスワードが無効",
     "logout": "ログアウト",
     "manufacturer": "メーカー",
@@ -814,6 +820,7 @@
     "risk_score": "リスクスコア",
     "risk_type": "リスクの種類",
     "rollback": "ロールバック",
+    "scope": "範囲",
     "search": "検索",
     "search_parent": "親を検索するには入力してください",
     "security_risk": "セキュリティリスク",

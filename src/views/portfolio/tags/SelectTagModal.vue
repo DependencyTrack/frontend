@@ -40,7 +40,7 @@ export default {
   mixins: [permissionsMixin],
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${this.policy.uuid}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}`;
       return url;
     },
     refreshTable: function () {
