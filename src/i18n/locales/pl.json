@@ -573,6 +573,7 @@
     "include_tags": "Dołącz tagi",
     "inherited_risk_score": "Odziedziczona ocena ryzyka",
     "internal": "Wewnętrzny",
+    "internal_status": "Component classified as internal",
     "inventory": "Spis",
     "inventory_with_vulnerabilities": "Inwentarz z lukami w zabezpieczeniach",
     "justification": "Uzasadnienie",
