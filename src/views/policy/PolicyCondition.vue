@@ -204,8 +204,14 @@ export default {
       this.subject = this.condition.subject;
       this.subjectChanged();
       this.operator = this.condition.operator;
-      this.value = this.condition.value === 'true';
+
+      if (this.subject === 'IS_INTERNAL') {
+        this.value = this.condition.value === 'true';
+      } else {
+        this.value = this.condition.value;
+      }
     }
+
     this.$nextTick(() => {
       this.ready = true;
     });
@@ -459,7 +465,10 @@ export default {
         this.versionDistance = result;
         return JSON.stringify(result);
       } else {
-        return String(this.value);
+        if (this.subject === 'IS_INTERNAL') {
+          return this.value ? 'true' : 'false';
+        }
+        return this.value;
       }
     },
     saveCondition: function () {
@@ -480,7 +489,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value === 'true';
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.updated'));
           })
           .catch((error) => {
@@ -498,7 +511,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value === 'true';
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.updated'));
           })
           .catch((error) => {
@@ -515,7 +532,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value === 'true';
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           })
