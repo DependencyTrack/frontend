@@ -3,7 +3,9 @@
     :delete-icon="true"
     v-on:actionClicked="removeCondition()"
   >
-    <b-row v-if="subject !== 'IS_INTERNAL'">
+    <b-row
+      v-if="subject !== 'IS_INTERNAL' && subject !== 'LATEST_VERSION_STATUS'"
+    >
       <b-col md="4" lg="3">
         <b-input-group-form-select
           id="input-subject"
@@ -148,6 +150,33 @@
       </b-col>
       <b-col md="0" lg="2"> </b-col>
     </b-row>
+
+    <b-row v-else-if="subject === 'LATEST_VERSION_STATUS'">
+      <b-col md="4" lg="3">
+        <b-input-group-form-select
+          id="input-subject"
+          required="true"
+          v-on:change="subjectChanged"
+          v-model="subject"
+          :options="subjects"
+        />
+      </b-col>
+
+      <b-col md="8" lg="9">
+        <b-input-group-form-select
+          id="latest-select"
+          v-model="value"
+          v-debounce:750ms="saveCondition"
+          :debounce-events="'change'"
+          :options="[
+            { value: 'LATEST', text: this.$t('message.latest') },
+            { value: 'OUTDATED', text: this.$t('message.outdated') },
+            { value: 'UNKNOWN', text: this.$t('message.unknown') },
+          ]"
+        />
+      </b-col>
+    </b-row>
+
     <b-row v-else>
       <b-col md="4" lg="3">
         <b-input-group-form-select
@@ -253,6 +282,10 @@ export default {
         { value: 'CWE', text: this.$t('message.cwe_full') },
         { value: 'EPSS', text: this.$t('message.epss_score') },
         {
+          value: 'LATEST_VERSION_STATUS',
+          text: this.$t('message.latest_version_status'),
+        },
+        {
           value: 'VULNERABILITY_ID',
           text: this.$t('message.vulnerability_vuln_id'),
         },
@@ -295,6 +328,11 @@ export default {
         { value: 'CONTAINS_ANY', text: this.$t('operator.contains_any') },
         { value: 'CONTAINS_ALL', text: this.$t('operator.contains_all') },
       ],
+      latestOptions: [
+        { value: 'LATEST', text: this.$t('message.latest') },
+        { value: 'OUTDATED', text: this.$t('message.outdated') },
+        { value: 'UNKNOWN', text: this.$t('message.unknown') },
+      ],
       operators: [],
       possibleValues: [],
     };
@@ -334,6 +372,8 @@ export default {
           return false;
         case 'VERSION_DISTANCE':
           return false;
+        case 'LATEST_VERSION_STATUS':
+          return true;
         case 'EPSS':
           return false;
         default:
@@ -411,6 +451,10 @@ export default {
         case 'VERSION_DISTANCE':
           this.operators = this.numericOperators;
           break;
+        case 'LATEST_VERSION_STATUS':
+          this.operators = this.objectOperators;
+          this.operator = 'IS';
+          return;
         case 'EPSS':
           this.operators = this.numericOperators;
           break;
@@ -447,23 +491,22 @@ export default {
           ),
         };
 
-        if (result.epoch < 0) {
-          result.epoch = 0; // no smaller values
-        }
+        if (result.epoch < 0) result.epoch = 0;
         if (result.major < 0) {
-          result.major = null; // no smaller values
+          result.major = null;
           result.minor = null;
           result.patch = null;
         }
         if (result.minor < 0) {
-          result.minor = null; // no smaller values
+          result.minor = null;
           result.patch = null;
         }
-        if (result.patch < 0) {
-          result.patch = null;
-        }
+        if (result.patch < 0) result.patch = null;
+
         this.versionDistance = result;
         return JSON.stringify(result);
+      } else if (this.subject === 'LATEST_VERSION_STATUS') {
+        return this.value;
       } else {
         if (this.subject === 'IS_INTERNAL') {
           return this.value ? 'true' : 'false';
