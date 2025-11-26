@@ -920,7 +920,8 @@
     "weakness": "Weakness",
     "will_not_fix": "Will not fix",
     "workaround_available": "Workaround available",
-    "x_trust_boundary": "Cross Trust Boundary"
+    "x_trust_boundary": "Cross Trust Boundary",
+    "priority_score": "Priority Score"
   },
   "operator": {
     "contains_all": "contains all",
