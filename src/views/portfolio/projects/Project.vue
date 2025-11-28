@@ -190,7 +190,7 @@
       </b-card-body>
       <div id="project-info-footer" slot="footer">
         <b-row>
-          <b-col>
+          <b-col class="col-auto">
             <b-link
               class="font-weight-bold font-xs btn-block text-muted"
               @click="initializeProjectDetailsModal"
@@ -204,6 +204,14 @@
                 :externalReferences="project.externalReferences"
               />
             </b-row>
+          </b-col>
+          <b-col class="col-auto">
+            <b-link
+              class="font-weight-bold font-xs btn-block text-muted"
+              @click="initializeProjectVersionCompareModal"
+              >{{ $t('message.compare_versions') }}
+              <i class="fa fa-angle-right font-lg"></i
+            ></b-link>
           </b-col>
         </b-row>
       </div>
@@ -388,6 +396,7 @@
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
     />
+    <project-version-compare-modal :project="cloneDeep(project)" />
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
@@ -409,6 +418,7 @@ import SeverityBarChart from '../../dashboard/SeverityBarChart';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal';
+import ProjectVersionCompareModal from './ProjectVersionCompareModal';
 import ProjectPropertiesModal from './ProjectPropertiesModal';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
 import ProjectAddVersionModal from './ProjectAddVersionModal';
@@ -427,6 +437,7 @@ export default {
     ProjectCreatePropertyModal,
     ProjectPropertiesModal,
     ProjectDetailsModal,
+    ProjectVersionCompareModal,
     ProjectComponents,
     ProjectCollectionProjects,
     ProjectDependencyGraph,
@@ -615,6 +626,9 @@ export default {
     },
     initializeProjectDetailsModal: function () {
       this.$root.$emit('initializeProjectDetailsModal');
+    },
+    initializeProjectVersionCompareModal: function () {
+      this.$root.$emit('initializeProjectVersionCompareModal');
     },
     routeTo(path) {
       if (path) {
