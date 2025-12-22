@@ -573,6 +573,7 @@
     "include_tags": "タグを含める",
     "inherited_risk_score": "継承リスクスコア",
     "internal": "内部",
+    "internal_status": "Component classified as internal",
     "inventory": "インベントリ",
     "inventory_with_vulnerabilities": "脆弱性のあるインベントリ",
     "justification": "正当化",

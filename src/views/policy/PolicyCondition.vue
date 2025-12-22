@@ -3,7 +3,7 @@
     :delete-icon="true"
     v-on:actionClicked="removeCondition()"
   >
-    <b-row>
+    <b-row v-if="subject !== 'IS_INTERNAL'">
       <b-col md="4" lg="3">
         <b-input-group-form-select
           id="input-subject"
@@ -148,10 +148,32 @@
       </b-col>
       <b-col md="0" lg="2"> </b-col>
     </b-row>
+    <b-row v-else>
+      <b-col md="4" lg="3">
+        <b-input-group-form-select
+          id="input-subject"
+          required="true"
+          v-on:change="subjectChanged"
+          v-model="subject"
+          :options="subjects"
+        />
+      </b-col>
+
+      <b-col md="8" lg="9">
+        <c-switch
+          v-model="value"
+          color="primary"
+          class="m-0"
+          label
+          v-bind="labelIcon"
+        />
+      </b-col>
+    </b-row>
   </actionable-list-group-item>
 </template>
 
 <script>
+import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
 import common from '../../shared/common';
@@ -166,6 +188,15 @@ export default {
     ActionableListGroupItem,
     BInputGroupFormSelect,
     BInputGroupFormInput,
+    cSwitch,
+  },
+  watch: {
+    value(newVal) {
+      if (!this.ready) return;
+      if (this.subject === 'IS_INTERNAL') {
+        this.saveCondition();
+      }
+    },
   },
   created() {
     if (this.condition) {
@@ -173,12 +204,22 @@ export default {
       this.subject = this.condition.subject;
       this.subjectChanged();
       this.operator = this.condition.operator;
-      this.value = this.condition.value;
+
+      if (this.subject === 'IS_INTERNAL') {
+        this.value = this.condition.value === 'true';
+      } else {
+        this.value = this.condition.value;
+      }
     }
+
+    this.$nextTick(() => {
+      this.ready = true;
+    });
   },
   data() {
     return {
       uuid: null,
+      ready: false,
       subject: null,
       operator: null,
       value: null,
@@ -190,6 +231,10 @@ export default {
         major: null,
         minor: null,
         patch: null,
+      },
+      labelIcon: {
+        dataOn: '\u2713',
+        dataOff: '\u2715',
       },
       subjects: [
         { value: 'AGE', text: this.$t('message.age') },
@@ -203,6 +248,7 @@ export default {
         { value: 'CPE', text: this.$t('message.cpe_full') },
         { value: 'SWID_TAGID', text: this.$t('message.swid_tagid') },
         { value: 'VERSION', text: this.$t('message.version') },
+        { value: 'IS_INTERNAL', text: this.$t('message.internal_status') },
         { value: 'COMPONENT_HASH', text: this.$t('message.component_hash') },
         { value: 'CWE', text: this.$t('message.cwe_full') },
         { value: 'EPSS', text: this.$t('message.epss_score') },
@@ -278,6 +324,8 @@ export default {
           return false;
         case 'VERSION':
           return false;
+        case 'IS_INTERNAL':
+          return false;
         case 'COMPONENT_HASH':
           return false;
         case 'CWE':
@@ -347,6 +395,10 @@ export default {
         case 'VERSION':
           this.operators = this.numericOperators;
           break;
+        case 'IS_INTERNAL':
+          this.operators = [];
+          this.operator = 'IS';
+          return;
         case 'COMPONENT_HASH':
           this.operators = this.hashAlgorithms;
           break;
@@ -413,6 +465,9 @@ export default {
         this.versionDistance = result;
         return JSON.stringify(result);
       } else {
+        if (this.subject === 'IS_INTERNAL') {
+          return this.value ? 'true' : 'false';
+        }
         return this.value;
       }
     },
@@ -434,7 +489,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.updated'));
           })
           .catch((error) => {
@@ -452,7 +511,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.updated'));
           })
           .catch((error) => {
@@ -469,7 +532,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           })
