@@ -12,6 +12,7 @@ module.exports = {
     'language.pt-BR',
     'language.ru',
     'language.zh',
+    'language.zh-TW',
     'validation.confirmed',
     'validation.max_value',
     'validation.min_value',
