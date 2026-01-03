@@ -160,7 +160,6 @@ export default {
                         id="username" :label="$t('admin.username')"
                         input-group-size="mb-3"
                         v-model="username"
-                        rules="required"
                         v-show="authenticationRequired"
                         v-debounce:750ms="updateRepository" :debounce-events="'keyup'"/>
                     </div>
