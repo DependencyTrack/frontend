@@ -95,7 +95,8 @@ This project supports internationalization. Supported languages are:
 - 🇧🇷 [Portuguese (Brazil)](src/i18n/locales/pt-BR.json)
 - 🇷🇺 [Russian](src/i18n/locales/ru.json)
 - 🇺🇦 [Ukrainian](src/i18n/locales/uk-UA.json)
-- 🇨🇳 [Chinese](src/i18n/locales/zh.json)
+- 🇨🇳 [Simplified Chinese](src/i18n/locales/zh.json)
+- 🇹🇼 [Traditional Chinese](src/i18n/locales/zh-TW.json)
 
 Pull requests to add support for additional languages, or improve existing
 ones are highly encouraged.
