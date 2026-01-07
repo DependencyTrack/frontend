@@ -573,6 +573,7 @@
     "include_tags": "包含标签",
     "inherited_risk_score": "遗传风险评分",
     "internal": "内部的",
+    "internal_status": "Component classified as internal",
     "inventory": "存货",
     "inventory_with_vulnerabilities": "存在漏洞的清单",
     "justification": "理由",
