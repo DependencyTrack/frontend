@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Próximo gatilho em",
     "alert_schedule_skip_publish_if_unchanged": "Pule o público se inalterado",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "Não envie um alerta se nada mudar desde a última vez que o alerta foi enviado.",
+    "alert_schedule_ignore_suppressed": "Ignorar detecções suprimidas",
+    "alert_schedule_ignore_suppressed_tooltip": "Ignorar detecções suprimidas nos resumos de alertas.",
     "alert_schedule_summary_warning": "O alerta deve estar limitado a um ou mais projetos para que os resumos funcionem. \nAo selecionar projetos para limitar o alerta, considere que a escolha de muitos projetos pode causar resumos para crescer demais para certos destinos, levando -os a serem rejeitados.",
     "alert_trigger_type": "Tipo de gatilho",
     "alert_trigger_type_event": "Evento",
