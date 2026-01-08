@@ -170,7 +170,12 @@ export default {
                         </b-col>
                       </b-row>
                     </div>
-                    <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
+                    <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="invertTagMatch ? this.$t('admin.exclude_tags') : this.$t('admin.limit_to_tags')">
+                      <b-input-group-form-switch
+                        id="isInvertTagMatch"
+                        :label="$t('admin.invert_tag_match')"
+                        v-model="invertTagMatch"
+                      />
                       <div class="list-group">
                         <span v-for="tag in tags">
                           <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.name)"/>
@@ -221,6 +226,7 @@ export default {
                 tags: row.tags,
                 includeChildren: row.includeChildren,
                 onlyLatestProjectVersion: row.onlyLatestProjectVersion,
+                invertTagMatch: row.invertTagMatch || false,
               };
             },
             methods: {
@@ -265,6 +271,7 @@ export default {
                     violationState: this.violationState,
                     includeChildren: this.includeChildren,
                     onlyLatestProjectVersion: this.onlyLatestProjectVersion,
+                    invertTagMatch: this.invertTagMatch,
                   })
                   .then((response) => {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
@@ -305,6 +312,7 @@ export default {
                 this.conditions = policy.policyConditions;
                 this.includeChildren = policy.includeChildren;
                 this.onlyLatestProjectVersion = policy.onlyLatestProjectVersion;
+                this.invertTagMatch = policy.invertTagMatch || false;
               },
               deleteProjectLimiter: function (projectUuid) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
@@ -397,6 +405,9 @@ export default {
                 this.updatePolicy();
               },
               onlyLatestProjectVersion() {
+                this.updatePolicy();
+              },
+              invertTagMatch() {
                 this.updatePolicy();
               },
             },
