@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Nächste Auslösung um",
     "alert_schedule_skip_publish_if_unchanged": "Alarmierung aussetzen, wenn keine neuen Daten vorhanden",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "Setzt die Alarmierung aus, wenn sich seit der letzten Auslösung keine neuen Daten ergeben haben.",
+    "alert_schedule_ignore_suppressed": "Unterdrückte Findings ignorieren",
+    "alert_schedule_ignore_suppressed_tooltip": "Unterdrückte Findings in Alarmzusammenfassungen ignorieren.",
     "alert_schedule_summary_warning": "Die Alarmierung muss auf mindestens ein Projekt beschränkt sein, damit die Zusammenfassungen funktionieren. Beachten Sie, dass die Auswahl von zu vielen Projekten dazu führen kann, dass Zusammenfassungen für bestimmte Alarmierungs-Ziele zu groß werden, was dazu führen könnte, dass sie abgelehnt werden.",
     "alert_trigger_type": "Auslösungs-Typ",
     "alert_trigger_type_event": "Ereignis",

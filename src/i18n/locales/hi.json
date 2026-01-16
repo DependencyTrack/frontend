@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "अगला ट्रिगर पर",
     "alert_schedule_skip_publish_if_unchanged": "अगर अपरिवर्तित हो तो सार्वजनिक रूप से छोड़ दें",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "अलर्ट न भेजें यदि पिछली बार अलर्ट भेजे जाने के बाद से कुछ भी नहीं बदला है।",
+    "alert_schedule_ignore_suppressed": "दबाई गई फाइंडिंग्स को अनदेखा करें",
+    "alert_schedule_ignore_suppressed_tooltip": "अलर्ट सारांशوں में दबाई गई फाइंडिंग्स को अनदेखा करें",
     "alert_schedule_summary_warning": "काम करने के लिए सारांश के लिए अलर्ट को एक या अधिक परियोजनाओं तक सीमित होना चाहिए। \nअलर्ट को सीमित करने के लिए परियोजनाओं का चयन करते समय, विचार करें कि बहुत अधिक परियोजनाओं को चुनने से कुछ गंतव्यों के लिए बहुत बड़ा हो सकता है, जिससे उन्हें अस्वीकार कर दिया जा सकता है।",
     "alert_trigger_type": "ट्रिगर प्रकार",
     "alert_trigger_type_event": "आयोजन",

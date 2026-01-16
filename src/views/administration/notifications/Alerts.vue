@@ -239,6 +239,7 @@ export default {
                     <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_last_triggered_at')" :readonly="true" type="text" :value="this.scheduleLastTriggeredAt" :state="null"/>
                     <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_next_trigger_at')" :readonly="true" type="text" :value="this.scheduleNextTriggerAt" :state="null"/>
                     <b-form-group v-if="isScheduled" :title="$t('admin.alert_schedule_skip_publish_if_unchanged_tooltip')"><c-switch v-model="scheduleSkipUnchanged" color="primary" label v-bind="labelIcon"/> {{ $t('admin.alert_schedule_skip_publish_if_unchanged') }}</b-form-group>
+                    <b-form-group v-if="isScheduled" :title="$t('admin.alert_schedule_ignore_suppressed_tooltip')"><c-switch v-model="scheduleIgnoreSuppressed" color="primary" label v-bind="labelIcon"/> {{ $t('admin.alert_schedule_ignore_suppressed') }}</b-form-group>
                     <div style="text-align:right">
                       <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
@@ -292,6 +293,7 @@ export default {
                 ),
                 scheduleCron: row.scheduleCron,
                 scheduleSkipUnchanged: row.scheduleSkipUnchanged,
+                scheduleIgnoreSuppressed: row.scheduleIgnoreSuppressed,
                 limitToVisible: false,
                 tag: '', // The contents of a tag as its being typed into the vue-tag-input
                 tags: [], // An array of tags bound to the vue-tag-input
@@ -414,6 +416,7 @@ export default {
                 if (this.triggerType === 'SCHEDULE') {
                   payload.scheduleCron = this.scheduleCron;
                   payload.scheduleSkipUnchanged = this.scheduleSkipUnchanged;
+                  payload.scheduleIgnoreSuppressed = this.scheduleIgnoreSuppressed;
                 }
                 this.axios.post(url, payload).then((response) => {
                   this.alert = response.data;
