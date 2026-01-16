@@ -32,12 +32,6 @@
         Built On: {{ frontendTimestamp }}
       </b-col>
     </b-row>
-    <b-row class="mt-3">
-      <b-col>
-        Database Product: {{ this.dtrack.database.productName }}<br />
-        Database Version: {{ this.dtrack.database.productVersion }}
-      </b-col>
-    </b-row>
     <hr />
     <b-row>
       <b-col>
