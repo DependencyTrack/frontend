@@ -25,6 +25,15 @@
         v-model="emailPrefix"
         lazy="true"
       />
+      <c-switch
+        id="email-subject-show-level"
+        color="primary"
+        v-model="isEmailSubjectShowLevelEnabled"
+        label
+        v-bind="labelIcon"
+      />
+      {{ $t('admin.email_subject_show_level') }}
+      <br />
       <b-validated-input-group-form-input
         id="email-smtp-server"
         :label="$t('admin.email_smtp_server')"
@@ -118,6 +127,7 @@ export default {
       isEmailEnabled: false,
       emailFromAddress: '',
       emailPrefix: '',
+      isEmailSubjectShowLevelEnabled: false,
       emailSmtpServer: '',
       emailSmtpPort: '',
       emailSmtpUsername: '',
@@ -143,6 +153,11 @@ export default {
           groupName: 'email',
           propertyName: 'subject.prefix',
           propertyValue: this.emailPrefix,
+        },
+        {
+          groupName: 'email',
+          propertyName: 'subject.show.level',
+          propertyValue: this.isEmailSubjectShowLevelEnabled,
         },
         {
           groupName: 'email',
@@ -198,6 +213,11 @@ export default {
             break;
           case 'subject.prefix':
             this.emailPrefix = item.propertyValue;
+            break;
+          case 'subject.show.level':
+            this.isEmailSubjectShowLevelEnabled = common.toBoolean(
+              item.propertyValue,
+            );
             break;
           case 'smtp.server.hostname':
             this.emailSmtpServer = item.propertyValue;

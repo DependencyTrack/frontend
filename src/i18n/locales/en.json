@@ -104,6 +104,7 @@
     "email_smtp_port": "SMTP server port",
     "email_smtp_server": "SMTP server",
     "email_smtp_username": "SMTP username",
+    "email_subject_show_level": "Show notification level in subject",
     "email_trust_cert": "Trust the certificate provided by the SMTP server",
     "enable_acl": "Enable portfolio access control (beta)",
     "enable_bom_cyclonedx": "Enable CycloneDX",

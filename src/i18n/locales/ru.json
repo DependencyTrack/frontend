@@ -104,6 +104,7 @@
     "email_smtp_port": "Порт сервера SMTP",
     "email_smtp_server": "Сервер SMTP",
     "email_smtp_username": "Имя пользователя SMTP",
+    "email_subject_show_level": "Show notification level in subject",
     "email_trust_cert": "Доверять сертификату SMTP сервера",
     "enable_acl": "Включить контроль доступа к портфолио (бета)",
     "enable_bom_cyclonedx": "Включить CycloneDX",
