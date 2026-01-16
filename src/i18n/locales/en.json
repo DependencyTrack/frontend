@@ -344,7 +344,8 @@
     "pt": "Portuguese (Portugal)",
     "pt-BR": "Portuguese (Brazil)",
     "ru": "Russian",
-    "zh": "Chinese"
+    "zh": "Chinese",
+    "zh-TW": "Chinese (Taiwan)"
   },
   "message": {
     "about": "About",
