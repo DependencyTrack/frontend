@@ -574,6 +574,7 @@
     "include_tags": "Включить теги",
     "inherited_risk_score": "Унаследованный рейтинг риска",
     "internal": "Внутренний",
+    "internal_status": "Component classified as internal",
     "inventory": "Инвентарь",
     "inventory_with_vulnerabilities": "Инвентарь с уязвимостями",
     "justification": "Обоснование",

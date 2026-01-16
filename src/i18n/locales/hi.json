@@ -574,6 +574,7 @@
     "include_tags": "टैग शामिल करें",
     "inherited_risk_score": "वंशानुगत जोखिम स्कोर",
     "internal": "आंतरिक",
+    "internal_status": "Component classified as internal",
     "inventory": "भंडार",
     "inventory_with_vulnerabilities": "कमज़ोरियों वाली सूची",
     "justification": "औचित्य",
