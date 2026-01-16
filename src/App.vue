@@ -1,7 +1,20 @@
 <template>
-  <router-view></router-view>
+  <div class="app-shell">
+    <Banner
+      v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
+      :key="bannerInstanceKey"
+      class="app-banner"
+      :dismissable="bannerConfig.makeBannerDismissable"
+      :color-scheme="bannerConfig.colorScheme"
+      :message="bannerConfig.message"
+      :custom-mode="bannerConfig.customMode"
+      :html="bannerConfig.html"
+    />
+    <main class="app-content">
+      <router-view />
+    </main>
+  </div>
 </template>
-
 <script>
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import $ from 'jquery';
@@ -9,9 +22,25 @@ import { getUrlVar } from './shared/utils';
 import { getToken } from './shared/permissions';
 import EventBus from './shared/eventbus';
 import VueRouter from 'vue-router';
+import Banner from './views/components/Banner.vue';
 
 export default {
   name: 'app',
+  components: {
+    Banner,
+  },
+  data() {
+    return {
+      bannerConfig: null,
+      bannerInstanceKey: 0,
+    };
+  },
+  computed: {
+    isLoginPage() {
+      const loginRoutes = ['/login'];
+      return loginRoutes.includes(this.$route.path);
+    },
+  },
   created() {
     const setJwtForAjax = (jwt) => {
       if (jwt) {
@@ -24,12 +53,26 @@ export default {
     };
 
     EventBus.$on('authenticated', (jwt) => {
+      sessionStorage.removeItem('banner-dismissed');
       if (jwt) {
         sessionStorage.setItem('token', jwt);
       } else {
         sessionStorage.removeItem('token');
       }
       setJwtForAjax(jwt);
+
+      if (jwt) {
+        this.fetchBannerConfig();
+      } else {
+        this.bannerConfig = null;
+        this.bannerInstanceKey++;
+      }
+    });
+
+    EventBus.$on('banner-updated', async () => {
+      sessionStorage.removeItem('banner-dismissed');
+      await this.fetchBannerConfig();
+      this.bannerInstanceKey++;
     });
 
     // ensure $.ajaxSettings.headers exists
@@ -37,7 +80,14 @@ export default {
       headers: {},
     });
 
+    const token = getToken();
     setJwtForAjax(getToken());
+
+    if (token) {
+      this.fetchBannerConfig();
+    } else {
+      this.bannerConfig = null;
+    }
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
@@ -164,6 +214,17 @@ export default {
       }
     });
   },
+  methods: {
+    async fetchBannerConfig() {
+      try {
+        const response = await this.axios.get(this.$api.URL_BANNER);
+        this.bannerConfig = response.data || null;
+      } catch (e) {
+        console.error('Failed to load banner config:', e);
+        this.bannerConfig = null;
+      }
+    },
+  },
 };
 </script>
 
@@ -175,4 +236,8 @@ $simple-line-font-path: '~simple-line-icons/fonts/';
 @import '~simple-line-icons/scss/simple-line-icons.scss';
 @import '~bootstrap-vue/dist/bootstrap-vue.css';
 @import 'assets/scss/style';
+
+.app-content {
+  padding-top: var(--banner-offset, 0px);
+}
 </style>
