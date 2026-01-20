@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Next trigger at",
     "alert_schedule_skip_publish_if_unchanged": "Skip publish if unchanged",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "Do not send an alert if nothing has changed since the last time the alert was sent.",
+    "alert_schedule_ignore_suppressed": "Ignore suppressed findings",
+    "alert_schedule_ignore_suppressed_tooltip": "Ignore suppressed findings for alert summaries.",
     "alert_schedule_summary_warning": "The alert must be limited to one or more projects in order for summaries to work. When selecting projects to limit the alert to, consider that choosing too many projects can cause summaries to grow too large for certain destinations, leading to them being rejected.",
     "alert_trigger_type": "Trigger type",
     "alert_trigger_type_event": "Event",

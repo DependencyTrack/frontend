@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "下一个触发",
     "alert_schedule_skip_publish_if_unchanged": "如果不变，则跳过公众",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "自从上次发送警报以来，如果什么都没有更改，请勿发送警报。",
+    "alert_schedule_ignore_suppressed": "忽略已抑制的发现",
+    "alert_schedule_ignore_suppressed_tooltip": "在警报摘要中忽略已抑制的发现。",
     "alert_schedule_summary_warning": "警报必须仅限于一个或多个项目才能进行摘要。\n在选择限制警报的项目时，请考虑选择太多项目会导致摘要在某些目的地中成长太大，从而导致他们被拒绝。",
     "alert_trigger_type": "触发类型",
     "alert_trigger_type_event": "事件",
