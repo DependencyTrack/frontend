@@ -21,6 +21,14 @@
       />
       {{ $t('admin.vulnsource_alias_sync_enable') }}
       <b-validated-input-group-form-input
+        id="ossindex-baseUrl"
+        :label="$t('admin.base_url')"
+        input-group-size="mb-3"
+        rules="required"
+        v-model="baseUrl"
+        lazy="true"
+      />
+      <b-validated-input-group-form-input
         id="ossindex-username"
         :label="$t('admin.registered_email_address')"
         input-group-size="mb-3"
@@ -68,6 +76,7 @@ export default {
     return {
       scannerEnabled: false,
       aliasSyncEnabled: false,
+      baseUrl: '',
       username: '',
       apitoken: '',
       labelIcon: {
@@ -88,6 +97,11 @@ export default {
           groupName: 'scanner',
           propertyName: 'ossindex.alias.sync.enabled',
           propertyValue: this.aliasSyncEnabled,
+        },
+        {
+          groupName: 'scanner',
+          propertyName: 'ossindex.base.url',
+          propertyValue: this.baseUrl,
         },
         {
           groupName: 'scanner',
@@ -115,6 +129,9 @@ export default {
             break;
           case 'ossindex.alias.sync.enabled':
             this.aliasSyncEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'ossindex.base.url':
+            this.baseUrl = item.propertyValue;
             break;
           case 'ossindex.api.username':
             this.username = item.propertyValue;
