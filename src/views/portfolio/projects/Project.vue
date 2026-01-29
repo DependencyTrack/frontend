@@ -384,13 +384,14 @@
       </b-tab>
     </b-tabs>
     <project-details-modal
-      :project="cloneDeep(project)"
+      :project="project"
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
     />
     <project-properties-modal :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
+    <project-add-author-modal :uuid="this.uuid" @author-added="addAuthor"/>
   </div>
 </template>
 
@@ -412,6 +413,7 @@ import ProjectDetailsModal from './ProjectDetailsModal';
 import ProjectPropertiesModal from './ProjectPropertiesModal';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
 import ProjectAddVersionModal from './ProjectAddVersionModal';
+import ProjectAddAuthorModal from './ProjectAddAuthorModal.vue';
 import ProjectFindings from './ProjectFindings';
 import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
@@ -424,6 +426,7 @@ export default {
     ProjectPolicyViolations,
     ProjectFindings,
     ProjectAddVersionModal,
+    ProjectAddAuthorModal,
     ProjectCreatePropertyModal,
     ProjectPropertiesModal,
     ProjectDetailsModal,
@@ -520,6 +523,12 @@ export default {
     };
   },
   methods: {
+    addAuthor(newAuthor) {
+      if (!this.project.authors) {
+        this.project.authors = [];
+      }
+      this.project.authors.push(newAuthor);
+    },
     cloneDeep: function (component) {
       return cloneDeep(component);
     },

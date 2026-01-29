@@ -1,244 +1,303 @@
 <template>
-  <b-modal
-    id="projectCreateProjectModal"
-    @hide="resetValues()"
-    size="md"
-    hide-header-close
-    no-stacking
-    :title="$t('message.create_project')"
-  >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
-        <template v-slot:title
-          ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
-        >
-        <b-card>
-          <b-input-group-form-input
-            id="project-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.name"
-            lazy="true"
-            required="true"
-            feedback="true"
-            autofocus="false"
-            :label="$t('message.project_name')"
-            :tooltip="this.$t('message.project_name_desc')"
-            :feedback-text="$t('message.required_project_name')"
-          />
-          <b-row align-v="stretch">
-            <b-col>
-              <b-input-group-form-input
-                id="project-version-input"
-                input-group-size="mb-3"
-                type="text"
-                v-model="project.version"
-                lazy="true"
-                required="false"
-                feedback="false"
-                autofocus="false"
-                :label="$t('message.version')"
-                :tooltip="this.$t('message.component_version_desc')"
-              />
-            </b-col>
-            <b-col cols="auto">
-              <b-input-group-form-switch
-                id="project-create-islatest"
-                :label="$t('message.project_is_latest')"
-                v-model="project.isLatest"
-                :show-placeholder-label="true"
-              />
-            </b-col>
-          </b-row>
-          <b-input-group-form-select
-            id="v-classifier-input"
-            required="true"
-            v-model="project.classifier"
-            :options="sortAvailableClassifiers"
-            :label="$t('message.classifier')"
-            :tooltip="$t('message.component_classifier_desc')"
-          />
-          <b-input-group-form-select
-            id="v-team-input"
-            :required="requiresTeam"
-            v-model="project.team"
-            :options="availableTeams"
-            :label="$t('message.team')"
-            :tooltip="$t('message.component_team_desc')"
-            :disabled="isDisabled"
-          />
-          <b-input-group-form-select
-            id="v-collection-logic-input"
-            required="true"
-            v-model="project.collectionLogic"
-            :options="availableCollectionLogics"
-            :label="$t('message.collectionLogic')"
-            :tooltip="$t('message.project_collection_logic_desc')"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-            v-on:change="syncCollectionTagsVisibility"
-          />
-          <vue-tags-input
-            id="input-collectionTags"
-            v-model="collectionTagTyping"
-            :tags="collectionTags"
-            :add-on-key="addOnKeys"
-            :placeholder="$t('message.project_add_collection_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="
-              (newCollectionTags) => (this.collectionTags = newCollectionTags)
-            "
-            class="mw-100 bg-transparent text-lowercase"
-            :max-tags="1"
-            v-show="showCollectionTags"
-            :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
-          />
+  <div>
+    <b-modal
+      id="projectCreateProjectModal"
+      @ok="resetValues()"
+      @cancel="resetValues()"
+      size="md"
+      hide-header-close
+      no-stacking
+      :title="$t('message.create_project')"
+    >
+      <b-tabs class="body-bg-color" style="border: 0; padding: 0">
+        <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+          <template v-slot:title
+            ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
+          >
+          <b-card>
+            <b-input-group-form-input
+              id="project-name-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.name"
+              lazy="true"
+              required="true"
+              feedback="true"
+              autofocus="false"
+              :label="$t('message.project_name')"
+              :tooltip="this.$t('message.project_name_desc')"
+              :feedback-text="$t('message.required_project_name')"
+            />
+            <b-row align-v="stretch">
+              <b-col>
+                <b-input-group-form-input
+                  id="project-version-input"
+                  input-group-size="mb-3"
+                  type="text"
+                  v-model="project.version"
+                  lazy="true"
+                  required="false"
+                  feedback="false"
+                  autofocus="false"
+                  :label="$t('message.version')"
+                  :tooltip="this.$t('message.component_version_desc')"
+                />
+              </b-col>
+              <b-col cols="auto">
+                <b-input-group-form-switch
+                  id="project-create-islatest"
+                  :label="$t('message.project_is_latest')"
+                  v-model="project.isLatest"
+                  :show-placeholder-label="true"
+                />
+              </b-col>
+            </b-row>
+            <b-input-group-form-select
+              id="v-classifier-input"
+              required="true"
+              v-model="project.classifier"
+              :options="sortAvailableClassifiers"
+              :label="$t('message.classifier')"
+              :tooltip="$t('message.component_classifier_desc')"
+            />
+            <b-input-group-form-select
+              id="v-team-input"
+              :required="requiresTeam"
+              v-model="project.team"
+              :options="availableTeams"
+              :label="$t('message.team')"
+              :tooltip="$t('message.component_team_desc')"
+              :disabled="isDisabled"
+            />
+            <b-button variant="outline-primary" class="mb-3" @click="showAuthorModal = true">
+            {{ $t('message.project_author') }}
+            </b-button>
 
-          <div style="margin-bottom: 1rem">
-            <label>Parent</label>
-            <multiselect
-              v-model="selectedParent"
-              id="multiselect"
-              :custom-label="createProjectLabel"
-              :placeholder="this.$t('message.search_parent')"
-              open-direction="bottom"
-              :options="availableParents"
-              :multiple="false"
-              :searchable="true"
-              track-by="uuid"
-              :loading="isLoading"
-              @search-change="asyncFind"
-              :internal-search="false"
-              :close-on-select="true"
-              selectLabel=""
-              deselectLabel=""
-            ></multiselect>
-          </div>
-          <b-form-group
-            id="project-description-form-group"
-            :label="this.$t('message.description')"
-            label-for="project-description-input"
-          >
-            <b-form-textarea
-              id="project-description-description"
-              v-model="project.description"
-              rows="3"
+
+            <b-input-group-form-select
+              id="v-collection-logic-input"
+              required="true"
+              v-model="project.collectionLogic"
+              :options="availableCollectionLogics"
+              :label="$t('message.collectionLogic')"
+              :tooltip="$t('message.project_collection_logic_desc')"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
+              v-on:change="syncCollectionTagsVisibility"
             />
-          </b-form-group>
-          <b-form-group
-            id="project-classifier-form-group"
-            :label="this.$t('message.tags')"
-            label-for="input-4"
-          >
             <vue-tags-input
-              id="input-4"
-              v-model="tag"
-              :tags="tags"
+              id="input-collectionTags"
+              v-model="collectionTagTyping"
+              :tags="collectionTags"
               :add-on-key="addOnKeys"
-              :placeholder="$t('message.add_tag')"
+              :placeholder="$t('message.project_add_collection_tag')"
               :autocomplete-items="tagsAutoCompleteItems"
-              @tags-changed="(newTags) => (this.tags = newTags)"
+              @tags-changed="
+                (newCollectionTags) => (this.collectionTags = newCollectionTags)
+              "
               class="mw-100 bg-transparent text-lowercase"
+              :max-tags="1"
+              v-show="showCollectionTags"
+              :readonly="this.isNotPermitted(PERMISSIONS.PORTFOLIO_MANAGEMENT)"
             />
-          </b-form-group>
-        </b-card>
-      </b-tab>
-      <b-tab class="body-bg-color" style="border: 0; padding: 0">
-        <template v-slot:title
-          ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
+
+            <div style="margin-bottom: 1rem">
+              <label>Parent</label>
+              <multiselect
+                v-model="selectedParent"
+                id="multiselect"
+                :custom-label="createProjectLabel"
+                :placeholder="this.$t('message.search_parent')"
+                open-direction="bottom"
+                :options="availableParents"
+                :multiple="false"
+                :searchable="true"
+                track-by="uuid"
+                :loading="isLoading"
+                @search-change="asyncFind"
+                :internal-search="false"
+                :close-on-select="true"
+                selectLabel=""
+                deselectLabel=""
+              ></multiselect>
+            </div>
+            <b-form-group
+              id="project-description-form-group"
+              :label="this.$t('message.description')"
+              label-for="project-description-input"
+            >
+              <b-form-textarea
+                id="project-description-description"
+                v-model="project.description"
+                rows="3"
+              />
+            </b-form-group>
+            <b-form-group
+              id="project-classifier-form-group"
+              :label="this.$t('message.tags')"
+              label-for="input-4"
+            >
+              <vue-tags-input
+                id="input-4"
+                v-model="tag"
+                :tags="tags"
+                :add-on-key="addOnKeys"
+                :placeholder="$t('message.add_tag')"
+                :autocomplete-items="tagsAutoCompleteItems"
+                @tags-changed="(newTags) => (this.tags = newTags)"
+                class="mw-100 bg-transparent text-lowercase"
+              />
+            </b-form-group>
+          </b-card>
+        </b-tab>
+        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+          <template v-slot:title
+            ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
+          >
+          <b-card>
+            <b-input-group-form-input
+              id="project-name-input-identify"
+              input-group-size="mb-3"
+              type="text"
+              v-model="readOnlyProjectName"
+              lazy="true"
+              required="false"
+              feedback="true"
+              autofocus="false"
+              disabled="true"
+              :label="$t('message.project_name')"
+              :tooltip="this.$t('message.project_name_desc')"
+              :readonly="true"
+            />
+            <b-input-group-form-input
+              id="project-version-input-identify"
+              input-group-size="mb-3"
+              type="text"
+              v-model="readOnlyProjectVersion"
+              lazy="true"
+              required="false"
+              feedback="true"
+              autofocus="false"
+              disabled="true"
+              :label="$t('message.version')"
+              :tooltip="this.$t('message.component_version_desc')"
+              :readonly="true"
+            />
+            <b-input-group-form-input
+              id="project-group-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.group"
+              required="false"
+              :label="$t('message.component_namespace_group_vendor')"
+              :tooltip="this.$t('message.component_group_desc')"
+            />
+            <b-input-group-form-input
+              id="project-purl-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.purl"
+              required="false"
+              :label="$t('message.package_url_full')"
+              :tooltip="this.$t('message.component_package_url_desc')"
+            />
+            <b-input-group-form-input
+              id="project-cpe-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.cpe"
+              required="false"
+              :label="$t('message.cpe_full')"
+              :tooltip="$t('message.component_cpe_desc')"
+            />
+            <b-input-group-form-input
+              id="project-swidTagId-input"
+              input-group-size="mb-3"
+              type="text"
+              v-model="project.swidTagId"
+              required="false"
+              :label="$t('message.swid_tagid')"
+              :tooltip="$t('message.component_swid_tagid_desc')"
+            />
+          </b-card>
+        </b-tab>
+        <!--
+        <b-tab>
+          <template v-slot:title><i class="fa fa-balance-scale"></i> {{ $t('message.legal') }}</template>
+          <b-card>
+            <b-input-group-form-select id="project-license-input" required="false"
+                                      v-model="selectedLicense" :options="selectableLicenses"
+                                      :label="$t('message.license')" :tooltip="$t('message.component_spdx_license_desc')" />
+            <b-form-group
+              id="project-copyright-form-group"
+              :label="this.$t('message.copyright')"
+              label-for="project-copyright-input">
+              <b-form-textarea id="project-description-description" v-model="project.copyright" rows="3" />
+            </b-form-group>
+          </b-card>
+        </b-tab>
+        -->
+      </b-tabs>
+      <template v-slot:modal-footer="{ cancel }">
+        <b-button size="md" variant="secondary" @click="cancel()">{{
+          $t('message.close')
+        }}</b-button>
+        <b-button size="md" variant="primary" @click="createProject()">{{
+          $t('message.create')
+        }}</b-button>
+      </template>
+    </b-modal>
+    <b-modal
+      id="add-author-modal"
+      v-model="showAuthorModal"
+      :title="$t('message.project_author')"
+      hide-footer
+    >
+    <div v-if="!isAddingAuthor">
+      <b-table
+        :items="project.authors"
+        :fields="authorFields"
+        striped
+        hover
+        small
+        empty-text="No authors added"
         >
-        <b-card>
-          <b-input-group-form-input
-            id="project-name-input-identify"
-            input-group-size="mb-3"
-            type="text"
-            v-model="readOnlyProjectName"
-            lazy="true"
-            required="false"
-            feedback="true"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.project_name')"
-            :tooltip="this.$t('message.project_name_desc')"
-            :readonly="true"
-          />
-          <b-input-group-form-input
-            id="project-version-input-identify"
-            input-group-size="mb-3"
-            type="text"
-            v-model="readOnlyProjectVersion"
-            lazy="true"
-            required="false"
-            feedback="true"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.version')"
-            :tooltip="this.$t('message.component_version_desc')"
-            :readonly="true"
-          />
-          <b-input-group-form-input
-            id="project-group-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.group"
-            required="false"
-            :label="$t('message.component_namespace_group_vendor')"
-            :tooltip="this.$t('message.component_group_desc')"
-          />
-          <b-input-group-form-input
-            id="project-purl-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.purl"
-            required="false"
-            :label="$t('message.package_url_full')"
-            :tooltip="this.$t('message.component_package_url_desc')"
-          />
-          <b-input-group-form-input
-            id="project-cpe-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.cpe"
-            required="false"
-            :label="$t('message.cpe_full')"
-            :tooltip="$t('message.component_cpe_desc')"
-          />
-          <b-input-group-form-input
-            id="project-swidTagId-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="project.swidTagId"
-            required="false"
-            :label="$t('message.swid_tagid')"
-            :tooltip="$t('message.component_swid_tagid_desc')"
-          />
-        </b-card>
-      </b-tab>
-      <!--
-      <b-tab>
-        <template v-slot:title><i class="fa fa-balance-scale"></i> {{ $t('message.legal') }}</template>
-        <b-card>
-          <b-input-group-form-select id="project-license-input" required="false"
-                                     v-model="selectedLicense" :options="selectableLicenses"
-                                     :label="$t('message.license')" :tooltip="$t('message.component_spdx_license_desc')" />
-          <b-form-group
-            id="project-copyright-form-group"
-            :label="this.$t('message.copyright')"
-            label-for="project-copyright-input">
-            <b-form-textarea id="project-description-description" v-model="project.copyright" rows="3" />
+        <template #cell(actions)="row">
+          <b-button size="sm" variant="danger" @click="removeAuthor(row.index)">
+            {{$t('message.remove_author')}}
+          </b-button>
+        </template>
+      </b-table>
+
+      <b-button variant="primary" class="mt-3" @click="isAddingAuthor = true">
+        {{ $t('message.add_author') }}
+      </b-button>
+
+      <b-button variant="outline-secondary" class="mt-3 ml-2" @click="goBackToProjectModal">
+        ← Back to Project
+      </b-button>
+    </div>
+        <div v-else>
+        <b-form @submit.prevent="addAuthor">
+          <b-form-group label="Name" label-for="author-name">
+            <b-form-input id="author-name" v-model="newAuthor.name" />
           </b-form-group>
-        </b-card>
-      </b-tab>
-      -->
-    </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button size="md" variant="primary" @click="createProject()">{{
-        $t('message.create')
-      }}</b-button>
-    </template>
-  </b-modal>
+
+          <b-form-group label="Email" label-for="author-email">
+            <b-form-input id="author-email" v-model="newAuthor.email" />
+          </b-form-group>
+
+          <b-form-group label="Phone" label-for="author-phone">
+            <b-form-input id="author-phone" v-model="newAuthor.phone" />
+          </b-form-group>
+
+          <b-button type="submit" variant="success">Save</b-button>
+          <b-button variant="secondary" @click="cancelAddAuthor" class="ml-2">
+            Cancel
+          </b-button>
+        </b-form>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -252,6 +311,7 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import common from '../../../shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
+import { BTable } from 'bootstrap-vue';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -270,6 +330,18 @@ export default {
   },
   data() {
     return {
+      showAuthorModal: false,
+      isAddingAuthor: false,
+      authorFields: [
+        { key: 'name', label: this.$t('message.name') },
+        { key: 'email', label: this.$t('message.email') },
+        { key: 'phone', label: this.$t('message.phone') },
+        { key: 'actions', label: 'Actions'},],
+      newAuthor:  {
+        name: '',
+        email: '',
+        phone: '',
+      },
       requiresTeam: true,
       isDisabled: false,
       readOnlyProjectName: '',
@@ -282,6 +354,7 @@ export default {
       project: {
         team: [],
         collectionLogic: 'NONE', // set default to regular project
+        authors: [],
       },
       teams: [],
       tag: '', // The contents of a tag as its being typed into the vue-tag-input
@@ -300,6 +373,7 @@ export default {
       this.getAvailableTeams();
     });
   },
+
   beforeUpdate() {
     if (this.tags.length === 0 && this.project && this.project.tags) {
       // Prevents line from being executed when entering new tags
@@ -327,6 +401,40 @@ export default {
     },
   },
   methods: {
+    addAuthor() {
+        if (this.newAuthor.name && this.newAuthor.email) {
+          const newAuthorEntry = {
+            name: this.newAuthor.name,
+            email: this.newAuthor.email,
+            phone: this.newAuthor.phone || '',
+          };
+          this.project.authors.push(newAuthorEntry);
+          this.resetAuthorForm();
+        } else {
+          this.$toastr.w('Name and Email are required to add an author.');
+        }
+    },
+
+    removeAuthor(index) {
+      this.project.authors.splice(index, 1);
+    },
+
+    cancelAddAuthor() {
+      this.newAuthor = { name: '', email: '', phone: '' };
+      this.isAddingAuthor = false;
+    },
+
+    resetAuthorForm() {
+      this.newAuthor = { name: '', email: '', phone: '' };
+      this.isAddingAuthor = false;
+    },
+
+    goBackToProjectModal() {
+      this.showAuthorModal = false; // Close author modal
+      this.$nextTick(() => {
+        this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
+      });
+    },
     async getACLEnabled() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/public/access-management/acl.enabled`;
       let response = await this.axios.get(url);
@@ -383,6 +491,7 @@ export default {
           group: this.project.group,
           description: this.project.description,
           //license: this.selectedLicense,
+          authors: this.project.authors,
           parent: parent,
           classifier: this.project.classifier,
           accessTeams: choosenTeamswithoutAPIKeys,
@@ -447,6 +556,7 @@ export default {
       this.project = {
         collectionLogic: 'NONE', // set default to regular project
         team: [],
+        authors: [],
       };
       this.isDisabled = false;
       this.tag = '';
