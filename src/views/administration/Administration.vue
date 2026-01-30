@@ -29,6 +29,7 @@ import TaskScheduler from './configuration/TaskScheduler.vue';
 import Telemetry from './configuration/Telemetry.vue';
 import Experimental from './configuration/Experimental.vue';
 import WelcomeMessage from './configuration/WelcomeMessage.vue';
+import Banner from './configuration/BannerConfigurationModal.vue';
 // Analyzer plugins
 import InternalAnalyzer from './analyzers/InternalAnalyzer';
 import OssIndexAnalyzer from './analyzers/OssIndexAnalyzer';
@@ -75,6 +76,7 @@ export default {
     AdminMenu,
     General,
     WelcomeMessage,
+    Banner,
     BomFormats,
     Email,
     Jira,
