@@ -136,6 +136,9 @@ export default {
         'ProjectList',
         this.$refs.table.columns,
       );
+      // Always enforce ancestor path visibility based on current view mode
+      // (overrides any localStorage preference when in hierarchical view)
+      this.updateAncestorPathVisibility();
     },
     onPreBody: function () {
       this.$refs.table.getData().forEach((project) => {
@@ -146,11 +149,21 @@ export default {
       if (!this.showFlatView && !this.isSearching) {
         let columns = this.$refs.table.getOptions().columns;
 
-        if (columns && columns[0][0].visible) {
-          this.$refs.table.$table.treegrid({
-            treeColumn: 0,
-            initialState: 'collapsed',
-          });
+        if (columns && columns[0]) {
+          // Find the 'name' column and calculate its visual index (among visible columns)
+          const nameColumnIndex = columns[0].findIndex(
+            (col) => col.field === 'name',
+          );
+          if (nameColumnIndex >= 0 && columns[0][nameColumnIndex].visible) {
+            // Count visible columns before the name column to get visual index
+            const visualIndex = columns[0]
+              .slice(0, nameColumnIndex)
+              .filter((col) => col.visible).length;
+            this.$refs.table.$table.treegrid({
+              treeColumn: visualIndex,
+              initialState: 'collapsed',
+            });
+          }
         }
         this.$refs.table.getData().forEach((project) => {
           if (
@@ -207,6 +220,15 @@ export default {
     saveViewState: function () {
       this.savedViewState = this.showFlatView;
     },
+    updateAncestorPathVisibility: function () {
+      // Show ancestor path column only in flat/search view (when hierarchy is not shown via treegrid)
+      // Hide it in hierarchical view where the tree structure already shows the hierarchy
+      if (this.isSearching || this.showFlatView) {
+        this.$refs.table.showColumn('ancestorPath');
+      } else {
+        this.$refs.table.hideColumn('ancestorPath');
+      }
+    },
   },
   watch: {
     $route(to, from) {
@@ -230,10 +252,14 @@ export default {
           this.showFlatView.toString(),
         );
       }
+      // Show ancestor path only in flat/search view, hide in hierarchical view
+      this.updateAncestorPathVisibility();
       this.$refs.table.showLoading();
       this.refreshTable();
     },
     isSearching() {
+      // Show ancestor path only in flat/search view, hide in hierarchical view
+      this.updateAncestorPathVisibility();
       this.refreshTable();
     },
   },
@@ -248,6 +274,34 @@ export default {
         dataOff: '\u2715',
       },
       columns: [
+        {
+          title: this.$t('message.ancestor_path'),
+          field: 'ancestorPath',
+          sortable: false,
+          visible: false,
+          routerFunc: () => this.$router,
+          formatter(value, row, index) {
+            if (!row.ancestorPath || row.ancestorPath.length === 0) {
+              return '';
+            }
+            const router = this.routerFunc();
+            return row.ancestorPath
+              .map((ancestor) => {
+                const url = xssFilters.uriInUnQuotedAttr(
+                  router.resolve({
+                    name: 'Project',
+                    params: { uuid: ancestor.uuid },
+                  }).route.fullPath,
+                );
+                const name = xssFilters.inHTMLData(ancestor.name);
+                const version = ancestor.version
+                  ? ` ${xssFilters.inHTMLData(ancestor.version)}`
+                  : '';
+                return `<a href="${url}">${name}${version}</a>`;
+              })
+              .join(' <i class="fa fa-angle-right" style="margin: 0 4px; color: #6c757d;"></i> ');
+          },
+        },
         {
           title: this.$t('message.project_name'),
           field: 'name',

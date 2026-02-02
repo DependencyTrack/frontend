@@ -58,6 +58,7 @@
       :data="data"
       :options="options"
       @on-pre-body="onPreBody"
+      @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
   </div>
@@ -189,15 +190,17 @@ export default {
       }
     },
     onPreBody: function () {
+      if (!this.changeSearchUrl) {
+        this.performSearch();
+        this.changeSearchUrl = true;
+      }
+    },
+    onLoadSuccess: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ComponentSearch',
         this.$refs.table.columns,
       );
-      if (!this.changeSearchUrl) {
-        this.performSearch();
-        this.changeSearchUrl = true;
-      }
     },
   },
   data() {
@@ -299,6 +302,29 @@ export default {
               row.project.version,
             );
             return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+          },
+        },
+        {
+          title: this.$t('message.ancestor_path'),
+          field: 'hierarchy',
+          sortable: false,
+          visible: true,
+          formatter(value, row, index) {
+            if (!row.project?.ancestorPath || row.project.ancestorPath.length === 0) {
+              return '';
+            }
+            return row.project.ancestorPath
+              .map((ancestor) => {
+                const url = xssFilters.uriInUnQuotedAttr(
+                  '../projects/' + ancestor.uuid,
+                );
+                const name = xssFilters.inHTMLData(ancestor.name);
+                const version = ancestor.version
+                  ? ` ${xssFilters.inHTMLData(ancestor.version)}`
+                  : '';
+                return `<a href="${url}">${name}${version}</a>`;
+              })
+              .join(' <i class="fa fa-angle-right" style="margin: 0 4px; color: #6c757d;"></i> ');
           },
         },
         {

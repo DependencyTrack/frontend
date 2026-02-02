@@ -56,6 +56,31 @@ export default {
       },
       columns: [
         {
+          title: this.$t('message.ancestor_path'),
+          field: 'ancestorPath',
+          sortable: false,
+          visible: true,
+          formatter: (value, row) => {
+            if (!row.ancestorPath || row.ancestorPath.length === 0) {
+              return '';
+            }
+            return row.ancestorPath
+              .map((ancestor) => {
+                const url = xssFilters.uriInUnQuotedAttr(
+                  '../projects/' + ancestor.uuid,
+                );
+                const name = xssFilters.inHTMLData(ancestor.name);
+                const version = ancestor.version
+                  ? ` ${xssFilters.inHTMLData(ancestor.version)}`
+                  : '';
+                return `<a href="${url}">${name}${version}</a>`;
+              })
+              .join(
+                ' <i class="fa fa-angle-right" style="margin: 0 4px; color: #6c757d;"></i> ',
+              );
+          },
+        },
+        {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
