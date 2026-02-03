@@ -574,6 +574,7 @@
     "include_tags": "Inclure des balises",
     "inherited_risk_score": "Score de risque hérité",
     "internal": "Interne",
+    "internal_status": "Component classified as internal",
     "inventory": "Inventaire",
     "inventory_with_vulnerabilities": "Inventaire avec vulnérabilités",
     "justification": "Justification",

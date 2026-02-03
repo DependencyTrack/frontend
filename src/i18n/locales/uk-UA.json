@@ -574,6 +574,7 @@
     "include_tags": "Включити теги",
     "inherited_risk_score": "Успадкований бал ризику",
     "internal": "Внутрішній",
+    "internal_status": "Component classified as internal",
     "inventory": "Інвентаризація",
     "inventory_with_vulnerabilities": "Інвентаризація з уразливостями",
     "justification": "Обґрунтування",

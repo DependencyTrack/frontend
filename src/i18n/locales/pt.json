@@ -574,6 +574,7 @@
     "include_tags": "Incluir tags",
     "inherited_risk_score": "Pontuação de risco herdada",
     "internal": "interno",
+    "internal_status": "Component classified as internal",
     "inventory": "Inventário",
     "inventory_with_vulnerabilities": "Inventário com vulnerabilidades",
     "justification": "Justificação",

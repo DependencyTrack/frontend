@@ -574,6 +574,7 @@
     "include_tags": "Include tags",
     "inherited_risk_score": "Inherited Risk Score",
     "internal": "Internal",
+    "internal_status": "Component classified as internal",
     "inventory": "Inventory",
     "inventory_with_vulnerabilities": "Inventory with Vulnerabilities",
     "justification": "Justification",
