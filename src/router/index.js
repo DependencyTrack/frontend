@@ -31,6 +31,8 @@ const BomFormats = () =>
   import('@/views/administration/configuration/BomFormats');
 const WelcomeMessage = () =>
   import('@/views/administration/configuration/WelcomeMessage');
+const Banner = () =>
+  import('@/views/administration/configuration/BannerConfigurationModal');
 const Email = () => import('@/views/administration/configuration/Email');
 const Jira = () => import('@/views/administration/configuration/JiraConfig');
 const InternalComponents = () =>
@@ -390,6 +392,17 @@ function configRoutes() {
             {
               path: 'configuration/welcomeMessage',
               component: WelcomeMessage,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/banner',
+              component: Banner,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
