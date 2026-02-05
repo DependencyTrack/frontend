@@ -214,6 +214,42 @@ function configRoutes() {
           },
         },
         {
+          path: 'projects/:name/:version/*',
+          name: 'Project By Name and Version',
+          beforeEnter: (to, from, next) => {
+            const searchParams = new URLSearchParams({
+              name: to.params.name,
+              version: to.params.version,
+            });
+            router.app.axios
+              .get(
+                `${router.app.$api.BASE_URL}/${router.app.$api.URL_PROJECT_LOOKUP}?${searchParams}`,
+              )
+              .then((result) => {
+                const trailingPathSegments = to.params.pathMatch
+                  ? `/${to.params.pathMatch}`
+                  : '';
+                next({
+                  path: `projects/${result.data.uuid}${trailingPathSegments}`,
+                  replace: true,
+                });
+              })
+              .catch(() => {
+                next({
+                  name: '404',
+                  replace: true,
+                });
+              });
+          },
+          meta: {
+            permission: 'VIEW_PORTFOLIO',
+          },
+        },
+        {
+          path: 'projects/:name/:version',
+          redirect: 'projects/:name/:version/',
+        },
+        {
           path: 'components',
           name: 'Component Lookup',
           component: ComponentSearch,

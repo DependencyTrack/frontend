@@ -41,6 +41,7 @@
   "URL_POLICY_VIOLATION": "api/v1/violation",
   "URL_POLICY_VIOLATION_ANALYSIS": "api/v1/violation/analysis",
   "URL_PROJECT": "api/v1/project",
+  "URL_PROJECT_LOOKUP": "api/v1/project/lookup",
   "URL_REPOSITORY": "api/v1/repository",
   "URL_SEARCH": "api/v1/search",
   "URL_SERVICE": "api/v1/service",
