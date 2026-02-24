@@ -15,20 +15,24 @@
               <td>{{ $t('message.last_vulnerability_analysis') }}:</td>
               <td>{{ lastVulnAnalysis }}</td>
             </tr>
-            <tr>
-              <td>{{ $t('message.last_measurement') }}:</td>
-              <td>
-                {{ lastMeasurement }}
-                <b-link
-                  v-permission="'PORTFOLIO_MANAGEMENT'"
-                  class="font-weight-bold"
-                  style="margin-left: 6px"
-                  v-on:click="refreshMetrics"
-                >
-                  <i class="fa fa-refresh"></i>
-                </b-link>
-              </td>
+            <td>{{ $t('message.time_bom_generated') }}:</td>
+            <td>{{ timeBomGenerated }}</td>
             </tr>
+            <tr>
+              <tr>
+                <td>{{ $t('message.last_measurement') }}:</td>
+                <td>
+                  {{ lastMeasurement }}
+                  <b-link
+                    v-permission="'PORTFOLIO_MANAGEMENT'"
+                    class="font-weight-bold"
+                    style="margin-left: 6px"
+                    v-on:click="refreshMetrics"
+                  >
+                    <i class="fa fa-refresh"></i>
+                  </b-link>
+                </td>
+              </tr>
           </table>
         </b-col>
         <b-col sm="7" class="d-none d-md-block"> </b-col>
@@ -83,8 +87,8 @@
               <b-col sm="6">
                 <Callout variant="severity-unassigned">
                   <small class="text-muted">{{
-                    $t('severity.unassigned')
-                  }}</small
+                      $t('severity.unassigned')
+                    }}</small
                   ><br />
                   <strong class="h4">{{ currentUnassigned }}</strong>
                 </Callout>
@@ -92,8 +96,8 @@
               <b-col sm="6">
                 <Callout variant="severity-info">
                   <small class="text-muted">{{
-                    $t('message.risk_score')
-                  }}</small
+                      $t('message.risk_score')
+                    }}</small
                   ><br />
                   <strong class="h5">{{ currentRiskScore }}</strong>
                 </Callout>
@@ -232,6 +236,7 @@ export default {
       suppressed: 0,
       lastMeasurement: 'n/a',
       lastBomImport: 'n/a',
+      timeBomGenerated: 'n/a',
       lastVulnAnalysis: 'n/a',
     };
   },
@@ -301,6 +306,12 @@ export default {
         );
       } else {
         this.lastBomImport = 'n/a';
+      }
+
+      if (newProject && newProject.bomTimestamp !== undefined) {
+        this.timeBomGenerated = common.formatTimestamp(newProject.bomTimestamp, true);
+      } else {
+        this.timeBomGenerated = 'n/a';
       }
 
       if (newProject && newProject.lastVulnerabilityAnalysis) {
