@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Successivo trigger a",
     "alert_schedule_skip_publish_if_unchanged": "Salta pubblico se invariato",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "Non inviare un avviso se nulla è cambiato dall'ultima volta che è stato inviato l'allerta.",
+    "alert_schedule_ignore_suppressed": "Ignora i rilevamenti soppressi",
+    "alert_schedule_ignore_suppressed_tooltip": "Ignora i rilevamenti soppressi nei riepiloghi degli avvisi.",
     "alert_schedule_summary_warning": "L'avviso deve essere limitato a uno o più progetti per far funzionare i riepiloghi. \nQuando si selezionano progetti a cui limitare l'avviso, considerare che la scelta di troppi progetti può far crescere troppo i riassunti per determinate destinazioni, portandole a essere respinte.",
     "alert_trigger_type": "Tipo di trigger",
     "alert_trigger_type_event": "Evento",
