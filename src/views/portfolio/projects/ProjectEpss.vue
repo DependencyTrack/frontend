@@ -167,11 +167,36 @@ export default {
           },
         },
         {
-          title: this.$t('message.cvss'),
+          title: this.$t('message.cvss_v2'),
+          field: 'vulnerability.cvssV2BaseScore',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            if (Number.isFinite(value)) {
+              return value.toFixed(1);
+            } else {
+              return null;
+            }
+          },
+        },
+        {
+          title: this.$t('message.cvss_v3'),
           field: 'vulnerability.cvssV3BaseScore',
           sortable: true,
           formatter(value, row, index) {
-            if (value && typeof value === 'number') {
+            if (Number.isFinite(value)) {
+              return value.toFixed(1);
+            } else {
+              return null;
+            }
+          },
+        },
+        {
+          title: this.$t('message.cvss_v4'),
+          field: 'vulnerability.cvssV4Score',
+          sortable: true,
+          formatter(value, row, index) {
+            if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
               return null;
