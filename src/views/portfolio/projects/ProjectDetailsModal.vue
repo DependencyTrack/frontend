@@ -662,11 +662,8 @@ export default {
   beforeMount() {
     this.$root.$on('initializeProjectDetailsModal', async () => {
       if (!this.retrievedParents && this.project.parent) {
-        this.parent = (
-          await this.axios.get(
-            `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.project.parent.uuid}`,
-          )
-        ).data;
+        // API returns nested parent with uuid, name, version - use directly, no fetch needed
+        this.parent = this.project.parent;
         this.selectedParent = this.parent;
         this.availableParents = [{ name: '', version: '', uuid: null }];
         this.retrievedParents = true;

@@ -7,6 +7,28 @@
             <i
               class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"
             ></i>
+            <div
+              v-if="parentChainBreadcrumb.length > 0"
+              class="text-muted font-xs mb-1"
+            >
+              <span
+                v-for="(ancestor, idx) in parentChainBreadcrumb"
+                :key="ancestor.uuid"
+              >
+                <router-link
+                  :to="{ name: 'Project', params: { uuid: ancestor.uuid } }"
+                  class="text-muted"
+                >
+                  {{ ancestor.name
+                  }}{{ ancestor.version ? ' ' + ancestor.version : '' }}
+                </router-link>
+                <i
+                  v-if="idx < parentChainBreadcrumb.length - 1"
+                  class="fa fa-angle-right mx-1"
+                  style="margin: 0 4px"
+                ></i>
+              </span>
+            </div>
             <div class="h5 mb-0 mt-2">
               <b-row>
                 <b-col class="text-nowrap" md="auto">
@@ -440,6 +462,9 @@ export default {
   },
   title: '',
   computed: {
+    parentChainBreadcrumb() {
+      return common.getParentChain(this.project);
+    },
     projectLabel() {
       if (this.project.name && this.project.version) {
         return this.project.name + ' ▸ ' + this.project.version;
