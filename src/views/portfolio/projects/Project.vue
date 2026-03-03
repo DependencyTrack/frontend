@@ -19,7 +19,8 @@
                   :to="{ name: 'Project', params: { uuid: ancestor.uuid } }"
                   class="text-muted"
                 >
-                  {{ ancestor.name }}{{ ancestor.version ? ' ' + ancestor.version : '' }}
+                  {{ ancestor.name
+                  }}{{ ancestor.version ? ' ' + ancestor.version : '' }}
                 </router-link>
                 <i
                   v-if="idx < parentChainBreadcrumb.length - 1"
