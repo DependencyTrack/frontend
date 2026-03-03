@@ -586,6 +586,7 @@
     "include_tags": "包含標籤",
     "inherited_risk_score": "繼承風險評分",
     "internal": "內部",
+    "internal_status": null,
     "inventory": "清單",
     "inventory_with_vulnerabilities": "含漏洞的清單",
     "justification": "理由",
