@@ -301,30 +301,12 @@ export default {
               row.project.name,
               row.project.version,
             );
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
-          },
-        },
-        {
-          title: this.$t('message.ancestor_path'),
-          field: 'hierarchy',
-          sortable: false,
-          visible: true,
-          formatter(value, row, index) {
-            if (!row.project?.ancestorPath || row.project.ancestorPath.length === 0) {
-              return '';
-            }
-            return row.project.ancestorPath
-              .map((ancestor) => {
-                const url = xssFilters.uriInUnQuotedAttr(
-                  '../projects/' + ancestor.uuid,
-                );
-                const name = xssFilters.inHTMLData(ancestor.name);
-                const version = ancestor.version
-                  ? ` ${xssFilters.inHTMLData(ancestor.version)}`
-                  : '';
-                return `<a href="${url}">${name}${version}</a>`;
-              })
-              .join(' <i class="fa fa-angle-right" style="margin: 0 4px; color: #6c757d;"></i> ');
+            const parentPath = common.formatParentChainForTooltip(row.project);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            return `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(name)}</a></span>`;
           },
         },
         {

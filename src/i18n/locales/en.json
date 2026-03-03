@@ -351,7 +351,7 @@
     "about": "About",
     "active": "Active",
     "add": "Add",
-    "ancestor_path": "Ancestor Path",
+    "parent_hierarchy": "Parent Hierarchy",
     "add_affected_component": "Add Affected Component",
     "add_comment": "Add Comment",
     "add_component": "Add Component",

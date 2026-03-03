@@ -26,6 +26,7 @@
 
 <script>
 import xssFilters from 'xss-filters';
+import common from '@/shared/common';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 
@@ -56,31 +57,6 @@ export default {
       },
       columns: [
         {
-          title: this.$t('message.ancestor_path'),
-          field: 'ancestorPath',
-          sortable: false,
-          visible: true,
-          formatter: (value, row) => {
-            if (!row.ancestorPath || row.ancestorPath.length === 0) {
-              return '';
-            }
-            return row.ancestorPath
-              .map((ancestor) => {
-                const url = xssFilters.uriInUnQuotedAttr(
-                  '../projects/' + ancestor.uuid,
-                );
-                const name = xssFilters.inHTMLData(ancestor.name);
-                const version = ancestor.version
-                  ? ` ${xssFilters.inHTMLData(ancestor.version)}`
-                  : '';
-                return `<a href="${url}">${name}${version}</a>`;
-              })
-              .join(
-                ' <i class="fa fa-angle-right" style="margin: 0 4px; color: #6c757d;"></i> ',
-              );
-          },
-        },
-        {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
@@ -90,7 +66,12 @@ export default {
               params: { uuid: row.uuid, vulnerability: this.vulnerability },
             }).route.fullPath;
 
-            let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            const parentPath = common.formatParentChainForTooltip(row);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            let html = `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(value)}</a></span>`;
             if (row.dependencyGraphAvailable) {
               const dependencyGraphUrl = this.$router.resolve({
                 name: 'Dependency Graph Component Lookup',
