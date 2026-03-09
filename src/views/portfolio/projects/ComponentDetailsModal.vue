@@ -63,7 +63,7 @@
             id="component-author-input"
             input-group-size="mb-3"
             type="text"
-            v-model="component.author"
+            v-model="component.authors"
             required="false"
             :label="$t('message.component_author')"
             :tooltip="this.$t('message.component_author_desc')"
@@ -548,7 +548,7 @@ export default {
           name: this.component.name,
           version: this.component.version,
           group: this.component.group,
-          author: this.component.author,
+          authors: this.component.authors,
           description: this.component.description,
           license: this.selectedLicense,
           licenseExpression: this.component.licenseExpression,
