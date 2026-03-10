@@ -26,6 +26,7 @@
 
 <script>
 import xssFilters from 'xss-filters';
+import common from '@/shared/common';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
 
@@ -65,7 +66,12 @@ export default {
               params: { uuid: row.uuid, vulnerability: this.vulnerability },
             }).route.fullPath;
 
-            let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
+            const parentPath = common.formatParentChainForTooltip(row);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            let html = `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(value)}</a></span>`;
             if (row.dependencyGraphAvailable) {
               const dependencyGraphUrl = this.$router.resolve({
                 name: 'Dependency Graph Component Lookup',
