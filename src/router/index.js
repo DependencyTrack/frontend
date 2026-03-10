@@ -248,7 +248,7 @@ function configRoutes() {
         {
           path: 'projects/:name/:version',
           redirect: (to) => ({
-            path: `/projects/${to.params.name}/${to.params.version}/`,
+            path: `/projects/${encodeURIComponent(to.params.name)}/${encodeURIComponent(to.params.version)}/`,
           }),
         },
         {
