@@ -104,6 +104,7 @@
     "email_smtp_port": "SMTP सर्वर पोर्ट",
     "email_smtp_server": "एसएमटीपी सर्वर",
     "email_smtp_username": "SMTP उपयोगकर्ता नाम",
+    "email_subject_show_level": "Show notification level in subject",
     "email_trust_cert": "SMTP सर्वर द्वारा प्रदान किए गए प्रमाणपत्र पर विश्वास करें",
     "enable_acl": "पोर्टफ़ोलियो एक्सेस नियंत्रण सक्षम करें (बीटा)",
     "enable_bom_cyclonedx": "साइक्लोनडीएक्स सक्षम करें",
