@@ -230,7 +230,7 @@ function configRoutes() {
                   ? `/${to.params.pathMatch}`
                   : '';
                 next({
-                  path: `projects/${result.data.uuid}${trailingPathSegments}`,
+                  path: `/projects/${result.data.uuid}${trailingPathSegments}`,
                   replace: true,
                 });
               })
@@ -247,7 +247,9 @@ function configRoutes() {
         },
         {
           path: 'projects/:name/:version',
-          redirect: 'projects/:name/:version/',
+          redirect: (to) => ({
+            path: `/projects/${to.params.name}/${to.params.version}/`,
+          }),
         },
         {
           path: 'components',
