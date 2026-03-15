@@ -39,6 +39,8 @@
           v-else-if="
             subject !== 'COORDINATES' &&
             subject !== 'VERSION_DISTANCE' &&
+            subject !== 'CPE' &&
+            subject !== 'PACKAGE_URL' &&
             !isSubjectSelectable
           "
           id="input-value"
@@ -50,6 +52,32 @@
           :tooltip="valueInputTooltip()"
           :debounce-events="'keyup'"
         />
+
+        <b-input-group-form-input
+          v-else-if="
+            (subject === 'CPE' && operator !== 'NOT_PRESENT') ||
+            (subject === 'PACKAGE_URL' && operator !== 'NOT_PRESENT')
+          "
+          id="input-value"
+          required="true"
+          type="text"
+          v-model="value"
+          lazy="true"
+          v-debounce:750ms="saveCondition"
+          :tooltip="valueInputTooltip()"
+          :debounce-events="'keyup'"
+        />
+
+        <template
+          v-else-if="
+            (subject === 'CPE' && operator === 'NOT_PRESENT') ||
+            (subject === 'PACKAGE_URL' && operator === 'NOT_PRESENT')
+          "
+        >
+          <div style="display: none">
+            {{ saveCondition() }}
+          </div>
+        </template>
 
         <b-input-group v-else-if="subject === 'COORDINATES'">
           <b-form-input
@@ -269,6 +297,11 @@ export default {
         { value: 'MATCHES', text: this.$t('operator.matches') },
         { value: 'NO_MATCH', text: this.$t('operator.no_match') },
       ],
+      regexOperatorsCpePurl: [
+        { value: 'MATCHES', text: this.$t('operator.matches') },
+        { value: 'NOT_PRESENT', text: this.$t('operator.not_present') },
+        { value: 'NO_MATCH', text: this.$t('operator.no_match') },
+      ],
       numericOperators: [
         { value: 'NUMERIC_GREATER_THAN', text: '>' },
         { value: 'NUMERIC_LESS_THAN', text: '<' },
@@ -384,10 +417,10 @@ export default {
           this.retrieveLicenseGroups();
           break;
         case 'PACKAGE_URL':
-          this.operators = this.regexOperators;
+          this.operators = this.regexOperatorsCpePurl;
           break;
         case 'CPE':
-          this.operators = this.regexOperators;
+          this.operators = this.regexOperatorsCpePurl;
           break;
         case 'SWID_TAGID':
           this.operators = this.regexOperators;
@@ -473,7 +506,15 @@ export default {
     },
     saveCondition: function () {
       let dynamicValue = this.createDynamicValue();
-      if (!this.subject || !this.operator || !dynamicValue) {
+      if (
+        !this.subject ||
+        !this.operator ||
+        (!dynamicValue &&
+          !(
+            (this.subject === 'CPE' && this.operator === 'NOT_PRESENT') ||
+            (this.subject === 'PACKAGE_URL' && this.operator === 'NOT_PRESENT')
+          ))
+      ) {
         return;
       }
       if (this.uuid) {
@@ -483,7 +524,8 @@ export default {
             uuid: this.uuid,
             subject: this.subject,
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
-            value: dynamicValue,
+            value:
+              this.operator === 'NOT_PRESENT' ? 'NOT_PRESENT' : dynamicValue,
           })
           .then((response) => {
             this.uuid = response.data.uuid;
@@ -505,7 +547,8 @@ export default {
           .put(url, {
             subject: this.subject,
             operator: this.subject === 'COMPONENT_HASH' ? 'IS' : this.operator,
-            value: dynamicValue,
+            value:
+              this.operator === 'NOT_PRESENT' ? 'NOT_PRESENT' : dynamicValue,
           })
           .then((response) => {
             this.uuid = response.data.uuid;
