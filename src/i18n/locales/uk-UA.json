@@ -374,6 +374,7 @@
     "apply_vex_tooltip": "Застосувати аналізи з документа Vulnerability Exploitability eXchange (VEX) до цього проєкту.",
     "approved": "Затверджено",
     "attributed_on": "Атрибутовано",
+    "attributed_on_tooltip": "Приписано у форматі періоду ISO-8601 (наприклад, P1Y = 1 рік; P2Y3M = 2 роки, 3 місяці)",
     "audit_trail": "Журнал аудиту",
     "audit_vulnerabilities": "Аудит уразливостей",
     "auditing_progress": "Прогрес аудиту",
