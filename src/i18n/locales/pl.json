@@ -15,6 +15,8 @@
     "alert_schedule_next_trigger_at": "Następny spust",
     "alert_schedule_skip_publish_if_unchanged": "Pomiń publicznie, jeśli jest niezmieniony",
     "alert_schedule_skip_publish_if_unchanged_tooltip": "Nie wysyłaj ostrzeżenia, jeśli nic się nie zmieniło, odkąd ostatnio wysłano ostrzeżenie.",
+    "alert_schedule_ignore_suppressed": "Ignoruj wyciszone wykrycia",
+    "alert_schedule_ignore_suppressed_tooltip": "Ignoruj wyciszone wykrycia w podsumowaniach alertów.",
     "alert_schedule_summary_warning": "Alert musi być ograniczony do jednego lub większej liczby projektów, aby działało podsumowania. \nWybierając projekty, aby ograniczyć ostrzeżenie, zastanów się, że wybór zbyt wielu projektów może spowodować, że podsumowania rosną zbyt duże dla niektórych miejsc, co doprowadziło do odrzucenia.",
     "alert_trigger_type": "Typ wyzwalacza",
     "alert_trigger_type_event": "Wydarzenie",
