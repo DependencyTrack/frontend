@@ -307,6 +307,58 @@ export default {
           },
         },
         {
+          title: this.$t('message.cvss_v2'),
+          field: 'vulnerability.cvssV2BaseScore',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return xssFilters.inHTMLData(value);
+            }
+          },
+        },
+        {
+          title: this.$t('message.cvss_v3'),
+          field: 'vulnerability.cvssV3BaseScore',
+          visible: false,
+          sortable: true,
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return xssFilters.inHTMLData(value);
+            }
+          },
+        },
+        {
+          title: this.$t('message.epss'),
+          field: 'vulnerability.epssScore',
+          visible: false,
+          sortable: true,
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return xssFilters.inHTMLData(value);
+            }
+          },
+        },
+        {
+          title: this.$t('message.epss_percentile'),
+          field: 'vulnerability.epssPercentile',
+          visible: false,
+          sortable: true,
+          formatter(value, row, index) {
+            if (typeof value !== 'undefined') {
+              return xssFilters.inHTMLData(value);
+            }
+          },
+        },
+        {
+          title: this.$t('message.priority_score'),
+          field: 'vulnerability.priorityScore',
+          sortable: true,
+          formatter(value, row, index) {
+            return value;
+          },
+        },
+        {
           title: this.$t('message.analyzer'),
           field: 'attribution.analyzerIdentity',
           sortable: true,
