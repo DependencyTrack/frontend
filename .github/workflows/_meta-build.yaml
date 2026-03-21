@@ -110,22 +110,3 @@ jobs:
           context: .
           file: docker/Dockerfile.alpine
 
-      - name: Run Trivy Vulnerability Scanner
-        if: ${{ inputs.publish-container }}
-        uses: aquasecurity/trivy-action@0.34.2
-        env:
-          # https://github.com/aquasecurity/trivy-action/issues/389
-          TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db:2'
-          TRIVY_JAVA_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-java-db:1'
-        with:
-          image-ref: docker.io/dependencytrack/frontend:${{ inputs.app-version }}
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          ignore-unfixed: true
-          vuln-type: 'os'
-
-      - name: Upload Trivy Scan Results to GitHub Security Tab
-        if: ${{ inputs.publish-container }}
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: 'trivy-results.sarif'
