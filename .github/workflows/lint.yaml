@@ -9,8 +9,7 @@ on:
       - 'master' # Default branch
       - 'feature-**' # Feature branches
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   lint:
@@ -18,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # tag=v6.0.2
 
       - name: Set up NodeJs
-        uses: actions/setup-node@v6.3.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # tag=v6.3.0
         with:
           node-version: '20'
           cache: 'npm'
