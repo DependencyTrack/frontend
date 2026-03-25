@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # tag=v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up NodeJs
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # tag=v6.3.0
@@ -60,6 +62,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # tag=v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Download Artifacts
         uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # tag=v8.0.0
@@ -85,16 +89,18 @@ jobs:
 
       - name: Set Container Tags
         id: tags
+        env:
+          REF_NAME: ${{ inputs.ref-name }}
+          APP_VERSION: ${{ inputs.app-version }}
         run: |-
           IMAGE_NAME="docker.io/dependencytrack/frontend"
-          REF_NAME="${{ inputs.ref-name }}"
           TAGS=""
 
           if [[ $REF_NAME == feature-* ]]; then
             TAGS="${IMAGE_NAME}:${REF_NAME,,}"
           else
-            TAGS="${IMAGE_NAME}:${{ inputs.app-version }}"
-            if [[ "${{ inputs.app-version }}" != "snapshot" ]]; then
+            TAGS="${IMAGE_NAME}:${APP_VERSION}"
+            if [[ "${APP_VERSION}" != "snapshot" ]]; then
               TAGS="${TAGS},${IMAGE_NAME}:latest"
             fi
           fi
