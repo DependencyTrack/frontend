@@ -15,6 +15,13 @@
         label
         v-bind="labelIcon"
       />{{ $t('admin.integration_defectdojo_reimport_enable') }}
+      <c-switch
+        id="autocreate-enabled"
+        color="primary"
+        v-model="autocreateEnabled"
+        label
+        v-bind="labelIcon"
+      />{{ $t('admin.integration_defectdojo_autocreate_enable') }}
       <b-validated-input-group-form-input
         id="defectdojo-cadence"
         :label="$t('admin.synchronization_cadence_minutes')"
@@ -45,6 +52,30 @@
         v-model="apiKey"
         lazy="true"
       />
+      <b-validated-input-group-form-input
+        id="defectdojo-autocreate-engagement-name"
+        :label="$t('admin.integration_defectdojo_autocreate_engagement_name')"
+        input-group-size="mb-3"
+        type="text"
+        v-model="autocreateEngagementName"
+        lazy="true"
+        :disabled="!autocreateEnabled"
+      />
+      <p class="text-muted">
+        {{ $t('admin.integration_defectdojo_autocreate_engagement_name_help') }}
+      </p>
+      <b-validated-input-group-form-input
+        id="defectdojo-autocreate-product-type-name"
+        :label="$t('admin.integration_defectdojo_autocreate_product_type_name')"
+        input-group-size="mb-3"
+        type="text"
+        v-model="autocreateProductTypeName"
+        lazy="true"
+        :disabled="!autocreateEnabled"
+      />
+      <p class="text-muted">
+        {{ $t('admin.integration_defectdojo_autocreate_product_type_name_help') }}
+      </p>
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -73,9 +104,12 @@ export default {
     return {
       enabled: false,
       reimportEnabled: false,
+      autocreateEnabled: false,
       cadence: '60',
       url: '',
       apiKey: '',
+      autocreateEngagementName: 'dependencytrack',
+      autocreateProductTypeName: 'Dependency Track',
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -97,6 +131,11 @@ export default {
         },
         {
           groupName: 'integrations',
+          propertyName: 'defectdojo.autocreate.enabled',
+          propertyValue: this.autocreateEnabled,
+        },
+        {
+          groupName: 'integrations',
           propertyName: 'defectdojo.sync.cadence',
           propertyValue: this.cadence,
         },
@@ -109,6 +148,16 @@ export default {
           groupName: 'integrations',
           propertyName: 'defectdojo.apiKey',
           propertyValue: this.apiKey,
+        },
+        {
+          groupName: 'integrations',
+          propertyName: 'defectdojo.autocreate.engagementName',
+          propertyValue: this.autocreateEngagementName,
+        },
+        {
+          groupName: 'integrations',
+          propertyName: 'defectdojo.autocreate.productTypeName',
+          propertyValue: this.autocreateProductTypeName,
         },
       ]);
     },
@@ -127,6 +176,9 @@ export default {
           case 'defectdojo.reimport.enabled':
             this.reimportEnabled = common.toBoolean(item.propertyValue);
             break;
+          case 'defectdojo.autocreate.enabled':
+            this.autocreateEnabled = common.toBoolean(item.propertyValue);
+            break;
           case 'defectdojo.sync.cadence':
             this.cadence = item.propertyValue;
             break;
@@ -135,6 +187,12 @@ export default {
             break;
           case 'defectdojo.apiKey':
             this.apiKey = item.propertyValue;
+            break;
+          case 'defectdojo.autocreate.engagementName':
+            this.autocreateEngagementName = item.propertyValue;
+            break;
+          case 'defectdojo.autocreate.productTypeName':
+            this.autocreateProductTypeName = item.propertyValue;
             break;
         }
       }
