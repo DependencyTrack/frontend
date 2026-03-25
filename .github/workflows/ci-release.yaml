@@ -34,27 +34,32 @@ jobs:
           cache: 'npm'
 
       - name: Bump version and tag via NodeJS
+        env:
+          VERSION_TO_BUMP: ${{ github.event.inputs.version-to-bump }}
+          GIT_REF: ${{ github.ref }}
         run: |-
           git config user.name "dependencytrack-bot"
           git config user.email "106437498+dependencytrack-bot@users.noreply.github.com"
 
-          npm version ${{ github.event.inputs.version-to-bump }} -m "prepare-release: set version to %s"
+          npm version "${VERSION_TO_BUMP}" -m "prepare-release: set version to %s"
 
-          git push origin "HEAD:${{ github.ref }}"
+          git push origin "HEAD:${GIT_REF}"
 
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_RELEASE_TOKEN }}
-          GH_OPTS: ''
+          VERSION_TO_BUMP: ${{ github.event.inputs.version-to-bump }}
+          GIT_REF_NAME: ${{ github.ref_name }}
         run: |-
           VERSION=`jq -r '.version' package.json`
+          GH_OPTS=""
 
-          if [[ "${{ contains(github.event.inputs.version-to-bump, 'pre') }}" == "true" ]]; then
+          if [[ "${VERSION_TO_BUMP}" == *pre* ]]; then
             GH_OPTS="--prerelease"
           fi
 
           gh release create "${VERSION}" ${GH_OPTS} \
-            --target "${{ github.ref_name }}" \
+            --target "${GIT_REF_NAME}" \
             --title "${VERSION}" \
             --draft \
             --generate-notes
