@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "在 DefectDojo 中自動建立情境時使用的預設參與名稱。可以使用屬性 'defectdojo.autocreate.engagementName' 按專案覆寫。",
     "integration_defectdojo_autocreate_product_type_name": "預設產品類型名稱",
     "integration_defectdojo_autocreate_product_type_name_help": "在 DefectDojo 中自動建立情境時使用的預設產品類型名稱。可以使用屬性 'defectdojo.autocreate.productTypeName' 按專案覆寫。",
+    "integration_defectdojo_deduplication_enable": "啟用參與層級的去重",
+    "integration_defectdojo_deduplication_help": "在參與層級而非產品層級啟用去重。可以使用屬性 'defectdojo.autocreate.deduplicationOnEngagement' 按專案覆寫。",
     "integration_defectdojo_enable": "啟用 DefectDojo 整合",
     "integration_defectdojo_reimport_enable": "啟用重新匯入",
     "integration_fortify_ssc_enable": "啟用 Fortify SSC 整合",

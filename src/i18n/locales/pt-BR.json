@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "O nome de compromisso padrão a ser usado ao criar contextos automaticamente no DefectDojo. Pode ser substituído por projeto usando a propriedade 'defectdojo.autocreate.engagementName'.",
     "integration_defectdojo_autocreate_product_type_name": "Nome do tipo de produto padrão",
     "integration_defectdojo_autocreate_product_type_name_help": "O nome do tipo de produto padrão a ser usado ao criar contextos automaticamente no DefectDojo. Pode ser substituído por projeto usando a propriedade 'defectdojo.autocreate.productTypeName'.",
+    "integration_defectdojo_deduplication_enable": "Ativar deduplicação no nível de compromisso",
+    "integration_defectdojo_deduplication_help": "Ativa a deduplicação no nível de compromisso em vez do nível de produto. Pode ser substituído por projeto usando a propriedade 'defectdojo.autocreate.deduplicationOnEngagement'.",
     "integration_defectdojo_enable": "Habilite a integração do DefectDojo",
     "integration_defectdojo_reimport_enable": "Ativar reimportação",
     "integration_fortify_ssc_enable": "Habilite a integração do Fortify SSC",

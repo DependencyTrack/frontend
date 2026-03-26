@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "DefectDojo में स्वचालित रूप से संदर्भ बनाते समय उपयोग करने के लिए डिफ़ॉल्ट एंगेजमेंट नाम। प्रॉपर्टी 'defectdojo.autocreate.engagementName' का उपयोग करके प्रति प्रोजेक्ट ओवरराइड किया जा सकता है।",
     "integration_defectdojo_autocreate_product_type_name": "डिफ़ॉल्ट उत्पाद प्रकार नाम",
     "integration_defectdojo_autocreate_product_type_name_help": "DefectDojo में स्वचालित रूप से संदर्भ बनाते समय उपयोग करने के लिए डिफ़ॉल्ट उत्पाद प्रकार नाम। प्रॉपर्टी 'defectdojo.autocreate.productTypeName' का उपयोग करके प्रति प्रोजेक्ट ओवरराइड किया जा सकता है।",
+    "integration_defectdojo_deduplication_enable": "एंगेजमेंट पर डिडुप्लीकेशन सक्षम करें",
+    "integration_defectdojo_deduplication_help": "उत्पाद स्तर के बजाय एंगेजमेंट स्तर पर डिडुप्लीकेशन सक्षम करें। प्रॉपर्टी 'defectdojo.autocreate.deduplicationOnEngagement' का उपयोग करके प्रति प्रोजेक्ट ओवरराइड किया जा सकता है।",
     "integration_defectdojo_enable": "DefectDojo एकीकरण सक्षम करें",
     "integration_defectdojo_reimport_enable": "पुनः आयात सक्षम करें",
     "integration_fortify_ssc_enable": "फोर्टिफाई एसएससी एकीकरण सक्षम करें",

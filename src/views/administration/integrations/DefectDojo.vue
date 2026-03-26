@@ -78,6 +78,17 @@
           $t('admin.integration_defectdojo_autocreate_product_type_name_help')
         }}
       </p>
+      <c-switch
+        id="deduplication-enabled"
+        color="primary"
+        v-model="deduplicationEnabled"
+        label
+        v-bind="labelIcon"
+        :disabled="!autocreateEnabled"
+      />{{ $t('admin.integration_defectdojo_deduplication_enable') }}
+      <p class="text-muted">
+        {{ $t('admin.integration_defectdojo_deduplication_help') }}
+      </p>
     </b-card-body>
     <b-card-footer>
       <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
@@ -107,6 +118,7 @@ export default {
       enabled: false,
       reimportEnabled: false,
       autocreateEnabled: false,
+      deduplicationEnabled: false,
       cadence: '60',
       url: '',
       apiKey: '',
@@ -161,6 +173,11 @@ export default {
           propertyName: 'defectdojo.autocreate.productTypeName',
           propertyValue: this.autocreateProductTypeName,
         },
+        {
+          groupName: 'integrations',
+          propertyName: 'defectdojo.autocreate.deduplicationOnEngagement',
+          propertyValue: this.deduplicationEnabled,
+        },
       ]);
     },
   },
@@ -195,6 +212,9 @@ export default {
             break;
           case 'defectdojo.autocreate.productTypeName':
             this.autocreateProductTypeName = item.propertyValue;
+            break;
+          case 'defectdojo.autocreate.deduplicationOnEngagement':
+            this.deduplicationEnabled = common.toBoolean(item.propertyValue);
             break;
         }
       }

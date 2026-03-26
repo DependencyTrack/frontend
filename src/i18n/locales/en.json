@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "The default engagement name to use when auto-creating contexts in DefectDojo. Can be overridden per project using the 'defectdojo.autocreate.engagementName' property.",
     "integration_defectdojo_autocreate_product_type_name": "Default product type name",
     "integration_defectdojo_autocreate_product_type_name_help": "The default product type name to use when auto-creating contexts in DefectDojo. Can be overridden per project using the 'defectdojo.autocreate.productTypeName' property.",
+    "integration_defectdojo_deduplication_enable": "Enable deduplication on engagement",
+    "integration_defectdojo_deduplication_help": "Enable deduplication on engagement level instead of product level. Can be overridden per project using the 'defectdojo.autocreate.deduplicationOnEngagement' property.",
     "integration_defectdojo_enable": "Enable DefectDojo integration",
     "integration_defectdojo_reimport_enable": "Enable reimport",
     "integration_fortify_ssc_enable": "Enable Fortify SSC integration",

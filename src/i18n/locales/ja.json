@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "DefectDojoでコンテキストを自動作成する際に使用するデフォルトのエンゲージメント名。プロパティ'defectdojo.autocreate.engagementName'を使用してプロジェクトごとに上書きできます。",
     "integration_defectdojo_autocreate_product_type_name": "デフォルトの製品タイプ名",
     "integration_defectdojo_autocreate_product_type_name_help": "DefectDojoでコンテキストを自動作成する際に使用するデフォルトの製品タイプ名。プロパティ'defectdojo.autocreate.productTypeName'を使用してプロジェクトごとに上書きできます。",
+    "integration_defectdojo_deduplication_enable": "エンゲージメントレベルでの重複排除を有効にする",
+    "integration_defectdojo_deduplication_help": "製品レベルではなくエンゲージメントレベルで重複排除を有効にします。プロパティ'defectdojo.autocreate.deduplicationOnEngagement'を使用してプロジェクトごとに上書きできます。",
     "integration_defectdojo_enable": "DefectDojo統合を有効にする",
     "integration_defectdojo_reimport_enable": "再インポートを有効にする",
     "integration_fortify_ssc_enable": "Fortify SSC統合を有効にする",

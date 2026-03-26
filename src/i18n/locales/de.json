@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "Der Standard-Engagement-Name, der beim automatischen Erstellen von Kontexten in DefectDojo verwendet wird. Kann pro Projekt mit der Eigenschaft 'defectdojo.autocreate.engagementName' überschrieben werden.",
     "integration_defectdojo_autocreate_product_type_name": "Standard-Produkttyp-Name",
     "integration_defectdojo_autocreate_product_type_name_help": "Der Standard-Produkttyp-Name, der beim automatischen Erstellen von Kontexten in DefectDojo verwendet wird. Kann pro Projekt mit der Eigenschaft 'defectdojo.autocreate.productTypeName' überschrieben werden.",
+    "integration_defectdojo_deduplication_enable": "Deduplizierung auf Engagement-Ebene aktivieren",
+    "integration_defectdojo_deduplication_help": "Aktiviert die Deduplizierung auf Engagement-Ebene anstatt auf Produktebene. Kann pro Projekt mit der Eigenschaft 'defectdojo.autocreate.deduplicationOnEngagement' überschrieben werden.",
     "integration_defectdojo_enable": "DefectDojo-Integration aktivieren",
     "integration_defectdojo_reimport_enable": "Erneuten Import aktivieren",
     "integration_fortify_ssc_enable": "Fortify SSC-Integration aktivieren",

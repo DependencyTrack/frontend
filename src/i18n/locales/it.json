@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "Il nome dell'impegno predefinito da utilizzare durante la creazione automatica di contesti in DefectDojo. Può essere sovrascritto per progetto utilizzando la proprietà 'defectdojo.autocreate.engagementName'.",
     "integration_defectdojo_autocreate_product_type_name": "Nome tipo di prodotto predefinito",
     "integration_defectdojo_autocreate_product_type_name_help": "Il nome del tipo di prodotto predefinito da utilizzare durante la creazione automatica di contesti in DefectDojo. Può essere sovrascritto per progetto utilizzando la proprietà 'defectdojo.autocreate.productTypeName'.",
+    "integration_defectdojo_deduplication_enable": "Abilita deduplicazione a livello di impegno",
+    "integration_defectdojo_deduplication_help": "Abilita la deduplicazione a livello di impegno invece che a livello di prodotto. Può essere sovrascritto per progetto utilizzando la proprietà 'defectdojo.autocreate.deduplicationOnEngagement'.",
     "integration_defectdojo_enable": "Abilita l'integrazione di DefectDojo",
     "integration_defectdojo_reimport_enable": "Abilita reimportazione",
     "integration_fortify_ssc_enable": "Abilita l'integrazione Fortify SSC",

@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "在 DefectDojo 中自动创建上下文时使用的默认参与名称。可以使用属性 'defectdojo.autocreate.engagementName' 按项目覆盖。",
     "integration_defectdojo_autocreate_product_type_name": "默认产品类型名称",
     "integration_defectdojo_autocreate_product_type_name_help": "在 DefectDojo 中自动创建上下文时使用的默认产品类型名称。可以使用属性 'defectdojo.autocreate.productTypeName' 按项目覆盖。",
+    "integration_defectdojo_deduplication_enable": "启用参与层级的去重",
+    "integration_defectdojo_deduplication_help": "在参与层级而非产品层级启用去重。可以使用属性 'defectdojo.autocreate.deduplicationOnEngagement' 按项目覆盖。",
     "integration_defectdojo_enable": "启用 DefectDojo 集成",
     "integration_defectdojo_reimport_enable": "启用重新导入",
     "integration_fortify_ssc_enable": "启用 Fortify SSC 集成",

@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "Имя взаимодействия по умолчанию, используемое при автоматическом создании контекстов в DefectDojo. Может быть переопределено для проекта с помощью свойства 'defectdojo.autocreate.engagementName'.",
     "integration_defectdojo_autocreate_product_type_name": "Имя типа продукта по умолчанию",
     "integration_defectdojo_autocreate_product_type_name_help": "Имя типа продукта по умолчанию, используемое при автоматическом создании контекстов в DefectDojo. Может быть переопределено для проекта с помощью свойства 'defectdojo.autocreate.productTypeName'.",
+    "integration_defectdojo_deduplication_enable": "Включить дедупликацию на уровне взаимодействия",
+    "integration_defectdojo_deduplication_help": "Включает дедупликацию на уровне взаимодействия вместо уровня продукта. Может быть переопределено для проекта с помощью свойства 'defectdojo.autocreate.deduplicationOnEngagement'.",
     "integration_defectdojo_enable": "Включить интеграцию с DefectDojo",
     "integration_defectdojo_reimport_enable": "Включить повторный импорт",
     "integration_fortify_ssc_enable": "Включить интеграцию с Fortify SSC",

@@ -141,6 +141,8 @@
     "integration_defectdojo_autocreate_engagement_name_help": "Domyślna nazwa zaangażowania używana podczas automatycznego tworzenia kontekstów w DefectDojo. Można zastąpić dla projektu za pomocą właściwości 'defectdojo.autocreate.engagementName'.",
     "integration_defectdojo_autocreate_product_type_name": "Domyślna nazwa typu produktu",
     "integration_defectdojo_autocreate_product_type_name_help": "Domyślna nazwa typu produktu używana podczas automatycznego tworzenia kontekstów w DefectDojo. Można zastąpić dla projektu za pomocą właściwości 'defectdojo.autocreate.productTypeName'.",
+    "integration_defectdojo_deduplication_enable": "Włącz deduplikację na poziomie zaangażowania",
+    "integration_defectdojo_deduplication_help": "Włącza deduplikację na poziomie zaangażowania zamiast poziomu produktu. Można zastąpić dla projektu za pomocą właściwości 'defectdojo.autocreate.deduplicationOnEngagement'.",
     "integration_defectdojo_enable": "Włącz integrację DefectDojo",
     "integration_defectdojo_reimport_enable": "Włącz ponowny import",
     "integration_fortify_ssc_enable": "Włącz integrację Fortify SSC",
