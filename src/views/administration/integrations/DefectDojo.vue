@@ -74,7 +74,9 @@
         :disabled="!autocreateEnabled"
       />
       <p class="text-muted">
-        {{ $t('admin.integration_defectdojo_autocreate_product_type_name_help') }}
+        {{
+          $t('admin.integration_defectdojo_autocreate_product_type_name_help')
+        }}
       </p>
     </b-card-body>
     <b-card-footer>
