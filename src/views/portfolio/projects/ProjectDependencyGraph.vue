@@ -371,6 +371,7 @@ export default {
       let children = [];
       if (dependencies) {
         let directDependencies = JSON.parse(this.project.directDependencies);
+        let visitedUuids = new Set();
         directDependencies.forEach((directDependency) => {
           if (
             dependencies[directDependency.uuid] &&
@@ -382,6 +383,7 @@ export default {
               dependencies[directDependency.uuid],
             );
             childNode.gatheredKeys.push(childNode.label);
+            visitedUuids.add(directDependency.uuid);
             children.push(childNode);
             if (
               onlySearched &&
@@ -395,6 +397,7 @@ export default {
                   dependencies[directDependency.uuid],
                   childNode,
                   false,
+                  visitedUuids,
                 ),
               );
             } else {
@@ -406,6 +409,7 @@ export default {
                   dependencies[directDependency.uuid],
                   childNode,
                   onlySearched,
+                  visitedUuids,
                 ),
               );
             }
@@ -419,15 +423,19 @@ export default {
       component,
       treeNode,
       onlySearched,
+      visitedUuids,
     ) {
       let children = [];
       if (component.dependencyGraph) {
         component.dependencyGraph.forEach((dependency) => {
+          if (visitedUuids.has(dependency)) {
+            return;
+          }
           if (
             dependencies[dependency] &&
             (!onlySearched ||
               dependencies[dependency].expandDependencyGraph ||
-              this.searchedComponentUuids[dependency] !== -1)
+              this.searchedComponentUuids[dependency])
           ) {
             let childNode = this.transformDependencyToOrgTree(
               dependencies[dependency],
@@ -441,6 +449,7 @@ export default {
               )
             ) {
               childNode.gatheredKeys.push(childNode.label);
+              visitedUuids.add(dependency);
               children.push(childNode);
               if (onlySearched && this.searchedComponentUuids[dependency]) {
                 this.$set(
@@ -451,6 +460,7 @@ export default {
                     dependencies[dependency],
                     childNode,
                     false,
+                    visitedUuids,
                   ),
                 );
                 this.collapse(childNode.children);
@@ -463,6 +473,7 @@ export default {
                     dependencies[dependency],
                     childNode,
                     onlySearched,
+                    visitedUuids,
                   ),
                 );
               }
