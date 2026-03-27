@@ -340,6 +340,12 @@ h6 {
 button:focus {
   outline: 0;
 }
+.navbar-toggler:focus,
+.sidebar-toggler:focus,
+.c-header-toggler:focus {
+  outline: 2px solid $light-blue !important;
+  outline-offset: 2px;
+}
 .badge-tab-total {
   border: 1px solid #60768c !important;
   background-color: $grey-900 !important;
