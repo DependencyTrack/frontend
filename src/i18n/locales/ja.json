@@ -104,6 +104,7 @@
     "email_smtp_port": "SMTPサーバー ポート",
     "email_smtp_server": "SMTPサーバー",
     "email_smtp_username": "SMTPユーザー名",
+    "email_subject_show_level": "Show notification level in subject",
     "email_trust_cert": "SMTPサーバーから提供された証明書を信頼する",
     "enable_acl": "ポートフォリオのアクセス制御を有効にする（ベータ版）",
     "enable_bom_cyclonedx": "CycloneDXを有効にする",
