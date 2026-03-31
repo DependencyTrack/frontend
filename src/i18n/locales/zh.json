@@ -374,6 +374,7 @@
     "apply_vex_tooltip": "将漏洞可利用性交换 (VEX) 文档的分析应用于该项目。",
     "approved": "批准",
     "attributed_on": "归因于",
+    "attributed_on_tooltip": "归因于ISO-8601周期格式（例如P1Y = 1年； P2Y3M = 2年3个月）",
     "audit_trail": "审计追踪",
     "audit_vulnerabilities": "审计漏洞",
     "auditing_progress": "审计进度",
