@@ -5,14 +5,20 @@ updates:
   directory: /
   schedule:
     interval: daily
+  cooldown:
+    default-days: 7
 - package-ecosystem: docker
   directory: /docker
   schedule:
     interval: daily
+  cooldown:
+    default-days: 7
 - package-ecosystem: github-actions
   directory: /
   schedule:
     interval: daily
+  cooldown:
+    default-days: 7
 # Receive minor and patch updates on latest release branch.
 # Ignore minor releases for NPM since they may ship breaking
 # changes, and we don't have the test coverage in place to
@@ -22,6 +28,8 @@ updates:
   directory: /
   schedule:
     interval: daily
+  cooldown:
+    default-days: 7
   ignore:
   - dependency-name: "*"
     update-types:
@@ -32,6 +40,8 @@ updates:
   directory: /docker
   schedule:
     interval: daily
+  cooldown:
+    default-days: 7
   ignore:
   - dependency-name: "*"
     update-types:

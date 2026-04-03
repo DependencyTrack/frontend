@@ -11,6 +11,8 @@ on:
       - 'feature-**' # Feature branches
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   call-build:
     uses: ./.github/workflows/_meta-build.yaml
