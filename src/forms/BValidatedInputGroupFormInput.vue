@@ -20,6 +20,7 @@
           :state="errorHandlingMethod(errors, valid)"
           :autocomplete="autocomplete"
           :autofocus="isFocused"
+          :disabled="disabled"
           v-on="inputListeners"
         />
         <b-input-group-append v-if="tooltip"
@@ -56,6 +57,7 @@ export default {
     autofocus: String,
     tooltip: String,
     lazy: String,
+    disabled: Boolean,
   },
   data() {
     return {
