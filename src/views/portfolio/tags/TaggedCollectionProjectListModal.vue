@@ -64,7 +64,12 @@ export default {
               name: 'Project',
               params: { uuid: row.uuid },
             }).route.fullPath;
-            return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
+            const parentPath = common.formatParentChainForTooltip(row);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            return `<span${tooltipAttr}><a href="${href}">${xssFilters.inHTMLData(value)}</a></span>`;
           },
         },
         {

@@ -58,6 +58,7 @@
       :data="data"
       :options="options"
       @on-pre-body="onPreBody"
+      @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
   </div>
@@ -189,15 +190,17 @@ export default {
       }
     },
     onPreBody: function () {
+      if (!this.changeSearchUrl) {
+        this.performSearch();
+        this.changeSearchUrl = true;
+      }
+    },
+    onLoadSuccess: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ComponentSearch',
         this.$refs.table.columns,
       );
-      if (!this.changeSearchUrl) {
-        this.performSearch();
-        this.changeSearchUrl = true;
-      }
     },
   },
   data() {
@@ -298,7 +301,12 @@ export default {
               row.project.name,
               row.project.version,
             );
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            const parentPath = common.formatParentChainForTooltip(row.project);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            return `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(name)}</a></span>`;
           },
         },
         {
