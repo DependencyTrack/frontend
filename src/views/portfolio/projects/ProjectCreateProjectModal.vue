@@ -319,6 +319,9 @@ export default {
   },
   beforeMount() {
     this.$root.$on('initializeProjectCreateProjectModal', async () => {
+      this.resetValues();
+      await this.getACLEnabled();
+      await this.getAvailableTeams();
       await this.retrieveLicenses();
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
@@ -350,6 +353,8 @@ export default {
       if (this.requiresTeam && this.availableTeams.length == 1) {
         this.project.team = this.availableTeams[0].value;
         this.isDisabled = true;
+      } else {
+        this.isDisabled = false;
       }
       this.availableTeams.sort(function (a, b) {
         return a.text.localeCompare(b.text);
@@ -451,6 +456,7 @@ export default {
         collectionLogic: null,
         team: [],
       };
+      this.isDisabled = false;
       this.tag = '';
       this.tags = [];
       this.selectedParent = null;
