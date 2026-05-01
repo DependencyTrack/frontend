@@ -46,7 +46,7 @@
             <div slot="header">
               <h4>{{ $t('admin.preview') }}</h4>
             </div>
-            <p><span v-html="welcomeMessage" /></p>
+            <p><span v-html="sanitizedWelcomeMessage" /></p>
           </b-card>
         </b-col>
       </b-row>
@@ -58,6 +58,7 @@ import axios from 'axios';
 import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
+import DOMPurify from 'dompurify';
 
 export default {
   mixins: [configPropertyMixin],
@@ -83,7 +84,11 @@ export default {
       this.isWelcomeMessage = common.toBoolean(response.data.propertyValue);
     });
   },
-  computed: {},
+  computed: {
+    sanitizedWelcomeMessage() {
+      return DOMPurify.sanitize(this.welcomeMessage);
+    },
+  },
   methods: {
     updateCode() {
       const editor = this.$refs.editor;
