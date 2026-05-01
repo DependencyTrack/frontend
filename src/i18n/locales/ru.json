@@ -432,6 +432,7 @@
     "component_container": "Контейнер",
     "component_cpe_desc": "URI CPE v2.2 или v2.3, предоставленный MITRE или NIST. Все активы должны иметь указанный CPE",
     "component_created": "Компонент создан",
+    "component_cryptographic_asset": "Криптографический актив",
     "component_data": "Данные",
     "component_deleted": "Компонент удален",
     "component_details": "Детали компонента",

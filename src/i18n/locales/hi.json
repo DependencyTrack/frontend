@@ -432,6 +432,7 @@
     "component_container": "कंटेनर",
     "component_cpe_desc": "MITRE या NIST द्वारा प्रदान किया गया CPE v2.2 या v2.3 URI। सभी संपत्तियों (अनुप्रयोग, ऑपरेटिंग सिस्टम और हार्डवेयर) में CPE निर्दिष्ट होना चाहिए",
     "component_created": "घटक बनाया गया",
+    "component_cryptographic_asset": "क्रिप्टोग्राफ़िक संपत्ति",
     "component_data": "डेटा",
     "component_deleted": "घटक हटा दिया गया",
     "component_details": "घटक विवरण",

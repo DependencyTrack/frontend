@@ -32,6 +32,10 @@ export default {
           text: this.$i18n.t('message.component_machine_learning_model'),
         },
         { value: 'DATA', text: this.$i18n.t('message.component_data') },
+        {
+          value: 'CRYPTOGRAPHIC_ASSET',
+          text: this.$i18n.t('message.component_cryptographic_asset'),
+        },
       ],
     };
   },

@@ -432,6 +432,7 @@
     "component_container": "Контейнер",
     "component_cpe_desc": "URI CPE версії 2.2 або версії 2.3, наданий МІТЕР або NIST. \nУсі активи (додатки, операційні системи та апаратне забезпечення) повинні мати CPE",
     "component_created": "Компонент створено",
+    "component_cryptographic_asset": "Криптографічний актив",
     "component_data": "Дані",
     "component_deleted": "Компонент видалено",
     "component_details": "Деталі компонента",

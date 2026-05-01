@@ -432,6 +432,7 @@
     "component_container": "コンテナ",
     "component_cpe_desc": "MITREまたはNISTによって提供されるCPE v2.2またはv2.3 URI。すべての資産（アプリケーション、オペレーティングシステム、ハードウェア）にはCPEを指定する必要があります。",
     "component_created": "コンポーネントが作成されました",
+    "component_cryptographic_asset": "暗号資産",
     "component_data": "データ",
     "component_deleted": "コンポーネントが削除されました",
     "component_details": "コンポーネントの詳細",

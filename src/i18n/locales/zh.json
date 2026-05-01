@@ -432,6 +432,7 @@
     "component_container": "容器",
     "component_cpe_desc": "MITRE 或 NIST 提供的 CPE v2.2 或 v2.3 URI。所有资产（应用程序、操作系统和硬件）都应指定 CPE",
     "component_created": "组件已创建",
+    "component_cryptographic_asset": "加密资产",
     "component_data": "数据",
     "component_deleted": "组件已删除",
     "component_details": "组件详细信息",

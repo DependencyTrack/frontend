@@ -432,6 +432,7 @@
     "component_container": "Contêiner",
     "component_cpe_desc": "O URI do CPE v2.2 ou v2.3 conforme fornecido pelo MITRE ou NIST. Todos os ativos (aplicativos, sistemas operacionais e hardware) devem ter um CPE especificado",
     "component_created": "Componente criado",
+    "component_cryptographic_asset": "Ativo criptográfico",
     "component_data": "Dados",
     "component_deleted": "Componente excluído",
     "component_details": "Detalhes do componente",
