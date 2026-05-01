@@ -277,8 +277,8 @@ export default {
       onlyActiveProjects: this.onlyActiveProjects,
       onlyLatestVersionProjects: this.onlyLatestVersionProjects,
       labelIcon: {
-        dataOn: '✓',
-        dataOff: '✕',
+        dataOn: '\u2713',
+        dataOff: '\u2715',
       },
       subjects: [
         { value: 'COORDINATES', text: this.$t('message.coordinates') },
