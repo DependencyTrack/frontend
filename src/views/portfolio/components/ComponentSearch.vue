@@ -340,6 +340,15 @@ export default {
           },
         },
         {
+          title: this.$t('message.scope'),
+          field: 'scope',
+          sortable: false,
+          visible: false,
+          formatter(value) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
+        {
           title: this.$t('message.swid_tagid'),
           field: 'swid_tag_id',
           sortable: false,
