@@ -51,6 +51,32 @@
           }}</b-button>
         </b-col>
       </b-row>
+      <b-row class="mt-2">
+        <b-col>
+          <c-switch
+            id="onlyActiveProjects"
+            color="primary"
+            v-model="onlyActiveProjects"
+            label
+            v-bind="labelIcon"
+            v-b-tooltip.hover
+            :title="$t('message.only_active_projects_tooltip')"
+          /><span class="text-muted" style="margin-right: 1rem">{{
+            $t('message.only_active_projects')
+          }}</span>
+          <c-switch
+            id="onlyLatestVersionProjects"
+            color="primary"
+            v-model="onlyLatestVersionProjects"
+            label
+            v-bind="labelIcon"
+            v-b-tooltip.hover
+            :title="$t('message.only_latest_version_projects_tooltip')"
+          /><span class="text-muted">{{
+            $t('message.only_latest_version_projects')
+          }}</span>
+        </b-col>
+      </b-row>
     </div>
     <bootstrap-table
       ref="table"
@@ -88,6 +114,17 @@ export default {
       localStorage && localStorage.getItem('ComponentSearchSubject') !== null
         ? localStorage.getItem('ComponentSearchSubject')
         : 'COORDINATES';
+    this.onlyActiveProjects =
+      localStorage &&
+      localStorage.getItem('ComponentSearchOnlyActiveProjects') !== null
+        ? localStorage.getItem('ComponentSearchOnlyActiveProjects') === 'true'
+        : false;
+    this.onlyLatestVersionProjects =
+      localStorage &&
+      localStorage.getItem('ComponentSearchOnlyLatestVersionProjects') !== null
+        ? localStorage.getItem('ComponentSearchOnlyLatestVersionProjects') ===
+          'true'
+        : false;
   },
   beforeMount() {
     if (this.$route.hash) {
@@ -121,6 +158,24 @@ export default {
         localStorage.setItem('ComponentSearchSubject', this.subject);
       }
     },
+    onlyActiveProjects(val) {
+      if (localStorage) {
+        localStorage.setItem(
+          'ComponentSearchOnlyActiveProjects',
+          val.toString(),
+        );
+      }
+      this.performSearch();
+    },
+    onlyLatestVersionProjects(val) {
+      if (localStorage) {
+        localStorage.setItem(
+          'ComponentSearchOnlyLatestVersionProjects',
+          val.toString(),
+        );
+      }
+      this.performSearch();
+    },
   },
   methods: {
     createQueryParams: function () {
@@ -153,6 +208,18 @@ export default {
         this.$refs.table.refresh({ silent: true });
       } else {
         let queryParams = this.createQueryParams();
+        const projectFilters = [];
+        if (this.onlyActiveProjects) {
+          projectFilters.push('onlyActive=true');
+        }
+        if (this.onlyLatestVersionProjects) {
+          projectFilters.push('onlyLatestVersion=true');
+        }
+        if (projectFilters.length) {
+          queryParams = queryParams
+            ? queryParams + '&' + projectFilters.join('&')
+            : projectFilters.join('&');
+        }
         this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity?${queryParams}`;
         this.$refs.table.refresh({ silent: true });
       }
@@ -207,6 +274,12 @@ export default {
       coordinatesGroup: null,
       coordinatesName: null,
       coordinatesVersion: null,
+      onlyActiveProjects: this.onlyActiveProjects,
+      onlyLatestVersionProjects: this.onlyLatestVersionProjects,
+      labelIcon: {
+        dataOn: '✓',
+        dataOff: '✕',
+      },
       subjects: [
         { value: 'COORDINATES', text: this.$t('message.coordinates') },
         { value: 'PACKAGE_URL', text: this.$t('message.package_url') },
