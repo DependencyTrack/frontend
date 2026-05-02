@@ -65,15 +65,15 @@
             $t('message.only_active_projects')
           }}</span>
           <c-switch
-            id="onlyLatestVersionProjects"
+            id="onlyLatestProjectVersions"
             color="primary"
-            v-model="onlyLatestVersionProjects"
+            v-model="onlyLatestProjectVersions"
             label
             v-bind="labelIcon"
             v-b-tooltip.hover
-            :title="$t('message.only_latest_version_projects_tooltip')"
+            :title="$t('message.only_latest_project_versions_tooltip')"
           /><span class="text-muted">{{
-            $t('message.only_latest_version_projects')
+            $t('message.only_latest_project_versions')
           }}</span>
         </b-col>
       </b-row>
@@ -119,10 +119,10 @@ export default {
       localStorage.getItem('ComponentSearchOnlyActiveProjects') !== null
         ? localStorage.getItem('ComponentSearchOnlyActiveProjects') === 'true'
         : false;
-    this.onlyLatestVersionProjects =
+    this.onlyLatestProjectVersions =
       localStorage &&
-      localStorage.getItem('ComponentSearchOnlyLatestVersionProjects') !== null
-        ? localStorage.getItem('ComponentSearchOnlyLatestVersionProjects') ===
+      localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') !== null
+        ? localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') ===
           'true'
         : false;
   },
@@ -167,10 +167,10 @@ export default {
       }
       this.performSearch();
     },
-    onlyLatestVersionProjects(val) {
+    onlyLatestProjectVersions(val) {
       if (localStorage) {
         localStorage.setItem(
-          'ComponentSearchOnlyLatestVersionProjects',
+          'ComponentSearchOnlyLatestProjectVersions',
           val.toString(),
         );
       }
@@ -210,10 +210,10 @@ export default {
         let queryParams = this.createQueryParams();
         const projectFilters = [];
         if (this.onlyActiveProjects) {
-          projectFilters.push('onlyActive=true');
+          projectFilters.push('excludeInactiveProjects=true');
         }
-        if (this.onlyLatestVersionProjects) {
-          projectFilters.push('onlyLatestVersion=true');
+        if (this.onlyLatestProjectVersions) {
+          projectFilters.push('onlyLatestProjectVersion=true');
         }
         if (projectFilters.length) {
           queryParams = queryParams
@@ -275,7 +275,7 @@ export default {
       coordinatesName: null,
       coordinatesVersion: null,
       onlyActiveProjects: this.onlyActiveProjects,
-      onlyLatestVersionProjects: this.onlyLatestVersionProjects,
+      onlyLatestProjectVersions: this.onlyLatestProjectVersions,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
