@@ -63,13 +63,13 @@
             $t('message.show_inactive_projects')
           }}</span>
           <c-switch
-            id="showAllProjectVersions"
+            id="showNonLatestProjectVersions"
             color="primary"
-            v-model="showAllProjectVersions"
+            v-model="showNonLatestProjectVersions"
             label
             v-bind="labelIcon"
           /><span class="text-muted">{{
-            $t('message.show_all_project_versions')
+            $t('message.show_non_latest_project_versions')
           }}</span>
         </b-col>
       </b-row>
@@ -115,10 +115,10 @@ export default {
       localStorage.getItem('ComponentSearchShowInactiveProjects') !== null
         ? localStorage.getItem('ComponentSearchShowInactiveProjects') === 'true'
         : true;
-    this.showAllProjectVersions =
+    this.showNonLatestProjectVersions =
       localStorage &&
-      localStorage.getItem('ComponentSearchShowAllProjectVersions') !== null
-        ? localStorage.getItem('ComponentSearchShowAllProjectVersions') ===
+      localStorage.getItem('ComponentSearchShowNonLatestProjectVersions') !== null
+        ? localStorage.getItem('ComponentSearchShowNonLatestProjectVersions') ===
           'true'
         : true;
   },
@@ -163,10 +163,10 @@ export default {
       }
       this.performSearch();
     },
-    showAllProjectVersions(val) {
+    showNonLatestProjectVersions(val) {
       if (localStorage) {
         localStorage.setItem(
-          'ComponentSearchShowAllProjectVersions',
+          'ComponentSearchShowNonLatestProjectVersions',
           val.toString(),
         );
       }
@@ -208,7 +208,7 @@ export default {
         if (!this.showInactiveProjects) {
           projectFilters.push('excludeInactiveProjects=true');
         }
-        if (!this.showAllProjectVersions) {
+        if (!this.showNonLatestProjectVersions) {
           projectFilters.push('onlyLatestProjectVersion=true');
         }
         if (projectFilters.length) {
@@ -271,7 +271,7 @@ export default {
       coordinatesName: null,
       coordinatesVersion: null,
       showInactiveProjects: this.showInactiveProjects,
-      showAllProjectVersions: this.showAllProjectVersions,
+      showNonLatestProjectVersions: this.showNonLatestProjectVersions,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
