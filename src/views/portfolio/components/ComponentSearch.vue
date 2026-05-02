@@ -54,26 +54,22 @@
       <b-row class="mt-2">
         <b-col>
           <c-switch
-            id="onlyActiveProjects"
+            id="showInactiveProjects"
             color="primary"
-            v-model="onlyActiveProjects"
+            v-model="showInactiveProjects"
             label
             v-bind="labelIcon"
-            v-b-tooltip.hover
-            :title="$t('message.only_active_projects_tooltip')"
           /><span class="text-muted" style="margin-right: 1rem">{{
-            $t('message.only_active_projects')
+            $t('message.show_inactive_projects')
           }}</span>
           <c-switch
-            id="onlyLatestProjectVersions"
+            id="showAllProjectVersions"
             color="primary"
-            v-model="onlyLatestProjectVersions"
+            v-model="showAllProjectVersions"
             label
             v-bind="labelIcon"
-            v-b-tooltip.hover
-            :title="$t('message.only_latest_project_versions_tooltip')"
           /><span class="text-muted">{{
-            $t('message.only_latest_project_versions')
+            $t('message.show_all_project_versions')
           }}</span>
         </b-col>
       </b-row>
@@ -114,17 +110,17 @@ export default {
       localStorage && localStorage.getItem('ComponentSearchSubject') !== null
         ? localStorage.getItem('ComponentSearchSubject')
         : 'COORDINATES';
-    this.onlyActiveProjects =
+    this.showInactiveProjects =
       localStorage &&
-      localStorage.getItem('ComponentSearchOnlyActiveProjects') !== null
-        ? localStorage.getItem('ComponentSearchOnlyActiveProjects') === 'true'
-        : false;
-    this.onlyLatestProjectVersions =
+      localStorage.getItem('ComponentSearchShowInactiveProjects') !== null
+        ? localStorage.getItem('ComponentSearchShowInactiveProjects') === 'true'
+        : true;
+    this.showAllProjectVersions =
       localStorage &&
-      localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') !== null
-        ? localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') ===
+      localStorage.getItem('ComponentSearchShowAllProjectVersions') !== null
+        ? localStorage.getItem('ComponentSearchShowAllProjectVersions') ===
           'true'
-        : false;
+        : true;
   },
   beforeMount() {
     if (this.$route.hash) {
@@ -158,19 +154,19 @@ export default {
         localStorage.setItem('ComponentSearchSubject', this.subject);
       }
     },
-    onlyActiveProjects(val) {
+    showInactiveProjects(val) {
       if (localStorage) {
         localStorage.setItem(
-          'ComponentSearchOnlyActiveProjects',
+          'ComponentSearchShowInactiveProjects',
           val.toString(),
         );
       }
       this.performSearch();
     },
-    onlyLatestProjectVersions(val) {
+    showAllProjectVersions(val) {
       if (localStorage) {
         localStorage.setItem(
-          'ComponentSearchOnlyLatestProjectVersions',
+          'ComponentSearchShowAllProjectVersions',
           val.toString(),
         );
       }
@@ -209,10 +205,10 @@ export default {
       } else {
         let queryParams = this.createQueryParams();
         const projectFilters = [];
-        if (this.onlyActiveProjects) {
+        if (!this.showInactiveProjects) {
           projectFilters.push('excludeInactiveProjects=true');
         }
-        if (this.onlyLatestProjectVersions) {
+        if (!this.showAllProjectVersions) {
           projectFilters.push('onlyLatestProjectVersion=true');
         }
         if (projectFilters.length) {
@@ -274,8 +270,8 @@ export default {
       coordinatesGroup: null,
       coordinatesName: null,
       coordinatesVersion: null,
-      onlyActiveProjects: this.onlyActiveProjects,
-      onlyLatestProjectVersions: this.onlyLatestProjectVersions,
+      showInactiveProjects: this.showInactiveProjects,
+      showAllProjectVersions: this.showAllProjectVersions,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
