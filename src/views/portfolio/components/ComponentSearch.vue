@@ -51,6 +51,28 @@
           }}</b-button>
         </b-col>
       </b-row>
+      <b-row class="mt-2">
+        <b-col>
+          <c-switch
+            id="showInactiveProjects"
+            color="primary"
+            v-model="showInactiveProjects"
+            label
+            v-bind="labelIcon"
+          /><span class="text-muted" style="margin-right: 1rem">{{
+            $t('message.show_inactive_projects')
+          }}</span>
+          <c-switch
+            id="onlyLatestProjectVersions"
+            color="primary"
+            v-model="onlyLatestProjectVersions"
+            label
+            v-bind="labelIcon"
+          /><span class="text-muted">{{
+            $t('message.only_show_latest_project_versions')
+          }}</span>
+        </b-col>
+      </b-row>
     </div>
     <bootstrap-table
       ref="table"
@@ -88,6 +110,17 @@ export default {
       localStorage && localStorage.getItem('ComponentSearchSubject') !== null
         ? localStorage.getItem('ComponentSearchSubject')
         : 'COORDINATES';
+    this.showInactiveProjects =
+      localStorage &&
+      localStorage.getItem('ComponentSearchShowInactiveProjects') !== null
+        ? localStorage.getItem('ComponentSearchShowInactiveProjects') === 'true'
+        : true;
+    this.onlyLatestProjectVersions =
+      localStorage &&
+      localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') !== null
+        ? localStorage.getItem('ComponentSearchOnlyLatestProjectVersions') ===
+          'true'
+        : false;
   },
   beforeMount() {
     if (this.$route.hash) {
@@ -121,6 +154,24 @@ export default {
         localStorage.setItem('ComponentSearchSubject', this.subject);
       }
     },
+    showInactiveProjects(val) {
+      if (localStorage) {
+        localStorage.setItem(
+          'ComponentSearchShowInactiveProjects',
+          val.toString(),
+        );
+      }
+      this.performSearch();
+    },
+    onlyLatestProjectVersions(val) {
+      if (localStorage) {
+        localStorage.setItem(
+          'ComponentSearchOnlyLatestProjectVersions',
+          val.toString(),
+        );
+      }
+      this.performSearch();
+    },
   },
   methods: {
     createQueryParams: function () {
@@ -153,6 +204,18 @@ export default {
         this.$refs.table.refresh({ silent: true });
       } else {
         let queryParams = this.createQueryParams();
+        const projectFilters = [];
+        if (!this.showInactiveProjects) {
+          projectFilters.push('excludeInactiveProjects=true');
+        }
+        if (this.onlyLatestProjectVersions) {
+          projectFilters.push('onlyLatestProjectVersions=true');
+        }
+        if (projectFilters.length) {
+          queryParams = queryParams
+            ? queryParams + '&' + projectFilters.join('&')
+            : projectFilters.join('&');
+        }
         this.options.url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/identity?${queryParams}`;
         this.$refs.table.refresh({ silent: true });
       }
@@ -207,6 +270,12 @@ export default {
       coordinatesGroup: null,
       coordinatesName: null,
       coordinatesVersion: null,
+      showInactiveProjects: this.showInactiveProjects,
+      onlyLatestProjectVersions: this.onlyLatestProjectVersions,
+      labelIcon: {
+        dataOn: '\u2713',
+        dataOff: '\u2715',
+      },
       subjects: [
         { value: 'COORDINATES', text: this.$t('message.coordinates') },
         { value: 'PACKAGE_URL', text: this.$t('message.package_url') },
