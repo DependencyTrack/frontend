@@ -4,7 +4,7 @@
     :delete-icon="true"
     v-on:actionClicked="removeCondition()"
   >
-    <b-row v-if="subject !== 'EXPRESSION'">
+    <b-row v-if="subject !== 'EXPRESSION' && subject !== 'IS_INTERNAL'">
       <b-col md="4" lg="3">
         <b-input-group-form-select
           id="input-subject"
@@ -80,8 +80,8 @@
             <b-tooltip
               target="input-value-coordinates-version"
               triggers="hover focus"
-              >{{ $t('message.coordinates_version_tooltip') }}</b-tooltip
-            >
+              >{{ $t('message.coordinates_version_tooltip') }}
+            </b-tooltip>
           </b-input-group>
         </b-form-group>
 
@@ -126,23 +126,23 @@
             <b-tooltip
               target="input-value-distance-epoch"
               triggers="hover focus"
-              >{{ $t('message.version_distance_tooltip') }}</b-tooltip
-            >
+              >{{ $t('message.version_distance_tooltip') }}
+            </b-tooltip>
             <b-tooltip
               target="input-value-distance-major"
               triggers="hover focus"
-              >{{ $t('message.version_distance_tooltip') }}</b-tooltip
-            >
+              >{{ $t('message.version_distance_tooltip') }}
+            </b-tooltip>
             <b-tooltip
               target="input-value-distance-minor"
               triggers="hover focus"
-              >{{ $t('message.version_distance_tooltip') }}</b-tooltip
-            >
+              >{{ $t('message.version_distance_tooltip') }}
+            </b-tooltip>
             <b-tooltip
               target="input-value-distance-patch"
               triggers="hover focus"
-              >{{ $t('message.version_distance_tooltip') }}</b-tooltip
-            >
+              >{{ $t('message.version_distance_tooltip') }}
+            </b-tooltip>
           </b-input-group>
         </b-form-group>
       </b-col>
@@ -157,7 +157,7 @@
       </b-col>
     </b-row>
 
-    <template v-if="subject === 'EXPRESSION'">
+    <template v-else-if="subject === 'EXPRESSION'">
       <b-row>
         <b-col md="4" lg="3">
           <b-input-group-form-select
@@ -200,10 +200,43 @@
         </b-col>
       </b-row>
     </template>
+
+    <b-row v-else-if="subject === 'IS_INTERNAL'">
+      <b-col md="4" lg="3">
+        <b-input-group-form-select
+          id="input-subject"
+          required="true"
+          :label="$t('message.condition_subject')"
+          v-on:change="subjectChanged"
+          v-model="subject"
+          :options="subjects"
+        />
+      </b-col>
+
+      <b-col md="6" lg="7" class="d-flex align-items-center">
+        <c-switch
+          v-model="value"
+          color="primary"
+          class="m-0"
+          label
+          v-bind="labelIcon"
+        />
+      </b-col>
+      <b-col cols="auto" class="d-flex align-items-end">
+        <b-button
+          variant="outline-primary"
+          :disabled="!isDirty"
+          @click="saveCondition"
+        >
+          <i class="fa fa-floppy-o"></i> {{ $t('message.update') }}
+        </b-button>
+      </b-col>
+    </b-row>
   </actionable-list-group-item>
 </template>
 
 <script>
+import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
 import common from '../../shared/common';
@@ -221,6 +254,7 @@ export default {
     BInputGroupFormSelect,
     BInputGroupFormInput,
     CodeMirrorEditor,
+    cSwitch,
   },
   created() {
     if (this.condition) {
@@ -228,8 +262,13 @@ export default {
       this.subject = this.condition.subject;
       this.subjectChanged();
       this.operator = this.condition.operator;
-      this.value = this.condition.value;
       this.violationType = this.condition.violationType;
+
+      if (this.subject === 'IS_INTERNAL') {
+        this.value = this.condition.value === 'true';
+      } else {
+        this.value = this.condition.value;
+      }
     }
     this.resetSavedState();
   },
@@ -250,6 +289,10 @@ export default {
         minor: null,
         patch: null,
       },
+      labelIcon: {
+        dataOn: '\u2713',
+        dataOff: '\u2715',
+      },
       savedState: null,
       subjects: [
         { value: 'AGE', text: this.$t('message.age') },
@@ -263,6 +306,7 @@ export default {
         { value: 'CPE', text: this.$t('message.cpe_full') },
         { value: 'SWID_TAGID', text: this.$t('message.swid_tagid') },
         { value: 'VERSION', text: this.$t('message.version') },
+        { value: 'IS_INTERNAL', text: this.$t('message.internal_status') },
         { value: 'COMPONENT_HASH', text: this.$t('message.component_hash') },
         { value: 'CWE', text: this.$t('message.cwe_full') },
         { value: 'EPSS', text: this.$t('message.epss_score') },
@@ -344,6 +388,8 @@ export default {
         case 'SWID_TAGID':
           return false;
         case 'VERSION':
+          return false;
+        case 'IS_INTERNAL':
           return false;
         case 'COMPONENT_HASH':
           return false;
@@ -443,6 +489,13 @@ export default {
         case 'VERSION':
           this.operators = this.numericOperators;
           break;
+        case 'IS_INTERNAL':
+          this.operators = [];
+          this.operator = 'IS';
+          if (typeof this.value !== 'boolean') {
+            this.value = this.value === 'true';
+          }
+          return;
         case 'COMPONENT_HASH':
           this.operators = this.hashAlgorithms;
           break;
@@ -511,6 +564,9 @@ export default {
         this.versionDistance = result;
         return JSON.stringify(result);
       } else {
+        if (this.subject === 'IS_INTERNAL') {
+          return this.value ? 'true' : 'false';
+        }
         return this.value;
       }
     },
@@ -547,7 +603,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.violationType = response.data.violationType;
             this.editorMarkers = [];
             this.resetSavedState();
@@ -590,7 +650,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.violationType = response.data.violationType;
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
@@ -609,7 +673,11 @@ export default {
             this.uuid = response.data.uuid;
             this.subject = response.data.subject;
             this.operator = response.data.operator;
-            this.value = response.data.value;
+            if (this.subject === 'IS_INTERNAL') {
+              this.value = response.data.value === 'true';
+            } else {
+              this.value = response.data.value;
+            }
             this.violationType = response.data.violationType;
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');

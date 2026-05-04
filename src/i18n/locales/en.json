@@ -600,6 +600,7 @@
     "input_validation_failed": "Input validation failed",
     "integrity": "Integrity",
     "internal": "Internal",
+    "internal_status": "Component classified as internal",
     "inventory": "Inventory",
     "inventory_with_vulnerabilities": "Inventory with Vulnerabilities",
     "item": "Item",

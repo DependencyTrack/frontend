@@ -600,6 +600,7 @@
     "input_validation_failed": "Помилка перевірки введення",
     "integrity": "Цілісність",
     "internal": "внутрішній",
+    "internal_status": null,
     "inventory": "Інвентар",
     "inventory_with_vulnerabilities": "Інвентаризація з уразливими місцями",
     "item": "Елемент",
