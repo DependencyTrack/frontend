@@ -600,6 +600,7 @@
     "input_validation_failed": "Falha na validação de entrada",
     "integrity": "Integridade",
     "internal": "interno",
+    "internal_status": null,
     "inventory": "Inventário",
     "inventory_with_vulnerabilities": "Inventário com vulnerabilidades",
     "item": "Item",

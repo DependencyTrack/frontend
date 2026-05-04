@@ -600,6 +600,7 @@
     "input_validation_failed": "Ошибка проверки ввода",
     "integrity": "Честность",
     "internal": "Внутренний",
+    "internal_status": null,
     "inventory": "Инвентарь",
     "inventory_with_vulnerabilities": "Инвентарь с уязвимостями",
     "item": "Элемент",

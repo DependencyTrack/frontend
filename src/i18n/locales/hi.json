@@ -600,6 +600,7 @@
     "input_validation_failed": "इनपुट सत्यापन विफल",
     "integrity": "अखंडता",
     "internal": "आंतरिक",
+    "internal_status": null,
     "inventory": "भंडार",
     "inventory_with_vulnerabilities": "कमज़ोरियों वाली सूची",
     "item": "वस्तु",

@@ -600,6 +600,7 @@
     "input_validation_failed": "Walidacja danych wejściowych nie powiodła się",
     "integrity": "Uczciwość",
     "internal": "Wewnętrzny",
+    "internal_status": null,
     "inventory": "Spis",
     "inventory_with_vulnerabilities": "Inwentarz z lukami w zabezpieczeniach",
     "item": "Pozycja",

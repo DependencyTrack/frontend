@@ -600,6 +600,7 @@
     "input_validation_failed": "入力検証に失敗しました",
     "integrity": "誠実さ",
     "internal": "内部",
+    "internal_status": null,
     "inventory": "インベントリ",
     "inventory_with_vulnerabilities": "脆弱性のあるインベントリ",
     "item": "アイテム",
