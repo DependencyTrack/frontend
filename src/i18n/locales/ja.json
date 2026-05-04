@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "OpenID Connect ID プロバイダーへのリダイレクト中にエラーが発生しました",
     "only_direct_tooltip": "直接的な依存関係のみを表示し、推移的な依存関係を非表示にする",
     "only_outdated_tooltip": "新しい安定バージョンが利用可能な依存関係のみを表示する",
+    "only_show_latest_project_versions": null,
     "operational_risk": "運用リスク",
     "operator": "オペレーター",
     "osi_approved": "OSI承認",

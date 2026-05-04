@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "Beim Umleiten zum OpenID Connect-Identitätsanbieter ist ein Fehler aufgetreten",
     "only_direct_tooltip": "Nur direkte Abhängigkeiten anzeigen, transitive Abhängigkeiten ausblenden",
     "only_outdated_tooltip": "Nur Abhängigkeiten anzeigen, für die neuere stabile Versionen verfügbar sind",
+    "only_show_latest_project_versions": null,
     "operational_risk": "Betriebsrisiko",
     "operator": "Operator",
     "osi_approved": "OSI-Zulassung",
