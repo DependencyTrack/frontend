@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "OpenID Connect पहचान प्रदाता पर रीडायरेक्ट करते समय एक त्रुटि हुई",
     "only_direct_tooltip": "केवल प्रत्यक्ष निर्भरताएँ दिखाएँ, सकर्मक निर्भरताएँ छिपाएँ",
     "only_outdated_tooltip": "केवल उन निर्भरताओं को दिखाएं जिनके नए स्थिर संस्करण उपलब्ध हैं",
+    "only_show_latest_project_versions": null,
     "operational_risk": "परिचालनात्मक जोखिम",
     "operator": "ऑपरेटर",
     "osi_approved": "ओएसआई स्वीकृत",

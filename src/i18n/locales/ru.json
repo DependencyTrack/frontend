@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "Произошла ошибка при перенаправлении к поставщику идентификации OpenID Connect",
     "only_direct_tooltip": "Показывать только прямые зависимости, скрывая транзитивные зависимости",
     "only_outdated_tooltip": "Показывать только зависимости, для которых доступны более новые стабильные версии.",
+    "only_show_latest_project_versions": null,
     "operational_risk": "Операционный риск",
     "operator": "Оператор",
     "osi_approved": "Одобрено OSI",
