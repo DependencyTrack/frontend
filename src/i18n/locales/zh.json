@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "重定向至 OpenID Connect 身份提供商时发生错误",
     "only_direct_tooltip": "仅显示直接依赖，隐藏间接依赖",
     "only_outdated_tooltip": "仅显示存在更新稳定版本的依赖项",
+    "only_show_latest_project_versions": null,
     "operational_risk": "运营风险",
     "operator": "操作人",
     "osi_approved": "OSI 认证",

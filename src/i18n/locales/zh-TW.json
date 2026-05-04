@@ -641,6 +641,7 @@
     "oidc_redirect_failed": "重定向至 OpenID Connect 身分提供者時發生錯誤",
     "only_direct_tooltip": "僅顯示直接依賴關係，隱藏傳遞依賴關係",
     "only_outdated_tooltip": "僅顯示具有較新的穩定版本的依賴項",
+    "only_show_latest_project_versions": null,
     "operational_risk": "作業風險",
     "operator": "運算子",
     "osi_approved": "OSI 核准",
