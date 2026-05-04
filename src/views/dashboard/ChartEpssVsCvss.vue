@@ -25,9 +25,12 @@ export default {
             vulnId: finding.vulnerability.vulnId,
             componentLabel: componentLabel,
           });
-          let cvssScore = finding.vulnerability.cvssV3BaseScore
-            ? finding.vulnerability.cvssV3BaseScore
-            : finding.vulnerability.cvssV2BaseScore;
+          let cvssScore =
+            typeof finding.vulnerability.cvssV4Score === 'number'
+              ? finding.vulnerability.cvssV4Score
+              : typeof finding.vulnerability.cvssV3BaseScore === 'number'
+                ? finding.vulnerability.cvssV3BaseScore
+                : finding.vulnerability.cvssV2BaseScore;
           cveData.push({ x: cvssScore, y: finding.vulnerability.epssScore });
         }
       }
