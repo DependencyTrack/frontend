@@ -262,41 +262,53 @@ export default {
         if (!confirmed) return;
       }
 
-      this.updateConfigProperties([
-        {
-          groupName: 'maintenance',
-          propertyName: 'metrics.retention.days',
-          propertyValue: this.metricsRetentionDays,
-        },
-        {
-          groupName: 'maintenance',
-          propertyName: 'projects.retention.type',
-          propertyValue: this.enableProjectRetention
-            ? this.projectRetentionTypeSelected
-            : null,
-        },
-        {
-          groupName: 'maintenance',
-          propertyName: 'projects.retention.days',
-          propertyValue:
-            this.projectRetentionTypeSelected === 'AGE'
-              ? this.projectRetentionDays
+      this.updateConfigProperties(
+        [
+          {
+            groupName: 'maintenance',
+            propertyName: 'metrics.retention.days',
+            propertyValue: this.metricsRetentionDays,
+          },
+          {
+            groupName: 'maintenance',
+            propertyName: 'projects.retention.type',
+            propertyValue: this.enableProjectRetention
+              ? this.projectRetentionTypeSelected
               : null,
-        },
-        {
-          groupName: 'maintenance',
-          propertyName: 'projects.retention.versions',
-          propertyValue:
-            this.projectRetentionTypeSelected === 'VERSIONS'
-              ? this.projectRetentionVersions
-              : null,
-        },
-        {
-          groupName: 'maintenance',
-          propertyName: 'tags.delete.unused',
-          propertyValue: this.tagsDeleteUnused,
-        },
-      ]).then((success) => {
+          },
+          {
+            groupName: 'maintenance',
+            propertyName: 'projects.retention.days',
+            propertyValue:
+              this.projectRetentionTypeSelected === 'AGE'
+                ? this.projectRetentionDays
+                : null,
+          },
+          {
+            groupName: 'maintenance',
+            propertyName: 'projects.retention.versions',
+            propertyValue:
+              this.projectRetentionTypeSelected === 'VERSIONS'
+                ? this.projectRetentionVersions
+                : null,
+          },
+          {
+            groupName: 'maintenance',
+            propertyName: 'tags.delete.unused',
+            propertyValue: this.tagsDeleteUnused,
+          },
+        ].filter(
+          (prop) =>
+            // NB: Integer properties can not be null.
+            // If they're not applicable per configured retention type,
+            // simply omit them instead of sending null.
+            prop.propertyValue !== null ||
+            ![
+              'projects.retention.days',
+              'projects.retention.versions',
+            ].includes(prop.propertyName),
+        ),
+      ).then((success) => {
         if (success) {
           this.initialSnapshot = JSON.stringify(this.formData);
         }
