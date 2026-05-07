@@ -24,7 +24,7 @@ updates:
 # changes, and we don't have the test coverage in place to
 # detect that in CI.
 - package-ecosystem: npm
-  target-branch: 4.13.x
+  target-branch: 4.14.x
   directory: /
   schedule:
     interval: daily
@@ -36,7 +36,7 @@ updates:
     - version-update:semver-major
     - version-update:semver-minor
 - package-ecosystem: docker
-  target-branch: 4.13.x
+  target-branch: 4.14.x
   directory: /docker
   schedule:
     interval: daily
