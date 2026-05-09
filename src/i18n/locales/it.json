@@ -679,6 +679,7 @@
     "oidc_availability_check_failed": "Impossibile determinare la disponibilità di OpenID Connect",
     "oidc_redirect_failed": "Si è verificato un errore durante il reindirizzamento al provider di identità OpenID Connect",
     "only_direct_tooltip": "Mostra solo le dipendenze dirette, nascondendo le dipendenze transitive",
+    "only_latest_project_versions": null,
     "only_outdated_tooltip": "Mostra solo le dipendenze per cui sono disponibili versioni stabili più recenti",
     "operational_risk": "Rischio operativo",
     "operator": "Operatore",

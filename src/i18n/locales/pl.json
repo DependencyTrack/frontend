@@ -679,6 +679,7 @@
     "oidc_availability_check_failed": "Nie udało się określić dostępności OpenID Connect",
     "oidc_redirect_failed": "Wystąpił błąd podczas przekierowania do dostawcy tożsamości OpenID Connect",
     "only_direct_tooltip": "Pokazuj tylko zależności bezpośrednie, ukrywając zależności przechodnie",
+    "only_latest_project_versions": null,
     "only_outdated_tooltip": "Pokazuj tylko zależności, dla których dostępne są nowsze stabilne wersje",
     "operational_risk": "Ryzyko operacyjne",
     "operator": "Operator",

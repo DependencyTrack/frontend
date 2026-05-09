@@ -679,6 +679,7 @@
     "oidc_availability_check_failed": "Не удалось определить доступность OpenID Connect",
     "oidc_redirect_failed": "Произошла ошибка при перенаправлении к поставщику идентификации OpenID Connect",
     "only_direct_tooltip": "Показывать только прямые зависимости, скрывая транзитивные зависимости",
+    "only_latest_project_versions": null,
     "only_outdated_tooltip": "Показывать только зависимости, для которых доступны более новые стабильные версии.",
     "operational_risk": "Операционный риск",
     "operator": "Оператор",
