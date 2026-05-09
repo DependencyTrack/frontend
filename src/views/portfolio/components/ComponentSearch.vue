@@ -76,6 +76,20 @@
           v-model="hashFilter"
           @dismiss="onFilterDismiss('hash')"
         />
+        <boolean-filter-pill
+          v-if="isFilterVisible('showInactive')"
+          :field-label="$t('message.show_inactive_projects')"
+          field-name="showInactive"
+          icon="fa-eye"
+          v-model="showInactive"
+        />
+        <boolean-filter-pill
+          v-if="isFilterVisible('onlyLatestVersion')"
+          :field-label="$t('message.only_latest_project_versions')"
+          field-name="onlyLatestVersion"
+          icon="fa-bookmark"
+          v-model="onlyLatestVersion"
+        />
         <b-dropdown
           v-if="addFilterOptions.length > 0"
           size="sm"
@@ -129,6 +143,7 @@ import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import HashFilterPill from '@/views/components/HashFilterPill.vue';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 
 export default {
   mixins: [permissionsMixin, filterPillsMixin],
@@ -136,6 +151,7 @@ export default {
     TokenPaginatedTable,
     TextFilterPill,
     HashFilterPill,
+    BooleanFilterPill,
   },
   beforeMount() {
     const q = this.$route.query;
@@ -155,6 +171,8 @@ export default {
       };
     if (q.hash && q.hash_type)
       this.hashFilter = { hashType: q.hash_type, hash: q.hash };
+    if (q.show_inactive === 'true') this.showInactive = true;
+    if (q.project_latest_version === 'true') this.onlyLatestVersion = true;
   },
   methods: {
     clearAllFilters() {
@@ -167,6 +185,8 @@ export default {
         this.cpeFilter = null;
         this.swidTagIdFilter = null;
         this.hashFilter = null;
+        this.showInactive = false;
+        this.onlyLatestVersion = false;
         this.clearPendingFilters();
       } finally {
         this._clearing = false;
@@ -194,10 +214,18 @@ export default {
         params.hash = this.hashFilter.hash;
         params.hash_type = this.hashFilter.hashType;
       }
+      if (!this.showInactive) params.project_state = 'ACTIVE';
+      if (this.onlyLatestVersion) params.project_latest_version = 'true';
+      return params;
+    },
+    buildUrlQueryParams() {
+      const params = this.buildFilterParams();
+      delete params.project_state;
+      if (this.showInactive) params.show_inactive = 'true';
       return params;
     },
     syncQueryParams() {
-      const query = this.buildFilterParams();
+      const query = this.buildUrlQueryParams();
       const currentQuery = this.$route.query;
       const keys = new Set([
         ...Object.keys(query),
@@ -239,6 +267,16 @@ export default {
           label: this.$t('message.hashes_short_desc'),
           icon: 'fa-hashtag',
         },
+        {
+          name: 'showInactive',
+          label: this.$t('message.show_inactive_projects'),
+          icon: 'fa-eye',
+        },
+        {
+          name: 'onlyLatestVersion',
+          label: this.$t('message.only_latest_project_versions'),
+          icon: 'fa-bookmark',
+        },
       ];
     },
     tableDataBaseUrl() {
@@ -260,6 +298,9 @@ export default {
       cpeFilter: null,
       swidTagIdFilter: null,
       hashFilter: null,
+      showInactive: false,
+      onlyLatestVersion: false,
+      booleanFilters: ['showInactive', 'onlyLatestVersion'],
       sortBy: null,
       sortDirection: null,
       hashTypeOptions: [

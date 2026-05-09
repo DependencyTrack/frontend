@@ -679,6 +679,7 @@
     "oidc_availability_check_failed": "无法确定 OpenID Connect 是否可用",
     "oidc_redirect_failed": "重定向至 OpenID Connect 身份提供商时发生错误",
     "only_direct_tooltip": "仅显示直接依赖关系，隐藏传递依赖关系",
+    "only_latest_project_versions": null,
     "only_outdated_tooltip": "仅显示具有较新的稳定版本的依赖项",
     "operational_risk": "操作风险",
     "operator": "操作员",

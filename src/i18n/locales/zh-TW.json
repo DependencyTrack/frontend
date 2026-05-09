@@ -679,6 +679,7 @@
     "oidc_availability_check_failed": "無法確定 OpenID Connect 是否可用",
     "oidc_redirect_failed": "重定向至 OpenID Connect 身分提供者時發生錯誤",
     "only_direct_tooltip": "僅顯示直接依賴關係，隱藏傳遞依賴關係",
+    "only_latest_project_versions": null,
     "only_outdated_tooltip": "僅顯示具有較新的穩定版本的依賴項",
     "operational_risk": "作業風險",
     "operator": "運算子",
