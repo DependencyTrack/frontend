@@ -52,7 +52,7 @@ Output is written to `dist/`.
 npm run build-image
 ```
 
-Produces `ghcr.io/dependencytrack/hyades-frontend:local`.
+Produces `ghcr.io/dependencytrack/frontend:local`.
 
 ## Linting and Formatting
 
