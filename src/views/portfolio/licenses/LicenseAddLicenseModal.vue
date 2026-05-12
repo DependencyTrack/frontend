@@ -178,11 +178,11 @@ export default {
           isDeprecatedLicenseId: this.license.isDeprecatedLicenseId,
           seeAlso: this.license.seeAlso,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
-          this.$toastr.s(this.$t('message.project_created'));
+          this.$toastr.s(this.$t('message.license_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         })
         .finally(() => {
