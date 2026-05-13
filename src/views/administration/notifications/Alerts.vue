@@ -215,6 +215,7 @@ export default {
                           <div v-if="!isScheduled" class="list-group-item"><b-form-checkbox value="VEX_PROCESSED">VEX_PROCESSED</b-form-checkbox></div>
                           <div v-if="!isScheduled" class="list-group-item"><b-form-checkbox value="POLICY_VIOLATION">POLICY_VIOLATION</b-form-checkbox></div>
                           <div v-if="!isScheduled" class="list-group-item"><b-form-checkbox value="PROJECT_CREATED">PROJECT_CREATED</b-form-checkbox></div>
+                          <div v-if="!isScheduled" class="list-group-item"><b-form-checkbox value="VULNERABILITY_RETRACTED">VULNERABILITY_RETRACTED</b-form-checkbox></div>
                           <div v-if="isScheduled" class="list-group-item"><b-form-checkbox value="NEW_POLICY_VIOLATIONS_SUMMARY">NEW_POLICY_VIOLATIONS_SUMMARY</b-form-checkbox></div>
                           <div v-if="isScheduled" class="list-group-item"><b-form-checkbox value="NEW_VULNERABILITIES_SUMMARY">NEW_VULNERABILITIES_SUMMARY</b-form-checkbox></div>
                         </b-form-checkbox-group>
