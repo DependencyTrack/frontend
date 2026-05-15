@@ -72,6 +72,11 @@
           <i class="fa fa-undo" />
           {{ $t('message.reset') }}
         </b-button>
+        <slot
+          name="footer-actions"
+          :operation-in-progress="isOperationInProgress"
+          :has-unsaved-changes="hasUnsavedChanges"
+        />
       </b-card-footer>
     </b-form>
 

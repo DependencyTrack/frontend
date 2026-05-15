@@ -496,6 +496,22 @@ $common.formatTimestamp = function formatTimestamp(timestamp, includeTime) {
   }
 };
 
+/**
+ * Formats a millisecond delta as a localized "just now" / "Xs ago" / "Xm ago" / "Xh ago" / "Xd ago" string.
+ * Pass the i18n `$t` function bound to the calling component.
+ */
+$common.formatRelative = function formatRelative(diffMs, $t) {
+  const diff = Math.max(0, Math.floor(diffMs / 1000));
+  if (diff < 10) return $t('message.relative_just_now');
+  if (diff < 60) return $t('message.relative_seconds_ago', { n: diff });
+  const m = Math.floor(diff / 60);
+  if (m < 60) return $t('message.relative_minutes_ago', { n: m });
+  const h = Math.floor(m / 60);
+  if (h < 24) return $t('message.relative_hours_ago', { n: h });
+  const d = Math.floor(h / 24);
+  return $t('message.relative_days_ago', { n: d });
+};
+
 /*
  * Concatenates the group, name, and version of a component.
  */
@@ -672,6 +688,7 @@ export default {
   componentClassifierLabelProjectUrlFormatter:
     $common.componentClassifierLabelProjectUrlFormatter,
   formatTimestamp: $common.formatTimestamp,
+  formatRelative: $common.formatRelative,
   concatenateComponentName: $common.concatenateComponentName,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,

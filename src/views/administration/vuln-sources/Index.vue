@@ -4,15 +4,25 @@
     :extension-name="$route.params.extensionName"
     extension-point-name="vuln-data-source"
     :testable="selectedExtension ? selectedExtension.testable !== false : true"
-  />
+  >
+    <template #footer-actions="{ operationInProgress, hasUnsavedChanges }">
+      <vuln-source-mirror-button
+        :extension-name="$route.params.extensionName"
+        :operation-in-progress="operationInProgress"
+        :has-unsaved-changes="hasUnsavedChanges"
+      />
+    </template>
+  </extension-config-form>
 </template>
 
 <script>
 import ExtensionConfigForm from '@/views/components/ExtensionConfigForm.vue';
+import VulnSourceMirrorButton from '@/views/administration/vuln-sources/VulnSourceMirrorButton.vue';
 
 export default {
   components: {
     ExtensionConfigForm,
+    VulnSourceMirrorButton,
   },
   data() {
     return {
