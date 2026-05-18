@@ -225,7 +225,7 @@ export default {
         showRefresh: true,
         pagination: true,
         silentSort: false,
-        sidePagination: 'client',
+        sidePagination: 'server',
         toolbar: '#epssToolbar',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
@@ -236,11 +236,11 @@ export default {
         sortName:
           localStorage && localStorage.getItem('ProjectEpssSortName') !== null
             ? localStorage.getItem('ProjectEpssSortName')
-            : undefined,
+            : 'vulnerability.epssScore',
         sortOrder:
           localStorage && localStorage.getItem('ProjectEpssSortOrder') !== null
             ? localStorage.getItem('ProjectEpssSortOrder')
-            : undefined,
+            : 'desc',
         icons: {
           refresh: 'fa-refresh',
         },
@@ -276,9 +276,9 @@ export default {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
       if (this.showSuppressedFindings === undefined) {
-        url += '?source=NVD&suppressed=false';
+        url += '?epssFrom=0&suppressed=false';
       } else {
-        url += '?source=NVD&suppressed=' + this.showSuppressedFindings;
+        url += '?epssFrom=0&suppressed=' + this.showSuppressedFindings;
       }
       return url;
     },
