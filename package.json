@@ -36,7 +36,7 @@
     "@johmun/vue-tags-input": "2.1.0",
     "ajv": "8.18.0",
     "ajv-formats": "3.0.1",
-    "axios": "1.15.1",
+    "axios": "1.16.1",
     "bootstrap": "4.6.2",
     "bootstrap-table": "1.22.4",
     "bootstrap-vue": "2.23.1",
