@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **v5 is coming.** The frontend repo is moving. Whether you operate or contribute to Dependency-Track, read [V5_MIGRATION.md](https://github.com/DependencyTrack/dependency-track/blob/master/V5_MIGRATION.md).
+
 [![Build Status](https://github.com/DependencyTrack/frontend/actions/workflows/ci-build.yaml/badge.svg)](https://github.com/DependencyTrack/frontend/actions?workflow=Build+CI)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/364443f9f30c4b70b56e5be76c9e079c)](https://www.codacy.com/gh/DependencyTrack/frontend/dashboard?utm_source=github.com&utm_medium=referral&utm_content=DependencyTrack/frontend&utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
