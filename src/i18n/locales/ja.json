@@ -601,6 +601,7 @@
     "legal": "法律上の",
     "license": "ライセンス",
     "license_comments": "ライセンスコメント",
+    "license_created": "ライセンスが作成されました",
     "license_expression": "SPDX 式",
     "license_group": "ライセンスグループ",
     "license_group_created": "ライセンスグループが作成されました",

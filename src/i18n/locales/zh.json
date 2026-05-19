@@ -601,6 +601,7 @@
     "legal": "法律",
     "license": "许可证",
     "license_comments": "许可证备注",
+    "license_created": "许可证已创建",
     "license_expression": "SPDX 表达式",
     "license_group": "许可证组",
     "license_group_created": "许可证组已创建",

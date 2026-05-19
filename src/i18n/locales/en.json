@@ -601,6 +601,7 @@
     "legal": "Legal",
     "license": "License",
     "license_comments": "License Comments",
+    "license_created": "License created",
     "license_expression": "SPDX Expression",
     "license_group": "License group",
     "license_group_created": "License group created",

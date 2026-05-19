@@ -601,6 +601,7 @@
     "legal": "法律",
     "license": "授權",
     "license_comments": "授權備註",
+    "license_created": "授權已建立",
     "license_expression": "SPDX 表示式",
     "license_group": "授權組",
     "license_group_created": "授權組已建立",

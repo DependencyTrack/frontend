@@ -601,6 +601,7 @@
     "legal": "Юридический",
     "license": "Лицензия",
     "license_comments": "Комментарии к лицензии",
+    "license_created": "Лицензия создана",
     "license_expression": "SPDX выражение",
     "license_group": "Группа лицензий",
     "license_group_created": "Группа лицензий создана",
