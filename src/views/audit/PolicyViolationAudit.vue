@@ -114,7 +114,6 @@
           <b-form-group
             id="policy-form-group"
             :label="this.$t('message.policies')"
-            v-permission="PERMISSIONS.POLICY_MANAGEMENT"
           >
             <b-form-checkbox-group
               id="policy-form-checkbox-group"
@@ -174,10 +173,7 @@ export default {
   methods: {
     initializePolicies: function () {
       let policyUrl = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`;
-      if (
-        hasPermission(permissions.POLICY_MANAGEMENT, this.decodedToken) ||
-        hasPermission(permissions.ACCESS_MANAGEMENT, this.decodedToken)
-      ) {
+      if (hasPermission(permissions.VIEW_POLICY_VIOLATION, this.decodedToken)) {
         this.axios
           .get(policyUrl)
           .then((response) => {
