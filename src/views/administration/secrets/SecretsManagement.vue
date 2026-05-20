@@ -5,10 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-permission:or="[
-            PERMISSIONS.SECRET_MANAGEMENT,
-            PERMISSIONS.SECRET_MANAGEMENT_CREATE,
-          ]"
+          v-if="canCreate"
           v-b-modal.createSecretModal
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
@@ -36,13 +33,19 @@ import common from '../../../shared/common';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import routerMixin from '@/mixins/routerMixin';
+import systemCapabilitiesMixin from '@/mixins/systemCapabilitiesMixin';
 import xssFilters from 'xss-filters';
 import CreateSecretModal from '@/views/administration/secrets/CreateSecretModal.vue';
 import UpdateSecretModal from '@/views/administration/secrets/UpdateSecretModal.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 export default {
-  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
+  mixins: [
+    bootstrapTableMixin,
+    permissionsMixin,
+    routerMixin,
+    systemCapabilitiesMixin,
+  ],
   props: {
     header: String,
   },
@@ -76,7 +79,7 @@ export default {
           title: this.$t('message.created'),
           field: 'created_at',
           formatter(value) {
-            return common.formatTimestamp(value, true);
+            return value ? common.formatTimestamp(value, true) : '-';
           },
         },
         {
@@ -139,7 +142,14 @@ export default {
   },
   computed: {
     isReadOnly() {
-      return this.$dtrack.secretManager.readOnly;
+      return this.systemCapabilities?.secret_management?.read_only !== false;
+    },
+    canCreate() {
+      return (
+        !this.isReadOnly &&
+        (this.isPermitted(this.PERMISSIONS.SECRET_MANAGEMENT) ||
+          this.isPermitted(this.PERMISSIONS.SECRET_MANAGEMENT_CREATE))
+      );
     },
     canUpdate() {
       return (
