@@ -4,6 +4,7 @@
 
 <script>
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
+import Vue from 'vue';
 import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { getToken, clearPermissions } from './shared/permissions';
@@ -24,14 +25,37 @@ export default {
       }
     };
 
+    const loadSystemCapabilities = () => {
+      Vue.prototype.$systemCapabilities = undefined;
+      EventBus.$emit('systemCapabilitiesUpdated', undefined);
+      this.axios
+        .get(
+          `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_SYSTEM_CAPABILITIES}`,
+        )
+        .then((result) => {
+          Vue.prototype.$systemCapabilities = result.data.capabilities;
+          EventBus.$emit('systemCapabilitiesUpdated', result.data.capabilities);
+        })
+        .catch((error) => {
+          console.error('Failed to load system capabilities', error);
+          Vue.prototype.$systemCapabilities = undefined;
+          EventBus.$emit('systemCapabilitiesUpdated', undefined);
+        });
+    };
+
     EventBus.$on('authenticated', (token) => {
       if (token) {
         sessionStorage.setItem('token', token);
       } else {
         sessionStorage.removeItem('token');
         clearPermissions();
+        Vue.prototype.$systemCapabilities = undefined;
+        EventBus.$emit('systemCapabilitiesUpdated', undefined);
       }
       setAuthHeader(token);
+      if (token) {
+        loadSystemCapabilities();
+      }
     });
 
     // ensure $.ajaxSettings.headers exists
@@ -39,7 +63,11 @@ export default {
       headers: {},
     });
 
-    setAuthHeader(getToken());
+    const initialToken = getToken();
+    setAuthHeader(initialToken);
+    if (initialToken) {
+      loadSystemCapabilities();
+    }
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
