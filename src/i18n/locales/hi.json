@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "केना सुरक्षा",
+    "label": null,
     "labels": null,
     "ldap_users": "एलडीएपी उपयोगकर्ता",
     "limit_to": "सीमित रखो",
@@ -630,6 +631,7 @@
     "item": "वस्तु",
     "justification": "औचित्य",
     "justification_tooltip": "प्रभाव विश्लेषण स्थिति को \"प्रभावित नहीं\" क्यों कहा गया, इसका औचित्य",
+    "key": null,
     "language": "भाषा",
     "last_bom_import": "अंतिम BOM आयात",
     "last_measurement": "अंतिम माप",

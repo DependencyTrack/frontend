@@ -140,6 +140,7 @@
       "test_summary": "{passed} passed, {failed} failed, {skipped} skipped"
     },
     "kenna_security": "Kenna Security",
+    "label": "Label",
     "labels": "Labels",
     "ldap_users": "LDAP Users",
     "limit_to": "Limit To",
@@ -630,6 +631,7 @@
     "item": "Item",
     "justification": "Justification",
     "justification_tooltip": "The rationale of why the impact analysis state was asserted to be \"Not Affected\"",
+    "key": "Key",
     "language": "Language",
     "last_bom_import": "Last BOM Import",
     "last_measurement": "Last Measurement",

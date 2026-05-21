@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "Kenna Security",
+    "label": null,
     "labels": null,
     "ldap_users": "LDAP 用户",
     "limit_to": "限制范围",
@@ -630,6 +631,7 @@
     "item": "项目",
     "justification": "理由",
     "justification_tooltip": "影响分析状态被断言为“不受影响”的理由",
+    "key": null,
     "language": "语言",
     "last_bom_import": "上次 BOM 导入",
     "last_measurement": "最后评估时间",

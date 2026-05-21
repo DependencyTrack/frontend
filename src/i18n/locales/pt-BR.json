@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "Kenna Segurança",
+    "label": null,
     "labels": null,
     "ldap_users": "Usuários LDAP",
     "limit_to": "Limitar a",
@@ -630,6 +631,7 @@
     "item": "Item",
     "justification": "Justificação",
     "justification_tooltip": "A justificativa pela qual o estado da análise de impacto foi declarado como \"Não afetado\"",
+    "key": null,
     "language": "Lingua",
     "last_bom_import": "Última importação de BOM",
     "last_measurement": "Última medição",
