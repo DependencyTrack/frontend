@@ -26,6 +26,10 @@ yarn-error.log*
 # Generates as part of serve
 src/version.json
 
+# CycloneDX BOM (generated during build)
+bom.json
+bom.xml
+
 # IntelliJ
 .idea/*
 !.idea/icon.svg

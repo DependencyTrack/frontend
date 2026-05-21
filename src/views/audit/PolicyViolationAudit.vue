@@ -391,7 +391,12 @@ export default {
               row.project.name,
               row.project.version,
             );
-            return `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`;
+            const parentPath = common.formatParentChainForTooltip(row.project);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            return `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(name)}</a></span>`;
           },
         },
         {

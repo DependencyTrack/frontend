@@ -35,6 +35,53 @@ $common.formatNotificationLabel = function formatNotificationLabel(
 };
 
 /**
+ * Returns the parent chain for a project as a flat array, derived from the nested parent structure.
+ *
+ * @param {Object} project - Project or AffectedProject with parent (nested parent.parent.parent...)
+ * @returns {Array} Array of {uuid, name, version} from root to immediate parent
+ */
+$common.getParentChain = function getParentChain(project) {
+  if (!project?.parent) {
+    return [];
+  }
+  const path = [];
+  let p = project.parent;
+  while (p) {
+    path.push({ uuid: p.uuid, name: p.name, version: p.version });
+    p = p.parent;
+  }
+  return path.reverse(); // root first
+};
+
+/**
+ * Returns the parent chain as a tooltip-friendly string (e.g. "acme-org 1.0 → acme-app 1.0.0").
+ *
+ * @param {Object} project - Project or AffectedProject with parent (nested parent.parent.parent...)
+ * @returns {string} Formatted path or empty string if no parents
+ */
+$common.formatParentChainForTooltip = function formatParentChainForTooltip(
+  project,
+) {
+  const chain = $common.getParentChain(project);
+  return $common.formatParentChainArray(chain);
+};
+
+$common.formatParentChainArray = function formatParentChainArray(chain) {
+  if (!chain || chain.length === 0) {
+    return '';
+  }
+  return chain
+    .map((a) => {
+      const name = a.name ?? '';
+      const version =
+        a.version != null && a.version !== '' ? ' ' + a.version : '';
+      const part = (name + version).trim();
+      return part || '(unknown)';
+    })
+    .join(' → ');
+};
+
+/**
  * Formats and returns a specialized label for a project tag.
  */
 $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
@@ -597,6 +644,8 @@ export default {
   formatSourceLabel: $common.formatSourceLabel,
   formatNotificationLabel: $common.formatNotificationLabel,
   formatProjectTagLabel: $common.formatProjectTagLabel,
+  getParentChain: $common.getParentChain,
+  formatParentChainForTooltip: $common.formatParentChainForTooltip,
   capitalize: $common.capitalize,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,

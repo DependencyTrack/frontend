@@ -146,11 +146,21 @@ export default {
       if (!this.showFlatView && !this.isSearching) {
         let columns = this.$refs.table.getOptions().columns;
 
-        if (columns && columns[0][0].visible) {
-          this.$refs.table.$table.treegrid({
-            treeColumn: 0,
-            initialState: 'collapsed',
-          });
+        if (columns && columns[0]) {
+          // Find the 'name' column and calculate its visual index (among visible columns)
+          const nameColumnIndex = columns[0].findIndex(
+            (col) => col.field === 'name',
+          );
+          if (nameColumnIndex >= 0 && columns[0][nameColumnIndex].visible) {
+            // Count visible columns before the name column to get visual index
+            const visualIndex = columns[0]
+              .slice(0, nameColumnIndex)
+              .filter((col) => col.visible).length;
+            this.$refs.table.$table.treegrid({
+              treeColumn: visualIndex,
+              initialState: 'collapsed',
+            });
+          }
         }
         this.$refs.table.getData().forEach((project) => {
           if (
@@ -287,7 +297,12 @@ export default {
               }
               collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
             }
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>${collectionIcon}`;
+            const parentPath = common.formatParentChainForTooltip(row);
+            const tooltipAttr =
+              parentPath !== ''
+                ? ` title="${xssFilters.inDoubleQuotedAttr('Parent: ' + parentPath)}"`
+                : '';
+            return `<span${tooltipAttr}><a href="${url}">${xssFilters.inHTMLData(value)}</a></span>${collectionIcon}`;
           },
         },
         {
