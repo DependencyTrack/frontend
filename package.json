@@ -85,7 +85,7 @@
     "prettier-plugin-sort-json": "4.0.0",
     "sass": "1.72.0",
     "sass-loader": "8.0.2",
-    "uuid": "9.0.1",
+    "uuid": "14.0.0",
     "vue-i18n-extract": "^2.0.7",
     "vue-template-compiler": "2.7.16"
   },
