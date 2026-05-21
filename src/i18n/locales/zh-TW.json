@@ -140,6 +140,7 @@
       "test_summary": "{passed} 通過，{failed} 失敗，{skipped} 跳過"
     },
     "kenna_security": "Kenna 安全",
+    "label": null,
     "labels": "標籤",
     "ldap_users": "LDAP 使用者",
     "limit_to": "限制至",
@@ -630,6 +631,7 @@
     "item": "物品",
     "justification": "理由",
     "justification_tooltip": "影響分析狀態被斷言為“不受影響”的理由",
+    "key": null,
     "language": "語言",
     "last_bom_import": "上次 BOM 匯入",
     "last_measurement": "最後一次評估",

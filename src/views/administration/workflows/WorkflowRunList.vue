@@ -46,6 +46,15 @@
             v-model="completedFilter"
             @dismiss="onFilterDismiss('completed')"
           />
+          <label-filter-pill
+            v-if="isFilterVisible('label')"
+            ref="filter_label"
+            :field-label="$t('admin.label')"
+            field-name="label"
+            icon="fa-tag"
+            v-model="labelFilter"
+            @dismiss="onFilterDismiss('label')"
+          />
           <b-dropdown
             v-if="addFilterOptions.length > 0"
             size="sm"
@@ -92,6 +101,7 @@
 <script>
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
 import EnumFilterPill from '@/views/components/EnumFilterPill.vue';
+import LabelFilterPill from '@/views/components/LabelFilterPill.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
@@ -102,6 +112,7 @@ export default {
   components: {
     DateTimeRangeFilterPill,
     EnumFilterPill,
+    LabelFilterPill,
     TextFilterPill,
     TokenPaginatedTable,
   },
@@ -111,6 +122,7 @@ export default {
       statusFilter: null,
       createdFilter: null,
       completedFilter: null,
+      labelFilter: null,
       sortBy: null,
       sortDirection: null,
       statusOptions: [
@@ -230,6 +242,11 @@ export default {
           label: this.$t('message.completed'),
           icon: 'fa-calendar-check-o',
         },
+        {
+          name: 'label',
+          label: this.$t('admin.label'),
+          icon: 'fa-tag',
+        },
       ];
     },
     tableDataBaseUrl() {
@@ -261,6 +278,9 @@ export default {
           queryParams.completed_at_to = this.completedFilter.to;
         }
       }
+      if (this.labelFilter && this.labelFilter.key) {
+        queryParams.label = `${this.labelFilter.key}=${this.labelFilter.value ?? ''}`;
+      }
       if (this.sortBy) {
         queryParams.sort_by = this.sortBy;
       }
@@ -278,6 +298,7 @@ export default {
         this.statusFilter = null;
         this.createdFilter = null;
         this.completedFilter = null;
+        this.labelFilter = null;
         this.clearPendingFilters();
       } finally {
         this._clearing = false;

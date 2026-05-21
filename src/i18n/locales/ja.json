@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "Kenna Security",
+    "label": null,
     "labels": null,
     "ldap_users": "LDAP ユーザー",
     "limit_to": "限定",
@@ -630,6 +631,7 @@
     "item": "アイテム",
     "justification": "正当化",
     "justification_tooltip": "影響分析の状態が「影響を受けない」と主張された理由",
+    "key": null,
     "language": "言語",
     "last_bom_import": "最後のBOMインポート",
     "last_measurement": "最終測定",

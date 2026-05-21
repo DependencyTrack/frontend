@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "Kenna Security",
+    "label": null,
     "labels": null,
     "ldap_users": "LDAP-Benutzer",
     "limit_to": "Beschränken auf",
@@ -630,6 +631,7 @@
     "item": "Element",
     "justification": "Begründung",
     "justification_tooltip": "Die Begründung, warum der Auswirkungsanalysestatus „Nicht betroffen“ lautete",
+    "key": null,
     "language": "Sprache",
     "last_bom_import": "Letzter BOM Import",
     "last_measurement": "Letzte Messung",

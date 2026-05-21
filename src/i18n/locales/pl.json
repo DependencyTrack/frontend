@@ -140,6 +140,7 @@
       "test_summary": null
     },
     "kenna_security": "Ochrona Kenny",
+    "label": null,
     "labels": null,
     "ldap_users": "Użytkownicy LDAP",
     "limit_to": "Ograniczone do",
@@ -630,6 +631,7 @@
     "item": "Pozycja",
     "justification": "Uzasadnienie",
     "justification_tooltip": "Uzasadnienie, dla którego stwierdzono, że stan analizy wpływu to „Nie ma wpływu”",
+    "key": null,
     "language": "Język",
     "last_bom_import": "Ostatni import BOM",
     "last_measurement": "Ostatni pomiar",
