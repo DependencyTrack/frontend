@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Détails de la vulnérabilité",
     "vulnerability_policies": "Politiques de vulnérabilité",
     "vulnerability_published_desc": "La date à laquelle l'enregistrement de vulnérabilité a été initialement publié",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "Balises de vulnérabilité mises à jour",
     "vulnerability_title": "Titre",
     "vulnerability_title_desc": "Le titre de la vulnérabilité, facultatif",

@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Деталі уразливості",
     "vulnerability_policies": "Політика вразливості",
     "vulnerability_published_desc": "Дата початкової публікації запису про уразливість",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "Оновлено теги вразливості",
     "vulnerability_title": "Заголовок",
     "vulnerability_title_desc": "Необов'язковий заголовок уразливості",

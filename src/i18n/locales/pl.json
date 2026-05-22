@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Szczegóły luki",
     "vulnerability_policies": "Zasady dotyczące luk w zabezpieczeniach",
     "vulnerability_published_desc": "Data pierwotnej publikacji rejestru luk w zabezpieczeniach",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "Tagi luk w zabezpieczeniach zostały zaktualizowane",
     "vulnerability_title": "Tytuł",
     "vulnerability_title_desc": "Opcjonalny tytuł luki",

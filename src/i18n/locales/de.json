@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Details zur Sicherheitsanfälligkeit",
     "vulnerability_policies": "Schwachstellen-Richtlinien",
     "vulnerability_published_desc": "Das Datum, an dem der Schwachstellendatensatz ursprünglich veröffentlicht wurde",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "Schwachstellen-Tags aktualisiert",
     "vulnerability_title": "Titel",
     "vulnerability_title_desc": "Der optionale Titel der Schwachstelle",

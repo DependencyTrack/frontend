@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Детали уязвимости",
     "vulnerability_policies": "Политика уязвимостей",
     "vulnerability_published_desc": "Дата, когда запись об уязвимости была опубликована",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "Теги уязвимостей обновлены.",
     "vulnerability_title": "Заголовок",
     "vulnerability_title_desc": "Необязательный заголовок уязвимости",
