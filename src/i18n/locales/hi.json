@@ -1081,6 +1081,7 @@
     "vulnerability_details": "भेद्यता विवरण",
     "vulnerability_policies": "भेद्यता नीतियाँ",
     "vulnerability_published_desc": "वह तिथि जब भेद्यता रिकॉर्ड मूल रूप से प्रकाशित किया गया था",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "भेद्यता टैग अपडेट किए गए",
     "vulnerability_title": "शीर्षक",
     "vulnerability_title_desc": "भेद्यता का वैकल्पिक शीर्षक",

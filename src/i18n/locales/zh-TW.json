@@ -1081,6 +1081,7 @@
     "vulnerability_details": "漏洞詳細資訊",
     "vulnerability_policies": "漏洞策略",
     "vulnerability_published_desc": "漏洞記錄最初發佈的日期",
+    "vulnerability_rejected_desc": null,
     "vulnerability_tags_updated": "漏洞標籤已更新",
     "vulnerability_title": "標題",
     "vulnerability_title_desc": "漏洞的可選標題",

@@ -1081,6 +1081,7 @@
     "vulnerability_details": "Vulnerability Details",
     "vulnerability_policies": "Vulnerability Policies",
     "vulnerability_published_desc": "The date the vulnerability record was originally published",
+    "vulnerability_rejected_desc": "The date the vulnerability record was rejected / withdrawn by its source",
     "vulnerability_tags_updated": "Vulnerability tags updated",
     "vulnerability_title": "Title",
     "vulnerability_title_desc": "The optional title of the vulnerability",
