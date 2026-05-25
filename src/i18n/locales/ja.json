@@ -451,6 +451,7 @@
     "component_details": "コンポーネントの詳細",
     "component_device": "デバイス",
     "component_device_driver": "デバイスドライバー",
+    "component_download_partial": null,
     "component_file": "ファイル",
     "component_filename_desc": "コンポーネントの監視ファイル名を指定します",
     "component_firmware": "ファームウェア",
@@ -602,6 +603,22 @@
     "group_name": "グループ名",
     "grouped_vulnerabilities": "グループ化された脆弱性",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "ハッシュ",
     "hashes_short_desc": "ハッシュ",
     "home": "ホーム",

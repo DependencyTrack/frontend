@@ -90,6 +90,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    emitDateAsMillis: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: Object,
       default: () => null,
@@ -104,14 +108,8 @@ export default {
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        if (val) {
-          this.tmpFrom = val.from ? this.toInputValue(val.from) : '';
-          this.tmpTo = val.to ? this.toInputValue(val.to) : '';
-        } else {
-          this.tmpFrom = '';
-          this.tmpTo = '';
-        }
+      handler() {
+        this.syncFromValue();
       },
     },
   },
@@ -123,9 +121,11 @@ export default {
       if (!this.value) return '';
 
       const from = this.value.from
-        ? this.formatDisplayValue(this.value.from)
+        ? this.formatDisplayValue(this.value.from, false)
         : '';
-      const to = this.value.to ? this.formatDisplayValue(this.value.to) : '';
+      const to = this.value.to
+        ? this.formatDisplayValue(this.value.to, true)
+        : '';
 
       if (from && to) {
         return `${from} - ${to}`;
@@ -137,12 +137,19 @@ export default {
       return '';
     },
   },
+  // `to` is stored as an exclusive upper bound: when emitDateAsMillis is on,
+  // it's the midnight *after* the selected day, so callers shift by ±1 day
+  // when converting between the user-visible date and the stored value.
   methods: {
-    formatDisplayValue(val) {
+    syncFromValue() {
+      const val = this.value;
+      this.tmpFrom = val && val.from ? this.toInputValue(val.from, false) : '';
+      this.tmpTo = val && val.to ? this.toInputValue(val.to, true) : '';
+    },
+    formatDisplayValue(val, isExclusiveUpper) {
       if (!val) return '';
       if (this.dateOnly) {
-        const [y, m, d] = val.split('-');
-        const date = new Date(y, m - 1, d);
+        const date = this.dateOnlyValueToDate(val, isExclusiveUpper);
         return date.toLocaleDateString(undefined, {
           year: 'numeric',
           month: 'short',
@@ -158,35 +165,53 @@ export default {
         minute: '2-digit',
       });
     },
-    toInputValue(val) {
+    toInputValue(val, isExclusiveUpper) {
       if (!val) return '';
       if (this.dateOnly) {
-        return val;
+        return this.formatDateInputValue(
+          this.dateOnlyValueToDate(val, isExclusiveUpper),
+        );
       }
       const date = new Date(val);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
+      return `${this.formatDateInputValue(date)}T${hours}:${minutes}`;
     },
-    toEmitValue(inputStr) {
+    toEmitValue(inputStr, isExclusiveUpper) {
       if (!inputStr) return null;
       if (this.dateOnly) {
+        if (this.emitDateAsMillis) {
+          const [y, m, d] = inputStr.split('-').map(Number);
+          const offset = isExclusiveUpper ? 1 : 0;
+          return new Date(y, m - 1, d + offset).getTime();
+        }
         return inputStr;
       }
       return new Date(inputStr).getTime();
+    },
+    dateOnlyValueToDate(val, isExclusiveUpper) {
+      if (this.emitDateAsMillis) {
+        const date = new Date(Number(val));
+        if (isExclusiveUpper) {
+          date.setDate(date.getDate() - 1);
+        }
+        return date;
+      }
+      const [y, m, d] = String(val).split('-').map(Number);
+      return new Date(y, m - 1, d);
+    },
+    formatDateInputValue(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     },
     open() {
       this.$refs.pill.open();
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpFrom = this.value.from
-          ? this.toInputValue(this.value.from)
-          : '';
-        this.tmpTo = this.value.to ? this.toInputValue(this.value.to) : '';
+        this.syncFromValue();
       } else {
         this.tmpFrom = '';
         this.tmpTo = '';
@@ -198,8 +223,8 @@ export default {
       }
 
       this.$emit('input', {
-        from: this.toEmitValue(this.tmpFrom),
-        to: this.toEmitValue(this.tmpTo),
+        from: this.toEmitValue(this.tmpFrom, false),
+        to: this.toEmitValue(this.tmpTo, true),
       });
       this.$refs.pill.hide();
     },

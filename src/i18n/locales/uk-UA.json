@@ -451,6 +451,7 @@
     "component_details": "Деталі компонента",
     "component_device": "Пристрій",
     "component_device_driver": "Драйвер пристрою",
+    "component_download_partial": null,
     "component_file": "Файл",
     "component_filename_desc": "Визначає спостережуване ім'я файлу компонента",
     "component_firmware": "Прошивка",
@@ -602,6 +603,22 @@
     "group_name": "Назва групи",
     "grouped_vulnerabilities": "Згруповані уразливості",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "Хеші",
     "hashes_short_desc": "Хеш",
     "home": "Головна",

@@ -613,11 +613,36 @@ $common.setQueryParams = function (url, params) {
   const isRelative = url.startsWith('/');
   const parsed = isRelative ? new URL(url, 'http://localhost') : new URL(url);
   for (const [key, value] of Object.entries(params)) {
-    parsed.searchParams.set(key, value);
+    if (Array.isArray(value)) {
+      parsed.searchParams.delete(key);
+      for (const v of value) {
+        if (v !== undefined && v !== null) {
+          parsed.searchParams.append(key, v);
+        }
+      }
+    } else if (value !== undefined && value !== null) {
+      parsed.searchParams.set(key, value);
+    }
   }
   return isRelative
     ? parsed.pathname + parsed.search + parsed.hash
     : parsed.href;
+};
+
+$common.sameQueryParams = function (a, b) {
+  const canonicalize = (params) => {
+    const pairs = [];
+    for (const [key, value] of Object.entries(params || {})) {
+      const values = Array.isArray(value) ? value : [value];
+      for (const v of values) {
+        if (v !== undefined && v !== null) {
+          pairs.push([key, String(v)]);
+        }
+      }
+    }
+    return JSON.stringify(pairs.sort());
+  };
+  return canonicalize(a) === canonicalize(b);
 };
 
 $common.getCollectionLogicText = function (i18n, project) {
@@ -696,6 +721,7 @@ export default {
   toBoolean: $common.toBoolean,
   trimToNull: $common.trimToNull,
   setQueryParams: $common.setQueryParams,
+  sameQueryParams: $common.sameQueryParams,
   OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX:
     $common.OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX,
   getCollectionLogicText: $common.getCollectionLogicText,

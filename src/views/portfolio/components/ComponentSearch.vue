@@ -76,6 +76,17 @@
           v-model="hashFilter"
           @dismiss="onFilterDismiss('hash')"
         />
+        <date-time-range-filter-pill
+          v-if="isFilterVisible('published')"
+          ref="filter_published"
+          :field-label="$t('message.published')"
+          field-name="package_artifact_published"
+          icon="fa-calendar"
+          date-only
+          emit-date-as-millis
+          v-model="publishedFilter"
+          @dismiss="onFilterDismiss('published')"
+        />
         <boolean-filter-pill
           v-if="isFilterVisible('showInactive')"
           :field-label="$t('message.show_inactive_projects')"
@@ -127,8 +138,11 @@
     <token-paginated-table
       ref="table"
       :base-url="tableDataBaseUrl"
+      :extra-query-params="extraQueryParams"
       :columns="columns"
       :options="tableOptions"
+      page-size-storage-key="ComponentSearchPageSize"
+      @visible-columns="onVisibleColumns"
     />
   </div>
 </template>
@@ -144,6 +158,37 @@ import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import HashFilterPill from '@/views/components/HashFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
+import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
+
+const COLUMN_DEFAULT_VISIBILITY = {
+  name: true,
+  version: true,
+  group: true,
+  purl: true,
+  internal: false,
+  cpe: false,
+  scope: false,
+  swid_tag_id: false,
+  'project.name': true,
+  'resolved_license.license_id': false,
+  'package_artifact_metadata.published_at': false,
+  last_inherited_risk_score: false,
+  metrics: false,
+};
+
+function storedVisibility(field) {
+  if (typeof localStorage === 'undefined') return null;
+  const stored = localStorage.getItem(
+    'ComponentSearchShow' + common.capitalize(field),
+  );
+  if (stored === null) return null;
+  return stored === 'true';
+}
+
+function initialColumnVisible(field) {
+  const stored = storedVisibility(field);
+  return stored !== null ? stored : COLUMN_DEFAULT_VISIBILITY[field] === true;
+}
 
 export default {
   mixins: [permissionsMixin, filterPillsMixin],
@@ -152,6 +197,7 @@ export default {
     TextFilterPill,
     HashFilterPill,
     BooleanFilterPill,
+    DateTimeRangeFilterPill,
   },
   beforeMount() {
     const q = this.$route.query;
@@ -171,6 +217,19 @@ export default {
       };
     if (q.hash && q.hash_type)
       this.hashFilter = { hashType: q.hash_type, hash: q.hash };
+    if (
+      q.package_artifact_published_since ||
+      q.package_artifact_published_before
+    ) {
+      this.publishedFilter = {
+        from: q.package_artifact_published_since
+          ? Number(q.package_artifact_published_since)
+          : null,
+        to: q.package_artifact_published_before
+          ? Number(q.package_artifact_published_before)
+          : null,
+      };
+    }
     if (q.show_inactive === 'true') this.showInactive = true;
     if (q.project_latest_version === 'true') this.onlyLatestVersion = true;
   },
@@ -185,6 +244,7 @@ export default {
         this.cpeFilter = null;
         this.swidTagIdFilter = null;
         this.hashFilter = null;
+        this.publishedFilter = null;
         this.showInactive = false;
         this.onlyLatestVersion = false;
         this.clearPendingFilters();
@@ -214,6 +274,14 @@ export default {
         params.hash = this.hashFilter.hash;
         params.hash_type = this.hashFilter.hashType;
       }
+      if (this.publishedFilter) {
+        if (this.publishedFilter.from) {
+          params.package_artifact_published_since = this.publishedFilter.from;
+        }
+        if (this.publishedFilter.to) {
+          params.package_artifact_published_before = this.publishedFilter.to;
+        }
+      }
       if (!this.showInactive) params.project_state = 'ACTIVE';
       if (this.onlyLatestVersion) params.project_latest_version = 'true';
       return params;
@@ -223,6 +291,9 @@ export default {
       delete params.project_state;
       if (this.showInactive) params.show_inactive = 'true';
       return params;
+    },
+    onVisibleColumns(fields) {
+      this.visibleColumns = fields;
     },
     syncQueryParams() {
       const query = this.buildUrlQueryParams();
@@ -268,6 +339,11 @@ export default {
           icon: 'fa-hashtag',
         },
         {
+          name: 'published',
+          label: this.$t('message.published'),
+          icon: 'fa-calendar',
+        },
+        {
           name: 'showInactive',
           label: this.$t('message.show_inactive_projects'),
           icon: 'fa-eye',
@@ -288,9 +364,24 @@ export default {
       queryParams.sort_direction = sortDirection.toUpperCase();
       return common.setQueryParams(url, queryParams);
     },
+    extraQueryParams() {
+      const expand = new Set();
+      for (const field of this.visibleColumns) {
+        if (field === 'metrics') {
+          expand.add('metrics');
+        } else if (field === 'package_artifact_metadata.published_at') {
+          expand.add('package_artifact_metadata');
+        }
+      }
+      if (expand.size === 0) {
+        return {};
+      }
+      return { expand: [...expand] };
+    },
   },
   data() {
     return {
+      visibleColumns: [],
       groupFilter: null,
       nameFilter: null,
       versionFilter: null,
@@ -298,6 +389,7 @@ export default {
       cpeFilter: null,
       swidTagIdFilter: null,
       hashFilter: null,
+      publishedFilter: null,
       showInactive: false,
       onlyLatestVersion: false,
       booleanFilters: ['showInactive', 'onlyLatestVersion'],
@@ -322,6 +414,7 @@ export default {
           title: this.$t('message.component'),
           field: 'name',
           sortable: true,
+          visible: initialColumnVisible('name'),
           formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr('../components/' + row.uuid);
             let dependencyGraphUrl = xssFilters.uriInUnQuotedAttr(
@@ -339,8 +432,8 @@ export default {
         {
           title: this.$t('message.version'),
           field: 'version',
-          sortable: true,
-          visible: true,
+          sortable: false,
+          visible: initialColumnVisible('version'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -349,6 +442,7 @@ export default {
           title: this.$t('message.group'),
           field: 'group',
           sortable: true,
+          visible: initialColumnVisible('group'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -356,7 +450,8 @@ export default {
         {
           title: this.$t('message.package_url'),
           field: 'purl',
-          sortable: true,
+          sortable: false,
+          visible: initialColumnVisible('purl'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -365,7 +460,7 @@ export default {
           title: this.$t('message.internal'),
           field: 'internal',
           sortable: false,
-          visible: false,
+          visible: initialColumnVisible('internal'),
           align: 'center',
           class: 'tight',
           formatter: function (value) {
@@ -375,7 +470,8 @@ export default {
         {
           title: this.$t('message.cpe'),
           field: 'cpe',
-          sortable: true,
+          sortable: false,
+          visible: initialColumnVisible('cpe'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -384,7 +480,7 @@ export default {
           title: this.$t('message.scope'),
           field: 'scope',
           sortable: false,
-          visible: false,
+          visible: initialColumnVisible('scope'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -393,7 +489,7 @@ export default {
           title: this.$t('message.swid_tagid'),
           field: 'swid_tag_id',
           sortable: false,
-          visible: false,
+          visible: initialColumnVisible('swid_tag_id'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -402,6 +498,7 @@ export default {
           title: this.$t('message.project_name'),
           field: 'project.name',
           sortable: false,
+          visible: initialColumnVisible('project.name'),
           formatter(_, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../projects/' + row.project.uuid,
@@ -418,7 +515,7 @@ export default {
           title: this.$t('message.license_name'),
           field: 'resolved_license.license_id',
           sortable: false,
-          visible: false,
+          visible: initialColumnVisible('resolved_license.license_id'),
           formatter(resolved_license, row) {
             if (typeof resolved_license === 'undefined') {
               return '-';
@@ -432,17 +529,31 @@ export default {
           },
         },
         {
+          title: this.$t('message.published'),
+          field: 'package_artifact_metadata.published_at',
+          sortable: false,
+          visible: initialColumnVisible(
+            'package_artifact_metadata.published_at',
+          ),
+          formatter(value) {
+            if (value == null) {
+              return '';
+            }
+            return xssFilters.inHTMLData(common.formatTimestamp(value));
+          },
+        },
+        {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
           sortable: true,
-          visible: false,
+          visible: initialColumnVisible('last_inherited_risk_score'),
           class: 'tight',
         },
         {
           title: this.$t('message.vulnerabilities'),
           field: 'metrics',
           sortable: false,
-          visible: false,
+          visible: initialColumnVisible('metrics'),
           formatter: function (metrics) {
             if (typeof metrics === 'undefined') {
               return '-';
@@ -461,7 +572,9 @@ export default {
               },
             });
             progressBar.$mount();
-            return progressBar.$el.outerHTML;
+            const html = progressBar.$el.outerHTML;
+            progressBar.$destroy();
+            return html;
           }.bind(this),
         },
       ],
@@ -479,6 +592,14 @@ export default {
         onSort: (name, order) => {
           this.sortBy = name;
           this.sortDirection = order;
+        },
+        onColumnSwitch: (field, checked) => {
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(
+              'ComponentSearchShow' + common.capitalize(field),
+              checked.toString(),
+            );
+          }
         },
       },
     };

@@ -451,6 +451,7 @@
     "component_details": "Détails des composants",
     "component_device": "Équipement",
     "component_device_driver": "Pilote de périphérique",
+    "component_download_partial": null,
     "component_file": "Fichier",
     "component_filename_desc": "Spécifie le nom de fichier observé du composant",
     "component_firmware": "Microprogramme",
@@ -602,6 +603,22 @@
     "group_name": "Nom de groupe",
     "grouped_vulnerabilities": "Vulnérabilités groupées",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "Condensats",
     "hashes_short_desc": "Condensat",
     "home": "Accueil",

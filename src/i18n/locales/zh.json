@@ -451,6 +451,7 @@
     "component_details": "组件详情",
     "component_device": "设备",
     "component_device_driver": "设备驱动程序",
+    "component_download_partial": null,
     "component_file": "文件",
     "component_filename_desc": "指定观察到的组件的文件名",
     "component_firmware": "固件",
@@ -602,6 +603,22 @@
     "group_name": "组名称",
     "grouped_vulnerabilities": "分组漏洞",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "哈希",
     "hashes_short_desc": "哈希",
     "home": "首页",
