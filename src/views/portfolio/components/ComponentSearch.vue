@@ -222,10 +222,10 @@ export default {
       q.package_artifact_published_before
     ) {
       this.publishedFilter = {
-        from: q.package_artifact_published_since
+        since: q.package_artifact_published_since
           ? Number(q.package_artifact_published_since)
           : null,
-        to: q.package_artifact_published_before
+        before: q.package_artifact_published_before
           ? Number(q.package_artifact_published_before)
           : null,
       };
@@ -275,11 +275,12 @@ export default {
         params.hash_type = this.hashFilter.hashType;
       }
       if (this.publishedFilter) {
-        if (this.publishedFilter.from) {
-          params.package_artifact_published_since = this.publishedFilter.from;
+        if (this.publishedFilter.since) {
+          params.package_artifact_published_since = this.publishedFilter.since;
         }
-        if (this.publishedFilter.to) {
-          params.package_artifact_published_before = this.publishedFilter.to;
+        if (this.publishedFilter.before) {
+          params.package_artifact_published_before =
+            this.publishedFilter.before;
         }
       }
       if (!this.showInactive) params.project_state = 'ACTIVE';

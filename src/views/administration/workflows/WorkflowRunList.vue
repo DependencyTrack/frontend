@@ -32,7 +32,7 @@
             v-if="isFilterVisible('created')"
             ref="filter_created"
             :field-label="$t('message.created')"
-            field-name="created_at"
+            field-name="created"
             icon="fa-calendar"
             v-model="createdFilter"
             @dismiss="onFilterDismiss('created')"
@@ -41,7 +41,7 @@
             v-if="isFilterVisible('completed')"
             ref="filter_completed"
             :field-label="$t('message.completed')"
-            field-name="completed_at"
+            field-name="completed"
             icon="fa-calendar-check-o"
             v-model="completedFilter"
             @dismiss="onFilterDismiss('completed')"
@@ -263,19 +263,19 @@ export default {
         queryParams.status = this.statusFilter;
       }
       if (this.createdFilter) {
-        if (this.createdFilter.from) {
-          queryParams.created_at_from = this.createdFilter.from;
+        if (this.createdFilter.since) {
+          queryParams.created_since = this.createdFilter.since;
         }
-        if (this.createdFilter.to) {
-          queryParams.created_at_to = this.createdFilter.to;
+        if (this.createdFilter.before) {
+          queryParams.created_before = this.createdFilter.before;
         }
       }
       if (this.completedFilter) {
-        if (this.completedFilter.from) {
-          queryParams.completed_at_from = this.completedFilter.from;
+        if (this.completedFilter.since) {
+          queryParams.completed_since = this.completedFilter.since;
         }
-        if (this.completedFilter.to) {
-          queryParams.completed_at_to = this.completedFilter.to;
+        if (this.completedFilter.before) {
+          queryParams.completed_before = this.completedFilter.before;
         }
       }
       if (this.labelFilter && this.labelFilter.key) {

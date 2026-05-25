@@ -198,11 +198,11 @@ export default {
         params.analysisState = this.analysisStateFilter.join(',');
       }
       if (this.occurredOnFilter) {
-        if (this.occurredOnFilter.from) {
-          params.occurredOnDateFrom = this.occurredOnFilter.from;
+        if (this.occurredOnFilter.since) {
+          params.occurredOnDateFrom = this.occurredOnFilter.since;
         }
-        if (this.occurredOnFilter.to) {
-          params.occurredOnDateTo = this.occurredOnFilter.to;
+        if (this.occurredOnFilter.before) {
+          params.occurredOnDateTo = this.occurredOnFilter.before;
         }
       }
       if (this.textSearchFilter && this.textSearchFilter.value) {
