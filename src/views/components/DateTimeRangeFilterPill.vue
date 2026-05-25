@@ -11,11 +11,11 @@
   >
     <template #value>{{ displayValue }}</template>
 
-    <b-form-group :label="$t('message.from')" label-size="sm" class="mb-2">
+    <b-form-group :label="$t('message.since')" label-size="sm" class="mb-2">
       <b-input-group>
         <b-form-input
           :id="`datetime-range-filter-pill-from-${fieldName}`"
-          v-model="tmpFrom"
+          v-model="tmpSince"
           :type="dateOnly ? 'date' : 'datetime-local'"
           size="sm"
         ></b-form-input>
@@ -23,21 +23,21 @@
           <b-button
             size="sm"
             variant="outline-secondary"
-            :disabled="!tmpFrom"
-            @click="tmpFrom = ''"
+            :disabled="!tmpSince"
+            @click="tmpSince = ''"
             :title="$t('message.clear')"
-            :aria-label="$t('message.clear') + ' ' + $t('message.from')"
+            :aria-label="$t('message.clear') + ' ' + $t('message.since')"
           >
             <span class="fa fa-times-circle" aria-hidden="true"></span>
           </b-button>
         </b-input-group-append>
       </b-input-group>
     </b-form-group>
-    <b-form-group :label="$t('message.to')" label-size="sm" class="mb-2">
+    <b-form-group :label="$t('message.before')" label-size="sm" class="mb-2">
       <b-input-group>
         <b-form-input
           :id="`datetime-range-filter-pill-to-${fieldName}`"
-          v-model="tmpTo"
+          v-model="tmpBefore"
           :type="dateOnly ? 'date' : 'datetime-local'"
           size="sm"
         ></b-form-input>
@@ -45,10 +45,10 @@
           <b-button
             size="sm"
             variant="outline-secondary"
-            :disabled="!tmpTo"
-            @click="tmpTo = ''"
+            :disabled="!tmpBefore"
+            @click="tmpBefore = ''"
             :title="$t('message.clear')"
-            :aria-label="$t('message.clear') + ' ' + $t('message.to')"
+            :aria-label="$t('message.clear') + ' ' + $t('message.before')"
           >
             <span class="fa fa-times-circle" aria-hidden="true"></span>
           </b-button>
@@ -60,7 +60,7 @@
         variant="primary"
         size="sm"
         @click="applyFilter"
-        :disabled="!tmpFrom && !tmpTo"
+        :disabled="!tmpSince && !tmpBefore"
         >{{ $t('message.apply') }}
       </b-button>
     </div>
@@ -101,8 +101,8 @@ export default {
   },
   data() {
     return {
-      tmpFrom: '',
-      tmpTo: '',
+      tmpSince: '',
+      tmpBefore: '',
     };
   },
   watch: {
@@ -115,36 +115,38 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && (this.value.from || this.value.to);
+      return this.value && (this.value.since || this.value.before);
     },
     displayValue() {
       if (!this.value) return '';
 
-      const from = this.value.from
-        ? this.formatDisplayValue(this.value.from, false)
+      const since = this.value.since
+        ? this.formatDisplayValue(this.value.since, false)
         : '';
-      const to = this.value.to
-        ? this.formatDisplayValue(this.value.to, true)
+      const before = this.value.before
+        ? this.formatDisplayValue(this.value.before, true)
         : '';
 
-      if (from && to) {
-        return `${from} - ${to}`;
-      } else if (from) {
-        return `≥ ${from}`;
-      } else if (to) {
-        return `< ${to}`;
+      if (since && before) {
+        return `${since} - ${before}`;
+      } else if (since) {
+        return `≥ ${since}`;
+      } else if (before) {
+        return `< ${before}`;
       }
       return '';
     },
   },
-  // `to` is stored as an exclusive upper bound: when emitDateAsMillis is on,
+  // `before` is stored as an exclusive upper bound: when emitDateAsMillis is on,
   // it's the midnight *after* the selected day, so callers shift by ±1 day
   // when converting between the user-visible date and the stored value.
   methods: {
     syncFromValue() {
       const val = this.value;
-      this.tmpFrom = val && val.from ? this.toInputValue(val.from, false) : '';
-      this.tmpTo = val && val.to ? this.toInputValue(val.to, true) : '';
+      this.tmpSince =
+        val && val.since ? this.toInputValue(val.since, false) : '';
+      this.tmpBefore =
+        val && val.before ? this.toInputValue(val.before, true) : '';
     },
     formatDisplayValue(val, isExclusiveUpper) {
       if (!val) return '';
@@ -213,24 +215,24 @@ export default {
       if (this.hasFilter) {
         this.syncFromValue();
       } else {
-        this.tmpFrom = '';
-        this.tmpTo = '';
+        this.tmpSince = '';
+        this.tmpBefore = '';
       }
     },
     applyFilter() {
-      if (!this.tmpFrom && !this.tmpTo) {
+      if (!this.tmpSince && !this.tmpBefore) {
         return;
       }
 
       this.$emit('input', {
-        from: this.toEmitValue(this.tmpFrom, false),
-        to: this.toEmitValue(this.tmpTo, true),
+        since: this.toEmitValue(this.tmpSince, false),
+        before: this.toEmitValue(this.tmpBefore, true),
       });
       this.$refs.pill.hide();
     },
     clearFilter() {
-      this.tmpFrom = '';
-      this.tmpTo = '';
+      this.tmpSince = '';
+      this.tmpBefore = '';
       this.$refs.pill.hide();
       this.$emit('input', null);
     },
