@@ -451,6 +451,7 @@
     "component_details": "Dettagli dei componenti",
     "component_device": "Dispositivo",
     "component_device_driver": "Driver del dispositivo",
+    "component_download_partial": null,
     "component_file": "File",
     "component_filename_desc": "Specifica il nome file osservato del componente",
     "component_firmware": "Firmware",
@@ -602,6 +603,22 @@
     "group_name": "Nome del gruppo",
     "grouped_vulnerabilities": "Vulnerabilità raggruppate",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "Hash",
     "hashes_short_desc": "Hash",
     "home": "Casa",

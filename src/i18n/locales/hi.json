@@ -451,6 +451,7 @@
     "component_details": "घटक विवरण",
     "component_device": "डिवाइस",
     "component_device_driver": "डिवाइस ड्राइवर",
+    "component_download_partial": null,
     "component_file": "फ़ाइल",
     "component_filename_desc": "घटक का प्रेक्षित फ़ाइल नाम निर्दिष्ट करता है",
     "component_firmware": "फर्मवेयर",
@@ -602,6 +603,22 @@
     "group_name": "समूह नाम",
     "grouped_vulnerabilities": "समूहीकृत कमज़ोरियाँ",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "हैश",
     "hashes_short_desc": "हैश",
     "home": "घर",

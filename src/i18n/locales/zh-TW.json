@@ -451,6 +451,7 @@
     "component_details": "元件詳細資訊",
     "component_device": "裝置",
     "component_device_driver": "裝置驅動程式",
+    "component_download_partial": null,
     "component_file": "檔案",
     "component_filename_desc": "指定觀察到的元件的檔名",
     "component_firmware": "韌體",
@@ -602,6 +603,22 @@
     "group_name": "群組名稱",
     "grouped_vulnerabilities": "分組漏洞",
     "hash_type": "哈希類型",
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "雜湊",
     "hashes_short_desc": "雜湊（MD5、SHA、SHA3、Blake2b、Blake3）",
     "home": "首頁",

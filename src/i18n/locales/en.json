@@ -451,6 +451,7 @@
     "component_details": "Component Details",
     "component_device": "Device",
     "component_device_driver": "Device Driver",
+    "component_download_partial": "Component list could not be fully downloaded; the file contains partial data.",
     "component_file": "File",
     "component_filename_desc": "Specifies the observed filename of the component",
     "component_firmware": "Firmware",
@@ -602,6 +603,22 @@
     "group_name": "Group Name",
     "grouped_vulnerabilities": "Grouped Vulnerabilities",
     "hash_type": "Hash Type",
+    "hash_verification": {
+      "component_hash": "Component hash",
+      "failed_explanation": "At least one hash recorded for the component does not match the corresponding hash of the artifact resolved from the repository. The component may have been tampered with, or it does not actually originate from the resolved repository.",
+      "modal_title": "Hash verification",
+      "no_common_algorithm": "The component and the repository artifact have no hash algorithms in common, so verification could not be performed.",
+      "no_component_hash_explanation": "The component has no recorded hashes, so verification could not be performed.",
+      "passed_explanation": "Every shared hash algorithm produced identical values for the component and the artifact resolved from the repository, indicating that the component matches what the repository published.",
+      "repository_hash": "Repository hash",
+      "resolved_from": "Resolved from",
+      "status": {
+        "failed": "Hash mismatch",
+        "no_component_hash": "No component hash recorded",
+        "passed": "Hashes match",
+        "unknown": "Hash verification unavailable"
+      }
+    },
     "hashes": "Hashes",
     "hashes_short_desc": "Hash",
     "home": "Home",

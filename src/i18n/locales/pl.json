@@ -451,6 +451,7 @@
     "component_details": "Szczegóły komponentu",
     "component_device": "Urządzenie",
     "component_device_driver": "Sterownik urządzenia",
+    "component_download_partial": null,
     "component_file": "Plik",
     "component_filename_desc": "Określa obserwowaną nazwę pliku komponentu",
     "component_firmware": "Oprogramowanie sprzętowe",
@@ -602,6 +603,22 @@
     "group_name": "Nazwa grupy",
     "grouped_vulnerabilities": "Zgrupowane luki w zabezpieczeniach",
     "hash_type": null,
+    "hash_verification": {
+      "component_hash": null,
+      "failed_explanation": null,
+      "modal_title": null,
+      "no_common_algorithm": null,
+      "no_component_hash_explanation": null,
+      "passed_explanation": null,
+      "repository_hash": null,
+      "resolved_from": null,
+      "status": {
+        "failed": null,
+        "no_component_hash": null,
+        "passed": null,
+        "unknown": null
+      }
+    },
     "hashes": "Hasze",
     "hashes_short_desc": "Hash",
     "home": "Dom",

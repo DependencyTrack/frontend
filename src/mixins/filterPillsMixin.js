@@ -42,7 +42,7 @@ export default {
     // since initToolbar() can recreate the `.columns` div (e.g. on option changes).
     this.$nextTick(() => {
       this._adoptTableControls();
-      const table = this.$el.querySelector('table');
+      const table = this._queryEl('table');
       if (table) {
         jQuery(table).on('post-body.bs.table.filterPillsMixin', () => {
           this._adoptTableControls();
@@ -51,14 +51,23 @@ export default {
     });
   },
   beforeDestroy() {
-    const table = this.$el.querySelector('table');
+    const table = this._queryEl('table');
     if (table) {
       jQuery(table).off('post-body.bs.table.filterPillsMixin');
     }
   },
   methods: {
+    _queryEl(selector) {
+      // `$el` is a comment placeholder when the render function throws,
+      // which has no querySelector. Guard so lifecycle hooks don't pile
+      // on top of an existing render error.
+      const el = this.$el;
+      return el && typeof el.querySelector === 'function'
+        ? el.querySelector(selector)
+        : null;
+    },
     _adoptTableControls() {
-      const filterBar = this.$el.querySelector('.filter-bar');
+      const filterBar = this._queryEl('.filter-bar');
       if (!filterBar) return;
       const toolbar = filterBar.closest('.fixed-table-toolbar');
       if (!toolbar) return;
