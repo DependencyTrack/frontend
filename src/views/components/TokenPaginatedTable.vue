@@ -7,47 +7,83 @@
       :options="tableOptions"
     >
     </bootstrap-table>
-    <div class="mt-2 d-flex justify-content-between align-items-center">
-      <div>
-        <b-button
-          id="pagination-button-prev"
-          class="pagination-button"
-          :disabled="!hasPreviousPage"
-          @click="goToPrevPage"
-          >‹ {{ $t('message.previous') }}
-        </b-button>
-      </div>
-      <div class="d-flex align-items-center">
-        <span v-if="totalCountDisplay" class="total-count-indicator mr-3">
+    <div
+      class="mt-2 d-flex flex-wrap justify-content-between align-items-center"
+    >
+      <div class="pagination-meta d-flex align-items-center flex-wrap">
+        <span
+          v-if="totalCountDisplay"
+          class="pagination-meta-text"
+          :title="
+            totalCountType === 'AT_LEAST'
+              ? $t('message.total_rows_at_least_tooltip')
+              : null
+          "
+        >
           {{ totalCountDisplay }} {{ $t('message.total_rows') }}
         </span>
-        <b-form-group
-          :label="$t('message.rows_per_page')"
-          label-for="pagination-page-size-select"
-          label-cols="auto"
-          class="mb-0"
+        <span
+          v-if="totalCountDisplay"
+          class="pagination-meta-divider"
+          aria-hidden="true"
+        ></span>
+        <label
+          class="pagination-meta-text mb-0 mr-2"
+          for="pagination-page-size-select"
         >
-          <b-form-select
-            id="pagination-page-size-select"
-            v-model="currentPageSize"
-          >
-            <b-form-select-option
-              v-for="pageSize in allowedPageSizes"
-              :key="`pageSize-${pageSize}`"
-              :value="pageSize"
-              >{{ pageSize }}
-            </b-form-select-option>
-          </b-form-select>
-        </b-form-group>
+          {{ $t('message.rows_per_page') }}
+        </label>
+        <b-form-select
+          id="pagination-page-size-select"
+          v-model="currentPageSize"
+          class="pagination-page-size-select"
+        >
+          <b-form-select-option
+            v-for="pageSize in allowedPageSizes"
+            :key="`pageSize-${pageSize}`"
+            :value="pageSize"
+            >{{ pageSize }}
+          </b-form-select-option>
+        </b-form-select>
       </div>
-      <div>
-        <b-button
-          id="pagination-button-next"
-          class="pagination-button"
-          :disabled="!hasNextPage"
-          @click="goToNextPage"
-          >{{ $t('message.next') }} ›
-        </b-button>
+      <div class="d-flex align-items-center">
+        <b-button-group class="pagination-group">
+          <b-button
+            id="pagination-button-first"
+            class="pagination-button"
+            :disabled="!hasPreviousPage || isLoading"
+            :aria-label="$t('message.first_page')"
+            :title="$t('message.first_page')"
+            @click="goToFirstPage"
+          >
+            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+          </b-button>
+          <b-button
+            id="pagination-button-prev"
+            class="pagination-button"
+            :disabled="!hasPreviousPage || isLoading"
+            :aria-label="$t('message.previous_page')"
+            :title="$t('message.previous_page')"
+            @click="goToPrevPage"
+          >
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+          </b-button>
+        </b-button-group>
+        <span class="page-indicator" aria-live="polite">
+          {{ $t('message.page_indicator', { n: currentPageNumber }) }}
+        </span>
+        <b-button-group class="pagination-group">
+          <b-button
+            id="pagination-button-next"
+            class="pagination-button"
+            :disabled="!hasNextPage || isLoading"
+            :aria-label="$t('message.next_page')"
+            :title="$t('message.next_page')"
+            @click="goToNextPage"
+          >
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </b-button>
+        </b-button-group>
       </div>
     </div>
   </div>
@@ -57,18 +93,36 @@
 @import '@/assets/scss/style';
 
 .page-indicator {
-  font-weight: 500;
-  color: $pagination-color;
+  padding: $pagination-padding-y 0.75rem;
+  font-weight: $font-weight-normal;
+  line-height: $pagination-line-height;
+  color: $body-color;
+  cursor: default;
+  user-select: none;
 }
 
-.total-count-indicator {
-  color: $pagination-color;
+.pagination-meta-text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  color: $body-color;
+}
+
+.pagination-meta-divider {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin: 0 0.75rem;
+  background-color: $pagination-border-color;
+}
+
+.pagination-page-size-select {
+  width: auto;
 }
 
 .pagination-button {
   position: relative;
   display: block;
-  padding: $pagination-padding-y $pagination-padding-x;
+  padding: $pagination-padding-y 1.25rem;
   margin-left: -$pagination-border-width;
   line-height: $pagination-line-height;
   color: $pagination-color;
@@ -183,6 +237,7 @@ export default {
       currentRequestId: 0,
       debounceTimer: null,
       extraParamsTimer: null,
+      isLoading: false,
       totalCount: null,
       totalCountType: null,
     };
@@ -206,6 +261,7 @@ export default {
   methods: {
     async loadPage(pageUrl) {
       this.$refs.table.showLoading();
+      this.isLoading = true;
 
       const requestId = ++this.currentRequestId;
 
@@ -258,8 +314,15 @@ export default {
       } finally {
         if (requestId === this.currentRequestId) {
           this.$refs.table.hideLoading();
+          this.isLoading = false;
         }
       }
+    },
+    async goToFirstPage() {
+      if (!this.hasPreviousPage) {
+        return;
+      }
+      await this.reset();
     },
     async goToPrevPage() {
       if (!this.hasPreviousPage) {
