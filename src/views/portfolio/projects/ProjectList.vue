@@ -16,6 +16,10 @@
         v-model="showInactiveProjects"
         label
         v-bind="labelIcon"
+	tabindex="0"
+	role="switch"
+	@keydown.enter.native="$event.target.click()"
+	@keydown.space.native="$event.target.click()"
       /><span class="text-muted">{{
         $t('message.show_inactive_projects')
       }}</span>
@@ -30,6 +34,10 @@
         :disabled="isSearching"
         v-b-tooltip.hover
         :title="$t('message.switch_view')"
+	tabindex="0"
+	role="switch"
+	@keydown.enter.native="$event.target.click()"
+	@keydown.space.native="$event.target.click()"
       /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
     </div>
     <bootstrap-table
