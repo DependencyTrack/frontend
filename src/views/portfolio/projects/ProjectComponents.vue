@@ -321,7 +321,7 @@ export default {
         {
           title: this.$t('message.version'),
           field: 'version',
-          sortable: true,
+          sortable: false,
           visible: initialColumnVisible('version'),
           formatter: (value, row) => {
             const latest =
@@ -392,7 +392,7 @@ export default {
         {
           title: this.$t('message.classifier'),
           field: 'classifier',
-          sortable: true,
+          sortable: false,
           visible: initialColumnVisible('classifier'),
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
