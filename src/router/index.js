@@ -1054,6 +1054,7 @@ function configRoutes() {
             },
             {
               path: 'workflows/runs',
+              name: 'WorkflowRunList',
               component: WorkflowRunList,
               meta: {
                 title: i18n.t('admin.workflow_runs'),

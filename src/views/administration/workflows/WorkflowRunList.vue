@@ -223,6 +223,13 @@ export default {
       ],
     };
   },
+  created() {
+    const q = this.$route.query.label;
+    if (typeof q === 'string' && q.includes('=')) {
+      const eq = q.indexOf('=');
+      this.labelFilter = { key: q.slice(0, eq), value: q.slice(eq + 1) };
+    }
+  },
   computed: {
     allFilterDefs() {
       return [

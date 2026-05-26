@@ -43,14 +43,32 @@
                 <dt>{{ $t('admin.concurrency_key') }}</dt>
                 <dd>{{ run.concurrency_key }}</dd>
               </template>
+              <template v-if="run.parent_id">
+                <dt>{{ $t('admin.workflow_parent_run') }}</dt>
+                <dd>
+                  <router-link
+                    :to="{
+                      name: 'WorkflowRunDetail',
+                      params: { id: run.parent_id },
+                    }"
+                  >
+                    {{ run.parent_id }}
+                  </router-link>
+                </dd>
+              </template>
               <template v-if="run.labels && Object.keys(run.labels).length">
                 <dt>{{ $t('admin.labels') }}</dt>
                 <dd>
-                  <span
+                  <router-link
                     v-for="(val, key) in run.labels"
                     :key="key"
-                    class="badge badge-info mr-1"
-                    >{{ key }}={{ val }}</span
+                    :to="{
+                      name: 'WorkflowRunList',
+                      query: { label: `${key}=${val}` },
+                    }"
+                    class="badge badge-info label-badge mr-1 mb-1"
+                    :title="`${key}=${val}`"
+                    >{{ key }}={{ val }}</router-link
                   >
                 </dd>
               </template>
@@ -189,22 +207,34 @@
                 </template>
 
                 <template v-else-if="eventType(event) === 'childRunCreated'">
-                  <div v-if="event.event.childRunCreated.childRunId">
+                  <div v-if="event.event.childRunCreated.id">
                     <strong>{{ $t('admin.workflow_child_run') }}:</strong>
                     <router-link
                       :to="{
                         name: 'WorkflowRunDetail',
-                        params: {
-                          id: event.event.childRunCreated.childRunId,
-                        },
+                        params: { id: event.event.childRunCreated.id },
                       }"
                     >
-                      {{ event.event.childRunCreated.childRunId }}
+                      {{ event.event.childRunCreated.id }}
                     </router-link>
                   </div>
                   <div v-if="event.event.childRunCreated.workflowName">
                     <strong>{{ $t('admin.workflow') }}:</strong>
                     {{ event.event.childRunCreated.workflowName }}
+                  </div>
+                  <div v-if="event.event.childRunCreated.queueName">
+                    <strong>{{ $t('admin.queue') }}:</strong>
+                    {{ event.event.childRunCreated.queueName }}
+                  </div>
+                  <div
+                    v-if="event.event.childRunCreated.priority !== undefined"
+                  >
+                    <strong>{{ $t('admin.priority') }}:</strong>
+                    {{ event.event.childRunCreated.priority }}
+                  </div>
+                  <div v-if="event.event.childRunCreated.concurrencyKey">
+                    <strong>{{ $t('admin.concurrency_key') }}:</strong>
+                    {{ event.event.childRunCreated.concurrencyKey }}
                   </div>
                 </template>
 
@@ -406,6 +436,17 @@ export default {
   },
   beforeDestroy() {
     this.stopPolling();
+  },
+  watch: {
+    id() {
+      this.stopPolling();
+      this.run = null;
+      this.events = [];
+      this.nextPageToken = null;
+      this.maxSeqNum = 0;
+      this.fetchRun();
+      this.fetchEvents();
+    },
   },
   methods: {
     async fetchRun() {
@@ -633,6 +674,16 @@ export default {
 
 .run-details dd {
   margin-bottom: 0.5rem;
+}
+
+.label-badge {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  cursor: pointer;
 }
 </style>
 
