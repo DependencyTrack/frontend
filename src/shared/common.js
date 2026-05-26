@@ -187,6 +187,9 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
       case 'NVD':
         analyzerUrl = 'https://nvd.nist.gov/vuln/detail/' + vulnId;
         break;
+      case 'OSV':
+        analyzerUrl = 'https://osv.dev/vulnerability/' + vulnId;
+        break;
     }
   }
 
