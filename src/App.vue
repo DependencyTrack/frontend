@@ -101,19 +101,27 @@ export default {
     }
 
     this.axios.interceptors.response.use(null, (error) => {
+      if (!error.response) {
+        this.$toastr.e(
+          this.$t('condition.unsuccessful_action'),
+          this.$t('condition.http_request_error'),
+        );
+        return Promise.reject(error);
+      }
+      const contentType =
+        (error.response.headers && error.response.headers['content-type']) ||
+        '';
       // On error status codes (4xx - 5xx), display a toast with either:
       //  * The problem title and detail in case of an RFC 9457 response
       //  * the HTTP status code and text
       if (error.response.status >= 400 && error.response.status < 500) {
-        if (
-          error.response.headers['content-type'] === 'application/problem+json'
-        ) {
+        if (contentType.includes('application/problem+json')) {
           this.$toastr.w(error.response.data.detail, error.response.data.title);
         } else if (
           error.response.status === 400 &&
-          error.response.headers['content-type'] === 'application/json' &&
-          error.response.data &&
+          contentType.includes('application/json') &&
           Array.isArray(error.response.data) &&
+          error.response.data.length > 0 &&
           error.response.data[0].hasOwnProperty('invalidValue')
         ) {
           let validationError = error.response.data
@@ -130,9 +138,7 @@ export default {
           );
         }
       } else {
-        if (
-          error.response.headers['content-type'] === 'application/problem+json'
-        ) {
+        if (contentType.includes('application/problem+json')) {
           this.$toastr.w(error.response.data.detail, error.response.data.title);
         } else {
           this.$toastr.e(

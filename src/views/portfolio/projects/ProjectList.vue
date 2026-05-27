@@ -45,7 +45,7 @@
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
-    <project-create-project-modal v-on:refreshTable="refreshTable" />
+    <project-create-project-modal />
   </div>
 </template>
 

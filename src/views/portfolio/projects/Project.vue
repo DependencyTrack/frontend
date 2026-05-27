@@ -359,7 +359,7 @@
       </b-tab>
     </b-tabs>
     <project-details-modal
-      :project="cloneDeep(project)"
+      :project-input="project"
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
     />
