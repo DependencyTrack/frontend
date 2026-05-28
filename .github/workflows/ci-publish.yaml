@@ -41,8 +41,8 @@ jobs:
       publish-container: true
       ref-name: ${{ github.ref_name }}
     secrets:
-      registry-0-usr: ${{ secrets.HUB_USERNAME }}
-      registry-0-psw: ${{ secrets.HUB_ACCESS_TOKEN }}
+      registry-0-usr: ${{ secrets.DOCKER_HUB_USERNAME }}
+      registry-0-psw: ${{ secrets.DOCKER_HUB_TOKEN }}
 
   update-github-release:
     runs-on: ubuntu-latest
