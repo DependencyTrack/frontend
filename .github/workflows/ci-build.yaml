@@ -3,11 +3,11 @@ name: Build CI
 on:
   push:
     branches:
-      - 'master' # Default branch
+      - '4.14.x' # Release branch
       - 'feature-**' # Feature branches
   pull_request:
     branches:
-      - 'master' # Default branch
+      - '4.14.x' # Release branch
       - 'feature-**' # Feature branches
   workflow_dispatch:
 
@@ -17,8 +17,8 @@ jobs:
   call-build:
     uses: ./.github/workflows/_meta-build.yaml
     with:
-      app-version: 'snapshot'
-      publish-container: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'feature-') }}
+      app-version: '4-snapshot'
+      publish-container: ${{ github.ref_name == '4.14.x' || startsWith(github.ref_name, 'feature-') }}
       ref-name: ${{ github.ref_name }}
     secrets:
       registry-0-usr: ${{ secrets.HUB_USERNAME }}
