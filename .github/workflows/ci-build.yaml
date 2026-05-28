@@ -10,14 +10,40 @@ on:
       - 'main' # Default branch
       - 'feature-**' # Feature branches
   workflow_dispatch:
+    inputs:
+      app-version:
+        type: string
+        required: false
+        default: ''
+        description: 'Override the derived app-version (e.g. 5.0.0 or 5.0.0-rc.1). Leave empty to use the derived snapshot tag (e.g. 5-snapshot).'
 
 permissions: {}
 
 jobs:
+  read-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      major: ${{ steps.parse.outputs.major }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # tag=v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Parse Version from package.json
+        id: parse
+        run: |-
+          VERSION=$(jq -r '.version' package.json)
+          MAJOR="${VERSION%%.*}"
+          echo "major=${MAJOR}" >> "$GITHUB_OUTPUT"
+
   call-build:
+    needs:
+      - read-version
     uses: ./.github/workflows/_meta-build.yaml
     with:
-      app-version: 'snapshot'
+      app-version: ${{ inputs.app-version || format('{0}-snapshot', needs.read-version.outputs.major) }}
       publish-container: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'feature-') }}
       ref-name: ${{ github.ref_name }}
     permissions:
