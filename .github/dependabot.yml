@@ -29,10 +29,10 @@ updates:
     cooldown:
       default-days: 7
     ignore:
-    - dependency-name: "*"
-      update-types:
-      - version-update:semver-major
-      - version-update:semver-minor
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
   - package-ecosystem: docker
     target-branch: 4.14.x
     directory: /docker
@@ -41,9 +41,9 @@ updates:
     cooldown:
       default-days: 7
     ignore:
-    - dependency-name: "*"
-      update-types:
-      - version-update:semver-major
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
   - package-ecosystem: github-actions
     target-branch: 4.14.x
     directory: /
