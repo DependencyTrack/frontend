@@ -7,7 +7,7 @@
 - Node.js 20+
 - npm 9+
 - Docker or Podman (for [container image builds](#container-image))
-- A running [API server](https://github.com/DependencyTrack/hyades-apiserver)
+- A running [API server](https://github.com/DependencyTrack/dependency-track)
 
 ## Core Technologies
 

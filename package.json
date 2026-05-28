@@ -1,6 +1,6 @@
 {
   "name": "@dependencytrack/frontend",
-  "version": "5.7.0-alpha.9",
+  "version": "5.0.0-rc.0",
   "description": "Single Page Application for OWASP Dependency-Track",
   "author": "Steve Springett",
   "homepage": "https://dependencytrack.org/",
