@@ -6,7 +6,7 @@ on:
       app-version:
         type: string
         required: false
-        default: 'snapshot'
+        default: '4-snapshot'
         description: 'Set the version that should be set/used as tag for the container image'
       publish-container:
         type: boolean
@@ -100,7 +100,7 @@ jobs:
             TAGS="${IMAGE_NAME}:${REF_NAME,,}"
           else
             TAGS="${IMAGE_NAME}:${APP_VERSION}"
-            if [[ "${APP_VERSION}" != "snapshot" ]]; then
+            if [[ "${APP_VERSION}" != *-* ]]; then
               TAGS="${TAGS},${IMAGE_NAME}:latest"
             fi
           fi

@@ -2,11 +2,11 @@ name: Lint
 on:
   push:
     branches:
-      - 'master' # Default branch
+      - '4.14.x' # Release branch
       - 'feature-**' # Feature branches
   pull_request:
     branches:
-      - 'master' # Default branch
+      - '4.14.x' # Release branch
       - 'feature-**' # Feature branches
 
 permissions: {}
