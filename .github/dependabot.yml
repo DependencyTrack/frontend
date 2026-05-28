@@ -21,3 +21,33 @@ updates:
     cooldown:
       default-days: 7
       semver-major-days: 7
+  - package-ecosystem: npm
+    target-branch: 4.14.x
+    directory: /
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 7
+    ignore:
+    - dependency-name: "*"
+      update-types:
+      - version-update:semver-major
+      - version-update:semver-minor
+  - package-ecosystem: docker
+    target-branch: 4.14.x
+    directory: /docker
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 7
+    ignore:
+    - dependency-name: "*"
+      update-types:
+      - version-update:semver-major
+  - package-ecosystem: github-actions
+    target-branch: 4.14.x
+    directory: /
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 7
