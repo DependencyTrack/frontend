@@ -567,6 +567,7 @@
     "deprecated": "Deprecato",
     "description": "Descrizione",
     "details": "Dettagli",
+    "direct": "Diretto",
     "direct_only": "Solo diretto",
     "direction": "Direzione",
     "download_bom": "Scarica distinta base",

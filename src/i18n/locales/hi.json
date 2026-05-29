@@ -567,6 +567,7 @@
     "deprecated": "पदावनत",
     "description": "विवरण",
     "details": "विवरण",
+    "direct": "प्रत्यक्ष",
     "direct_only": "केवल प्रत्यक्ष",
     "direction": "दिशा",
     "download_bom": "BOM डाउनलोड करें",

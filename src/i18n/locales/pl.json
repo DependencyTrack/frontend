@@ -567,6 +567,7 @@
     "deprecated": "Przestarzałe",
     "description": "Opis",
     "details": "Detale",
+    "direct": "Bezpośredni",
     "direct_only": "Tylko bezpośrednie",
     "direction": "Kierunek",
     "download_bom": "Pobierz BOM",

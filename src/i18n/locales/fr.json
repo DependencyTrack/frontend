@@ -567,6 +567,7 @@
     "deprecated": "Dépréciée",
     "description": "Description",
     "details": "Détails",
+    "direct": "Direct",
     "direct_only": "Direct uniquement",
     "direction": "Direction",
     "download_bom": "Télécharger la nomenclature",

@@ -167,7 +167,8 @@ const COLUMN_DEFAULT_VISIBILITY = {
   group: true,
   classifier: false,
   scope: false,
-  is_internal: true,
+  internal: true,
+  direct: true,
   'hash_verification.status': false,
   license: true,
   occurrence_count: false,
@@ -409,9 +410,20 @@ export default {
         },
         {
           title: this.$t('message.internal'),
-          field: 'is_internal',
+          field: 'internal',
           sortable: false,
-          visible: initialColumnVisible('is_internal'),
+          visible: initialColumnVisible('internal'),
+          align: 'center',
+          class: 'tight',
+          formatter(value) {
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+          },
+        },
+        {
+          title: this.$t('message.direct'),
+          field: 'direct',
+          sortable: false,
+          visible: initialColumnVisible('direct'),
           align: 'center',
           class: 'tight',
           formatter(value) {
@@ -667,7 +679,8 @@ export default {
         'name',
         'version',
         'group',
-        'is_internal',
+        'internal',
+        'direct',
         'resolved_license.license_id',
         'last_inherited_risk_score',
         'metrics.vulnerabilities',

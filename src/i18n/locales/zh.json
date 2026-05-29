@@ -567,6 +567,7 @@
     "deprecated": "已弃用",
     "description": "描述",
     "details": "详情",
+    "direct": "直接的",
     "direct_only": "仅直接依赖",
     "direction": "方向",
     "download_bom": "下载 BOM",
