@@ -51,7 +51,7 @@
                         </span>
                         <b-dropdown-group
                           v-if="inactiveProjectVersions.length > 0"
-                          header="$t('message.inactive_versions')"
+                          :header="$t('message.inactive_versions')"
                         >
                           <span
                             v-for="projectVersion in inactiveProjectVersions"
