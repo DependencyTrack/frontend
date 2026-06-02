@@ -1,9 +1,12 @@
 .editorconfig
 .git/
 .github/
+AGENTS.md
+CLAUDE.md
 CODE_OF_CONDUCT.md
 LICENSE
 README.md
+RELEASING.md
 SECURITY.md
 docker/
 docs/

@@ -1,34 +1,32 @@
-# Releasing the OWASP Dependency-Track Frontend
+# Releasing OWASP Dependency-Track Frontend
 
-This document describes the process of releasing a new version of the Dependency-Track Frontend via GitHub Actions.
+This document describes the process of releasing a new version of the Dependency-Track Frontend.
 
 ## Releasing
 
-### Release a new major of minor version
+### Stable Version
 
-1. Ensure the current state in `master` is ready to be released
-2. Head over to the _Actions_ tab in GitHub
-3. Select the _Release CI_ entry in the _Workflows_ section
-4. The following UI element will have a button to trigger the workflow. Once clicked, the Use workflow from dialog will appear:
+To release a new stable version such as `5.1.0`:
 
-![Create a release from `master`](./.github/images/release-master.png)
+1. Ensure the current state in the target branch is ready to be released.
+2. Navigate to the [Release CI] workflow.
+3. Run the workflow with the following parameters:
 
-5. Ensure that `master` is selected in the branch dropdown
-6. For the part of the version to bump, select either `major` or `minor` (see [Semantic Versioning](https://semver.org/))
-7. Finally, once all inputs are checked press the _Run Workflow_ button
-8. **Manually** create a release branch by selecting `master` in the branch dropdown and entering the branch name:
+- **Branch**: Select the branch to release from (e.g. `main` for new releases, `5.1.x` for bugfixes).
+- **Release version**: Specify a custom version (e.g. `5.1.0`), or leave empty to use NPM's version bumping.
+- **Version bump type**: Select the bump type (e.g. `minor` to bump `5.0.0` to `5.1.0`). Ignored when _Release version_ was specified.
+- **Dry run**: Enable to test the release process without making any changes.
 
-![Create a release branch](./.github/images/release-branch.png)
+### Release Candidate
 
-### Release a new bugfix version
+To release a prerelease such as `5.2.0-rc.1`:
 
-1. Ensure the current state in the release branch is ready to be released
-2. Head over to the _Actions_ tab in GitHub
-3. Select the _Release CI_ entry in the _Workflows_ section
-4. The following UI element will have a button to trigger the workflow. Once clicked, the Use workflow from dialog will appear:
+1. Ensure the current state in the target branch is ready to be released.
+2. Navigate to the [Release CI] workflow.
+3. Run the workflow with the following parameters:
 
-![Create a release from a release branch](./.github/images/release-releasebranch.png)
+- **Branch**: Select the branch (usually `main`).
+- **Release version**: Enter the prerelease version (e.g. `5.2.0-rc.1`).
+- **Version bump type**: Leave empty.
 
-5. Ensure that a release branch (e.g. `4.6.x`) is selected in the branch dropdown
-6. For the part of the version to bump, select `patch` (see [Semantic Versioning](https://semver.org/))
-7. Finally, once all inputs are checked press the _Run Workflow_ button
+[Release CI]: https://github.com/DependencyTrack/frontend/actions/workflows/ci-release.yaml

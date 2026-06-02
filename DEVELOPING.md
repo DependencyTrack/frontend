@@ -4,8 +4,8 @@
 
 ## Prerequisites
 
-- Node.js 20+
-- npm 9+
+- Node.js 22+
+- npm 10+
 - Docker or Podman (for [container image builds](#container-image))
 - A running [API server](https://github.com/DependencyTrack/dependency-track)
 
