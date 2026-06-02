@@ -281,9 +281,9 @@ export default {
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
       if (this.showSuppressedFindings === undefined) {
-        url += '?source=NVD&suppressed=false';
+        url += '?suppressed=false';
       } else {
-        url += '?source=NVD&suppressed=' + this.showSuppressedFindings;
+        url += '?suppressed=' + this.showSuppressedFindings;
       }
       return url;
     },
