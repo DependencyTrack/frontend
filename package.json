@@ -34,7 +34,7 @@
     "@coreui/icons": "0.4.1",
     "@coreui/vue": "2.1.2",
     "@johmun/vue-tags-input": "2.1.0",
-    "ajv": "8.18.0",
+    "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "axios": "1.16.1",
     "bootstrap": "4.6.2",
