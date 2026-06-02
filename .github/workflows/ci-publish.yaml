@@ -26,6 +26,7 @@ permissions: {}
 
 jobs:
   read-version:
+    name: Read Version
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -50,6 +51,7 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
   call-build:
+    name: Build
     needs:
       - read-version
     uses: ./.github/workflows/_meta-build.yaml
@@ -64,6 +66,7 @@ jobs:
       registry-0-psw: ${{ github.repository_owner == 'DependencyTrack' && secrets.BOT_IMAGE_PUSH_TOKEN || secrets.GITHUB_TOKEN }}
 
   update-github-release:
+    name: Update GitHub Release
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

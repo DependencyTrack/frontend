@@ -21,6 +21,7 @@ permissions: {}
 
 jobs:
   read-version:
+    name: Read Version
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -39,6 +40,7 @@ jobs:
           echo "major=${MAJOR}" >> "$GITHUB_OUTPUT"
 
   call-build:
+    name: Build
     needs:
       - read-version
     uses: ./.github/workflows/_meta-build.yaml
