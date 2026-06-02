@@ -40,6 +40,7 @@ on:
 
 jobs:
   build-node:
+    name: Build JavaScript
     runs-on: ubuntu-latest
 
     steps:
@@ -70,6 +71,7 @@ jobs:
             bom.*
 
   build-container:
+    name: Build Container
     runs-on: ubuntu-latest
     permissions:
       packages: write # Required to push images to ghcr.io
