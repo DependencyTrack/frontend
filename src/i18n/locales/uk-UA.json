@@ -567,7 +567,7 @@
     "deprecated": "Застарілий",
     "description": "Опис",
     "details": "Деталі",
-    "direct": "Прямий",
+    "direct_dependency": "Пряма залежність",
     "direct_only": "Тільки прямі",
     "direction": "Напрямок",
     "download_bom": "Завантажити BOM",

@@ -567,7 +567,7 @@
     "deprecated": "Устаревший",
     "description": "Описание",
     "details": "Детали",
-    "direct": "Прямой",
+    "direct_dependency": "Прямая зависимость",
     "direct_only": "Только прямые",
     "direction": "Направление",
     "download_bom": "Скачать BOM",

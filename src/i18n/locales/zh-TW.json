@@ -567,7 +567,7 @@
     "deprecated": "已棄用",
     "description": "描述",
     "details": "詳細資訊",
-    "direct": "直接的",
+    "direct_dependency": "直接依賴",
     "direct_only": "僅限直接",
     "direction": "方向",
     "download_bom": "下載 BOM",
