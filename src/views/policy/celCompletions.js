@@ -53,6 +53,7 @@ const TYPES = {
     resolved_license: 'License',
     published_at: 'Timestamp',
     latest_version: 'string',
+    latest_version_published_at: 'Timestamp',
     package_artifact_md5: 'string',
     package_artifact_sha1: 'string',
     package_artifact_sha256: 'string',
