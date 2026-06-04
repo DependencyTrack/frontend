@@ -148,8 +148,10 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import Vue from 'vue';
 import common from '../../../shared/common';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import xssFilters from 'xss-filters';
@@ -159,6 +161,13 @@ import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import HashFilterPill from '@/views/components/HashFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
+import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
+
+const EXPAND_BY_COLUMN = {
+  metrics: 'metrics',
+  'package_artifact_metadata.published_at': 'package_artifact_metadata',
+  'hash_verification.status': 'package_artifact_metadata',
+};
 
 const COLUMN_DEFAULT_VISIBILITY = {
   name: true,
@@ -172,6 +181,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'project.name': true,
   'resolved_license.license_id': false,
   'package_artifact_metadata.published_at': false,
+  'hash_verification.status': false,
   last_inherited_risk_score: false,
   metrics: false,
 };
@@ -191,7 +201,7 @@ function initialColumnVisible(field) {
 }
 
 export default {
-  mixins: [permissionsMixin, filterPillsMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, filterPillsMixin],
   components: {
     TokenPaginatedTable,
     TextFilterPill,
@@ -201,16 +211,16 @@ export default {
   },
   beforeMount() {
     const q = this.$route.query;
-    if (q.group)
+    if (q.group_contains)
       this.groupFilter = { operator: 'contains', value: q.group_contains };
-    if (q.name)
+    if (q.name_contains)
       this.nameFilter = { operator: 'contains', value: q.name_contains };
-    if (q.version)
+    if (q.version_contains)
       this.versionFilter = { operator: 'contains', value: q.version_contains };
-    if (q.purl)
+    if (q.purl_prefix)
       this.purlFilter = { operator: 'starts_with', value: q.purl_prefix };
     if (q.cpe) this.cpeFilter = { operator: 'equals', value: q.cpe };
-    if (q.swid_tag_id)
+    if (q.swid_tag_id_contains)
       this.swidTagIdFilter = {
         operator: 'contains',
         value: q.swid_tag_id_contains,
@@ -296,6 +306,11 @@ export default {
     onVisibleColumns(fields) {
       this.visibleColumns = fields;
     },
+    initializeTooltips() {
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover',
+      });
+    },
     syncQueryParams() {
       const query = this.buildUrlQueryParams();
       const currentQuery = this.$route.query;
@@ -368,10 +383,8 @@ export default {
     extraQueryParams() {
       const expand = new Set();
       for (const field of this.visibleColumns) {
-        if (field === 'metrics') {
-          expand.add('metrics');
-        } else if (field === 'package_artifact_metadata.published_at') {
-          expand.add('package_artifact_metadata');
+        if (EXPAND_BY_COLUMN[field]) {
+          expand.add(EXPAND_BY_COLUMN[field]);
         }
       }
       if (expand.size === 0) {
@@ -543,6 +556,11 @@ export default {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
           },
         },
+        buildHashVerificationColumn({
+          $t: this.$t.bind(this),
+          vueFormatter: this.vueFormatter,
+          visible: initialColumnVisible('hash_verification.status'),
+        }),
         {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
@@ -590,6 +608,10 @@ export default {
         sortName: 'name',
         sortOrder: 'asc',
         customSort: () => {},
+        onPostBody: () => {
+          this.vueFormatterInit();
+          this.initializeTooltips();
+        },
         onSort: (name, order) => {
           this.sortBy = name;
           this.sortDirection = order;
