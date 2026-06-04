@@ -34,6 +34,12 @@ User-facing documentation is rendered at [dependencytrack.github.io/docs/next](h
 1. [Code of conduct](CODE_OF_CONDUCT.md)
 2. [Developer guide](DEVELOPING.md)
 
+## Community
+
+Dependency-Track is an open source project maintained by a community of contributors.
+Join the [monthly community meeting](https://github.com/DependencyTrack/community#community-meetings)
+to hear project updates, ask questions, and meet other users and maintainers.
+
 ## See also
 
 - [dependency-track](https://github.com/DependencyTrack/dependency-track): Main repository
