@@ -612,12 +612,14 @@
       "modal_title": null,
       "no_common_algorithm": null,
       "no_component_hash_explanation": null,
+      "no_repository_hash_explanation": null,
       "passed_explanation": null,
       "repository_hash": null,
       "resolved_from": null,
       "status": {
         "failed": null,
         "no_component_hash": null,
+        "no_repository_hash": null,
         "passed": null,
         "unknown": null
       }

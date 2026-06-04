@@ -612,12 +612,14 @@
       "modal_title": "Hash verification",
       "no_common_algorithm": "The component and the repository artifact have no hash algorithms in common, so verification could not be performed.",
       "no_component_hash_explanation": "The component has no recorded hashes, so verification could not be performed.",
+      "no_repository_hash_explanation": "No repository hashes are available for this component, so verification could not be performed.",
       "passed_explanation": "Every shared hash algorithm produced identical values for the component and the artifact resolved from the repository, indicating that the component matches what the repository published.",
       "repository_hash": "Repository hash",
       "resolved_from": "Resolved from",
       "status": {
         "failed": "Hash mismatch",
         "no_component_hash": "No component hash recorded",
+        "no_repository_hash": "No repository hashes available",
         "passed": "Hashes match",
         "unknown": "Hash verification unavailable"
       }

@@ -131,7 +131,6 @@
 <script>
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
-import HashVerificationModal from '@/views/components/HashVerificationModal.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
 import ProjectUploadBomModal from '@/views/portfolio/projects/ProjectUploadBomModal';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
@@ -145,10 +144,7 @@ import SeverityProgressBar from '../../components/SeverityProgressBar';
 import { get } from 'lodash-es';
 import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
-import {
-  computeHashVerificationStatus,
-  getHashVerificationStatusInfo,
-} from '@/shared/hashVerificationStatus';
+import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
 
 const EXPAND_BY_COLUMN = {
   metrics: 'metrics',
@@ -418,72 +414,11 @@ export default {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
-        {
-          title: this.$t('message.integrity'),
-          field: 'hash_verification.status',
-          sortable: false,
+        buildHashVerificationColumn({
+          $t: this.$t.bind(this),
+          vueFormatter: this.vueFormatter,
           visible: initialColumnVisible('hash_verification.status'),
-          formatter: (_, row, index) => {
-            const artifact = row.package_artifact_metadata;
-            const repoHashes = artifact && artifact.hashes;
-            const repoIdentifier = (artifact && artifact.resolved_from) || null;
-            const status = computeHashVerificationStatus(
-              row.hashes,
-              repoHashes,
-            );
-            if (!status) {
-              return '';
-            }
-            const info = getHashVerificationStatusInfo(status);
-            const isClickable = status === 'PASSED' || status === 'FAILED';
-            const tooltipTitle = this.hashStatusLabel(status);
-            return this.vueFormatter({
-              i18n,
-              components: { HashVerificationModal },
-              template: `
-                <div>
-                  <b-link
-                    v-if="isClickable"
-                    v-b-modal="\`hashVerificationModal-${index}\`"
-                    class="hash-verification-trigger"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    :title="tooltipTitle"
-                  >
-                    <i :class="['fa', iconClass, colorClass]" aria-hidden="true"></i>
-                  </b-link>
-                  <span
-                    v-else
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    :title="tooltipTitle"
-                  >
-                    <i :class="['fa', iconClass, colorClass]" aria-hidden="true"></i>
-                  </span>
-                  <hash-verification-modal
-                    v-if="isClickable"
-                    :modal-id="\`hashVerificationModal-${index}\`"
-                    :status="status"
-                    :component-hashes="componentHashes"
-                    :repository-hashes="repositoryHashes"
-                    :repository-identifier="repositoryIdentifier"
-                  />
-                </div>`,
-              data() {
-                return {
-                  status,
-                  isClickable,
-                  iconClass: info.icon,
-                  colorClass: info.color,
-                  tooltipTitle,
-                  componentHashes: row.hashes || {},
-                  repositoryHashes: repoHashes || {},
-                  repositoryIdentifier: repoIdentifier,
-                };
-              },
-            });
-          },
-        },
+        }),
         {
           title: this.$t('message.license'),
           field: 'license',
@@ -574,20 +509,6 @@ export default {
           },
         },
       ];
-    },
-    hashStatusLabel(status) {
-      switch (status) {
-        case 'PASSED':
-          return this.$t('message.hash_verification.status.passed');
-        case 'FAILED':
-          return this.$t('message.hash_verification.status.failed');
-        case 'UNKNOWN':
-          return this.$t('message.hash_verification.status.unknown');
-        case 'NO_COMPONENT_HASH':
-          return this.$t('message.hash_verification.status.no_component_hash');
-        default:
-          return '';
-      }
     },
     initializeTooltips() {
       $('[data-toggle="tooltip"]').tooltip({
@@ -730,16 +651,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.hash-verification-trigger {
-  display: inline-block;
-  padding-bottom: 2px;
-  border-bottom: 1px dashed currentColor;
-  line-height: 1;
-}
-.hash-verification-trigger:hover {
-  text-decoration: none;
-  border-bottom-style: solid;
-}
-</style>
