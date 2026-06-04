@@ -12,7 +12,7 @@
                 <b-col class="text-nowrap" md="auto">
                   {{ project.name }}
                   <ol
-                    v-if="project.version"
+                    v-if="project.uuid"
                     style="
                       display: inline-block;
                       margin: 0;
@@ -27,26 +27,78 @@
                         role="button"
                         aria-haspopup="true"
                         aria-expanded="false"
+                        v-b-tooltip.hover
+                        :title="$t('message.switch_version')"
+                        class="version-dropdown-toggle badge badge-pill border"
+                        ><i class="fa fa-caret-down" aria-hidden="true"></i
+                        ><span
+                          class="ml-1"
+                          :class="{
+                            'text-muted font-italic': !project.version,
+                          }"
+                          >{{
+                            project.version || $t('message.no_version')
+                          }}</span
                         ><i
-                          class="fa fa-caret-down"
+                          v-if="project.isLatest"
+                          class="fa fa-star text-warning ml-1"
                           aria-hidden="true"
-                          style="
-                            padding-left: 10px;
-                            padding-right: 10px;
-                            padding-top: 3px;
-                            padding-bottom: 3px;
-                          "
                         ></i
-                      ></a>
+                        ><span
+                          v-if="versionCount > 1"
+                          class="version-count border-left"
+                          >{{ versionCount }}</span
+                        ></a
+                      >
                       <ul class="dropdown-menu">
-                        <span v-for="projectVersion in activeProjectVersions">
+                        <b-dropdown-item
+                          href="#"
+                          v-permission:or="[
+                            PERMISSIONS.PORTFOLIO_MANAGEMENT,
+                            PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
+                          ]"
+                          @click.prevent="
+                            $root.$emit(
+                              'bv::show::modal',
+                              'projectAddVersionModal',
+                            )
+                          "
+                        >
+                          <i
+                            class="fa fa-plus mr-1 add-version-icon"
+                            aria-hidden="true"
+                          ></i
+                          >{{ $t('message.add_version') }}
+                        </b-dropdown-item>
+                        <b-dropdown-divider
+                          v-permission:or="[
+                            PERMISSIONS.PORTFOLIO_MANAGEMENT,
+                            PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
+                          ]"
+                        />
+                        <span
+                          v-for="projectVersion in activeProjectVersions"
+                          :key="projectVersion.uuid"
+                        >
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
                               params: { uuid: projectVersion.uuid },
                             }"
                           >
-                            {{ projectVersion.version }}
+                            <span v-if="projectVersion.version">{{
+                              projectVersion.version
+                            }}</span>
+                            <span v-else class="text-muted font-italic">{{
+                              $t('message.no_version')
+                            }}</span>
+                            <i
+                              v-if="projectVersion.isLatest"
+                              class="fa fa-star text-warning ml-1"
+                              aria-hidden="true"
+                              v-b-tooltip.hover
+                              :title="$t('message.latest_version')"
+                            ></i>
                           </b-dropdown-item>
                         </span>
                         <b-dropdown-group
@@ -55,6 +107,7 @@
                         >
                           <span
                             v-for="projectVersion in inactiveProjectVersions"
+                            :key="projectVersion.uuid"
                           >
                             <b-dropdown-item
                               :to="{
@@ -62,14 +115,25 @@
                                 params: { uuid: projectVersion.uuid },
                               }"
                             >
-                              {{ projectVersion.version }}
+                              <span v-if="projectVersion.version">{{
+                                projectVersion.version
+                              }}</span>
+                              <span v-else class="text-muted font-italic">{{
+                                $t('message.no_version')
+                              }}</span>
+                              <i
+                                v-if="projectVersion.isLatest"
+                                class="fa fa-star text-warning ml-1"
+                                aria-hidden="true"
+                                v-b-tooltip.hover
+                                :title="$t('message.latest_version')"
+                              ></i>
                             </b-dropdown-item>
                           </span>
                         </b-dropdown-group>
                       </ul>
                     </li>
                   </ol>
-                  {{ project.version }}
                   <i
                     v-if="isCollectionProject"
                     class="fa fa-calculator fa-fw collectionlogic-icon"
@@ -80,9 +144,6 @@
                 </b-col>
                 <b-badge v-if="!this.project.active" :variant="'tab-warn'">
                   {{ $t('message.inactive').toUpperCase() }}
-                </b-badge>
-                <b-badge v-if="this.project.isLatest" :variant="'tab-info'">
-                  {{ $t('message.latest_version').toUpperCase() }}
                 </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
@@ -422,10 +483,15 @@ export default {
       }
     },
     activeProjectVersions() {
-      return this.project.versions.filter((version) => version.active);
+      return (this.project.versions || []).filter((version) => version.active);
     },
     inactiveProjectVersions() {
-      return this.project.versions.filter((version) => !version.active);
+      return (this.project.versions || []).filter((version) => !version.active);
+    },
+    versionCount() {
+      return this.project.versions && this.project.versions.length > 0
+        ? this.project.versions.length
+        : 1;
     },
     isCollectionProject: function () {
       return !!this.project.collectionLogic;
@@ -635,5 +701,28 @@ export default {
 .dropdown-menu {
   max-height: 30rem;
   overflow-y: auto;
+}
+.add-version-icon {
+  color: inherit !important;
+}
+.version-dropdown-toggle.badge {
+  padding: 0.3em 0.6em;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  color: inherit;
+  background-color: transparent;
+}
+.version-dropdown-toggle.badge:hover {
+  color: inherit;
+}
+.version-dropdown-toggle .fa-caret-down {
+  transition: transform 0.15s ease-in-out;
+}
+.version-dropdown-toggle[aria-expanded='true'] .fa-caret-down {
+  transform: rotate(180deg);
+}
+.version-count {
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
 }
 </style>
