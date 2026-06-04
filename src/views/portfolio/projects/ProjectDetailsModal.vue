@@ -564,17 +564,6 @@
       >
       <b-button
         size="md"
-        variant="outline-primary"
-        :disabled="isUpdating"
-        v-b-modal.projectAddVersionModal
-        v-permission:or="[
-          PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
-        ]"
-        >{{ $t('message.add_version') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="secondary"
         :disabled="isUpdating"
         @click="cancel()"
