@@ -151,7 +151,7 @@ export default {
                     <b-form-group :label="this.$t('message.conditions')">
                       <div class="list-group">
                         <span v-for="(condition, conditionIndex) in conditions">
-                          <policy-condition :policy="policy" :condition="condition" v-on:conditionRemoved="removeCondition(condition, conditionIndex, index)" />
+                          <policy-condition :policy="policy" :condition="condition" v-on:conditionRemoved="removeCondition(condition, conditionIndex)" />
                         </span>
                         <actionable-list-group-item v-permission:or="[PERMISSIONS.POLICY_MANAGEMENT, PERMISSIONS.POLICY_MANAGEMENT_UPDATE]" :add-icon="true" v-on:actionClicked="addCondition" />
                       </div>
@@ -249,7 +249,7 @@ export default {
                 }
                 this.conditions.push({});
               },
-              removeCondition: function (condition, conditionIndex, index) {
+              removeCondition: function (condition, conditionIndex) {
                 this.conditions = [];
                 this.refreshPolicy();
                 //this.conditions.splice(conditionIndex, 1);
