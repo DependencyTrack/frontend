@@ -66,7 +66,6 @@
   "devDependencies": {
     "@babel/core": "7.24.3",
     "@babel/eslint-parser": "7.24.1",
-    "@cyclonedx/cyclonedx-npm": "1.16.2",
     "@cyclonedx/webpack-plugin": "2.0.2",
     "@vue/babel-helper-vue-jsx-merge-props": "1.4.0",
     "@vue/babel-preset-jsx": "1.4.0",
@@ -100,7 +99,7 @@
     "not ie <= 10"
   ],
   "engines": {
-    "node": ">= 20",
-    "npm": ">= 9"
+    "node": ">= 22",
+    "npm": ">= 10"
   }
 }
