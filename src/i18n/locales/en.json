@@ -1057,6 +1057,8 @@
     "switch_version": "Switch version",
     "switch_view": "Cannot switch view while searching",
     "sync_status": "Sync Status",
+    "table_load_error": "Failed to load table data",
+    "table_sort_preference_reset": "Sorting by \"{field}\" is no longer supported. Stored preferences cleared. Reload to apply.",
     "tag_name": "Tag Name",
     "tag_unassigned_successfully": "Untagged successfully",
     "tags": "Tags",

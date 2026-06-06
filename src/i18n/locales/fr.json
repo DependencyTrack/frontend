@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "Impossible de changer de vue pendant la recherche",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "Nom de la tag",
     "tag_unassigned_successfully": "Détaché avec succès",
     "tags": "Tags",

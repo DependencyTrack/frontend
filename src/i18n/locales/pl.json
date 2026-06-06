@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "Nie można przełączyć widoku podczas wyszukiwania",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "Nazwa znacznika",
     "tag_unassigned_successfully": "Pomyślnie nieoznaczono",
     "tags": "Tagi",

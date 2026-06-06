@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "搜尋時無法切換檢視",
     "sync_status": "同步狀態",
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "標籤名稱",
     "tag_unassigned_successfully": "成功取消標籤",
     "tags": "標籤",
