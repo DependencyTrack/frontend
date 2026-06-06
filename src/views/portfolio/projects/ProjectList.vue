@@ -162,9 +162,10 @@ export default {
           });
         }
         this.$refs.table.getData().forEach((project) => {
-          if (project.fetchedChildren) {
+          if (project.fetchedChildren || project.checkedHasChildren) {
             return;
           }
+          project.checkedHasChildren = true;
 
           this.hasMatchingChildren(project).then((doesHaveMatchingChildren) => {
             if (doesHaveMatchingChildren) {
