@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "Não é possível mudar de visualização durante a pesquisa",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "Nome da etiqueta",
     "tag_unassigned_successfully": "Não marcado com sucesso",
     "tags": "Tag",

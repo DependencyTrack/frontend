@@ -7,6 +7,7 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
+import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
 import VueRouter from 'vue-router';
@@ -111,6 +112,15 @@ export default {
       const contentType =
         (error.response.headers && error.response.headers['content-type']) ||
         '';
+      // Suppress generic toast for problems with call site handler
+      // to avoid a duplicate notification.
+      if (
+        contentType.includes('application/problem+json') &&
+        error.response.data &&
+        error.response.data.type === INVALID_SORT_FIELD_PROBLEM_TYPE
+      ) {
+        return Promise.reject(error);
+      }
       // On error status codes (4xx - 5xx), display a toast with either:
       //  * The problem title and detail in case of an RFC 9457 response
       //  * the HTTP status code and text

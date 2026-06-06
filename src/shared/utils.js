@@ -1,5 +1,45 @@
 import common from '@/shared/common';
+import i18n from '@/i18n';
+import { INVALID_SORT_FIELD_PROBLEM_TYPE } from '@/shared/problemDetails';
 import flexVerCompare from 'flexver/dist/module';
+import Vue from 'vue';
+import xssFilters from 'xss-filters';
+
+export function handleTableLoadError(problem, { fallback = true } = {}) {
+  if (
+    problem &&
+    problem.type === INVALID_SORT_FIELD_PROBLEM_TYPE &&
+    (problem.invalidField || problem.invalid_field)
+  ) {
+    const staleField = problem.invalidField ?? problem.invalid_field;
+    // This clears every {ViewName}SortName whose value matches the rejected field.
+    // A different view may legitimately sort by the same field, but its pref is
+    // wiped too. Acceptable because the UI never offers an unsortable field, so
+    // reaching this branch already implies broken state (e.g. version upgrade).
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (
+        key &&
+        key.endsWith('SortName') &&
+        localStorage.getItem(key) === staleField
+      ) {
+        const prefix = key.slice(0, -'SortName'.length);
+        localStorage.removeItem(key);
+        localStorage.removeItem(prefix + 'SortOrder');
+      }
+    }
+    Vue.prototype.$toastr.w(
+      i18n.t('message.table_sort_preference_reset', {
+        field: xssFilters.inHTMLData(staleField),
+      }),
+    );
+    return true;
+  }
+  if (fallback) {
+    Vue.prototype.$toastr.e(i18n.t('message.table_load_error'));
+  }
+  return false;
+}
 
 export function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);

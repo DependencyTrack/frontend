@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "खोज करते समय दृश्य स्विच नहीं किया जा सकता",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "टैग नाम",
     "tag_unassigned_successfully": "सफलतापूर्वक अनटैग किया गया",
     "tags": "टैग",

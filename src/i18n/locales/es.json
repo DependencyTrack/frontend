@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "No se puede cambiar de vista durante la búsqueda",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "Nombre de etiqueta",
     "tag_unassigned_successfully": "Sin etiquetar con éxito",
     "tags": "Etiquetas",

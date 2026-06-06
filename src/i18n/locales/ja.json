@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "検索中にビューを切り替えることはできません",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "タグ名",
     "tag_unassigned_successfully": "タグが正常に解除されました",
     "tags": "タグ",

@@ -1057,6 +1057,8 @@
     "switch_version": null,
     "switch_view": "Невозможно переключить вид при поиске",
     "sync_status": null,
+    "table_load_error": null,
+    "table_sort_preference_reset": null,
     "tag_name": "Название тега",
     "tag_unassigned_successfully": "Тег успешно снят",
     "tags": "Теги",
