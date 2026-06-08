@@ -187,6 +187,19 @@
             }"
             :disabled="analysisState === null"
           />
+          <b-datepicker
+            v-model="suppressionExpiration"
+            type="date"
+            format="YYYY-MM-DD"
+            placeholder="Suppression Expiration"
+            :disabled="!isSuppressed"
+            :clearable="true"
+            @input="makeAnalysis"
+            :min="today"
+            style="margin-left: 2rem"
+            reset-button
+            close-button
+          />
         </b-input-group>
       </b-form-group>
       <b-row v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)">
@@ -278,6 +291,8 @@ export default {
       auditTrail: null,
       comment: null,
       isSuppressed: !!this.finding?.analysis?.isSuppressed,
+      suppressionExpiration: null,
+      today: this.getToday(),
       analysisChoices: [
         { value: 'NOT_SET', text: this.$t('message.not_set') },
         { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
@@ -345,6 +360,9 @@ export default {
   watch: {
     isSuppressed: function (currentValue, oldValue) {
       if (oldValue != null) {
+        if (!currentValue) {
+          this.suppressionExpiration = null;
+        }
         this.callRestEndpoint(
           this.analysisState,
           this.analysisJustification,
@@ -352,6 +370,7 @@ export default {
           null,
           null,
           currentValue,
+          currentValue ? this.suppressionExpiration : null,
         );
       }
     },
@@ -363,6 +382,26 @@ export default {
         vulnSource ? vulnSource : this.source,
         aliases,
       );
+    },
+    getToday() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = (today.getMonth() + 1).toString().padStart(2, '0');
+      const dd = today.getDate().toString().padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    },
+    convertTimestampToDateString(timestamp) {
+      if (!timestamp) return null;
+      const date = new Date(timestamp);
+      const yyyy = date.getFullYear();
+      const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+      const dd = date.getDate().toString().padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    },
+    convertDateStringToTimestamp(dateString) {
+      if (!dateString) return null;
+      const date = new Date(dateString + 'T00:00:00.000Z');
+      return date.getTime();
     },
     getAnalysis: function () {
       let queryString =
@@ -422,6 +461,13 @@ export default {
       } else {
         this.isSuppressed = false;
       }
+      if (
+        Object.prototype.hasOwnProperty.call(analysis, 'suppressionExpiration')
+      ) {
+        this.suppressionExpiration = analysis.suppressionExpiration
+          ? this.convertTimestampToDateString(analysis.suppressionExpiration)
+          : null;
+      }
     },
     makeAnalysis: function () {
       this.callRestEndpoint(
@@ -431,6 +477,7 @@ export default {
         this.analysisDetails,
         null,
         null,
+        this.suppressionExpiration,
       );
     },
     addComment: function () {
@@ -442,6 +489,7 @@ export default {
           this.analysisDetails,
           this.comment,
           null,
+          this.suppressionExpiration,
         );
       }
       this.comment = null;
@@ -453,8 +501,14 @@ export default {
       analysisDetails,
       comment,
       isSuppressed,
+      suppressionExpiration,
     ) {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
+
+      const suppressionExpirationTimestamp = this.convertDateStringToTimestamp(
+        suppressionExpiration,
+      );
+
       this.axios
         .put(url, {
           project: this.projectUuid,
@@ -466,6 +520,7 @@ export default {
           analysisDetails: analysisDetails,
           comment: comment,
           isSuppressed: isSuppressed,
+          suppressionExpiration: suppressionExpirationTimestamp,
         })
         .then((response) => {
           this.$toastr.s(this.$t('message.updated'));
