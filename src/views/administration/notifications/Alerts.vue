@@ -225,7 +225,6 @@ export default {
                           <div class="list-group-item"><b-form-checkbox value="ANALYZER">ANALYZER</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="REPOSITORY">REPOSITORY</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="USER_CREATED">USER_CREATED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="USER_DELETED">USER_DELETED</b-form-checkbox></div>
