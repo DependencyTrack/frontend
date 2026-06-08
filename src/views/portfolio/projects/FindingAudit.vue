@@ -129,6 +129,18 @@
     </b-col>
     <b-col sm="6">
       <b-form-group
+        v-if="policyAnnotations.length > 0"
+        id="fieldset-policy-annotations"
+        :label="this.$t('message.policy_annotations')"
+        label-for="policyAnnotationsField"
+      >
+        <policy-annotations-display
+          :annotations="policyAnnotations"
+          values-only
+          variant="danger"
+        />
+      </b-form-group>
+      <b-form-group
         id="fieldset-7"
         :label="this.$t('message.audit_trail')"
         label-for="auditTrailField"
@@ -292,6 +304,7 @@
 import common from '@/shared/common';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import PolicyAnnotationsDisplay from '@/views/components/PolicyAnnotationsDisplay.vue';
 
 export default {
   props: {
@@ -365,6 +378,7 @@ export default {
       analysisJustification: null,
       analysisResponse: null,
       analysisDetails: null,
+      policyAnnotations: this.finding?.analysis?.policyAnnotations ?? [],
     };
   },
   watch: {
@@ -447,6 +461,9 @@ export default {
       } else {
         this.isSuppressed = false;
       }
+      if (Object.prototype.hasOwnProperty.call(analysis, 'policyAnnotations')) {
+        this.policyAnnotations = analysis.policyAnnotations ?? [];
+      }
     },
     makeAnalysis: function () {
       this.callRestEndpoint(
@@ -506,6 +523,7 @@ export default {
   },
   components: {
     BootstrapToggle,
+    PolicyAnnotationsDisplay,
   },
 };
 </script>

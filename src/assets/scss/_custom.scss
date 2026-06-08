@@ -160,6 +160,10 @@ html {
   background-color: lighten($notification-info, 15% );
   border: 1px solid $notification-info;
 }
+.policy-annotation-badge {
+  margin-right: 4px;
+  font-weight: 600;
+}
 .table {
   background-color: $grey-750;
 }
