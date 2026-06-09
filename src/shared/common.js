@@ -140,34 +140,33 @@ $common.formatViolationStateLabel = function formatViolationStateLabel(
 /**
  * Formats policy annotation applied-at for display (ISO-8601, epoch sec/ms, Jackson arrays).
  */
-$common.formatPolicyAnnotationAppliedAt = function formatPolicyAnnotationAppliedAt(
-  appliedAt,
-) {
-  if (appliedAt == null || appliedAt === '') {
-    return null;
-  }
-
-  let timestamp = appliedAt;
-  if (typeof appliedAt === 'number') {
-    timestamp = appliedAt < 1e12 ? appliedAt * 1000 : appliedAt;
-  } else if (Array.isArray(appliedAt) && appliedAt.length > 0) {
-    timestamp =
-      appliedAt[0] * 1000 + Math.floor((appliedAt[1] || 0) / 1000000);
-  } else if (typeof appliedAt === 'object') {
-    if (appliedAt.seconds != null) {
-      timestamp = appliedAt.seconds * 1000;
-    } else {
+$common.formatPolicyAnnotationAppliedAt =
+  function formatPolicyAnnotationAppliedAt(appliedAt) {
+    if (appliedAt == null || appliedAt === '') {
       return null;
     }
-  }
 
-  const date = new Date(timestamp);
-  if (Number.isNaN(date.getTime()) || date.getFullYear() < 1980) {
-    return null;
-  }
+    let timestamp = appliedAt;
+    if (typeof appliedAt === 'number') {
+      timestamp = appliedAt < 1e12 ? appliedAt * 1000 : appliedAt;
+    } else if (Array.isArray(appliedAt) && appliedAt.length > 0) {
+      timestamp =
+        appliedAt[0] * 1000 + Math.floor((appliedAt[1] || 0) / 1000000);
+    } else if (typeof appliedAt === 'object') {
+      if (appliedAt.seconds != null) {
+        timestamp = appliedAt.seconds * 1000;
+      } else {
+        return null;
+      }
+    }
 
-  return $common.formatTimestamp(timestamp, true);
-};
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime()) || date.getFullYear() < 1980) {
+      return null;
+    }
+
+    return $common.formatTimestamp(timestamp, true);
+  };
 
 /**
  * Formats policy-driven analysis annotations for bootstrap-table cells.

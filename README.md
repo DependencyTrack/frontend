@@ -29,6 +29,9 @@ in the software supply chain.
 
 User-facing documentation is rendered at [dependencytrack.github.io/docs/next](https://dependencytrack.github.io/docs/next/) and maintained in the [docs](https://github.com/DependencyTrack/docs) repository.
 
+Developer notes for feature-specific UI work live under [`docs/`](./docs/) (for example,
+[`docs/policy-annotations.md`](./docs/policy-annotations.md)).
+
 ## Contributing
 
 1. [Code of conduct](CODE_OF_CONDUCT.md)
