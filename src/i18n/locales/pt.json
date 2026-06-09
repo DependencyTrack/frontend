@@ -568,6 +568,7 @@
     "deprecated": "Descontinuada",
     "description": "Descrição",
     "details": "Detalhes",
+    "direct_dependency": "Dependência Direta",
     "direct_only": "Somente direto",
     "direction": "Direção",
     "download_bom": "Baixe a lista técnica",

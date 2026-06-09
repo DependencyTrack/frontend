@@ -568,6 +568,7 @@
     "deprecated": "Obsoleto",
     "description": "Descripción",
     "details": "Detalles",
+    "direct_dependency": "Dependencia directa",
     "direct_only": "Solo directo",
     "direction": "Dirección",
     "download_bom": "Descargar lista de materiales",

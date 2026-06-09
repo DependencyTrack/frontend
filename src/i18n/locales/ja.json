@@ -568,6 +568,7 @@
     "deprecated": "非推奨",
     "description": "説明",
     "details": "詳細",
+    "direct_dependency": "直接依存関係",
     "direct_only": "直接のみ",
     "direction": "方向",
     "download_bom": "BOMをダウンロード",
