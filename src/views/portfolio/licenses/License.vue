@@ -165,7 +165,7 @@ export default {
     },
     getTabFromRoute: function () {
       let pattern = new RegExp(
-        '/licenses\\/' + this.licenseId + '\\/([^\\/]*)',
+        '/licenses\\/' + this.licenseId + '\\/([^\\/?#]*)',
         'gi',
       );
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());

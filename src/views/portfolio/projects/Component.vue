@@ -280,7 +280,7 @@ export default {
     },
     getTabFromRoute: function () {
       let pattern = new RegExp(
-        '/components\\/' + this.uuid + '\\/([^\\/]*)',
+        '/components\\/' + this.uuid + '\\/([^\\/?#]*)',
         'gi',
       );
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
