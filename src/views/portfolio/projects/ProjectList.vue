@@ -560,5 +560,27 @@ export default {
       },
     };
   },
+  mounted() {
+   this.$nextTick(() => {
+                   console.log("DOM state inside nextTick:", this.$el);
+                   const input = document.querySelector('.search input');
+                   if (input) {
+                           input.setAttribute('aria-label', this.$t('message.search_aria_label'));
+                                           refreshButton = document.querySelector('[name="refresh"]');
+                              }
+                         });
+  },
+  updated(){
+    this.$nextTick(() => {
+                   const refreshButton = document.querySelector('button[name="refresh"]');
+                   if  (refreshButton) {
+                                   refreshButton.setAttribute('aria-label',this.$t('message.refresh_aria_label'));
+                   }
+                   const columnButton = document.querySelector('button[title="Columns"]');
+                   if  (columnButton) {
+                                   columnButton.setAttribute('aria-label',this.$t('message.columns_aria_label'));
+                   }
+    });
+  } 
 };
 </script>
