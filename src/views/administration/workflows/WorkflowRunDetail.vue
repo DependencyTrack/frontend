@@ -349,7 +349,7 @@ const CollapsibleJson = {
   `,
 };
 
-const TERMINAL_STATUSES = ['COMPLETED', 'FAILED', 'CANCELED'];
+const TERMINAL_STATUSES = ['COMPLETED', 'FAILED', 'CANCELLED'];
 const POLL_INTERVAL_MS = 5000;
 const EVENT_LIMIT = 10;
 const POLL_LIMIT = 50;
@@ -557,7 +557,7 @@ export default {
     },
     statusIcon(status) {
       const icons = {
-        CANCELED: 'fa-ban',
+        CANCELLED: 'fa-ban',
         FAILED: 'fa-fire',
         SUSPENDED: 'fa-pause',
         RUNNING: 'fa-play',
@@ -568,7 +568,7 @@ export default {
     },
     statusVariant(status) {
       const variants = {
-        CANCELED: 'warning',
+        CANCELLED: 'warning',
         FAILED: 'danger',
         RUNNING: 'secondary',
         COMPLETED: 'success',
