@@ -126,7 +126,7 @@ export default {
       sortBy: null,
       sortDirection: null,
       statusOptions: [
-        { value: 'CANCELED', text: this.$t(`message.status_canceled`) },
+        { value: 'CANCELLED', text: this.$t(`message.status_canceled`) },
         { value: 'COMPLETED', text: this.$t(`message.status_completed`) },
         { value: 'CREATED', text: this.$t(`message.status_created`) },
         { value: 'FAILED', text: this.$t(`message.status_failed`) },
@@ -167,7 +167,7 @@ export default {
           formatter: (value) => {
             let iconName = 'fa-question';
             let textVariant = 'primary';
-            if (value === 'CANCELED') {
+            if (value === 'CANCELLED') {
               iconName = 'fa-ban';
               textVariant = 'warning';
             } else if (value === 'FAILED') {
