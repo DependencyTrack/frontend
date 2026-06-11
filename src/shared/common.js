@@ -137,6 +137,73 @@ $common.formatViolationStateLabel = function formatViolationStateLabel(
   return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
 };
 
+/**
+ * Formats policy annotation applied-at for display (ISO-8601, epoch sec/ms, Jackson arrays).
+ */
+$common.formatPolicyAnnotationAppliedAt =
+  function formatPolicyAnnotationAppliedAt(appliedAt) {
+    if (appliedAt == null || appliedAt === '') {
+      return null;
+    }
+
+    let timestamp = appliedAt;
+    if (typeof appliedAt === 'number') {
+      timestamp = appliedAt < 1e12 ? appliedAt * 1000 : appliedAt;
+    } else if (Array.isArray(appliedAt) && appliedAt.length > 0) {
+      timestamp =
+        appliedAt[0] * 1000 + Math.floor((appliedAt[1] || 0) / 1000000);
+    } else if (typeof appliedAt === 'object') {
+      if (appliedAt.seconds != null) {
+        timestamp = appliedAt.seconds * 1000;
+      } else {
+        return null;
+      }
+    }
+
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime()) || date.getFullYear() < 1980) {
+      return null;
+    }
+
+    return $common.formatTimestamp(timestamp, true);
+  };
+
+/**
+ * Formats policy-driven analysis annotations for bootstrap-table cells.
+ */
+$common.formatPolicyAnnotationsLabel = function formatPolicyAnnotationsLabel(
+  annotations,
+) {
+  if (!annotations || annotations.length === 0) {
+    return '';
+  }
+
+  return annotations
+    .map((annotation) => {
+      const label = xssFilters.inHTMLData(
+        annotation.policyName ?? annotation.value ?? '',
+      );
+      const tooltipParts = [];
+      const appliedAtLabel = $common.formatPolicyAnnotationAppliedAt(
+        annotation.appliedAt,
+      );
+      if (appliedAtLabel) {
+        tooltipParts.push('Applied: ' + appliedAtLabel);
+      }
+      if (annotation.annotator) {
+        tooltipParts.push(
+          'Annotator: ' + xssFilters.inHTMLData(annotation.annotator),
+        );
+      }
+      const title =
+        tooltipParts.length > 0
+          ? ` title="${xssFilters.inDoubleQuotedAttr(tooltipParts.join(' | '))}"`
+          : '';
+      return `<span class="badge badge-danger policy-annotation-badge"${title}>${label}</span>`;
+    })
+    .join(' ');
+};
+
 $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   if (cweId && cweName) {
     return (
@@ -331,9 +398,10 @@ $common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
 $common.makeAnalysisStateLabelFormatter = (i18n) => {
   return function (value) {
     switch (value) {
+      case 'NOT_SET':
+        return null;
       case 'APPROVED':
       case 'REJECTED':
-      case 'NOT_SET':
       case 'EXPLOITABLE':
       case 'IN_TRIAGE':
       case 'FALSE_POSITIVE':
@@ -704,6 +772,8 @@ export default {
   titleCase: $common.titleCase,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
+  formatPolicyAnnotationsLabel: $common.formatPolicyAnnotationsLabel,
+  formatPolicyAnnotationAppliedAt: $common.formatPolicyAnnotationAppliedAt,
   formatCweLabel: $common.formatCweLabel,
   formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,

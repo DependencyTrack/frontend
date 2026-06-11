@@ -341,6 +341,16 @@ export default {
           },
         },
         {
+          title: this.$t('message.policy_annotations'),
+          field: 'analysis.policyAnnotations',
+          sortable: false,
+          formatter(value, row, index) {
+            return common.formatPolicyAnnotationsLabel(
+              row.analysis?.policyAnnotations,
+            );
+          },
+        },
+        {
           title: this.$t('message.matrix'),
           field: 'matrix',
           sortable: true,
