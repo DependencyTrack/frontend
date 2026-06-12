@@ -316,7 +316,7 @@
     "workflow_event_child_run_created": "Child Run Created",
     "workflow_event_child_run_failed": "Child Run Failed",
     "workflow_event_external_event_received": "External Event Received",
-    "workflow_event_run_canceled": "Run Canceled",
+    "workflow_event_run_canceled": "Run Cancelled",
     "workflow_event_run_completed": "Run Completed",
     "workflow_event_run_created": "Run Created",
     "workflow_event_run_resumed": "Run Resumed",
