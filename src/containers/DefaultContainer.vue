@@ -211,8 +211,19 @@ export default {
         ];
       }
     },
+
+    removeScrollbarTabindex() {
+      document
+        .querySelectorAll('.ps__scrollbar-x, .ps__scrollbar-y')
+        .forEach((el) => el.removeAttribute('tabindex'));
+    },
   },
   mounted() {
+    this.$nextTick(() => {
+      this.removeScrollbarTabindex();
+    });
+    ``;
+
     if (this.$dtrack && this.$dtrack.version.includes('SNAPSHOT')) {
       this.$root.$emit('bv::show::modal', 'snapshotModal');
     }
@@ -234,6 +245,11 @@ export default {
       if (sidebarMinimizer) {
         sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
       }
+    });
+  },
+  updated() {
+    this.$nextTick(() => {
+      this.removeScrollbarTabindex();
     });
   },
   computed: {
