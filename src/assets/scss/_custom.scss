@@ -514,3 +514,19 @@ td a.detail-icon {
   float: right;
   padding-top: 0.3rem;
 }
+
+.navbar-toggler:focus-visible {
+      outline: 3px solid #66ccff !important;
+          outline-offset: 2px;
+}
+
+.sidebar-nav a:focus-visible,
+.nav-link:focus-visible {
+  outline: 3px solid #66ccff !important;
+  outline-offset: 2px;
+                }
+
+.sidebar-minimizer:focus-visible {
+  outline: 3px solid #66ccff !important;
+  outline-offset: 2px;
+  }
