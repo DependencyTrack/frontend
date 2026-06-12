@@ -216,7 +216,7 @@ export default {
 	  document.querySelectorAll('.ps__scrollbar-x, .ps__scrollbar-y')
 		    .forEach(el => el.removeAttribute('tabindex'));
 	},
-  
+
   mounted() {
 	  this.$nextTick(() => {
 		    this.removeScrollbarTabindex();
