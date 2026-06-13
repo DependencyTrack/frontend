@@ -62,6 +62,7 @@ export default {
         showRefresh: true,
         pagination: true,
         silentSort: false,
+        maintainMetaData: true,
         sidePagination: 'client',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
