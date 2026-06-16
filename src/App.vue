@@ -1,5 +1,19 @@
 <template>
-  <router-view></router-view>
+  <div class="app-shell">
+    <Banner
+      v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
+      :key="bannerInstanceKey"
+      class="app-banner"
+      :dismissable="bannerConfig.makeBannerDismissable"
+      :color-scheme="bannerConfig.colorScheme"
+      :message="bannerConfig.message"
+      :custom-mode="!!bannerConfig.customMode"
+      :html="bannerConfig.customMode ? bannerConfig.html : ''"
+    />
+    <main class="app-content">
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <script>
@@ -11,9 +25,29 @@ import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
 import VueRouter from 'vue-router';
+import Banner from './views/components/Banner.vue';
+import {
+  BANNER_DISMISSED_KEY,
+  getBannerConfigUrl,
+  parseBannerConfigFromProperty,
+} from './shared/bannerConfig';
 
 export default {
   name: 'app',
+  components: {
+    Banner,
+  },
+  data() {
+    return {
+      bannerConfig: null,
+      bannerInstanceKey: 0,
+    };
+  },
+  computed: {
+    isLoginPage() {
+      return ['/login', '/change-password'].includes(this.$route.path);
+    },
+  },
   created() {
     const setAuthHeader = (token) => {
       if (token) {
@@ -45,6 +79,7 @@ export default {
     };
 
     EventBus.$on('authenticated', (token) => {
+      sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       if (token) {
         sessionStorage.setItem('token', token);
       } else {
@@ -57,6 +92,14 @@ export default {
       if (token) {
         loadSystemCapabilities();
       }
+      this.fetchBannerConfig();
+      this.bannerInstanceKey++;
+    });
+
+    EventBus.$on('banner-updated', async () => {
+      sessionStorage.removeItem(BANNER_DISMISSED_KEY);
+      await this.fetchBannerConfig();
+      this.bannerInstanceKey++;
     });
 
     // ensure $.ajaxSettings.headers exists
@@ -69,6 +112,7 @@ export default {
     if (initialToken) {
       loadSystemCapabilities();
     }
+    this.fetchBannerConfig();
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
@@ -215,6 +259,17 @@ export default {
         }
       }
     });
+  },
+  methods: {
+    async fetchBannerConfig() {
+      try {
+        const response = await this.axios.get(getBannerConfigUrl(this.$api));
+        this.bannerConfig = parseBannerConfigFromProperty(response);
+      } catch (e) {
+        console.error('Failed to load banner config:', e);
+        this.bannerConfig = null;
+      }
+    },
   },
 };
 </script>

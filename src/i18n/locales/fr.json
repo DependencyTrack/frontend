@@ -30,6 +30,18 @@
     "api_token": "Jeton d'API",
     "argument": null,
     "attempts": null,
+    "banner": "Bannière",
+    "banner_activate": "Activer la bannière",
+    "banner_color_scheme": "Jeu de couleurs",
+    "banner_custom_mode": "Mode personnalisé",
+    "banner_dismiss": "Ignorer la bannière",
+    "banner_dismissable": "Autoriser les utilisateurs à ignorer la bannière",
+    "banner_dismissable_help": "Lorsqu'elle est activée, les utilisateurs peuvent fermer la bannière à l'aide du bouton de fermeture. \nLa bannière réapparaîtra lors d'une nouvelle session de connexion.",
+    "banner_enable_custom": "Activer la bannière HTML personnalisée",
+    "banner_explanation": "Configurez une bannière qui s'affiche en haut de l'application pour tous les utilisateurs authentifiés.",
+    "banner_explanation_html_text": "Fournissez le contenu de la bannière au format HTML. \nLe bouton de fermeture est ajouté automatiquement lorsque « Autoriser les utilisateurs à ignorer la bannière » est activé.",
+    "banner_html_text": "Contenu HTML",
+    "banner_message": "Message",
     "base_url": "URL de base",
     "bom_formats": "Formats de nomenclature (BOM)",
     "bom_formats_desc": "Permet la prise en charge du traitement des nomenclatures (BOM) de différents formats. Seuls les formats de nomenclature activés seront traités.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Exécutions du flux de travail",
     "workflows": "Flux de travail"
+  },
+  "banner": {
+    "administration": "Bannière"
   },
   "condition": {
     "forbidden": "Interdit (403)",

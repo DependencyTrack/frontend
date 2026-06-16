@@ -30,6 +30,18 @@
     "api_token": "Токен API",
     "argument": null,
     "attempts": null,
+    "banner": "банер",
+    "banner_activate": "Активувати банер",
+    "banner_color_scheme": "Колірна гамма",
+    "banner_custom_mode": "Спеціальний режим",
+    "banner_dismiss": "Закрити банер",
+    "banner_dismissable": "Дозволити користувачам закривати банер",
+    "banner_dismissable_help": "Якщо ввімкнено, користувачі можуть закривати банер за допомогою кнопки закриття. \nБанер знову з’явиться під час нового сеансу входу.",
+    "banner_enable_custom": "Увімкнути спеціальний банер HTML",
+    "banner_explanation": "Налаштуйте банер, який відображатиметься у верхній частині програми для всіх автентифікованих користувачів.",
+    "banner_explanation_html_text": "Надайте вміст банера як HTML. \nКнопка закриття додається автоматично, коли ввімкнено «Дозволити користувачам закривати банер».",
+    "banner_html_text": "Вміст HTML",
+    "banner_message": "повідомлення",
     "base_url": "Базова URL-адреса",
     "bom_formats": "Формати BOM",
     "bom_formats_desc": "Вмикає підтримку обробки BOM різних форматів. Оброблятися будуть лише ті формати BOM, які увімкнено.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Виконання робочого процесу",
     "workflows": "Робочі процеси"
+  },
+  "banner": {
+    "administration": "банер"
   },
   "condition": {
     "forbidden": "Заборонено (403)",

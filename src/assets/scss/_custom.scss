@@ -533,3 +533,41 @@ td a.detail-icon {
   float: right;
   padding-top: 0.3rem;
 }
+
+@include media-breakpoint-up($breakpoint-mobile-up) {
+  .header-fixed {
+    .app-header {
+      top: var(--banner-offset, 0);
+    }
+
+    .app-body {
+      margin-top: calc(#{$navbar-height} + var(--banner-offset, 0px));
+    }
+  }
+
+  .sidebar-fixed {
+    .sidebar {
+      top: calc(#{$navbar-height} + var(--banner-offset, 0px));
+      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+    }
+
+    .app-header + .app-body .sidebar {
+      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+    }
+  }
+}
+
+@include media-breakpoint-down($breakpoint-mobile-down) {
+  .app-header {
+    top: var(--banner-offset, 0);
+  }
+
+  .app-body {
+    margin-top: calc(#{$navbar-height} + var(--banner-offset, 0px));
+  }
+
+  .sidebar {
+    top: calc(#{$navbar-height} + var(--banner-offset, 0px));
+    height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+  }
+}

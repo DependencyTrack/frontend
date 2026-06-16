@@ -34,6 +34,7 @@ import InternalComponents from './configuration/InternalComponents';
 import RiskScore from './configuration/RiskScore.vue';
 import Telemetry from './configuration/Telemetry.vue';
 import WelcomeMessage from './configuration/WelcomeMessage.vue';
+import Banner from './configuration/BannerConfiguration.vue';
 // Secrets plugins
 import SecretsManagement from './secrets/SecretsManagement.vue';
 // Repositories
@@ -76,6 +77,7 @@ export default {
     AdminMenu,
     General,
     WelcomeMessage,
+    Banner,
     BomFormats,
     InternalComponents,
     Telemetry,

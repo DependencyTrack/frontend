@@ -30,6 +30,18 @@
     "api_token": "API token",
     "argument": "Argument",
     "attempts": "Attempts",
+    "banner": "Banner",
+    "banner_activate": "Activate banner",
+    "banner_color_scheme": "Color scheme",
+    "banner_custom_mode": "Custom mode",
+    "banner_dismiss": "Dismiss banner",
+    "banner_dismissable": "Allow users to dismiss banner",
+    "banner_dismissable_help": "When enabled, users can close the banner using the close button. The banner will reappear in a new login session.",
+    "banner_enable_custom": "Enable custom HTML banner",
+    "banner_explanation": "Configure a banner that is displayed at the top of the application for all authenticated users.",
+    "banner_explanation_html_text": "Provide the banner content as HTML. The close button is added automatically when \"Allow users to dismiss banner\" is enabled.",
+    "banner_html_text": "HTML content",
+    "banner_message": "Message",
     "base_url": "Base URL",
     "bom_formats": "BOM Formats",
     "bom_formats_desc": "Enables support for processing BOMs of various formats. Only BOM formats which are enabled will be processed.",
@@ -334,6 +346,9 @@
     "workflow_run_details": "Workflow Run Details",
     "workflow_runs": "Workflow Runs",
     "workflows": "Workflows"
+  },
+  "banner": {
+    "administration": "Banner"
   },
   "condition": {
     "forbidden": "Forbidden (403)",

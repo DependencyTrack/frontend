@@ -30,6 +30,18 @@
     "api_token": "Token API",
     "argument": null,
     "attempts": null,
+    "banner": "Stendardo",
+    "banner_activate": "Attiva il banner",
+    "banner_color_scheme": "Combinazione di colori",
+    "banner_custom_mode": "Modalità personalizzata",
+    "banner_dismiss": "Ignora banner",
+    "banner_dismissable": "Consenti agli utenti di eliminare il banner",
+    "banner_dismissable_help": "Se abilitato, gli utenti possono chiudere il banner utilizzando il pulsante di chiusura. \nIl banner riapparirà in una nuova sessione di accesso.",
+    "banner_enable_custom": "Abilita banner HTML personalizzato",
+    "banner_explanation": "Configura un banner che verrà visualizzato nella parte superiore dell'applicazione per tutti gli utenti autenticati.",
+    "banner_explanation_html_text": "Fornisci il contenuto del banner come HTML. \nIl pulsante di chiusura viene aggiunto automaticamente quando è abilitata l'opzione \"Consenti agli utenti di eliminare il banner\".",
+    "banner_html_text": "Contenuto HTML",
+    "banner_message": "Messaggio",
     "base_url": "URL di base",
     "bom_formats": "Formati distinta base",
     "bom_formats_desc": "Abilita il supporto per l'elaborazione di distinte base di vari formati. Verranno elaborati solo i formati BOM abilitati.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Esecuzioni del flusso di lavoro",
     "workflows": "Flussi di lavoro"
+  },
+  "banner": {
+    "administration": "Stendardo"
   },
   "condition": {
     "forbidden": "Proibito (403)",

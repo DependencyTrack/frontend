@@ -30,6 +30,18 @@
     "api_token": "API 令牌",
     "argument": null,
     "attempts": null,
+    "banner": "横幅",
+    "banner_activate": "激活横幅",
+    "banner_color_scheme": "配色方案",
+    "banner_custom_mode": "自定义模式",
+    "banner_dismiss": "关闭横幅",
+    "banner_dismissable": "允许用户关闭横幅",
+    "banner_dismissable_help": "启用后，用户可以使用关闭按钮关闭横幅。\n该横幅将重新出现在新的登录会话中。",
+    "banner_enable_custom": "启用自定义 HTML 横幅",
+    "banner_explanation": "配置为所有经过身份验证的用户显示在应用程序顶部的横幅。",
+    "banner_explanation_html_text": "提供 HTML 格式的横幅内容。\n启用“允许用户关闭横幅”时，会自动添加关闭按钮。",
+    "banner_html_text": "HTML 内容",
+    "banner_message": "信息",
     "base_url": "基础 URL",
     "bom_formats": "BOM 格式",
     "bom_formats_desc": "启用对处理各种格式的 BOM 的支持。（只有启用的 BOM 格式才会被处理）",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "工作流运行",
     "workflows": "工作流程"
+  },
+  "banner": {
+    "administration": "横幅"
   },
   "condition": {
     "forbidden": "禁止访问 (403)",
