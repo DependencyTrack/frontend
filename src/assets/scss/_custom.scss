@@ -514,3 +514,18 @@ td a.detail-icon {
   float: right;
   padding-top: 0.3rem;
 }
+
+.card,
+.card-body,
+.dashboard-chart {
+  background-color: #102233 !important;
+  border: 1px solid #4a6a8a !important;
+}
+
+.main {
+  background-color: #0e1c2b !important;
+}
+
+.app-header {
+  border-bottom: 2px solid #4a6a8a !important;
+}
