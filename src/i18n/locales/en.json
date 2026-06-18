@@ -25,7 +25,7 @@
     "analyzer_internal_fuzzy_enable": "Enable fuzzy CPE matching. Helps with inconsistent NVD data, highlighting missing risks but also increasing false positives",
     "analyzer_internal_fuzzy_exclude_internal": "Enable fuzzy CPE matching on internal components",
     "analyzer_internal_fuzzy_exclude_purl": "Enable fuzzy CPE matching on components that have a Package URL (PURL) defined",
-    "analyzer_ossindex_desc": "OSS Index is a service provided by Sonatype which identifies vulnerabilities in third-party components. Dependency-Track integrates natively with the OSS Index service to provide highly accurate results. Use of this analyzer requires a valid PackageURL for the components being analyzed.",
+    "analyzer_ossindex_desc": "OSS Index is a service provided by Sonatype which identifies vulnerabilities in third-party components. Dependency-Track integrates natively with the OSS Index service to provide highly accurate results. Rate and request metric limits may apply to requests, provide an API token for higher limits. Use of this analyzer requires a valid PackageURL for the components being analyzed.",
     "analyzer_ossindex_enable": "Enable OSS Index analyzer",
     "analyzer_snyk_alias_sync_warning": "Snyk does not differentiate between related and identical vulnerabilities. Proceed with caution.",
     "analyzer_snyk_api_version": "API Version",
