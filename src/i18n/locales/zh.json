@@ -798,7 +798,6 @@
     "owasp_rr_reputation_damage_goodwill": "商誉损害",
     "owasp_rr_reputation_damage_major_accounts": "主要客户流失",
     "owasp_rr_reputation_damage_minimal": "轻微",
-    "owasp_rr_score": null,
     "owasp_rr_skill_level": "技能等级",
     "owasp_rr_skill_level_advanced": "高级",
     "owasp_rr_skill_level_network_and_programming": "网络与编程",

@@ -140,20 +140,6 @@
           trim
         />
       </b-form-group>
-      <b-form-group
-        v-if="owaspScore"
-        id="fieldset-owasp-score"
-        :label="this.$t('message.owasp_rr_score')"
-        label-for="input-owasp-score"
-      >
-        <b-form-input
-          id="input-owasp-score"
-          :value="owaspScore"
-          class="form-control disabled"
-          readonly
-          trim
-        />
-      </b-form-group>
     </b-col>
     <b-col sm="6">
       <b-form-group
@@ -394,7 +380,6 @@ export default {
       analysisResponse: null,
       analysisDetails: null,
       owaspVector: null,
-      owaspScore: null,
     };
   },
   watch: {
@@ -479,9 +464,8 @@ export default {
       }
       if (Object.prototype.hasOwnProperty.call(analysis, 'owaspVector')) {
         this.owaspVector = analysis.owaspVector;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'owaspScore')) {
-        this.owaspScore = analysis.owaspScore;
+      } else {
+        this.owaspVector = null;
       }
     },
     makeAnalysis: function () {
