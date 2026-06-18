@@ -77,3 +77,12 @@ Reports and cleanup:
 npm run vue-i18n-extract
 npm run remove-unused-i18n
 ```
+
+## Policy-Driven Vulnerability Annotations
+
+UI for policy-defined annotations on findings ([#6205](https://github.com/DependencyTrack/dependency-track/issues/6205)).
+Requires the matching API server feature branch.
+
+See [`docs/policy-annotations.md`](./docs/policy-annotations.md) for component map, verification steps,
+and i18n notes. End-user documentation belongs in the
+[docs](https://github.com/DependencyTrack/docs) repository.
