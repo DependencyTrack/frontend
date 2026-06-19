@@ -533,3 +533,62 @@ td a.detail-icon {
   float: right;
   padding-top: 0.3rem;
 }
+
+body,
+p,
+span,
+div {
+  color: #d6e8ff !important;
+}
+ 
+.text-muted,
+.card-subtitle,
+.small {
+  color: #cfe3ff !important;
+}
+ 
+.card-title,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: #e6f0ff !important;
+}
+ 
+.sidebar-nav .nav-link {
+  color: #cfe3ff !important;
+}
+ 
+.sidebar-nav .nav-link:hover {
+  color: #ffffff !important;
+}
+ 
+.breadcrumb,
+.breadcrumb-item {
+  color: #cfe3ff !important;
+}
+ 
+.badge,
+.label {
+  color: #ffffff !important;
+}
+ 
+.table,
+.table td,
+.table th {
+  color: #d6e8ff !important;
+}
+ 
+.apexcharts-text,
+.apexcharts-xaxis text,
+.apexcharts-yaxis text,
+.apexcharts-legend text,
+.apexcharts-datalabel,
+.apexcharts-tooltip-text {
+  fill: #d6e8ff !important;
+}
+ 
+svg text {
+  fill: #d6e8ff !important;
+}
