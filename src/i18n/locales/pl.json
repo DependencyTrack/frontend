@@ -30,6 +30,18 @@
     "api_token": "Token API",
     "argument": null,
     "attempts": null,
+    "banner": "Transparent",
+    "banner_activate": "Aktywuj baner",
+    "banner_color_scheme": "Schemat kolorów",
+    "banner_custom_mode": "Tryb niestandardowy",
+    "banner_dismiss": "Odrzuć baner",
+    "banner_dismissable": "Zezwalaj użytkownikom na odrzucanie banerów",
+    "banner_dismissable_help": "Po włączeniu użytkownicy mogą zamknąć baner za pomocą przycisku zamykania. \nBaner pojawi się ponownie w nowej sesji logowania.",
+    "banner_enable_custom": "Włącz niestandardowy baner HTML",
+    "banner_explanation": "Skonfiguruj baner wyświetlany u góry aplikacji dla wszystkich uwierzytelnionych użytkowników.",
+    "banner_explanation_html_text": "Podaj treść banera w formacie HTML. \nPrzycisk zamykania jest dodawany automatycznie, gdy włączona jest opcja „Zezwalaj użytkownikom na zamykanie banera”.",
+    "banner_html_text": "Treść HTML",
+    "banner_message": "Wiadomość",
     "base_url": "Bazowy adres URL",
     "bom_formats": "Formaty BOM-ów",
     "bom_formats_desc": "Umożliwia obsługę przetwarzania BOM-ów w różnych formatach. Przetwarzane będą tylko włączone formaty BOM.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Uruchomienia przepływu pracy",
     "workflows": "Przepływy pracy"
+  },
+  "banner": {
+    "administration": "Transparent"
   },
   "condition": {
     "forbidden": "Zabronione (403)",

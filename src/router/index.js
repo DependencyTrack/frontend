@@ -37,6 +37,8 @@ const BomFormats = () =>
   import('@/views/administration/configuration/BomFormats');
 const WelcomeMessage = () =>
   import('@/views/administration/configuration/WelcomeMessage');
+const Banner = () =>
+  import('@/views/administration/configuration/BannerConfiguration');
 const InternalComponents = () =>
   import('@/views/administration/configuration/InternalComponents');
 const Maintenance = () =>
@@ -444,6 +446,17 @@ function configRoutes() {
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/banner',
+              component: Banner,
+              meta: {
+                title: i18n.t('banner.administration'),
+                i18n: 'banner.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
                 permission: 'SYSTEM_CONFIGURATION',

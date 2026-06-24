@@ -192,6 +192,11 @@ export default {
               route: 'configuration/welcomeMessage',
             },
             {
+              component: 'Banner',
+              name: this.$t('admin.banner'),
+              route: 'configuration/banner',
+            },
+            {
               component: 'InternalComponents',
               name: this.$t('admin.internal_components'),
               route: 'configuration/internalComponents',

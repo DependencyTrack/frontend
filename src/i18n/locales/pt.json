@@ -30,6 +30,18 @@
     "api_token": "Token de API",
     "argument": null,
     "attempts": null,
+    "banner": "Bandeira",
+    "banner_activate": "Ativar banner",
+    "banner_color_scheme": "Esquema de cores",
+    "banner_custom_mode": "Modo personalizado",
+    "banner_dismiss": "Dispensar banner",
+    "banner_dismissable": "Permitir que os usuários ignorem o banner",
+    "banner_dismissable_help": "Quando ativado, os usuários podem fechar o banner usando o botão Fechar. \nO banner reaparecerá em uma nova sessão de login.",
+    "banner_enable_custom": "Ativar banner HTML personalizado",
+    "banner_explanation": "Configure um banner que será exibido na parte superior da aplicação para todos os usuários autenticados.",
+    "banner_explanation_html_text": "Forneça o conteúdo do banner como HTML. \nO botão Fechar é adicionado automaticamente quando \"Permitir que os usuários ignorem o banner\" está ativado.",
+    "banner_html_text": "Conteúdo HTML",
+    "banner_message": "Mensagem",
     "base_url": "URL base",
     "bom_formats": "Formatos de lista de materiais",
     "bom_formats_desc": "Permite suporte para processamento de BOMs de vários formatos. Somente formatos de BOM habilitados serão processados.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Execuções do fluxo de trabalho",
     "workflows": "Fluxos de trabalho"
+  },
+  "banner": {
+    "administration": "Bandeira"
   },
   "condition": {
     "forbidden": "Proibido (403)",
