@@ -112,12 +112,6 @@ export default {
     });
     window.addEventListener('resize', this.updateOffset);
   },
-  updated() {
-    this.$nextTick(() => {
-      this.updateOffset();
-      this.updateCustomContentColor();
-    });
-  },
   beforeDestroy() {
     window.removeEventListener('resize', this.updateOffset);
     this.clearOffset();

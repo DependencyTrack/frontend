@@ -4,29 +4,18 @@ export const BANNER_CONFIG_GROUP = 'banner';
 export const BANNER_CONFIG_PROPERTY = 'config';
 
 export function getBannerConfigUrl(api) {
-  return `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}`;
+  return `${api.BASE_URL}/${api.URL_CONFIG_PROPERTY}/internal/${BANNER_CONFIG_GROUP}/${BANNER_CONFIG_PROPERTY}`;
 }
 
 export function buildExampleBannerTemplate() {
   return `<div style="background:#321FDB;color:#fff;padding:0.5rem 1rem;border-bottom:1px solid rgba(0,0,0,.2);font-size:1rem;line-height:1.5;text-align:center">
-        <strong>Example:</strong> <span>Your HTML-Banner Text</span>
-      </div>
+  <strong>Example:</strong> <span>Your HTML-Banner Text</span>
+</div>
     `;
 }
 
 export function parseBannerConfigFromProperty(response) {
-  const data = response?.data;
-  let propertyValue = null;
-  if (Array.isArray(data)) {
-    const item = data.find(
-      (p) =>
-        p.groupName === BANNER_CONFIG_GROUP &&
-        p.propertyName === BANNER_CONFIG_PROPERTY,
-    );
-    propertyValue = item?.propertyValue;
-  } else {
-    propertyValue = data?.propertyValue;
-  }
+  const propertyValue = response?.data?.propertyValue;
   if (!propertyValue) {
     return null;
   }

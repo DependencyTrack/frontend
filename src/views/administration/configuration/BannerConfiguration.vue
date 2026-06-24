@@ -69,13 +69,12 @@
               <label for="HTMLConfig"
                 >{{ $t('admin.banner_html_text') }}:</label
               >
-              <textarea
+              <code-mirror-editor
                 id="HTMLConfig"
-                class="form-control font-monospace"
                 v-model="HTMLConfig"
-                rows="8"
-                spellcheck="false"
-              ></textarea>
+                :language="htmlLanguage"
+                :line-wrapping="false"
+              />
               <small class="form-text text-muted">
                 {{ $t('admin.banner_explanation_html_text') }}
               </small>
@@ -102,6 +101,8 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
+import { html } from '@codemirror/lang-html';
+import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import { BANNER_SCHEMES } from '@/shared/bannerSchemes';
 import {
@@ -119,6 +120,7 @@ export default {
   },
   components: {
     cSwitch,
+    CodeMirrorEditor,
   },
   data() {
     return {
@@ -129,6 +131,7 @@ export default {
       colorSchemes: BANNER_SCHEMES,
       customMode: false,
       HTMLConfig: '',
+      htmlLanguage: html(),
     };
   },
   async created() {
@@ -187,6 +190,10 @@ export default {
 </script>
 
 <style scoped>
+::v-deep .card-body {
+  min-width: 0;
+}
+
 .swatches.square.large {
   display: flex;
   gap: 10px;
