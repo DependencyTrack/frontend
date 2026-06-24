@@ -30,6 +30,18 @@
     "api_token": "API 토큰",
     "argument": "인자",
     "attempts": "시도 횟수",
+    "banner": null,
+    "banner_activate": null,
+    "banner_color_scheme": null,
+    "banner_custom_mode": null,
+    "banner_dismiss": null,
+    "banner_dismissable": null,
+    "banner_dismissable_help": null,
+    "banner_enable_custom": null,
+    "banner_explanation": null,
+    "banner_explanation_html_text": null,
+    "banner_html_text": null,
+    "banner_message": null,
     "base_url": "기본 URL",
     "bom_formats": "BOM 형식",
     "bom_formats_desc": "다양한 형식의 BOM 처리를 지원합니다. 활성화된 BOM 형식만 처리됩니다.",
@@ -334,6 +346,9 @@
     "workflow_run_details": "워크플로 실행 세부 정보",
     "workflow_runs": "워크플로 실행",
     "workflows": "워크플로"
+  },
+  "banner": {
+    "administration": null
   },
   "condition": {
     "forbidden": "접근 거부됨 (403)",

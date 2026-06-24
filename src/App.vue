@@ -91,8 +91,10 @@ export default {
       setAuthHeader(token);
       if (token) {
         loadSystemCapabilities();
+        this.fetchBannerConfig();
+      } else {
+        this.bannerConfig = null;
       }
-      this.fetchBannerConfig();
       this.bannerInstanceKey++;
     });
 
@@ -111,8 +113,8 @@ export default {
     setAuthHeader(initialToken);
     if (initialToken) {
       loadSystemCapabilities();
+      this.fetchBannerConfig();
     }
-    this.fetchBannerConfig();
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
