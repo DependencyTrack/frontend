@@ -74,7 +74,7 @@
     "xss-filters": "1.2.7"
   },
   "devDependencies": {
-    "@babel/core": "7.24.7",
+    "@babel/core": "7.29.6",
     "@babel/eslint-parser": "7.24.1",
     "@cyclonedx/webpack-plugin": "2.0.2",
     "@vue/babel-helper-vue-jsx-merge-props": "1.4.0",
