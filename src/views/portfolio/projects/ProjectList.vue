@@ -162,21 +162,36 @@ export default {
           });
         }
         this.$refs.table.getData().forEach((project) => {
-          if (project.fetchedChildren || project.checkedHasChildren) {
+          // Expander is rendered natively by treegrid when children are
+          // already loaded. No extra logic needed.
+          if (project.fetchedChildren) {
+            return;
+          }
+
+          const renderExpander = () => {
+            this.$refs.table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + project.id.toString())
+              .addClass('treegrid-collapsed')
+              .treegrid('renderExpander');
+          };
+
+          // Pre-flight result already known to be positive. Just render
+          // the expander, since the tbody was just rebuilt and dropped it.
+          if (project.matchesChildSearch) {
+            renderExpander();
+            return;
+          }
+
+          if (project.checkedHasChildren) {
             return;
           }
           project.checkedHasChildren = true;
 
           this.hasMatchingChildren(project).then((doesHaveMatchingChildren) => {
+            project.matchesChildSearch = doesHaveMatchingChildren;
             if (doesHaveMatchingChildren) {
-              this.$refs.table.$table
-                .find('tbody')
-                .find('tr.treegrid-' + project.id.toString())
-                .addClass('treegrid-collapsed');
-              this.$refs.table.$table
-                .find('tbody')
-                .find('tr.treegrid-' + project.id.toString())
-                .treegrid('renderExpander');
+              renderExpander();
             }
           });
         });
@@ -207,7 +222,7 @@ export default {
     },
     hasMatchingChildren: function (project) {
       if (!project.hasChildren) {
-        return new Promise(() => false);
+        return Promise.resolve(false);
       }
 
       // Perform a pre-flight search if there is at least one

@@ -820,6 +820,7 @@
     "owasp_rr_threat_size_dev_sa": "Dev/Administrateur système",
     "owasp_rr_threat_size_intranet": "Intranet",
     "owasp_rr_threat_size_partners": "Partenaires",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "Facteur de vulnérabilité",
     "package_url": "PackageURL (PURL)",
     "package_url_full": "URL du package au format PackageURL (PURL)",
