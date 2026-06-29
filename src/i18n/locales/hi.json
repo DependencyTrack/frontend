@@ -30,6 +30,18 @@
     "api_token": "एपीआई टोकन",
     "argument": null,
     "attempts": null,
+    "banner": "बैनर",
+    "banner_activate": "बैनर सक्रिय करें",
+    "banner_color_scheme": "रंग योजना",
+    "banner_custom_mode": "कस्टम मोड",
+    "banner_dismiss": "बैनर खारिज करें",
+    "banner_dismissable": "उपयोगकर्ताओं को बैनर खारिज करने की अनुमति दें",
+    "banner_dismissable_help": "सक्षम होने पर, उपयोगकर्ता क्लोज़ बटन का उपयोग करके बैनर को बंद कर सकते हैं। \nबैनर एक नए लॉगिन सत्र में फिर से दिखाई देगा।",
+    "banner_enable_custom": "कस्टम HTML बैनर सक्षम करें",
+    "banner_explanation": "एक बैनर कॉन्फ़िगर करें जो सभी प्रमाणित उपयोगकर्ताओं के लिए एप्लिकेशन के शीर्ष पर प्रदर्शित होता है।",
+    "banner_explanation_html_text": "बैनर सामग्री को HTML के रूप में प्रदान करें। \n\"उपयोगकर्ताओं को बैनर खारिज करने की अनुमति दें\" सक्षम होने पर बंद करें बटन स्वचालित रूप से जुड़ जाता है।",
+    "banner_html_text": "HTML सामग्री",
+    "banner_message": "संदेश",
     "base_url": "आधार यूआरएल",
     "bom_formats": "बीओएम प्रारूप",
     "bom_formats_desc": "विभिन्न प्रारूपों के BOMs के प्रसंस्करण के लिए समर्थन सक्षम करता है। केवल सक्षम BOM प्रारूप ही संसाधित किए जाएँगे।",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "वर्कफ़्लो रन",
     "workflows": "वर्कफ़्लो"
+  },
+  "banner": {
+    "administration": "बैनर"
   },
   "condition": {
     "forbidden": "निषिद्ध (403)",
@@ -820,6 +835,7 @@
     "owasp_rr_threat_size_dev_sa": "डेव/सिसएडमिन",
     "owasp_rr_threat_size_intranet": "इंट्रानेट",
     "owasp_rr_threat_size_partners": "साझेदार",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "भेद्यता कारक",
     "package_url": "पैकेज यूआरएल (PURL)",
     "package_url_full": "पैकेज यूआरएल (PURL)",

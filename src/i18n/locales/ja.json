@@ -30,6 +30,18 @@
     "api_token": "APIトークン",
     "argument": null,
     "attempts": null,
+    "banner": "バナー",
+    "banner_activate": "バナーをアクティブにする",
+    "banner_color_scheme": "配色",
+    "banner_custom_mode": "カスタムモード",
+    "banner_dismiss": "バナーを閉じる",
+    "banner_dismissable": "ユーザーがバナーを閉じることを許可する",
+    "banner_dismissable_help": "有効にすると、ユーザーは閉じるボタンを使用してバナーを閉じることができます。\nバナーは新しいログイン セッションで再度表示されます。",
+    "banner_enable_custom": "カスタム HTML バナーを有効にする",
+    "banner_explanation": "すべての認証されたユーザーに対してアプリケーションの上部に表示されるバナーを構成します。",
+    "banner_explanation_html_text": "バナーのコンテンツを HTML として提供します。 \n「ユーザーがバナーを閉じることを許可する」が有効になっている場合、閉じるボタンは自動的に追加されます。",
+    "banner_html_text": "HTMLコンテンツ",
+    "banner_message": "メッセージ",
     "base_url": "ベースURL",
     "bom_formats": "BOM 形式",
     "bom_formats_desc": "さまざまな形式の BOM の処理をサポートします。有効になっている BOM 形式のみが処理されます。",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "ワークフロー実行",
     "workflows": "ワークフロー"
+  },
+  "banner": {
+    "administration": "バナー"
   },
   "condition": {
     "forbidden": "禁止 (403)",
@@ -820,6 +835,7 @@
     "owasp_rr_threat_size_dev_sa": "開発/システム管理者",
     "owasp_rr_threat_size_intranet": "イントラネット",
     "owasp_rr_threat_size_partners": "パートナー",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "脆弱性の要素",
     "package_url": "パッケージ URL (PURL)",
     "package_url_full": "パッケージ URL (PURL)",

@@ -30,6 +30,18 @@
     "api_token": "token API",
     "argument": null,
     "attempts": null,
+    "banner": "Bandera",
+    "banner_activate": "Activar banner",
+    "banner_color_scheme": "esquema de color",
+    "banner_custom_mode": "Modo personalizado",
+    "banner_dismiss": "Descartar banner",
+    "banner_dismissable": "Permitir a los usuarios descartar el banner",
+    "banner_dismissable_help": "Cuando está habilitado, los usuarios pueden cerrar el banner usando el botón de cerrar. \nEl banner reaparecerá en una nueva sesión de inicio de sesión.",
+    "banner_enable_custom": "Habilitar banner HTML personalizado",
+    "banner_explanation": "Configure un banner que se muestra en la parte superior de la aplicación para todos los usuarios autenticados.",
+    "banner_explanation_html_text": "Proporcione el contenido del banner como HTML. \nEl botón de cerrar se agrega automáticamente cuando está habilitado \"Permitir a los usuarios descartar el banner\".",
+    "banner_html_text": "contenido HTML",
+    "banner_message": "Mensaje",
     "base_url": "URL base",
     "bom_formats": "Formatos de lista de materiales",
     "bom_formats_desc": "Habilita la compatibilidad con el procesamiento de listas de materiales de varios formatos. Sólo se procesarán los formatos de lista de materiales que estén habilitados.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Ejecuciones de flujo de trabajo",
     "workflows": "Flujos de trabajo"
+  },
+  "banner": {
+    "administration": "Bandera"
   },
   "condition": {
     "forbidden": "Prohibido (403)",
@@ -820,6 +835,7 @@
     "owasp_rr_threat_size_dev_sa": "Desarrollador/Administrador de sistemas",
     "owasp_rr_threat_size_intranet": "Intranet",
     "owasp_rr_threat_size_partners": "Socios",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "Factor de vulnerabilidad",
     "package_url": "URL del paquete (PURL)",
     "package_url_full": "URL del paquete (PURL)",

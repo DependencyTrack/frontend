@@ -30,6 +30,18 @@
     "api_token": "API 權杖",
     "argument": "爭論",
     "attempts": "嘗試",
+    "banner": "橫幅",
+    "banner_activate": "啟動橫幅",
+    "banner_color_scheme": "配色方案",
+    "banner_custom_mode": "自訂模式",
+    "banner_dismiss": "關閉橫幅",
+    "banner_dismissable": "允許用戶關閉橫幅",
+    "banner_dismissable_help": "啟用後，用戶可以使用關閉按鈕關閉橫幅。該橫幅將重新出現在新的登入工作階段中。",
+    "banner_enable_custom": "啟用自訂 HTML 橫幅",
+    "banner_explanation": "配置為所有經過身份驗證的使用者顯示在應用程式頂部的橫幅。",
+    "banner_explanation_html_text": "提供 HTML 格式的横幅内容。啟用「允許使用者關閉橫幅」時，會自動新增關閉按鈕。",
+    "banner_html_text": "HTML 內容",
+    "banner_message": "訊息",
     "base_url": "基礎 URL",
     "bom_formats": "BOM 格式",
     "bom_formats_desc": "啟用對處理各種格式的 BOM 的支援。（只有啟用的 BOM 格式才會被處理）",
@@ -334,6 +346,9 @@
     "workflow_run_details": "工作流程運行詳細信息",
     "workflow_runs": "工作流程運行",
     "workflows": "工作流程"
+  },
+  "banner": {
+    "administration": "橫幅"
   },
   "condition": {
     "forbidden": "禁止 (403)",
@@ -820,6 +835,7 @@
     "owasp_rr_threat_size_dev_sa": "開發/系統管理員",
     "owasp_rr_threat_size_intranet": "內部網路",
     "owasp_rr_threat_size_partners": "合作夥伴",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "脆弱性因素",
     "package_url": "套件 URL (PURL)",
     "package_url_full": "套件 URL (PURL)",

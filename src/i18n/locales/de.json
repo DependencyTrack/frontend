@@ -30,6 +30,18 @@
     "api_token": "API-Token",
     "argument": null,
     "attempts": null,
+    "banner": "Banner",
+    "banner_activate": "Banner aktivieren",
+    "banner_color_scheme": "Farbschema",
+    "banner_custom_mode": "Benutzerdefinierter Modus",
+    "banner_dismiss": "Banner schließen",
+    "banner_dismissable": "Benutzern erlauben, Banner zu schließen",
+    "banner_dismissable_help": "Wenn diese Option aktiviert ist, können Benutzer das Banner über die Schaltfläche „Schließen“ schließen. \nDas Banner wird bei einer neuen Anmeldesitzung wieder angezeigt.",
+    "banner_enable_custom": "Aktivieren Sie benutzerdefiniertes HTML-Banner",
+    "banner_explanation": "Konfigurieren Sie ein Banner, das allen authentifizierten Benutzern oben in der Anwendung angezeigt wird.",
+    "banner_explanation_html_text": "Stellen Sie den Bannerinhalt als HTML bereit. \nDie Schaltfläche „Schließen“ wird automatisch hinzugefügt, wenn „Benutzern erlauben, Banner zu schließen“ aktiviert ist.",
+    "banner_html_text": "HTML-Inhalt",
+    "banner_message": "Nachricht",
     "base_url": "Basis-URL",
     "bom_formats": "BOM-Formate",
     "bom_formats_desc": "Aktiviert die Unterstützung für die Verarbeitung von BOMs verschiedener Formate. Nur aktivierte BOM-Formate werden verarbeitet.",
@@ -334,6 +346,9 @@
     "workflow_run_details": null,
     "workflow_runs": "Workflow-Ausführungen",
     "workflows": "Workflows"
+  },
+  "banner": {
+    "administration": "Banner"
   },
   "condition": {
     "forbidden": "Verboten (403)",
@@ -820,6 +835,7 @@
     "owasp_rr_threat_size_dev_sa": "Dev/Sysadmin",
     "owasp_rr_threat_size_intranet": "Intranet",
     "owasp_rr_threat_size_partners": "Partner",
+    "owasp_rr_vector": null,
     "owasp_rr_vulnerability_factor": "Verletzlichkeitsfaktor",
     "package_url": "Paket-URL (PURL)",
     "package_url_full": "Paket-URL (PURL)",
