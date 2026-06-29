@@ -127,6 +127,7 @@ const TYPES = {
     epss_percentile: 'double',
     cvssv4_vector: 'string',
     cvssv4_score: 'double',
+    is_kev: 'bool',
   },
   'Vulnerability.Alias': {
     id: 'string',
