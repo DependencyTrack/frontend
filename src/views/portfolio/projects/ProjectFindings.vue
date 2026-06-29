@@ -118,6 +118,7 @@ import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import FindingAudit from './FindingAudit';
 import ProjectUploadVexModal from './ProjectUploadVexModal';
+import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
 
 export default {
   props: {
@@ -127,6 +128,7 @@ export default {
   components: {
     cSwitch,
     ProjectUploadVexModal,
+    KevAssertionsModal,
   },
   beforeCreate() {
     this.showSuppressedFindings =
@@ -304,6 +306,38 @@ export default {
           },
         },
         {
+          title: this.$t('message.kev'),
+          field: 'vulnerability.isKev',
+          sortable: false,
+          class: 'tight',
+          formatter: (value, row, index) => {
+            if (value !== true) {
+              return '';
+            }
+            return this.vueFormatter({
+              i18n,
+              components: { KevAssertionsModal },
+              template: `
+                <div class="text-center">
+                  <b-link
+                    v-b-modal="\`kevAssertionsModal-${index}\`"
+                    :title="$t('message.kev_show_assertions')"
+                    class="text-danger"
+                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
+                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
+                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
+                </div>`,
+              data() {
+                return {
+                  index: index,
+                  source: row.vulnerability.source,
+                  vulnId: row.vulnerability.vulnId,
+                };
+              },
+            });
+          },
+        },
+        {
           title: this.$t('message.analyzer'),
           field: 'attribution.analyzerIdentity',
           sortable: true,
@@ -349,7 +383,10 @@ export default {
       ],
       data: [],
       options: {
-        onPostBody: this.initializeTooltips,
+        onPostBody: () => {
+          this.vueFormatterInit();
+          this.initializeTooltips();
+        },
         search: true,
         showColumns: true,
         showRefresh: true,
