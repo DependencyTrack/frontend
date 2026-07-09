@@ -35,10 +35,14 @@
         }}</b-tooltip>
         <b-dropdown
           variant="outline-primary"
+          :disabled="isDownloadingBom"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
-            <span class="fa fa-download"></span>
+            <span
+              class="fa"
+              :class="isDownloadingBom ? 'fa-spinner fa-spin' : 'fa-download'"
+            ></span>
             {{ $t('message.download_bom') }}
           </template>
           <b-dropdown-item @click="downloadBom('inventory')" href="#">{{
@@ -52,10 +56,14 @@
         </b-dropdown>
         <b-dropdown
           variant="outline-primary"
+          :disabled="isDownloadingTable"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
-            <span class="fa fa-download"></span>
+            <span
+              class="fa"
+              :class="isDownloadingTable ? 'fa-spinner fa-spin' : 'fa-download'"
+            ></span>
             {{ $t('message.download_component') }}
           </template>
           <b-dropdown-item @click="downloadTable('csv')" href="#">{{
@@ -151,6 +159,8 @@ export default {
   },
   data() {
     return {
+      isDownloadingBom: false,
+      isDownloadingTable: false,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -410,6 +420,10 @@ export default {
       this.$refs.table.uncheckAll();
     },
     downloadBom: function (data) {
+      if (this.isDownloadingBom) {
+        return;
+      }
+      this.isDownloadingBom = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
@@ -438,6 +452,9 @@ export default {
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
+        })
+        .finally(() => {
+          this.isDownloadingBom = false;
         });
     },
     buildTableFile: function (json, fileType) {
@@ -469,8 +486,16 @@ export default {
       }
     },
     downloadTable: async function (fileType) {
-      const result = await this.downloadTableJson();
-      this.buildTableFile(result, fileType);
+      if (this.isDownloadingTable) {
+        return;
+      }
+      this.isDownloadingTable = true;
+      try {
+        const result = await this.downloadTableJson();
+        this.buildTableFile(result, fileType);
+      } finally {
+        this.isDownloadingTable = false;
+      }
     },
     downloadTableJson: async function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}?limit=1000000&offset=0`;
