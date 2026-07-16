@@ -25,13 +25,18 @@
         id="export-vex-button"
         size="md"
         variant="outline-primary"
+        :disabled="isExportingVex"
         @click="downloadVex()"
         v-permission:or="[
           PERMISSIONS.VIEW_VULNERABILITY,
           PERMISSIONS.VULNERABILITY_ANALYSIS,
         ]"
       >
-        <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
+        <span
+          class="fa"
+          :class="isExportingVex ? 'fa-spinner fa-spin' : 'fa-download'"
+        ></span>
+        {{ $t('message.export_vex') }}
       </b-button>
       <b-tooltip target="export-vex-button" triggers="hover focus">{{
         $t('message.export_vex_tooltip')
@@ -41,13 +46,18 @@
         id="export-vdr-button"
         size="md"
         variant="outline-primary"
+        :disabled="isExportingVdr"
         @click="downloadVdr()"
         v-permission:or="[
           PERMISSIONS.VIEW_VULNERABILITY,
           PERMISSIONS.VULNERABILITY_ANALYSIS,
         ]"
       >
-        <span class="fa fa-download"></span> {{ $t('message.export_vdr') }}
+        <span
+          class="fa"
+          :class="isExportingVdr ? 'fa-spinner fa-spin' : 'fa-download'"
+        ></span>
+        {{ $t('message.export_vdr') }}
       </b-button>
       <b-tooltip target="export-vdr-button" triggers="hover focus">{{
         $t('message.export_vdr_tooltip')
@@ -149,6 +159,8 @@ export default {
   data() {
     return {
       showSuppressedFindings: this.showSuppressedFindings,
+      isExportingVex: false,
+      isExportingVdr: false,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -438,6 +450,10 @@ export default {
       return url;
     },
     downloadVex: function () {
+      if (this.isExportingVex) {
+        return;
+      }
+      this.isExportingVex = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
@@ -464,9 +480,16 @@ export default {
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
+        })
+        .finally(() => {
+          this.isExportingVex = false;
         });
     },
     downloadVdr: function () {
+      if (this.isExportingVdr) {
+        return;
+      }
+      this.isExportingVdr = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
       this.axios
         .request({
@@ -495,6 +518,9 @@ export default {
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
+        })
+        .finally(() => {
+          this.isExportingVdr = false;
         });
     },
     reAnalyze: function (data) {
