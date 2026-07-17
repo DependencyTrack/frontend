@@ -26,7 +26,7 @@
   "dependencies": {
     "@codemirror/autocomplete": "6.20.3",
     "@codemirror/lang-javascript": "6.2.5",
-    "@codemirror/lang-jinja": "6.0.0",
+    "@codemirror/lang-jinja": "6.0.1",
     "@codemirror/lint": "6.9.4",
     "@codemirror/theme-one-dark": "6.1.3",
     "@coreui/coreui": "2.1.16",
