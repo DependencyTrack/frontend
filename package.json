@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.24.7",
-    "@babel/eslint-parser": "7.24.1",
+    "@babel/eslint-parser": "7.24.8",
     "@cyclonedx/webpack-plugin": "2.0.2",
     "@vue/babel-helper-vue-jsx-merge-props": "1.4.0",
     "@vue/babel-preset-jsx": "1.4.0",
