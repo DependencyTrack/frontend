@@ -102,4 +102,5 @@ jobs:
           RELEASE_VERSION: ${{ needs.read-version.outputs.version }}
         run: |-
           gh release edit "${RELEASE_VERSION}" \
+            --latest=false \
             --draft=false
