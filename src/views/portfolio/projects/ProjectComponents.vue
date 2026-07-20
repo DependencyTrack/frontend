@@ -131,6 +131,7 @@
 <script>
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
+import ComponentAudit from '@/views/portfolio/projects/ComponentAudit.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
 import ProjectUploadBomModal from '@/views/portfolio/projects/ProjectUploadBomModal';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
@@ -221,8 +222,34 @@ export default {
       searchText: null,
       visibleColumns: initialVisibleColumns,
       columns: this.buildColumns(),
+      analysisByIdentity: {},
       tableOptions: {
         toolbar: '#componentsToolbar',
+        onRefresh: () => {
+          this.fetchComponentAnalyses();
+        },
+        icons: {
+          detailOpen: 'fa-fw fa-angle-right',
+          detailClose: 'fa-fw fa-angle-down',
+          refresh: 'fa-refresh',
+        },
+        detailView: true,
+        detailViewIcon: true,
+        detailViewByClick: false,
+        detailFormatter: (index, row) => {
+          return (
+            row &&
+            this.vueFormatter({
+              i18n,
+              propsData: {
+                component: row,
+                projectUuid: this.uuid,
+              },
+              ...ComponentAudit,
+            })
+          );
+        },
+        onExpandRow: this.vueFormatterInit,
         search: true,
         searchable: false,
         onSearch: (text) => {
@@ -275,6 +302,9 @@ export default {
       }
       return { expand: [...expand] };
     },
+  },
+  created() {
+    this.fetchComponentAnalyses();
   },
   methods: {
     buildBaseParams() {
@@ -443,6 +473,23 @@ export default {
               );
             }
             return '';
+          },
+        },
+        {
+          title: 'Override',
+          field: 'override',
+          sortable: false,
+          visible: initialColumnVisible('override'),
+          formatter: (value, row) => {
+            const analysis = this.analysisByIdentity[this.identityKey(row)];
+            if (!analysis || !analysis.license) {
+              return '';
+            }
+            return (
+              '<i class="fa fa-balance-scale" data-toggle="tooltip" title="' +
+              xssFilters.inHTMLData('License override: ' + analysis.license) +
+              '"></i>'
+            );
           },
         },
         {
@@ -644,9 +691,36 @@ export default {
       return { items, partial: true };
     },
     refreshTable() {
+      this.fetchComponentAnalyses();
       if (this.$refs.table) {
         this.$refs.table.refreshCurrentPage();
       }
+    },
+    identityKey(row) {
+      const norm = (value) => value || '';
+      return [
+        norm(row.purl),
+        norm(row.group),
+        norm(row.name),
+        norm(row.version),
+      ].join('|');
+    },
+    fetchComponentAnalyses() {
+      const url = `${this.$api.BASE_URL}/api/v2/component-analyses?project=${this.uuid}`;
+      this.axios.get(url).then((response) => {
+        const map = {};
+        for (const analysis of response.data.analyses || []) {
+          map[this.identityKey(analysis)] = analysis;
+        }
+        // re-render only when the flags actually changed — onRefresh calls
+        // this too, and an unconditional re-render would loop
+        const changed =
+          JSON.stringify(map) !== JSON.stringify(this.analysisByIdentity);
+        this.analysisByIdentity = map;
+        if (changed && this.$refs.table) {
+          this.$refs.table.refreshCurrentPage();
+        }
+      });
     },
   },
 };
