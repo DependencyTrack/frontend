@@ -488,6 +488,7 @@
     "component_operating_system": "Système d'exploitation",
     "component_package_url_desc": "Une PackageURL valide est requise pour les bibliothèques et les frameworks. Syntaxe PURL : pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Plate-forme",
+    "component_policies": null,
     "component_properties": "Propriétés des composants",
     "component_search": "Recherche de composants",
     "component_spdx_license_desc": "Spécifie l'ID de licence SPDX du composant",

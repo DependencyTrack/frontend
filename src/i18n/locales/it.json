@@ -488,6 +488,7 @@
     "component_operating_system": "Sistema operativo",
     "component_package_url_desc": "Per librerie e framework è richiesto un URL del pacchetto valido. Sintassi PURL: pkg:tipo/spazio dei nomi/nome@versione?qualificatori#sottopercorso",
     "component_platform": "Piattaforma",
+    "component_policies": null,
     "component_properties": "Proprietà del componente",
     "component_search": "Ricerca componente",
     "component_spdx_license_desc": "Specifica l'ID della licenza SPDX del componente",

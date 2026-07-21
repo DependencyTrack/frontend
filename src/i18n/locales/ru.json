@@ -488,6 +488,7 @@
     "component_operating_system": "Операционная система",
     "component_package_url_desc": "Действительный Package URL требуется для библиотек и фреймворков. Синтаксис PURL: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Платформа",
+    "component_policies": null,
     "component_properties": "Свойства компонента",
     "component_search": "Поиск компонента",
     "component_spdx_license_desc": "Указывает идентификатор лицензии SPDX компонента",

@@ -488,6 +488,7 @@
     "component_operating_system": "System operacyjny",
     "component_package_url_desc": "W przypadku bibliotek i struktur wymagany jest prawidłowy adres URL pakietu. Składnia PURL: pkg:typ/przestrzeń nazw/nazwa@wersja?kwalifikatory#podścieżka",
     "component_platform": "Platforma",
+    "component_policies": null,
     "component_properties": "Właściwości komponentu",
     "component_search": "Wyszukiwanie komponentów",
     "component_spdx_license_desc": "Określa identyfikator licencji SPDX komponentu",

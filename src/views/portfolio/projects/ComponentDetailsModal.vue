@@ -463,16 +463,6 @@
     <template v-slot:modal-footer="{ cancel }">
       <b-button
         size="md"
-        variant="outline-danger"
-        @click="deleteComponent()"
-        v-permission:or="[
-          PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_DELETE,
-        ]"
-        >{{ $t('message.delete') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="outline-primary"
         v-b-modal.componentPropertiesModal
         v-permission:or="[
@@ -484,16 +474,6 @@
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button
-        size="md"
-        variant="primary"
-        @click="updateComponent()"
-        v-permission:or="[
-          PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
-        ]"
-        >{{ $t('message.update') }}</b-button
-      >
     </template>
   </b-modal>
 </template>
@@ -652,6 +632,13 @@ export default {
     //console.log(this.component);
   },
   methods: {
+    // Components are managed by SBOM uploads; license curation happens via
+    // component analyses and component policies. The details view is
+    // therefore read-only for everyone, regardless of permissions.
+    isNotPermitted() {
+      return true;
+    },
+
     updateComponent: function () {
       this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;

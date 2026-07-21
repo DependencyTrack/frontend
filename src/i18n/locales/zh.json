@@ -488,6 +488,7 @@
     "component_operating_system": "操作系统",
     "component_package_url_desc": "库和框架需要有效的包 URL。PURL 语法：pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "平台",
+    "component_policies": null,
     "component_properties": "组件属性",
     "component_search": "组件搜索",
     "component_spdx_license_desc": "指定组件的 SPDX 许可证 ID",

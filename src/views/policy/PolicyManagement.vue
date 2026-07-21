@@ -36,6 +36,16 @@
         >
         <license-group-list v-on:total="totalLicenseGroups = $event" />
       </b-tab>
+      <b-tab ref="componentpolicies" @click="routeTo('componentPolicies')">
+        <template v-slot:title
+          ><i class="fa fa-balance-scale"></i>
+          {{ $t('message.component_policies') }}
+          <b-badge variant="tab-total">{{
+            totalComponentPolicies
+          }}</b-badge></template
+        >
+        <component-policy-list v-on:total="totalComponentPolicies = $event" />
+      </b-tab>
       <b-tab
         ref="vulnerability"
         class="body-bg-color overview-chart"
@@ -61,11 +71,13 @@
 import permissionsMixin from '../../mixins/permissionsMixin';
 import PolicyList from './PolicyList';
 import LicenseGroupList from './LicenseGroupList';
+import ComponentPolicyList from './ComponentPolicyList';
 import VulnerabilityPolicyList from './VulnerabilityPolicyList';
 
 export default {
   mixins: [permissionsMixin],
   components: {
+    ComponentPolicyList,
     LicenseGroupList,
     PolicyList,
     VulnerabilityPolicyList,
@@ -75,6 +87,7 @@ export default {
       totalPolicies: 0,
       totalLicenseGroups: 0,
       totalVulnerabilityPolicies: 0,
+      totalComponentPolicies: 0,
     };
   },
   methods: {

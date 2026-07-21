@@ -488,6 +488,7 @@
     "component_operating_system": "作業系統",
     "component_package_url_desc": "函式庫和框架需要有效的套件 URL。PURL 語法：pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "平台",
+    "component_policies": null,
     "component_properties": "元件屬性",
     "component_search": "元件搜尋",
     "component_spdx_license_desc": "指定元件的 SPDX 授權 ID",
