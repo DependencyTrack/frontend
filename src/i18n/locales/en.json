@@ -1151,6 +1151,7 @@
     "vulnerability_updated_desc": "The date the vulnerability record was last updated",
     "vulnerability_vuln_id": "Vulnerability ID",
     "vulnerability_vuln_id_desc": "The identifier which uniquely identifies this vulnerability within the same source",
+    "vulnerability_id_pattern_tooltip": "Use * as wildcard (e.g., CVE-2024-* or MAL-*) or regular expressions (e.g., ^CVE-202[34]-.*)",
     "vulnerable": "Vulnerable",
     "vulnerable_components": "Vulnerable Components",
     "vulnerable_projects": "Vulnerable Projects",
