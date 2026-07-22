@@ -290,8 +290,10 @@ export default {
           description: policy.description || '',
           operationMode: policy.enabled ? 'APPLY' : 'DISABLED',
           priority: String(policy.priority),
-          validFrom: policy.validFrom ? policy.validFrom.slice(0, 10) : null,
-          validUntil: policy.validUntil ? policy.validUntil.slice(0, 10) : null,
+          validFrom: policy.valid_from ? policy.valid_from.slice(0, 10) : null,
+          validUntil: policy.valid_until
+            ? policy.valid_until.slice(0, 10)
+            : null,
           condition: policy.condition,
           license: policy.license || '',
           details: policy.details || '',
@@ -310,10 +312,10 @@ export default {
         condition: this.policy.condition,
         license: this.policy.license || null,
         details: this.policy.details || null,
-        validFrom: this.policy.validFrom
+        valid_from: this.policy.validFrom
           ? `${this.policy.validFrom}T00:00:00Z`
           : null,
-        validUntil: this.policy.validUntil
+        valid_until: this.policy.validUntil
           ? `${this.policy.validUntil}T23:59:59Z`
           : null,
       };

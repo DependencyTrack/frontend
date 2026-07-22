@@ -193,7 +193,7 @@ export default {
         if (analysis) {
           this.analysisId = analysis.id;
           this.overrideLicense = analysis.license;
-          this.declaredLicense = analysis.declaredLicense;
+          this.declaredLicense = analysis.declared_license;
           this.details = analysis.details;
           this.loadComments();
         }
@@ -214,8 +214,8 @@ export default {
           if (comment.commenter) {
             trail += comment.commenter + ' - ';
           }
-          // v2 serializes timestamps as epoch seconds
-          trail += common.formatTimestamp(comment.timestamp * 1000, true);
+          // v2 serializes timestamps as epoch milliseconds
+          trail += common.formatTimestamp(comment.timestamp, true);
           trail += '\n' + comment.comment + '\n\n';
         }
         this.auditTrail = trail;
@@ -225,7 +225,7 @@ export default {
       const url = `${this.$api.BASE_URL}/api/v2/component-analyses`;
       this.axios
         .put(url, {
-          projectUuid: this.projectUuid,
+          project_uuid: this.projectUuid,
           purl: this.component.purl || null,
           group: this.component.group || null,
           name: this.component.name,
@@ -233,10 +233,9 @@ export default {
           license: this.overrideLicense || null,
           details: this.details || null,
         })
-        .then((response) => {
-          this.analysisId = response.data.id;
+        .then(() => {
           this.$toastr.s(this.$t('message.updated'));
-          this.loadComments();
+          this.loadAnalysis();
         })
         .catch((error) => {
           this.$toastr.w(

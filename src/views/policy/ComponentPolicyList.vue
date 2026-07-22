@@ -109,14 +109,14 @@ export default {
         },
         {
           title: this.$t('message.validFrom'),
-          field: 'validFrom',
+          field: 'valid_from',
           visible: initialColumnVisible('validFrom', false),
           formatter: (value) =>
             value ? common.formatTimestamp(Date.parse(value)) : '',
         },
         {
           title: this.$t('message.validUntil'),
-          field: 'validUntil',
+          field: 'valid_until',
           visible: initialColumnVisible('validUntil', false),
           formatter: (value) =>
             value ? common.formatTimestamp(Date.parse(value)) : '',
