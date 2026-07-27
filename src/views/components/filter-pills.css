@@ -19,14 +19,3 @@
   min-height: calc(1.5em + 0.5rem + 2px);
 }
 
-.btn-clear-all-filters {
-  border-radius: 20px;
-  font-size: 0.85rem;
-}
-
-.btn-more-filters >>> button {
-  border-radius: 20px;
-  border-style: dashed !important;
-  font-size: 0.85rem;
-}
-

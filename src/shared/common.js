@@ -430,13 +430,6 @@ $common.componentClassifierLabelFormatter = (i18n) => {
  */
 $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
   return function (value) {
-    let url = !this.routerFunc
-      ? '../projects/?classifier=' + value
-      : this.routerFunc().resolve({
-          name: 'Projects',
-          query: { classifier: value },
-        }).href;
-
     switch (value) {
       case 'APPLICATION':
       case 'FRAMEWORK':
@@ -446,9 +439,7 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
       case 'DEVICE':
       case 'FIRMWARE':
       case 'FILE':
-        return `<a href="${url}">${i18n.$t(
-          `message.component_${value.toLowerCase()}`,
-        )}</a>`;
+        return i18n.$t(`message.component_${value.toLowerCase()}`);
       default:
         return null;
     }
@@ -649,10 +640,12 @@ $common.sameQueryParams = function (a, b) {
 };
 
 $common.getCollectionLogicText = function (i18n, project) {
-  const tag = project.collectionTag
-    ? xssFilters.inDoubleQuotedAttr(project.collectionTag.name)
+  const collectionLogic = project.collection_logic ?? project.collectionLogic;
+  const collectionTag = project.collection_tag ?? project.collectionTag;
+  const tag = collectionTag
+    ? xssFilters.inDoubleQuotedAttr(collectionTag.name)
     : '';
-  switch (project.collectionLogic) {
+  switch (collectionLogic) {
     case 'AGGREGATE_DIRECT_CHILDREN':
       return i18n.$t(
         'message.collection_logic_metrics_by_aggregate_direct_children',

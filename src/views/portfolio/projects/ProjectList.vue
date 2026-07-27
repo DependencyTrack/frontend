@@ -1,27 +1,6 @@
 <template>
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <b-button
-        size="md"
-        variant="outline-primary"
-        @click="initializeProjectCreateProjectModal"
-        v-permission:or="[
-          PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
-        ]"
-      >
-        <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
-      </b-button>
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showInactiveProjects"
-        color="primary"
-        v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
       <c-switch
         @click.native="saveViewState"
         style="margin-left: 1rem; margin-right: 0.5rem"
@@ -30,21 +9,265 @@
         v-model="showFlatView"
         label
         v-bind="labelIcon"
-        :disabled="isSearching"
+        :disabled="!isTreeViewAllowed"
         v-b-tooltip.hover
         :title="$t('message.switch_view')"
       /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
     </div>
+    <div id="projectsFilterBarRow" class="filter-bar-row">
+      <div
+        v-if="
+          isPermitted([
+            PERMISSIONS.PORTFOLIO_MANAGEMENT,
+            PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
+          ])
+        "
+        class="filter-bar-surface filter-bar-actions"
+      >
+        <b-button
+          size="sm"
+          variant="outline-primary"
+          class="btn-create-project"
+          @click="initializeProjectCreateProjectModal"
+        >
+          <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
+        </b-button>
+      </div>
+      <div
+        id="projectsFilterBar"
+        class="filter-bar filter-bar-filters"
+        role="toolbar"
+        :aria-label="$t('message.filters')"
+      >
+        <div class="filter-pills">
+          <text-filter-pill
+            v-if="isFilterVisible('name')"
+            ref="filter_name"
+            :field-label="$t('message.project_name')"
+            field-name="name"
+            icon="fa-folder-open-o"
+            :operators="['contains']"
+            v-model="nameFilter"
+            @dismiss="onFilterDismiss('name')"
+          />
+          <text-filter-pill
+            v-if="isFilterVisible('version')"
+            ref="filter_version"
+            :field-label="$t('message.version')"
+            field-name="version"
+            icon="fa-bookmark-o"
+            :operators="['contains']"
+            v-model="versionFilter"
+            @dismiss="onFilterDismiss('version')"
+          />
+          <searchable-multi-select-filter-pill
+            v-if="isFilterVisible('classifier')"
+            ref="filter_classifier"
+            :field-label="$t('message.classifier')"
+            field-name="classifier"
+            icon="fa-cube"
+            :options="sortAvailableClassifiers"
+            v-model="classifierFilter"
+            @dismiss="onFilterDismiss('classifier')"
+          />
+          <multi-value-text-filter-pill
+            v-if="isFilterVisible('tag')"
+            ref="filter_tag"
+            :field-label="$t('message.tags')"
+            field-name="tag"
+            icon="fa-tag"
+            :input-placeholder="$t('message.tag_name')"
+            v-model="tagFilter"
+            @dismiss="onFilterDismiss('tag')"
+          />
+          <searchable-multi-select-filter-pill
+            v-if="isFilterVisible('severity')"
+            ref="filter_severity"
+            :field-label="$t('message.severity')"
+            field-name="severity"
+            icon="fa-signal"
+            :options="severityFilterOptions"
+            v-model="severityFilter"
+            @dismiss="onFilterDismiss('severity')"
+          />
+          <multi-value-text-filter-pill
+            v-if="isFilterVisible('team')"
+            ref="filter_team"
+            :field-label="$t('message.teams')"
+            field-name="team"
+            icon="fa-users"
+            :input-placeholder="$t('message.team_name')"
+            v-model="teamFilter"
+            @dismiss="onFilterDismiss('team')"
+          />
+          <searchable-multi-select-filter-pill
+            v-if="!uuid && isFilterVisible('parent')"
+            ref="filter_parent"
+            :field-label="$t('message.parent')"
+            field-name="parent"
+            icon="fa-sitemap"
+            :multiple="false"
+            :options="parentOptions"
+            :loading="parentOptionsLoading"
+            :search-placeholder="$t('message.search_parent')"
+            v-model="parentFilter"
+            @dismiss="onFilterDismiss('parent')"
+          />
+          <date-time-range-filter-pill
+            v-if="isFilterVisible('lastBomImport')"
+            ref="filter_lastBomImport"
+            :field-label="$t('message.last_bom_import')"
+            field-name="last_bom_import"
+            icon="fa-calendar"
+            date-only
+            emit-date-as-millis
+            v-model="lastBomImportFilter"
+            @dismiss="onFilterDismiss('lastBomImport')"
+          />
+          <enum-filter-pill
+            v-if="isFilterVisible('active')"
+            ref="filter_active"
+            :field-label="$t('message.active')"
+            field-name="active"
+            icon="fa-eye"
+            :options="activeFilterOptions"
+            v-model="activeFilter"
+            @dismiss="onFilterDismiss('active')"
+          />
+          <enum-filter-pill
+            v-if="isFilterVisible('latest')"
+            ref="filter_latest"
+            :field-label="$t('message.latest')"
+            field-name="latest"
+            icon="fa-bookmark"
+            :options="latestFilterOptions"
+            v-model="latestFilter"
+            @dismiss="onFilterDismiss('latest')"
+          />
+          <b-dropdown
+            v-if="addFilterOptions.length > 0"
+            size="sm"
+            variant="outline-primary"
+            class="btn-more-filters"
+            no-caret
+          >
+            <template #button-content>
+              <span class="fa fa-plus" aria-hidden="true"></span>
+              {{ $t('message.add_filter') }}
+            </template>
+            <b-dropdown-item
+              v-for="filter in addFilterOptions"
+              :key="filter.name"
+              @click="showFilter(filter.name)"
+            >
+              <span
+                :class="['fa', filter.icon, 'mr-2']"
+                aria-hidden="true"
+              ></span>
+              {{ filter.label }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <b-button
+            v-show="activeFilterCount >= 2"
+            size="sm"
+            variant="outline-danger"
+            class="btn-clear-all-filters"
+            @click="clearAllFilters"
+          >
+            <span class="fa fa-remove" aria-hidden="true"></span>
+            {{ $t('message.clear_filters') }}
+          </b-button>
+        </div>
+      </div>
+    </div>
     <bootstrap-table
       ref="table"
       :columns="columns"
-      :data="data"
+      :data="tableData"
       :options="options"
       @on-load-success="onLoadSuccess"
       @on-pre-body="onPreBody"
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
+    <div
+      class="mt-2 d-flex flex-wrap justify-content-between align-items-center"
+    >
+      <div class="pagination-meta d-flex align-items-center flex-wrap">
+        <span
+          v-if="totalCountDisplay"
+          class="pagination-meta-text"
+          :title="
+            totalCountType === 'AT_LEAST'
+              ? $t('message.total_rows_at_least_tooltip')
+              : null
+          "
+        >
+          {{ totalCountDisplay }} {{ $t('message.total_rows') }}
+        </span>
+        <span
+          v-if="totalCountDisplay"
+          class="pagination-meta-divider"
+          aria-hidden="true"
+        ></span>
+        <label
+          class="pagination-meta-text mb-0 mr-2"
+          for="project-list-page-size-select"
+        >
+          {{ $t('message.rows_per_page') }}
+        </label>
+        <b-form-select
+          id="project-list-page-size-select"
+          v-model="currentPageSize"
+          class="pagination-page-size-select"
+          :disabled="isLoading"
+        >
+          <b-form-select-option
+            v-for="pageSize in allowedPageSizes"
+            :key="`pageSize-${pageSize}`"
+            :value="pageSize"
+          >
+            {{ pageSize }}
+          </b-form-select-option>
+        </b-form-select>
+      </div>
+      <div class="d-flex align-items-center">
+        <b-button-group class="pagination-group">
+          <b-button
+            class="pagination-button"
+            :disabled="!hasPreviousPage || isLoading"
+            :aria-label="$t('message.first_page')"
+            :title="$t('message.first_page')"
+            @click="goToFirstPage"
+          >
+            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+          </b-button>
+          <b-button
+            class="pagination-button"
+            :disabled="!hasPreviousPage || isLoading"
+            :aria-label="$t('message.previous_page')"
+            :title="$t('message.previous_page')"
+            @click="goToPrevPage"
+          >
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+          </b-button>
+        </b-button-group>
+        <span class="page-indicator" aria-live="polite">
+          {{ $t('message.page_indicator', { n: currentPageNumber }) }}
+        </span>
+        <b-button-group class="pagination-group">
+          <b-button
+            class="pagination-button"
+            :disabled="!hasNextPage || isLoading"
+            :aria-label="$t('message.next_page')"
+            :title="$t('message.next_page')"
+            @click="goToNextPage"
+          >
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </b-button>
+        </b-button-group>
+      </div>
+    </div>
     <project-create-project-modal />
   </div>
 </template>
@@ -56,105 +279,487 @@ import MurmurHash2 from 'imurmurhash';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import routerMixin from '../../../mixins/routerMixin';
+import filterPillsMixin from '../../../mixins/filterPillsMixin';
+import availableClassifiersMixin from '../../../mixins/availableClassifiersMixin';
 import common from '../../../shared/common';
 import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
 import SeverityProgressBar from '../../components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
+import TextFilterPill from '@/views/components/TextFilterPill.vue';
+import EnumFilterPill from '@/views/components/EnumFilterPill.vue';
+import SearchableMultiSelectFilterPill from '@/views/components/SearchableMultiSelectFilterPill.vue';
+import MultiValueTextFilterPill from '@/views/components/MultiValueTextFilterPill.vue';
+import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
+
+const ALLOWED_PAGE_SIZES = [10, 25, 50, 100];
+
+const EXPAND_BY_COLUMN = {
+  'metrics.policy_violations_total': 'metrics',
+  'metrics.vulnerabilities': 'metrics',
+};
+
+const LEGACY_SORT_FIELD_MAP = {
+  isLatest: 'is_latest',
+  lastBomImport: 'last_bom_import',
+  lastRiskScore: 'last_inherited_risk_score',
+};
+
+function normalizeSortField(field) {
+  if (!field) {
+    return field;
+  }
+  return LEGACY_SORT_FIELD_MAP[field] || field;
+}
+
+const METRICS_COLUMN_FIELDS = Object.keys(EXPAND_BY_COLUMN);
+
+function storedColumnVisibility(field) {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  const stored = localStorage.getItem(
+    'ProjectListShow' + common.capitalize(field),
+  );
+  if (stored === null) {
+    return null;
+  }
+  return stored === 'true';
+}
+
+function initialMetricsColumnVisible(field) {
+  const stored = storedColumnVisibility(field);
+  return stored !== null ? stored : true;
+}
+
+function initialVisibleColumns() {
+  return METRICS_COLUMN_FIELDS.filter((field) =>
+    initialMetricsColumnVisible(field),
+  );
+}
+
+// Filters that force flat view; active/latest keep tree view available.
+const HEAVY_FILTER_NAMES = [
+  'name',
+  'version',
+  'classifier',
+  'tag',
+  'severity',
+  'team',
+  'parent',
+  'lastBomImport',
+];
+
+const DEFAULT_ACTIVE_FILTER = 'true';
 
 export default {
-  mixins: [permissionsMixin, routerMixin],
+  mixins: [permissionsMixin, filterPillsMixin, availableClassifiersMixin],
   components: {
     cSwitch,
     ProjectCreateProjectModal,
+    TextFilterPill,
+    EnumFilterPill,
+    SearchableMultiSelectFilterPill,
+    MultiValueTextFilterPill,
+    DateTimeRangeFilterPill,
   },
   props: {
-    // If only children from a specific project shall be shown,
-    // this must be set to the corresponding project.
     uuid: String,
   },
   beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('ProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
-        : false;
     this.showFlatView =
       localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
         ? localStorage.getItem('ProjectListShowFlatView') === 'true'
         : false;
   },
+  beforeMount() {
+    this.applyRouteFilters();
+  },
+  mounted() {
+    if (!this.uuid) {
+      this.loadParentOptions();
+    }
+    this.resetAndLoad();
+  },
   methods: {
-    initializeProjectCreateProjectModal: function () {
+    hasFilterValue(name) {
+      if (name === 'active') {
+        return this.activeFilter === 'true' || this.activeFilter === 'false';
+      }
+      if (name === 'latest') {
+        return this.latestFilter === 'true' || this.latestFilter === 'false';
+      }
+      const val = this[name + 'Filter'];
+      return Array.isArray(val) ? val.length > 0 : !!val;
+    },
+    onFilterDismiss(name) {
+      // Active uses 'all' (show inactive too) instead of null when dismissed.
+      if (name === 'active') {
+        this.activeFilter = 'all';
+      }
+      filterPillsMixin.methods.onFilterDismiss.call(this, name);
+    },
+    showFilter(name) {
+      if (name === 'active' && this.activeFilter === 'all') {
+        this.activeFilter = DEFAULT_ACTIVE_FILTER;
+      }
+      filterPillsMixin.methods.showFilter.call(this, name);
+    },
+    isFilterVisible(name) {
+      if (name === 'active') {
+        return (
+          this.activeFilter === 'true' ||
+          this.activeFilter === 'false' ||
+          !!this.pendingFilters.active
+        );
+      }
+      return filterPillsMixin.methods.isFilterVisible.call(this, name);
+    },
+    applyRouteFilters() {
+      const q = this.$route.query;
+      this.nameFilter = q.name_contains
+        ? { operator: 'contains', value: q.name_contains }
+        : null;
+      this.versionFilter = q.version_contains
+        ? { operator: 'contains', value: q.version_contains }
+        : null;
+      if (q.classifier) {
+        this.classifierFilter = Array.isArray(q.classifier)
+          ? q.classifier
+          : [q.classifier];
+      } else {
+        this.classifierFilter = null;
+      }
+      if (q.tags) {
+        this.tagFilter = Array.isArray(q.tags) ? q.tags : [q.tags];
+      } else if (q.tag) {
+        this.tagFilter = Array.isArray(q.tag) ? q.tag : [q.tag];
+      } else {
+        this.tagFilter = null;
+      }
+      if (q.severity) {
+        this.severityFilter = Array.isArray(q.severity)
+          ? q.severity
+          : [q.severity];
+      } else {
+        this.severityFilter = null;
+      }
+      if (q.teams) {
+        this.teamFilter = Array.isArray(q.teams) ? q.teams : [q.teams];
+      } else if (q.team) {
+        this.teamFilter = Array.isArray(q.team) ? q.team : [q.team];
+      } else {
+        this.teamFilter = null;
+      }
+      if (q.last_bom_import_since || q.last_bom_import_before) {
+        this.lastBomImportFilter = {
+          since: q.last_bom_import_since
+            ? Number(q.last_bom_import_since)
+            : null,
+          before: q.last_bom_import_before
+            ? Number(q.last_bom_import_before)
+            : null,
+        };
+      } else {
+        this.lastBomImportFilter = null;
+      }
+      if (q.show_inactive === 'true') {
+        this.activeFilter = 'all';
+      } else if (q.is_active === 'false') {
+        this.activeFilter = 'false';
+      } else if (q.is_active === 'true') {
+        this.activeFilter = 'true';
+      } else {
+        this.activeFilter = DEFAULT_ACTIVE_FILTER;
+      }
+      if (q.is_latest === 'false') {
+        this.latestFilter = 'false';
+      } else if (q.is_latest === 'true') {
+        this.latestFilter = 'true';
+      } else {
+        this.latestFilter = null;
+      }
+      if (q.ancestor_uuid) {
+        this.parentFilter = q.ancestor_uuid;
+      } else {
+        this.parentFilter = null;
+      }
+    },
+    initializeProjectCreateProjectModal() {
       this.$root.$emit('initializeProjectCreateProjectModal');
     },
-    apiUrl: function (parentUuid) {
-      if (this.uuid && !parentUuid) {
-        parentUuid = this.uuid;
+    async loadParentOptions() {
+      this.parentOptionsLoading = true;
+      try {
+        const baseUrl = common.setQueryParams(
+          `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
+          {
+            has_children: true,
+            is_active: true,
+            limit: 1000,
+            sort_by: 'name',
+          },
+        );
+        const items = [];
+        let pageUrl = baseUrl;
+        while (pageUrl) {
+          const response = await this.axios.get(pageUrl);
+          items.push(...(response.data.items || []));
+          const nextPageToken = response.data.next_page_token;
+          pageUrl = nextPageToken
+            ? common.setQueryParams(baseUrl, { page_token: nextPageToken })
+            : null;
+        }
+        this.parentOptions = items.map((item) => ({
+          value: item.uuid,
+          text: item.version ? `${item.name} : ${item.version}` : item.name,
+        }));
+      } catch (err) {
+        console.error(`Failed to load parent filter options: ${err}`);
+        this.parentOptions = [];
+      } finally {
+        this.parentOptionsLoading = false;
       }
-
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/concise`;
-      if (parentUuid) {
-        url += `/${parentUuid}/children`;
+    },
+    projectsUrl() {
+      return `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`;
+    },
+    buildFilterParams() {
+      const params = {};
+      if (this.activeFilter === 'false') {
+        params.is_active = false;
+      } else if (this.activeFilter === 'true') {
+        params.is_active = true;
       }
-      let queryParams = {
-        includeMetrics: true,
-      };
-      if (this.showInactiveProjects === false) {
-        queryParams['active'] = true;
+      // 'all': omit is_active to include active and inactive projects.
+      if (this.nameFilter?.value) {
+        params.name_contains = this.nameFilter.value;
       }
-      let tag = this.$route.query.tag;
-      if (tag) {
-        queryParams['tag'] = tag;
+      if (this.versionFilter?.value) {
+        params.version_contains = this.versionFilter.value;
       }
-      let team = this.$route.query.team;
-      if (team) {
-        queryParams['team'] = team;
+      if (this.classifierFilter?.length) {
+        params.classifier = [...this.classifierFilter];
       }
-      let classifier = this.$route.query.classifier;
-      if (classifier) {
-        queryParams['classifier'] = classifier;
+      if (this.tagFilter?.length) {
+        params.tags = [...this.tagFilter];
       }
-      if (this.isSearching || parentUuid) {
-        queryParams['onlyRoot'] = false;
+      if (this.severityFilter?.length) {
+        params.severity = [...this.severityFilter];
+      }
+      if (this.teamFilter?.length) {
+        params.teams = [...this.teamFilter];
+      }
+      if (this.latestFilter === 'true') {
+        params.is_latest = true;
+      } else if (this.latestFilter === 'false') {
+        params.is_latest = false;
+      }
+      if (this.lastBomImportFilter?.since) {
+        params.last_bom_import_since = this.lastBomImportFilter.since;
+      }
+      if (this.lastBomImportFilter?.before) {
+        params.last_bom_import_before = this.lastBomImportFilter.before;
+      }
+      if (this.parentFilter) {
+        params.ancestor_uuid = this.parentFilter;
+      }
+      return params;
+    },
+    buildUrlQueryParams() {
+      const params = this.buildFilterParams();
+      if (this.activeFilter === 'all') {
+        params.show_inactive = 'true';
+        delete params.is_active;
+      } else if (this.activeFilter === 'false') {
+        params.is_active = 'false';
       } else {
-        if (this.showFlatView === undefined) {
-          queryParams['onlyRoot'] = true;
+        delete params.is_active;
+      }
+      if (this.latestFilter === 'true') {
+        params.is_latest = 'true';
+      } else if (this.latestFilter === 'false') {
+        params.is_latest = 'false';
+      } else {
+        delete params.is_latest;
+      }
+      return params;
+    },
+    buildListUrl({ parentUuid, sortBy, sortDirection } = {}) {
+      const params = this.buildFilterParams();
+      if (sortBy) {
+        params.sort_by = sortBy;
+      }
+      if (sortDirection) {
+        params.sort_direction = sortDirection.toUpperCase();
+      }
+      if (parentUuid) {
+        params.parent_uuid = parentUuid;
+      } else if (this.uuid && !parentUuid) {
+        params.parent_uuid = this.uuid;
+      } else if (this.isTreeView) {
+        params.only_root = true;
+      }
+      return common.setQueryParams(this.projectsUrl(), params);
+    },
+    syncQueryParams() {
+      const query = this.buildUrlQueryParams();
+      if (!common.sameQueryParams(query, this.$route.query)) {
+        this.$router.replace({ query }).catch(() => {});
+      }
+    },
+    clearAllFilters() {
+      this._clearing = true;
+      try {
+        this.nameFilter = null;
+        this.versionFilter = null;
+        this.classifierFilter = null;
+        this.tagFilter = null;
+        this.severityFilter = null;
+        this.teamFilter = null;
+        this.parentFilter = null;
+        this.lastBomImportFilter = null;
+        this.activeFilter = 'all';
+        this.latestFilter = null;
+        this.clearPendingFilters();
+      } finally {
+        this._clearing = false;
+      }
+      this.syncQueryParams();
+    },
+    refreshTable() {
+      this.syncQueryParams();
+      this.resetAndLoad();
+    },
+    emitVisibleColumns() {
+      if (!this.$refs.table) {
+        return;
+      }
+      this.visibleColumns = this.$refs.table
+        .getVisibleColumns()
+        .map((column) => column.field);
+    },
+    async refreshCurrentPage() {
+      if (this.currentPageUrl === null) {
+        await this.resetAndLoad();
+        return;
+      }
+      await this.loadPage(this.currentPageUrl);
+    },
+    async loadPage(pageUrl) {
+      this.$refs.table.showLoading();
+      this.isLoading = true;
+      const requestId = ++this.currentRequestId;
+
+      try {
+        const fetchUrl = common.setQueryParams(pageUrl, {
+          ...this.expandQueryParams,
+          limit: this.currentPageSize,
+        });
+        const response = await this.axios.get(fetchUrl);
+        if (requestId !== this.currentRequestId) {
+          return;
+        }
+
+        this.tableData = response.data.items || [];
+        this.currentPageUrl = pageUrl;
+
+        const nextPageToken = response.data.next_page_token;
+        if (nextPageToken) {
+          this.nextPageUrl = common.setQueryParams(pageUrl, {
+            page_token: nextPageToken,
+          });
         } else {
-          queryParams['onlyRoot'] = !this.showFlatView;
+          this.nextPageUrl = null;
+        }
+
+        const total = response.data.total;
+        if (total) {
+          this.totalCount = total.count;
+          this.totalCountType = total.type;
+        } else {
+          this.totalCount = null;
+          this.totalCountType = null;
+        }
+      } catch (err) {
+        if (requestId !== this.currentRequestId) {
+          return;
+        }
+        console.error(`Failed to load projects: ${err}`);
+        this.tableData = [];
+        this.currentPageNumber = 1;
+        this.currentPageUrl = null;
+        this.nextPageUrl = null;
+        this.pageUrlHistory = [];
+        this.totalCount = null;
+        this.totalCountType = null;
+      } finally {
+        if (requestId === this.currentRequestId) {
+          this.$refs.table.hideLoading();
+          this.isLoading = false;
         }
       }
-      let queryString = Object.keys(queryParams)
-        .map(
-          (key) =>
-            `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`,
-        )
-        .join('&');
-      return `${url}?${queryString}`;
     },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        silent: true,
-        pageNumber: 1,
-      });
+    async resetAndLoad() {
+      this.currentPageNumber = 1;
+      this.pageUrlHistory = [];
+      this.nextPageUrl = null;
+      this.totalCount = null;
+      this.totalCountType = null;
+      await this.loadPage(
+        this.buildListUrl({
+          sortBy: this.sortBy,
+          sortDirection: this.sortDirection,
+        }),
+      );
     },
-    onLoadSuccess: function () {
+    async goToFirstPage() {
+      if (!this.hasPreviousPage) {
+        return;
+      }
+      await this.resetAndLoad();
+    },
+    async goToPrevPage() {
+      if (!this.hasPreviousPage) {
+        return;
+      }
+      this.currentPageNumber--;
+      if (this.currentPageNumber === 1) {
+        this.pageUrlHistory = [];
+        await this.loadPage(
+          this.buildListUrl({
+            sortBy: this.sortBy,
+            sortDirection: this.sortDirection,
+          }),
+        );
+      } else {
+        const prevPageUrl = this.pageUrlHistory.pop();
+        await this.loadPage(prevPageUrl);
+      }
+    },
+    async goToNextPage() {
+      if (!this.hasNextPage) {
+        return;
+      }
+      this.pageUrlHistory.push(this.currentPageUrl);
+      this.currentPageNumber++;
+      await this.loadPage(this.nextPageUrl);
+    },
+    onLoadSuccess() {
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectList',
         this.$refs.table.columns,
       );
+      this.emitVisibleColumns();
     },
-    onPreBody: function () {
+    onPreBody() {
       this.$refs.table.getData().forEach((project) => {
         project.id = MurmurHash2(project.uuid).result();
       });
     },
-    onPostBody: function () {
-      if (!this.showFlatView && !this.isSearching) {
-        let columns = this.$refs.table.getOptions().columns;
-
+    onPostBody() {
+      if (this.isTreeView) {
+        const columns = this.$refs.table.getOptions().columns;
         if (columns && columns[0][0].visible) {
           this.$refs.table.$table.treegrid({
             treeColumn: 0,
@@ -162,8 +767,6 @@ export default {
           });
         }
         this.$refs.table.getData().forEach((project) => {
-          // Expander is rendered natively by treegrid when children are
-          // already loaded. No extra logic needed.
           if (project.fetchedChildren) {
             return;
           }
@@ -176,8 +779,6 @@ export default {
               .treegrid('renderExpander');
           };
 
-          // Pre-flight result already known to be positive. Just render
-          // the expander, since the tbody was just rebuilt and dropped it.
           if (project.matchesChildSearch) {
             renderExpander();
             return;
@@ -211,71 +812,245 @@ export default {
       }
       this.$refs.table.hideLoading();
     },
-    getChildren: async function (parentProject) {
-      let url = this.apiUrl(parentProject.uuid);
-      await this.axios.get(url).then((response) => {
-        for (let project of response.data) {
-          project.pid = MurmurHash2(parentProject.uuid).result();
-        }
-        this.$refs.table.append(response.data);
-      });
+    async getChildren(parentProject) {
+      const url = this.buildListUrl({ parentUuid: parentProject.uuid });
+      const response = await this.axios.get(
+        common.setQueryParams(url, {
+          ...this.expandQueryParams,
+          limit: 100,
+        }),
+      );
+      const children = (response.data.items || []).map((item) => ({
+        ...item,
+        pid: MurmurHash2(parentProject.uuid).result(),
+      }));
+      this.$refs.table.append(children);
     },
-    hasMatchingChildren: function (project) {
-      if (!project.hasChildren) {
-        return Promise.resolve(false);
+    async hasMatchingChildren(project) {
+      if (!project.has_children) {
+        return false;
       }
-
-      // Perform a pre-flight search if there is at least one
-      // child project that matches the current search criteria,
-      // and is accessible to the user.
-      //
-      // While this *does* result in an additional request per project
-      // with hasChildren=true, it's still better than returning child
-      // data in the project list response.
-      let url = this.apiUrl(project.uuid);
-      return this.axios
-        .get(`${url}&pageNumber=1&pageSize=1`)
-        .then((response) => Number(response.headers['x-total-count']) > 0);
+      const url = this.buildListUrl({ parentUuid: project.uuid });
+      const response = await this.axios.get(
+        common.setQueryParams(url, { limit: 1 }),
+      );
+      return (response.data.total?.count ?? 0) > 0;
     },
-    saveViewState: function () {
+    saveViewState() {
       this.savedViewState = this.showFlatView;
     },
   },
   watch: {
-    $route(to, from) {
-      this.refreshTable();
-    },
-    showInactiveProjects() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectListShowInactiveProjects',
-          this.showInactiveProjects.toString(),
-        );
+    activeFilter(value) {
+      if (value === null) {
+        this.activeFilter = 'all';
       }
-      this.$refs.table.showLoading();
-      this.currentPage = 1;
-      this.refreshTable();
     },
-    showFlatView() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectListShowFlatView',
-          this.showFlatView.toString(),
-        );
+    '$route.fullPath'(newPath, oldPath) {
+      if (newPath === oldPath) {
+        return;
       }
-      this.$refs.table.showLoading();
-      this.refreshTable();
+      const expected = this.buildUrlQueryParams();
+      if (common.sameQueryParams(expected, this.$route.query)) {
+        return;
+      }
+      this.applyRouteFilters();
+      this.resetAndLoad();
     },
-    isSearching() {
-      this.refreshTable();
+    showFlatView(value) {
+      if (localStorage) {
+        localStorage.setItem('ProjectListShowFlatView', value.toString());
+      }
+      this.resetAndLoad();
+    },
+    hasListFilters(active) {
+      if (active && this.isTreeViewAllowed) {
+        this.showFlatView = true;
+      } else if (!active && this.savedViewState !== null) {
+        this.showFlatView = this.savedViewState;
+      } else if (!active) {
+        this.showFlatView = false;
+      }
+    },
+    currentPageSize(size) {
+      if (localStorage) {
+        localStorage.setItem('ProjectListPageSize', String(size));
+      }
+      this.resetAndLoad();
+    },
+    expandQueryParams(newVal, oldVal) {
+      if (this.currentPageUrl === null) {
+        return;
+      }
+      if (common.sameQueryParams(newVal, oldVal)) {
+        return;
+      }
+      if (this.expandParamsTimer) {
+        clearTimeout(this.expandParamsTimer);
+      }
+      this.expandParamsTimer = setTimeout(() => {
+        this.refreshCurrentPage();
+      }, 300);
+    },
+  },
+  beforeDestroy() {
+    if (this.expandParamsTimer) {
+      clearTimeout(this.expandParamsTimer);
+    }
+  },
+  computed: {
+    expandQueryParams() {
+      const expand = new Set();
+      for (const field of this.visibleColumns) {
+        if (EXPAND_BY_COLUMN[field]) {
+          expand.add(EXPAND_BY_COLUMN[field]);
+        }
+      }
+      if (expand.size === 0) {
+        return {};
+      }
+      return { expand: [...expand] };
+    },
+    allFilterDefs() {
+      return [
+        {
+          name: 'name',
+          label: this.$t('message.project_name'),
+          icon: 'fa-folder-open-o',
+        },
+        {
+          name: 'version',
+          label: this.$t('message.version'),
+          icon: 'fa-bookmark-o',
+        },
+        {
+          name: 'classifier',
+          label: this.$t('message.classifier'),
+          icon: 'fa-cube',
+        },
+        { name: 'tag', label: this.$t('message.tags'), icon: 'fa-tag' },
+        {
+          name: 'severity',
+          label: this.$t('message.severity'),
+          icon: 'fa-signal',
+        },
+        { name: 'team', label: this.$t('message.teams'), icon: 'fa-users' },
+        ...(!this.uuid
+          ? [
+              {
+                name: 'parent',
+                label: this.$t('message.parent'),
+                icon: 'fa-sitemap',
+              },
+            ]
+          : []),
+        {
+          name: 'lastBomImport',
+          label: this.$t('message.last_bom_import'),
+          icon: 'fa-calendar',
+        },
+        {
+          name: 'active',
+          label: this.$t('message.active'),
+          icon: 'fa-eye',
+        },
+        {
+          name: 'latest',
+          label: this.$t('message.latest'),
+          icon: 'fa-bookmark',
+        },
+      ];
+    },
+    hasListFilters() {
+      return HEAVY_FILTER_NAMES.some((name) => this.hasFilterValue(name));
+    },
+    activeFilterOptions() {
+      return [
+        { value: 'true', text: this.$t('message.filter_only_active') },
+        { value: 'false', text: this.$t('message.filter_only_inactive') },
+      ];
+    },
+    latestFilterOptions() {
+      return [
+        { value: 'true', text: this.$t('message.filter_only_latest') },
+        { value: 'false', text: this.$t('message.filter_only_non_latest') },
+      ];
+    },
+    severityFilterOptions() {
+      return [
+        { text: this.$t('severity.critical'), value: 'critical' },
+        { text: this.$t('severity.high'), value: 'high' },
+        { text: this.$t('severity.medium'), value: 'medium' },
+        { text: this.$t('severity.low'), value: 'low' },
+        { text: this.$t('severity.unassigned'), value: 'unassigned' },
+      ];
+    },
+    isTreeViewAllowed() {
+      return !this.uuid && !this.hasListFilters;
+    },
+    isTreeView() {
+      return this.isTreeViewAllowed && !this.showFlatView;
+    },
+    hasNextPage() {
+      return this.nextPageUrl !== undefined && this.nextPageUrl !== null;
+    },
+    hasPreviousPage() {
+      return this.pageUrlHistory.length > 0;
+    },
+    totalCountDisplay() {
+      if (this.totalCount === null) {
+        return null;
+      }
+      return this.totalCountType === 'AT_LEAST'
+        ? `${this.totalCount}+`
+        : `${this.totalCount}`;
     },
   },
   data() {
+    let currentPageSize = 10;
+    if (typeof localStorage !== 'undefined') {
+      const stored = Number(localStorage.getItem('ProjectListPageSize'));
+      if (ALLOWED_PAGE_SIZES.includes(stored)) {
+        currentPageSize = stored;
+      }
+    }
     return {
-      showInactiveProjects: this.showInactiveProjects,
       showFlatView: this.showFlatView,
-      isSearching: false,
       savedViewState: null,
+      nameFilter: null,
+      versionFilter: null,
+      classifierFilter: null,
+      tagFilter: null,
+      severityFilter: null,
+      teamFilter: null,
+      parentFilter: null,
+      parentOptions: [],
+      parentOptionsLoading: false,
+      lastBomImportFilter: null,
+      activeFilter: DEFAULT_ACTIVE_FILTER,
+      latestFilter: null,
+      sortBy: normalizeSortField(
+        localStorage && localStorage.getItem('ProjectListSortName') !== null
+          ? localStorage.getItem('ProjectListSortName')
+          : 'name',
+      ),
+      sortDirection:
+        localStorage && localStorage.getItem('ProjectListSortOrder') !== null
+          ? localStorage.getItem('ProjectListSortOrder')
+          : 'asc',
+      tableData: [],
+      visibleColumns: initialVisibleColumns(),
+      expandParamsTimer: null,
+      currentPageNumber: 1,
+      currentPageSize,
+      allowedPageSizes: ALLOWED_PAGE_SIZES,
+      currentPageUrl: null,
+      nextPageUrl: null,
+      pageUrlHistory: [],
+      currentRequestId: 0,
+      isLoading: false,
+      totalCount: null,
+      totalCountType: null,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -287,7 +1062,7 @@ export default {
           sortable: true,
           routerFunc: () => this.$router,
           $t: (key, values) => this.$t(key, values),
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
                 name: 'Project',
@@ -295,7 +1070,7 @@ export default {
               }).route.fullPath,
             );
             let collectionIcon = '';
-            if (row.collectionLogic) {
+            if (row.collection_logic) {
               const title = common.getCollectionLogicText(this, row);
               collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
             }
@@ -307,8 +1082,8 @@ export default {
           field: 'tags',
           sortable: false,
           visible: false,
-          routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          routerFunc: () => this.$router,
+          formatter(value, row) {
             const router = this.routerFunc();
             let tag_string = '';
             if (row.tags) {
@@ -335,8 +1110,8 @@ export default {
           field: 'teams',
           sortable: false,
           visible: false,
-          routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          routerFunc: () => this.$router,
+          formatter(value, row) {
             const router = this.routerFunc();
             let team_string = '';
             if (row.teams) {
@@ -362,14 +1137,14 @@ export default {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
         {
           title: this.$t('message.latest'),
-          field: 'isLatest',
-          formatter(value, row, index) {
+          field: 'is_latest',
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
@@ -384,46 +1159,40 @@ export default {
         },
         {
           title: this.$t('message.last_bom_import'),
-          field: 'lastBomImport',
+          field: 'last_bom_import',
           sortable: true,
-          formatter(timestamp, row, index) {
+          formatter(timestamp) {
             return typeof timestamp === 'number'
-              ? common.formatTimestamp(timestamp, true)
+              ? common.formatTimestamp(timestamp, false)
               : '-';
           },
         },
         {
           title: this.$t('message.bom_format'),
-          field: 'lastBomImportFormat',
-          sortable: true,
+          field: 'last_bom_import_format',
+          sortable: false,
         },
         {
           title: this.$t('message.risk_score'),
-          field: 'lastRiskScore',
+          field: 'last_inherited_risk_score',
           sortable: true,
         },
         {
           title: this.$t('message.active'),
-          field: 'active',
-          formatter(value, row, index) {
+          field: 'is_active',
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
           sortable: false,
         },
         {
-          title: this.$t('message.components'),
-          field: 'metrics.components',
-          sortable: false,
-          visible: false,
-        },
-        {
           title: this.$t('message.policy_violations'),
-          field: 'metrics.policyViolationsTotal', // this column uses other fields, but the field id must be unique
+          field: 'metrics.policy_violations_total',
           formatter: function (_, row) {
             let metrics = row.metrics;
             if (typeof metrics === 'undefined') {
-              return '-'; // No vulnerability info available
+              return '-';
             }
             let ComponentClass = Vue.extend(PolicyViolationProgressBar);
             let progressBar = new ComponentClass({
@@ -438,15 +1207,13 @@ export default {
         },
         {
           title: this.$t('message.vulnerabilities'),
-          field: 'metrics.vulnerabilities', // this column uses other fields, but the field id must be unique
+          field: 'metrics.vulnerabilities',
           sortable: false,
           formatter: function (_, row) {
             let metrics = row.metrics;
             if (typeof metrics === 'undefined') {
-              return '-'; // No vulnerability info available
+              return '-';
             }
-
-            // Programmatically instantiate SeverityProgressBar Vue component
             let ComponentClass = Vue.extend(SeverityProgressBar);
             let progressBar = new ComponentClass({
               propsData: {
@@ -464,99 +1231,68 @@ export default {
           }.bind(this),
         },
       ],
-      data: [],
       options: {
         idField: 'id',
         parentIdField: 'pid',
         treeShowField: 'name',
-        search: true,
+        search: false,
         showColumns: true,
         showRefresh: true,
-        pagination: true,
+        pagination: false,
         silentSort: false,
-        sidePagination: 'server',
-        queryParamsType: 'pageSize',
-        pageList: '[10, 25, 50, 100]',
-        currentPage: 1,
-        pageSize:
-          localStorage && localStorage.getItem('ProjectListPageSize') !== null
-            ? Number(localStorage.getItem('ProjectListPageSize'))
-            : 10,
-        sortName:
+        sortName: normalizeSortField(
           localStorage && localStorage.getItem('ProjectListSortName') !== null
             ? localStorage.getItem('ProjectListSortName')
-            : undefined,
+            : 'name',
+        ),
         sortOrder:
           localStorage && localStorage.getItem('ProjectListSortOrder') !== null
             ? localStorage.getItem('ProjectListSortOrder')
-            : undefined,
-        searchText: this.$route.query.searchText
-          ? this.$route.query.searchText
-          : '',
+            : 'asc',
         icons: {
           refresh: 'fa-refresh',
         },
-        toolbar: '#projectsToolbar',
-        responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
-        },
-        url: this.apiUrl(),
-        // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
+        toolbar: '#projectsFilterBarRow',
+        customSort: () => {},
         onClickRow: (row, $element) => {
-          if (!this.showFlatView && !this.isSearching) {
-            if (
-              event.target.tagName.toLowerCase() !== 'a' &&
-              $element.treegrid('isLeaf') &&
-              row.hasChildren &&
-              !row.fetchedChildren
-            ) {
-              row.fetchedChildren = true;
-              this.getChildren(row);
-              row.expanded = true;
-            } else if (
-              event.target.tagName.toLowerCase() !== 'a' &&
-              ((!$element.treegrid('isLeaf') &&
-                $element.treegrid('isCollapsed') &&
-                event.target.className !==
-                  'treegrid-expander treegrid-expander-collapsed') ||
-                event.target.className ===
-                  'treegrid-expander treegrid-expander-expanded')
-            ) {
-              $element.treegrid('expand');
-              row.expanded = true;
-            } else if (
-              event.target.tagName.toLowerCase() !== 'a' &&
-              ((!$element.treegrid('isLeaf') &&
-                $element.treegrid('isExpanded') &&
-                event.target.className !==
-                  'treegrid-expander treegrid-expander-expanded') ||
-                event.target.className ===
-                  'treegrid-expander treegrid-expander-collapsed')
-            ) {
-              $element.treegrid('collapse');
-              row.expanded = false;
-            }
+          if (!this.isTreeView) {
+            return;
+          }
+          if (
+            event.target.tagName.toLowerCase() !== 'a' &&
+            $element.treegrid('isLeaf') &&
+            row.has_children &&
+            !row.fetchedChildren
+          ) {
+            row.fetchedChildren = true;
+            this.getChildren(row);
+            row.expanded = true;
+          } else if (
+            event.target.tagName.toLowerCase() !== 'a' &&
+            ((!$element.treegrid('isLeaf') &&
+              $element.treegrid('isCollapsed') &&
+              event.target.className !==
+                'treegrid-expander treegrid-expander-collapsed') ||
+              event.target.className ===
+                'treegrid-expander treegrid-expander-expanded')
+          ) {
+            $element.treegrid('expand');
+            row.expanded = true;
+          } else if (
+            event.target.tagName.toLowerCase() !== 'a' &&
+            ((!$element.treegrid('isLeaf') &&
+              $element.treegrid('isExpanded') &&
+              event.target.className !==
+                'treegrid-expander treegrid-expander-expanded') ||
+              event.target.className ===
+                'treegrid-expander treegrid-expander-collapsed')
+          ) {
+            $element.treegrid('collapse');
+            row.expanded = false;
           }
         },
-        onSearch: (text) => {
-          this.isSearching = text.length !== 0;
-          if (this.isSearching) {
-            this.showFlatView = true;
-          } else {
-            if (this.savedViewState !== null) {
-              this.showFlatView = !this.savedViewState;
-            } else {
-              this.showFlatView = false;
-            }
-          }
-          this.setSearchTextQuery(text);
-        },
-        onPageChange: (number, size) => {
-          if (localStorage) {
-            localStorage.setItem('ProjectListPageSize', size.toString());
-          }
-          this.currentPage = number;
+        onRefresh: () => {
+          this.refreshTable();
         },
         onColumnSwitch: (field, checked) => {
           if (localStorage) {
@@ -565,15 +1301,88 @@ export default {
               checked.toString(),
             );
           }
+          this.emitVisibleColumns();
+        },
+        onColumnSwitchAll: () => {
+          this.emitVisibleColumns();
         },
         onSort: (name, order) => {
+          this.sortBy = name;
+          this.sortDirection = order;
           if (localStorage) {
             localStorage.setItem('ProjectListSortName', name);
             localStorage.setItem('ProjectListSortOrder', order);
           }
+          this.resetAndLoad();
         },
       },
     };
   },
 };
 </script>
+
+<style scoped src="@/views/components/filter-pills.css"></style>
+<style lang="scss" scoped>
+@import '@/assets/scss/style';
+
+.page-indicator {
+  padding: $pagination-padding-y 0.75rem;
+  font-weight: $font-weight-normal;
+  line-height: $pagination-line-height;
+  color: $body-color;
+  cursor: default;
+  user-select: none;
+}
+
+.pagination-meta-text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  color: $body-color;
+}
+
+.pagination-meta-divider {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin: 0 0.75rem;
+  background-color: $pagination-border-color;
+}
+
+.pagination-page-size-select {
+  width: auto;
+}
+
+.filter-bar-surface {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 6px;
+  background: rgb(255 255 255 / 5%);
+}
+
+.pagination-button {
+  position: relative;
+  display: block;
+  padding: $pagination-padding-y 1.25rem;
+  margin-left: -$pagination-border-width;
+  line-height: $pagination-line-height;
+  color: $pagination-color;
+  background-color: $pagination-bg;
+  border: $pagination-border-width solid $pagination-border-color;
+
+  &:disabled {
+    z-index: 2;
+    color: $pagination-disabled-color;
+    background-color: $pagination-disabled-bg;
+    border-color: $pagination-disabled-border-color;
+  }
+
+  &:not(:disabled):hover {
+    z-index: 2;
+    color: $pagination-hover-color;
+    background-color: $pagination-hover-bg;
+    border-color: $pagination-hover-border-color;
+  }
+}
+</style>

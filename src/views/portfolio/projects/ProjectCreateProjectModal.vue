@@ -444,17 +444,6 @@ export default {
           }
         });
     },
-    parentSearchUrl(searchText) {
-      return common.setQueryParams(
-        `${this.$api.BASE_URL}/${this.$api.URL_PROJECT_CONCISE}`,
-        {
-          excludeInactive: true,
-          pageSize: 10,
-          pageNumber: 1,
-          searchText: searchText || null,
-        },
-      );
-    },
     resetValues() {
       this.project = { ...FORM_FIELD_DEFAULTS, classifier: DEFAULT_CLASSIFIER };
       this.isDisabled = false;
