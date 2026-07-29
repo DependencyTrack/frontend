@@ -412,7 +412,7 @@ export default {
           sortable: true,
           visible: false,
           formatter(value, row, index) {
-            return value;
+            return xssFilters.inHTMLData(value);
           },
         },
       ],
