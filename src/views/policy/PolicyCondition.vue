@@ -308,6 +308,7 @@ export default {
         { value: 'VERSION', text: this.$t('message.version') },
         { value: 'IS_INTERNAL', text: this.$t('message.internal_status') },
         { value: 'COMPONENT_HASH', text: this.$t('message.component_hash') },
+        { value: 'COMPONENT_SCOPE', text: this.$t('message.component_scope') },
         { value: 'CWE', text: this.$t('message.cwe_full') },
         { value: 'EPSS', text: this.$t('message.epss_score') },
         {
@@ -393,6 +394,8 @@ export default {
           return false;
         case 'COMPONENT_HASH':
           return false;
+        case 'COMPONENT_SCOPE':
+          return true;
         case 'CWE':
           return false;
         case 'VULNERABILITY_ID':
@@ -498,6 +501,10 @@ export default {
           return;
         case 'COMPONENT_HASH':
           this.operators = this.hashAlgorithms;
+          break;
+        case 'COMPONENT_SCOPE':
+          this.operators = this.objectOperators;
+          this.populateComponentScope();
           break;
         case 'CWE':
           this.operators = this.listOperators;
@@ -738,6 +745,14 @@ export default {
         { value: 'LOW', text: this.$t('severity.low') },
         { value: 'INFO', text: this.$t('severity.info') },
         { value: 'UNASSIGNED', text: this.$t('severity.unassigned') },
+      ];
+    },
+    populateComponentScope: function () {
+      this.possibleValues = [
+        { value: 'REQUIRED', text: this.$t('scope.required') },
+        { value: 'OPTIONAL', text: this.$t('scope.optional') },
+        { value: 'EXCLUDED', text: this.$t('scope.excluded') },
+        { value: 'UNASSIGNED', text: this.$t('scope.unassigned') },
       ];
     },
     valueInputTooltip: function () {
