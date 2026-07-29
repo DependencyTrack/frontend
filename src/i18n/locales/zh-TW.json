@@ -489,6 +489,7 @@
     "component_package_url_desc": "函式庫和框架需要有效的套件 URL。PURL 語法：pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "平台",
     "component_properties": "元件屬性",
+    "component_scope": "元件範圍",
     "component_search": "元件搜尋",
     "component_spdx_license_desc": "指定元件的 SPDX 授權 ID",
     "component_supplier_name_desc": "供應元件的組織",
@@ -1177,6 +1178,12 @@
     "security": "安全違規",
     "total": "違規總數",
     "warns": "違規警告"
+  },
+  "scope": {
+    "excluded": "排除",
+    "optional": "選用",
+    "required": "必要",
+    "unassigned": "未分配"
   },
   "severity": {
     "critical": "嚴重",
