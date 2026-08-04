@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "使用標籤彙總直接子專案",
     "project_collection_logic_desc": "指定此專案是否是集合專案以及要為集合專案應用哪些指標計算邏輯。\n集合專案沒有自己的元件，但使用可用邏輯之一顯示其子專案的資料。",
     "project_collection_logic_latest_version_children": "彙總標記為最新的直接子專案",
+    "project_components_changed_since_analysis": "自上次分析以來已修改",
+    "project_components_changed_since_analysis_tooltip": "自上次分析以來，該項目的組件已被修改。若要查看最新的漏洞和指標，請執行手動重新分析。",
     "project_created": "專案已建立",
     "project_delete_message": "刪除此專案還將永久刪除所有關聯的子專案。\n此操作無法撤銷。\n您確定要繼續嗎？",
     "project_delete_title": "確認專案刪除",

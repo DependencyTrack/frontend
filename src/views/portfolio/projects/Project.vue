@@ -1,7 +1,25 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
     <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
-      <b-card-body class="p-3 clearfix">
+      <b-card-body
+        class="p-3 clearfix project-overview-body"
+        :class="{
+          'project-overview-body--stale':
+            project.componentsChangedSinceAnalysis,
+        }"
+      >
+        <b-badge
+          v-if="project.componentsChangedSinceAnalysis"
+          id="project-stale-analysis-badge"
+          variant="info"
+          class="project-stale-analysis-badge"
+          v-b-tooltip.hover
+          :title="
+            $t('message.project_components_changed_since_analysis_tooltip')
+          "
+        >
+          {{ $t('message.project_components_changed_since_analysis') }}
+        </b-badge>
         <b-row>
           <b-col>
             <i
@@ -549,6 +567,7 @@ export default {
       warnViolations: 0,
       failViolations: 0,
       tabIndex: 0,
+      reanalyzePollTimer: null,
     };
   },
   methods: {
@@ -562,6 +581,40 @@ export default {
       this.project = project;
       EventBus.$emit('addCrumb', this.projectLabel);
       this.$title = this.projectLabel;
+    },
+    markComponentsChangedSinceAnalysis: function () {
+      this.$set(this.project, 'componentsChangedSinceAnalysis', true);
+    },
+    clearReanalyzePoll: function () {
+      if (this.reanalyzePollTimer) {
+        clearTimeout(this.reanalyzePollTimer);
+        this.reanalyzePollTimer = null;
+      }
+    },
+    watchReanalyzeToken: function (token) {
+      if (!token) {
+        return;
+      }
+      this.clearReanalyzePoll();
+      const poll = () => {
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_EVENT}/token/${token}`;
+        this.axios
+          .get(url)
+          .then((response) => {
+            if (response.data && response.data.processing) {
+              this.reanalyzePollTimer = setTimeout(poll, 2000);
+              return;
+            }
+            this.reanalyzePollTimer = null;
+            this.initialize().then(() => {
+              EventBus.$emit('projectAnalysisCompleted');
+            });
+          })
+          .catch(() => {
+            this.reanalyzePollTimer = setTimeout(poll, 5000);
+          });
+      };
+      this.reanalyzePollTimer = setTimeout(poll, 2000);
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
@@ -653,6 +706,11 @@ export default {
   },
   beforeMount() {
     this.uuid = this.$route.params.uuid;
+    EventBus.$on(
+      'projectComponentsChanged',
+      this.markComponentsChangedSinceAnalysis,
+    );
+    EventBus.$on('projectReanalyzeRequested', this.watchReanalyzeToken);
     this.initialize()
       .then(() => {
         this.$nextTick(() => {
@@ -674,6 +732,7 @@ export default {
     $route(to, from) {
       this.uuid = this.$route.params.uuid;
       if (to.params.uuid !== from.params.uuid) {
+        this.clearReanalyzePoll();
         this.initialize();
       } else if (
         this.$route.params.componentUuids &&
@@ -684,6 +743,14 @@ export default {
       }
       this.getTabFromRoute().activate();
     },
+  },
+  beforeDestroy() {
+    EventBus.$off(
+      'projectComponentsChanged',
+      this.markComponentsChangedSinceAnalysis,
+    );
+    EventBus.$off('projectReanalyzeRequested', this.watchReanalyzeToken);
+    this.clearReanalyzePoll();
   },
   destroyed() {
     EventBus.$emit('crumble');
@@ -724,5 +791,17 @@ export default {
 .version-count {
   margin-left: 0.5rem;
   padding-left: 0.5rem;
+}
+.project-overview-body {
+  position: relative;
+}
+.project-overview-body--stale {
+  padding-top: 2.25rem !important;
+}
+.project-stale-analysis-badge {
+  position: absolute;
+  top: 0.4rem;
+  right: 1rem;
+  margin-right: 0;
 }
 </style>

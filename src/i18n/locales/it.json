@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Aggrega i figli diretti con il tag",
     "project_collection_logic_desc": "Specifica se questo progetto è un progetto di raccolta e quale logica di calcolo delle metriche applicare per un progetto di raccolta. \nI progetti di raccolta non hanno componenti propri ma visualizzano i dati dei propri figli utilizzando una delle logiche disponibili.",
     "project_collection_logic_latest_version_children": "Figli diretti aggregati contrassegnati come ultimi",
+    "project_components_changed_since_analysis": "Modificato dall'ultima analisi",
+    "project_components_changed_since_analysis_tooltip": "I componenti di questo progetto sono stati modificati rispetto all'ultima analisi. \nPer visualizzare vulnerabilità e metriche aggiornate, esegui una rianalisi manuale.",
     "project_created": "Progetto creato",
     "project_delete_message": "L'eliminazione di questo progetto eliminerà definitivamente anche tutti i progetti secondari associati. \nQuesta azione non può essere annullata. \nSei sicuro di voler procedere?",
     "project_delete_title": "Conferma l'eliminazione del progetto",

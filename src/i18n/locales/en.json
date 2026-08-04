@@ -942,6 +942,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Aggregate direct children with tag",
     "project_collection_logic_desc": "Specifies if this project is a collection project and which metrics calculation logic to apply for a collection project. Collection projects do not have own components but display data of their children using one of the available logics.",
     "project_collection_logic_latest_version_children": "Aggregate direct children marked as latest",
+    "project_components_changed_since_analysis": "Modified since last analysis",
+    "project_components_changed_since_analysis_tooltip": "This project's components have been modified since the last analysis. To view up-to-date vulnerabilities and metrics, please run a manual reanalysis.",
     "project_created": "Project created",
     "project_delete_message": "Deleting this project will also permanently delete all associated child projects. This action cannot be undone. Are you sure you want to proceed?",
     "project_delete_title": "Confirm Project Deletion",

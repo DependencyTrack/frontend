@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Agréger les enfants directs avec la balise",
     "project_collection_logic_desc": "Spécifie si ce projet est un projet de collection et quelle logique de calcul de métriques appliquer pour un projet de collection. \nLes projets de collection n’ont pas de composants propres mais affichent les données de leurs enfants en utilisant l’une des logiques disponibles.",
     "project_collection_logic_latest_version_children": "Agréger les enfants directs marqués comme les plus récents",
+    "project_components_changed_since_analysis": "Modifié depuis la dernière analyse",
+    "project_components_changed_since_analysis_tooltip": "Les composantes de ce projet ont été modifiées depuis la dernière analyse. \nPour afficher les vulnérabilités et les mesures à jour, veuillez exécuter une réanalyse manuelle.",
     "project_created": "Projet créé",
     "project_delete_message": "La suppression de ce projet supprimera également définitivement tous les projets enfants associés. \nCette action ne peut pas être annulée. \nÊtes-vous sûr de vouloir continuer ?",
     "project_delete_title": "Confirmer la suppression du projet",

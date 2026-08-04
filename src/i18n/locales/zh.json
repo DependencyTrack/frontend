@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "按标签聚合直接子项",
     "project_collection_logic_desc": "指定此项目是否为集合项目，以及集合项目使用哪种指标计算逻辑。\n集合项目不包含自身的组件，而是通过可选逻辑之一展示其子项的数据。",
     "project_collection_logic_latest_version_children": "聚合标记为最新的直接子项",
+    "project_components_changed_since_analysis": "自上次分析以来已修改",
+    "project_components_changed_since_analysis_tooltip": "自上次分析以来，该项目的组件已被修改。\n要查看最新的漏洞和指标，请运行手动重新分析。",
     "project_created": "项目已创建",
     "project_delete_message": "删除此项目还将永久删除所有关联的子项目。\n此操作无法撤销。\n确定要继续吗？",
     "project_delete_title": "确认删除项目",

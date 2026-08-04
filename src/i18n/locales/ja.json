@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "タグを使用して直接の子を集約する",
     "project_collection_logic_desc": "このプロジェクトが収集プロジェクトであるかどうか、および収集プロジェクトにどのメトリック計算ロジックを適用するかを指定します。\nコレクション プロジェクトには独自のコンポーネントはありませんが、利用可能なロジックの 1 つを使用して子のデータを表示します。",
     "project_collection_logic_latest_version_children": "最新としてマークされた直接の子を集約する",
+    "project_components_changed_since_analysis": "前回の分析以降に変更されました",
+    "project_components_changed_since_analysis_tooltip": "このプロジェクトのコンポーネントは、最後の分析以降に変更されています。\n最新の脆弱性と指標を表示するには、手動で再分析を実行してください。",
     "project_created": "プロジェクトが作成されました",
     "project_delete_message": "このプロジェクトを削除すると、関連するすべての子プロジェクトも完全に削除されます。\nこの操作は元に戻すことができません。\n続行してもよろしいですか?",
     "project_delete_title": "プロジェクトの削除の確認",
