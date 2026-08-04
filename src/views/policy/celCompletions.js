@@ -31,6 +31,7 @@ const TYPES = {
     group: 'string',
     name: 'string',
     version: 'string',
+    scope: 'string',
     classifier: 'string',
     cpe: 'string',
     purl: 'string',

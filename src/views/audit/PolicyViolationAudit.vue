@@ -406,6 +406,15 @@ export default {
             }
           },
         },
+        {
+          title: this.$t('message.scope'),
+          field: 'component.scope',
+          sortable: true,
+          visible: false,
+          formatter(value, row, index) {
+            return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
+          },
+        },
       ],
       data: [],
       options: {
