@@ -489,7 +489,6 @@
     "component_package_url_desc": "库和框架需要有效的包 URL。PURL 语法：pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "平台",
     "component_properties": "组件属性",
-    "component_scope": "组件范围",
     "component_search": "组件搜索",
     "component_spdx_license_desc": "指定组件的 SPDX 许可证 ID",
     "component_supplier_name_desc": "提供该组件的组织",
@@ -1178,12 +1177,6 @@
     "security": "安全违规",
     "total": "违规总数",
     "warns": "违规警告"
-  },
-  "scope": {
-    "excluded": "排除",
-    "optional": "可选",
-    "required": "必需",
-    "unassigned": "未分配"
   },
   "severity": {
     "critical": "严重",

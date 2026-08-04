@@ -489,7 +489,6 @@
     "component_package_url_desc": "Um URL de pacote válido é necessário para bibliotecas e estruturas. Sintaxe PURL: pkg:tipo/namespace/nome@versão?qualificadores#subcaminho",
     "component_platform": "Plataforma",
     "component_properties": "Propriedades do Componente",
-    "component_scope": "Âmbito do componente",
     "component_search": "Pesquisa de Componentes",
     "component_spdx_license_desc": "Especifica o ID de licença SPDX do componente",
     "component_supplier_name_desc": "A organização que forneceu o componente",
@@ -1178,12 +1177,6 @@
     "security": "Violações de segurança",
     "total": "Violações totais",
     "warns": "Avisos de violação"
-  },
-  "scope": {
-    "excluded": "Excluído",
-    "optional": "Opcional",
-    "required": "Obrigatório",
-    "unassigned": "Não atribuído"
   },
   "severity": {
     "critical": "Crítico",

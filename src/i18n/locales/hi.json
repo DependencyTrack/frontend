@@ -489,7 +489,6 @@
     "component_package_url_desc": "लाइब्रेरीज़ और फ़्रेमवर्क के लिए एक मान्य पैकेज URL आवश्यक है। PURL सिंटैक्स: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "प्लैटफ़ॉर्म",
     "component_properties": "घटक गुण",
-    "component_scope": "अवयव का दायरा",
     "component_search": "घटक खोज",
     "component_spdx_license_desc": "घटक की SPDX लाइसेंस आईडी निर्दिष्ट करता है",
     "component_supplier_name_desc": "वह संगठन जिसने घटक की आपूर्ति की",
@@ -1178,12 +1177,6 @@
     "security": "सुरक्षा उल्लंघन",
     "total": "कुल उल्लंघन",
     "warns": "उल्लंघन की चेतावनियाँ"
-  },
-  "scope": {
-    "excluded": "बहिष्कृत",
-    "optional": "वैकल्पिक",
-    "required": "आवश्यक",
-    "unassigned": "सौंपे नहीं गए"
   },
   "severity": {
     "critical": "गंभीर",

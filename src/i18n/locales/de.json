@@ -489,7 +489,6 @@
     "component_package_url_desc": "Für Bibliotheken und Frameworks ist eine gültige Paket-URL erforderlich. PURL-Syntax: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Plattform",
     "component_properties": "Komponenteneigenschaften",
-    "component_scope": "Komponenten-Scope",
     "component_search": "Komponentensuche",
     "component_spdx_license_desc": "Gibt die SPDX-Lizenz-ID der Komponente an",
     "component_supplier_name_desc": "Die Organisation, die die Komponente geliefert hat",
@@ -1178,12 +1177,6 @@
     "security": "Verstöße gegen Sicherheitsrichtlinien",
     "total": "Gesamtzahl der Verstöße",
     "warns": "Verstöße mit Schweregrad Warnung"
-  },
-  "scope": {
-    "excluded": "Ausgeschlossen",
-    "optional": "Optional",
-    "required": "Erforderlich",
-    "unassigned": "Nicht zugewiesen"
   },
   "severity": {
     "critical": "Kritisch",

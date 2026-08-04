@@ -489,7 +489,6 @@
     "component_package_url_desc": "Для бібліотек та фреймворків потрібна дійсна URL-адреса пакета. Синтаксис PURL: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Платформа",
     "component_properties": "Властивості компонента",
-    "component_scope": "Область застосування компонента",
     "component_search": "Пошук компонентів",
     "component_spdx_license_desc": "Визначає ідентифікатор ліцензії SPDX компонента",
     "component_supplier_name_desc": "Організація, що постачала компонент",
@@ -1178,12 +1177,6 @@
     "security": "Порушення безпеки",
     "total": "Сумарні порушення",
     "warns": "Попередження про порушення"
-  },
-  "scope": {
-    "excluded": "Виключений",
-    "optional": "Необов'язковий",
-    "required": "Обов'язковий",
-    "unassigned": "Непризначений"
   },
   "severity": {
     "critical": "Критичний",

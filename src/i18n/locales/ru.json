@@ -489,7 +489,6 @@
     "component_package_url_desc": "Действительный Package URL требуется для библиотек и фреймворков. Синтаксис PURL: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Платформа",
     "component_properties": "Свойства компонента",
-    "component_scope": "Область действия компонента",
     "component_search": "Поиск компонента",
     "component_spdx_license_desc": "Указывает идентификатор лицензии SPDX компонента",
     "component_supplier_name_desc": "Организация, предоставившая компонент",
@@ -1178,12 +1177,6 @@
     "security": "Нарушения безопасности",
     "total": "Всего нарушений",
     "warns": "Предупреждения о нарушениях"
-  },
-  "scope": {
-    "excluded": "Исключённый",
-    "optional": "Необязательный",
-    "required": "Обязательный",
-    "unassigned": "Не назначено"
   },
   "severity": {
     "critical": "Критический",

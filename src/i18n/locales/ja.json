@@ -489,7 +489,6 @@
     "component_package_url_desc": "ライブラリとフレームワークには有効なパッケージ URL が必要です。PURL 構文: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "プラットフォーム",
     "component_properties": "コンポーネントのプロパティ",
-    "component_scope": "コンポーネントスコープ",
     "component_search": "コンポーネント検索",
     "component_spdx_license_desc": "コンポーネントのSPDXライセンスIDを指定します",
     "component_supplier_name_desc": "コンポーネントを供給した組織",
@@ -1178,12 +1177,6 @@
     "security": "セキュリティ",
     "total": "総数",
     "warns": "警告"
-  },
-  "scope": {
-    "excluded": "除外",
-    "optional": "任意",
-    "required": "必須",
-    "unassigned": "未割り当て"
   },
   "severity": {
     "critical": "致命的",

@@ -490,7 +490,6 @@
     "component_package_url_desc": "A Valid Package URL is required for libraries and frameworks. PURL syntax: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Platform",
     "component_properties": "Component Properties",
-    "component_scope": "Component Scope",
     "component_search": "Component Search",
     "component_spdx_license_desc": "Specifies the SPDX license ID of the component",
     "component_supplier_name_desc": "The organization that supplied the component",
@@ -1179,12 +1178,6 @@
     "security": "Security Violations",
     "total": "Total Violations",
     "warns": "Violation Warnings"
-  },
-  "scope": {
-    "excluded": "Excluded",
-    "optional": "Optional",
-    "required": "Required",
-    "unassigned": "Unassigned"
   },
   "severity": {
     "critical": "Critical",
