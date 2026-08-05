@@ -301,6 +301,11 @@ $common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
         $common.resolveSourceVulnInfo('VULNDB', alias.vulnDbId),
       );
     }
+    if (vulnSource !== 'CX' && alias.cxId) {
+      _resolvedAliases.push(
+        $common.resolveSourceVulnInfo('CX', alias.cxId),
+      );
+    }
     return _resolvedAliases;
   });
 
