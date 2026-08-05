@@ -302,9 +302,7 @@ $common.resolveVulnAliases = function resolveVulnAliases(vulnSource, aliases) {
       );
     }
     if (vulnSource !== 'CX' && alias.cxId) {
-      _resolvedAliases.push(
-        $common.resolveSourceVulnInfo('CX', alias.cxId),
-      );
+      _resolvedAliases.push($common.resolveSourceVulnInfo('CX', alias.cxId));
     }
     return _resolvedAliases;
   });
