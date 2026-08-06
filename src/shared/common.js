@@ -35,16 +35,30 @@ $common.formatNotificationLabel = function formatNotificationLabel(
 };
 
 /**
+ * Resolves a display name from a v2 string or a v1 `{ name }` object.
+ */
+function namedItemName(item) {
+  if (item == null || item === '') {
+    return '';
+  }
+  if (typeof item === 'string') {
+    return item;
+  }
+  return item.name || '';
+}
+
+/**
  * Formats and returns a specialized label for a project tag.
  */
 $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
-  if (!tag) {
+  const name = namedItemName(tag);
+  if (!name) {
     return '';
   }
   return `<a href="${
-    router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
+    router.resolve({ name: 'Projects', query: { tags_all: name } }).href
   }" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(
-    tag.name,
+    name,
   )}</a>`;
 };
 
@@ -52,13 +66,14 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
  * Formats and returns a specialized label for a project team.
  */
 $common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
-  if (!team) {
+  const name = namedItemName(team);
+  if (!name) {
     return '';
   }
   return `<a href="${
-    router.resolve({ name: 'Projects', query: { team: team.name } }).href
+    router.resolve({ name: 'Projects', query: { teams_any: name } }).href
   }" class="badge badge-team text-lowercase mr-1">${xssFilters.inHTMLData(
-    team.name,
+    name,
   )}</a>`;
 };
 
@@ -642,9 +657,8 @@ $common.sameQueryParams = function (a, b) {
 $common.getCollectionLogicText = function (i18n, project) {
   const collectionLogic = project.collection_logic ?? project.collectionLogic;
   const collectionTag = project.collection_tag ?? project.collectionTag;
-  const tag = collectionTag
-    ? xssFilters.inDoubleQuotedAttr(collectionTag.name)
-    : '';
+  const tagName = namedItemName(collectionTag);
+  const tag = tagName ? xssFilters.inDoubleQuotedAttr(tagName) : '';
   switch (collectionLogic) {
     case 'AGGREGATE_DIRECT_CHILDREN':
       return i18n.$t(

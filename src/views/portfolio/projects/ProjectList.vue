@@ -101,17 +101,17 @@
             @dismiss="onFilterDismiss('team')"
           />
           <searchable-multi-select-filter-pill
-            v-if="!uuid && isFilterVisible('parent')"
-            ref="filter_parent"
-            :field-label="$t('message.parent')"
-            field-name="parent"
+            v-if="!uuid && isFilterVisible('ancestor')"
+            ref="filter_ancestor"
+            :field-label="$t('message.ancestor')"
+            field-name="ancestor"
             icon="fa-sitemap"
             :multiple="false"
-            :options="parentOptions"
-            :loading="parentOptionsLoading"
-            :search-placeholder="$t('message.search_parent')"
-            v-model="parentFilter"
-            @dismiss="onFilterDismiss('parent')"
+            :options="ancestorOptions"
+            :loading="ancestorOptionsLoading"
+            :search-placeholder="$t('message.search_ancestor')"
+            v-model="ancestorFilter"
+            @dismiss="onFilterDismiss('ancestor')"
           />
           <date-time-range-filter-pill
             v-if="isFilterVisible('lastBomImport')"
@@ -296,7 +296,14 @@ const ALLOWED_PAGE_SIZES = [10, 25, 50, 100];
 const EXPAND_BY_COLUMN = {
   'metrics.policy_violations_total': 'metrics',
   'metrics.vulnerabilities': 'metrics',
+  teams: 'teams',
 };
+
+// Columns that request expand and are visible by default when no preference is stored.
+const DEFAULT_VISIBLE_EXPAND_COLUMNS = [
+  'metrics.policy_violations_total',
+  'metrics.vulnerabilities',
+];
 
 const LEGACY_SORT_FIELD_MAP = {
   isLatest: 'is_latest',
@@ -311,8 +318,6 @@ function normalizeSortField(field) {
   return LEGACY_SORT_FIELD_MAP[field] || field;
 }
 
-const METRICS_COLUMN_FIELDS = Object.keys(EXPAND_BY_COLUMN);
-
 function storedColumnVisibility(field) {
   if (typeof localStorage === 'undefined') {
     return null;
@@ -326,15 +331,14 @@ function storedColumnVisibility(field) {
   return stored === 'true';
 }
 
-function initialMetricsColumnVisible(field) {
-  const stored = storedColumnVisibility(field);
-  return stored !== null ? stored : true;
-}
-
 function initialVisibleColumns() {
-  return METRICS_COLUMN_FIELDS.filter((field) =>
-    initialMetricsColumnVisible(field),
-  );
+  return Object.keys(EXPAND_BY_COLUMN).filter((field) => {
+    const stored = storedColumnVisibility(field);
+    if (stored !== null) {
+      return stored;
+    }
+    return DEFAULT_VISIBLE_EXPAND_COLUMNS.includes(field);
+  });
 }
 
 // Filters that force flat view; active/latest keep tree view available.
@@ -345,7 +349,7 @@ const HEAVY_FILTER_NAMES = [
   'tag',
   'severity',
   'team',
-  'parent',
+  'ancestor',
   'lastBomImport',
 ];
 
@@ -376,7 +380,7 @@ export default {
   },
   mounted() {
     if (!this.uuid) {
-      this.loadParentOptions();
+      this.loadAncestorOptions();
     }
     this.resetAndLoad();
   },
@@ -429,7 +433,9 @@ export default {
       } else {
         this.classifierFilter = null;
       }
-      if (q.tags) {
+      if (q.tags_all) {
+        this.tagFilter = Array.isArray(q.tags_all) ? q.tags_all : [q.tags_all];
+      } else if (q.tags) {
         this.tagFilter = Array.isArray(q.tags) ? q.tags : [q.tags];
       } else if (q.tag) {
         this.tagFilter = Array.isArray(q.tag) ? q.tag : [q.tag];
@@ -443,7 +449,11 @@ export default {
       } else {
         this.severityFilter = null;
       }
-      if (q.teams) {
+      if (q.teams_any) {
+        this.teamFilter = Array.isArray(q.teams_any)
+          ? q.teams_any
+          : [q.teams_any];
+      } else if (q.teams) {
         this.teamFilter = Array.isArray(q.teams) ? q.teams : [q.teams];
       } else if (q.team) {
         this.teamFilter = Array.isArray(q.team) ? q.team : [q.team];
@@ -464,9 +474,9 @@ export default {
       }
       if (q.show_inactive === 'true') {
         this.activeFilter = 'all';
-      } else if (q.is_active === 'false') {
+      } else if (q.is_active === 'INACTIVE' || q.is_active === 'false') {
         this.activeFilter = 'false';
-      } else if (q.is_active === 'true') {
+      } else if (q.is_active === 'ACTIVE' || q.is_active === 'true') {
         this.activeFilter = 'true';
       } else {
         this.activeFilter = DEFAULT_ACTIVE_FILTER;
@@ -479,22 +489,22 @@ export default {
         this.latestFilter = null;
       }
       if (q.ancestor_uuid) {
-        this.parentFilter = q.ancestor_uuid;
+        this.ancestorFilter = q.ancestor_uuid;
       } else {
-        this.parentFilter = null;
+        this.ancestorFilter = null;
       }
     },
     initializeProjectCreateProjectModal() {
       this.$root.$emit('initializeProjectCreateProjectModal');
     },
-    async loadParentOptions() {
-      this.parentOptionsLoading = true;
+    async loadAncestorOptions() {
+      this.ancestorOptionsLoading = true;
       try {
         const baseUrl = common.setQueryParams(
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
           {
             has_children: true,
-            is_active: true,
+            is_active: 'ACTIVE',
             limit: 1000,
             sort_by: 'name',
           },
@@ -509,15 +519,15 @@ export default {
             ? common.setQueryParams(baseUrl, { page_token: nextPageToken })
             : null;
         }
-        this.parentOptions = items.map((item) => ({
+        this.ancestorOptions = items.map((item) => ({
           value: item.uuid,
           text: item.version ? `${item.name} : ${item.version}` : item.name,
         }));
       } catch (err) {
-        console.error(`Failed to load parent filter options: ${err}`);
-        this.parentOptions = [];
+        console.error(`Failed to load ancestor filter options: ${err}`);
+        this.ancestorOptions = [];
       } finally {
-        this.parentOptionsLoading = false;
+        this.ancestorOptionsLoading = false;
       }
     },
     projectsUrl() {
@@ -526,9 +536,9 @@ export default {
     buildFilterParams() {
       const params = {};
       if (this.activeFilter === 'false') {
-        params.is_active = false;
+        params.is_active = 'INACTIVE';
       } else if (this.activeFilter === 'true') {
-        params.is_active = true;
+        params.is_active = 'ACTIVE';
       }
       // 'all': omit is_active to include active and inactive projects.
       if (this.nameFilter?.value) {
@@ -541,13 +551,13 @@ export default {
         params.classifier = [...this.classifierFilter];
       }
       if (this.tagFilter?.length) {
-        params.tags = [...this.tagFilter];
+        params.tags_all = [...this.tagFilter];
       }
       if (this.severityFilter?.length) {
         params.severity = [...this.severityFilter];
       }
       if (this.teamFilter?.length) {
-        params.teams = [...this.teamFilter];
+        params.teams_any = [...this.teamFilter];
       }
       if (this.latestFilter === 'true') {
         params.is_latest = true;
@@ -560,8 +570,8 @@ export default {
       if (this.lastBomImportFilter?.before) {
         params.last_bom_import_before = this.lastBomImportFilter.before;
       }
-      if (this.parentFilter) {
-        params.ancestor_uuid = this.parentFilter;
+      if (this.ancestorFilter) {
+        params.ancestor_uuid = this.ancestorFilter;
       }
       return params;
     },
@@ -571,7 +581,7 @@ export default {
         params.show_inactive = 'true';
         delete params.is_active;
       } else if (this.activeFilter === 'false') {
-        params.is_active = 'false';
+        params.is_active = 'INACTIVE';
       } else {
         delete params.is_active;
       }
@@ -616,7 +626,7 @@ export default {
         this.tagFilter = null;
         this.severityFilter = null;
         this.teamFilter = null;
-        this.parentFilter = null;
+        this.ancestorFilter = null;
         this.lastBomImportFilter = null;
         this.activeFilter = 'all';
         this.latestFilter = null;
@@ -938,8 +948,8 @@ export default {
         ...(!this.uuid
           ? [
               {
-                name: 'parent',
-                label: this.$t('message.parent'),
+                name: 'ancestor',
+                label: this.$t('message.ancestor'),
                 icon: 'fa-sitemap',
               },
             ]
@@ -978,11 +988,11 @@ export default {
     },
     severityFilterOptions() {
       return [
-        { text: this.$t('severity.critical'), value: 'critical' },
-        { text: this.$t('severity.high'), value: 'high' },
-        { text: this.$t('severity.medium'), value: 'medium' },
-        { text: this.$t('severity.low'), value: 'low' },
-        { text: this.$t('severity.unassigned'), value: 'unassigned' },
+        { text: this.$t('severity.critical'), value: 'CRITICAL' },
+        { text: this.$t('severity.high'), value: 'HIGH' },
+        { text: this.$t('severity.medium'), value: 'MEDIUM' },
+        { text: this.$t('severity.low'), value: 'LOW' },
+        { text: this.$t('severity.unassigned'), value: 'UNASSIGNED' },
       ];
     },
     isTreeViewAllowed() {
@@ -1023,9 +1033,9 @@ export default {
       tagFilter: null,
       severityFilter: null,
       teamFilter: null,
-      parentFilter: null,
-      parentOptions: [],
-      parentOptionsLoading: false,
+      ancestorFilter: null,
+      ancestorOptions: [],
+      ancestorOptionsLoading: false,
       lastBomImportFilter: null,
       activeFilter: DEFAULT_ACTIVE_FILTER,
       latestFilter: null,
@@ -1109,7 +1119,7 @@ export default {
           title: this.$t('message.teams'),
           field: 'teams',
           sortable: false,
-          visible: false,
+          visible: storedColumnVisibility('teams') === true,
           routerFunc: () => this.$router,
           formatter(value, row) {
             const router = this.routerFunc();
@@ -1181,7 +1191,9 @@ export default {
           title: this.$t('message.active'),
           field: 'is_active',
           formatter(value) {
-            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+            return value === 'ACTIVE' || value === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
           },
           align: 'center',
           sortable: false,
