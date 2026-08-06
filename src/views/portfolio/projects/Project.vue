@@ -180,7 +180,7 @@
                 <b-col class="text-lowercase fw-bold" md="auto">
                   <span v-for="tag in project.tags" :key="tag.name">
                     <b-badge
-                      :to="{ name: 'Projects', query: { tag: tag.name } }"
+                      :to="{ name: 'Projects', query: { tags_all: tag.name } }"
                       variant="tag"
                       >{{ tag.name }}</b-badge
                     >
