@@ -171,7 +171,7 @@ export default {
       return common.setQueryParams(
         `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
         {
-          is_active: true,
+          is_active: 'ACTIVE',
           limit: 10,
           sort_by: 'name',
           name_contains: searchText || undefined,

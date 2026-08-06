@@ -48,7 +48,7 @@ export default {
       return common.setQueryParams(
         `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
         {
-          is_active: true,
+          is_active: 'ACTIVE',
           sort_by: 'name',
           sort_direction: 'ASC',
         },
@@ -90,7 +90,9 @@ export default {
           title: this.$t('message.active'),
           field: 'is_active',
           formatter(value) {
-            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+            return value === 'ACTIVE' || value === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
           },
           align: 'center',
           class: 'tight',
