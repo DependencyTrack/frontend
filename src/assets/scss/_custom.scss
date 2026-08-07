@@ -327,6 +327,36 @@ h6 {
   float: none;
   width: 100%;
 }
+.fixed-table-toolbar .bs-bars:has(.filter-bar-row) {
+  float: none;
+  width: 100%;
+}
+.fixed-table-toolbar .filter-bar-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 0;
+}
+.fixed-table-toolbar .filter-bar-row .filter-bar-filters {
+  flex: 1;
+  min-width: 0;
+}
+.fixed-table-toolbar .filter-bar-row .filter-bar-actions {
+  flex-shrink: 0;
+}
+.fixed-table-toolbar .filter-bar-row .btn-create-project {
+  font-size: 0.85rem !important;
+}
+.fixed-table-toolbar .filter-bar .btn-clear-all-filters,
+.fixed-table-toolbar .filter-bar .btn-more-filters > .dropdown-toggle {
+  border-radius: 20px;
+  font-size: 0.85rem !important;
+}
+.fixed-table-toolbar .filter-bar .btn-more-filters > .dropdown-toggle {
+  border-style: dashed !important;
+}
 .fixed-table-toolbar .filter-bar {
   margin-bottom: 0;
 }

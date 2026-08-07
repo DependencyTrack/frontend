@@ -159,7 +159,7 @@
               <span class="text-lowercase font-weight-bold">
                 <span v-for="tag in project.tags">
                   <b-badge
-                    :to="{ name: 'Projects', query: { tag: tag.name } }"
+                    :to="{ name: 'Projects', query: { tags_all: tag.name } }"
                     variant="tag"
                     >{{ tag.name }}</b-badge
                   >
