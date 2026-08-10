@@ -878,6 +878,7 @@
     "policy_cel_desc_project": "The project owning the component",
     "policy_cel_desc_vuln": "The vulnerability being evaluated",
     "policy_cel_overview_link": "Learn more about CEL.",
+    "policy_condition_formatted_for_display": "This large bundle-managed condition has been formatted for display. The stored condition is unchanged.",
     "policy_condition_hint": "The condition determines when a policy applies. Use templates for common patterns.",
     "policy_condition_templates": "Insert Template",
     "policy_create": "Create Policy",
