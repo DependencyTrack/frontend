@@ -19,6 +19,39 @@
           v-bind="labelIcon"
         />{{ $t('admin.enable_svg_badge') }}
       </b-form-group>
+      <b-form-group
+        :label="$t('admin.manufacturer')"
+        label-size="lg"
+        label-class="font-weight-bold pt-0 mb-2"
+      >
+        <p>{{ $t('admin.manufacturer_desc') }}</p>
+        <b-validated-input-group-form-input
+          id="manufacturer_name"
+          :label="$t('admin.manufacturer_name')"
+          input-group-size="mb-3"
+          v-model="manufacturerName"
+        />
+        <b-validated-input-group-form-input
+          id="manufacturer_url"
+          :label="$t('admin.manufacturer_url')"
+          input-group-size="mb-3"
+          type="url"
+          v-model="manufacturerUrl"
+        />
+        <b-validated-input-group-form-input
+          id="manufacturer_contact_name"
+          :label="$t('admin.manufacturer_contact_name')"
+          input-group-size="mb-3"
+          v-model="manufacturerContactName"
+        />
+        <b-validated-input-group-form-input
+          id="manufacturer_contact_email"
+          :label="$t('admin.manufacturer_contact_email')"
+          input-group-size="mb-3"
+          type="email"
+          v-model="manufacturerContactEmail"
+        />
+      </b-form-group>
       <b-form-group>
         <b-form-group
           :label="$t('admin.default_language')"
@@ -93,6 +126,10 @@ export default {
     return {
       baseUrl: '',
       isBadgesEnabled: false,
+      manufacturerName: '',
+      manufacturerUrl: '',
+      manufacturerContactName: '',
+      manufacturerContactEmail: '',
       isDefaultLanguageEnabled: false,
       defaultLanguage: 'en',
       labelIcon: {
@@ -113,6 +150,26 @@ export default {
           groupName: 'general',
           propertyName: 'badge.enabled',
           propertyValue: this.isBadgesEnabled,
+        },
+        {
+          groupName: 'general',
+          propertyName: 'manufacturer.name',
+          propertyValue: this.manufacturerName,
+        },
+        {
+          groupName: 'general',
+          propertyName: 'manufacturer.url',
+          propertyValue: this.manufacturerUrl,
+        },
+        {
+          groupName: 'general',
+          propertyName: 'manufacturer.contact.name',
+          propertyValue: this.manufacturerContactName,
+        },
+        {
+          groupName: 'general',
+          propertyName: 'manufacturer.contact.email',
+          propertyValue: this.manufacturerContactEmail,
         },
         {
           groupName: 'general',
@@ -155,6 +212,18 @@ export default {
             break;
           case 'badge.enabled':
             this.isBadgesEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'manufacturer.name':
+            this.manufacturerName = item.propertyValue;
+            break;
+          case 'manufacturer.url':
+            this.manufacturerUrl = item.propertyValue;
+            break;
+          case 'manufacturer.contact.name':
+            this.manufacturerContactName = item.propertyValue;
+            break;
+          case 'manufacturer.contact.email':
+            this.manufacturerContactEmail = item.propertyValue;
             break;
           case 'default.locale':
             this.isDefaultLanguageEnabled = !!common.trimToNull(
