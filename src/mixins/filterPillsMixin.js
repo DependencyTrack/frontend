@@ -1,182 +1,122 @@
 import jQuery from 'jquery';
 import common from '@/shared/common';
 
-// Delay before filter state is written back to the URL. Mirrors the debounce
-// used for table refreshes so that bulk changes (e.g. "clear all") collapse
-// into a single history entry.
-const QUERY_SYNC_DELAY_MS = 250;
+const DATE_ONLY_PATTERN = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-const INTEGER_PATTERN = /^\d+$/;
+// Lets the URL and the outgoing request share the REST API's vocabulary.
+const paramName = (def) => def.param || def.name;
+// The only door query data enters through: every value is a string ('' for a
+// bare `?flag`), and the last occurrence of a repeated key wins.
+export const queryFromSearch = (search) =>
+  Object.fromEntries(new URLSearchParams(search || ''));
+// Which tab a history entry belongs to. One tab answers to several spellings of
+// its path - trailing slash, the '/occurrences' alias, any casing - which the
+// parent folds together too (getTabFromRoute); any other path stays distinct.
+const historyEntryTabKey = (pathname) =>
+  pathname.toLowerCase().replace(/(\/occurrences)?\/*$/, '');
 
-// A query parameter may appear more than once, in which case vue-router hands
-// us an array. The last occurrence wins, mirroring URLSearchParams.set().
-//
-// Values parsed from a URL are always strings, but a query object built in
-// memory (as this mixin does when writing) can still hold the original numbers
-// and booleans, so coerce those rather than discarding them.
-function singleValue(raw) {
-  const value = Array.isArray(raw) ? raw[raw.length - 1] : raw;
-  if (typeof value === 'string') {
-    return value;
-  }
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return String(value);
-  }
-  if (typeof value === 'boolean') {
-    return String(value);
-  }
-  return null;
-}
-
-function splitList(raw) {
-  const value = singleValue(raw);
-  if (value === null) {
-    return [];
-  }
-  return value
+function splitAllowed(raw, allowed) {
+  return (raw || '')
     .split(',')
     .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0);
+    .filter((entry) => allowed.includes(entry));
 }
 
-// Date pills emit either a "YYYY-MM-DD" string (dateOnly) or epoch millis.
-// Accept both shapes so the codec works for every date pill configuration,
-// and reject anything else rather than forwarding junk to the API.
+// Both audit views use <date-time-range-filter-pill date-only> without
+// emit-date-as-millis: anything but a "YYYY-MM-DD" string renders "Invalid Date"
+// in the pill while still reaching the API. The round-trip rejects 2024-02-30.
 function parseDateBoundary(raw) {
-  const value = singleValue(raw);
-  if (value === null) {
-    return null;
-  }
-  if (DATE_ONLY_PATTERN.test(value)) {
-    return value;
-  }
-  if (INTEGER_PATTERN.test(value)) {
-    return Number(value);
-  }
-  return null;
+  if (!DATE_ONLY_PATTERN.test(raw || '')) return null;
+  const parsed = new Date(`${raw}T00:00:00Z`);
+  const iso = Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString();
+  return iso.slice(0, 10) === raw ? raw : null;
 }
-
+// Bounds outside the pill's own range are rejected rather than clamped: a
+// clamped bound claims a filter nobody asked for.
 function parseNumberBoundary(raw, def) {
-  const value = singleValue(raw);
-  if (value === null || value.length === 0) {
-    return null;
-  }
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) {
-    return null;
-  }
-  let clamped = parsed;
-  if (typeof def.min === 'number') {
-    clamped = Math.max(def.min, clamped);
-  }
-  if (typeof def.max === 'number') {
-    clamped = Math.min(def.max, clamped);
-  }
-  return clamped;
+  const parsed = raw ? Number(raw) : NaN;
+  const belowMin = typeof def.min === 'number' && parsed < def.min;
+  const aboveMax = typeof def.max === 'number' && parsed > def.max;
+  return Number.isFinite(parsed) && !belowMin && !aboveMax ? parsed : null;
+}
+function rangeCodec(lowKey, highKey, parseBoundary, rejectInverted) {
+  return {
+    encode: (def, value) => {
+      const encoded = {};
+      // `!= null` rather than truthiness, so a 0 bound survives.
+      if (value && value[lowKey] != null)
+        encoded[`${paramName(def)}From`] = value[lowKey];
+      if (value && value[highKey] != null)
+        encoded[`${paramName(def)}To`] = value[highKey];
+      return encoded;
+    },
+    decode: (def, query) => {
+      const low = parseBoundary(query[`${paramName(def)}From`], def);
+      const high = parseBoundary(query[`${paramName(def)}To`], def);
+      if (low === null && high === null) return null;
+      // Only where the pill forbids it too: NumericRangeFilterPill's from/to
+      // states make an inverted range unreachable, so one in the URL was
+      // hand-written. The date pill has no such guard, so its own bookmark
+      // would lose the pill.
+      if (rejectInverted && low !== null && high !== null && low > high)
+        return null;
+      // Both keys always present: the pills test `value.from !== null`.
+      return { [lowKey]: low, [highKey]: high };
+    },
+  };
 }
 
-// Per filter type: which query parameters it owns, how to write the current
-// value into them, and how to read a value back out. `decode` returns null when
-// the query holds nothing usable, which leaves the filter at its default.
-const FILTER_QUERY_CODECS = {
+// Per filter type: how to write the current value into query parameters and read
+// it back. `decode` yields null (false for booleans) to leave the filter alone.
+export const FILTER_QUERY_CODECS = {
   boolean: {
-    keys: (def) => [def.name],
-    encode: (def, value) => (value === true ? { [def.name]: 'true' } : {}),
-    decode: (def, query) =>
-      String(singleValue(query[def.name])).toLowerCase() === 'true',
+    encode: (def, value) =>
+      value === true ? { [paramName(def)]: 'true' } : {},
+    // A bare `?showInactive` arrives as '', which still means "on".
+    decode: (def, query) => {
+      const value = query[paramName(def)];
+      return typeof value === 'string' && !/^(false|0)$/i.test(value);
+    },
   },
   multiselect: {
-    keys: (def) => [def.name],
     encode: (def, value) =>
       Array.isArray(value) && value.length > 0
-        ? { [def.name]: value.join(',') }
+        ? { [paramName(def)]: value.join(',') }
         : {},
     decode: (def, query) => {
       const allowed = (def.options || []).map((option) => option.value);
-      const selected = splitList(query[def.name]).filter(
-        (entry) => allowed.length === 0 || allowed.includes(entry),
-      );
+      const selected = splitAllowed(query[paramName(def)], allowed);
       return selected.length > 0 ? selected : null;
     },
   },
   text: {
-    keys: (def) => [def.name, `${def.name}Fields`],
-    encode: (def, value) =>
-      value && value.value
-        ? {
-            [def.name]: value.value,
-            [`${def.name}Fields`]: (value.fields || []).join(','),
-          }
-        : {},
+    encode: (def, value) => {
+      if (!value || !value.value) return {};
+      const encoded = { [`${paramName(def)}Input`]: value.value };
+      // The pill never searches without fields; this only keeps a dangling
+      // `&textSearchField=` out of a hand-written URL.
+      if ((value.fields || []).length > 0)
+        encoded[`${paramName(def)}Field`] = value.fields.join(',');
+      return encoded;
+    },
     decode: (def, query) => {
-      const text = singleValue(query[def.name]);
-      if (text === null || text.trim().length === 0) {
-        return null;
-      }
+      const text = (query[`${paramName(def)}Input`] || '').trim();
+      if (!text) return null;
+      // An omitted or unusable field list searches everything, as the pill does.
       const allowed = (def.fields || []).map((field) => field.value);
-      let fields = splitList(query[`${def.name}Fields`]).filter(
-        (entry) => allowed.length === 0 || allowed.includes(entry),
-      );
-      // An omitted or fully invalid field list searches everything, which is
-      // what the pill itself defaults to.
-      if (fields.length === 0) {
-        fields = allowed;
-      }
-      return { fields, value: text.trim() };
+      const fields = splitAllowed(query[`${paramName(def)}Field`], allowed);
+      return { fields: fields.length ? fields : allowed, value: text };
     },
   },
-  daterange: {
-    keys: (def) => [`${def.name}From`, `${def.name}To`],
-    encode: (def, value) => {
-      if (!value) {
-        return {};
-      }
-      const encoded = {};
-      if (value.since !== null && value.since !== undefined) {
-        encoded[`${def.name}From`] = value.since;
-      }
-      if (value.before !== null && value.before !== undefined) {
-        encoded[`${def.name}To`] = value.before;
-      }
-      return encoded;
-    },
-    decode: (def, query) => {
-      const since = parseDateBoundary(query[`${def.name}From`]);
-      const before = parseDateBoundary(query[`${def.name}To`]);
-      if (since === null && before === null) {
-        return null;
-      }
-      return { since, before };
-    },
-  },
-  numrange: {
-    keys: (def) => [`${def.name}From`, `${def.name}To`],
-    encode: (def, value) => {
-      if (!value) {
-        return {};
-      }
-      const encoded = {};
-      if (value.from !== null && value.from !== undefined) {
-        encoded[`${def.name}From`] = value.from;
-      }
-      if (value.to !== null && value.to !== undefined) {
-        encoded[`${def.name}To`] = value.to;
-      }
-      return encoded;
-    },
-    decode: (def, query) => {
-      const from = parseNumberBoundary(query[`${def.name}From`], def);
-      const to = parseNumberBoundary(query[`${def.name}To`], def);
-      if (from === null && to === null) {
-        return null;
-      }
-      return { from, to };
-    },
-  },
+  daterange: rangeCodec('since', 'before', parseDateBoundary),
+  numrange: rangeCodec('from', 'to', parseNumberBoundary, true),
 };
-
 export default {
+  props: {
+    // Set for the tab the route points at, so tabs never fight over the URL. A
+    // syncing host must be one whole tab in the sense of historyEntryTabKey.
+    filterUrlSync: { type: Boolean, default: false },
+  },
   data: () => ({
     pendingFilters: {},
   }),
@@ -188,46 +128,25 @@ export default {
     addFilterOptions() {
       return this.allFilterDefs.filter((f) => !this.isFilterVisible(f.name));
     },
-    // Filters that can be represented in the URL. A filter opts in by declaring
-    // a `type` in allFilterDefs; booleans are recognised via `booleanFilters`.
-    filterQueryDefs() {
-      return this.allFilterDefs
-        .map((def) => ({
-          ...def,
-          type:
-            this.booleanFilters && this.booleanFilters.includes(def.name)
-              ? 'boolean'
-              : def.type,
-        }))
-        .filter((def) =>
-          Object.prototype.hasOwnProperty.call(FILTER_QUERY_CODECS, def.type),
-        );
-    },
   },
   created() {
-    // Seed from the URL before the watchers exist, so restoring a bookmark
-    // does not look like a user edit and immediately echo back.
     if (this.filterUrlSync) {
-      this._filterQueryHydrated = this.applyFilterQuery(this.$route.query);
-      // data() built the table's URL before those filters existed. Rewrite it
-      // here, while the table component is still to be created, so a bookmark
-      // loads filtered data in one request instead of fetching twice.
-      if (
-        this._filterQueryHydrated &&
-        this.options &&
-        typeof this.apiUrl === 'function'
-      ) {
+      // Hydrated before the watchers below exist, so a bookmark never looks
+      // like a user edit. Rewriting options.url - which a syncing host owes,
+      // along with apiUrl() - makes the table's first request already filtered.
+      const query = queryFromSearch(window.location.search);
+      if (this.applyFilterQuery(query) && this.options && this.apiUrl) {
         this.options.url = this.apiUrl();
       }
+      // Drops what no codec claimed, so the URL shows exactly the pills on screen.
+      this.syncFilterQueryToUrl();
+      this._ownedHistoryTab = historyEntryTabKey(window.location.pathname);
+      window.addEventListener('popstate', this._noteHistoryQuery);
     }
-
     this.allFilterDefs.forEach((def) => {
       const name = def.name;
-      const isBoolean =
-        this.booleanFilters && this.booleanFilters.includes(name);
-      const dataKey = isBoolean ? name : name + 'Filter';
-
-      this.$watch(dataKey, (val) => {
+      const isBoolean = this.isBooleanFilter(def);
+      this.$watch(this.filterDataKey(def), (val) => {
         if (!isBoolean) {
           const hasValue = Array.isArray(val) ? val.length > 0 : !!val;
           if (hasValue) this.$set(this.pendingFilters, name, false);
@@ -235,30 +154,34 @@ export default {
         if (!this._clearing && typeof this.refreshTable === 'function') {
           this.refreshTable();
         }
-        // Runs even while clearing, so "clear all" is reflected in the URL.
-        this.scheduleFilterQuerySync();
+        // Runs even while clearing, so "clear all" reaches the URL too. Vue
+        // queues these callbacks, so a bulk clear's twelve assignments end up
+        // as one effective write and eleven no-ops.
+        this.syncFilterQueryToUrl();
       });
     });
   },
   watch: {
-    $route() {
-      if (!this.filterUrlSync) {
-        return;
-      }
-      // Ignore the echo of our own write.
-      if (this._filterQuerySelfNavigation) {
-        this._filterQuerySelfNavigation = false;
-        return;
-      }
-      // Any navigation we did not initiate (bookmark, back/forward, tab
-      // switch) makes the URL authoritative again for whichever view is now
-      // on screen. Deferred so the tab pane's active class is up to date.
-      this.$nextTick(() => {
-        if (!this.isActiveFilterView()) {
-          return;
-        }
-        this.applyFilterQuery(this.$route.query);
-      });
+    filterUrlSync(active) {
+      // A popstate that does not change tabs leaves its note unconsumed on the
+      // inactive tab, so honour a note only while the address bar still shows the
+      // entry it was taken for - otherwise the next tab switch would read a stale
+      // one and reset the arriving tab against an entry it never described.
+      const fromHistory = this._pendingHistoryQueryUrl === window.location.href;
+      this._pendingHistoryQueryUrl = null;
+      if (!active) return;
+      // The address bar always leads the prop, so it already names this tab here.
+      this._ownedHistoryTab = historyEntryTabKey(window.location.pathname);
+      // A tab created while hidden - always the one the page did not land on -
+      // skipped created()'s registration. Re-adding the same bound method is a
+      // no-op, so ownership can change hands repeatedly without stacking handlers.
+      window.addEventListener('popstate', this._noteHistoryQuery);
+      if (fromHistory)
+        this.applyFilterQuery(queryFromSearch(window.location.search), true);
+      // Newly the visible tab, so its own state owns the whole query string
+      // again - which also cleans up after a tab click, whose guarded
+      // navigation leaves the leaving tab's query behind until it resolves.
+      this.syncFilterQueryToUrl();
     },
   },
   mounted() {
@@ -281,9 +204,7 @@ export default {
     });
   },
   beforeDestroy() {
-    if (this._filterQuerySyncTimer) {
-      clearTimeout(this._filterQuerySyncTimer);
-    }
+    window.removeEventListener('popstate', this._noteHistoryQuery);
     const table = this._queryEl('table');
     if (table) {
       jQuery(table).off('post-body.bs.table.filterPillsMixin');
@@ -320,18 +241,46 @@ export default {
       });
       filterBar.appendChild(columns);
     },
-    hasFilterValue(name) {
-      if (this.booleanFilters && this.booleanFilters.includes(name)) {
-        return !!this[name];
+    // The single derivation of "this filter is a boolean toggle": booleanFilters
+    // is authoritative (templates ask by name) and a def's `type: 'boolean'`
+    // restates it. Booleans live in a plain data property, the rest in `<name>Filter`.
+    isBooleanFilter(defOrName) {
+      const { name, type } = defOrName.name ? defOrName : { name: defOrName };
+      return type === 'boolean' || (this.booleanFilters || []).includes(name);
+    },
+    filterDataKey(defOrName) {
+      const name = defOrName.name || defOrName;
+      return this.isBooleanFilter(defOrName) ? name : name + 'Filter';
+    },
+    filterCodec(def) {
+      const type = this.isBooleanFilter(def) ? 'boolean' : def.type;
+      return FILTER_QUERY_CODECS[type];
+    },
+    // Back/forward swaps the whole address bar, so that entry's query - not this
+    // view's live state - is the truth for the tab it names, which only learns
+    // it is named once the guarded navigation resolves. Hence the note.
+    _noteHistoryQuery() {
+      this._pendingHistoryQueryUrl = window.location.href;
+      // A jump between two entries of the tab on screen hands ownership to nobody,
+      // so no watcher runs to consume the note: adopt here. Not on ownership alone -
+      // a cross-tab jump reaches the LEAVING tab while it still reads as the owner,
+      // the guarded navigation being unresolved; only the entry's own tab may adopt.
+      if (
+        this.filterUrlSync &&
+        historyEntryTabKey(window.location.pathname) === this._ownedHistoryTab
+      ) {
+        this.applyFilterQuery(queryFromSearch(window.location.search), true);
       }
-      const val = this[name + 'Filter'];
+    },
+    hasFilterValue(name) {
+      const val = this[this.filterDataKey(name)];
       return Array.isArray(val) ? val.length > 0 : !!val;
     },
     isFilterVisible(name) {
       return this.pendingFilters[name] || this.hasFilterValue(name);
     },
     showFilter(name) {
-      if (this.booleanFilters && this.booleanFilters.includes(name)) {
+      if (this.isBooleanFilter(name)) {
         this[name] = true;
         return;
       }
@@ -353,98 +302,67 @@ export default {
         this.pendingFilters[k] = false;
       });
     },
-    filterDataKey(def) {
-      return def.type === 'boolean' ? def.name : def.name + 'Filter';
-    },
-    // Every query parameter owned by this view's filters.
-    ownedFilterQueryKeys() {
-      return this.filterQueryDefs.reduce(
-        (keys, def) => keys.concat(FILTER_QUERY_CODECS[def.type].keys(def)),
-        [],
-      );
-    },
-    // Current filter state expressed as query parameters.
+    // Current filter state as query parameters; a filter joins in by declaring a
+    // `type` in allFilterDefs. The same builder feeds the address bar and each
+    // view's apiUrl(), so the two cannot drift. A method, not a computed,
+    // because apiUrl() runs from data(), before computed properties exist.
     buildFilterQuery() {
-      return this.filterQueryDefs.reduce((query, def) => {
-        const encoded = FILTER_QUERY_CODECS[def.type].encode(
-          def,
-          this[this.filterDataKey(def)],
-        );
-        return Object.assign(query, encoded);
-      }, {});
+      const query = {};
+      (this.allFilterDefs || []).forEach((def) => {
+        const codec = this.filterCodec(def);
+        const value = this[this.filterDataKey(def)];
+        if (codec) Object.assign(query, codec.encode(def, value));
+      });
+      return query;
     },
-    // Overwrite filter state from query parameters. Filters the query says
-    // nothing about are reset, so a bookmark always describes the full view.
-    // Returns true when any filter ended up set.
-    applyFilterQuery(query) {
+    // Returns true when any filter ended up set. Without `reset` a filter the
+    // query does not mention is left alone - the created() call, which runs
+    // before the watchers exist and while every filter holds its default. With
+    // `reset` (back/forward) the entry's query is the whole truth instead.
+    applyFilterQuery(query, reset) {
       let anyApplied = false;
-      this.filterQueryDefs.forEach((def) => {
-        const codec = FILTER_QUERY_CODECS[def.type];
-        const present = codec
-          .keys(def)
-          .some((key) =>
-            Object.prototype.hasOwnProperty.call(query || {}, key),
-          );
-        const decoded = present ? codec.decode(def, query) : null;
-        const dataKey = this.filterDataKey(def);
-        if (decoded === null || decoded === false) {
-          this[dataKey] = def.type === 'boolean' ? false : this.emptyValue(def);
-          return;
+      this.allFilterDefs.forEach((def) => {
+        const codec = this.filterCodec(def);
+        if (!codec) return;
+        const decoded = codec.decode(def, query);
+        if (decoded !== null && decoded !== false) {
+          this.assignFilterValue(def, codec, decoded);
+          anyApplied = true;
+        } else if (reset) {
+          // `false` is the boolean codec's empty value, the only one that is
+          // not null; a multiselect pill's is [].
+          const empty = def.type === 'multiselect' ? [] : null;
+          this.assignFilterValue(def, codec, decoded === false ? false : empty);
         }
-        this[dataKey] = decoded;
-        anyApplied = true;
       });
       return anyApplied;
     },
-    emptyValue(def) {
-      return def.type === 'multiselect' ? [] : null;
-    },
-    scheduleFilterQuerySync() {
-      if (!this.filterUrlSync) {
+    // Decoding mints fresh arrays and objects, so assigning unconditionally would
+    // trip the filter's watcher - and the refreshTable() server request behind it
+    // - even when the value is unchanged. The codec is its own equality oracle.
+    assignFilterValue(def, codec, value) {
+      const dataKey = this.filterDataKey(def);
+      const encodedCurrent = codec.encode(def, this[dataKey]);
+      if (common.sameQueryParams(encodedCurrent, codec.encode(def, value))) {
         return;
       }
-      if (this._filterQuerySyncTimer) {
-        clearTimeout(this._filterQuerySyncTimer);
-      }
-      this._filterQuerySyncTimer = setTimeout(() => {
-        this.syncFilterQueryToUrl();
-      }, QUERY_SYNC_DELAY_MS);
+      this[dataKey] = value;
     },
+    // Written directly, never through the router: refining a filter is not a
+    // navigation, and $router.replace() would run the permission-guarded
+    // beforeEach hook and scrollBehavior on every edit. So this.$route does not
+    // track these writes and filter state is read from window.location instead.
+    // Known limitation: clicking the sidebar entry for the page you are already
+    // on is a duplicate navigation, whose ensureURL() restores vue-router's stale
+    // fullPath and drops the query until the next filter edit.
     syncFilterQueryToUrl() {
-      // While two tabbed views share a route, only the visible one may own the
-      // query string.
-      if (!this.filterUrlSync || !this.isActiveFilterView()) {
-        return;
-      }
-      const owned = this.ownedFilterQueryKeys();
-      const preserved = Object.entries(this.$route.query || {}).reduce(
-        (query, [key, value]) => {
-          if (!owned.includes(key)) {
-            query[key] = value;
-          }
-          return query;
-        },
-        {},
-      );
-      const query = Object.assign(preserved, this.buildFilterQuery());
-      if (common.sameQueryParams(query, this.$route.query)) {
-        return;
-      }
-      // replace() rather than push(): filtering is a refinement of the current
-      // view, not a separate destination to step back through.
-      this._filterQuerySelfNavigation = true;
-      this.$router.replace({ path: this.$route.path, query }).catch(() => {
-        // Redundant navigations reject in vue-router 3; nothing to recover.
-        this._filterQuerySelfNavigation = false;
-      });
-    },
-    isActiveFilterView() {
-      const el = this.$el;
-      if (!el || typeof el.closest !== 'function') {
-        return false;
-      }
-      const pane = el.closest('.tab-pane');
-      return !pane || pane.classList.contains('active');
+      if (!this.filterUrlSync) return;
+      // pathname, not $route.path: the router's base path is already part of it.
+      const { pathname, search } = window.location;
+      const next = common.setQueryParams(pathname, this.buildFilterQuery());
+      // history.state is passed through: it carries vue-router's scroll key.
+      if (next !== pathname + search)
+        window.history.replaceState(window.history.state, '', next);
     },
   },
 };
