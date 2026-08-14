@@ -13,6 +13,7 @@ export default {
       const securityStyle = getStyle('--notification-fail');
       const operationalStyle = getStyle('--notification-warn');
       const licenseStyle = getStyle('--notification-info');
+      const  chartAxisStyle = getStyle('--chart-axis-color');
       let labels = [];
       let securityData = [];
       let operationalData = [];
@@ -89,6 +90,7 @@ export default {
                   drawOnChartArea: false,
                 },
                 ticks: {
+                  fontColor: chartAxisStyle,
                   callback: function (value) {
                     return common.formatTimestamp(value);
                   },
@@ -98,6 +100,7 @@ export default {
             yAxes: [
               {
                 ticks: {
+                  fontColor: chartAxisStyle,
                   beginAtZero: true,
                   maxTicksLimit: 1,
                 },

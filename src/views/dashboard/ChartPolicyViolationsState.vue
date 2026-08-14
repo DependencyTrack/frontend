@@ -14,6 +14,7 @@ export default {
       const failStyle = getStyle('--notification-fail');
       const warnStyle = getStyle('--notification-warn');
       const infoStyle = getStyle('--notification-info');
+      const  chartAxisStyle = getStyle('--chart-axis-color');
 
       let labels = [];
       let failData = [];
@@ -94,6 +95,7 @@ export default {
                   drawOnChartArea: false,
                 },
                 ticks: {
+                  fontColor: chartAxisStyle,
                   callback: function (value) {
                     return common.formatTimestamp(value);
                   },
@@ -103,6 +105,7 @@ export default {
             yAxes: [
               {
                 ticks: {
+                  fontColor: chartAxisStyle,
                   beginAtZero: true,
                   maxTicksLimit: 1,
                 },

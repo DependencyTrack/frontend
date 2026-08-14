@@ -14,6 +14,7 @@ export default {
       const totalStyle = getStyle('--notification-note');
       const affectedStyle = getStyle('--notification-warn');
       const nonAffectedStyle = getStyle('--notification-pass');
+      const  chartAxisStyle = getStyle('--chart-axis-color');
 
       let labels = [];
       let totalData = [];
@@ -98,6 +99,7 @@ export default {
                   drawOnChartArea: false,
                 },
                 ticks: {
+                  fontColor: chartAxisStyle,
                   callback: function (value, index) {
                     return common.formatTimestamp(value);
                   },
@@ -107,6 +109,7 @@ export default {
             yAxes: [
               {
                 ticks: {
+                  fontColor: chartAxisStyle,
                   beginAtZero: true,
                   maxTicksLimit: 1,
                 },
