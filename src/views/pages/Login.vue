@@ -290,6 +290,11 @@ export default {
         this.oidcUserManager.getUser().then((oidcUser) => {
           // oidcUser will only be set when coming from oidc-callback.html
           if (oidcUser === null) {
+            // Automatically trigger OIDC login if we got redirected.
+            // Don't do it otherwise so users can navigate manually to /login.
+            if (this.$router.currentRoute.query.redirect) {
+              this.oidcLogin();
+            }
             return;
           }
 
