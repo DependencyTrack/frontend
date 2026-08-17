@@ -52,8 +52,8 @@ const SecretsManagement = () =>
 
 const AnalyzerView = () => import('@/views/administration/analyzers/Index');
 
-const VulnSourceView = () =>
-  import('@/views/administration/vuln-sources/Index');
+const DataSourceView = () =>
+  import('@/views/administration/data-sources/Index');
 
 const Cargo = () => import('@/views/administration/repositories/Cargo');
 const Composer = () => import('@/views/administration/repositories/Composer');
@@ -574,7 +574,36 @@ function configRoutes() {
             },
             {
               path: 'vulnerabilitySources/:extensionName',
-              component: VulnSourceView,
+              component: DataSourceView,
+              props: {
+                extensionPointName: 'vuln-data-source',
+                resourcePath: 'vuln-data-sources',
+              },
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'SYSTEM_CONFIGURATION',
+                  'SYSTEM_CONFIGURATION_CREATE',
+                  'SYSTEM_CONFIGURATION_READ',
+                  'SYSTEM_CONFIGURATION_UPDATE',
+                  'SYSTEM_CONFIGURATION_DELETE',
+                ],
+              },
+            },
+            {
+              path: 'kevSources',
+              redirect: 'kevSources/cisa',
+            },
+            {
+              path: 'kevSources/:extensionName',
+              component: DataSourceView,
+              props: {
+                extensionPointName: 'kev-data-source',
+                resourcePath: 'kev-data-sources',
+              },
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
