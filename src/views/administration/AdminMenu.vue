@@ -146,6 +146,7 @@ export default {
       'vuln-data-source',
       'vulnerabilitySources',
     );
+    this.fetchExtensions('kevsources', 'kev-data-source', 'kevSources');
     this.fetchExtensions(
       'notifications',
       'notification-publisher',
@@ -251,6 +252,18 @@ export default {
         {
           name: this.$t('admin.vuln_sources'),
           id: 'vulnerabilitysources',
+          permission: [
+            SYSTEM_CONFIGURATION,
+            SYSTEM_CONFIGURATION_CREATE,
+            SYSTEM_CONFIGURATION_READ,
+            SYSTEM_CONFIGURATION_UPDATE,
+            SYSTEM_CONFIGURATION_DELETE,
+          ],
+          children: [],
+        },
+        {
+          name: this.$t('admin.kev_sources'),
+          id: 'kevsources',
           permission: [
             SYSTEM_CONFIGURATION,
             SYSTEM_CONFIGURATION_CREATE,
