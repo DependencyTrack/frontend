@@ -1,6 +1,10 @@
 import Vue from 'vue';
-import { INVALID_SORT_FIELD_PROBLEM_TYPE } from '@/shared/problemDetails';
 import {
+  INVALID_SORT_FIELD_PROBLEM_TYPE,
+  TIMEOUT_PROBLEM_TYPE,
+} from '@/shared/problemDetails';
+import {
+  applyTotalCountHeaders,
   compareVersions,
   getContextPath,
   getRedirectUrl,
@@ -433,6 +437,18 @@ describe('shared/utils', () => {
       expect(toastr.w).not.toHaveBeenCalled();
     });
 
+    it('warns about a timed out query without touching any preference', () => {
+      seedLocalStorage({ ProjectsSortName: 'name' });
+
+      const handled = handleTableLoadError({ type: TIMEOUT_PROBLEM_TYPE });
+
+      expect(handled).toBe(true);
+      expect(toastr.w).toHaveBeenCalledTimes(1);
+      expect(toastr.w).toHaveBeenCalledWith('message.table_load_timeout');
+      expect(toastr.e).not.toHaveBeenCalled();
+      expect(localStorageSnapshot()).toEqual({ ProjectsSortName: 'name' });
+    });
+
     it('falls back when there is no problem at all', () => {
       expect(handleTableLoadError(undefined)).toBe(false);
       expect(toastr.e).toHaveBeenCalledTimes(1);
@@ -443,6 +459,88 @@ describe('shared/utils', () => {
         handleTableLoadError({ type: INVALID_SORT_FIELD_PROBLEM_TYPE }),
       ).toBe(false);
       expect(toastr.e).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('applyTotalCountHeaders', () => {
+    const rows = (count) =>
+      Array.from({ length: count }, (_, i) => ({ id: i }));
+
+    const xhrWith = (headers) => ({
+      getResponseHeader: (name) =>
+        Object.prototype.hasOwnProperty.call(headers, name)
+          ? headers[name]
+          : null,
+    });
+
+    const exactXhr = (total) => xhrWith({ 'X-Total-Count': total });
+
+    const boundedXhr = (total) =>
+      xhrWith({ 'X-Total-Count': total, 'X-Total-Count-Type': 'AT_LEAST' });
+
+    it('reports the header count when the endpoint sends no count type', () => {
+      const res = rows(10);
+      const options = { pageNumber: 1, pageSize: 25 };
+
+      expect(applyTotalCountHeaders(res, exactXhr('10'), options)).toBe(res);
+      expect(res.total).toBe('10');
+      expect(options.boundedTotal).toBeNull();
+    });
+
+    it('reports the header count for an explicitly exact count type', () => {
+      const res = rows(25);
+      const options = { pageNumber: 4, pageSize: 25 };
+
+      applyTotalCountHeaders(
+        res,
+        xhrWith({ 'X-Total-Count': '1000', 'X-Total-Count-Type': 'EXACT' }),
+        options,
+      );
+
+      expect(res.total).toBe('1000');
+      expect(options.boundedTotal).toBeNull();
+    });
+
+    it('leaves a page of headroom above a bound reached with a full page', () => {
+      // Reporting 250 verbatim would cap the pager at page 10 and make any row
+      // beyond the bound unreachable.
+      const res = rows(25);
+      const options = { pageNumber: 1, pageSize: 25 };
+
+      applyTotalCountHeaders(res, boundedXhr('250'), options);
+
+      expect(res.total).toBe(275);
+      expect(options.boundedTotal).toBe('250');
+    });
+
+    it('reports a bound reached with a partial page verbatim', () => {
+      // A short page is the end of the data, so no headroom is needed.
+      const res = rows(12);
+      const options = { pageNumber: 10, pageSize: 25 };
+
+      applyTotalCountHeaders(res, boundedXhr('237'), options);
+
+      expect(res.total).toBe('237');
+      expect(options.boundedTotal).toBe('237');
+    });
+
+    it('falls back to the rows earlier pages proved when the bound is zero', () => {
+      // "At least 0" means this page starts past the end, not that the
+      // collection is empty, so the pager must fall back rather than collapse.
+      const res = rows(0);
+      const options = { pageNumber: 5, pageSize: 25 };
+
+      applyTotalCountHeaders(res, boundedXhr('0'), options);
+
+      expect(res.total).toBe(100);
+      expect(options.boundedTotal).toBeNull();
+    });
+
+    it('clears a bound left over from the previous response', () => {
+      const options = { pageNumber: 1, pageSize: 25, boundedTotal: '250' };
+
+      applyTotalCountHeaders(rows(3), exactXhr('3'), options);
+
+      expect(options.boundedTotal).toBeNull();
     });
   });
 });

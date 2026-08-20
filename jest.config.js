@@ -34,8 +34,11 @@ module.exports = {
     '^.+\\.vue$': '@vue/vue2-jest',
   },
   // flexver publishes ESM at 'flexver/dist/module' and lodash-es is ESM only;
-  // both need transpiling before Jest can require them.
-  transformIgnorePatterns: ['/node_modules/(?!(flexver|lodash-es)/)'],
+  // both need transpiling before Jest can require them. bootstrap-table joins
+  // them because src/plugins/table.js imports its ESM Vue wrapper.
+  transformIgnorePatterns: [
+    '/node_modules/(?!(flexver|lodash-es|bootstrap-table)/)',
+  ],
   clearMocks: true,
   restoreMocks: true,
   collectCoverageFrom: [
