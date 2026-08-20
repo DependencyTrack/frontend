@@ -38,6 +38,7 @@
 
 <script>
 import {
+  applyTotalCountHeaders,
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
@@ -245,8 +246,7 @@ export default {
           refresh: 'fa-refresh',
         },
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
+          return applyTotalCountHeaders(res, xhr, this);
         },
         url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
@@ -280,6 +280,7 @@ export default {
       } else {
         url += '?epssFrom=0&suppressed=' + this.showSuppressedFindings;
       }
+      url += '&totalCount=BOUNDED';
       return url;
     },
     refreshTable: function () {
@@ -294,7 +295,8 @@ export default {
         'ProjectEpss',
         this.$refs.table.columns,
       );
-      this.$emit('total', data.total);
+      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
+      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {

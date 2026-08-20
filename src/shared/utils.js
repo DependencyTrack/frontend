@@ -1,6 +1,9 @@
 import common from '@/shared/common';
 import i18n from '@/i18n';
-import { INVALID_SORT_FIELD_PROBLEM_TYPE } from '@/shared/problemDetails';
+import {
+  INVALID_SORT_FIELD_PROBLEM_TYPE,
+  TIMEOUT_PROBLEM_TYPE,
+} from '@/shared/problemDetails';
 import flexVerCompare from 'flexver/dist/module';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
@@ -35,10 +38,51 @@ export function handleTableLoadError(problem, { fallback = true } = {}) {
     );
     return true;
   }
+  if (problem && problem.type === TIMEOUT_PROBLEM_TYPE) {
+    Vue.prototype.$toastr.w(i18n.t('message.table_load_timeout'));
+    return true;
+  }
   if (fallback) {
     Vue.prototype.$toastr.e(i18n.t('message.table_load_error'));
   }
   return false;
+}
+
+/**
+ * responseHandler for bootstrap-table against endpoints that send the
+ * X-Total-Count-Type header. `options` is the table's internal options object,
+ * i.e. `this` inside a non-arrow responseHandler. It is not the options object
+ * the Vue component passed in, because the wrapper deep-copies that at init.
+ * Components read `boundedTotal` back via `$refs.table.getOptions()`.
+ */
+export function applyTotalCountHeaders(res, xhr, options) {
+  const total = xhr.getResponseHeader('X-Total-Count');
+  res.total = total;
+  options.boundedTotal = null;
+
+  if (xhr.getResponseHeader('X-Total-Count-Type') !== 'AT_LEAST') {
+    // Exact, including the last page of a bounded result set.
+    return res;
+  }
+
+  if (Number(total) === 0) {
+    // "At least 0" does not mean the collection is empty. It means this page
+    // starts past the end, and the true total is unknown. Report what the
+    // preceding pages proved, so the pager falls back to the last page that
+    // had rows instead of collapsing the table to "0 rows".
+    res.total = (options.pageNumber - 1) * options.pageSize;
+    return res;
+  }
+
+  options.boundedTotal = total;
+  if (res.length >= options.pageSize) {
+    // A full page under a lower-bound count means more rows may follow.
+    // Reporting the bound verbatim would cap totalPages at it and make those
+    // rows unreachable, so leave one page of headroom. The server raises the
+    // bound as the offset grows, which unlocks the page after that, and so on.
+    res.total = Number(total) + options.pageSize;
+  }
+  return res;
 }
 
 export function random(min, max) {

@@ -4,6 +4,9 @@
     :extension-name="$route.params.extensionName"
     :extension-point-name="extensionPointName"
     :testable="selectedExtension ? selectedExtension.testable !== false : true"
+    :display-name="
+      selectedExtension ? selectedExtension.display_name : undefined
+    "
   >
     <template #footer-actions="{ operationInProgress, hasUnsavedChanges }">
       <data-source-mirror-button

@@ -111,6 +111,7 @@ import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import i18n from '@/i18n';
 import {
+  applyTotalCountHeaders,
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
@@ -435,8 +436,7 @@ export default {
         },
         onExpandRow: this.vueFormatterInit,
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
+          return applyTotalCountHeaders(res, xhr, this);
         },
         url: this.apiUrl(),
         onPageChange: (number, size) => {
@@ -469,6 +469,7 @@ export default {
       } else {
         url += '?suppressed=' + this.showSuppressedFindings;
       }
+      url += '&totalCount=BOUNDED';
       return url;
     },
     downloadVex: function () {
@@ -552,7 +553,9 @@ export default {
         'ProjectFindings',
         this.$refs.table.columns,
       );
-      this.$emit('total', data.total); // the unfiltered length
+      // the unfiltered length
+      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
+      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       if (
         this.$route.params.vulnerability &&
         this.$refs.table.getData().length === 1
