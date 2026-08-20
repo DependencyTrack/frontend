@@ -111,7 +111,7 @@ export default {
             const route = routePrefix + '/' + encodedName;
             return {
               id: route,
-              name: common.titleCase(ext.name),
+              name: ext.display_name || common.titleCase(ext.name),
               route: route,
               configurable: ext.configurable !== false,
             };
