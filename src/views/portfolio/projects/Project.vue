@@ -424,7 +424,7 @@
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
     />
-    <project-properties-modal :uuid="this.uuid" />
+    <project-properties-modal :key="this.uuid" :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
   </div>
