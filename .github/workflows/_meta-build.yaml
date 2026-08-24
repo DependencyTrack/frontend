@@ -74,6 +74,9 @@ jobs:
     name: Build Container
     runs-on: ubuntu-latest
     permissions:
+      artifact-metadata: write # Required to create the artifact storage record.
+      attestations: write # Required to generate SLSA build provenance.
+      id-token: write # Required for keyless signing of SLSA build provenance.
       packages: write # Required to push images to ghcr.io
     needs:
       - build-node
@@ -135,8 +138,10 @@ jobs:
             TAGS="${IMAGE_NAME}:${APP_VERSION}"
           fi
           echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+          echo "image=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Build multi-arch Container Image
+        id: push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # tag=v7.3.0
         with:
           tags: ${{ steps.tags.outputs.tags }}
@@ -147,3 +152,11 @@ jobs:
           push: ${{ inputs.publish-container }}
           context: .
           file: docker/Dockerfile.alpine
+
+      - name: Generate SLSA Build Provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # tag=v4.2.2
+        if: ${{ inputs.publish-container }}
+        with:
+          subject-name: ${{ steps.tags.outputs.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
