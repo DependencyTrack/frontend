@@ -506,6 +506,7 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import EventBus from '../../../shared/eventbus';
 
 export default {
   name: 'ComponentDetailsModal',
@@ -683,6 +684,7 @@ export default {
         })
         .then((response) => {
           this.$emit('componentUpdated', response.data);
+          EventBus.$emit('projectComponentsChanged');
           this.$toastr.s(this.$t('message.component_updated'));
         })
         .catch((error) => {
@@ -698,6 +700,7 @@ export default {
         .delete(url)
         .then((response) => {
           this.$toastr.s(this.$t('message.component_deleted'));
+          EventBus.$emit('projectComponentsChanged');
           this.$router.replace({
             path: '/projects/' + this.component.project.uuid,
           });

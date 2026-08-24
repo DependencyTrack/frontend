@@ -120,6 +120,7 @@ import permissionsMixin from '@/mixins/permissionsMixin';
 import FindingAudit from './FindingAudit';
 import ProjectUploadVexModal from './ProjectUploadVexModal';
 import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
+import EventBus from '../../../shared/eventbus';
 
 export default {
   props: {
@@ -536,8 +537,9 @@ export default {
       let analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
       this.axios.post(analyzeUrl).then((response) => {
         this.$toastr.s(this.$t('message.project_reanalyze_requested'));
-        //ignore token from response, don't wait for completion
-        this.refreshTable();
+        if (response.data && response.data.token) {
+          EventBus.$emit('projectReanalyzeRequested', response.data.token);
+        }
       });
     },
     refreshTable: function () {
@@ -546,6 +548,9 @@ export default {
         pageNumber: 1,
         silent: true,
       });
+    },
+    onProjectAnalysisCompleted: function () {
+      this.refreshTable();
     },
     tableLoaded: function (data) {
       loadUserPreferencesForBootstrapTable(
@@ -581,6 +586,12 @@ export default {
       }
       this.refreshTable();
     },
+  },
+  mounted() {
+    EventBus.$on('projectAnalysisCompleted', this.onProjectAnalysisCompleted);
+  },
+  beforeDestroy() {
+    EventBus.$off('projectAnalysisCompleted', this.onProjectAnalysisCompleted);
   },
 };
 </script>

@@ -222,6 +222,7 @@ import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnera
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import EventBus from '../../../shared/eventbus';
 
 export default {
   name: 'project-dashboard',
@@ -319,6 +320,9 @@ export default {
         this.extractStats(response.data);
       });
     },
+    onProjectAnalysisCompleted() {
+      this.fetchMetrics();
+    },
   },
   beforeMount() {
     this.metricDays =
@@ -328,6 +332,10 @@ export default {
   },
   mounted() {
     this.fetchMetrics();
+    EventBus.$on('projectAnalysisCompleted', this.onProjectAnalysisCompleted);
+  },
+  beforeDestroy() {
+    EventBus.$off('projectAnalysisCompleted', this.onProjectAnalysisCompleted);
   },
   computed: {
     isCollectionProject() {

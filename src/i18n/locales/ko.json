@@ -942,6 +942,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "태그가 지정된 직속 하위 항목 집계",
     "project_collection_logic_desc": "이 프로젝트가 컬렉션 프로젝트인지, 그리고 컬렉션 프로젝트에 적용할 지표 계산 로직을 지정합니다. 컬렉션 프로젝트는 자체 컴포넌트를 갖지 않으며, 사용 가능한 로직 중 하나를 사용해 하위 항목의 데이터를 표시합니다.",
     "project_collection_logic_latest_version_children": "최신으로 표시된 직속 하위 항목 집계",
+    "project_components_changed_since_analysis": "마지막 분석 이후 수정됨",
+    "project_components_changed_since_analysis_tooltip": "이 프로젝트의 구성 요소는 마지막 분석 이후 수정되었습니다. \n최신 취약점과 측정항목을 보려면 수동 재분석을 실행하세요.",
     "project_created": "프로젝트가 생성되었습니다",
     "project_delete_message": "이 프로젝트를 삭제하면 연결된 모든 하위 프로젝트도 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?",
     "project_delete_title": "프로젝트 삭제 확인",

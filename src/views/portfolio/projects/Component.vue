@@ -1,7 +1,24 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
     <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
-      <b-card-body class="p-3 clearfix">
+      <b-card-body
+        class="p-3 clearfix component-overview-body"
+        :class="{
+          'component-overview-body--stale': componentsChangedSinceAnalysis,
+        }"
+      >
+        <b-badge
+          v-if="componentsChangedSinceAnalysis"
+          id="component-stale-analysis-badge"
+          variant="info"
+          class="component-stale-analysis-badge"
+          v-b-tooltip.hover
+          :title="
+            $t('message.project_components_changed_since_analysis_tooltip')
+          "
+        >
+          {{ $t('message.project_components_changed_since_analysis') }}
+        </b-badge>
         <b-row>
           <b-col>
             <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
@@ -242,6 +259,7 @@ export default {
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
+      componentsChangedSinceAnalysis: false,
     };
   },
   methods: {
@@ -251,8 +269,12 @@ export default {
     getStyle: function (style) {
       return getStyle(style);
     },
+    markComponentsChangedSinceAnalysis: function () {
+      this.componentsChangedSinceAnalysis = true;
+    },
     syncComponentFields: function (component) {
       this.component = component;
+      this.markComponentsChangedSinceAnalysis();
       EventBus.$emit('addCrumb', this.componentLabel);
     },
     redirectToDependencyGraph: function () {
@@ -302,6 +324,15 @@ export default {
         this.projectLabel,
       );
       this.$title = this.componentLabel;
+      const projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.component.project.uuid}`;
+      this.axios.get(projectUrl).then((projectResponse) => {
+        if (!this.componentsChangedSinceAnalysis) {
+          this.componentsChangedSinceAnalysis = !!(
+            projectResponse.data &&
+            projectResponse.data.componentsChangedSinceAnalysis
+          );
+        }
+      });
     });
 
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
@@ -321,11 +352,21 @@ export default {
     });
 
     this.getTabFromRoute().active = true;
+    EventBus.$on(
+      'projectComponentsChanged',
+      this.markComponentsChangedSinceAnalysis,
+    );
   },
   watch: {
     $route() {
       this.getTabFromRoute().activate();
     },
+  },
+  beforeDestroy() {
+    EventBus.$off(
+      'projectComponentsChanged',
+      this.markComponentsChangedSinceAnalysis,
+    );
   },
   destroyed() {
     EventBus.$emit('crumble');
@@ -339,5 +380,17 @@ export default {
 }
 .badge {
   margin-right: 0.4rem;
+}
+.component-overview-body {
+  position: relative;
+}
+.component-overview-body--stale {
+  padding-top: 2rem !important;
+}
+.component-stale-analysis-badge {
+  position: absolute;
+  top: 0.4rem;
+  right: 1rem;
+  margin-right: 0;
 }
 </style>

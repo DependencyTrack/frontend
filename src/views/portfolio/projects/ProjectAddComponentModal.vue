@@ -260,6 +260,7 @@ import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import EventBus from '../../../shared/eventbus';
 
 export default {
   name: 'ProjectAddComponentModal',
@@ -311,6 +312,7 @@ export default {
         })
         .then((response) => {
           this.$emit('refreshTable');
+          EventBus.$emit('projectComponentsChanged');
           this.$toastr.s(this.$t('message.component_created'));
         })
         .catch((error) => {

@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Agregar filhos diretos com tag",
     "project_collection_logic_desc": "Especifica se este projeto é um projeto de coleção e qual lógica de cálculo de métricas aplicar a um projeto de coleção. \nOs projetos de coleção não possuem componentes próprios, mas exibem os dados de seus filhos utilizando uma das lógicas disponíveis.",
     "project_collection_logic_latest_version_children": "Agregar filhos diretos marcados como os mais recentes",
+    "project_components_changed_since_analysis": "Modificado desde a última análise",
+    "project_components_changed_since_analysis_tooltip": "Os componentes deste projeto foram modificados desde a última análise. \nPara visualizar vulnerabilidades e métricas atualizadas, execute uma reanálise manual.",
     "project_created": "Projeto criado",
     "project_delete_message": "A exclusão deste projeto também excluirá permanentemente todos os projetos secundários associados. \nEsta ação não pode ser desfeita. \nTem certeza de que deseja prosseguir?",
     "project_delete_title": "Confirmar exclusão do projeto",

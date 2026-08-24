@@ -140,6 +140,7 @@ import Vue from 'vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import SeverityProgressBar from '../../components/SeverityProgressBar';
 import { get } from 'lodash-es';
 import i18n from '@/i18n';
@@ -534,6 +535,7 @@ export default {
             if (this.$refs.table) {
               this.$refs.table.refreshCurrentPage();
             }
+            EventBus.$emit('projectComponentsChanged');
             this.$toastr.s(this.$t('message.component_deleted'));
           })
           .catch(() => {

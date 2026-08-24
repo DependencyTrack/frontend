@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Zagreguj bezpośrednie dzieci ze znacznikiem",
     "project_collection_logic_desc": "Określa, czy ten projekt jest projektem kolekcji i jaką logikę obliczania metryk należy zastosować w projekcie kolekcji. \nProjekty kolekcji nie mają własnych komponentów, ale wyświetlają dane swoich dzieci przy użyciu jednej z dostępnych logiki.",
     "project_collection_logic_latest_version_children": "Łączne bezpośrednie elementy podrzędne oznaczone jako najnowsze",
+    "project_components_changed_since_analysis": "Zmodyfikowano od ostatniej analizy",
+    "project_components_changed_since_analysis_tooltip": "Od czasu ostatniej analizy elementy tego projektu zostały zmodyfikowane. \nAby wyświetlić aktualne luki i wskaźniki, przeprowadź ręczną ponowną analizę.",
     "project_created": "Projekt stworzony",
     "project_delete_message": "Usunięcie tego projektu spowoduje również trwałe usunięcie wszystkich powiązanych projektów podrzędnych. \nTej akcji nie można cofnąć. \nCzy na pewno chcesz kontynuować?",
     "project_delete_title": "Potwierdź usunięcie projektu",

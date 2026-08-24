@@ -941,6 +941,8 @@
     "project_collection_logic_aggregate_direct_children_with_tag": "Summiere Daten von direkten Kindern mit Tag",
     "project_collection_logic_desc": "Gibt an, ob das Projekt ein Sammlungsprojekt ist und welche Berechnung für die Metriken verwendet werden soll. Sammlungsprojekte haben keine eigenen Komponenten, sondern zeigen Daten ihrer Kinder an, basierend auf der gewählten Berechnungsart.",
     "project_collection_logic_latest_version_children": "Summiere Daten direkter Kinder, die als letzte Version markiert sind",
+    "project_components_changed_since_analysis": "Seit der letzten Analyse geändert",
+    "project_components_changed_since_analysis_tooltip": "Die Komponenten dieses Projekts wurden seit der letzten Analyse geändert. Um aktuelle Schwachstellen und Metriken einzusehen, führen Sie bitte eine manuelle erneute Analyse durch.",
     "project_created": "Projekt erstellt",
     "project_delete_message": "Durch das Löschen dieses Projekts werden auch alle zugehörigen untergeordneten Projekte dauerhaft gelöscht. \nDiese Aktion kann nicht rückgängig gemacht werden. \nSind Sie sicher, dass Sie fortfahren möchten?",
     "project_delete_title": "Bestätigen Sie die Projektlöschung",
