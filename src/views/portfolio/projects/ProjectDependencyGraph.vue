@@ -60,6 +60,7 @@
 import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
+import { createNodeLabel } from '@/shared/nodeLabel';
 import { Switch as cSwitch } from '@coreui/vue';
 let pos = { top: 0, left: 0, x: 0, y: 0 };
 
@@ -534,33 +535,7 @@ export default {
         return null;
       }
     },
-    createNodeLabel: function (identity) {
-      // Could be a project or a directDependency object.
-      // Projects don't have the objectType property.
-      const isProject = !identity.objectType;
-      const purl = !isProject && (identity.purlCoordinates || identity.purl);
-      if (purl) {
-        // purls are percent-encoded per spec (npm scopes become %40); the graph
-        // is display-only, so decode for readability.
-        try {
-          return decodeURIComponent(purl);
-        } catch {
-          return purl;
-        }
-      } else {
-        let label = '';
-        if (identity.groupId) {
-          label += identity.groupId + ' ';
-        }
-        if (identity.name) {
-          label += identity.name;
-        }
-        if (identity.version) {
-          label += ' ' + identity.version;
-        }
-        return label;
-      }
-    },
+    createNodeLabel,
     labelClassName: function (data) {
       if (
         this.$route.params.componentUuids &&
