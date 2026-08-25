@@ -538,10 +538,15 @@ export default {
       // Could be a project or a directDependency object.
       // Projects don't have the objectType property.
       const isProject = !identity.objectType;
-      if (!isProject && identity.purlCoordinates) {
-        return identity.purlCoordinates;
-      } else if (!isProject && identity.purl) {
-        return identity.purl;
+      const purl = !isProject && (identity.purlCoordinates || identity.purl);
+      if (purl) {
+        // purls are percent-encoded per spec (npm scopes become %40); the graph
+        // is display-only, so decode for readability.
+        try {
+          return decodeURIComponent(purl);
+        } catch {
+          return purl;
+        }
       } else {
         let label = '';
         if (identity.groupId) {
