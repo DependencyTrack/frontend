@@ -5,41 +5,28 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedValue"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>{{ operatorAbbrev }} "{{ value.value }}"</template>
+    <template #value
+      ><span :title="operatorLabel"
+        >{{ operatorAbbrev }} "{{ value.value }}"</span
+      ></template
+    >
 
-    <b-input-group class="mb-2">
-      <b-input-group-prepend>
-        <b-form-select
-          :id="`text-filter-pill-operator-${fieldName}`"
-          v-model="tmpOperator"
-          :options="operators"
-          :disabled="operators.length < 2"
-          size="sm"
-        ></b-form-select>
-      </b-input-group-prepend>
+    <b-input-group size="sm">
+      <b-input-group-prepend is-text>{{ operatorLabel }}</b-input-group-prepend>
       <b-form-input
         :id="`text-filter-pill-value-${fieldName}`"
-        ref="valueInput"
         v-model="tmpValue"
         :maxlength="maxLength"
+        :aria-label="valueAriaLabel"
         size="sm"
-        @keyup.enter="applyFilter"
       ></b-form-input>
     </b-input-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpValue"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
   </filter-pill-dropdown>
 </template>
 
@@ -77,23 +64,16 @@ export default {
       type: String,
       default: null,
     },
-    operators: {
-      type: Array,
+    operator: {
+      type: String,
       validator: (value) => {
-        if (!value) {
+        if (!supportedOperators.find((op) => op.name === value)) {
+          console.error(`Unknown operator ${value}`);
           return false;
         }
-
-        for (const operator of value) {
-          if (!supportedOperators.find((op) => op.name === operator)) {
-            console.error(`Unknown operator ${operator}`);
-            return false;
-          }
-        }
-
         return true;
       },
-      default: () => supportedOperators.map((op) => op.name),
+      default: 'equals',
     },
     maxLength: {
       type: Number,
@@ -106,7 +86,6 @@ export default {
   },
   data() {
     return {
-      tmpOperator: this.operators[0],
       tmpValue: '',
     };
   },
@@ -114,13 +93,7 @@ export default {
     value: {
       immediate: true,
       handler(val) {
-        if (val && val.operator && val.value) {
-          this.tmpOperator = val.operator;
-          this.tmpValue = val.value;
-        } else {
-          this.tmpOperator = this.operators[0];
-          this.tmpValue = '';
-        }
+        this.tmpValue = val && val.value ? val.value : '';
       },
     },
   },
@@ -128,45 +101,46 @@ export default {
     hasFilter() {
       return this.value && this.value.operator && this.value.value;
     },
+    trimmedValue() {
+      return this.tmpValue ? this.tmpValue.trim() : '';
+    },
     operatorAbbrev() {
-      return supportedOperators.find((op) => op.name === this.tmpOperator)
-        .symbol;
+      const operator = supportedOperators.find(
+        (op) => op.name === this.operator,
+      );
+      return operator ? operator.symbol : '';
+    },
+    // Keys are spelled out so vue-i18n-extract can see them.
+    operatorLabel() {
+      return {
+        equals: this.$t('message.operator_equals'),
+        contains: this.$t('message.operator_contains'),
+        starts_with: this.$t('message.operator_starts_with'),
+      }[this.operator];
+    },
+    valueAriaLabel() {
+      return `${this.fieldLabel} ${this.operatorLabel}`;
     },
   },
   methods: {
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.valueInput) {
-          this.$refs.valueInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
     onDropdownHide() {
-      if (this.hasFilter) {
-        this.tmpOperator = this.value.operator;
-        this.tmpValue = this.value.value;
-      } else {
-        this.tmpOperator = this.operators[0];
-        this.tmpValue = '';
-      }
+      this.tmpValue = this.hasFilter ? this.value.value : '';
     },
     applyFilter() {
-      const trimmed = this.tmpValue ? this.tmpValue.trim() : '';
-      if (!trimmed) {
+      if (!this.trimmedValue) {
         return;
       }
 
       this.$emit('input', {
-        operator: this.tmpOperator,
-        value: trimmed,
+        operator: this.operator,
+        value: this.trimmedValue,
       });
       this.$refs.pill.hide();
     },
     clearFilter() {
-      this.tmpOperator = this.operators[0];
       this.tmpValue = '';
       this.$refs.pill.hide();
       this.$emit('input', null);

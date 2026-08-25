@@ -5,38 +5,27 @@
     :field-label="fieldLabel"
     icon="fa-hashtag"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedHash || !tmpHashType"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>{{ value.hashType }} = "{{ value.hash }}"</template>
 
-    <b-input-group class="mb-2">
-      <b-input-group-prepend>
-        <b-form-select
-          v-model="tmpHashType"
-          :options="hashTypeOptions"
-          size="sm"
-        ></b-form-select>
-      </b-input-group-prepend>
-      <b-form-input
-        ref="valueInput"
-        v-model="tmpHash"
-        :placeholder="$t('message.value')"
-        size="sm"
-        @keyup.enter="applyFilter"
-      ></b-form-input>
-    </b-input-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpHash || !tmpHashType"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
+    <b-form-select
+      v-model="tmpHashType"
+      :options="hashTypeOptions"
+      :aria-label="$t('message.hash_type')"
+      class="mb-2"
+      size="sm"
+    ></b-form-select>
+    <b-form-input
+      v-model="tmpHash"
+      :placeholder="$t('message.value')"
+      :aria-label="$t('message.value')"
+      size="sm"
+    ></b-form-input>
   </filter-pill-dropdown>
 </template>
 
@@ -88,6 +77,9 @@ export default {
     hasFilter() {
       return this.value && this.value.hashType && this.value.hash;
     },
+    trimmedHash() {
+      return this.tmpHash ? this.tmpHash.trim() : '';
+    },
     hashTypeOptions() {
       return [
         {
@@ -100,13 +92,6 @@ export default {
     },
   },
   methods: {
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.valueInput) {
-          this.$refs.valueInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
@@ -120,14 +105,13 @@ export default {
       }
     },
     applyFilter() {
-      const trimmed = this.tmpHash ? this.tmpHash.trim() : '';
-      if (!trimmed || !this.tmpHashType) {
+      if (!this.trimmedHash || !this.tmpHashType) {
         return;
       }
 
       this.$emit('input', {
         hashType: this.tmpHashType,
-        hash: trimmed,
+        hash: this.trimmedHash,
       });
       this.$refs.pill.hide();
     },

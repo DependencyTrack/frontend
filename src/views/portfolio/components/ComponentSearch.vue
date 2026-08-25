@@ -13,7 +13,7 @@
           :field-label="$t('message.group')"
           field-name="group"
           icon="fa-archive"
-          :operators="['contains']"
+          operator="contains"
           v-model="groupFilter"
           @dismiss="onFilterDismiss('group')"
         />
@@ -23,7 +23,7 @@
           :field-label="$t('message.name')"
           field-name="name"
           icon="fa-cube"
-          :operators="['contains']"
+          operator="contains"
           v-model="nameFilter"
           @dismiss="onFilterDismiss('name')"
         />
@@ -33,7 +33,7 @@
           :field-label="$t('message.version')"
           field-name="version"
           icon="fa-bookmark-o"
-          :operators="['contains']"
+          operator="contains"
           v-model="versionFilter"
           @dismiss="onFilterDismiss('version')"
         />
@@ -43,7 +43,7 @@
           :field-label="$t('message.package_url')"
           field-name="purl"
           icon="fa-gift"
-          :operators="['starts_with']"
+          operator="starts_with"
           v-model="purlFilter"
           @dismiss="onFilterDismiss('purl')"
         />
@@ -53,7 +53,7 @@
           :field-label="$t('message.cpe')"
           field-name="cpe"
           icon="fa-shield"
-          :operators="['equals']"
+          operator="equals"
           v-model="cpeFilter"
           @dismiss="onFilterDismiss('cpe')"
         />
@@ -63,7 +63,7 @@
           :field-label="$t('message.swid_tagid')"
           field-name="swid_tag_id"
           icon="fa-tag"
-          :operators="['contains']"
+          operator="contains"
           v-model="swidTagIdFilter"
           @dismiss="onFilterDismiss('swidTagId')"
         />
