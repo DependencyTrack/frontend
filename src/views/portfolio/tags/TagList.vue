@@ -17,6 +17,7 @@ import common from '../../../shared/common';
 import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import * as permissions from '../../../shared/permissions';
 import routerMixin from '../../../mixins/routerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import TaggedCollectionProjectListModal from '@/views/portfolio/tags/TaggedCollectionProjectListModal.vue';
@@ -54,6 +55,10 @@ export default {
     });
   },
   data() {
+    const canDeleteTags = permissions.hasPermission([
+      permissions.TAG_MANAGEMENT,
+      permissions.TAG_MANAGEMENT_DELETE,
+    ]);
     return {
       errorsByTagName: {},
       columns: [
@@ -228,6 +233,7 @@ export default {
       options: {
         buttons: {
           btnDeleteSelected: {
+            render: canDeleteTags,
             icon: 'fa fa-trash',
             attributes: {
               title: this.$t('message.delete_selected'),

@@ -28,6 +28,10 @@
         $t('message.close')
       }}</b-button>
       <b-button
+        v-permission:or="[
+          'PORTFOLIO_MANAGEMENT',
+          'PORTFOLIO_MANAGEMENT_CREATE',
+        ]"
         size="md"
         variant="primary"
         v-b-modal.projectCreatePropertyModal

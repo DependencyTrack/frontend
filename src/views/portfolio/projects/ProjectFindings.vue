@@ -12,7 +12,7 @@
         v-b-modal.projectUploadVexModal
         v-permission:or="[
           PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_CREATE,
+          PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
         ]"
       >
         <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}

@@ -78,7 +78,6 @@ import {
   SECRET_MANAGEMENT_CREATE,
   SECRET_MANAGEMENT_UPDATE,
   SECRET_MANAGEMENT_DELETE,
-  SECRET_MANAGEMENT_READ,
 } from '../../shared/permissions';
 
 export default {
@@ -225,7 +224,6 @@ export default {
           permission: [
             SECRET_MANAGEMENT,
             SECRET_MANAGEMENT_CREATE,
-            SECRET_MANAGEMENT_READ,
             SECRET_MANAGEMENT_UPDATE,
             SECRET_MANAGEMENT_DELETE,
           ],
