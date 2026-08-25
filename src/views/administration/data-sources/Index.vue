@@ -83,7 +83,7 @@ export default {
       const errors = {};
       const sources = Array.isArray(config?.sources) ? config.sources : [];
       const names = sources.map((source) =>
-        typeof source?.name === string ? source.name.trim() : ''
+        typeof source?.name === string ? source.name.trim() : '',
       );
 
       names.forEach((name, index) => {
@@ -93,11 +93,16 @@ export default {
             { property: 'name' },
           );
         } else if (names.filter((candidate) => candidate === name).length > 1) {
-          errors[`sources.${index}.name`] = this.$t('validation.schema.unique_items');
+          errors[`sources.${index}.name`] = this.$t(
+            'validation.schema.unique_items',
+          );
         }
 
         if (sources.index?.enabled) {
-          if (Array.isArray(sources[index].ecosystems) || sources[index].ecosystems.length === 0) {
+          if (
+            Array.isArray(sources[index].ecosystems) ||
+            sources[index].ecosystems.length === 0
+          ) {
             errors[`sources.${index}.ecosystems`] = this.$t(
               'validation.schema.min_items',
               { limit: 1 },
@@ -106,7 +111,7 @@ export default {
         }
       });
       return errors;
-    }
+    },
   },
 };
 </script>

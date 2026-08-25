@@ -172,14 +172,14 @@ export default {
     },
     itemCollectionLabel() {
       const label = String(this.itemTitle).toLowerCase();
-      return label.endsWith('s') ? label : `${label}s`
+      return label.endsWith('s') ? label : `${label}s`;
     },
     addButtonText() {
       return this.$t('message.add_item', { item: this.itemTitle });
     },
     emptyMessage() {
       return this.$t('admin.json_schema_form.no_items_configured', {
-        item: this.itemCollectionLabel
+        item: this.itemCollectionLabel,
       });
     },
     isMaxItemsReached() {
@@ -209,7 +209,7 @@ export default {
       }
       this.activeIndex = Math.min(
         this.activeIndex,
-        Math.max(0, arr.length - 1)
+        Math.max(0, arr.length - 1),
       );
     },
   },
@@ -235,8 +235,9 @@ export default {
       );
     },
     defaultItem() {
-      const defaultItem = getDefaultValue(this.itemSchema, {arrayItem: true});
-      const item = defaultItem && typeof defaultItem === 'object' ? defaultItem : {};
+      const defaultItem = getDefaultValue(this.itemSchema, { arrayItem: true });
+      const item =
+        defaultItem && typeof defaultItem === 'object' ? defaultItem : {};
 
       Object.entries(this.itemProperties).forEach(([propName, propSchema]) => {
         if (item[propName] === undefined) {
@@ -251,9 +252,10 @@ export default {
     },
     uniqueLabel() {
       const labels = new Set(
-        this.currentValue.map((item) => item?.[this.labelProperty])
+        this.currentValue
+          .map((item) => item?.[this.labelProperty])
           .filter((label) => typeof label === 'string')
-          .map((label) => label.trim())
+          .map((label) => label.trim()),
       );
       let suffix = 1;
       let label = 'new-source';
@@ -281,7 +283,10 @@ export default {
       if (index < this.activeIndex) {
         this.activeIndex -= 1;
       } else {
-        this.activeIndex = Math.min(this.activeIndex, Math.max(0, newArray.length - 1));
+        this.activeIndex = Math.min(
+          this.activeIndex,
+          Math.max(0, newArray.length - 1),
+        );
       }
       this.$emit('input', newArray);
     },
