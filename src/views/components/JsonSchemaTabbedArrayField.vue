@@ -30,11 +30,11 @@
           variant="outline-danger"
           size="sm"
           :disabled="!canRemoveItems"
-          :aria-label="removeItemAriaLabel(activeItem activeIndex)"
+          :aria-label="removeItemAriaLabel(activeItem, activeIndex)"
           @click="removeItem(activeIndex)"
         >
           <i class="fa fa-trash mr-1" area-hidden="true"></i>
-          {{ removeItemAriaLabel(activeItem activeIndex) }}
+          {{ removeItemAriaLabel(activeItem, activeIndex) }}
         </b-button>
       </div>
       <div v-for="(propSchema, propName) in itemProperties" :key="propName">
