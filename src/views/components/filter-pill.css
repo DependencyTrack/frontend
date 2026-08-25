@@ -44,8 +44,34 @@
   color: #fff !important;
 }
 
+/* The form owns all padding, and clipping keeps the footer flush with the
+   menu's rounded bottom corners. */
+.filter-pill-wrapper >>> .dropdown-menu {
+  padding: 0;
+  overflow: hidden;
+}
+
 .filter-pill-form {
-  min-width: 280px;
+  padding: 0;
+  min-width: 300px;
+  max-width: 480px;
+}
+
+.filter-pill-body {
+  padding: 0.75rem;
+}
+
+.filter-pill-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.filter-pill-footer-clear {
+  font-size: 0.85rem;
 }
 
 /* --- Segmented pill layout --- */

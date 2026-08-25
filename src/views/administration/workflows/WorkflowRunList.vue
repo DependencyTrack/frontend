@@ -14,7 +14,7 @@
             :field-label="$t('admin.workflow_name')"
             field-name="workflow_name"
             icon="fa-code-fork"
-            :operators="['equals']"
+            operator="equals"
             v-model="workflowNameFilter"
             @dismiss="onFilterDismiss('workflowName')"
           />
