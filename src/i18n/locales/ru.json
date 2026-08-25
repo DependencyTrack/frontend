@@ -314,7 +314,6 @@
     "vulnerability_id_generation": "Internal Vulnerability ID Generation",
     "vulnerability_id_template": "Vulnerability ID Template",
     "vulnerability_id_template_placeholder": "Select placeholders to define your vulnerability ID format",
-    "vulnerability_ids": "Vulnerability IDs",
     "vulnsource_alias_sync_enable": "Включить синхронизацию псевдонимов уязвимостей",
     "vulnsource_alias_sync_enable_tooltip": "Данные псевдонимов могут помочь в идентификации одинаковых уязвимостей в разных базах данных. Если источник предоставляет такие данные, синхронизируйте их с базой данных Dependency-Track.",
     "vulnsource_github_advisories_desc": "GitHub Advisories (GHSA) — это база данных CVE и рекомендаций по безопасности, инициированных GitHub, которые затрагивают открытый исходный код. Dependency-Track интегрируется с GHSA, зеркалируя рекомендации через публичный GraphQL API GitHub. Зеркало обновляется ежедневно или при перезапуске экземпляра Dependency-Track. Для аутентификации с GitHub требуется персональный токен доступа (PAT), но ему не нужно присваивать какие-либо права.",

@@ -314,7 +314,6 @@
     "vulnerability_id_generation": "Internal Vulnerability ID Generation",
     "vulnerability_id_template": "Vulnerability ID Template",
     "vulnerability_id_template_placeholder": "Select placeholders to define your vulnerability ID format",
-    "vulnerability_ids": "Vulnerability IDs",
     "vulnsource_alias_sync_enable": "脆弱性エイリアスの同期を有効にする",
     "vulnsource_alias_sync_enable_tooltip": "エイリアス データは、複数のデータベース間で同一の脆弱性を識別するのに役立ちます。ソースがこのデータを提供する場合は、Dependency-Track のデータベースと同期します。",
     "vulnsource_github_advisories_desc": "GitHub Advisories (GHSA) は、オープンソースの世界に影響を与える CVE と GitHub 発のセキュリティ アドバイザリのデータベースです。Dependency-Track は、GitHub のパブリック GraphQL API を介してアドバイザリをミラーリングすることで GHSA と統合します。ミラーは毎日、または Dependency-Track インスタンスの再起動時に更新されます。GitHub で認証するには個人アクセス トークン (PAT) が必要ですが、スコープを割り当てる必要はありません。",

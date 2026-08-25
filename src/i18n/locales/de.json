@@ -314,7 +314,6 @@
     "vulnerability_id_generation": "Internal Vulnerability ID Generation",
     "vulnerability_id_template": "Vulnerability ID Template",
     "vulnerability_id_template_placeholder": "Select placeholders to define your vulnerability ID format",
-    "vulnerability_ids": "Vulnerability IDs",
     "vulnsource_alias_sync_enable": "Synchronisierung von Schwachstellenaliasen aktivieren",
     "vulnsource_alias_sync_enable_tooltip": "Alias-Daten können dabei helfen, identische Schwachstellen in mehreren Datenbanken zu identifizieren. Wenn die Quelle diese Daten bereitstellt, synchronisieren Sie sie mit der Datenbank von Dependency-Track.",
     "vulnsource_github_advisories_desc": "GitHub Advisories (GHSA) ist eine Datenbank mit CVEs und von GitHub stammenden Sicherheitshinweisen, die die Open-Source-Welt betreffen. Dependency-Track integriert sich in GHSA, indem Hinweise über die öffentliche GraphQL-API von GitHub gespiegelt werden. Der Spiegel wird täglich oder beim Neustart der Dependency-Track-Instanz aktualisiert. Zur Authentifizierung bei GitHub ist ein persönlicher Zugriffstoken (PAT) erforderlich, ihm müssen jedoch keine Bereiche zugewiesen werden.",

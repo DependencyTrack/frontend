@@ -314,7 +314,6 @@
     "vulnerability_id_generation": "Internal Vulnerability ID Generation",
     "vulnerability_id_template": "Vulnerability ID Template",
     "vulnerability_id_template_placeholder": "Select placeholders to define your vulnerability ID format",
-    "vulnerability_ids": "Vulnerability IDs",
     "vulnsource_alias_sync_enable": "啟用漏洞別名同步",
     "vulnsource_alias_sync_enable_tooltip": "別名資料有助於識別多個資料庫中的相同漏洞。如果來源提供此資料，請將其與 Dependency-Track 的資料庫同步。",
     "vulnsource_github_advisories_desc": "GitHub 公告 (GHSA) 是一個 CVE 資料庫，其中包含影響開源世界的 GitHub 安全公告。Dependency-Track 透過 GitHub 的公開 GraphQL API 鏡像公告，與 GHSA 整合。鏡像每天重新整理一次，或在重新啟動 Dependency-Track 執行個體時重新整理。需要個人存取權杖 (PAT) 才能透過 GitHub 進行身分驗證，但無需為其分配範圍。",
