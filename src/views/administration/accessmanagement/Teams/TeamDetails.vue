@@ -16,18 +16,13 @@
         />
         <b-form-group :label="this.$t('admin.api_keys')">
           <div class="list-group">
-            <span
+            <api-key-list-group-item
               v-for="key in sortedApiKeys"
               :key="`${key}-${apiKeys[key].created}`"
-            >
-              <api-key-list-group-item
-                :team-uuid="team.uuid"
-                :api-key="apiKeys[key]"
-                :delete-icon="true"
-                v-on:removeClicked="removeApiKey(apiKeys[key])"
-                v-on:regenerateClicked="regenerateApiKey(apiKeys[key])"
-              />
-            </span>
+              :api-key="apiKeys[key]"
+              v-on:removeClicked="removeApiKey(apiKeys[key])"
+              v-on:regenerateClicked="regenerateApiKey(apiKeys[key])"
+            />
             <actionable-list-group-item
               :add-icon="true"
               v-on:actionClicked="createApiKey()"
@@ -37,13 +32,13 @@
         </b-form-group>
         <b-form-group :label="this.$t('admin.permissions')">
           <div class="list-group">
-            <span v-for="permission in permissions" :key="permission.name">
-              <actionable-list-group-item
-                :value="permission.name"
-                :delete-icon="true"
-                v-on:actionClicked="removePermission(permission)"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="permission in permissions"
+              :key="permission.name"
+              :value="permission.name"
+              :delete-icon="true"
+              v-on:actionClicked="removePermission(permission)"
+            />
             <actionable-list-group-item
               :add-icon="true"
               v-on:actionClicked="
@@ -54,13 +49,13 @@
         </b-form-group>
         <b-form-group :label="this.$t('admin.mapped_ldap_groups')">
           <div class="list-group">
-            <span v-for="ldapGroup in ldapGroups" :key="ldapGroup.uuid">
-              <actionable-list-group-item
-                :value="ldapGroup.dn"
-                :delete-icon="true"
-                v-on:actionClicked="removeLdapGroupMapping(ldapGroup.uuid)"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="ldapGroup in ldapGroups"
+              :key="ldapGroup.uuid"
+              :value="ldapGroup.dn"
+              :delete-icon="true"
+              v-on:actionClicked="removeLdapGroupMapping(ldapGroup.uuid)"
+            />
             <actionable-list-group-item
               :add-icon="true"
               v-on:actionClicked="
@@ -71,13 +66,13 @@
         </b-form-group>
         <b-form-group :label="this.$t('admin.mapped_oidc_groups')">
           <div class="list-group">
-            <span v-for="oidcGroup in mappedOidcGroups" :key="oidcGroup.uuid">
-              <actionable-list-group-item
-                :value="oidcGroup.group.name"
-                :delete-icon="true"
-                v-on:actionClicked="removeOidcGroupMapping(oidcGroup)"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="oidcGroup in mappedOidcGroups"
+              :key="oidcGroup.uuid"
+              :value="oidcGroup.group.name"
+              :delete-icon="true"
+              v-on:actionClicked="removeOidcGroupMapping(oidcGroup)"
+            />
             <actionable-list-group-item
               :add-icon="true"
               v-on:actionClicked="
@@ -93,13 +88,13 @@
           :label="this.$t('admin.managed_users')"
         >
           <div class="list-group">
-            <span v-for="user in managedUsers" :key="user.username">
-              <actionable-list-group-item
-                :value="user.username"
-                :delete-icon="true"
-                v-on:actionClicked="removeUser(user, 'managedUsers')"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="user in managedUsers"
+              :key="user.username"
+              :value="user.username"
+              :delete-icon="true"
+              v-on:actionClicked="removeUser(user, 'managedUsers')"
+            />
           </div>
         </b-form-group>
         <b-form-group
@@ -107,13 +102,13 @@
           :label="this.$t('admin.ldap_users')"
         >
           <div class="list-group">
-            <span v-for="user in ldapUsers" :key="user.username">
-              <actionable-list-group-item
-                :value="user.username"
-                :delete-icon="true"
-                v-on:actionClicked="removeUser(user, 'ldapUsers')"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="user in ldapUsers"
+              :key="user.username"
+              :value="user.username"
+              :delete-icon="true"
+              v-on:actionClicked="removeUser(user, 'ldapUsers')"
+            />
           </div>
         </b-form-group>
         <b-form-group
@@ -121,13 +116,13 @@
           :label="this.$t('admin.oidc_users')"
         >
           <div class="list-group">
-            <span v-for="user in oidcUsers" :key="user.username">
-              <actionable-list-group-item
-                :value="user.username"
-                :delete-icon="true"
-                v-on:actionClicked="removeUser(user, 'oidcUsers')"
-              />
-            </span>
+            <actionable-list-group-item
+              v-for="user in oidcUsers"
+              :key="user.username"
+              :value="user.username"
+              :delete-icon="true"
+              v-on:actionClicked="removeUser(user, 'oidcUsers')"
+            />
           </div>
         </b-form-group>
         <div style="text-align: right">
@@ -295,6 +290,17 @@ export default {
       }
     },
     async regenerateApiKey(apiKey) {
+      const confirmed = await this.$bvModal.msgBoxConfirm(
+        this.$t('admin.regenerate_api_key_confirm'),
+        {
+          title: this.$t('admin.regenerate_api_key_title'),
+          okVariant: 'danger',
+          okTitle: this.$t('message.regenerate'),
+          cancelTitle: this.$t('message.cancel'),
+          centered: true,
+        },
+      );
+      if (!confirmed) return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
       try {
         const response = await this.axios.post(endpoint);
@@ -311,6 +317,17 @@ export default {
       }
     },
     removeApiKey: async function (apiKey) {
+      const confirmed = await this.$bvModal.msgBoxConfirm(
+        this.$t('admin.remove_api_key_confirm'),
+        {
+          title: this.$t('admin.remove_api_key'),
+          okVariant: 'danger',
+          okTitle: this.$t('message.delete'),
+          cancelTitle: this.$t('message.cancel'),
+          centered: true,
+        },
+      );
+      if (!confirmed) return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
       try {
         await this.axios.delete(endpoint);

@@ -1,6 +1,7 @@
 <template>
   <b-modal
     :id="`editApiKeyCommentModal-${keyId}`"
+    @show="resetValues()"
     size="md"
     hide-header-close
     no-stacking
@@ -46,9 +47,6 @@ export default {
       comment: null,
     };
   },
-  mounted() {
-    this.comment = this.apiKey.comment;
-  },
   methods: {
     updateComment: function () {
       this.axios
@@ -71,7 +69,7 @@ export default {
         });
     },
     resetValues: function () {
-      this.comment = null;
+      this.comment = this.apiKey.comment;
     },
   },
 };
