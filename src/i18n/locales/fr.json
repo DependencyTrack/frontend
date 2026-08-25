@@ -159,8 +159,10 @@
     "internal_identification_error": "Une erreur s'est produite lors de la mise en file d'attente de l'identification des composants internes. Vérifiez les journaux du serveur pour plus de détails",
     "internal_identification_queued": "Identification des composants internes en file d'attente",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

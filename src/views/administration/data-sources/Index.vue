@@ -93,7 +93,7 @@ export default {
             { property: 'name' },
           );
         } else if (names.filter((candidate) => candidate === name).length > 1) {
-          errors[`sources.${index}.name`] = this.$t('validation.schema.required');
+          errors[`sources.${index}.name`] = this.$t('validation.schema.unique_items');
         }
 
         if (sources.index?.enabled) {

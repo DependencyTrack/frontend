@@ -159,8 +159,10 @@
     "internal_identification_error": "An error occurred queueing internal component identification. Check server logs for details",
     "internal_identification_queued": "Internal component identification queued",
     "json_schema_form": {
+      "item_number": "{item} {n}",
       "max_items": "Maximum {n} item. | Maximum {n} items.",
       "min_items": "Minimum {n} item. | Minimum {n} items.",
+      "no_items_configured": "No {item} configured",
       "remove_item_aria": "Remove item {n}",
       "remove_named_item_aria": "Remove {name}",
       "test_summary": "{passed} passed, {failed} failed, {skipped} skipped"

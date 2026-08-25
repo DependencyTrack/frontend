@@ -159,8 +159,10 @@
     "internal_identification_error": "Wystąpił błąd podczas kolejkowania identyfikacji komponentów wewnętrznych. Sprawdź dzienniki serwera, aby uzyskać szczegółowe informacje",
     "internal_identification_queued": "Wewnętrzna identyfikacja komponentów w kolejce",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

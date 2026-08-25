@@ -159,8 +159,10 @@
     "internal_identification_error": "Beim Warteschlangenvorgang für die interne Komponentenidentifikation ist ein Fehler aufgetreten. Weitere Informationen finden Sie in den Serverprotokollen.",
     "internal_identification_queued": "Interne Komponentenidentifikation in der Warteschlange",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

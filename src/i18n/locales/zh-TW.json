@@ -159,8 +159,10 @@
     "internal_identification_error": "排入內部元件識別佇列時發生錯誤。請檢視伺服器日誌了解詳細資訊",
     "internal_identification_queued": "內部元件識別已排入佇列",
     "json_schema_form": {
+      "item_number": "{項目} {n}",
       "max_items": "最多 {n} 項。 |最多 {n} 個項目。",
       "min_items": "最少 {n} 項。 |最少 {n} 項。",
+      "no_items_configured": "未配置 {item}",
       "remove_item_aria": "刪除項目 {n}",
       "remove_named_item_aria": "刪除{名稱}",
       "test_summary": "{passed} 通過，{failed} 失敗，{skipped} 跳過"

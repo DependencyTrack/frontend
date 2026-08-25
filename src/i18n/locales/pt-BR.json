@@ -159,8 +159,10 @@
     "internal_identification_error": "Ocorreu um erro ao enfileirar a identificação do componente interno. Verifique os logs do servidor para obter detalhes",
     "internal_identification_queued": "Identificação de componente interno na fila",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null
