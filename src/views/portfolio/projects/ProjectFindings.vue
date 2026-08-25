@@ -4,90 +4,127 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="findingsToolbar" class="bs-table-custom-toolbar">
-      <b-button
-        id="apply-vex-button"
-        size="md"
-        variant="outline-primary"
-        v-b-modal.projectUploadVexModal
-        v-permission:or="[
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-        ]"
-      >
-        <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
-      </b-button>
-      <b-tooltip target="apply-vex-button" triggers="hover focus">{{
-        $t('message.apply_vex_tooltip')
-      }}</b-tooltip>
+    <div id="findingsToolbar">
+      <div class="bs-table-custom-toolbar mb-2">
+        <b-button
+          id="apply-vex-button"
+          size="md"
+          variant="outline-primary"
+          v-b-modal.projectUploadVexModal
+          v-permission:or="[
+            PERMISSIONS.VULNERABILITY_ANALYSIS,
+            PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+          ]"
+        >
+          <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
+        </b-button>
+        <b-tooltip target="apply-vex-button" triggers="hover focus">{{
+          $t('message.apply_vex_tooltip')
+        }}</b-tooltip>
 
-      <b-button
-        id="export-vex-button"
-        size="md"
-        variant="outline-primary"
-        @click="downloadVex()"
-        v-permission:or="[
-          PERMISSIONS.VIEW_VULNERABILITY,
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-        ]"
-      >
-        <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
-      </b-button>
-      <b-tooltip target="export-vex-button" triggers="hover focus">{{
-        $t('message.export_vex_tooltip')
-      }}</b-tooltip>
-
-      <b-button
-        id="export-vdr-button"
-        size="md"
-        variant="outline-primary"
-        @click="downloadVdr()"
-        v-permission:or="[
-          PERMISSIONS.VIEW_VULNERABILITY,
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-        ]"
-      >
-        <span class="fa fa-download"></span> {{ $t('message.export_vdr') }}
-      </b-button>
-      <b-tooltip target="export-vdr-button" triggers="hover focus">{{
-        $t('message.export_vdr_tooltip')
-      }}</b-tooltip>
-
-      <b-button
-        id="reanalyze-button"
-        size="md"
-        variant="outline-primary"
-        @click="reAnalyze()"
-        v-permission:or="[PERMISSIONS.VULNERABILITY_ANALYSIS]"
-      >
-        <span class="fa fa-refresh"></span>
-        {{ $t('message.project_reanalyze') }}
-      </b-button>
-      <b-tooltip target="reanalyze-button" triggers="hover focus">{{
-        $t('message.project_reanalyze_tooltip')
-      }}</b-tooltip>
-
-      <!-- Future use when CSAF support is added
-      <b-dropdown variant="outline-primary" v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
-        <template #button-content>
+        <b-button
+          id="export-vex-button"
+          size="md"
+          variant="outline-primary"
+          @click="downloadVex()"
+          v-permission:or="[
+            PERMISSIONS.VIEW_VULNERABILITY,
+            PERMISSIONS.VULNERABILITY_ANALYSIS,
+            PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
+          ]"
+        >
           <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
-        </template>
-        <b-dropdown-item @click="downloadVex('cyclonedx')" href="#">CycloneDX</b-dropdown-item>
-        <b-dropdown-item @click="downloadVex('csaf')" href="#">CSAF</b-dropdown-item>
-      </b-dropdown>
-      -->
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedFindings"
-        color="primary"
-        v-model="showSuppressedFindings"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_findings')
-      }}</span>
+        </b-button>
+        <b-tooltip target="export-vex-button" triggers="hover focus">{{
+          $t('message.export_vex_tooltip')
+        }}</b-tooltip>
+
+        <b-button
+          id="export-vdr-button"
+          size="md"
+          variant="outline-primary"
+          @click="downloadVdr()"
+          v-permission:or="[
+            PERMISSIONS.VIEW_VULNERABILITY,
+            PERMISSIONS.VULNERABILITY_ANALYSIS,
+            PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
+          ]"
+        >
+          <span class="fa fa-download"></span> {{ $t('message.export_vdr') }}
+        </b-button>
+        <b-tooltip target="export-vdr-button" triggers="hover focus">{{
+          $t('message.export_vdr_tooltip')
+        }}</b-tooltip>
+
+        <b-button
+          id="reanalyze-button"
+          size="md"
+          variant="outline-primary"
+          @click="reAnalyze()"
+          v-permission:or="[PERMISSIONS.VULNERABILITY_ANALYSIS]"
+        >
+          <span class="fa fa-refresh"></span>
+          {{ $t('message.project_reanalyze') }}
+        </b-button>
+        <b-tooltip target="reanalyze-button" triggers="hover focus">{{
+          $t('message.project_reanalyze_tooltip')
+        }}</b-tooltip>
+      </div>
+
+      <div
+        class="filter-bar"
+        role="toolbar"
+        :aria-label="$t('message.filters')"
+      >
+        <div class="filter-pills">
+          <boolean-filter-pill
+            v-if="isFilterVisible('showSuppressedFindings')"
+            :field-label="$t('message.show_suppressed_findings')"
+            field-name="showSuppressedFindings"
+            icon="fa-eye"
+            v-model="showSuppressedFindings"
+          />
+          <boolean-filter-pill
+            v-if="isFilterVisible('showKevOnly')"
+            :field-label="$t('message.kev')"
+            field-name="showKevOnly"
+            icon="fa-crosshairs"
+            v-model="showKevOnly"
+          />
+          <b-dropdown
+            v-if="addFilterOptions.length > 0"
+            size="sm"
+            variant="outline-primary"
+            class="btn-more-filters"
+            no-caret
+          >
+            <template #button-content>
+              <span class="fa fa-plus" aria-hidden="true"></span>
+              {{ $t('message.add_filter') }}
+            </template>
+            <b-dropdown-item
+              v-for="filter in addFilterOptions"
+              :key="filter.name"
+              @click="showFilter(filter.name)"
+              ><span
+                :class="['fa', filter.icon, 'mr-2']"
+                aria-hidden="true"
+              ></span
+              >{{ filter.label }}</b-dropdown-item
+            >
+          </b-dropdown>
+          <b-button
+            v-show="activeFilterCount >= 2"
+            size="sm"
+            variant="outline-danger"
+            class="btn-clear-all-filters"
+            @click="clearAllFilters"
+          >
+            <span class="fa fa-remove" aria-hidden="true"></span>
+            {{ $t('message.clear_all') }}
+          </b-button>
+        </div>
+      </div>
     </div>
 
     <bootstrap-table
@@ -104,7 +141,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
 
@@ -116,28 +152,30 @@ import {
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import filterPillsMixin from '@/mixins/filterPillsMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import FindingAudit from './FindingAudit';
 import ProjectUploadVexModal from './ProjectUploadVexModal';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin, permissionsMixin],
   components: {
-    cSwitch,
+    BooleanFilterPill,
     ProjectUploadVexModal,
     KevAssertionsModal,
   },
   beforeCreate() {
     this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectFindingsShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
-          'true'
-        : false;
+      !!localStorage &&
+      localStorage.getItem('ProjectFindingsShowSuppressedFindings') === 'true';
+    this.showKevOnly =
+      !!localStorage &&
+      localStorage.getItem('ProjectFindingsShowKevOnly') === 'true';
 
     if (this.$route.params.vulnerability) {
       if (this.$route.params.affectedComponent) {
@@ -154,10 +192,8 @@ export default {
   data() {
     return {
       showSuppressedFindings: this.showSuppressedFindings,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showKevOnly: this.showKevOnly,
+      booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
           title: this.$t('message.component'),
@@ -463,14 +499,23 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
-      if (this.showSuppressedFindings === undefined) {
-        url += '?suppressed=false';
-      } else {
-        url += '?suppressed=' + this.showSuppressedFindings;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
+      return common.setQueryParams(url, {
+        suppressed: this.showSuppressedFindings === true,
+        isKev: this.showKevOnly === true ? true : null,
+        totalCount: 'BOUNDED',
+      });
+    },
+    clearAllFilters: function () {
+      this._clearing = true;
+      try {
+        this.showSuppressedFindings = false;
+        this.showKevOnly = false;
+        this.clearPendingFilters();
+      } finally {
+        this._clearing = false;
       }
-      url += '&totalCount=BOUNDED';
-      return url;
+      this.refreshTable();
     },
     downloadVex: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
@@ -565,22 +610,42 @@ export default {
         this.$refs.table.expandRow(0);
       }
     },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
+      }
+    },
     initializeTooltips: function () {
       $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showKevOnly',
+          label: this.$t('message.kev'),
+          icon: 'fa-crosshairs',
+        },
+        {
+          name: 'showSuppressedFindings',
+          label: this.$t('message.show_suppressed_findings'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectFindingsShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedFindings(value) {
+      this.persistFilter('ProjectFindingsShowSuppressedFindings', value);
+    },
+    showKevOnly(value) {
+      this.persistFilter('ProjectFindingsShowKevOnly', value);
     },
   },
 };
 </script>
+
+<style scoped src="../../components/filter-pills.css"></style>

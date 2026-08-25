@@ -12,17 +12,60 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="epssToolbar" class="bs-table-custom-toolbar">
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedFindings"
-        color="primary"
-        v-model="showSuppressedFindings"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_findings')
-      }}</span>
+    <div
+      id="epssToolbar"
+      class="filter-bar"
+      role="toolbar"
+      :aria-label="$t('message.filters')"
+    >
+      <div class="filter-pills">
+        <boolean-filter-pill
+          v-if="isFilterVisible('showSuppressedFindings')"
+          :field-label="$t('message.show_suppressed_findings')"
+          field-name="showSuppressedFindings"
+          icon="fa-eye"
+          v-model="showSuppressedFindings"
+        />
+        <boolean-filter-pill
+          v-if="isFilterVisible('showKevOnly')"
+          :field-label="$t('message.kev')"
+          field-name="showKevOnly"
+          icon="fa-crosshairs"
+          v-model="showKevOnly"
+        />
+        <b-dropdown
+          v-if="addFilterOptions.length > 0"
+          size="sm"
+          variant="outline-primary"
+          class="btn-more-filters"
+          no-caret
+        >
+          <template #button-content>
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            {{ $t('message.add_filter') }}
+          </template>
+          <b-dropdown-item
+            v-for="filter in addFilterOptions"
+            :key="filter.name"
+            @click="showFilter(filter.name)"
+            ><span
+              :class="['fa', filter.icon, 'mr-2']"
+              aria-hidden="true"
+            ></span
+            >{{ filter.label }}</b-dropdown-item
+          >
+        </b-dropdown>
+        <b-button
+          v-show="activeFilterCount >= 2"
+          size="sm"
+          variant="outline-danger"
+          class="btn-clear-all-filters"
+          @click="clearAllFilters"
+        >
+          <span class="fa fa-remove" aria-hidden="true"></span>
+          {{ $t('message.clear_all') }}
+        </b-button>
+      </div>
     </div>
 
     <bootstrap-table
@@ -42,38 +85,41 @@ import {
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
-import { Switch as cSwitch } from '@coreui/vue';
+import i18n from '@/i18n';
 import $ from 'jquery';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
+import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
+import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
 import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
-    cSwitch,
+    BooleanFilterPill,
     BootstrapToggle,
     ChartEpssVsCvss,
+    KevAssertionsModal,
   },
   beforeCreate() {
     this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true'
-        : false;
+      !!localStorage &&
+      localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true';
+    this.showKevOnly =
+      !!localStorage &&
+      localStorage.getItem('ProjectEpssShowKevOnly') === 'true';
   },
   data() {
     return {
       showSuppressedFindings: this.showSuppressedFindings,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showKevOnly: this.showKevOnly,
+      booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
           title: this.$t('message.component'),
@@ -163,6 +209,38 @@ export default {
           },
         },
         {
+          title: this.$t('message.kev'),
+          field: 'vulnerability.isKev',
+          sortable: false,
+          class: 'tight',
+          formatter: (value, row, index) => {
+            if (value !== true) {
+              return '';
+            }
+            return this.vueFormatter({
+              i18n,
+              components: { KevAssertionsModal },
+              template: `
+                <div class="text-center">
+                  <b-link
+                    v-b-modal="\`kevAssertionsModal-${index}\`"
+                    :title="$t('message.kev_show_assertions')"
+                    class="text-danger"
+                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
+                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
+                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
+                </div>`,
+              data() {
+                return {
+                  index: index,
+                  source: row.vulnerability.source,
+                  vulnId: row.vulnerability.vulnId,
+                };
+              },
+            });
+          },
+        },
+        {
           title: this.$t('message.cvss_v2'),
           field: 'vulnerability.cvssV2BaseScore',
           sortable: true,
@@ -249,8 +327,11 @@ export default {
           return applyTotalCountHeaders(res, xhr, this);
         },
         url: this.apiUrl(),
-        onPostBody: this.initializeTooltips,
-        onPageChange: (number, size) => {
+        onPostBody: () => {
+          this.vueFormatterInit();
+          this.initializeTooltips();
+        },
+        onPageChange: (_, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectEpssPageSize', size.toString());
           }
@@ -274,18 +355,34 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
-      if (this.showSuppressedFindings === undefined) {
-        url += '?epssFrom=0&suppressed=false';
-      } else {
-        url += '?epssFrom=0&suppressed=' + this.showSuppressedFindings;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
+      return common.setQueryParams(url, {
+        epssFrom: 0,
+        suppressed: this.showSuppressedFindings === true,
+        isKev: this.showKevOnly === true ? true : null,
+        totalCount: 'BOUNDED',
+      });
+    },
+    clearAllFilters: function () {
+      this._clearing = true;
+      try {
+        this.showSuppressedFindings = false;
+        this.showKevOnly = false;
+        this.clearPendingFilters();
+      } finally {
+        this._clearing = false;
       }
-      url += '&totalCount=BOUNDED';
-      return url;
+      this.refreshTable();
+    },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
+      }
     },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
+        pageNumber: 1,
         silent: true,
       });
     },
@@ -305,16 +402,31 @@ export default {
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showKevOnly',
+          label: this.$t('message.kev'),
+          icon: 'fa-crosshairs',
+        },
+        {
+          name: 'showSuppressedFindings',
+          label: this.$t('message.show_suppressed_findings'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectEpssShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedFindings(value) {
+      this.persistFilter('ProjectEpssShowSuppressedFindings', value);
+    },
+    showKevOnly(value) {
+      this.persistFilter('ProjectEpssShowKevOnly', value);
     },
   },
 };
 </script>
+
+<style scoped src="../../components/filter-pills.css"></style>
