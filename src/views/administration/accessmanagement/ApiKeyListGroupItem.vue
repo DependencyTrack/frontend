@@ -1,21 +1,20 @@
 <template>
-  <b-list-group-item class="flex-column align-items-start">
+  <b-list-group-item>
     <div class="d-flex w-100 justify-content-between">
-      <span class="text-monospace">{{ apiKey.maskedKey }}</span>
-      <div class="d-flex">
-        <div v-show="apiKey.legacy">
-          <span
-            class="ml-3"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            v-b-tooltip.hover
-            :title="$t('admin.old_key_format')"
-            ><i
-              class="fa fa-exclamation-triangle status-warning"
-              aria-hidden="true"
-            ></i
-          ></span>
-        </div>
+      <span class="text-monospace text-truncate mr-3">{{
+        apiKey.maskedKey
+      }}</span>
+      <div class="d-flex flex-shrink-0">
+        <span
+          v-if="apiKey.legacy"
+          class="ml-3"
+          v-b-tooltip.hover
+          :title="$t('admin.old_key_format')"
+          ><i
+            class="fa fa-exclamation-triangle status-warning"
+            aria-hidden="true"
+          ></i
+        ></span>
         <b-button
           size="sm"
           class="action-icon ml-3"
@@ -43,22 +42,19 @@
         >
           <span class="fa fa-trash-o"></span>
         </b-button>
-        <edit-api-key-comment-modal
-          :key-id="this.keyId"
-          :api-key="this.apiKey"
-        />
       </div>
     </div>
+    <edit-api-key-comment-modal :key-id="keyId" :api-key="apiKey" />
     <p class="mt-2 font-weight-light">
       <em>{{ comment }}</em>
     </p>
     <hr />
-    <div class="d-flex w-100 justify-content-between text-muted">
-      <small :title="$t('admin.api_key_created_tooltip')"
-        >Created: {{ createdTimestamp }}</small
+    <div class="d-flex flex-wrap w-100 justify-content-between text-muted">
+      <small v-b-tooltip.hover :title="$t('admin.api_key_created_tooltip')"
+        >{{ $t('admin.api_key_created') }}: {{ createdTimestamp }}</small
       >
-      <small :title="$t('admin.api_key_last_used_tooltip')"
-        >Last Used: {{ lastUsedTimestamp }}</small
+      <small v-b-tooltip.hover :title="$t('admin.api_key_last_used_tooltip')"
+        >{{ $t('admin.api_key_last_used') }}: {{ lastUsedTimestamp }}</small
       >
     </div>
   </b-list-group-item>
@@ -71,8 +67,6 @@ import EditApiKeyCommentModal from './EditApiKeyCommentModal.vue';
 export default {
   props: {
     apiKey: Object,
-    variant: String,
-    href: String,
   },
   components: {
     EditApiKeyCommentModal,
@@ -82,7 +76,9 @@ export default {
       return this.apiKey.publicId;
     },
     comment: function () {
-      return this.apiKey.comment ? this.apiKey.comment : 'No comment';
+      return this.apiKey.comment
+        ? this.apiKey.comment
+        : this.$t('admin.api_key_no_comment');
     },
     createdTimestamp: function () {
       return this.apiKey.created
@@ -99,6 +95,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text-truncate {
+  min-width: 0;
+}
+
 .list-group-item .form-group {
   padding-top: 0;
   padding-bottom: 0;
@@ -127,9 +127,5 @@ export default {
 
 .action-icon .fa-trash-o {
   color: var(--danger);
-}
-
-.list-group-item:last-child {
-  margin-bottom: -1px;
 }
 </style>
