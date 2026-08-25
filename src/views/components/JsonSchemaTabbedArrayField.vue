@@ -235,34 +235,67 @@ export default {
       );
     },
     defaultItem() {
+      const defaultItem = getDefaultValue(this.itemSchema, {arrayItem: true});
+      const item = defaultItem && typeof defaultItem === 'object' ? defaultItem : {};
 
+      Object.entries(this.itemProperties).forEach(([propName, propSchema]) => {
+        if (item[propName] === undefined) {
+          item[propName] = getDefaultValue(propSchema);
+        }
+      });
+
+      if (this.itemProperties[this.labelProperty]) {
+        item[this.labelProperty] = this.uniqueLabel();
+      }
+      return item;
+    },
+    uniqueLabel() {
+      const labels = new Set(
+        this.currentValue.map((item) => item?.[this.labelProperty])
+          .filter((label) => typeof label === 'string')
+          .map((label) => label.trim())
+      );
+      let suffix = 1;
+      let label = 'new-source';
+      while (labels.has(label)) {
+        suffix += 1;
+        label = `new-source-'${suffix}`;
+      }
+      return label;
     },
     addItem() {
-      const defaultValue = getDefaultValue(this.itemSchema, {
-        arrayItem: true,
-      });
-      const newArray = [...this.currentValue, defaultValue];
+      if (this.isMaxItemsReached) {
+        return;
+      }
+      const newArray = [...this.currentValue, this.defaultItem()];
       this.itemKeys = [...this.itemKeys, nextId()];
+      this.activeIndex = newArray.length - 1;
       this.$emit('input', newArray);
     },
     removeItem(index) {
+      if (!this.canRemoveItems) {
+        return;
+      }
       const newArray = this.currentValue.filter((_, i) => i !== index);
       this.itemKeys = this.itemKeys.filter((_, i) => i !== index);
+      if (index < this.activeIndex) {
+        this.activeIndex -= 1;
+      } else {
+        this.activeIndex = Math.min(this.activeIndex, Math.max(0, newArray.length - 1));
+      }
       this.$emit('input', newArray);
     },
-    onItemChange(index, newValue) {
+    onPropertyChange(propName, propValue) {
+      const newItem = { ...this.activeItem, [propName]: propValue };
       const newArray = this.currentValue.slice();
-      newArray[index] = newValue;
+      newArray[this.activeIndex] = newItem;
       this.$emit('input', newArray);
     },
     removeItemAriaLabel(item, index) {
-      if (
-        (typeof item === 'string' || typeof item === 'number') &&
-        item !== '' &&
-        item !== null
-      ) {
+      const label = item?.[this.labelProperty];
+      if (typeof label === 'string' && label.trim()) {
         return this.$t('admin.json_schema_form.remove_named_item_aria', {
-          name: item,
+          name: label,
         });
       }
       return this.$t('admin.json_schema_form.remove_item_aria', {
