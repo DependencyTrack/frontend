@@ -122,6 +122,11 @@ export default {
               route: 'configuration/search',
             },
             {
+              component: 'Customization',
+              name: this.$t('admin.customization'),
+              route: 'configuration/customization',
+            },
+            {
               component: 'Experimental',
               name: this.$t('admin.experimental'),
               route: 'configuration/experimental',
