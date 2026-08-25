@@ -64,7 +64,8 @@ import SecretRefSelect from './SecretRefSelect.vue';
 
 const JsonSchemaObjectField = () => import('./JsonSchemaObjectField.vue');
 const JsonSchemaArrayField = () => import('./JsonSchemaArrayField.vue');
-const JsonSchemaTabbedArrayField = () => import('./JsonSchemaTabbedArrayField.vue');
+const JsonSchemaTabbedArrayField = () =>
+  import('./JsonSchemaTabbedArrayField.vue');
 
 export default {
   name: 'JsonSchemaFormField',
