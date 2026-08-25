@@ -32,11 +32,11 @@ export default {
     });
   },
   mounted() {
-    // Move bootstrap-table's built-in toolbar controls (refresh, column toggle)
-    // into the filter bar so they appear in one cohesive row.
+    // Move bootstrap-table's built-in toolbar controls (search, refresh, column
+    // toggle) into the filter bar so they appear in one cohesive row.
     //
-    // This depends on bootstrap-table rendering a `.columns` div as a direct
-    // child of `.fixed-table-toolbar` during its mounted() hook.
+    // This depends on bootstrap-table rendering `.search` / `.columns` divs as
+    // direct children of `.fixed-table-toolbar` during its mounted() hook.
     //
     // We also listen for bootstrap-table's post-body event to re-run the move,
     // since initToolbar() can recreate the `.columns` div (e.g. on option changes).
@@ -71,21 +71,24 @@ export default {
       if (!filterBar) return;
       const toolbar = filterBar.closest('.fixed-table-toolbar');
       if (!toolbar) return;
+      const search = toolbar.querySelector(':scope > .search');
       const columns = toolbar.querySelector(':scope > .columns');
-      if (!columns) return;
-      columns.style.setProperty('float', 'none', 'important');
-      columns.style.marginLeft = 'auto';
-      columns.style.flexShrink = '0';
-      columns.style.alignSelf = 'flex-start';
-      columns.style.borderLeft = '1px solid rgb(255 255 255 / 10%)';
-      columns.style.paddingLeft = '0.5rem';
-      columns.querySelectorAll('.btn').forEach((btn) => {
-        if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
-          const title = btn.getAttribute('title') || btn.getAttribute('name');
-          if (title) btn.setAttribute('aria-label', title);
-        }
+      if (!search && !columns) return;
+      [search, columns].filter(Boolean).forEach((el, index) => {
+        el.style.setProperty('float', 'none', 'important');
+        el.style.marginLeft = index === 0 ? 'auto' : '0.5rem';
+        el.style.flexShrink = '0';
+        el.style.alignSelf = 'flex-start';
+        el.style.borderLeft = '1px solid rgb(255 255 255 / 10%)';
+        el.style.paddingLeft = '0.5rem';
+        el.querySelectorAll('.btn').forEach((btn) => {
+          if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
+            const title = btn.getAttribute('title') || btn.getAttribute('name');
+            if (title) btn.setAttribute('aria-label', title);
+          }
+        });
+        filterBar.appendChild(el);
       });
-      filterBar.appendChild(columns);
     },
     hasFilterValue(name) {
       if (this.booleanFilters && this.booleanFilters.includes(name)) {
