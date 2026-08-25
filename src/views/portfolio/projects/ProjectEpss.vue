@@ -363,17 +363,6 @@ export default {
         totalCount: 'BOUNDED',
       });
     },
-    clearAllFilters: function () {
-      this._clearing = true;
-      try {
-        this.showSuppressedFindings = false;
-        this.showKevOnly = false;
-        this.clearPendingFilters();
-      } finally {
-        this._clearing = false;
-      }
-      this.refreshTable();
-    },
     persistFilter: function (key, value) {
       if (localStorage) {
         localStorage.setItem(key, value.toString());

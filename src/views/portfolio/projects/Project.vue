@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
-    <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
+    <b-card :no-body="true" footer-class="px-3 py-2">
       <b-card-body class="p-3 clearfix">
         <b-row>
           <b-col>
@@ -155,16 +155,53 @@
                 </b-col>
               </b-row>
             </div>
+            <!--
+            These repeat the title's b-row/b-col nesting so all three lines
+            share a left edge. A bare block starts 15px further left, because
+            it wraps the floated icon directly instead of clearing it.
+            -->
             <div class="text-muted font-xs">
-              <span class="text-lowercase font-weight-bold">
-                <span v-for="tag in project.tags">
-                  <b-badge
-                    :to="{ name: 'Projects', query: { tag: tag.name } }"
-                    variant="tag"
-                    >{{ tag.name }}</b-badge
+              <b-row>
+                <b-col class="text-lowercase font-weight-bold" md="auto">
+                  <span v-for="tag in project.tags">
+                    <b-badge
+                      :to="{ name: 'Projects', query: { tag: tag.name } }"
+                      variant="tag"
+                      >{{ tag.name }}</b-badge
+                    >
+                  </span>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-if="!isCollectionProject" class="font-xs mt-1">
+              <b-row>
+                <b-col md="auto">
+                  <span class="text-muted mr-1"
+                    >{{ $t('message.last_bom_import') }}:</span
                   >
-                </span>
-              </span>
+                  <span
+                    v-b-tooltip.hover="{
+                      title: absoluteTime(project.lastBomImport),
+                    }"
+                    >{{ relativeTime(project.lastBomImport) }}</span
+                  >
+                  <span class="text-muted mx-2">&middot;</span>
+                  <span class="text-muted mr-1"
+                    >{{ $t('message.last_analysis') }}:</span
+                  >
+                  <span
+                    v-b-tooltip.hover="{
+                      title: absoluteTime(project.lastVulnerabilityAnalysis),
+                    }"
+                    >{{ relativeTime(project.lastVulnerabilityAnalysis) }}</span
+                  >
+                  <span
+                    v-if="isAnalysisRequested"
+                    class="text-muted font-italic ml-2"
+                    >&middot; {{ $t('message.analysis_requested') }}</span
+                  >
+                </b-col>
+              </b-row>
             </div>
           </b-col>
           <b-col md="auto">
@@ -249,21 +286,83 @@
         </b-row>
       </b-card-body>
       <div id="project-info-footer" slot="footer">
-        <b-row>
+        <b-row align-v="center">
           <b-col>
             <b-link
-              class="font-weight-bold font-xs btn-block text-muted"
+              class="font-weight-bold font-xs text-muted"
               @click="initializeProjectDetailsModal"
               >{{ $t('message.view_details') }}
               <i class="fa fa-angle-right font-lg"></i
             ></b-link>
           </b-col>
-          <b-col v-if="project.externalReferences" md="auto">
-            <b-row class="d-none d-md-flex float-right">
-              <ExternalReferencesDropdown
-                :externalReferences="project.externalReferences"
-              />
-            </b-row>
+          <b-col md="auto" class="btn-spaced-group text-right">
+            <b-button
+              id="upload-bom-button"
+              v-if="!isCollectionProject"
+              variant="outline-primary"
+              v-b-modal.projectUploadBomModal
+              v-permission="PERMISSIONS.BOM_UPLOAD"
+            >
+              <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
+            </b-button>
+            <b-tooltip target="upload-bom-button" triggers="hover focus">{{
+              $t('message.upload_bom_tooltip')
+            }}</b-tooltip>
+
+            <b-button
+              id="apply-vex-button"
+              v-if="!isCollectionProject"
+              variant="outline-primary"
+              v-b-modal.projectUploadVexModal
+              v-permission:or="[
+                PERMISSIONS.VULNERABILITY_ANALYSIS,
+                PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+              ]"
+            >
+              <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
+            </b-button>
+            <b-tooltip target="apply-vex-button" triggers="hover focus">{{
+              $t('message.apply_vex_tooltip')
+            }}</b-tooltip>
+
+            <b-button
+              v-if="!isCollectionProject"
+              variant="outline-primary"
+              v-b-modal.projectExportModal
+              v-permission:or="[
+                PERMISSIONS.VIEW_PORTFOLIO,
+                PERMISSIONS.VIEW_VULNERABILITY,
+                PERMISSIONS.VULNERABILITY_ANALYSIS,
+                PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
+              ]"
+            >
+              <span class="fa fa-download"></span> {{ $t('message.export') }}
+            </b-button>
+
+            <b-button
+              id="reanalyze-button"
+              v-if="!isCollectionProject"
+              variant="outline-primary"
+              @click="reAnalyze()"
+              :disabled="isAnalysisRequested"
+              v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+            >
+              <span class="fa fa-refresh"></span>
+              {{ $t('message.project_reanalyze') }}
+            </b-button>
+            <b-tooltip
+              target="reanalyze-button"
+              triggers="hover focus"
+              :disabled="isAnalysisRequested"
+              >{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip
+            >
+
+            <ExternalReferencesDropdown
+              v-if="project.externalReferences"
+              class="d-none d-md-inline-block"
+              size="md"
+              :externalReferences="project.externalReferences"
+            />
           </b-col>
         </b-row>
       </div>
@@ -286,7 +385,6 @@
         <project-dashboard
           :key="this.uuid"
           :uuid="this.uuid"
-          :project="this.project"
           style="border-left: 0; border-right: 0; border-top: 0"
         />
       </b-tab>
@@ -427,6 +525,9 @@
     <project-properties-modal :key="this.uuid" :uuid="this.uuid" />
     <project-create-property-modal :uuid="this.uuid" />
     <project-add-version-modal :uuid="this.uuid" />
+    <project-upload-bom-modal :uuid="this.uuid" />
+    <project-upload-vex-modal :uuid="this.uuid" />
+    <project-export-modal :uuid="this.uuid" />
   </div>
 </template>
 
@@ -448,6 +549,9 @@ import ProjectDetailsModal from './ProjectDetailsModal';
 import ProjectPropertiesModal from './ProjectPropertiesModal';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
 import ProjectAddVersionModal from './ProjectAddVersionModal';
+import ProjectUploadBomModal from './ProjectUploadBomModal';
+import ProjectUploadVexModal from './ProjectUploadVexModal';
+import ProjectExportModal from './ProjectExportModal';
 import ProjectFindings from './ProjectFindings';
 import ProjectPolicyViolations from './ProjectPolicyViolations';
 import ProjectEpss from './ProjectEpss';
@@ -459,6 +563,9 @@ export default {
     ProjectPolicyViolations,
     ProjectFindings,
     ProjectAddVersionModal,
+    ProjectUploadBomModal,
+    ProjectUploadVexModal,
+    ProjectExportModal,
     ProjectCreatePropertyModal,
     ProjectPropertiesModal,
     ProjectDetailsModal,
@@ -545,6 +652,8 @@ export default {
       totalFindingsIncludingAliases: 0,
       totalEpss: 0,
       totalViolations: 0,
+      isAnalysisRequested: false,
+      nowTick: Date.now(),
       infoViolations: 0,
       warnViolations: 0,
       failViolations: 0,
@@ -624,6 +733,27 @@ export default {
     initializeProjectDetailsModal: function () {
       this.$root.$emit('initializeProjectDetailsModal');
     },
+    reAnalyze: function () {
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
+      this.axios
+        .post(url, null, {
+          // 409 means an analysis is already running, which gets its own
+          // message rather than the generic error toast.
+          validateStatus: (status) =>
+            status === 409 || (status >= 200 && status < 300),
+        })
+        .then((response) => {
+          if (response.status === 409) {
+            this.$toastr.i(this.$t('message.project_reanalyze_in_progress'));
+            return;
+          }
+          // A disabled button fires no mouse events, so its tooltip never gets
+          // the mouseleave that hides it. Close it before disabling.
+          this.$root.$emit('bv::hide::tooltip', 'reanalyze-button');
+          this.isAnalysisRequested = true;
+          this.$toastr.s(this.$t('message.project_reanalyze_requested'));
+        });
+    },
     routeTo(path) {
       if (path) {
         if (
@@ -646,6 +776,17 @@ export default {
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       let refName = tab && tab[1] ? tab[1].toLowerCase() : 'overview';
       return this.$refs[refName] || this.$refs['overview'];
+    },
+    relativeTime: function (timestamp) {
+      return timestamp
+        ? common.formatRelative(
+            this.nowTick - new Date(timestamp).getTime(),
+            this.$t.bind(this),
+          )
+        : 'n/a';
+    },
+    absoluteTime: function (timestamp) {
+      return timestamp ? common.formatTimestamp(timestamp, true) : '';
     },
     getCollectionLogicText: function (project) {
       return common.getCollectionLogicText(this, project);

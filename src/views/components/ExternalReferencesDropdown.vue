@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-dropdown size="sm" class="mr-2" variant="outline-primary" right>
+    <b-dropdown :size="size" class="mr-2" variant="outline-primary" right>
       <template #button-content>
         <span
           ><i
@@ -30,6 +30,10 @@
 export default {
   props: {
     externalReferences: Array,
+    size: {
+      type: String,
+      default: 'sm',
+    },
   },
   data() {
     return {
