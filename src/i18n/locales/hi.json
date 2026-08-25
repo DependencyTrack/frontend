@@ -159,8 +159,10 @@
     "internal_identification_error": "आंतरिक घटक पहचान को कतारबद्ध करते समय त्रुटि हुई। विवरण के लिए सर्वर लॉग देखें",
     "internal_identification_queued": "आंतरिक घटक पहचान पंक्तिबद्ध",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

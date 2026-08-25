@@ -159,8 +159,10 @@
     "internal_identification_error": "内部组件识别入队时发生错误。请查看服务器日志了解详细信息",
     "internal_identification_queued": "内部组件识别已加入队列",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

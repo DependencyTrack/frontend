@@ -159,8 +159,10 @@
     "internal_identification_error": "내부 컴포넌트 식별 작업을 큐에 등록하는 중 오류가 발생했습니다. 자세한 내용은 서버 로그를 확인하세요",
     "internal_identification_queued": "내부 컴포넌트 식별 작업이 큐에 등록되었습니다",
     "json_schema_form": {
+      "item_number": "{항목} {n}",
       "max_items": "최대 {n}개 항목. | 최대 {n}개 항목.",
       "min_items": "최소 {n}개 항목. | 최소 {n}개 항목.",
+      "no_items_configured": "설정된 {item}이(가) 없습니다.",
       "remove_item_aria": "항목 {n} 제거",
       "remove_named_item_aria": "{name} 제거",
       "test_summary": "성공 {passed}건, 실패 {failed}건, 건너뜀 {skipped}건"

@@ -159,8 +159,10 @@
     "internal_identification_error": "Сталася помилка при постановці в чергу ідентифікації внутрішнього компонента. Перевірте журнали сервера для отримання деталей",
     "internal_identification_queued": "Ідентифікацію внутрішнього компонента поставлено в чергу",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

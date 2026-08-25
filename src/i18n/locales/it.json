@@ -159,8 +159,10 @@
     "internal_identification_error": "Si è verificato un errore nell'accodamento dell'identificazione del componente interno. Controlla i log del server per i dettagli",
     "internal_identification_queued": "Identificazione del componente interno in coda",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null
