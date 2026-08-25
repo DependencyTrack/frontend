@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     // Move bootstrap-table's built-in toolbar controls (search, refresh, column
-    // toggle) into the filter bar so they appear in one cohesive row.
+    // toggle) into the filter bar so they appear in one row.
     //
     // This depends on bootstrap-table rendering `.search` / `.columns` divs as
     // direct children of `.fixed-table-toolbar` during its mounted() hook.
@@ -117,6 +117,23 @@ export default {
     },
     onFilterDismiss(name) {
       this.$set(this.pendingFilters, name, false);
+    },
+    clearAllFilters() {
+      this._clearing = true;
+      try {
+        this.allFilterDefs.forEach((def) => {
+          if (this.booleanFilters && this.booleanFilters.includes(def.name)) {
+            this[def.name] = false;
+          } else {
+            const key = def.name + 'Filter';
+            this[key] = Array.isArray(this[key]) ? [] : null;
+          }
+        });
+        this.clearPendingFilters();
+      } finally {
+        this._clearing = false;
+      }
+      this.refreshTable();
     },
     clearPendingFilters() {
       Object.keys(this.pendingFilters).forEach((k) => {

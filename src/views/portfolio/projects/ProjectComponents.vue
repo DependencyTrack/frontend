@@ -24,40 +24,6 @@
         >
           <span class="fa fa-minus"></span> {{ $t('message.remove_component') }}
         </b-button>
-        <b-button
-          id="upload-button"
-          size="md"
-          variant="outline-primary"
-          v-b-modal.projectUploadBomModal
-          v-permission="PERMISSIONS.BOM_UPLOAD"
-        >
-          <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
-        </b-button>
-        <b-tooltip target="upload-button" triggers="hover focus">{{
-          $t('message.upload_bom_tooltip')
-        }}</b-tooltip>
-        <b-dropdown
-          variant="outline-primary"
-          v-permission="PERMISSIONS.VIEW_PORTFOLIO"
-        >
-          <template #button-content>
-            <span class="fa fa-download"></span>
-            {{ $t('message.download_bom') }}
-          </template>
-          <b-dropdown-item @click="downloadBom('inventory')" href="#">{{
-            $t('message.inventory')
-          }}</b-dropdown-item>
-          <b-dropdown-item
-            @click="downloadBom('withVulnerabilities')"
-            v-permission:or="[
-              PERMISSIONS.VIEW_VULNERABILITY,
-              PERMISSIONS.VULNERABILITY_ANALYSIS,
-              PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-            ]"
-            href="#"
-            >{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item
-          >
-        </b-dropdown>
         <b-dropdown
           variant="outline-primary"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
@@ -120,7 +86,6 @@
       @total="onTotal"
       @visible-columns="onVisibleColumns"
     />
-    <project-upload-bom-modal :uuid="this.uuid" />
     <project-add-component-modal
       :uuid="this.uuid"
       v-on:refreshTable="refreshTable"
@@ -132,7 +97,6 @@
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
-import ProjectUploadBomModal from '@/views/portfolio/projects/ProjectUploadBomModal';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
@@ -197,7 +161,6 @@ function readSort() {
 export default {
   components: {
     cSwitch,
-    ProjectUploadBomModal,
     ProjectAddComponentModal,
     TokenPaginatedTable,
   },
@@ -547,39 +510,6 @@ export default {
         ? this.$refs.table.$refs.table
         : null;
     },
-    downloadBom(data) {
-      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
-      this.axios
-        .request({
-          responseType: 'blob',
-          url: url,
-          method: 'get',
-          params: {
-            format: 'json',
-            variant: data,
-            download: 'true',
-          },
-        })
-        .then((response) => {
-          const objectUrl = window.URL.createObjectURL(
-            new Blob([response.data]),
-          );
-          const link = document.createElement('a');
-          link.href = objectUrl;
-          let filename = 'bom.json';
-          const disposition = response.headers['content-disposition'];
-          if (disposition && disposition.indexOf('attachment') !== -1) {
-            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            const matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) {
-              filename = matches[1].replace(/['"]/g, '');
-            }
-          }
-          link.setAttribute('download', filename);
-          document.body.appendChild(link);
-          link.click();
-        });
-    },
     buildTableFile(items, fileType) {
       if (fileType !== 'csv') {
         return;
@@ -604,12 +534,7 @@ export default {
           header.map((h) => csvEscape(get(row, h, ''))).join(','),
         ),
       ].join('\r\n');
-      const url = window.URL.createObjectURL(new Blob([csv]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'componentTable.csv');
-      document.body.appendChild(link);
-      link.click();
+      common.saveBlob(new Blob([csv]), 'componentTable.csv');
     },
     async downloadTable(fileType) {
       const result = await this.downloadAllComponents();

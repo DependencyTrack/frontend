@@ -611,6 +611,40 @@ $common.trimToNull = function (value) {
   return value;
 };
 
+$common.saveBlob = function (blob, filename) {
+  const objectUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  // Revoking synchronously can cancel the download in some browsers.
+  setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
+};
+
+/*
+ * GETs an attachment and saves it under the filename from the server's
+ * Content-Disposition header, or fallbackFilename if the header has none.
+ */
+$common.downloadAttachment = function (axios, url, params, fallbackFilename) {
+  return axios
+    .request({ responseType: 'blob', url: url, method: 'get', params: params })
+    .then((response) => {
+      let filename = fallbackFilename;
+      const disposition = response.headers['content-disposition'];
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+        const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
+          disposition,
+        );
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '');
+        }
+      }
+      $common.saveBlob(new Blob([response.data]), filename);
+    });
+};
+
 $common.setQueryParams = function (url, params) {
   // During local development, the API base URL is empty,
   // leading to URLs such as "/api/v2/secrets".
@@ -726,6 +760,8 @@ export default {
   sleep: $common.sleep,
   toBoolean: $common.toBoolean,
   trimToNull: $common.trimToNull,
+  saveBlob: $common.saveBlob,
+  downloadAttachment: $common.downloadAttachment,
   setQueryParams: $common.setQueryParams,
   sameQueryParams: $common.sameQueryParams,
   OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX:
