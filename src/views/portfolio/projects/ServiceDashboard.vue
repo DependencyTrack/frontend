@@ -7,17 +7,7 @@
             {{ $t('message.service_vulnerabilities') }}
           </h4>
           <div class="small text-muted">
-            {{ $t('message.last_measurement') }}: {{ lastMeasurement
-            }}<b-link
-              v-permission:or="[
-                'PORTFOLIO_MANAGEMENT',
-                'PORTFOLIO_MANAGEMENT_READ',
-              ]"
-              class="font-weight-bold"
-              style="margin-left: 6px"
-              v-on:click="refreshMetrics"
-              ><i class="fa fa-refresh"></i
-            ></b-link>
+            {{ $t('message.last_measurement') }}: {{ lastMeasurement }}
           </div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block"> </b-col>
@@ -211,15 +201,6 @@ export default {
         metric.lastOccurrence,
         true,
       );
-    },
-    refreshMetrics() {
-      /*  TODO: Add when server supports service metrics
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${uuid}/refresh`;
-      this.axios.get(url).then((response) => {
-        this.$toastr.s(this.$t('message.metric_refresh_requested'));
-      });
-      */
     },
   },
   mounted() {

@@ -4,7 +4,10 @@
     size="lg"
     hide-header-close
     no-stacking
-    v-permission="'SYSTEM_CONFIGURATION'"
+    v-permission:or="[
+      PERMISSIONS.SYSTEM_CONFIGURATION,
+      PERMISSIONS.SYSTEM_CONFIGURATION_READ,
+    ]"
     :title="$t('message.alerts_tagged_with', { tag: this.tag })"
   >
     <bootstrap-table
@@ -25,6 +28,7 @@
 <script>
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import * as permissions from '../../../shared/permissions';
 import common from '../../../shared/common';
 
 export default {
@@ -67,6 +71,10 @@ export default {
     }, 50);
   },
   data() {
+    const canUntag = permissions.hasPermission([
+      permissions.SYSTEM_CONFIGURATION,
+      permissions.SYSTEM_CONFIGURATION_UPDATE,
+    ]);
     return {
       labelIcon: {
         dataOn: '\u2713',
@@ -91,6 +99,7 @@ export default {
       options: {
         buttons: {
           btnDeleteSelected: {
+            render: canUntag,
             icon: 'fa fa-minus',
             attributes: {
               title: this.$t('message.unassign_tag_from_selection'),
