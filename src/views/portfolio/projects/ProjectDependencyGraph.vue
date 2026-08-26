@@ -477,6 +477,8 @@ export default {
       return {
         id: this.nodeId,
         label: this.createNodeLabel(dependency),
+        displayLabel: this.createNodeDisplayLabel(dependency),
+        purl: dependency.purl || dependency.purlCoordinates || null,
         version: dependency.version,
         objectType: dependency.objectType || 'COMPONENT',
         uuid: dependency.uuid,
@@ -535,18 +537,15 @@ export default {
       }
     },
     createNodeLabel: function (identity) {
+      // Node identity, also used as key for cycle detection, hence the purl.
+      // createNodeDisplayLabel() provides what is actually rendered.
       // Could be a project or a directDependency object.
       // Projects don't have the objectType property.
       const isProject = !identity.objectType;
-      const purl = !isProject && (identity.purlCoordinates || identity.purl);
-      if (purl) {
-        // purls are percent-encoded per spec (npm scopes become %40); the graph
-        // is display-only, so decode for readability.
-        try {
-          return decodeURIComponent(purl);
-        } catch {
-          return purl;
-        }
+      if (!isProject && identity.purlCoordinates) {
+        return identity.purlCoordinates;
+      } else if (!isProject && identity.purl) {
+        return identity.purl;
       } else {
         let label = '';
         if (identity.groupId) {
@@ -561,6 +560,22 @@ export default {
         return label;
       }
     },
+    createNodeDisplayLabel: function (identity) {
+      // purls are percent-encoded per spec, which is unreadable in the graph
+      // (npm scopes become %40). Render group/name/version like the component
+      // view does; the verbatim purl stays available as the node's tooltip.
+      if (!identity.name) {
+        return null;
+      }
+      let label = identity.name;
+      if (identity.group) {
+        label = identity.group + ' ▸ ' + label;
+      }
+      if (identity.version) {
+        label = label + ' ▸ ' + identity.version;
+      }
+      return label;
+    },
     labelClassName: function (data) {
       if (
         this.$route.params.componentUuids &&
@@ -571,6 +586,7 @@ export default {
       return 'clickable-node';
     },
     renderContent: function (h, data) {
+      const label = data.displayLabel || data.label;
       if (
         this.highlightOutdatedComponents &&
         data.version &&
@@ -578,8 +594,8 @@ export default {
         data.latestVersion !== data.version
       ) {
         return (
-          <div style="white-space: nowrap;">
-            {data.label + ' '}
+          <div style="white-space: nowrap;" title={data.purl}>
+            {label + ' '}
             <i
               id={'icon' + data.id}
               class="fa fa-exclamation-triangle status-warning"
@@ -596,7 +612,11 @@ export default {
           </div>
         );
       } else {
-        return <div style="white-space: nowrap;">{data.label}</div>;
+        return (
+          <div style="white-space: nowrap;" title={data.purl}>
+            {label}
+          </div>
+        );
       }
     },
     onExpand: async function (e, data) {
