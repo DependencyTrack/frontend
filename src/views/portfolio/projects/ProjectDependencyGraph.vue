@@ -61,7 +61,6 @@ import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import { Switch as cSwitch } from '@coreui/vue';
-let pos = { top: 0, left: 0, x: 0, y: 0 };
 
 export default {
   mixins: [permissionsMixin],
@@ -365,7 +364,7 @@ export default {
     },
     transformDependenciesToOrgTreeWithSearchedDependency: function (
       dependencies,
-      treeNode,
+      _treeNode,
       onlySearched,
     ) {
       let children = [];
@@ -565,7 +564,7 @@ export default {
       }
       return 'clickable-node';
     },
-    renderContent: function (h, data) {
+    renderContent: function (_h, data) {
       if (
         this.highlightOutdatedComponents &&
         data.version &&
@@ -614,7 +613,7 @@ export default {
         }
       }
     },
-    onNodeClick: function (e, data) {
+    onNodeClick: function (_e, data) {
       this.$set(data, 'selectedKey', !data.selectedKey);
       if (data.objectType === 'COMPONENT') {
         this.$router.push({ path: '/components/' + data.uuid });

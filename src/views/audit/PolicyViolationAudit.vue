@@ -255,7 +255,7 @@ export default {
           field: 'policyCondition.policy.violationState',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               return common.formatViolationStateLabel(value);
             }
@@ -266,7 +266,7 @@ export default {
           field: 'type',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(
               common.capitalize(common.valueWithDefault(value, '')),
             );
@@ -276,7 +276,7 @@ export default {
           title: this.$t('message.policy_name'),
           field: 'policyCondition.policy.name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -284,7 +284,7 @@ export default {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (_value, row) => {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr(
                 '../../../components/' + row.component.uuid,
@@ -313,7 +313,7 @@ export default {
           title: this.$t('message.project_name'),
           field: 'project.name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../projects/' + row.project.uuid,
             );
@@ -329,7 +329,7 @@ export default {
           title: this.$t('message.occurred_on'),
           field: 'timestamp',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
           },
         },
@@ -345,7 +345,7 @@ export default {
           sortable: false,
           visible: false,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -354,7 +354,7 @@ export default {
           field: 'component.license',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (
               Object.prototype.hasOwnProperty.call(
                 row.component,
@@ -380,7 +380,7 @@ export default {
           field: 'component.scope',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -419,7 +419,7 @@ export default {
           return res;
         },
         url: this.apiUrl(),
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem(
               'PolicyViolationAuditPageSize',

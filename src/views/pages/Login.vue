@@ -103,7 +103,6 @@
 import axios from 'axios';
 import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import $ from 'jquery';
 import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import InformationalModal from '../modals/InformationalModal';
@@ -327,7 +326,7 @@ export default {
             });
         });
       })
-      .catch((err) => {
+      .catch(() => {
         // automatic fallback to login form when oidc availability check failed
         this.showLoginForm = true;
         this.$toastr.e(this.$t('message.oidc_availability_check_failed'));

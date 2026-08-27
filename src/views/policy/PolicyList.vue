@@ -53,7 +53,7 @@ export default {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
+    EventBus.$on('policyManagement:policies:rowDeleted', () => {
       this.refreshTable();
     });
   },
@@ -82,7 +82,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             return (
               common.formatNotificationLabel(row.violationState) +
               ` ${xssFilters.inHTMLData(value)}`
@@ -240,7 +240,7 @@ export default {
                 }
                 this.conditions.push({});
               },
-              removeCondition: function (condition, conditionIndex) {
+              removeCondition: function () {
                 this.conditions = [];
                 this.refreshPolicy();
                 //this.conditions.splice(conditionIndex, 1);
@@ -281,7 +281,7 @@ export default {
                     }
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -289,14 +289,14 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     EventBus.$emit(
                       'policyManagement:policies:rowDeleted',
                       index,
                     );
                     this.$toastr.s(this.$t('message.policy_deleted'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -313,7 +313,7 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     let p = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
@@ -323,7 +323,7 @@ export default {
                     this.projects = p;
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -349,7 +349,7 @@ export default {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
                   this.axios
                     .post(url)
-                    .then((response) => {
+                    .then(() => {
                       this.projects.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
                     })
@@ -409,7 +409,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('PolicyListPageSize', size.toString());
           }

@@ -94,7 +94,7 @@ export default {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
@@ -114,7 +114,7 @@ export default {
           title: this.$t('message.version'),
           field: 'component.version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (row.component.latestVersion) {
               if (
                 compareVersions(
@@ -156,7 +156,7 @@ export default {
           title: this.$t('message.group'),
           field: 'component.group',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -164,7 +164,7 @@ export default {
           title: this.$t('message.vulnerability'),
           field: 'vulnerability.vulnId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
@@ -214,7 +214,7 @@ export default {
           field: 'vulnerability.cvssV2BaseScore',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -226,7 +226,7 @@ export default {
           title: this.$t('message.cvss_v3'),
           field: 'vulnerability.cvssV3BaseScore',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -238,7 +238,7 @@ export default {
           title: this.$t('message.cvss_v4'),
           field: 'vulnerability.cvssV4Score',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -261,7 +261,7 @@ export default {
           field: 'analysis.isSuppressed',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },

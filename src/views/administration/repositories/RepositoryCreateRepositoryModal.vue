@@ -146,7 +146,7 @@ export default {
           password: this.password || null,
           enabled: this.enabled,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.repository_created'));
           this.$root.$emit(
@@ -154,7 +154,7 @@ export default {
             'repositoryCreateRepositoryModal',
           );
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
           this.$root.$emit(
             'bv::hide::modal',

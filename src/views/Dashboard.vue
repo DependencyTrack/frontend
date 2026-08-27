@@ -837,7 +837,7 @@ export default {
     },
     refreshMetrics() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/refresh`;
-      this.axios.get(url).then((response) => {
+      this.axios.get(url).then(() => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },

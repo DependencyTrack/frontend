@@ -47,7 +47,7 @@ export default {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('policyManagement:licenseGroups:rowDeleted', (index, row) => {
+    EventBus.$on('policyManagement:licenseGroups:rowDeleted', () => {
       this.refreshTable();
     });
   },
@@ -76,7 +76,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -190,7 +190,7 @@ export default {
                     );
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -198,14 +198,14 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     EventBus.$emit(
                       'policyManagement:licenseGroups:rowDeleted',
                       index,
                     );
                     this.$toastr.s(this.$t('message.license_group_deleted'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -217,7 +217,7 @@ export default {
                     this.syncVariables(response.data);
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -258,7 +258,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('LicenseGroupListPageSize', size.toString());
           }

@@ -235,7 +235,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -243,7 +243,7 @@ export default {
           title: this.$t('message.email'),
           field: 'email',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -251,7 +251,7 @@ export default {
           title: this.$t('message.phone'),
           field: 'phone',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -278,7 +278,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -306,7 +306,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -334,7 +334,7 @@ export default {
           title: this.$t('message.classification'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -342,7 +342,7 @@ export default {
           title: this.$t('message.direction'),
           field: 'direction',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -370,7 +370,7 @@ export default {
           title: this.$t('message.url'),
           field: 'url',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             let url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
@@ -383,7 +383,7 @@ export default {
           title: this.$t('message.type'),
           field: 'type',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -391,7 +391,7 @@ export default {
           title: this.$t('message.comment'),
           field: 'comment',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -427,7 +427,7 @@ export default {
           this.$emit('serviceUpdated', response.data);
           this.$toastr.s(this.$t('message.service_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -437,13 +437,13 @@ export default {
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.service_deleted'));
           this.$router.replace({
             path: '/projects/' + this.service.project.uuid,
           });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

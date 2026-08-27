@@ -12,7 +12,7 @@ import BootstrapTable from 'bootstrap-table/dist/bootstrap-table-vue.esm.js';
 import { handleTableLoadError } from '@/shared/utils';
 import xssFilters from 'xss-filters';
 
-$.fn.bootstrapTable.defaults.onLoadError = function (status, jqXHR) {
+$.fn.bootstrapTable.defaults.onLoadError = function (_status, jqXHR) {
   handleTableLoadError(jqXHR && jqXHR.responseJSON);
 };
 

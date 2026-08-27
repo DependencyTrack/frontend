@@ -1145,7 +1145,7 @@ function configRoutes() {
           path: 'project',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/projects/' + uuid, query: null };
@@ -1158,7 +1158,7 @@ function configRoutes() {
           path: 'component',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/components/' + uuid, query: null };
@@ -1174,7 +1174,7 @@ function configRoutes() {
             vulnId: route.query.vulnId,
           }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.source && query.vulnId) {
               return {
                 path: '/vulnerabilities/' + query.source + '/' + query.vulnId,
@@ -1189,7 +1189,7 @@ function configRoutes() {
           path: 'license',
           props: (route) => ({ licenseId: route.query.licenseId }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.licenseId) {
               let licenseId = query.licenseId;
               return { path: '/licenses/' + licenseId, query: null };
@@ -1233,7 +1233,7 @@ const router = new Router({
   routes: configRoutes(),
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const redirectToLogin = () => {
     next({ name: 'Login', query: { redirect: to.fullPath }, replace: true });
   };

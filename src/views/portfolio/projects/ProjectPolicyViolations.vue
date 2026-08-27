@@ -71,7 +71,7 @@ export default {
           field: 'policyCondition.policy.violationState',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               return common.formatViolationStateLabel(value);
             }
@@ -82,7 +82,7 @@ export default {
           field: 'type',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(
               common.capitalize(common.valueWithDefault(value, '')),
             );
@@ -92,7 +92,7 @@ export default {
           title: this.$t('message.policy_name'),
           field: 'policyCondition.policy.name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -100,7 +100,7 @@ export default {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (_value, row) => {
             if (row.component) {
               let url = xssFilters.uriInUnQuotedAttr(
                 '../../../components/' + row.component.uuid,
@@ -129,7 +129,7 @@ export default {
           title: this.$t('message.occurred_on'),
           field: 'timestamp',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
           },
         },
@@ -144,7 +144,7 @@ export default {
           field: 'analysis.isSuppressed',
           sortable: false,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -183,7 +183,7 @@ export default {
         detailView: true,
         detailViewIcon: true,
         detailViewByClick: false,
-        detailFormatter: (index, row) => {
+        detailFormatter: (_index, row) => {
           let projectUuid = this.uuid;
           return this.vueFormatter({
             i18n,
@@ -369,7 +369,7 @@ export default {
                     this.$toastr.s(this.$t('message.updated'));
                     this.updateAnalysisData(response.data);
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -389,7 +389,7 @@ export default {
         },
         url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem(
               'ProjectPolicyViolationsPageSize',

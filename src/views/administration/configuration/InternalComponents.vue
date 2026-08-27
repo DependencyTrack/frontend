@@ -99,10 +99,10 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/internal/identify`;
       this.axios
         .get(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('admin.internal_identification_queued'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.s(this.$t('admin.internal_identification_error'));
         });
     },

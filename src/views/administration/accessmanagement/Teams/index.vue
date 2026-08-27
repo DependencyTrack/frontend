@@ -79,7 +79,7 @@ export default {
           title: this.$t('admin.members'),
           field: 'members',
           sortable: false,
-          formatter(value, row) {
+          formatter(_value, row) {
             let count = 0;
             if (row.managedUsers) {
               count += row.managedUsers.length;

@@ -78,7 +78,7 @@ axios
 
     createVueApp();
   })
-  .catch(function (error) {
+  .catch(function () {
     console.log(
       'Cannot retrieve static/config.json from host. This is expected behavior in development environments.',
     );
