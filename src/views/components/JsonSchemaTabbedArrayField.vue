@@ -7,7 +7,7 @@
     />
 
     <b-nav v-if="currentValue.length" tabs>
-      <n-nav-item
+      <b-nav-item
         v-for="(item, index) in currentValue"
         :key="itemKeys[index]"
         :active="activeIndex === index"
@@ -21,7 +21,7 @@
           area-hidden="true"
         ></i>
         {{ itemLabel(item, index) }}
-      </n-nav-item>
+      </b-nav-item>
     </b-nav>
 
     <div v-if="currentValue.length" class="pt-3">
@@ -33,7 +33,7 @@
           :aria-label="removeItemAriaLabel(activeItem, activeIndex)"
           @click="removeItem(activeIndex)"
         >
-          <i class="fa fa-trash mr-1" area-hidden="true"></i>
+          <i class="fa fa-trash mr-1" aria-hidden="true"></i>
           {{ removeItemAriaLabel(activeItem, activeIndex) }}
         </b-button>
       </div>
@@ -228,7 +228,7 @@ export default {
         n: index + 1,
       });
     },
-    hasItemValidationError() {
+    hasItemValidationError(index) {
       return (
         Object.keys(this.nestedErrorMap[index] || {}).length > 0 ||
         Object.prototype.hasOwnProperty.call(this.validationErrors, index)
