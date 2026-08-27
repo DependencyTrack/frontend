@@ -83,7 +83,7 @@ export default {
       const errors = {};
       const sources = Array.isArray(config?.sources) ? config.sources : [];
       const names = sources.map((source) =>
-        typeof source?.name === string ? source.name.trim() : '',
+        typeof source?.name === 'string' ? source.name.trim() : '',
       );
 
       names.forEach((name, index) => {
@@ -98,11 +98,9 @@ export default {
           );
         }
 
-        if (sources.index?.enabled) {
-          if (
-            Array.isArray(sources[index].ecosystems) ||
-            sources[index].ecosystems.length === 0
-          ) {
+        if (sources[index]?.enabled) {
+          const ecosystems = sources[index]?.ecosystems;
+          if (!Array.isArray(ecosystems) || ecosystems.length === 0) {
             errors[`sources.${index}.ecosystems`] = this.$t(
               'validation.schema.min_items',
               { limit: 1 },
