@@ -163,7 +163,7 @@
             <div class="text-muted font-xs">
               <b-row>
                 <b-col class="text-lowercase font-weight-bold" md="auto">
-                  <span v-for="tag in project.tags">
+                  <span v-for="tag in project.tags" :key="tag.name">
                     <b-badge
                       :to="{ name: 'Projects', query: { tag: tag.name } }"
                       variant="tag"
