@@ -28,6 +28,8 @@ const LicenseList = () => import('@/views/portfolio/licenses/LicenseList');
 const PolicyManagement = () => import('@/views/policy/PolicyManagement');
 const VulnerabilityPolicyEditor = () =>
   import('@/views/policy/VulnerabilityPolicyEditor');
+const ComponentPolicyEditor = () =>
+  import('@/views/policy/ComponentPolicyEditor');
 const Project = () => import('@/views/portfolio/projects/Project');
 const PolicyViolationAudit = () => import('@/views/audit/PolicyViolationAudit');
 
@@ -329,6 +331,31 @@ function configRoutes() {
           },
         },
         {
+          path: 'policy/componentPolicies/new',
+          name: 'ComponentPolicyCreate',
+          component: ComponentPolicyEditor,
+          meta: {
+            title: i18n.t('message.policy_management'),
+            i18n: 'message.policy_management',
+            sectionPath: '/policy',
+            sectionName: 'Policy Management',
+            permissions: ['POLICY_MANAGEMENT', 'POLICY_MANAGEMENT_CREATE'],
+          },
+        },
+        {
+          path: 'policy/componentPolicies/:id',
+          name: 'ComponentPolicyEdit',
+          component: ComponentPolicyEditor,
+          props: (route) => ({ policyId: route.params.id }),
+          meta: {
+            title: i18n.t('message.policy_management'),
+            i18n: 'message.policy_management',
+            sectionPath: '/policy',
+            sectionName: 'Policy Management',
+            permissions: ['POLICY_MANAGEMENT', 'POLICY_MANAGEMENT_READ'],
+          },
+        },
+        {
           path: 'policy/vulnerability/new',
           name: 'VulnerabilityPolicyCreate',
           component: VulnerabilityPolicyEditor,
@@ -359,6 +386,7 @@ function configRoutes() {
           alias: [
             'policy/policies',
             'policy/licenseGroups',
+            'policy/componentPolicies',
             'policy/vulnerability',
           ],
           component: PolicyManagement,

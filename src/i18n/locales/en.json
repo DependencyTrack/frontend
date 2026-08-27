@@ -496,6 +496,7 @@
     "component_operating_system": "Operating system",
     "component_package_url_desc": "A Valid Package URL is required for libraries and frameworks. PURL syntax: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Platform",
+    "component_policies": "Component Policies",
     "component_properties": "Component Properties",
     "component_search": "Component Search",
     "component_spdx_license_desc": "Specifies the SPDX license ID of the component",

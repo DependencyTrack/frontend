@@ -495,6 +495,7 @@
     "component_operating_system": "Sistema operacional",
     "component_package_url_desc": "Um URL de pacote válido é necessário para bibliotecas e estruturas. Sintaxe PURL: pkg:tipo/namespace/nome@versão?qualificadores#subcaminho",
     "component_platform": "Plataforma",
+    "component_policies": null,
     "component_properties": "Propriedades do Componente",
     "component_search": "Pesquisa de Componentes",
     "component_spdx_license_desc": "Especifica o ID de licença SPDX do componente",

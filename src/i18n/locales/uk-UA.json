@@ -495,6 +495,7 @@
     "component_operating_system": "Операційна система",
     "component_package_url_desc": "Для бібліотек та фреймворків потрібна дійсна URL-адреса пакета. Синтаксис PURL: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Платформа",
+    "component_policies": null,
     "component_properties": "Властивості компонента",
     "component_search": "Пошук компонентів",
     "component_spdx_license_desc": "Визначає ідентифікатор ліцензії SPDX компонента",

@@ -495,6 +495,7 @@
     "component_operating_system": "ऑपरेटिंग सिस्टम",
     "component_package_url_desc": "लाइब्रेरीज़ और फ़्रेमवर्क के लिए एक मान्य पैकेज URL आवश्यक है। PURL सिंटैक्स: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "प्लैटफ़ॉर्म",
+    "component_policies": null,
     "component_properties": "घटक गुण",
     "component_search": "घटक खोज",
     "component_spdx_license_desc": "घटक की SPDX लाइसेंस आईडी निर्दिष्ट करता है",

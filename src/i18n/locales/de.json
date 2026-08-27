@@ -495,6 +495,7 @@
     "component_operating_system": "Betriebssystem",
     "component_package_url_desc": "Für Bibliotheken und Frameworks ist eine gültige Paket-URL erforderlich. PURL-Syntax: pkg:type/namespace/name@version?qualifiers#subpath",
     "component_platform": "Plattform",
+    "component_policies": null,
     "component_properties": "Komponenteneigenschaften",
     "component_search": "Komponentensuche",
     "component_spdx_license_desc": "Gibt die SPDX-Lizenz-ID der Komponente an",

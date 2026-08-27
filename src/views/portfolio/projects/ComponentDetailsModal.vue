@@ -462,6 +462,7 @@
     </b-tabs>
     <template v-slot:modal-footer="{ cancel }">
       <b-button
+        v-if="component && component.manuallyCreated"
         size="md"
         variant="outline-danger"
         @click="deleteComponent()"
@@ -482,6 +483,7 @@
         $t('message.close')
       }}</b-button>
       <b-button
+        v-if="component && component.manuallyCreated"
         size="md"
         variant="primary"
         @click="updateComponent()"
@@ -649,6 +651,17 @@ export default {
     //console.log(this.component);
   },
   methods: {
+    // Imported components are managed by SBOM uploads and curated via
+    // component analyses and component policies, so their details are
+    // read-only. Only manually created components are editable, subject to
+    // the caller's regular permissions.
+    isNotPermitted(permissions) {
+      return (
+        !(this.component && this.component.manuallyCreated) ||
+        !this.isPermitted(permissions)
+      );
+    },
+
     updateComponent: function () {
       this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
