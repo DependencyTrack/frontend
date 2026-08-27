@@ -11,58 +11,55 @@
         v-for="(item, index) in currentValue"
         :key="itemKeys[index]"
         :active="activeIndex === index"
-        :class="{ 'text=danger': hasItemValidationError(index) }"
+        :class="{ 'text-danger': hasItemValidationError(index) }"
         @click="selectTab(index)"
       >
         <i
           v-if="hasItemValidationError(index)"
           class="fa fa-exclamation-circle text-danger mr-1"
           :title="$t('validation.schema.validation_failed')"
-          area-hidden="true"
+          aria-hidden="true"
         ></i>
         {{ itemLabel(item, index) }}
       </b-nav-item>
     </b-nav>
 
     <div v-if="currentValue.length" class="pt-3">
-      <div class="text-right mb-2">
-        <b-button
-          variant="outline-danger"
-          size="sm"
-          :disabled="!canRemoveItems"
-          :aria-label="removeItemAriaLabel(activeItem, activeIndex)"
-          @click="removeItem(activeIndex)"
-        >
-          <i class="fa fa-trash mr-1" aria-hidden="true"></i>
-          {{ removeItemAriaLabel(activeItem, activeIndex) }}
-        </b-button>
-      </div>
-      <div v-for="(propSchema, propName) in itemProperties" :key="propName">
-        <json-schema-form-field
-          :schema="enrichSchema(propSchema, propName, itemSchema)"
-          :property-name="`${propertyName}[${activeIndex}].${propName}`"
-          :value="activeItem[propName]"
-          :validation-error="activeItemValidationErrors[propName]"
-          :validation-errors="activeNestedErrorMap[propName] || {}"
-          :is-array-item="true"
-          @input="onPropertyChange(propName, $event)"
-        />
-      </div>
+      <json-schema-object-field
+        :schema="itemSchema"
+        :property-name="`${propertyName}[${activeIndex}]`"
+        :value="activeItem"
+        :validation-errors="activeItemValidationErrors"
+        @input="onItemChange"
+      />
     </div>
 
     <p v-else class="text-muted mb-2">
       {{ emptyMessage }}
     </p>
 
-    <b-button
-      variant="outline-primary"
-      size="sm"
-      :disabled="isMaxItemsReached"
-      @click="addItem"
-    >
-      <i class="fa fa-plus"></i>
-      {{ addButtonText }}
-    </b-button>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <b-button
+        variant="outline-primary"
+        size="sm"
+        :disabled="isMaxItemsReached"
+        @click="addItem"
+      >
+        <i class="fa fa-plus"></i>
+        {{ addButtonText }}
+      </b-button>
+
+      <b-button
+        variant="outline-danger"
+        size="sm"
+        :disabled="!canRemoveItems"
+        :aria-label="removeItemAriaLabel(activeItem, activeIndex)"
+        @click="removeItem(activeIndex)"
+      >
+        <i class="fa fa-trash mr-1" aria-hidden="true"></i>
+        {{ removeItemAriaLabel(activeItem, activeIndex) }}
+      </b-button>
+    </div>
 
     <small
       v-if="!validationError && (schema.minItems || schema.maxItems)"
@@ -290,10 +287,9 @@ export default {
       }
       this.$emit('input', newArray);
     },
-    onPropertyChange(propName, propValue) {
-      const newItem = { ...this.activeItem, [propName]: propValue };
-      const newArray = this.currentValue.slice();
-      newArray[this.activeIndex] = newItem;
+    onItemChange(item) {
+      const newArray = [...this.currentValue];
+      newArray[this.activeIndex] = item;
       this.$emit('input', newArray);
     },
     removeItemAriaLabel(item, index) {
