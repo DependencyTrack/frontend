@@ -172,7 +172,6 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
   analyzer,
   vulnSource,
   vulnId,
-  alternateIdentifier,
   referenceUrl,
 ) {
   if (!analyzer) {

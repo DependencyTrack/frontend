@@ -26,7 +26,6 @@ import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import i18n from '../../../i18n';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
 import ActionableListGroupItem from '../../components/ActionableListGroupItem';
 import SelectProjectModal from './SelectProjectModal';
 import permissionsMixin from '../../../mixins/permissionsMixin';
@@ -55,7 +54,7 @@ export default {
           title: this.$t('admin.team_name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -77,7 +76,7 @@ export default {
         detailView: true,
         detailViewIcon: false,
         detailViewByClick: true,
-        detailFormatter: (index, row) => {
+        detailFormatter: (_index, row) => {
           return this.vueFormatter({
             i18n,
             template: `
@@ -141,7 +140,7 @@ export default {
                       team: this.team.uuid,
                       project: selection.uuid,
                     })
-                    .then((response) => {
+                    .then(() => {
                       if (
                         this.projects === undefined ||
                         this.projects === null
@@ -171,7 +170,7 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}/team/${this.team.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     let k = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
@@ -181,7 +180,7 @@ export default {
                     this.projects = k;
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -193,7 +192,7 @@ export default {
                 .then((response) => {
                   this.projects = response.data;
                 })
-                .catch((error) => {
+                .catch(() => {
                   this.$toastr.w(this.$t('condition.unsuccessful_action'));
                 });
             },
@@ -234,10 +233,10 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
       this.axios
         .post(url, props)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('admin.configuration_saved'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

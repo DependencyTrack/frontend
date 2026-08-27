@@ -44,7 +44,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../services/' + row.uuid,
             );
@@ -55,7 +55,7 @@ export default {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -65,7 +65,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -75,7 +75,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -89,7 +89,7 @@ export default {
           title: this.$t('message.vulnerabilities'),
           field: 'metrics',
           sortable: false,
-          formatter: function (metrics, row, index) {
+          formatter: function (metrics) {
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
@@ -147,7 +147,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/project/${this.uuid}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectServicesPageSize', size.toString());
           }

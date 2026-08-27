@@ -50,7 +50,7 @@ export default {
           title: this.$t('admin.oidc_group_name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },

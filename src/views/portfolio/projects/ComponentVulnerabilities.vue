@@ -34,7 +34,7 @@ export default {
           title: this.$t('message.name'),
           field: 'vulnId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../vulnerabilities/' + row.source + '/' + value,
             );
@@ -48,7 +48,7 @@ export default {
           title: this.$t('message.aliases'),
           field: 'aliases',
           visible: false,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (typeof value !== 'undefined') {
               let label = '';
               const aliases = common.resolveVulnAliases(row.source, value);
@@ -72,7 +72,7 @@ export default {
           title: this.$t('message.published'),
           field: 'published',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               return common.formatTimestamp(value);
             }
@@ -82,7 +82,7 @@ export default {
           title: this.$t('message.cwe'),
           field: 'cwes',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               let s = '';
               for (let i = 0; i < value.length; i++) {
@@ -100,7 +100,7 @@ export default {
           title: this.$t('message.severity'),
           field: 'severity',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               return common.formatSeverityLabel(value);
             }
@@ -120,7 +120,7 @@ export default {
           sortable: false,
           class: 'tight',
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -129,7 +129,7 @@ export default {
           field: 'cvssV2BaseScore',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -142,7 +142,7 @@ export default {
           field: 'cvssV3BaseScore',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -155,7 +155,7 @@ export default {
           field: 'cvssV4Score',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -210,7 +210,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_VULNERABILITY}/component/${this.uuid}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem(
               'ComponentVulnerabilitiesPageSize',

@@ -62,7 +62,7 @@ export default {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:repository:rowDeleted', (index, row) => {
+    EventBus.$on('admin:repository:rowDeleted', () => {
       this.refreshTable();
     });
   },
@@ -77,7 +77,7 @@ export default {
           title: this.$t('admin.identifier'),
           field: 'identifier',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -85,7 +85,7 @@ export default {
           title: this.$t('admin.url'),
           field: 'url',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -94,7 +94,7 @@ export default {
           field: 'internal',
           class: 'tight',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -103,7 +103,7 @@ export default {
           field: 'authenticationRequired',
           class: 'tight',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -112,7 +112,7 @@ export default {
           field: 'enabled',
           class: 'tight',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -204,11 +204,11 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     EventBus.$emit('admin:repository:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.repository_deleted'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -234,7 +234,7 @@ export default {
                     );
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },

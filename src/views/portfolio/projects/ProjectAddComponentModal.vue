@@ -309,11 +309,11 @@ export default {
           sha3_512: this.component.sha3_512,
           notes: this.component.notes,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.component_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       this.resetValues();
@@ -357,7 +357,7 @@ export default {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
