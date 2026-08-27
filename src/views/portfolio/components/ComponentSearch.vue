@@ -1,140 +1,107 @@
 <template>
   <div class="componentSearch animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <div
-      id="componentSearchToolbar"
-      class="filter-bar"
-      role="toolbar"
-      :aria-label="$t('message.filters')"
+    <filter-bar
+      toolbar-id="componentSearchToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
     >
-      <div class="filter-pills">
-        <text-filter-pill
-          v-if="isFilterVisible('group')"
-          ref="filter_group"
-          :field-label="$t('message.group')"
-          field-name="group"
-          icon="fa-archive"
-          operator="contains"
-          v-model="groupFilter"
-          @dismiss="onFilterDismiss('group')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('name')"
-          ref="filter_name"
-          :field-label="$t('message.name')"
-          field-name="name"
-          icon="fa-cube"
-          operator="contains"
-          v-model="nameFilter"
-          @dismiss="onFilterDismiss('name')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('version')"
-          ref="filter_version"
-          :field-label="$t('message.version')"
-          field-name="version"
-          icon="fa-bookmark-o"
-          operator="contains"
-          v-model="versionFilter"
-          @dismiss="onFilterDismiss('version')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('purl')"
-          ref="filter_purl"
-          :field-label="$t('message.package_url')"
-          field-name="purl"
-          icon="fa-gift"
-          operator="starts_with"
-          v-model="purlFilter"
-          @dismiss="onFilterDismiss('purl')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('cpe')"
-          ref="filter_cpe"
-          :field-label="$t('message.cpe')"
-          field-name="cpe"
-          icon="fa-shield"
-          operator="equals"
-          v-model="cpeFilter"
-          @dismiss="onFilterDismiss('cpe')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('swidTagId')"
-          ref="filter_swidTagId"
-          :field-label="$t('message.swid_tagid')"
-          field-name="swid_tag_id"
-          icon="fa-tag"
-          operator="contains"
-          v-model="swidTagIdFilter"
-          @dismiss="onFilterDismiss('swidTagId')"
-        />
-        <hash-filter-pill
-          v-if="isFilterVisible('hash')"
-          ref="filter_hash"
-          field-name="hash"
-          :field-label="$t('message.hashes_short_desc')"
-          :hash-types="hashTypeOptions"
-          v-model="hashFilter"
-          @dismiss="onFilterDismiss('hash')"
-        />
-        <date-time-range-filter-pill
-          v-if="isFilterVisible('published')"
-          ref="filter_published"
-          :field-label="$t('message.published')"
-          field-name="package_artifact_published"
-          icon="fa-calendar"
-          date-only
-          emit-date-as-millis
-          v-model="publishedFilter"
-          @dismiss="onFilterDismiss('published')"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('showInactive')"
-          :field-label="$t('message.show_inactive_projects')"
-          field-name="showInactive"
-          icon="fa-eye"
-          v-model="showInactive"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('onlyLatestVersion')"
-          :field-label="$t('message.only_latest_project_versions')"
-          field-name="onlyLatestVersion"
-          icon="fa-bookmark"
-          v-model="onlyLatestVersion"
-        />
-        <b-dropdown
-          v-if="addFilterOptions.length > 0"
-          size="sm"
-          variant="outline-primary"
-          class="btn-more-filters"
-          no-caret
-        >
-          <template #button-content>
-            <span class="fa fa-plus" aria-hidden="true"></span>
-            {{ $t('message.add_filter') }}
-          </template>
-          <b-dropdown-item
-            v-for="filter in addFilterOptions"
-            :key="filter.name"
-            @click="showFilter(filter.name)"
-            ><span
-              :class="['fa', filter.icon, 'mr-2']"
-              aria-hidden="true"
-            ></span
-            >{{ filter.label }}</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-button
-          v-show="activeFilterCount >= 2"
-          size="sm"
-          variant="outline-danger"
-          class="btn-clear-all-filters"
-          @click="clearAllFilters"
-        >
-          <span class="fa fa-remove" aria-hidden="true"></span>
-          {{ $t('message.clear_all') }}
-        </b-button>
-      </div>
-    </div>
+      <text-filter-pill
+        v-if="isFilterVisible('group')"
+        ref="filter_group"
+        :field-label="$t('message.group')"
+        field-name="group"
+        icon="fa-archive"
+        operator="contains"
+        v-model="groupFilter"
+        @dismiss="onFilterDismiss('group')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('name')"
+        ref="filter_name"
+        :field-label="$t('message.name')"
+        field-name="name"
+        icon="fa-cube"
+        operator="contains"
+        v-model="nameFilter"
+        @dismiss="onFilterDismiss('name')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('version')"
+        ref="filter_version"
+        :field-label="$t('message.version')"
+        field-name="version"
+        icon="fa-bookmark-o"
+        operator="contains"
+        v-model="versionFilter"
+        @dismiss="onFilterDismiss('version')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('purl')"
+        ref="filter_purl"
+        :field-label="$t('message.package_url')"
+        field-name="purl"
+        icon="fa-gift"
+        operator="starts_with"
+        v-model="purlFilter"
+        @dismiss="onFilterDismiss('purl')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('cpe')"
+        ref="filter_cpe"
+        :field-label="$t('message.cpe')"
+        field-name="cpe"
+        icon="fa-shield"
+        operator="equals"
+        v-model="cpeFilter"
+        @dismiss="onFilterDismiss('cpe')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('swidTagId')"
+        ref="filter_swidTagId"
+        :field-label="$t('message.swid_tagid')"
+        field-name="swid_tag_id"
+        icon="fa-tag"
+        operator="contains"
+        v-model="swidTagIdFilter"
+        @dismiss="onFilterDismiss('swidTagId')"
+      />
+      <hash-filter-pill
+        v-if="isFilterVisible('hash')"
+        ref="filter_hash"
+        field-name="hash"
+        :field-label="$t('message.hashes_short_desc')"
+        :hash-types="hashTypeOptions"
+        v-model="hashFilter"
+        @dismiss="onFilterDismiss('hash')"
+      />
+      <date-time-range-filter-pill
+        v-if="isFilterVisible('published')"
+        ref="filter_published"
+        :field-label="$t('message.published')"
+        field-name="package_artifact_published"
+        icon="fa-calendar"
+        date-only
+        emit-date-as-millis
+        v-model="publishedFilter"
+        @dismiss="onFilterDismiss('published')"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showInactive')"
+        :field-label="$t('message.show_inactive_projects')"
+        field-name="showInactive"
+        icon="fa-eye"
+        v-model="showInactive"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyLatestVersion')"
+        :field-label="$t('message.only_latest_project_versions')"
+        field-name="onlyLatestVersion"
+        icon="fa-bookmark"
+        v-model="onlyLatestVersion"
+      />
+    </filter-bar>
     <token-paginated-table
       ref="table"
       :base-url="tableDataBaseUrl"
@@ -157,6 +124,7 @@ import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import xssFilters from 'xss-filters';
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
+import FilterBar from '@/views/components/FilterBar.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import HashFilterPill from '@/views/components/HashFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
@@ -203,6 +171,7 @@ function initialColumnVisible(field) {
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, filterPillsMixin],
   components: {
+    FilterBar,
     TokenPaginatedTable,
     TextFilterPill,
     HashFilterPill,
@@ -629,5 +598,3 @@ export default {
   },
 };
 </script>
-
-<style scoped src="../../components/filter-pills.css"></style>

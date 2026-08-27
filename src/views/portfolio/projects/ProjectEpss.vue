@@ -12,61 +12,28 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div
-      id="epssToolbar"
-      class="filter-bar"
-      role="toolbar"
-      :aria-label="$t('message.filters')"
+    <filter-bar
+      toolbar-id="epssToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
     >
-      <div class="filter-pills">
-        <boolean-filter-pill
-          v-if="isFilterVisible('showSuppressedFindings')"
-          :field-label="$t('message.show_suppressed_findings')"
-          field-name="showSuppressedFindings"
-          icon="fa-eye"
-          v-model="showSuppressedFindings"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('showKevOnly')"
-          :field-label="$t('message.kev')"
-          field-name="showKevOnly"
-          icon="fa-crosshairs"
-          v-model="showKevOnly"
-        />
-        <b-dropdown
-          v-if="addFilterOptions.length > 0"
-          size="sm"
-          variant="outline-primary"
-          class="btn-more-filters"
-          no-caret
-        >
-          <template #button-content>
-            <span class="fa fa-plus" aria-hidden="true"></span>
-            {{ $t('message.add_filter') }}
-          </template>
-          <b-dropdown-item
-            v-for="filter in addFilterOptions"
-            :key="filter.name"
-            @click="showFilter(filter.name)"
-            ><span
-              :class="['fa', filter.icon, 'mr-2']"
-              aria-hidden="true"
-            ></span
-            >{{ filter.label }}</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-button
-          v-show="activeFilterCount >= 2"
-          size="sm"
-          variant="outline-danger"
-          class="btn-clear-all-filters"
-          @click="clearAllFilters"
-        >
-          <span class="fa fa-remove" aria-hidden="true"></span>
-          {{ $t('message.clear_all') }}
-        </b-button>
-      </div>
-    </div>
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressedFindings')"
+        :field-label="$t('message.show_suppressed_findings')"
+        field-name="showSuppressedFindings"
+        icon="fa-eye"
+        v-model="showSuppressedFindings"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showKevOnly')"
+        :field-label="$t('message.kev')"
+        field-name="showKevOnly"
+        icon="fa-crosshairs"
+        v-model="showKevOnly"
+      />
+    </filter-bar>
 
     <bootstrap-table
       ref="table"
@@ -92,6 +59,7 @@ import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
+import FilterBar from '../../components/FilterBar.vue';
 import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
 import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
 import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
@@ -102,6 +70,7 @@ export default {
   },
   mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
+    FilterBar,
     BooleanFilterPill,
     BootstrapToggle,
     ChartEpssVsCvss,
@@ -417,5 +386,3 @@ export default {
   },
 };
 </script>
-
-<style scoped src="../../components/filter-pills.css"></style>

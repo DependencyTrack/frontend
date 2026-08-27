@@ -81,6 +81,9 @@ export default {
         el.style.alignSelf = 'flex-start';
         el.style.borderLeft = '1px solid rgb(255 255 255 / 10%)';
         el.style.paddingLeft = '0.5rem';
+        el.querySelectorAll('.form-control').forEach((input) => {
+          input.classList.add('form-control-sm');
+        });
         el.querySelectorAll('.btn').forEach((btn) => {
           if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
             const title = btn.getAttribute('title') || btn.getAttribute('name');
@@ -133,7 +136,9 @@ export default {
       } finally {
         this._clearing = false;
       }
-      this.refreshTable();
+      if (typeof this.refreshTable === 'function') {
+        this.refreshTable();
+      }
     },
     clearPendingFilters() {
       Object.keys(this.pendingFilters).forEach((k) => {

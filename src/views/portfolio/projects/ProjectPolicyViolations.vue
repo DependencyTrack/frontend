@@ -4,18 +4,21 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="violationsToolbar" class="bs-table-custom-toolbar">
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedViolations"
-        color="primary"
+    <filter-bar
+      toolbar-id="violationsToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressedViolations')"
+        :field-label="$t('message.show_suppressed_violations')"
+        field-name="showSuppressedViolations"
+        icon="fa-eye"
         v-model="showSuppressedViolations"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_violations')
-      }}</span>
-    </div>
+      />
+    </filter-bar>
 
     <bootstrap-table
       ref="table"
@@ -29,10 +32,12 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import common from '../../../shared/common';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import FilterBar from '../../components/FilterBar.vue';
+import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
 import xssFilters from 'xss-filters';
 import i18n from '../../../i18n';
 import BootstrapToggle from 'vue-bootstrap-toggle';
@@ -43,29 +48,23 @@ export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
-    cSwitch,
+    FilterBar,
+    BooleanFilterPill,
     BootstrapToggle,
   },
   beforeCreate() {
     this.showSuppressedViolations =
-      localStorage &&
+      !!localStorage &&
       localStorage.getItem(
         'ProjectPolicyViolationsShowSuppressedViolations',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectPolicyViolationsShowSuppressedViolations',
-          ) === 'true'
-        : false;
+      ) === 'true';
   },
   data() {
     return {
       showSuppressedViolations: this.showSuppressedViolations,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      booleanFilters: ['showSuppressedViolations'],
       columns: [
         {
           title: this.$t('message.state'),
@@ -428,8 +427,14 @@ export default {
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
+        pageNumber: 1,
         silent: true,
       });
+    },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
+      }
     },
     tableLoaded: function (data) {
       loadUserPreferencesForBootstrapTable(
@@ -445,15 +450,23 @@ export default {
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showSuppressedViolations',
+          label: this.$t('message.show_suppressed_violations'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedViolations() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectPolicyViolationsShowSuppressedViolations',
-          this.showSuppressedViolations.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedViolations(value) {
+      this.persistFilter(
+        'ProjectPolicyViolationsShowSuppressedViolations',
+        value,
+      );
     },
   },
 };

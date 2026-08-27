@@ -1,110 +1,77 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_POLICY_VIOLATION">
-    <div
-      id="policyViolationAuditToolbar"
-      class="filter-bar"
-      role="toolbar"
-      :aria-label="$t('message.filters')"
+    <filter-bar
+      toolbar-id="policyViolationAuditToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
     >
-      <div class="filter-pills">
-        <multi-select-filter-pill
-          v-if="isFilterVisible('violationState')"
-          ref="filter_violationState"
-          :field-label="$t('message.violation_state')"
-          field-name="violationState"
-          icon="fa-exclamation-circle"
-          :options="violationStateOptions"
-          v-model="violationStateFilter"
-          @dismiss="onFilterDismiss('violationState')"
-        />
-        <multi-select-filter-pill
-          v-if="isFilterVisible('riskType')"
-          ref="filter_riskType"
-          :field-label="$t('message.risk_type')"
-          field-name="riskType"
-          icon="fa-shield"
-          :options="riskTypeOptions"
-          v-model="riskTypeFilter"
-          @dismiss="onFilterDismiss('riskType')"
-        />
-        <multi-select-filter-pill
-          v-if="isFilterVisible('analysisState')"
-          ref="filter_analysisState"
-          :field-label="$t('message.analysis_state')"
-          field-name="analysisState"
-          icon="fa-tasks"
-          :options="analysisStateOptions"
-          v-model="analysisStateFilter"
-          @dismiss="onFilterDismiss('analysisState')"
-        />
-        <text-search-filter-pill
-          v-if="isFilterVisible('textSearch')"
-          ref="filter_textSearch"
-          :field-label="$t('message.search')"
-          field-name="textSearch"
-          icon="fa-search"
-          :fields="textSearchFields"
-          v-model="textSearchFilter"
-          @dismiss="onFilterDismiss('textSearch')"
-        />
-        <date-time-range-filter-pill
-          v-if="isFilterVisible('occurredOn')"
-          ref="filter_occurredOn"
-          :field-label="$t('message.occurred_on')"
-          field-name="occurredOn"
-          icon="fa-calendar"
-          date-only
-          v-model="occurredOnFilter"
-          @dismiss="onFilterDismiss('occurredOn')"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('showInactive')"
-          :field-label="$t('message.show_inactive_projects')"
-          field-name="showInactive"
-          icon="fa-eye"
-          v-model="showInactive"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('showSuppressed')"
-          :field-label="$t('message.show_suppressed_violations')"
-          field-name="showSuppressed"
-          icon="fa-eye"
-          v-model="showSuppressed"
-        />
-        <b-dropdown
-          v-if="addFilterOptions.length > 0"
-          size="sm"
-          variant="outline-primary"
-          class="btn-more-filters"
-          no-caret
-        >
-          <template #button-content>
-            <span class="fa fa-plus" aria-hidden="true"></span>
-            {{ $t('message.add_filter') }}
-          </template>
-          <b-dropdown-item
-            v-for="filter in addFilterOptions"
-            :key="filter.name"
-            @click="showFilter(filter.name)"
-            ><span
-              :class="['fa', filter.icon, 'mr-2']"
-              aria-hidden="true"
-            ></span
-            >{{ filter.label }}</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-button
-          v-show="activeFilterCount >= 2"
-          size="sm"
-          variant="outline-danger"
-          class="btn-clear-all-filters"
-          @click="clearAllFilters"
-        >
-          <span class="fa fa-remove" aria-hidden="true"></span>
-          {{ $t('message.clear_all') }}
-        </b-button>
-      </div>
-    </div>
+      <multi-select-filter-pill
+        v-if="isFilterVisible('violationState')"
+        ref="filter_violationState"
+        :field-label="$t('message.violation_state')"
+        field-name="violationState"
+        icon="fa-exclamation-circle"
+        :options="violationStateOptions"
+        v-model="violationStateFilter"
+        @dismiss="onFilterDismiss('violationState')"
+      />
+      <multi-select-filter-pill
+        v-if="isFilterVisible('riskType')"
+        ref="filter_riskType"
+        :field-label="$t('message.risk_type')"
+        field-name="riskType"
+        icon="fa-shield"
+        :options="riskTypeOptions"
+        v-model="riskTypeFilter"
+        @dismiss="onFilterDismiss('riskType')"
+      />
+      <multi-select-filter-pill
+        v-if="isFilterVisible('analysisState')"
+        ref="filter_analysisState"
+        :field-label="$t('message.analysis_state')"
+        field-name="analysisState"
+        icon="fa-tasks"
+        :options="analysisStateOptions"
+        v-model="analysisStateFilter"
+        @dismiss="onFilterDismiss('analysisState')"
+      />
+      <text-search-filter-pill
+        v-if="isFilterVisible('textSearch')"
+        ref="filter_textSearch"
+        :field-label="$t('message.search')"
+        field-name="textSearch"
+        icon="fa-search"
+        :fields="textSearchFields"
+        v-model="textSearchFilter"
+        @dismiss="onFilterDismiss('textSearch')"
+      />
+      <date-time-range-filter-pill
+        v-if="isFilterVisible('occurredOn')"
+        ref="filter_occurredOn"
+        :field-label="$t('message.occurred_on')"
+        field-name="occurredOn"
+        icon="fa-calendar"
+        date-only
+        v-model="occurredOnFilter"
+        @dismiss="onFilterDismiss('occurredOn')"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showInactive')"
+        :field-label="$t('message.show_inactive_projects')"
+        field-name="showInactive"
+        icon="fa-eye"
+        v-model="showInactive"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressed')"
+        :field-label="$t('message.show_suppressed_violations')"
+        field-name="showSuppressed"
+        icon="fa-eye"
+        v-model="showSuppressed"
+      />
+    </filter-bar>
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -122,6 +89,7 @@ import filterPillsMixin from '@/mixins/filterPillsMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
+import FilterBar from '@/views/components/FilterBar.vue';
 import MultiSelectFilterPill from '@/views/components/MultiSelectFilterPill.vue';
 import TextSearchFilterPill from '@/views/components/TextSearchFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
@@ -130,6 +98,7 @@ import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 export default {
   mixins: [permissionsMixin, filterPillsMixin],
   components: {
+    FilterBar,
     MultiSelectFilterPill,
     TextSearchFilterPill,
     DateTimeRangeFilterPill,
@@ -477,5 +446,3 @@ export default {
   },
 };
 </script>
-
-<style scoped src="../components/filter-pills.css"></style>
