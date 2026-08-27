@@ -1,81 +1,74 @@
 <template>
   <div>
-    <div id="componentsToolbar">
-      <div class="btn-spaced-group" role="form">
+    <filter-bar
+      toolbar-id="componentsToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyOutdated')"
+        :field-label="$t('message.outdated')"
+        field-name="onlyOutdated"
+        icon="fa-exclamation-triangle"
+        v-model="onlyOutdated"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyDirect')"
+        :field-label="$t('message.direct')"
+        field-name="onlyDirect"
+        icon="fa-level-down"
+        v-model="onlyDirect"
+      />
+      <template #actions>
         <b-button
-          size="md"
+          size="sm"
           variant="outline-primary"
+          :title="$t('message.add_component')"
           v-b-modal.projectAddComponentModal
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
           ]"
         >
-          <span class="fa fa-plus"></span> {{ $t('message.add_component') }}
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          {{ $t('message.add') }}
         </b-button>
         <b-button
-          size="md"
-          variant="outline-primary"
+          size="sm"
+          variant="outline-danger"
+          :disabled="selectedCount === 0"
+          :title="
+            selectedCount === 0
+              ? $t('message.remove_component_select_first')
+              : $t('message.remove_component')
+          "
           @click="removeDependencies"
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_DELETE,
           ]"
         >
-          <span class="fa fa-minus"></span> {{ $t('message.remove_component') }}
+          <span class="fa fa-trash" aria-hidden="true"></span>
+          {{ $t('message.remove') }}
         </b-button>
         <b-dropdown
+          size="sm"
           variant="outline-primary"
+          :title="$t('message.download_component')"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
-            <span class="fa fa-download"></span>
-            {{ $t('message.download_component') }}
+            <span class="fa fa-download" aria-hidden="true"></span>
+            {{ $t('message.download') }}
           </template>
           <b-dropdown-item @click="downloadTable('csv')" href="#">{{
             $t('message.csv_filetype')
           }}</b-dropdown-item>
         </b-dropdown>
-        <span
-          id="switch-container-outdated"
-          style="margin-left: 1rem; margin-right: 0.5rem"
-          class="keep-together"
-        >
-          <c-switch
-            id="only-outdated"
-            :disabled="!project"
-            color="primary"
-            v-model="onlyOutdated"
-            label
-            v-bind="labelIcon"
-          />
-          <span class="text-muted">{{
-            $t('message.outdated_only')
-          }}</span></span
-        >
-        <b-tooltip target="switch-container-outdated" triggers="hover focus">{{
-          $t('message.only_outdated_tooltip')
-        }}</b-tooltip>
-        <span
-          id="switch-container-direct"
-          style="margin-left: 1rem; margin-right: 0.5rem"
-          class="keep-together"
-        >
-          <c-switch
-            id="only-direct"
-            :disabled="!project || !this.project.directDependencies"
-            color="primary"
-            v-model="onlyDirect"
-            label
-            v-bind="labelIcon"
-          />
-          <span class="text-muted">{{ $t('message.direct_only') }}</span></span
-        >
-        <b-tooltip target="switch-container-direct" triggers="hover focus">{{
-          $t('message.only_direct_tooltip')
-        }}</b-tooltip>
-      </div>
-    </div>
+      </template>
+    </filter-bar>
     <token-paginated-table
       ref="table"
       :base-url="tableBaseUrl"
@@ -88,7 +81,7 @@
     />
     <project-add-component-modal
       :uuid="this.uuid"
-      v-on:refreshTable="refreshTable"
+      v-on:refreshTable="onComponentAdded"
     />
   </div>
 </template>
@@ -98,7 +91,8 @@ import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
-import { Switch as cSwitch } from '@coreui/vue';
+import FilterBar from '@/views/components/FilterBar.vue';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import $ from 'jquery';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
@@ -108,6 +102,7 @@ import SeverityProgressBar from '../../components/SeverityProgressBar';
 import { get } from 'lodash-es';
 import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import filterPillsMixin from '@/mixins/filterPillsMixin';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
 
 const EXPAND_BY_COLUMN = {
@@ -160,11 +155,12 @@ function readSort() {
 
 export default {
   components: {
-    cSwitch,
+    BooleanFilterPill,
+    FilterBar,
     ProjectAddComponentModal,
     TokenPaginatedTable,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin, permissionsMixin],
   props: {
     uuid: String,
     project: Object,
@@ -175,12 +171,10 @@ export default {
     );
     const sort = readSort();
     return {
-      labelIcon: {
-        dataOn: '✓',
-        dataOff: '✕',
-      },
       onlyOutdated: false,
       onlyDirect: false,
+      booleanFilters: ['onlyOutdated', 'onlyDirect'],
+      selectedCount: 0,
       searchText: null,
       visibleColumns: initialVisibleColumns,
       columns: this.buildColumns(),
@@ -195,7 +189,13 @@ export default {
         onPostBody: () => {
           this.vueFormatterInit();
           this.initializeTooltips();
+          // Reloading a page rebuilds the rows, dropping any selection.
+          this.updateSelectionCount();
         },
+        onCheck: () => this.updateSelectionCount(),
+        onUncheck: () => this.updateSelectionCount(),
+        onCheckAll: () => this.updateSelectionCount(),
+        onUncheckAll: () => this.updateSelectionCount(),
         onColumnSwitch: (field, checked) => {
           if (localStorage) {
             localStorage.setItem(
@@ -220,6 +220,25 @@ export default {
     };
   },
   computed: {
+    allFilterDefs() {
+      const defs = [
+        {
+          name: 'onlyOutdated',
+          label: this.$t('message.outdated'),
+          description: this.$t('message.only_outdated_tooltip'),
+          icon: 'fa-exclamation-triangle',
+        },
+      ];
+      if (this.project && this.project.directDependencies) {
+        defs.push({
+          name: 'onlyDirect',
+          label: this.$t('message.direct'),
+          description: this.$t('message.only_direct_tooltip'),
+          icon: 'fa-level-down',
+        });
+      }
+      return defs;
+    },
     componentsUrl() {
       return `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/components`;
     },
@@ -505,6 +524,10 @@ export default {
       }
       bt.uncheckAll();
     },
+    updateSelectionCount() {
+      const bt = this.innerBootstrapTable();
+      this.selectedCount = bt ? bt.getSelections().length : 0;
+    },
     innerBootstrapTable() {
       return this.$refs.table && this.$refs.table.$refs
         ? this.$refs.table.$refs.table
@@ -568,7 +591,7 @@ export default {
       }
       return { items, partial: true };
     },
-    refreshTable() {
+    onComponentAdded() {
       if (this.$refs.table) {
         this.$refs.table.refreshCurrentPage();
       }
