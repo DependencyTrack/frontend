@@ -564,7 +564,8 @@ export default {
       }
       return 'clickable-node';
     },
-    renderContent: function (_h, data) {
+    // eslint-disable-next-line no-unused-vars -- rendering breaks if the parameter is not named exactly `h`.
+    renderContent: function (h, data) {
       if (
         this.highlightOutdatedComponents &&
         data.version &&
