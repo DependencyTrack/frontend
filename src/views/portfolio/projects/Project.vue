@@ -368,6 +368,8 @@
       </div>
     </b-card>
     <b-tabs
+      v-scrollable-tabs
+      nav-wrapper-class="nav-tabs-scroller"
       class="body-bg-color"
       style="border-left: 0; border-right: 0; border-top: 0"
     >
