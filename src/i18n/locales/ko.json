@@ -893,6 +893,7 @@
     "policy_cel_desc_vuln": "평가 대상 취약점",
     "policy_cel_overview_link": "CEL에 대해 자세히 알아보기.",
     "policy_condition_hint": "조건은 정책이 적용되는 시점을 결정합니다. 일반적인 패턴에는 템플릿을 사용하세요.",
+    "policy_condition_plain_text_display": null,
     "policy_condition_templates": "템플릿 삽입",
     "policy_create": "정책 생성",
     "policy_created": "정책이 생성되었습니다",

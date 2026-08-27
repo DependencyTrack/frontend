@@ -892,6 +892,7 @@
     "policy_cel_desc_vuln": "正在評估的漏洞",
     "policy_cel_overview_link": "了解有關 CEL 的更多資訊。",
     "policy_condition_hint": "條件決定策略何時適用。使用常见模式的模板。",
+    "policy_condition_plain_text_display": null,
     "policy_condition_templates": "插入模板",
     "policy_create": "創建策略",
     "policy_created": "策略已建立",
