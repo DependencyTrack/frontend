@@ -134,7 +134,6 @@
 <script>
 import common from '../../../shared/common';
 import { Callout } from '@coreui/vue';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
@@ -142,7 +141,6 @@ import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolatio
 export default {
   name: 'ServiceDashboard',
   components: {
-    ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,

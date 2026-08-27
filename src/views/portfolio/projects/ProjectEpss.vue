@@ -54,7 +54,6 @@ import {
 } from '@/shared/utils';
 import i18n from '@/i18n';
 import $ from 'jquery';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
@@ -72,9 +71,7 @@ export default {
   components: {
     FilterBar,
     BooleanFilterPill,
-    BootstrapToggle,
     ChartEpssVsCvss,
-    KevAssertionsModal,
   },
   beforeCreate() {
     this.showSuppressedFindings =

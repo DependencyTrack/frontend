@@ -44,7 +44,6 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 
@@ -75,7 +74,6 @@ export default {
   },
   components: {
     cSwitch,
-    BValidatedInputGroupFormInput,
   },
   data() {
     return {

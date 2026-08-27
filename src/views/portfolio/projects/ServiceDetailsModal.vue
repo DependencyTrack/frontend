@@ -213,7 +213,6 @@
 
 <script>
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
@@ -223,7 +222,6 @@ export default {
   mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
-    BInputGroupFormSelect,
   },
   props: {
     service: Object,

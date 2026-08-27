@@ -172,10 +172,8 @@ import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ComponentDashboard from './ComponentDashboard';
 import ComponentVulnerabilities from './ComponentVulnerabilities';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
@@ -188,10 +186,8 @@ export default {
   components: {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
-    SeverityBarChart,
     ComponentDashboard,
     ComponentVulnerabilities,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ComponentDetailsModal,
     ExternalReferencesDropdown,

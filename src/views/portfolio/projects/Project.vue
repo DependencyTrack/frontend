@@ -540,9 +540,7 @@ import ProjectComponents from './ProjectComponents';
 import ProjectList from './ProjectList';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
 import ProjectServices from './ProjectServices';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ProjectDashboard from './ProjectDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal';
@@ -573,9 +571,7 @@ export default {
     ProjectList,
     ProjectDependencyGraph,
     ProjectServices,
-    SeverityBarChart,
     ProjectDashboard,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ProjectEpss,
     ExternalReferencesDropdown,

@@ -82,9 +82,7 @@ import {
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
-  },
+  components: {},
   methods: {
     emitEvent: function (plugin) {
       EventBus.$emit('admin:plugin', plugin);

@@ -64,7 +64,6 @@ export default {
   components: {
     FilterBar,
     BooleanFilterPill,
-    KevAssertionsModal,
   },
   beforeCreate() {
     this.showSuppressedFindings =
