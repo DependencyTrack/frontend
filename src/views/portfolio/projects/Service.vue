@@ -128,9 +128,7 @@
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from 'vue-easy-pie-chart';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
 import ServiceDashboard from './ServiceDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal';
@@ -138,9 +136,7 @@ import ServiceDetailsModal from './ServiceDetailsModal';
 export default {
   mixins: [permissionsMixin],
   components: {
-    SeverityBarChart,
     ServiceDashboard,
-    PortfolioWidgetRow,
     VueEasyPieChart,
     ServiceDetailsModal,
   },

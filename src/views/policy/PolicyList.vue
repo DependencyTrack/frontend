@@ -45,7 +45,6 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 export default {
   mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   components: {
-    BInputGroupFormSwitch,
     CreatePolicyModal,
   },
   mounted() {

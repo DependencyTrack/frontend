@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
@@ -57,7 +56,6 @@ export default {
     header: String,
   },
   components: {
-    ValidationObserver,
     BValidatedInputGroupFormInput,
   },
   data() {

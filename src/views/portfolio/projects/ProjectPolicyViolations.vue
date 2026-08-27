@@ -52,7 +52,6 @@ export default {
   components: {
     FilterBar,
     BooleanFilterPill,
-    BootstrapToggle,
   },
   beforeCreate() {
     this.showSuppressedViolations =

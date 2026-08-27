@@ -498,7 +498,6 @@
 <script>
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
@@ -510,7 +509,6 @@ export default {
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    ComponentPropertiesModal,
   },
   props: {
     component: Object,
