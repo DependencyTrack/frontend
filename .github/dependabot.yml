@@ -21,6 +21,10 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
   #
   # 5.0.x maintenance branch
   #
@@ -54,6 +58,10 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
   #
   # 4.14.x maintenance branch
   #
@@ -87,3 +95,7 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
