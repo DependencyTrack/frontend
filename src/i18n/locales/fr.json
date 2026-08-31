@@ -118,6 +118,7 @@
     "enabled": "Activé",
     "enabled_for_tags": "Activé pour les balises",
     "events": null,
+    "exclude_tags": "Tags exclus",
     "extension_name": "Nom d'extension",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Composants internes",
     "internal_identification_error": "Une erreur s'est produite lors de la mise en file d'attente de l'identification des composants internes. Vérifiez les journaux du serveur pour plus de détails",
     "internal_identification_queued": "Identification des composants internes en file d'attente",
+    "invert_tag_match": "Exclure les balises sélectionnées",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

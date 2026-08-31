@@ -118,6 +118,7 @@
     "enabled": "Activado",
     "enabled_for_tags": "Habilitado para etiquetas",
     "events": null,
+    "exclude_tags": "Etiquetas excluidas",
     "extension_name": "Nombre de extensión",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Componentes internos",
     "internal_identification_error": "Se produjo un error al poner en cola la identificación de componentes internos. Consulte los registros del servidor para obtener más detalles",
     "internal_identification_queued": "Identificación de componentes internos en cola",
+    "invert_tag_match": "Excluir etiquetas seleccionadas",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

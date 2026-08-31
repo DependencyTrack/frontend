@@ -118,6 +118,7 @@
     "enabled": "सक्रिय",
     "enabled_for_tags": "टैग के लिए सक्षम",
     "events": null,
+    "exclude_tags": "बाहर रखा टैग",
     "extension_name": "एक्सटेंशन का नाम",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "आंतरिक घटक",
     "internal_identification_error": "आंतरिक घटक पहचान को कतारबद्ध करते समय त्रुटि हुई। विवरण के लिए सर्वर लॉग देखें",
     "internal_identification_queued": "आंतरिक घटक पहचान पंक्तिबद्ध",
+    "invert_tag_match": "चयनित टैग को बाहर करें",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,
