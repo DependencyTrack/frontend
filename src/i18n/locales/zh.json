@@ -118,6 +118,7 @@
     "enabled": "已启用",
     "enabled_for_tags": "已对标签启用",
     "events": null,
+    "exclude_tags": "排除的标签",
     "extension_name": "扩展名称",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "内部组件",
     "internal_identification_error": "内部组件识别入队时发生错误。请查看服务器日志了解详细信息",
     "internal_identification_queued": "内部组件识别已加入队列",
+    "invert_tag_match": "排除选定的标签",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

@@ -118,6 +118,7 @@
     "enabled": "Увімкнено",
     "enabled_for_tags": "Увімкнено для тегів",
     "events": null,
+    "exclude_tags": "Виключені теги",
     "extension_name": "Назва розширення",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Внутрішні компоненти",
     "internal_identification_error": "Сталася помилка при постановці в чергу ідентифікації внутрішнього компонента. Перевірте журнали сервера для отримання деталей",
     "internal_identification_queued": "Ідентифікацію внутрішнього компонента поставлено в чергу",
+    "invert_tag_match": "Виключити вибрані теги",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,
