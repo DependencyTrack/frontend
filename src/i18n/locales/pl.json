@@ -118,6 +118,7 @@
     "enabled": "Włączony",
     "enabled_for_tags": "Włączono dla tagów",
     "events": null,
+    "exclude_tags": "Wykluczone tagi",
     "extension_name": "Nazwa rozszerzenia",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Komponenty wewnętrzne",
     "internal_identification_error": "Wystąpił błąd podczas kolejkowania identyfikacji komponentów wewnętrznych. Sprawdź dzienniki serwera, aby uzyskać szczegółowe informacje",
     "internal_identification_queued": "Wewnętrzna identyfikacja komponentów w kolejce",
+    "invert_tag_match": "Wyklucz wybrane tagi",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

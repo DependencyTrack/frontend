@@ -118,6 +118,7 @@
     "enabled": "Aktiviert",
     "enabled_for_tags": "Aktiviert für Tags",
     "events": null,
+    "exclude_tags": "Ausgeschlossene Tags",
     "extension_name": "Erweiterungsname",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Interne Komponenten",
     "internal_identification_error": "Beim Warteschlangenvorgang für die interne Komponentenidentifikation ist ein Fehler aufgetreten. Weitere Informationen finden Sie in den Serverprotokollen.",
     "internal_identification_queued": "Interne Komponentenidentifikation in der Warteschlange",
+    "invert_tag_match": "Ausgewählte Tags ausschließen",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

@@ -118,6 +118,7 @@
     "enabled": "Habilitado",
     "enabled_for_tags": "Ativado para tags",
     "events": null,
+    "exclude_tags": "Tags excluídas",
     "extension_name": "Nome da extensão",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Componentes Internos",
     "internal_identification_error": "Ocorreu um erro ao enfileirar a identificação do componente interno. Verifique os logs do servidor para obter detalhes",
     "internal_identification_queued": "Identificação de componente interno na fila",
+    "invert_tag_match": "Exclua tags selecionadas",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

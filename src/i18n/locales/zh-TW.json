@@ -118,6 +118,7 @@
     "enabled": "已啟用",
     "enabled_for_tags": "對標籤啟用",
     "events": "活動",
+    "exclude_tags": "排除的標籤",
     "extension_name": "擴充名",
     "extension_no_config": "此擴充不支援配置。",
     "failure": "失敗",
@@ -158,6 +159,7 @@
     "internal_components": "內部元件",
     "internal_identification_error": "排入內部元件識別佇列時發生錯誤。請檢視伺服器日誌了解詳細資訊",
     "internal_identification_queued": "內部元件識別已排入佇列",
+    "invert_tag_match": "排除選取的標籤",
     "json_schema_form": {
       "max_items": "最多 {n} 項。 |最多 {n} 個項目。",
       "min_items": "最少 {n} 項。 |最少 {n} 項。",

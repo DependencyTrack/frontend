@@ -118,6 +118,7 @@
     "enabled": "有効",
     "enabled_for_tags": "タグに対して有効化",
     "events": null,
+    "exclude_tags": "除外されたタグ",
     "extension_name": "拡張機能名",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "内部コンポーネント",
     "internal_identification_error": "内部コンポーネント識別のキューイング中にエラーが発生しました。詳細についてはサーバーログを確認してください。",
     "internal_identification_queued": "内部コンポーネント識別がキューに登録されました",
+    "invert_tag_match": "選択したタグを除外します",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

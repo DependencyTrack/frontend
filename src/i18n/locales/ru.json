@@ -118,6 +118,7 @@
     "enabled": "Включено",
     "enabled_for_tags": "Включено для тегов",
     "events": null,
+    "exclude_tags": "Исключённые теги",
     "extension_name": "Имя расширения",
     "extension_no_config": null,
     "failure": null,
@@ -158,6 +159,7 @@
     "internal_components": "Внутренние компоненты",
     "internal_identification_error": "Произошла ошибка при постановке задачи по идентификации внутренних компонентов в очередь. Проверьте логи сервера для получения деталей.",
     "internal_identification_queued": "Идентификация внутренних компонентов поставлена в очередь",
+    "invert_tag_match": "Исключить выбранные теги",
     "json_schema_form": {
       "max_items": null,
       "min_items": null,

@@ -118,6 +118,7 @@
     "enabled": "Enabled",
     "enabled_for_tags": "Enabled for tags",
     "events": "Events",
+    "exclude_tags": "Excluded Tags",
     "extension_name": "Extension name",
     "extension_no_config": "This extension does not support configuration.",
     "failure": "Failure",
@@ -158,6 +159,7 @@
     "internal_components": "Internal Components",
     "internal_identification_error": "An error occurred queueing internal component identification. Check server logs for details",
     "internal_identification_queued": "Internal component identification queued",
+    "invert_tag_match": "Exclude selected tags",
     "json_schema_form": {
       "max_items": "Maximum {n} item. | Maximum {n} items.",
       "min_items": "Minimum {n} item. | Minimum {n} items.",

@@ -118,6 +118,7 @@
     "enabled": "활성화됨",
     "enabled_for_tags": "다음 태그에 대해 활성화",
     "events": "이벤트",
+    "exclude_tags": "제외된 태그",
     "extension_name": "확장 이름",
     "extension_no_config": "이 확장은 설정을 지원하지 않습니다.",
     "failure": "실패",
@@ -158,6 +159,7 @@
     "internal_components": "내부 컴포넌트",
     "internal_identification_error": "내부 컴포넌트 식별 작업을 큐에 등록하는 중 오류가 발생했습니다. 자세한 내용은 서버 로그를 확인하세요",
     "internal_identification_queued": "내부 컴포넌트 식별 작업이 큐에 등록되었습니다",
+    "invert_tag_match": "선택한 태그 제외",
     "json_schema_form": {
       "max_items": "최대 {n}개 항목. | 최대 {n}개 항목.",
       "min_items": "최소 {n}개 항목. | 최소 {n}개 항목.",
