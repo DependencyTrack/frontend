@@ -127,7 +127,7 @@
 <script>
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
+import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ServiceDashboard from './ServiceDashboard';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';

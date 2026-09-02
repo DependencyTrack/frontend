@@ -537,7 +537,7 @@
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
+import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ProjectComponents from './ProjectComponents';
 import ProjectList from './ProjectList';
 import ProjectDependencyGraph from './ProjectDependencyGraph';
