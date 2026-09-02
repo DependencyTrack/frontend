@@ -171,7 +171,7 @@
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
+import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard';
 import ComponentVulnerabilities from './ComponentVulnerabilities';
 import EventBus from '../../../shared/eventbus';
