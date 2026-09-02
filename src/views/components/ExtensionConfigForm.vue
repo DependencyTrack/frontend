@@ -30,6 +30,7 @@
               :value="formData[propName]"
               :validation-error="getValidationError(propName)"
               :validation-errors="nestedErrorMap[propName] || {}"
+              :tabbed="tabbedArrayProperties.includes(propName)"
               @input="onFieldChange(propName, $event)"
             />
           </div>
@@ -181,6 +182,14 @@ export default {
       type: String,
       required: false,
       default: undefined,
+    },
+    tabbedArrayProperties: {
+      type: Array,
+      default: () => [],
+    },
+    extraValidators: {
+      type: Array,
+      default: () => [],
     },
   },
   data() {
@@ -365,9 +374,9 @@ export default {
       }
       const validate = this.compiledValidator;
       const valid = validate(this.normalizedFormData);
+      const nextErrors = {};
 
       if (!valid) {
-        const nextErrors = {};
         validate.errors?.forEach((error) => {
           const field = error.instancePath
             .replace(/^\//, '')
@@ -383,12 +392,14 @@ export default {
             nextErrors[field] = message;
           }
         });
-        this.validationErrors = nextErrors;
-        return false;
       }
 
-      this.validationErrors = {};
-      return true;
+      this.extraValidators.forEach((validator) => {
+        Object.assign(nextErrors, validator(this.normalizedFormData) || {});
+      });
+
+      this.validationErrors = nextErrors;
+      return Object.keys(nextErrors).length === 0;
     },
     // Normalize form data by omitting fields that are null entirely.
     // Required for schema validation to correctly determine missing required fields.

@@ -159,8 +159,10 @@
     "internal_identification_error": "Произошла ошибка при постановке задачи по идентификации внутренних компонентов в очередь. Проверьте логи сервера для получения деталей.",
     "internal_identification_queued": "Идентификация внутренних компонентов поставлена в очередь",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null

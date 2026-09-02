@@ -159,8 +159,10 @@
     "internal_identification_error": "Se produjo un error al poner en cola la identificación de componentes internos. Consulte los registros del servidor para obtener más detalles",
     "internal_identification_queued": "Identificación de componentes internos en cola",
     "json_schema_form": {
+      "item_number": null,
       "max_items": null,
       "min_items": null,
+      "no_items_configured": null,
       "remove_item_aria": null,
       "remove_named_item_aria": null,
       "test_summary": null
