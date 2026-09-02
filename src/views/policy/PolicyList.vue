@@ -406,6 +406,9 @@ export default {
               onlyLatestProjectVersion() {
                 this.updatePolicy();
               },
+              invertTagMatch() {
+                this.updatePolicy();
+              },
             },
           });
         },
