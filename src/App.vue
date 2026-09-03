@@ -23,6 +23,16 @@ export default {
       }
     };
 
+    const preloadCustomizationIfAuthenticated = (jwt) => {
+      if (
+        jwt &&
+        this.$customization &&
+        typeof this.$customization.preloadAll === 'function'
+      ) {
+        this.$customization.preloadAll();
+      }
+    };
+
     EventBus.$on('authenticated', (jwt) => {
       if (jwt) {
         sessionStorage.setItem('token', jwt);
@@ -30,6 +40,7 @@ export default {
         sessionStorage.removeItem('token');
       }
       setJwtForAjax(jwt);
+      preloadCustomizationIfAuthenticated(jwt);
     });
 
     // ensure $.ajaxSettings.headers exists
@@ -37,7 +48,9 @@ export default {
       headers: {},
     });
 
-    setJwtForAjax(getToken());
+    const existingToken = getToken();
+    setJwtForAjax(existingToken);
+    preloadCustomizationIfAuthenticated(existingToken);
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
