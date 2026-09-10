@@ -32,6 +32,7 @@
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue';
 import EventBus from '../shared/eventbus';
+import { clearOidcSession, getOidcUserManager } from '../shared/oidc';
 import globalVarsMixin from '../mixins/globalVarsMixin';
 import LocalePicker from '@/views/components/LocalePicker.vue';
 
@@ -67,7 +68,24 @@ export default {
         localStorage.removeItem('sessionInvalidate');
         // Clear token and permissions.
         EventBus.$emit('authenticated', null);
-        this.$router.replace({ name: 'Login' });
+
+        const idToken = clearOidcSession();
+        const oidcUserManager = idToken === null ? null : getOidcUserManager();
+        if (oidcUserManager === null) {
+          // Not an OIDC session, or OIDC is no longer configured.
+          this.$router.replace({ name: 'Login' });
+          return;
+        }
+
+        // RP-Initiated Logout, see
+        // https://openid.net/specs/openid-connect-rpinitiated-1_0.html
+        // Without it the session at the identity provider survives, and the
+        // next click on the OpenID button re-authenticates silently.
+        oidcUserManager
+          .signoutRedirect({ id_token_hint: idToken || undefined })
+          .catch(() => {
+            this.$router.replace({ name: 'Login' });
+          });
       });
     },
     canChangePassword: function () {

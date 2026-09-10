@@ -101,13 +101,18 @@
 
 <script>
 import axios from 'axios';
-import Oidc from 'oidc-client';
+import {
+  getOidcUserManager,
+  isOidcConfigured,
+  markOidcSession,
+} from '../../shared/oidc';
+
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
 import InformationalModal from '../modals/InformationalModal';
 import EventBus from '../../shared/eventbus';
-import { getRedirectUrl, getContextPath } from '../../shared/utils';
+import { getRedirectUrl } from '../../shared/utils';
 const qs = require('querystring');
 import common from '../../shared/common';
 import * as permissions from '../../shared/permissions';
@@ -130,19 +135,7 @@ export default {
         password: '',
       },
       oidcAvailable: false,
-      oidcUserManager: new Oidc.UserManager({
-        userStore: new Oidc.WebStorageStateStore(),
-        authority: this.$oidc.ISSUER,
-        client_id: this.$oidc.CLIENT_ID,
-        redirect_uri:
-          getContextPath() !== ''
-            ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
-            : `${window.location.origin}/static/oidc-callback.html`,
-        response_type:
-          this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
-        scope: this.$oidc.SCOPE,
-        loadUserInfo: false,
-      }),
+      oidcUserManager: getOidcUserManager(),
       showLoginForm: false,
     };
   },
@@ -230,11 +223,7 @@ export default {
         });
     },
     isOidcAvailableInFrontend() {
-      return (
-        this.oidcUserManager.settings.authority &&
-        this.oidcUserManager.settings.client_id &&
-        this.oidcUserManager.settings.scope
-      );
+      return isOidcConfigured();
     },
     checkOidcAvailability() {
       if (!this.isOidcAvailableInFrontend()) {
@@ -282,7 +271,7 @@ export default {
         this.oidcAvailable = oidcAvailable;
         this.showLoginForm = !oidcAvailable;
 
-        if (!oidcAvailable) {
+        if (!oidcAvailable || this.oidcUserManager === null) {
           return;
         }
 
@@ -308,6 +297,9 @@ export default {
             .post(url, qs.stringify(requestBody), config)
             .then((result) => {
               if (result.status === 200) {
+                // Remember that this session was established via OIDC, so that
+                // logging out can terminate the session at the IdP as well.
+                markOidcSession(oidcUser.id_token);
                 const redirectTo = getRedirectUrl(this.$router);
                 return this.fetchAndCheckPermissions(result.data, redirectTo);
               }
