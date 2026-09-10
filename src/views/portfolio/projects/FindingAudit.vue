@@ -153,6 +153,7 @@
           v-model="comment"
           rows="4"
           class="form-control"
+          :placeholder="auditTextPlaceholders.commentPlaceholder"
           trim
         />
         <div class="pull-right">
@@ -240,6 +241,7 @@
           v-model="analysisDetails"
           rows="7"
           class="form-control"
+          :placeholder="auditTextPlaceholders.analysisDetailsInstruction"
           :disabled="
             analysisState === null ||
             !this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)
@@ -354,6 +356,20 @@ export default {
           currentValue,
         );
       }
+    },
+  },
+  computed: {
+    auditTextPlaceholders() {
+      const settings = this.$customization
+        ? this.$customization.getCachedTextPlaceholderSettings()
+        : null;
+      if (!settings || settings.enabled !== true) {
+        return { commentPlaceholder: '', analysisDetailsInstruction: '' };
+      }
+      return {
+        commentPlaceholder: settings.commentPlaceholder || '',
+        analysisDetailsInstruction: settings.analysisDetailsInstruction || '',
+      };
     },
   },
   mixins: [permissionsMixin],
