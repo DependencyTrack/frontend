@@ -4,6 +4,8 @@
     :extension-name="$route.params.extensionName"
     :extension-point-name="extensionPointName"
     :testable="selectedExtension ? selectedExtension.testable !== false : true"
+    :tabbed-array-properties="tabbedArrayProperties"
+    :extra-validators="extraValidators"
     :display-name="
       selectedExtension ? selectedExtension.display_name : undefined
     "
@@ -38,6 +40,15 @@ export default {
     };
   },
   computed: {
+    tabbedArrayProperties() {
+      return this.$route.params.extensionName == 'osv' ? ['sources'] : [];
+    },
+    extraValidators() {
+      if (this.$route.params.extensionName !== 'osv') {
+        return [];
+      }
+      return [(config) => this.validateOsvSources(config)];
+    },
     selectedExtension() {
       const name = this.$route.params.extensionName;
       if (!name) return null;
@@ -67,6 +78,37 @@ export default {
           error,
         );
       }
+    },
+    validateOsvSources(config) {
+      const errors = {};
+      const sources = Array.isArray(config?.sources) ? config.sources : [];
+      const names = sources.map((source) =>
+        typeof source?.name === 'string' ? source.name.trim() : '',
+      );
+
+      names.forEach((name, index) => {
+        if (!name) {
+          errors[`sources.${index}.name`] = this.$t(
+            'validation.schema.required',
+            { property: 'name' },
+          );
+        } else if (names.filter((candidate) => candidate === name).length > 1) {
+          errors[`sources.${index}.name`] = this.$t(
+            'validation.schema.unique_items',
+          );
+        }
+
+        if (sources[index]?.enabled) {
+          const ecosystems = sources[index]?.ecosystems;
+          if (!Array.isArray(ecosystems) || ecosystems.length === 0) {
+            errors[`sources.${index}.ecosystems`] = this.$t(
+              'validation.schema.min_items',
+              { limit: 1 },
+            );
+          }
+        }
+      });
+      return errors;
     },
   },
 };
