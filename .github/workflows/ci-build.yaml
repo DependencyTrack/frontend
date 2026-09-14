@@ -20,6 +20,10 @@ jobs:
       app-version: '4-snapshot'
       publish-container: ${{ github.ref_name == '4.14.x' || startsWith(github.ref_name, 'feature-') }}
       ref-name: ${{ github.ref_name }}
+    permissions:
+      artifact-metadata: write # Required to create the artifact storage record.
+      attestations: write # Required to generate SLSA build provenance.
+      id-token: write # Required for keyless signing of SLSA build provenance.
     secrets:
       registry-0-usr: ${{ secrets.DOCKER_HUB_USERNAME }}
       registry-0-psw: ${{ secrets.DOCKER_HUB_TOKEN }}
