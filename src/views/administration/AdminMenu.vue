@@ -430,6 +430,11 @@ export default {
               route: 'accessManagement/oidcGroups',
             },
             {
+              component: 'ServiceAccounts',
+              name: this.$t('admin.service_accounts'),
+              route: 'accessManagement/serviceAccounts',
+            },
+            {
               component: 'Teams',
               name: this.$t('admin.teams'),
               route: 'accessManagement/teams',

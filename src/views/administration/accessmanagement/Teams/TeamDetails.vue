@@ -15,6 +15,12 @@
           :debounce-events="'keyup'"
         />
         <b-form-group :label="this.$t('admin.api_keys')">
+          <p class="text-muted small">
+            {{ $t('admin.team_api_keys_description') }}
+            <router-link to="/admin/accessManagement/serviceAccounts">{{
+              $t('admin.team_api_keys_service_account_link')
+            }}</router-link>
+          </p>
           <div class="list-group">
             <api-key-list-group-item
               v-for="key in sortedApiKeys"
@@ -125,6 +131,20 @@
             />
           </div>
         </b-form-group>
+        <b-form-group
+          v-if="serviceAccounts && serviceAccounts.length > 0"
+          :label="this.$t('admin.service_accounts')"
+        >
+          <div class="list-group">
+            <actionable-list-group-item
+              v-for="user in serviceAccounts"
+              :key="user.username"
+              :value="user.username"
+              :delete-icon="true"
+              v-on:actionClicked="removeUser(user, 'serviceAccounts')"
+            />
+          </div>
+        </b-form-group>
         <div style="text-align: right">
           <b-button variant="outline-danger" @click="deleteTeam">{{
             $t('admin.delete_team')
@@ -180,6 +200,7 @@ export default {
       managedUsers: this.row.managedUsers,
       ldapUsers: this.row.ldapUsers,
       oidcUsers: this.row.oidcUsers,
+      serviceAccounts: this.row.serviceAccounts,
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -209,6 +230,7 @@ export default {
         this.managedUsers = newValue.managedUsers;
         this.ldapUsers = newValue.ldapUsers;
         this.oidcUsers = newValue.oidcUsers;
+        this.serviceAccounts = newValue.serviceAccounts;
       },
       deep: true,
     },
