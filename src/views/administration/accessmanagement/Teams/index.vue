@@ -90,6 +90,9 @@ export default {
             if (row.oidcUsers) {
               count += row.oidcUsers.length;
             }
+            if (row.serviceAccounts) {
+              count += row.serviceAccounts.length;
+            }
             return count;
           },
         },
@@ -113,6 +116,7 @@ export default {
         detailViewByClick: true,
         detailFormatter: (index, row) => {
           return this.vueFormatter({
+            router: this.$router,
             render: () => (
               <TeamDetails row={row} index={index} rowEvents={this.rowEvents} />
             ),

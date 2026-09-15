@@ -45,6 +45,7 @@
   "URL_REPOSITORY": "api/v1/repository",
   "URL_SEARCH": "api/v1/search",
   "URL_SERVICE": "api/v1/service",
+  "URL_SERVICE_ACCOUNT": "api/v2/service-accounts",
   "URL_SYSTEM_CAPABILITIES": "api/v2/internal/system-capabilities",
   "URL_TAG": "api/v1/tag",
   "URL_TEAM": "api/v1/team",
