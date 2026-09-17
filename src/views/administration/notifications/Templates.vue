@@ -65,7 +65,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -74,7 +74,7 @@ export default {
           field: 'defaultPublisher',
           class: 'tight',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },

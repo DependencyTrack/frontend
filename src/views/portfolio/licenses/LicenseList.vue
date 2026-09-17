@@ -63,7 +63,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -71,7 +71,7 @@ export default {
           title: this.$t('message.spdx_license_id'),
           field: 'licenseId',
           sortable: true,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );
@@ -84,7 +84,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -94,7 +94,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -104,7 +104,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -115,7 +115,7 @@ export default {
           align: 'center',
           class: 'tight',
           visible: false,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -154,7 +154,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('LicenseListPageSize', size.toString());
           }

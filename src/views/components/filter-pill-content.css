@@ -1,0 +1,97 @@
+/*
+ * Layout helpers for the controls that pills render into FilterPillDropdown's
+ * default slot. Vue compiles slot content in the parent pill's scope, so these
+ * rules cannot live in the scoped filter-pill.css. The shared prefix keeps them
+ * clear of everything else in the global scope.
+ */
+
+/* Two-value range row: [from] – [to] */
+.filter-pill-range {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-pill-range > * {
+  min-width: 0;
+}
+
+.filter-pill-range-separator {
+  opacity: 0.6;
+}
+
+/* Bound captions, laid out on the same grid so they sit over their input.
+   Date inputs ignore placeholders, so these are the only visible hint of
+   which end of the range is which. */
+.filter-pill-range-captions {
+  margin-bottom: 0.25rem;
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+/* Keeps the caption grid's middle track the same width as the input row's,
+   so each caption lines up with the field below it. */
+.filter-pill-range-captions .filter-pill-range-separator {
+  visibility: hidden;
+}
+
+.filter-pill-range-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.filter-pill-range-clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  opacity: 0.6;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.filter-pill-range-clear:hover,
+.filter-pill-range-clear:focus {
+  opacity: 1;
+}
+
+.filter-pill-range-clear:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 1px;
+}
+
+/* Scrollable, full-bleed option list (checkboxes / radios) */
+.filter-pill-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0 -0.75rem;
+}
+
+.filter-pill-list .custom-control {
+  padding: 0.2rem 0.75rem 0.2rem 2.25rem;
+}
+
+.filter-pill-list .custom-control:hover {
+  background: rgb(255 255 255 / 7%);
+}
+
+/* Inline group caption, replaces a full-width b-form-group label */
+.filter-pill-caption {
+  margin-bottom: 0.25rem;
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+/* "Select all · Clear all" link row */
+.filter-pill-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.filter-pill-actions-separator {
+  opacity: 0.5;
+}

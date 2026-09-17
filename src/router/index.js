@@ -90,6 +90,8 @@ const OidcUsers = () =>
   import('@/views/administration/accessmanagement/OidcUsers');
 const OidcGroups = () =>
   import('@/views/administration/accessmanagement/OidcGroups');
+const ServiceAccounts = () =>
+  import('@/views/administration/accessmanagement/ServiceAccounts');
 const Teams = () => import('@/views/administration/accessmanagement/Teams');
 const Permissions = () =>
   import('@/views/administration/accessmanagement/Permissions');
@@ -295,7 +297,7 @@ function configRoutes() {
             i18n: 'message.tags',
             sectionPath: '/tags',
             sectionName: 'Tags',
-            permission: 'VIEW_PORTFOLIO',
+            permissions: ['VIEW_PORTFOLIO'],
           },
         },
         {
@@ -367,13 +369,7 @@ function configRoutes() {
             i18n: 'message.policy_management',
             sectionPath: '/policy',
             sectionName: 'Policy Management',
-            permissions: [
-              'POLICY_MANAGEMENT',
-              'POLICY_MANAGEMENT_CREATE',
-              'POLICY_MANAGEMENT_READ',
-              'POLICY_MANAGEMENT_UPDATE',
-              'POLICY_MANAGEMENT_DELETE',
-            ],
+            permissions: ['POLICY_MANAGEMENT', 'POLICY_MANAGEMENT_READ'],
           },
         },
         {
@@ -383,7 +379,7 @@ function configRoutes() {
             title: i18n.t('message.policy_violation_audit'),
             i18n: 'message.policy_violation_audit',
             sectionPath: '/audit',
-            permission: 'VIEW_POLICY_VIOLATION',
+            permissions: ['VIEW_POLICY_VIOLATION'],
           },
         },
         {
@@ -395,13 +391,6 @@ function configRoutes() {
             i18n: 'message.administration',
             sectionPath: '/admin',
             sectionName: 'Admin',
-            permissions: [
-              'SYSTEM_CONFIGURATION',
-              'SYSTEM_CONFIGURATION_CREATE',
-              'SYSTEM_CONFIGURATION_READ',
-              'SYSTEM_CONFIGURATION_UPDATE',
-              'SYSTEM_CONFIGURATION_DELETE',
-            ],
           },
           children: [
             {
@@ -448,7 +437,13 @@ function configRoutes() {
                 i18n: 'message.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
-                permission: 'SYSTEM_CONFIGURATION',
+                permissions: [
+                  'SYSTEM_CONFIGURATION',
+                  'SYSTEM_CONFIGURATION_CREATE',
+                  'SYSTEM_CONFIGURATION_READ',
+                  'SYSTEM_CONFIGURATION_UPDATE',
+                  'SYSTEM_CONFIGURATION_DELETE',
+                ],
               },
             },
             {
@@ -459,7 +454,13 @@ function configRoutes() {
                 i18n: 'banner.administration',
                 sectionPath: '/admin',
                 sectionName: 'Admin',
-                permission: 'SYSTEM_CONFIGURATION',
+                permissions: [
+                  'SYSTEM_CONFIGURATION',
+                  'SYSTEM_CONFIGURATION_CREATE',
+                  'SYSTEM_CONFIGURATION_READ',
+                  'SYSTEM_CONFIGURATION_UPDATE',
+                  'SYSTEM_CONFIGURATION_DELETE',
+                ],
               },
             },
             {
@@ -541,7 +542,6 @@ function configRoutes() {
                 permissions: [
                   'SECRET_MANAGEMENT',
                   'SECRET_MANAGEMENT_CREATE',
-                  'SECRET_MANAGEMENT_READ',
                   'SECRET_MANAGEMENT_UPDATE',
                   'SECRET_MANAGEMENT_DELETE',
                 ],
@@ -1031,6 +1031,23 @@ function configRoutes() {
               },
             },
             {
+              path: 'accessManagement/serviceAccounts',
+              component: ServiceAccounts,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'ACCESS_MANAGEMENT',
+                  'ACCESS_MANAGEMENT_CREATE',
+                  'ACCESS_MANAGEMENT_READ',
+                  'ACCESS_MANAGEMENT_UPDATE',
+                  'ACCESS_MANAGEMENT_DELETE',
+                ],
+              },
+            },
+            {
               path: 'accessManagement/teams',
               component: Teams,
               meta: {
@@ -1147,7 +1164,7 @@ function configRoutes() {
           path: 'project',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/projects/' + uuid, query: null };
@@ -1160,7 +1177,7 @@ function configRoutes() {
           path: 'component',
           props: (route) => ({ uuid: route.query.uuid }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.uuid) {
               let uuid = query.uuid;
               return { path: '/components/' + uuid, query: null };
@@ -1176,7 +1193,7 @@ function configRoutes() {
             vulnId: route.query.vulnId,
           }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.source && query.vulnId) {
               return {
                 path: '/vulnerabilities/' + query.source + '/' + query.vulnId,
@@ -1191,7 +1208,7 @@ function configRoutes() {
           path: 'license',
           props: (route) => ({ licenseId: route.query.licenseId }),
           redirect: (to) => {
-            let { hash, params, query } = to;
+            let { query } = to;
             if (query.licenseId) {
               let licenseId = query.licenseId;
               return { path: '/licenses/' + licenseId, query: null };
@@ -1235,7 +1252,7 @@ const router = new Router({
   routes: configRoutes(),
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const redirectToLogin = () => {
     next({ name: 'Login', query: { redirect: to.fullPath }, replace: true });
   };

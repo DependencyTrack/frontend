@@ -60,6 +60,9 @@ jobs:
       publish-container: true
       ref-name: ${{ github.ref_name }}
     permissions:
+      artifact-metadata: write # Required to create the artifact storage record.
+      attestations: write # Required to generate SLSA build provenance.
+      id-token: write # Required for keyless signing of SLSA build provenance.
       packages: write # Required to push images to ghcr.io
     secrets:
       registry-0-usr: ${{ github.repository_owner }}
@@ -70,7 +73,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      artifact-metadata: write # Required to create the artifact storage record.
+      attestations: write # Required to generate SLSA build provenance.
       contents: write # Required to edit release.
+      id-token: write # Required for keyless signing of SLSA build provenance.
     needs:
       - read-version
       - call-build
@@ -96,6 +102,21 @@ jobs:
           echo "# SHA512" >> checksums.txt
           sha512sum frontend-dist.zip >> checksums.txt
 
+      - name: Generate SLSA Build Provenance
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # tag=v4.2.2
+        with:
+          subject-path: |-
+            frontend-dist.zip
+            bom.json
+            bom.xml
+
+      - name: Prepare SLSA Build Provenance Asset
+        env:
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |-
+          cp "${BUNDLE_PATH}" frontend-dist.zip.intoto.jsonl
+
       - name: Update Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,6 +125,7 @@ jobs:
           gh release upload "${RELEASE_VERSION}" \
             --clobber \
             frontend-dist.zip \
+            frontend-dist.zip.intoto.jsonl \
             checksums.txt \
             bom.xml bom.json
 
