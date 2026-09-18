@@ -5,8 +5,10 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    :apply-disabled="!canApply || loading"
     @show="onDropdownShow"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
@@ -51,15 +53,6 @@
       >
         {{ $t('message.no_results') }}
       </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!canApply || loading"
-        >{{ $t('message.apply') }}
-      </b-button>
     </div>
   </filter-pill-dropdown>
 </template>
