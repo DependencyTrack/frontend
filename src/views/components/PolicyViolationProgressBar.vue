@@ -1,5 +1,5 @@
 <template>
-  <span v-if="metrics.policyViolationsTotal === 0" class="progress">
+  <span v-if="metrics.policy_violations_total === 0" class="progress">
     <b-progress class="table-progress" :max="'0'" show-value>
       <b-progress-bar
         class="table-progress text-dark"
@@ -11,19 +11,19 @@
     <span :id="'progressbar' + hoverId" class="table-progress">
       <b-progress
         class="table-progress"
-        :max="metrics.policyViolationsTotal"
+        :max="metrics.policy_violations_total"
         show-value
       >
         <b-progress-bar
-          :value="metrics.policyViolationsInfo"
+          :value="metrics.policy_violations_info"
           class="severity-info-bg text-dark"
         ></b-progress-bar>
         <b-progress-bar
-          :value="metrics.policyViolationsWarn"
+          :value="metrics.policy_violations_warn"
           class="severity-warn-bg text-dark"
         ></b-progress-bar>
         <b-progress-bar
-          :value="metrics.policyViolationsFail"
+          :value="metrics.policy_violations_fail"
           class="severity-fail-bg"
         ></b-progress-bar>
       </b-progress>
@@ -37,22 +37,22 @@
         <h5>{{ $t('message.type') }}</h5>
         <p>
           {{ $t('policy_violation.license') }}:
-          {{ metrics.policyViolationsLicenseTotal }}<br />
+          {{ metrics.policy_violations_license_total }}<br />
           {{ $t('policy_violation.operational') }}:
-          {{ metrics.policyViolationsOperationalTotal }}<br />
+          {{ metrics.policy_violations_operational_total }}<br />
           {{ $t('policy_violation.security') }}:
-          {{ metrics.policyViolationsSecurityTotal }}<br />
+          {{ metrics.policy_violations_security_total }}<br />
         </p>
         <h5>{{ $t('message.violation_state') }}</h5>
         <p>
-          {{ $t('policy_violation.infos') }}: {{ metrics.policyViolationsInfo
+          {{ $t('policy_violation.infos') }}: {{ metrics.policy_violations_info
           }}<br />
-          {{ $t('policy_violation.warns') }}: {{ metrics.policyViolationsWarn
+          {{ $t('policy_violation.warns') }}: {{ metrics.policy_violations_warn
           }}<br />
-          {{ $t('policy_violation.fails') }}: {{ metrics.policyViolationsFail
+          {{ $t('policy_violation.fails') }}: {{ metrics.policy_violations_fail
           }}<br />
         </p>
-        {{ $t('message.total') }}: {{ metrics.policyViolationsTotal }}
+        {{ $t('message.total') }}: {{ metrics.policy_violations_total }}
       </div>
     </b-tooltip>
   </span>
