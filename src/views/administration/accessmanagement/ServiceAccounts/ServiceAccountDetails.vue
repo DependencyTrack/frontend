@@ -19,6 +19,23 @@
             />
           </div>
         </b-form-group>
+        <b-form-group :label="$t('admin.workload_identity_bindings')">
+          <div class="list-group">
+            <workload-identity-binding-list-group-item
+              v-for="binding in workloadIdentityBindings"
+              :key="binding.uuid"
+              :binding="binding"
+              v-on:removeClicked="removeWorkloadIdentityBinding(binding)"
+            />
+            <actionable-list-group-item
+              :add-icon="true"
+              :tooltip="$t('admin.create_workload_identity_binding')"
+              v-on:actionClicked="
+                $bvModal.show(`createWorkloadIdentityBindingModal-${row.name}`)
+              "
+            />
+          </div>
+        </b-form-group>
         <b-form-group :label="$t('admin.team_membership')">
           <div class="list-group">
             <actionable-list-group-item
@@ -112,6 +129,10 @@
       :name="row.name"
       v-on:created="loadApiKeys"
     />
+    <create-workload-identity-binding-modal
+      :name="row.name"
+      v-on:created="loadWorkloadIdentityBindings"
+    />
   </div>
 </template>
 
@@ -120,10 +141,12 @@ import { Switch as cSwitch } from '@coreui/vue';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
 import CreateServiceAccountApiKeyModal from '../CreateServiceAccountApiKeyModal.vue';
+import CreateWorkloadIdentityBindingModal from '../CreateWorkloadIdentityBindingModal.vue';
+import WorkloadIdentityBindingListGroupItem from '../WorkloadIdentityBindingListGroupItem.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
-import common from '../../../../shared/common';
+import { fetchAllPages } from '@/shared/utils';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
 import i18n from '../../../../i18n';
@@ -141,6 +164,8 @@ export default {
     ActionableListGroupItem,
     ApiKeyListGroupItem,
     CreateServiceAccountApiKeyModal,
+    CreateWorkloadIdentityBindingModal,
+    WorkloadIdentityBindingListGroupItem,
     SelectTeamModal,
     SelectPermissionModal,
     BInputGroupFormInput,
@@ -152,6 +177,7 @@ export default {
       teams: [],
       permissions: [],
       apiKeys: [],
+      workloadIdentityBindings: [],
       loaded: false,
       labelIcon: {
         dataOn: '✓',
@@ -171,7 +197,11 @@ export default {
     },
   },
   async mounted() {
-    await Promise.all([this.loadServiceAccount(), this.loadApiKeys()]);
+    await Promise.all([
+      this.loadServiceAccount(),
+      this.loadApiKeys(),
+      this.loadWorkloadIdentityBindings(),
+    ]);
   },
   methods: {
     async loadServiceAccount() {
@@ -185,28 +215,28 @@ export default {
       }
     },
     async loadApiKeys() {
-      const apiKeys = [];
-      let url = `${this.serviceAccountUrl}/api-keys`;
       try {
-        while (url) {
-          const response = await this.axios.get(url);
-          apiKeys.push(
-            ...response.data.items.map((apiKey) => ({
-              publicId: apiKey.public_id,
-              comment: apiKey.comment,
-              created: apiKey.created_at,
-              lastUsed: apiKey.last_used_at,
-              expiresAt: apiKey.expires_at,
-            })),
-          );
-          const nextPageToken = response.data.next_page_token;
-          url = nextPageToken
-            ? common.setQueryParams(`${this.serviceAccountUrl}/api-keys`, {
-                page_token: nextPageToken,
-              })
-            : null;
-        }
-        this.apiKeys = apiKeys;
+        const apiKeys = await fetchAllPages(
+          this.axios,
+          `${this.serviceAccountUrl}/api-keys`,
+        );
+        this.apiKeys = apiKeys.map((apiKey) => ({
+          publicId: apiKey.public_id,
+          comment: apiKey.comment,
+          created: apiKey.created_at,
+          lastUsed: apiKey.last_used_at,
+          expiresAt: apiKey.expires_at,
+        }));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async loadWorkloadIdentityBindings() {
+      try {
+        this.workloadIdentityBindings = await fetchAllPages(
+          this.axios,
+          `${this.serviceAccountUrl}/workload-identity-bindings`,
+        );
       } catch (error) {
         console.error(error);
       }
@@ -269,6 +299,30 @@ export default {
           (key) => key.publicId !== apiKey.publicId,
         );
         this.$toastr.s(this.$t('message.updated'));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async removeWorkloadIdentityBinding(binding) {
+      const confirmed = await this.$bvModal.msgBoxConfirm(
+        this.$t('admin.remove_workload_identity_binding_confirm'),
+        {
+          title: this.$t('admin.remove_workload_identity_binding'),
+          okVariant: 'danger',
+          okTitle: this.$t('message.delete'),
+          cancelTitle: this.$t('message.cancel'),
+          centered: true,
+        },
+      );
+      if (!confirmed) return;
+      try {
+        await this.axios.delete(
+          `${this.serviceAccountUrl}/workload-identity-bindings/${encodeURIComponent(binding.uuid)}`,
+        );
+        this.workloadIdentityBindings = this.workloadIdentityBindings.filter(
+          (b) => b.uuid !== binding.uuid,
+        );
+        this.$toastr.s(this.$t('admin.workload_identity_binding_removed'));
       } catch (error) {
         console.error(error);
       }

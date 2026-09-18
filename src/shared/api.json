@@ -66,5 +66,6 @@
   "URL_VULNERABILITY": "api/v1/vulnerability",
   "URL_VULNERABILITY_POLICY": "api/v1/policy/vulnerability",
   "URL_WORKFLOW": "api/v1/workflow",
+  "URL_WORKLOAD_IDENTITY_PROVIDER": "api/v2/workload-identity-providers",
   "WITH_CREDENTIALS": ""
 }

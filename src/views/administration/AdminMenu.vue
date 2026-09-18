@@ -435,6 +435,11 @@ export default {
               route: 'accessManagement/serviceAccounts',
             },
             {
+              component: 'WorkloadIdentityProviders',
+              name: this.$t('admin.workload_identity_providers'),
+              route: 'accessManagement/workloadIdentityProviders',
+            },
+            {
               component: 'Teams',
               name: this.$t('admin.teams'),
               route: 'accessManagement/teams',

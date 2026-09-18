@@ -92,6 +92,8 @@ const OidcGroups = () =>
   import('@/views/administration/accessmanagement/OidcGroups');
 const ServiceAccounts = () =>
   import('@/views/administration/accessmanagement/ServiceAccounts');
+const WorkloadIdentityProviders = () =>
+  import('@/views/administration/accessmanagement/WorkloadIdentityProviders');
 const Teams = () => import('@/views/administration/accessmanagement/Teams');
 const Permissions = () =>
   import('@/views/administration/accessmanagement/Permissions');
@@ -1033,6 +1035,23 @@ function configRoutes() {
             {
               path: 'accessManagement/serviceAccounts',
               component: ServiceAccounts,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'ACCESS_MANAGEMENT',
+                  'ACCESS_MANAGEMENT_CREATE',
+                  'ACCESS_MANAGEMENT_READ',
+                  'ACCESS_MANAGEMENT_UPDATE',
+                  'ACCESS_MANAGEMENT_DELETE',
+                ],
+              },
+            },
+            {
+              path: 'accessManagement/workloadIdentityProviders',
+              component: WorkloadIdentityProviders,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
