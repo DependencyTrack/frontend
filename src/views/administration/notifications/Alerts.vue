@@ -40,6 +40,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import ExtensionConfigForm from '../../components/ExtensionConfigForm';
 import CodeMirrorEditor from '../../components/CodeMirrorEditor';
 import { createCelCompletionSource } from '../../policy/celCompletions';
+import { celErrorsToMarkers } from '../../../shared/utils';
 
 export default {
   props: {
@@ -340,19 +341,22 @@ export default {
                 filterExpressionMarkers: [],
                 showFilterExpressionModal: false,
                 showFilterExpressionReference: false,
-                celCompletionSource: createCelCompletionSource({
-                  component: undefined,
-                  project: undefined,
-                  vulns: undefined,
-                  now: undefined,
-                  level: 'int',
-                  scope: 'int',
-                  group: 'int',
-                  title: 'string',
-                  content: 'string',
-                  timestamp: 'Timestamp',
-                  subject: 'dyn',
-                }),
+                celCompletionSource: createCelCompletionSource(
+                  {
+                    component: undefined,
+                    project: undefined,
+                    vulns: undefined,
+                    now: undefined,
+                    level: 'int',
+                    scope: 'int',
+                    group: 'int',
+                    title: 'string',
+                    content: 'string',
+                    timestamp: 'Timestamp',
+                    subject: 'dyn',
+                  },
+                  [],
+                ),
                 filterExpressionReferenceFields: [
                   { key: 'variable', label: i18n.t('message.variable') },
                   { key: 'type', label: i18n.t('message.type') },
@@ -529,14 +533,8 @@ export default {
                         response.data &&
                         Array.isArray(response.data.errors)
                       ) {
-                        this.filterExpressionMarkers = response.data.errors.map(
-                          (err) => ({
-                            startLineNumber: err.line || 1,
-                            endLineNumber: err.line || 1,
-                            startColumn: err.column || 1,
-                            endColumn: (err.column || 1) + 3,
-                            message: err.message || 'Compilation error',
-                          }),
+                        this.filterExpressionMarkers = celErrorsToMarkers(
+                          response.data.errors,
                         );
                         this.showFilterExpressionModal = true;
                         this.$toastr.w(
