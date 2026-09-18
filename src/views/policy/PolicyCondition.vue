@@ -329,6 +329,12 @@ export default {
         { value: 'MATCHES', text: this.$t('operator.matches') },
         { value: 'NO_MATCH', text: this.$t('operator.no_match') },
       ],
+      objectAndRegexOperators: [
+        { value: 'IS', text: this.$t('operator.is') },
+        { value: 'IS_NOT', text: this.$t('operator.is_not') },
+        { value: 'MATCHES', text: this.$t('operator.matches') },
+        { value: 'NO_MATCH', text: this.$t('operator.no_match') },
+      ],
       numericOperators: [
         { value: 'NUMERIC_GREATER_THAN', text: '>' },
         { value: 'NUMERIC_LESS_THAN', text: '<' },
@@ -504,7 +510,7 @@ export default {
           this.operators = this.listOperators;
           break;
         case 'VULNERABILITY_ID':
-          this.operators = this.objectOperators;
+          this.operators = this.objectAndRegexOperators;
           break;
         case 'VERSION_DISTANCE':
           this.operators = this.numericOperators;
@@ -736,6 +742,11 @@ export default {
       switch (this.subject) {
         case 'AGE':
           return this.$t('message.age_tooltip');
+        case 'VULNERABILITY_ID':
+          if (this.operator === 'MATCHES' || this.operator === 'NO_MATCH') {
+            return this.$t('message.vulnerability_id_pattern_tooltip');
+          }
+          return '';
         default:
           return '';
       }
