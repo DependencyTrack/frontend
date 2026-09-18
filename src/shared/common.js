@@ -447,6 +447,13 @@ $common.componentClassifierLabelFormatter = (i18n) => {
  */
 $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
   return function (value) {
+    let url = !this.routerFunc
+      ? '../projects/?classifier=' + value
+      : this.routerFunc().resolve({
+          name: 'Projects',
+          query: { classifier: value },
+        }).href;
+
     switch (value) {
       case 'APPLICATION':
       case 'FRAMEWORK':
@@ -456,7 +463,9 @@ $common.componentClassifierLabelProjectUrlFormatter = (i18n) => {
       case 'DEVICE':
       case 'FIRMWARE':
       case 'FILE':
-        return i18n.$t(`message.component_${value.toLowerCase()}`);
+        return `<a href="${url}">${i18n.$t(
+          `message.component_${value.toLowerCase()}`,
+        )}</a>`;
       default:
         return null;
     }

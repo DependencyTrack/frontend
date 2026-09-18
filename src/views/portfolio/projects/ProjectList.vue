@@ -46,7 +46,7 @@
             :field-label="$t('message.project_name')"
             field-name="name"
             icon="fa-folder-open-o"
-            :operators="['contains']"
+            operator="contains"
             v-model="nameFilter"
             @dismiss="onFilterDismiss('name')"
           />
@@ -56,7 +56,7 @@
             :field-label="$t('message.version')"
             field-name="version"
             icon="fa-bookmark-o"
-            :operators="['contains']"
+            operator="contains"
             v-model="versionFilter"
             @dismiss="onFilterDismiss('version')"
           />
@@ -79,16 +79,6 @@
             :input-placeholder="$t('message.tag_name')"
             v-model="tagFilter"
             @dismiss="onFilterDismiss('tag')"
-          />
-          <searchable-multi-select-filter-pill
-            v-if="isFilterVisible('severity')"
-            ref="filter_severity"
-            :field-label="$t('message.severity')"
-            field-name="severity"
-            icon="fa-signal"
-            :options="severityFilterOptions"
-            v-model="severityFilter"
-            @dismiss="onFilterDismiss('severity')"
           />
           <multi-value-text-filter-pill
             v-if="isFilterVisible('team')"
@@ -347,7 +337,6 @@ const HEAVY_FILTER_NAMES = [
   'version',
   'classifier',
   'tag',
-  'severity',
   'team',
   'ancestor',
   'lastBomImport',
@@ -441,13 +430,6 @@ export default {
         this.tagFilter = Array.isArray(q.tag) ? q.tag : [q.tag];
       } else {
         this.tagFilter = null;
-      }
-      if (q.severity) {
-        this.severityFilter = Array.isArray(q.severity)
-          ? q.severity
-          : [q.severity];
-      } else {
-        this.severityFilter = null;
       }
       if (q.teams_any) {
         this.teamFilter = Array.isArray(q.teams_any)
@@ -553,9 +535,6 @@ export default {
       if (this.tagFilter?.length) {
         params.tags_all = [...this.tagFilter];
       }
-      if (this.severityFilter?.length) {
-        params.severity = [...this.severityFilter];
-      }
       if (this.teamFilter?.length) {
         params.teams_any = [...this.teamFilter];
       }
@@ -624,7 +603,6 @@ export default {
         this.versionFilter = null;
         this.classifierFilter = null;
         this.tagFilter = null;
-        this.severityFilter = null;
         this.teamFilter = null;
         this.ancestorFilter = null;
         this.lastBomImportFilter = null;
@@ -939,11 +917,6 @@ export default {
           icon: 'fa-cube',
         },
         { name: 'tag', label: this.$t('message.tags'), icon: 'fa-tag' },
-        {
-          name: 'severity',
-          label: this.$t('message.severity'),
-          icon: 'fa-signal',
-        },
         { name: 'team', label: this.$t('message.teams'), icon: 'fa-users' },
         ...(!this.uuid
           ? [
@@ -986,15 +959,6 @@ export default {
         { value: 'false', text: this.$t('message.filter_only_non_latest') },
       ];
     },
-    severityFilterOptions() {
-      return [
-        { text: this.$t('severity.critical'), value: 'CRITICAL' },
-        { text: this.$t('severity.high'), value: 'HIGH' },
-        { text: this.$t('severity.medium'), value: 'MEDIUM' },
-        { text: this.$t('severity.low'), value: 'LOW' },
-        { text: this.$t('severity.unassigned'), value: 'UNASSIGNED' },
-      ];
-    },
     isTreeViewAllowed() {
       return !this.uuid && !this.hasListFilters;
     },
@@ -1031,7 +995,6 @@ export default {
       versionFilter: null,
       classifierFilter: null,
       tagFilter: null,
-      severityFilter: null,
       teamFilter: null,
       ancestorFilter: null,
       ancestorOptions: [],

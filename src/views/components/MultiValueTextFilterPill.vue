@@ -5,8 +5,10 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    :apply-disabled="!canApply"
     @show="onDropdownShow"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
@@ -44,15 +46,6 @@
       class="mb-2"
       @keydown.enter.prevent="addValuesFromInput"
     ></b-form-input>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!canApply"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
   </filter-pill-dropdown>
 </template>
 
