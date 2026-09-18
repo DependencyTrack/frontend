@@ -64,6 +64,8 @@ import SecretRefSelect from './SecretRefSelect.vue';
 
 const JsonSchemaObjectField = () => import('./JsonSchemaObjectField.vue');
 const JsonSchemaArrayField = () => import('./JsonSchemaArrayField.vue');
+const JsonSchemaTabbedArrayField = () =>
+  import('./JsonSchemaTabbedArrayField.vue');
 
 export default {
   name: 'JsonSchemaFormField',
@@ -93,6 +95,10 @@ export default {
       default: () => ({}),
     },
     isArrayItem: {
+      type: Boolean,
+      default: false,
+    },
+    tabbed: {
       type: Boolean,
       default: false,
     },
@@ -147,6 +153,9 @@ export default {
         return JsonSchemaObjectField;
       }
       if (this.schema.type === 'array') {
+        if (this.isTabbedObjectArray) {
+          return JsonSchemaTabbedArrayField;
+        }
         return JsonSchemaArrayField;
       }
       if (this.isSecretRef) {
@@ -177,6 +186,9 @@ export default {
       }
 
       if (this.schema.type === 'array') {
+        const tabbedProps = this.isTabbedObjectArray
+          ? { labelProperty: this.schema['x-ui-hint']?.labelProperty || 'name' }
+          : {};
         return {
           ...baseProps,
           value: this.value,
@@ -184,6 +196,7 @@ export default {
           propertyName: this.propertyName,
           validationErrors: this.validationErrors,
           validationError: this.validationError,
+          ...tabbedProps,
         };
       }
 
@@ -218,6 +231,19 @@ export default {
         trim:
           this.schema.type === 'string' && this.schema.format !== 'password',
       };
+    },
+    isTabbedArray() {
+      return (
+        this.schema.type === 'array' &&
+        (this.tabbed || this.schema['x-ui-hint']?.layout === 'tabs')
+      );
+    },
+    isTabbedObjectArray() {
+      return (
+        this.isTabbedArray &&
+        (this.schema.items?.type === 'object' ||
+          !!this.schema.items?.properties)
+      );
     },
     enumOptions() {
       const labels = this.localizedSchema.enumLabels || {};
