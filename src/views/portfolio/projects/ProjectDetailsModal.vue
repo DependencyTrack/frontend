@@ -558,7 +558,7 @@
         v-b-modal.projectPropertiesModal
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+          PERMISSIONS.PORTFOLIO_MANAGEMENT_READ,
         ]"
         >{{ $t('message.properties') }}</b-button
       >

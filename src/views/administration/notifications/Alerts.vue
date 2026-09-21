@@ -239,12 +239,12 @@ export default {
                     <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_next_trigger_at')" :readonly="true" type="text" :value="this.scheduleNextTriggerAt" :state="null"/>
                     <b-form-group v-if="isScheduled" :title="$t('admin.alert_schedule_skip_publish_if_unchanged_tooltip')"><c-switch v-model="scheduleSkipUnchanged" color="primary" label v-bind="labelIcon"/> {{ $t('admin.alert_schedule_skip_publish_if_unchanged') }}</b-form-group>
                     <div style="text-align:right">
-                      <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
+                      <b-button variant="outline-primary" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
-                       <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
-                       <b-button variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
+                       <b-button v-permission:or="[PERMISSIONS.SYSTEM_CONFIGURATION, PERMISSIONS.SYSTEM_CONFIGURATION_DELETE]" variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                       <b-button v-permission:or="[PERMISSIONS.SYSTEM_CONFIGURATION, PERMISSIONS.SYSTEM_CONFIGURATION_UPDATE]" variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
                     </div>
                   </b-col>
                   <b-modal v-model="showFilterExpressionModal" :title="$t('admin.filter_expression')" size="lg">

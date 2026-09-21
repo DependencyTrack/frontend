@@ -127,7 +127,7 @@ export default {
 
     // debug logging of ajax requests/responses
     if (getUrlVar('debug')) {
-      $(document).ajaxComplete((event, xhr) => {
+      $(document).ajaxComplete((_event, xhr) => {
         console.debug(
           'jQuery-Status:',
           xhr.status,

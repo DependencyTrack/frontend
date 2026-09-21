@@ -213,7 +213,85 @@ input.required, select.required, textarea.required {
 .tab-content {
   background: $body-bg;
 }
+.nav-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  --nav-tabs-fade: 2rem;
+}
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (animation-timeline: scroll(self inline)) {
+  @keyframes nav-tabs-scroll-fade {
+    from {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 0,
+        #000 calc(100% - var(--nav-tabs-fade)),
+        transparent 100%
+      );
+    }
+    50% {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--nav-tabs-fade),
+        #000 calc(100% - var(--nav-tabs-fade)),
+        transparent 100%
+      );
+    }
+    to {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--nav-tabs-fade),
+        #000 100%,
+        transparent 100%
+      );
+    }
+  }
+  .nav-tabs {
+    animation-name: nav-tabs-scroll-fade;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(self inline);
+  }
+}
+.nav-tabs-scroller {
+  position: relative;
+}
+.nav-tabs-scroll-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  padding: 0 0.5rem;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.nav-tabs-scroll-btn.is-visible {
+  display: flex;
+}
+.nav-tabs-scroll-btn-left {
+  left: 0;
+  padding-right: 1.5rem;
+  background: linear-gradient(to right, $body-bg 50%, transparent);
+}
+.nav-tabs-scroll-btn-right {
+  right: 0;
+  padding-left: 1.5rem;
+  background: linear-gradient(to left, $body-bg 50%, transparent);
+}
 .nav-tabs .nav-link {
+  white-space: nowrap;
   border-top-color: $grey-900;
   border-left-color: $grey-900;
   border-right-color: $grey-900;

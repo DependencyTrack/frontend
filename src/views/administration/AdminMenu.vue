@@ -78,14 +78,11 @@ import {
   SECRET_MANAGEMENT_CREATE,
   SECRET_MANAGEMENT_UPDATE,
   SECRET_MANAGEMENT_DELETE,
-  SECRET_MANAGEMENT_READ,
 } from '../../shared/permissions';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
-  },
+  components: {},
   methods: {
     emitEvent: function (plugin) {
       EventBus.$emit('admin:plugin', plugin);
@@ -225,7 +222,6 @@ export default {
           permission: [
             SECRET_MANAGEMENT,
             SECRET_MANAGEMENT_CREATE,
-            SECRET_MANAGEMENT_READ,
             SECRET_MANAGEMENT_UPDATE,
             SECRET_MANAGEMENT_DELETE,
           ],
@@ -432,6 +428,11 @@ export default {
               component: 'OidcGroups',
               name: this.$t('admin.oidc_groups'),
               route: 'accessManagement/oidcGroups',
+            },
+            {
+              component: 'ServiceAccounts',
+              name: this.$t('admin.service_accounts'),
+              route: 'accessManagement/serviceAccounts',
             },
             {
               component: 'Teams',

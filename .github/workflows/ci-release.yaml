@@ -71,7 +71,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # tag=v7.0.1
         with:
-          token: ${{ secrets.BOT_RELEASE_GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Set up NodeJs
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # tag=v7.0.0
@@ -90,6 +90,7 @@ jobs:
           VERSION_BUMP_TYPE: ${{ inputs.version-bump-type }}
           PREID: ${{ inputs.preid }}
           DRY_RUN: ${{ inputs.dry-run }}
+          GITHUB_TOKEN: ${{ secrets.BOT_RELEASE_GITHUB_TOKEN }}
         run: |-
           NPM_VERSION_OPTS='--tag-version-prefix='
 
@@ -107,8 +108,9 @@ jobs:
           fi
 
           if [[ "${DRY_RUN}" != "true" ]]; then
-            git push
-            git push --tags
+            REMOTE="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+            git push "${REMOTE}" "HEAD:${GITHUB_REF_NAME}"
+            git push "${REMOTE}" --tags
           fi
 
       - name: Create GitHub Release

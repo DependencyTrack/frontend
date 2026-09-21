@@ -32,7 +32,7 @@ export default {
     };
   },
   methods: {
-    render: function (metric) {
+    render: function () {
       this.renderChart(
         {
           labels: [

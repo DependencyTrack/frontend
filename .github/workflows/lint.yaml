@@ -55,6 +55,22 @@ jobs:
         run: npm run vue-i18n-extract
         continue-on-error: false
 
+  lint-gha:
+    name: Lint GitHub Actions
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # tag=v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+
   test-unit:
     name: Unit Tests
     runs-on: ubuntu-latest

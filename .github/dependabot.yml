@@ -4,28 +4,41 @@ updates:
   # main branch
   #
   - package-ecosystem: npm
+    commit-message:
+      # Disable "chore(deps):" prefixes.
+      prefix: ""
     directory: /
     schedule:
       interval: daily
     cooldown:
       default-days: 7
   - package-ecosystem: docker
+    commit-message:
+      prefix: ""
     directory: /docker
     schedule:
       interval: daily
     cooldown:
       default-days: 7
   - package-ecosystem: github-actions
+    commit-message:
+      prefix: ""
     directory: /
     schedule:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
   #
   # 5.0.x maintenance branch
   #
   - package-ecosystem: npm
-    target-branch: 5.0.x
+    target-branch: 5.1.x
+    commit-message:
+      prefix: ""
     directory: /
     schedule:
       interval: daily
@@ -37,7 +50,9 @@ updates:
           - version-update:semver-major
           - version-update:semver-minor
   - package-ecosystem: docker
-    target-branch: 5.0.x
+    target-branch: 5.1.x
+    commit-message:
+      prefix: ""
     directory: /docker
     schedule:
       interval: daily
@@ -48,17 +63,25 @@ updates:
         update-types:
           - version-update:semver-major
   - package-ecosystem: github-actions
-    target-branch: 5.0.x
+    target-branch: 5.1.x
+    commit-message:
+      prefix: ""
     directory: /
     schedule:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
   #
   # 4.14.x maintenance branch
   #
   - package-ecosystem: npm
     target-branch: 4.14.x
+    commit-message:
+      prefix: ""
     directory: /
     schedule:
       interval: daily
@@ -71,6 +94,8 @@ updates:
           - version-update:semver-minor
   - package-ecosystem: docker
     target-branch: 4.14.x
+    commit-message:
+      prefix: ""
     directory: /docker
     schedule:
       interval: daily
@@ -82,8 +107,14 @@ updates:
           - version-update:semver-major
   - package-ecosystem: github-actions
     target-branch: 4.14.x
+    commit-message:
+      prefix: ""
     directory: /
     schedule:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"

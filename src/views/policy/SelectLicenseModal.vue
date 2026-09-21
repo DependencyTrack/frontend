@@ -50,7 +50,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -58,7 +58,7 @@ export default {
           title: this.$t('message.spdx_license_id'),
           field: 'licenseId',
           sortable: true,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );

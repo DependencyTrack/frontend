@@ -288,7 +288,12 @@
         />
         <div class="pull-right">
           <b-button
-            v-if="this.isPermitted(this.PERMISSIONS.VULNERABILITY_ANALYSIS)"
+            v-if="
+              this.isPermitted([
+                this.PERMISSIONS.VULNERABILITY_ANALYSIS,
+                this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+              ])
+            "
             :disabled="analysisState === null"
             size="sm"
             variant="outline-primary"

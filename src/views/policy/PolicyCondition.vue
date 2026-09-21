@@ -659,7 +659,7 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       }
@@ -682,7 +682,7 @@ export default {
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       } else {
