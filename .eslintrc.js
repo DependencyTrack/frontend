@@ -16,4 +16,12 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
   },
+  overrides: [
+    {
+      files: ['tests/**/*.js', 'jest.config.js'],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };
