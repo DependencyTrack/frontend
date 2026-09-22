@@ -466,17 +466,6 @@ export default {
           }
         });
     },
-    parentSearchUrl(searchText) {
-      return common.setQueryParams(
-        `${this.$api.BASE_URL}/${this.$api.URL_PROJECT_CONCISE}`,
-        {
-          excludeInactive: true,
-          pageSize: 10,
-          pageNumber: 1,
-          searchText: searchText || null,
-        },
-      );
-    },
     teamSearchUrl(searchText) {
       return common.setQueryParams(
         `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`,

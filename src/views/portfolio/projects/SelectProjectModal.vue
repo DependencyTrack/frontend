@@ -7,13 +7,14 @@
     v-permission="'VIEW_PORTFOLIO'"
     :title="$t('message.select_project')"
   >
-    <bootstrap-table
+    <token-paginated-table
       ref="table"
+      :base-url="tableBaseUrl"
       :columns="columns"
-      :data="data"
-      :options="options"
-    >
-    </bootstrap-table>
+      :options="tableOptions"
+      :default-page-size="10"
+      page-size-storage-key="SelectProjectModalPageSize"
+    />
     <template v-slot:modal-footer="{ cancel }">
       <b-button size="md" variant="secondary" @click="cancel()">{{
         $t('message.cancel')
@@ -29,53 +30,40 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 export default {
   mixins: [permissionsMixin],
+  components: {
+    TokenPaginatedTable,
+  },
   props: {
-    // Current projects should be a list of UUIDs since names can be duplicate
     username: { type: String, default: null },
   },
-  methods: {
-    apiUrl: function () {
-      let endpoint = '';
+  computed: {
+    tableBaseUrl() {
       if (this.username) {
-        endpoint = `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
-        return endpoint;
+        return `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
       }
-
-      endpoint = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-      if (this.showInactiveProjects === undefined) {
-        endpoint += '?excludeInactive=true';
-      } else {
-        endpoint += '?excludeInactive=' + !this.showInactiveProjects;
-      }
-      return endpoint;
-    },
-    refreshTable: function () {
-      this.$refs.table.refresh({
-        url: this.apiUrl(),
-        pageNumber: 1,
-        silent: true,
-      });
-    },
-    handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', this.$children[0].id);
-      this.$emit('selection', this.$refs.table.getSelections());
+      return common.setQueryParams(
+        `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
+        {
+          is_active: 'ACTIVE',
+          sort_by: 'name',
+          sort_direction: 'ASC',
+        },
+      );
     },
   },
-  watch: {
-    showInactiveProjects() {
-      this.refreshTable();
+  methods: {
+    handleSelection() {
+      this.$root.$emit('bv::hide::modal', this.$children[0].id);
+      const selections = this.$refs.table.$refs.table.getSelections();
+      this.$emit('selection', selections);
     },
   },
   data() {
     return {
-      showInactiveProjects: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -85,7 +73,7 @@ export default {
         {
           title: this.$t('message.project_name'),
           field: 'name',
-          sortable: true,
+          sortable: false,
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -93,43 +81,25 @@ export default {
         {
           title: this.$t('message.version'),
           field: 'version',
-          sortable: true,
+          sortable: false,
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
         {
           title: this.$t('message.active'),
-          field: 'active',
+          field: 'is_active',
           formatter(value) {
-            return value === true ? '<i class="fa fa-check-square-o" />' : '';
+            return value === 'ACTIVE' || value === true
+              ? '<i class="fa fa-check-square-o" />'
+              : '';
           },
           align: 'center',
           class: 'tight',
-          sortable: true,
         },
       ],
-      data: [],
-      options: {
-        search: true,
-        showColumns: true,
-        showRefresh: true,
-        pagination: true,
-        silentSort: false,
-        sidePagination: 'server',
-        queryParamsType: 'pageSize',
-        pageList: '[10, 25, 50, 100]',
-        pageSize: 10,
-        icons: {
-          refresh: 'fa-refresh',
-        },
-        toolbar: '#projectsToolbar',
-        responseHandler: (res, xhr) => {
-          // console.log(this.currentProjects);
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
-        },
-        url: this.apiUrl(),
+      tableOptions: {
+        search: false,
       },
     };
   },
