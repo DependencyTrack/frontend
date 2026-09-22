@@ -20,7 +20,10 @@
         size="md"
         variant="outline-danger"
         @click="deleteProperty"
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+        v-permission:or="[
+          PERMISSIONS.PORTFOLIO_MANAGEMENT,
+          PERMISSIONS.PORTFOLIO_MANAGEMENT_DELETE,
+        ]"
         :disabled="!hasRowsSelected"
         >{{ $t('message.delete') }}</b-button
       >
@@ -30,7 +33,10 @@
       <b-button
         size="md"
         variant="primary"
-        v-permission="PERMISSIONS.PORTFOLIO_MANAGEMENT"
+        v-permission:or="[
+          PERMISSIONS.PORTFOLIO_MANAGEMENT,
+          PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
+        ]"
         v-b-modal.componentCreatePropertyModal
         >{{ $t('message.create_property') }}</b-button
       >

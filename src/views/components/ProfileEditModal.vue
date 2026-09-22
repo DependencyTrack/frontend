@@ -76,12 +76,12 @@ export default {
           fullname: this.fullname,
           email: this.email,
         })
-        .then((response) => {
+        .then(() => {
           EventBus.$emit('profileUpdated');
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.profile_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       this.$root.$emit('bv::hide::modal', 'profileEditModal');

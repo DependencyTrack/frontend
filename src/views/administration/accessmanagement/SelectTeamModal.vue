@@ -43,7 +43,7 @@ export default {
   mixins: [permissionsMixin],
   data() {
     return {
-      currentSelection: [],
+      currentSelection: this.currentTeams.slice(),
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
@@ -70,7 +70,7 @@ export default {
         showRefresh: true,
         pagination: true,
         silentSort: false,
-        sidePagination: 'client',
+        sidePagination: 'server',
         queryParamsType: 'pageSize',
         pageList: '[10, 25, 50, 100]',
         pageSize: 10,
@@ -83,16 +83,17 @@ export default {
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`,
         onLoadSuccess: () => {
-          const preSelected = this.currentTeams.map((team) => team.name);
+          // Re-apply checkboxes for already-selected teams on every
+          // page load, including teams selected on previously visited pages.
           this.$refs.table.checkBy({
             field: 'name',
-            values: preSelected,
+            values: this.currentSelection.map((team) => team.name),
           });
         },
-        onCheck: this.updateCurrentSelection,
-        onUncheck: this.updateCurrentSelection,
-        onCheckAll: this.updateCurrentSelection,
-        onUncheckAll: this.updateCurrentSelection,
+        onCheck: this.addSelection,
+        onUncheck: this.removeSelection,
+        onCheckAll: this.addSelections,
+        onUncheckAll: (_, rowsBefore) => this.removeSelections(rowsBefore),
       },
     };
   },
@@ -127,8 +128,21 @@ export default {
       this.$bvModal.hide('selectTeamModal');
       this.$emit('selection', this.currentSelection);
     },
-    updateCurrentSelection() {
-      this.currentSelection = this.$refs.table.getSelections();
+    addSelection(row) {
+      if (!this.currentSelection.some((team) => team.name === row.name)) {
+        this.currentSelection.push(row);
+      }
+    },
+    removeSelection(row) {
+      this.currentSelection = this.currentSelection.filter(
+        (team) => team.name !== row.name,
+      );
+    },
+    addSelections(rows) {
+      rows.forEach((row) => this.addSelection(row));
+    },
+    removeSelections(rows) {
+      rows.forEach((row) => this.removeSelection(row));
     },
   },
 };

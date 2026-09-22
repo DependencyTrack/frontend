@@ -12,6 +12,12 @@
           {{ loadError }}
         </b-alert>
 
+        <showdown
+          v-if="!loadError && schema && schema.description"
+          :markdown="schema.description"
+          class="extension-config-form__description"
+        />
+
         <div v-if="!loadError && schema">
           <div
             v-for="(propSchema, propName) in schema.properties"
@@ -124,6 +130,7 @@ import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import common from '../../shared/common';
 import JsonSchemaFormField from './JsonSchemaFormField.vue';
+import Showdown from './Showdown.vue';
 import {
   enrichSchema,
   getDefaultValue,
@@ -135,6 +142,7 @@ const CHECK_STATUS_ORDER = { FAILED: 0, SKIPPED: 1, PASSED: 2 };
 export default {
   components: {
     JsonSchemaFormField,
+    Showdown,
   },
   props: {
     extensionPointName: {
@@ -169,6 +177,11 @@ export default {
       required: false,
       default: undefined,
     },
+    displayName: {
+      type: String,
+      required: false,
+      default: undefined,
+    },
   },
   data() {
     return {
@@ -190,7 +203,11 @@ export default {
       if (this.header !== undefined) {
         return this.header;
       }
-      return this.schema?.title || common.titleCase(this.extensionName);
+      return (
+        this.displayName ||
+        this.schema?.title ||
+        common.titleCase(this.extensionName)
+      );
     },
     normalizedFormData() {
       return this.normalizeFormData(this.formData);
@@ -577,6 +594,12 @@ export default {
 </script>
 
 <style scoped>
+.extension-config-form__description {
+  margin-bottom: 1rem;
+}
+.extension-config-form__description >>> p:last-child {
+  margin-bottom: 0;
+}
 .extension-config-form__skeleton {
   padding: 0.5rem 0;
 }

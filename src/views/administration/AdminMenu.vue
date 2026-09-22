@@ -78,14 +78,11 @@ import {
   SECRET_MANAGEMENT_CREATE,
   SECRET_MANAGEMENT_UPDATE,
   SECRET_MANAGEMENT_DELETE,
-  SECRET_MANAGEMENT_READ,
 } from '../../shared/permissions';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
-  },
+  components: {},
   methods: {
     emitEvent: function (plugin) {
       EventBus.$emit('admin:plugin', plugin);
@@ -111,7 +108,7 @@ export default {
             const route = routePrefix + '/' + encodedName;
             return {
               id: route,
-              name: common.titleCase(ext.name),
+              name: ext.display_name || common.titleCase(ext.name),
               route: route,
               configurable: ext.configurable !== false,
             };
@@ -146,6 +143,7 @@ export default {
       'vuln-data-source',
       'vulnerabilitySources',
     );
+    this.fetchExtensions('kevsources', 'kev-data-source', 'kevSources');
     this.fetchExtensions(
       'notifications',
       'notification-publisher',
@@ -224,7 +222,6 @@ export default {
           permission: [
             SECRET_MANAGEMENT,
             SECRET_MANAGEMENT_CREATE,
-            SECRET_MANAGEMENT_READ,
             SECRET_MANAGEMENT_UPDATE,
             SECRET_MANAGEMENT_DELETE,
           ],
@@ -251,6 +248,18 @@ export default {
         {
           name: this.$t('admin.vuln_sources'),
           id: 'vulnerabilitysources',
+          permission: [
+            SYSTEM_CONFIGURATION,
+            SYSTEM_CONFIGURATION_CREATE,
+            SYSTEM_CONFIGURATION_READ,
+            SYSTEM_CONFIGURATION_UPDATE,
+            SYSTEM_CONFIGURATION_DELETE,
+          ],
+          children: [],
+        },
+        {
+          name: this.$t('admin.kev_sources'),
+          id: 'kevsources',
           permission: [
             SYSTEM_CONFIGURATION,
             SYSTEM_CONFIGURATION_CREATE,
@@ -419,6 +428,16 @@ export default {
               component: 'OidcGroups',
               name: this.$t('admin.oidc_groups'),
               route: 'accessManagement/oidcGroups',
+            },
+            {
+              component: 'ServiceAccounts',
+              name: this.$t('admin.service_accounts'),
+              route: 'accessManagement/serviceAccounts',
+            },
+            {
+              component: 'WorkloadIdentityProviders',
+              name: this.$t('admin.workload_identity_providers'),
+              route: 'accessManagement/workloadIdentityProviders',
             },
             {
               component: 'Teams',
