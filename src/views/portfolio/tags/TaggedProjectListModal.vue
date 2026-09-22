@@ -25,6 +25,7 @@
 <script>
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import * as permissions from '../../../shared/permissions';
 import common from '../../../shared/common';
 import router from '@/router';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
@@ -69,6 +70,10 @@ export default {
     }, 50);
   },
   data() {
+    const canUntag = permissions.hasPermission([
+      permissions.PORTFOLIO_MANAGEMENT,
+      permissions.PORTFOLIO_MANAGEMENT_UPDATE,
+    ]);
     return {
       labelIcon: {
         dataOn: '\u2713',
@@ -106,6 +111,7 @@ export default {
       options: {
         buttons: {
           btnDeleteSelected: {
+            render: canUntag,
             icon: 'fa fa-minus',
             attributes: {
               title: this.$t('message.unassign_tag_from_selection'),

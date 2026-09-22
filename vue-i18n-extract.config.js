@@ -5,6 +5,7 @@ module.exports = {
     'condition.server_error',
     'language.de',
     'language.en',
+    'language.ko',
     'language.es',
     'language.fr',
     'language.hi',

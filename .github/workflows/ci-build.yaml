@@ -5,10 +5,12 @@ on:
     branches:
       - 'main' # Default branch
       - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
   pull_request:
     branches:
       - 'main' # Default branch
       - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
   workflow_dispatch:
     inputs:
       app-version:
@@ -28,7 +30,7 @@ jobs:
       major: ${{ steps.parse.outputs.major }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # tag=v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # tag=v7.0.1
         with:
           persist-credentials: false
 
@@ -49,6 +51,9 @@ jobs:
       publish-container: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'feature-') }}
       ref-name: ${{ github.ref_name }}
     permissions:
+      artifact-metadata: write # Required to create the artifact storage record.
+      attestations: write # Required to generate SLSA build provenance.
+      id-token: write # Required for keyless signing of SLSA build provenance.
       packages: write # Required to push images to ghcr.io
     secrets:
       registry-0-usr: ${{ github.repository_owner }}

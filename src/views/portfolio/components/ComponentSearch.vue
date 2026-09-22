@@ -1,140 +1,107 @@
 <template>
   <div class="componentSearch animated fadeIn" v-permission="'VIEW_PORTFOLIO'">
-    <div
-      id="componentSearchToolbar"
-      class="filter-bar"
-      role="toolbar"
-      :aria-label="$t('message.filters')"
+    <filter-bar
+      toolbar-id="componentSearchToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
     >
-      <div class="filter-pills">
-        <text-filter-pill
-          v-if="isFilterVisible('group')"
-          ref="filter_group"
-          :field-label="$t('message.group')"
-          field-name="group"
-          icon="fa-archive"
-          :operators="['contains']"
-          v-model="groupFilter"
-          @dismiss="onFilterDismiss('group')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('name')"
-          ref="filter_name"
-          :field-label="$t('message.name')"
-          field-name="name"
-          icon="fa-cube"
-          :operators="['contains']"
-          v-model="nameFilter"
-          @dismiss="onFilterDismiss('name')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('version')"
-          ref="filter_version"
-          :field-label="$t('message.version')"
-          field-name="version"
-          icon="fa-bookmark-o"
-          :operators="['contains']"
-          v-model="versionFilter"
-          @dismiss="onFilterDismiss('version')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('purl')"
-          ref="filter_purl"
-          :field-label="$t('message.package_url')"
-          field-name="purl"
-          icon="fa-gift"
-          :operators="['starts_with']"
-          v-model="purlFilter"
-          @dismiss="onFilterDismiss('purl')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('cpe')"
-          ref="filter_cpe"
-          :field-label="$t('message.cpe')"
-          field-name="cpe"
-          icon="fa-shield"
-          :operators="['equals']"
-          v-model="cpeFilter"
-          @dismiss="onFilterDismiss('cpe')"
-        />
-        <text-filter-pill
-          v-if="isFilterVisible('swidTagId')"
-          ref="filter_swidTagId"
-          :field-label="$t('message.swid_tagid')"
-          field-name="swid_tag_id"
-          icon="fa-tag"
-          :operators="['contains']"
-          v-model="swidTagIdFilter"
-          @dismiss="onFilterDismiss('swidTagId')"
-        />
-        <hash-filter-pill
-          v-if="isFilterVisible('hash')"
-          ref="filter_hash"
-          field-name="hash"
-          :field-label="$t('message.hashes_short_desc')"
-          :hash-types="hashTypeOptions"
-          v-model="hashFilter"
-          @dismiss="onFilterDismiss('hash')"
-        />
-        <date-time-range-filter-pill
-          v-if="isFilterVisible('published')"
-          ref="filter_published"
-          :field-label="$t('message.published')"
-          field-name="package_artifact_published"
-          icon="fa-calendar"
-          date-only
-          emit-date-as-millis
-          v-model="publishedFilter"
-          @dismiss="onFilterDismiss('published')"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('showInactive')"
-          :field-label="$t('message.show_inactive_projects')"
-          field-name="showInactive"
-          icon="fa-eye"
-          v-model="showInactive"
-        />
-        <boolean-filter-pill
-          v-if="isFilterVisible('onlyLatestVersion')"
-          :field-label="$t('message.only_latest_project_versions')"
-          field-name="onlyLatestVersion"
-          icon="fa-bookmark"
-          v-model="onlyLatestVersion"
-        />
-        <b-dropdown
-          v-if="addFilterOptions.length > 0"
-          size="sm"
-          variant="outline-primary"
-          class="btn-more-filters"
-          no-caret
-        >
-          <template #button-content>
-            <span class="fa fa-plus" aria-hidden="true"></span>
-            {{ $t('message.add_filter') }}
-          </template>
-          <b-dropdown-item
-            v-for="filter in addFilterOptions"
-            :key="filter.name"
-            @click="showFilter(filter.name)"
-            ><span
-              :class="['fa', filter.icon, 'mr-2']"
-              aria-hidden="true"
-            ></span
-            >{{ filter.label }}</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-button
-          v-show="activeFilterCount >= 2"
-          size="sm"
-          variant="outline-danger"
-          class="btn-clear-all-filters"
-          @click="clearAllFilters"
-        >
-          <span class="fa fa-remove" aria-hidden="true"></span>
-          {{ $t('message.clear_all') }}
-        </b-button>
-      </div>
-    </div>
+      <text-filter-pill
+        v-if="isFilterVisible('group')"
+        ref="filter_group"
+        :field-label="$t('message.group')"
+        field-name="group"
+        icon="fa-archive"
+        operator="contains"
+        v-model="groupFilter"
+        @dismiss="onFilterDismiss('group')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('name')"
+        ref="filter_name"
+        :field-label="$t('message.name')"
+        field-name="name"
+        icon="fa-cube"
+        operator="contains"
+        v-model="nameFilter"
+        @dismiss="onFilterDismiss('name')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('version')"
+        ref="filter_version"
+        :field-label="$t('message.version')"
+        field-name="version"
+        icon="fa-bookmark-o"
+        operator="contains"
+        v-model="versionFilter"
+        @dismiss="onFilterDismiss('version')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('purl')"
+        ref="filter_purl"
+        :field-label="$t('message.package_url')"
+        field-name="purl"
+        icon="fa-gift"
+        operator="starts_with"
+        v-model="purlFilter"
+        @dismiss="onFilterDismiss('purl')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('cpe')"
+        ref="filter_cpe"
+        :field-label="$t('message.cpe')"
+        field-name="cpe"
+        icon="fa-shield"
+        operator="equals"
+        v-model="cpeFilter"
+        @dismiss="onFilterDismiss('cpe')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('swidTagId')"
+        ref="filter_swidTagId"
+        :field-label="$t('message.swid_tagid')"
+        field-name="swid_tag_id"
+        icon="fa-tag"
+        operator="contains"
+        v-model="swidTagIdFilter"
+        @dismiss="onFilterDismiss('swidTagId')"
+      />
+      <hash-filter-pill
+        v-if="isFilterVisible('hash')"
+        ref="filter_hash"
+        field-name="hash"
+        :field-label="$t('message.hashes_short_desc')"
+        :hash-types="hashTypeOptions"
+        v-model="hashFilter"
+        @dismiss="onFilterDismiss('hash')"
+      />
+      <date-time-range-filter-pill
+        v-if="isFilterVisible('published')"
+        ref="filter_published"
+        :field-label="$t('message.published')"
+        field-name="package_artifact_published"
+        icon="fa-calendar"
+        date-only
+        emit-date-as-millis
+        v-model="publishedFilter"
+        @dismiss="onFilterDismiss('published')"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showInactive')"
+        :field-label="$t('message.show_inactive_projects')"
+        field-name="showInactive"
+        icon="fa-eye"
+        v-model="showInactive"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyLatestVersion')"
+        :field-label="$t('message.only_latest_project_versions')"
+        field-name="onlyLatestVersion"
+        icon="fa-bookmark"
+        v-model="onlyLatestVersion"
+      />
+    </filter-bar>
     <token-paginated-table
       ref="table"
       :base-url="tableDataBaseUrl"
@@ -148,17 +115,27 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import Vue from 'vue';
 import common from '../../../shared/common';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import xssFilters from 'xss-filters';
 import SeverityProgressBar from '@/views/components/SeverityProgressBar';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
+import FilterBar from '@/views/components/FilterBar.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
 import HashFilterPill from '@/views/components/HashFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
+import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
+
+const EXPAND_BY_COLUMN = {
+  metrics: 'metrics',
+  'package_artifact_metadata.published_at': 'package_artifact_metadata',
+  'hash_verification.status': 'package_artifact_metadata',
+};
 
 const COLUMN_DEFAULT_VISIBILITY = {
   name: true,
@@ -172,6 +149,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'project.name': true,
   'resolved_license.license_id': false,
   'package_artifact_metadata.published_at': false,
+  'hash_verification.status': false,
   last_inherited_risk_score: false,
   metrics: false,
 };
@@ -191,8 +169,9 @@ function initialColumnVisible(field) {
 }
 
 export default {
-  mixins: [permissionsMixin, filterPillsMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, filterPillsMixin],
   components: {
+    FilterBar,
     TokenPaginatedTable,
     TextFilterPill,
     HashFilterPill,
@@ -201,16 +180,16 @@ export default {
   },
   beforeMount() {
     const q = this.$route.query;
-    if (q.group)
+    if (q.group_contains)
       this.groupFilter = { operator: 'contains', value: q.group_contains };
-    if (q.name)
+    if (q.name_contains)
       this.nameFilter = { operator: 'contains', value: q.name_contains };
-    if (q.version)
+    if (q.version_contains)
       this.versionFilter = { operator: 'contains', value: q.version_contains };
-    if (q.purl)
+    if (q.purl_prefix)
       this.purlFilter = { operator: 'starts_with', value: q.purl_prefix };
     if (q.cpe) this.cpeFilter = { operator: 'equals', value: q.cpe };
-    if (q.swid_tag_id)
+    if (q.swid_tag_id_contains)
       this.swidTagIdFilter = {
         operator: 'contains',
         value: q.swid_tag_id_contains,
@@ -296,6 +275,11 @@ export default {
     onVisibleColumns(fields) {
       this.visibleColumns = fields;
     },
+    initializeTooltips() {
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover',
+      });
+    },
     syncQueryParams() {
       const query = this.buildUrlQueryParams();
       const currentQuery = this.$route.query;
@@ -368,10 +352,8 @@ export default {
     extraQueryParams() {
       const expand = new Set();
       for (const field of this.visibleColumns) {
-        if (field === 'metrics') {
-          expand.add('metrics');
-        } else if (field === 'package_artifact_metadata.published_at') {
-          expand.add('package_artifact_metadata');
+        if (EXPAND_BY_COLUMN[field]) {
+          expand.add(EXPAND_BY_COLUMN[field]);
         }
       }
       if (expand.size === 0) {
@@ -425,7 +407,7 @@ export default {
                 row.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}>"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -543,6 +525,11 @@ export default {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
           },
         },
+        buildHashVerificationColumn({
+          $t: this.$t.bind(this),
+          vueFormatter: this.vueFormatter,
+          visible: initialColumnVisible('hash_verification.status'),
+        }),
         {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
@@ -590,6 +577,10 @@ export default {
         sortName: 'name',
         sortOrder: 'asc',
         customSort: () => {},
+        onPostBody: () => {
+          this.vueFormatterInit();
+          this.initializeTooltips();
+        },
         onSort: (name, order) => {
           this.sortBy = name;
           this.sortDirection = order;
@@ -607,5 +598,3 @@ export default {
   },
 };
 </script>
-
-<style scoped src="../../components/filter-pills.css"></style>

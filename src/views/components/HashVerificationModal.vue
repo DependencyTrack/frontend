@@ -56,6 +56,7 @@
 import {
   HASH_ALGORITHMS,
   getHashVerificationStatusInfo,
+  hashStatusLabel,
   normalizeHashes,
 } from '@/shared/hashVerificationStatus';
 
@@ -88,18 +89,7 @@ export default {
       return getHashVerificationStatusInfo(this.status);
     },
     statusLabel() {
-      switch (this.status) {
-        case 'PASSED':
-          return this.$t('message.hash_verification.status.passed');
-        case 'FAILED':
-          return this.$t('message.hash_verification.status.failed');
-        case 'UNKNOWN':
-          return this.$t('message.hash_verification.status.unknown');
-        case 'NO_COMPONENT_HASH':
-          return this.$t('message.hash_verification.status.no_component_hash');
-        default:
-          return '';
-      }
+      return hashStatusLabel(this.$t.bind(this), this.status);
     },
     statusIcon() {
       return this.statusInfo.icon;
@@ -118,6 +108,10 @@ export default {
         case 'NO_COMPONENT_HASH':
           return this.$t(
             'message.hash_verification.no_component_hash_explanation',
+          );
+        case 'NO_REPOSITORY_HASH':
+          return this.$t(
+            'message.hash_verification.no_repository_hash_explanation',
           );
         default:
           return null;

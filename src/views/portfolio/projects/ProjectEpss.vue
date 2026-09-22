@@ -12,18 +12,28 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="epssToolbar" class="bs-table-custom-toolbar">
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedFindings"
-        color="primary"
+    <filter-bar
+      toolbar-id="epssToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressedFindings')"
+        :field-label="$t('message.show_suppressed_findings')"
+        field-name="showSuppressedFindings"
+        icon="fa-eye"
         v-model="showSuppressedFindings"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_findings')
-      }}</span>
-    </div>
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showKevOnly')"
+        :field-label="$t('message.kev')"
+        field-name="showKevOnly"
+        icon="fa-crosshairs"
+        v-model="showKevOnly"
+      />
+    </filter-bar>
 
     <bootstrap-table
       ref="table"
@@ -38,47 +48,50 @@
 
 <script>
 import {
+  applyTotalCountHeaders,
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
-import { Switch as cSwitch } from '@coreui/vue';
+import i18n from '@/i18n';
 import $ from 'jquery';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
+import FilterBar from '../../components/FilterBar.vue';
+import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
+import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
 import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
-    cSwitch,
-    BootstrapToggle,
+    FilterBar,
+    BooleanFilterPill,
     ChartEpssVsCvss,
   },
   beforeCreate() {
     this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true'
-        : false;
+      !!localStorage &&
+      localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true';
+    this.showKevOnly =
+      !!localStorage &&
+      localStorage.getItem('ProjectEpssShowKevOnly') === 'true';
   },
   data() {
     return {
       showSuppressedFindings: this.showSuppressedFindings,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showKevOnly: this.showKevOnly,
+      booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
@@ -98,7 +111,7 @@ export default {
           title: this.$t('message.version'),
           field: 'component.version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (row.component.latestVersion) {
               if (
                 compareVersions(
@@ -140,7 +153,7 @@ export default {
           title: this.$t('message.group'),
           field: 'component.group',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -148,7 +161,7 @@ export default {
           title: this.$t('message.vulnerability'),
           field: 'vulnerability.vulnId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
@@ -162,11 +175,43 @@ export default {
           },
         },
         {
+          title: this.$t('message.kev'),
+          field: 'vulnerability.isKev',
+          sortable: false,
+          class: 'tight',
+          formatter: (value, row, index) => {
+            if (value !== true) {
+              return '';
+            }
+            return this.vueFormatter({
+              i18n,
+              components: { KevAssertionsModal },
+              template: `
+                <div class="text-center">
+                  <b-link
+                    v-b-modal="\`kevAssertionsModal-${index}\`"
+                    :title="$t('message.kev_show_assertions')"
+                    class="text-danger"
+                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
+                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
+                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
+                </div>`,
+              data() {
+                return {
+                  index: index,
+                  source: row.vulnerability.source,
+                  vulnId: row.vulnerability.vulnId,
+                };
+              },
+            });
+          },
+        },
+        {
           title: this.$t('message.cvss_v2'),
           field: 'vulnerability.cvssV2BaseScore',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -178,7 +223,7 @@ export default {
           title: this.$t('message.cvss_v3'),
           field: 'vulnerability.cvssV3BaseScore',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -190,7 +235,7 @@ export default {
           title: this.$t('message.cvss_v4'),
           field: 'vulnerability.cvssV4Score',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -213,7 +258,7 @@ export default {
           field: 'analysis.isSuppressed',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -245,12 +290,14 @@ export default {
           refresh: 'fa-refresh',
         },
         responseHandler: function (res, xhr) {
-          res.total = xhr.getResponseHeader('X-Total-Count');
-          return res;
+          return applyTotalCountHeaders(res, xhr, this);
         },
         url: this.apiUrl(),
-        onPostBody: this.initializeTooltips,
-        onPageChange: (number, size) => {
+        onPostBody: () => {
+          this.vueFormatterInit();
+          this.initializeTooltips();
+        },
+        onPageChange: (_, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectEpssPageSize', size.toString());
           }
@@ -274,17 +321,23 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
-      if (this.showSuppressedFindings === undefined) {
-        url += '?epssFrom=0&suppressed=false';
-      } else {
-        url += '?epssFrom=0&suppressed=' + this.showSuppressedFindings;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
+      return common.setQueryParams(url, {
+        epssFrom: 0,
+        suppressed: this.showSuppressedFindings === true,
+        isKev: this.showKevOnly === true ? true : null,
+        totalCount: 'BOUNDED',
+      });
+    },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
       }
-      return url;
     },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
+        pageNumber: 1,
         silent: true,
       });
     },
@@ -294,7 +347,8 @@ export default {
         'ProjectEpss',
         this.$refs.table.columns,
       );
-      this.$emit('total', data.total);
+      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
+      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {
@@ -303,15 +357,28 @@ export default {
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showKevOnly',
+          label: this.$t('message.kev'),
+          icon: 'fa-crosshairs',
+        },
+        {
+          name: 'showSuppressedFindings',
+          label: this.$t('message.show_suppressed_findings'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectEpssShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedFindings(value) {
+      this.persistFilter('ProjectEpssShowSuppressedFindings', value);
+    },
+    showKevOnly(value) {
+      this.persistFilter('ProjectEpssShowKevOnly', value);
     },
   },
 };

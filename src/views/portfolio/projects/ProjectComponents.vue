@@ -1,115 +1,74 @@
 <template>
   <div>
-    <div id="componentsToolbar">
-      <div class="btn-spaced-group" role="form">
+    <filter-bar
+      toolbar-id="componentsToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyOutdated')"
+        :field-label="$t('message.outdated')"
+        field-name="onlyOutdated"
+        icon="fa-exclamation-triangle"
+        v-model="onlyOutdated"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyDirect')"
+        :field-label="$t('message.direct')"
+        field-name="onlyDirect"
+        icon="fa-level-down"
+        v-model="onlyDirect"
+      />
+      <template #actions>
         <b-button
-          size="md"
+          size="sm"
           variant="outline-primary"
+          :title="$t('message.add_component')"
           v-b-modal.projectAddComponentModal
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
           ]"
         >
-          <span class="fa fa-plus"></span> {{ $t('message.add_component') }}
+          <span class="fa fa-plus" aria-hidden="true"></span>
+          {{ $t('message.add') }}
         </b-button>
         <b-button
-          size="md"
-          variant="outline-primary"
+          size="sm"
+          variant="outline-danger"
+          :disabled="selectedCount === 0"
+          :title="
+            selectedCount === 0
+              ? $t('message.remove_component_select_first')
+              : $t('message.remove_component')
+          "
           @click="removeDependencies"
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_DELETE,
           ]"
         >
-          <span class="fa fa-minus"></span> {{ $t('message.remove_component') }}
+          <span class="fa fa-trash" aria-hidden="true"></span>
+          {{ $t('message.remove') }}
         </b-button>
-        <b-button
-          id="upload-button"
-          size="md"
-          variant="outline-primary"
-          v-b-modal.projectUploadBomModal
-          v-permission="PERMISSIONS.BOM_UPLOAD"
-        >
-          <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
-        </b-button>
-        <b-tooltip target="upload-button" triggers="hover focus">{{
-          $t('message.upload_bom_tooltip')
-        }}</b-tooltip>
         <b-dropdown
+          size="sm"
           variant="outline-primary"
+          :title="$t('message.download_component')"
           v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >
           <template #button-content>
-            <span class="fa fa-download"></span>
-            {{ $t('message.download_bom') }}
-          </template>
-          <b-dropdown-item @click="downloadBom('inventory')" href="#">{{
-            $t('message.inventory')
-          }}</b-dropdown-item>
-          <b-dropdown-item
-            @click="downloadBom('withVulnerabilities')"
-            v-permission:or="[
-              PERMISSIONS.VIEW_VULNERABILITY,
-              PERMISSIONS.VULNERABILITY_ANALYSIS,
-              PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-            ]"
-            href="#"
-            >{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item
-          >
-        </b-dropdown>
-        <b-dropdown
-          variant="outline-primary"
-          v-permission="PERMISSIONS.VIEW_PORTFOLIO"
-        >
-          <template #button-content>
-            <span class="fa fa-download"></span>
-            {{ $t('message.download_component') }}
+            <span class="fa fa-download" aria-hidden="true"></span>
+            {{ $t('message.download') }}
           </template>
           <b-dropdown-item @click="downloadTable('csv')" href="#">{{
             $t('message.csv_filetype')
           }}</b-dropdown-item>
         </b-dropdown>
-        <span
-          id="switch-container-outdated"
-          style="margin-left: 1rem; margin-right: 0.5rem"
-          class="keep-together"
-        >
-          <c-switch
-            id="only-outdated"
-            :disabled="!project"
-            color="primary"
-            v-model="onlyOutdated"
-            label
-            v-bind="labelIcon"
-          />
-          <span class="text-muted">{{
-            $t('message.outdated_only')
-          }}</span></span
-        >
-        <b-tooltip target="switch-container-outdated" triggers="hover focus">{{
-          $t('message.only_outdated_tooltip')
-        }}</b-tooltip>
-        <span
-          id="switch-container-direct"
-          style="margin-left: 1rem; margin-right: 0.5rem"
-          class="keep-together"
-        >
-          <c-switch
-            id="only-direct"
-            :disabled="!project || !this.project.directDependencies"
-            color="primary"
-            v-model="onlyDirect"
-            label
-            v-bind="labelIcon"
-          />
-          <span class="text-muted">{{ $t('message.direct_only') }}</span></span
-        >
-        <b-tooltip target="switch-container-direct" triggers="hover focus">{{
-          $t('message.only_direct_tooltip')
-        }}</b-tooltip>
-      </div>
-    </div>
+      </template>
+    </filter-bar>
     <token-paginated-table
       ref="table"
       :base-url="tableBaseUrl"
@@ -120,10 +79,9 @@
       @total="onTotal"
       @visible-columns="onVisibleColumns"
     />
-    <project-upload-bom-modal :uuid="this.uuid" />
     <project-add-component-modal
       :uuid="this.uuid"
-      v-on:refreshTable="refreshTable"
+      v-on:refreshTable="onComponentAdded"
     />
   </div>
 </template>
@@ -131,11 +89,10 @@
 <script>
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
-import HashVerificationModal from '@/views/components/HashVerificationModal.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
-import ProjectUploadBomModal from '@/views/portfolio/projects/ProjectUploadBomModal';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
-import { Switch as cSwitch } from '@coreui/vue';
+import FilterBar from '@/views/components/FilterBar.vue';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import $ from 'jquery';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
@@ -145,10 +102,8 @@ import SeverityProgressBar from '../../components/SeverityProgressBar';
 import { get } from 'lodash-es';
 import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
-import {
-  computeHashVerificationStatus,
-  getHashVerificationStatusInfo,
-} from '@/shared/hashVerificationStatus';
+import filterPillsMixin from '@/mixins/filterPillsMixin';
+import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
 
 const EXPAND_BY_COLUMN = {
   metrics: 'metrics',
@@ -167,7 +122,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   group: true,
   classifier: false,
   scope: false,
-  is_internal: true,
+  internal: true,
   'hash_verification.status': false,
   license: true,
   occurrence_count: false,
@@ -200,12 +155,12 @@ function readSort() {
 
 export default {
   components: {
-    cSwitch,
-    ProjectUploadBomModal,
+    BooleanFilterPill,
+    FilterBar,
     ProjectAddComponentModal,
     TokenPaginatedTable,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin, permissionsMixin],
   props: {
     uuid: String,
     project: Object,
@@ -216,12 +171,10 @@ export default {
     );
     const sort = readSort();
     return {
-      labelIcon: {
-        dataOn: '✓',
-        dataOff: '✕',
-      },
       onlyOutdated: false,
       onlyDirect: false,
+      booleanFilters: ['onlyOutdated', 'onlyDirect'],
+      selectedCount: 0,
       searchText: null,
       visibleColumns: initialVisibleColumns,
       columns: this.buildColumns(),
@@ -236,7 +189,13 @@ export default {
         onPostBody: () => {
           this.vueFormatterInit();
           this.initializeTooltips();
+          // Reloading a page rebuilds the rows, dropping any selection.
+          this.updateSelectionCount();
         },
+        onCheck: () => this.updateSelectionCount(),
+        onUncheck: () => this.updateSelectionCount(),
+        onCheckAll: () => this.updateSelectionCount(),
+        onUncheckAll: () => this.updateSelectionCount(),
         onColumnSwitch: (field, checked) => {
           if (localStorage) {
             localStorage.setItem(
@@ -261,6 +220,25 @@ export default {
     };
   },
   computed: {
+    allFilterDefs() {
+      const defs = [
+        {
+          name: 'onlyOutdated',
+          label: this.$t('message.outdated'),
+          description: this.$t('message.only_outdated_tooltip'),
+          icon: 'fa-exclamation-triangle',
+        },
+      ];
+      if (this.project && this.project.directDependencies) {
+        defs.push({
+          name: 'onlyDirect',
+          label: this.$t('message.direct'),
+          description: this.$t('message.only_direct_tooltip'),
+          icon: 'fa-level-down',
+        });
+      }
+      return defs;
+    },
     componentsUrl() {
       return `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/components`;
     },
@@ -409,81 +387,20 @@ export default {
         },
         {
           title: this.$t('message.internal'),
-          field: 'is_internal',
+          field: 'internal',
           sortable: false,
-          visible: initialColumnVisible('is_internal'),
+          visible: initialColumnVisible('internal'),
           align: 'center',
           class: 'tight',
           formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
-        {
-          title: this.$t('message.integrity'),
-          field: 'hash_verification.status',
-          sortable: false,
+        buildHashVerificationColumn({
+          $t: this.$t.bind(this),
+          vueFormatter: this.vueFormatter,
           visible: initialColumnVisible('hash_verification.status'),
-          formatter: (_, row, index) => {
-            const artifact = row.package_artifact_metadata;
-            const repoHashes = artifact && artifact.hashes;
-            const repoIdentifier = (artifact && artifact.resolved_from) || null;
-            const status = computeHashVerificationStatus(
-              row.hashes,
-              repoHashes,
-            );
-            if (!status) {
-              return '';
-            }
-            const info = getHashVerificationStatusInfo(status);
-            const isClickable = status === 'PASSED' || status === 'FAILED';
-            const tooltipTitle = this.hashStatusLabel(status);
-            return this.vueFormatter({
-              i18n,
-              components: { HashVerificationModal },
-              template: `
-                <div>
-                  <b-link
-                    v-if="isClickable"
-                    v-b-modal="\`hashVerificationModal-${index}\`"
-                    class="hash-verification-trigger"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    :title="tooltipTitle"
-                  >
-                    <i :class="['fa', iconClass, colorClass]" aria-hidden="true"></i>
-                  </b-link>
-                  <span
-                    v-else
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    :title="tooltipTitle"
-                  >
-                    <i :class="['fa', iconClass, colorClass]" aria-hidden="true"></i>
-                  </span>
-                  <hash-verification-modal
-                    v-if="isClickable"
-                    :modal-id="\`hashVerificationModal-${index}\`"
-                    :status="status"
-                    :component-hashes="componentHashes"
-                    :repository-hashes="repositoryHashes"
-                    :repository-identifier="repositoryIdentifier"
-                  />
-                </div>`,
-              data() {
-                return {
-                  status,
-                  isClickable,
-                  iconClass: info.icon,
-                  colorClass: info.color,
-                  tooltipTitle,
-                  componentHashes: row.hashes || {},
-                  repositoryHashes: repoHashes || {},
-                  repositoryIdentifier: repoIdentifier,
-                };
-              },
-            });
-          },
-        },
+        }),
         {
           title: this.$t('message.license'),
           field: 'license',
@@ -575,20 +492,6 @@ export default {
         },
       ];
     },
-    hashStatusLabel(status) {
-      switch (status) {
-        case 'PASSED':
-          return this.$t('message.hash_verification.status.passed');
-        case 'FAILED':
-          return this.$t('message.hash_verification.status.failed');
-        case 'UNKNOWN':
-          return this.$t('message.hash_verification.status.unknown');
-        case 'NO_COMPONENT_HASH':
-          return this.$t('message.hash_verification.status.no_component_hash');
-        default:
-          return '';
-      }
-    },
     initializeTooltips() {
       $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
@@ -621,43 +524,14 @@ export default {
       }
       bt.uncheckAll();
     },
+    updateSelectionCount() {
+      const bt = this.innerBootstrapTable();
+      this.selectedCount = bt ? bt.getSelections().length : 0;
+    },
     innerBootstrapTable() {
       return this.$refs.table && this.$refs.table.$refs
         ? this.$refs.table.$refs.table
         : null;
-    },
-    downloadBom(data) {
-      const url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
-      this.axios
-        .request({
-          responseType: 'blob',
-          url: url,
-          method: 'get',
-          params: {
-            format: 'json',
-            variant: data,
-            download: 'true',
-          },
-        })
-        .then((response) => {
-          const objectUrl = window.URL.createObjectURL(
-            new Blob([response.data]),
-          );
-          const link = document.createElement('a');
-          link.href = objectUrl;
-          let filename = 'bom.json';
-          const disposition = response.headers['content-disposition'];
-          if (disposition && disposition.indexOf('attachment') !== -1) {
-            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            const matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) {
-              filename = matches[1].replace(/['"]/g, '');
-            }
-          }
-          link.setAttribute('download', filename);
-          document.body.appendChild(link);
-          link.click();
-        });
     },
     buildTableFile(items, fileType) {
       if (fileType !== 'csv') {
@@ -667,7 +541,7 @@ export default {
         'name',
         'version',
         'group',
-        'is_internal',
+        'internal',
         'resolved_license.license_id',
         'last_inherited_risk_score',
         'metrics.vulnerabilities',
@@ -683,12 +557,7 @@ export default {
           header.map((h) => csvEscape(get(row, h, ''))).join(','),
         ),
       ].join('\r\n');
-      const url = window.URL.createObjectURL(new Blob([csv]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'componentTable.csv');
-      document.body.appendChild(link);
-      link.click();
+      common.saveBlob(new Blob([csv]), 'componentTable.csv');
     },
     async downloadTable(fileType) {
       const result = await this.downloadAllComponents();
@@ -722,7 +591,7 @@ export default {
       }
       return { items, partial: true };
     },
-    refreshTable() {
+    onComponentAdded() {
       if (this.$refs.table) {
         this.$refs.table.refreshCurrentPage();
       }
@@ -730,16 +599,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.hash-verification-trigger {
-  display: inline-block;
-  padding-bottom: 2px;
-  border-bottom: 1px dashed currentColor;
-  line-height: 1;
-}
-.hash-verification-trigger:hover {
-  text-decoration: none;
-  border-bottom-style: solid;
-}
-</style>

@@ -15,26 +15,26 @@
       >
         <b-spinner v-if="busy" small :label="$t('message.loading')" />
         <i v-else class="fa fa-refresh" />
-        {{ $t('admin.vuln_source_mirror_now') }}
+        {{ $t('admin.data_source_mirror_now') }}
       </b-button>
     </span>
     <b-badge v-if="failed" variant="danger" class="ml-2">
       {{
-        $t('admin.vuln_source_mirror_status_failed', {
+        $t('admin.data_source_mirror_status_failed', {
           relative: lastRunRelative,
         })
       }}
     </b-badge>
     <small v-else-if="inProgress" class="ml-2 text-muted">
       {{
-        $t('admin.vuln_source_mirror_status_running', {
+        $t('admin.data_source_mirror_status_running', {
           relative: lastRunRelative,
         })
       }}
     </small>
     <small v-else-if="status === 'COMPLETED'" class="ml-2 text-muted">
       {{
-        $t('admin.vuln_source_mirror_status_completed', {
+        $t('admin.data_source_mirror_status_completed', {
           relative: lastRunRelative,
         })
       }}
@@ -47,10 +47,11 @@ import common from '@/shared/common';
 import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
-  name: 'VulnSourceMirrorButton',
+  name: 'DataSourceMirrorButton',
   mixins: [permissionsMixin],
   props: {
     extensionName: { type: String, required: true },
+    resourcePath: { type: String, required: true },
     operationInProgress: { type: Boolean, default: false },
     hasUnsavedChanges: { type: Boolean, default: false },
   },
@@ -104,21 +105,21 @@ export default {
         return this.$t('message.save_changes_first');
       }
       if (this.inProgress) {
-        return this.$t('admin.vuln_source_mirror_running', {
+        return this.$t('admin.data_source_mirror_running', {
           startedAt: fmt(this.startedAt),
         });
       }
       if (this.failed) {
-        return this.$t('admin.vuln_source_mirror_failed', {
+        return this.$t('admin.data_source_mirror_failed', {
           relative: this.lastRunRelative || '?',
           completedAt: fmt(this.completedAt),
           reason:
             this.failureReason ||
-            this.$t('admin.vuln_source_mirror_unknown_reason'),
+            this.$t('admin.data_source_mirror_unknown_reason'),
         });
       }
       if (this.status === 'COMPLETED') {
-        return this.$t('admin.vuln_source_mirror_completed', {
+        return this.$t('admin.data_source_mirror_completed', {
           completedAt: fmt(this.completedAt),
         });
       }
@@ -126,14 +127,8 @@ export default {
     },
   },
   watch: {
-    extensionName() {
-      this.status = null;
-      this.startedAt = null;
-      this.completedAt = null;
-      this.failureReason = null;
-      this.stopPolling();
-      this.fetchStatus();
-    },
+    extensionName: 'reset',
+    resourcePath: 'reset',
   },
   mounted() {
     this.fetchStatus();
@@ -143,13 +138,21 @@ export default {
     this.abortController?.abort();
   },
   methods: {
+    reset() {
+      this.status = null;
+      this.startedAt = null;
+      this.completedAt = null;
+      this.failureReason = null;
+      this.stopPolling();
+      this.fetchStatus();
+    },
     async fetchStatus() {
       this.abortController?.abort();
       const controller = new AbortController();
       this.abortController = controller;
       try {
         const response = await this.axios.get(
-          `${this.$api.BASE_URL}/api/v2/vuln-data-sources/${encodeURIComponent(
+          `${this.$api.BASE_URL}/api/v2/${this.resourcePath}/${encodeURIComponent(
             this.extensionName,
           )}/mirror-runs/latest`,
           {
@@ -179,13 +182,13 @@ export default {
       this.triggering = true;
       try {
         await this.axios.post(
-          `${this.$api.BASE_URL}/api/v2/vuln-data-sources/${encodeURIComponent(
+          `${this.$api.BASE_URL}/api/v2/${this.resourcePath}/${encodeURIComponent(
             this.extensionName,
           )}/mirror-runs`,
           null,
           { validateStatus: (s) => s === 202 },
         );
-        this.$toastr.s(this.$t('admin.vuln_source_mirror_started'));
+        this.$toastr.s(this.$t('admin.data_source_mirror_started'));
         // Optimistically reflect the queued run so the button stays disabled
         // and polling keeps running even if the immediate refresh fails.
         this.status = 'PENDING';
@@ -214,9 +217,9 @@ export default {
         const wasInProgress =
           prevStatus === 'PENDING' || prevStatus === 'RUNNING';
         if (wasInProgress && this.status === 'COMPLETED') {
-          this.$toastr.s(this.$t('admin.vuln_source_mirror_finished_success'));
+          this.$toastr.s(this.$t('admin.data_source_mirror_finished_success'));
         } else if (wasInProgress && this.status === 'FAILED') {
-          this.$toastr.e(this.$t('admin.vuln_source_mirror_finished_failure'));
+          this.$toastr.e(this.$t('admin.data_source_mirror_finished_failure'));
         }
       }, 5000);
     },

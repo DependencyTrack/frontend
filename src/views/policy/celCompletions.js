@@ -31,6 +31,7 @@ const TYPES = {
     group: 'string',
     name: 'string',
     version: 'string',
+    scope: 'string',
     classifier: 'string',
     cpe: 'string',
     purl: 'string',
@@ -53,6 +54,11 @@ const TYPES = {
     resolved_license: 'License',
     published_at: 'Timestamp',
     latest_version: 'string',
+    latest_version_published_at: 'Timestamp',
+    package_artifact_md5: 'string',
+    package_artifact_sha1: 'string',
+    package_artifact_sha256: 'string',
+    package_artifact_sha512: 'string',
   },
   License: {
     uuid: 'string',
@@ -122,6 +128,7 @@ const TYPES = {
     epss_percentile: 'double',
     cvssv4_vector: 'string',
     cvssv4_score: 'double',
+    is_kev: 'bool',
   },
   'Vulnerability.Alias': {
     id: 'string',
@@ -130,6 +137,17 @@ const TYPES = {
   Timestamp: {
     seconds: 'int',
     nanos: 'int',
+  },
+  // Registered JWT claims (RFC 7519). Issuers add their own, which cannot be
+  // known here. aud is either a string or a list of strings.
+  Claims: {
+    aud: 'dyn',
+    exp: 'double',
+    iat: 'double',
+    iss: 'string',
+    jti: 'string',
+    nbf: 'double',
+    sub: 'string',
   },
 };
 
@@ -174,6 +192,7 @@ const TIMESTAMP_METHODS = [
 
 const TYPE_METHODS = {
   Component: [
+    nullaryFunc('has_package_artifact_hash_mismatch', 'bool'),
     unaryFunc('is_dependency_of', 'v1.Component{}', 'bool'),
     unaryFunc('is_direct_dependency_of', 'v1.Component{}', 'bool'),
     unaryFunc('is_exclusive_dependency_of', 'v1.Component{}', 'bool'),
@@ -199,12 +218,15 @@ const CEL_GLOBALS = [
   unaryFunc('string', 'value', 'string'),
   unaryFunc('timestamp', 'string', 'Timestamp'),
   unaryFunc('duration', 'string', 'Duration'),
-  binaryFunc('spdx_expr_allows', ['expression', 'ids'], 'bool'),
-  binaryFunc('spdx_expr_requires_any', ['expression', 'ids'], 'bool'),
   { label: 'true', type: 'keyword' },
   { label: 'false', type: 'keyword' },
   { label: 'null', type: 'keyword' },
   { label: 'in', type: 'keyword', detail: 'membership test' },
+];
+
+const SPDX_GLOBALS = [
+  binaryFunc('spdx_expr_allows', ['expression', 'ids'], 'bool'),
+  binaryFunc('spdx_expr_requires_any', ['expression', 'ids'], 'bool'),
 ];
 
 // Scans text for macro bindings like `vulns.exists(v,` and returns a map of
@@ -270,7 +292,10 @@ function methodsForType(rawType) {
   return TYPE_METHODS[rawType] || [];
 }
 
-export function createCelCompletionSource(topLevelOverrides) {
+export function createCelCompletionSource(
+  topLevelOverrides,
+  globals = SPDX_GLOBALS,
+) {
   const mergedTopLevel = Object.fromEntries(
     Object.entries({ ...TOP_LEVEL, ...topLevelOverrides }).filter(
       ([, v]) => v !== undefined,
@@ -328,7 +353,7 @@ export function createCelCompletionSource(topLevelOverrides) {
 
     return {
       from: word ? word.from : context.pos,
-      options: [...topLevelOptions, ...CEL_GLOBALS],
+      options: [...topLevelOptions, ...CEL_GLOBALS, ...globals],
       validFor: /^\w*$/,
     };
   };

@@ -14,6 +14,8 @@ import VueAxios from 'vue-axios';
 import vueDebounce from 'vue-debounce';
 import VuePageTitle from 'vue-page-title';
 import '@/directives/VuePermission';
+import '@/directives/ScrollableTabs';
+import '@/views/components/filter-pill-content.css';
 import VueToastr from 'vue-toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
@@ -77,7 +79,7 @@ axios
 
     createVueApp();
   })
-  .catch(function (error) {
+  .catch(function () {
     console.log(
       'Cannot retrieve static/config.json from host. This is expected behavior in development environments.',
     );

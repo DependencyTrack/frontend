@@ -56,11 +56,11 @@ export default {
         .put(url, {
           username: this.username,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.user_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       this.$root.$emit('bv::hide::modal', 'createLdapUserModal');

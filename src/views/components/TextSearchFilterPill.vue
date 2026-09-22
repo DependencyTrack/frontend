@@ -5,39 +5,34 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedValue || tmpFields.length === 0"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>~ "{{ value.value }}"</template>
+    <template #value
+      ><span :title="$t('message.operator_contains')"
+        >~ "{{ value.value }}"</span
+      ></template
+    >
 
-    <b-form-group class="mb-2">
-      <b-form-input
-        :id="`text-search-filter-pill-value-${fieldName}`"
-        ref="valueInput"
-        v-model="tmpValue"
-        :placeholder="$t('message.search') + '...'"
-        size="sm"
-        @keyup.enter="applyFilter"
-      ></b-form-input>
-    </b-form-group>
-    <b-form-group :label="$t('message.search_in')" label-size="sm" class="mb-2">
+    <b-form-input
+      :id="`text-search-filter-pill-value-${fieldName}`"
+      v-model="tmpValue"
+      :placeholder="$t('message.search') + '...'"
+      :aria-label="fieldLabel"
+      class="mb-2"
+      size="sm"
+    ></b-form-input>
+    <div class="filter-pill-caption">{{ $t('message.search_in') }}</div>
+    <div class="filter-pill-list">
       <b-form-checkbox-group
         v-model="tmpFields"
         :options="fields"
+        :aria-label="$t('message.search_in')"
         stacked
-        size="sm"
       ></b-form-checkbox-group>
-    </b-form-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpValue || tmpFields.length === 0"
-        >{{ $t('message.apply') }}
-      </b-button>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -99,17 +94,13 @@ export default {
         this.value.value
       );
     },
+    trimmedValue() {
+      return this.tmpValue ? this.tmpValue.trim() : '';
+    },
   },
   methods: {
     allFieldValues() {
       return this.fields.map((f) => (typeof f === 'object' ? f.value : f));
-    },
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.valueInput) {
-          this.$refs.valueInput.focus();
-        }
-      });
     },
     open() {
       this.$refs.pill.open();
@@ -124,11 +115,10 @@ export default {
       }
     },
     applyFilter() {
-      const trimmed = this.tmpValue ? this.tmpValue.trim() : '';
-      if (!trimmed || this.tmpFields.length === 0) return;
+      if (!this.trimmedValue || this.tmpFields.length === 0) return;
       this.$emit('input', {
         fields: [...this.tmpFields],
-        value: trimmed,
+        value: this.trimmedValue,
       });
       this.$refs.pill.hide();
     },

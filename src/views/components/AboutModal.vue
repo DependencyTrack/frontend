@@ -101,6 +101,10 @@
             <i class="fa-li fa fa-link" aria-hidden="true"></i
             ><a href="https://vulndb.cyberriskanalytics.com">VulnDB</a>
           </li>
+          <li>
+            <i class="fa-li fa fa-link" aria-hidden="true"></i
+            ><a href="https://advisory.checkmarx.net/advisory/">Checkmarx</a>
+          </li>
         </ul>
       </b-col>
     </b-row>

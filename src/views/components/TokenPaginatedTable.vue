@@ -157,6 +157,7 @@
 <script>
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import common from '@/shared/common';
+import { handleTableLoadError } from '@/shared/utils';
 
 export default {
   name: 'TokenPaginatedTable',
@@ -303,6 +304,9 @@ export default {
         }
 
         console.error(`Failed to load page ${pageUrl}: ${err}`);
+        handleTableLoadError(err && err.response && err.response.data, {
+          fallback: false,
+        });
         this.tableData = [];
         this.currentPageNumber = 1;
         this.currentPageUrl = null;

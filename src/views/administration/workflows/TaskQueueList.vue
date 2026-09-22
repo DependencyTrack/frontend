@@ -105,7 +105,7 @@ export default {
             return `<span class="badge badge-${variant} status-badge"><i class="fa ${icon}"></i> ${label}</span>`;
           },
           events: {
-            'click .status-badge-interactive': (event, _, row) => {
+            'click .status-badge-interactive': (_event, _, row) => {
               this.toggleStatus(row);
             },
           },
@@ -121,7 +121,7 @@ export default {
             return `<button type="button" class="capacity-value" title="${tooltip}">${value} <i class="fa fa-pencil text-muted"></i></button>`;
           },
           events: {
-            'click .capacity-value': (event, _, row) => {
+            'click .capacity-value': (_event, _, row) => {
               this.openEditCapacity(row);
             },
           },

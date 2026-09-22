@@ -1,14 +1,5 @@
 <template>
-  <div
-    class="animated fadeIn"
-    v-permission:or="[
-      PERMISSIONS.POLICY_MANAGEMENT,
-      PERMISSIONS.POLICY_MANAGEMENT_CREATE,
-      PERMISSIONS.POLICY_MANAGEMENT_READ,
-      PERMISSIONS.POLICY_MANAGEMENT_UPDATE,
-      PERMISSIONS.POLICY_MANAGEMENT_DELETE,
-    ]"
-  >
+  <div class="animated fadeIn">
     <b-tabs
       class="body-bg-color"
       style="border-left: 0; border-right: 0; border-top: 0"
@@ -58,13 +49,11 @@
 </template>
 
 <script>
-import permissionsMixin from '../../mixins/permissionsMixin';
 import PolicyList from './PolicyList';
 import LicenseGroupList from './LicenseGroupList';
 import VulnerabilityPolicyList from './VulnerabilityPolicyList';
 
 export default {
-  mixins: [permissionsMixin],
   components: {
     LicenseGroupList,
     PolicyList,
@@ -93,7 +82,7 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp('/policy\/([^\\/]*)', 'gi');
+      let pattern = new RegExp('/policy\/([^\\/?#]*)', 'gi');
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
     },

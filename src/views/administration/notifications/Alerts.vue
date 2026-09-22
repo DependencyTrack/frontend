@@ -40,6 +40,7 @@ import { Switch as cSwitch } from '@coreui/vue';
 import ExtensionConfigForm from '../../components/ExtensionConfigForm';
 import CodeMirrorEditor from '../../components/CodeMirrorEditor';
 import { createCelCompletionSource } from '../../policy/celCompletions';
+import { celErrorsToMarkers } from '../../../shared/utils';
 
 export default {
   props: {
@@ -225,7 +226,6 @@ export default {
                           <div class="list-group-item"><b-form-checkbox value="ANALYZER">ANALYZER</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="DATASOURCE_MIRRORING">DATASOURCE_MIRRORING</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="FILE_SYSTEM">FILE_SYSTEM</b-form-checkbox></div>
-                          <div class="list-group-item"><b-form-checkbox value="INDEXING_SERVICE">INDEXING_SERVICE</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="REPOSITORY">REPOSITORY</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="USER_CREATED">USER_CREATED</b-form-checkbox></div>
                           <div class="list-group-item"><b-form-checkbox value="USER_DELETED">USER_DELETED</b-form-checkbox></div>
@@ -240,12 +240,12 @@ export default {
                     <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_next_trigger_at')" :readonly="true" type="text" :value="this.scheduleNextTriggerAt" :state="null"/>
                     <b-form-group v-if="isScheduled" :title="$t('admin.alert_schedule_skip_publish_if_unchanged_tooltip')"><c-switch v-model="scheduleSkipUnchanged" color="primary" label v-bind="labelIcon"/> {{ $t('admin.alert_schedule_skip_publish_if_unchanged') }}</b-form-group>
                     <div style="text-align:right">
-                      <b-button variant="outline-primary" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
+                      <b-button variant="outline-primary" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>
                       <b-toggleable-display-button variant="outline-primary" :label="$t('admin.limit_to')"
                                 v-permission="PERMISSIONS.VIEW_PORTFOLIO" v-on:toggle="limitToVisible = !limitToVisible"
                                 v-if="this.scope === 'PORTFOLIO'" />
-                       <b-button variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
-                       <b-button variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
+                       <b-button v-permission:or="[PERMISSIONS.SYSTEM_CONFIGURATION, PERMISSIONS.SYSTEM_CONFIGURATION_DELETE]" variant="outline-danger" @click="deleteNotificationRule">{{ $t('admin.delete_alert') }}</b-button>
+                       <b-button v-permission:or="[PERMISSIONS.SYSTEM_CONFIGURATION, PERMISSIONS.SYSTEM_CONFIGURATION_UPDATE]" variant="primary" @click="updateNotificationRule">{{ $t('admin.submit') }}</b-button>
                     </div>
                   </b-col>
                   <b-modal v-model="showFilterExpressionModal" :title="$t('admin.filter_expression')" size="lg">
@@ -341,19 +341,22 @@ export default {
                 filterExpressionMarkers: [],
                 showFilterExpressionModal: false,
                 showFilterExpressionReference: false,
-                celCompletionSource: createCelCompletionSource({
-                  component: undefined,
-                  project: undefined,
-                  vulns: undefined,
-                  now: undefined,
-                  level: 'int',
-                  scope: 'int',
-                  group: 'int',
-                  title: 'string',
-                  content: 'string',
-                  timestamp: 'Timestamp',
-                  subject: 'dyn',
-                }),
+                celCompletionSource: createCelCompletionSource(
+                  {
+                    component: undefined,
+                    project: undefined,
+                    vulns: undefined,
+                    now: undefined,
+                    level: 'int',
+                    scope: 'int',
+                    group: 'int',
+                    title: 'string',
+                    content: 'string',
+                    timestamp: 'Timestamp',
+                    subject: 'dyn',
+                  },
+                  [],
+                ),
                 filterExpressionReferenceFields: [
                   { key: 'variable', label: i18n.t('message.variable') },
                   { key: 'type', label: i18n.t('message.type') },
@@ -530,14 +533,8 @@ export default {
                         response.data &&
                         Array.isArray(response.data.errors)
                       ) {
-                        this.filterExpressionMarkers = response.data.errors.map(
-                          (err) => ({
-                            startLineNumber: err.line || 1,
-                            endLineNumber: err.line || 1,
-                            startColumn: err.column || 1,
-                            endColumn: (err.column || 1) + 3,
-                            message: err.message || 'Compilation error',
-                          }),
+                        this.filterExpressionMarkers = celErrorsToMarkers(
+                          response.data.errors,
                         );
                         this.showFilterExpressionModal = true;
                         this.$toastr.w(
