@@ -9,6 +9,13 @@
       <b-input-group-prepend v-if="icon"
         ><b-input-group-text><i :class="icon"></i></b-input-group-text
       ></b-input-group-prepend>
+      <span
+        v-if="tooltip"
+        :id="`${id}-tooltip`"
+        class="sr-only"
+      >
+        {{ tooltip }}
+      </span>
       <b-form-input
         :id="`${id}-input`"
         :type="type"
@@ -21,6 +28,7 @@
         :required="isRequired"
         :readonly="readonly"
         :disabled="isDisabled"
+        :aria-describedby="tooltip ? `${id}-tooltip` : null"
         v-on="inputListeners"
         v-on:blur="hadFocus = true"
         trim
