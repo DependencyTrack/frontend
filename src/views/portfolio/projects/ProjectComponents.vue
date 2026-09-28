@@ -57,6 +57,9 @@
             href="#"
             >{{ $t('message.inventory_with_vulnerabilities') }}</b-dropdown-item
           >
+          <b-dropdown-item @click="downloadOriginalBom" href="#">
+            {{ $t('message.original_unmodified') }}
+          </b-dropdown-item>
         </b-dropdown>
         <b-dropdown
           variant="outline-primary"
@@ -575,6 +578,43 @@ export default {
               filename = matches[1].replace(/['"]/g, '');
             }
           }
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+        });
+    },
+    downloadOriginalBom() {
+      const url = `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/bom/original`;
+      this.axios
+        .request({
+          responseType: 'blob',
+          url: url,
+          method: 'get',
+        })
+        .then((response) => {
+          const objectUrl = window.URL.createObjectURL(
+            new Blob([response.data]),
+          );
+          const link = document.createElement('a');
+          link.href = objectUrl;
+
+          let filename = 'bom';
+          const contentType = response.headers['content-type'];
+          if (contentType && contentType.includes('json')) {
+            filename = 'bom.json';
+          } else if (contentType && contentType.includes('xml')) {
+            filename = 'bom.xml';
+          }
+
+          const disposition = response.headers['content-disposition'];
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
+          }
+
           link.setAttribute('download', filename);
           document.body.appendChild(link);
           link.click();
