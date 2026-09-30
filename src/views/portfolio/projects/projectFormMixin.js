@@ -1,3 +1,5 @@
+import common from '../../../shared/common';
+
 export const DEFAULT_CLASSIFIER = 'APPLICATION';
 
 export const COLLECTION_LOGIC_AGGREGATE_TAG =
@@ -165,12 +167,24 @@ export default {
         ? `${project.name} : ${project.version}`
         : project.name;
     },
+    parentSearchUrl(searchText) {
+      return common.setQueryParams(
+        `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
+        {
+          is_active: 'ACTIVE',
+          limit: 10,
+          sort_by: 'name',
+          name_contains: searchText || undefined,
+        },
+      );
+    },
     fetchDefaultParents() {
       this.axios
         .get(this.parentSearchUrl(''))
         .then((response) => {
-          this.defaultParents = response.data || [];
-          this.availableParents = this.defaultParents;
+          const items = response.data.items || [];
+          this.defaultParents = items;
+          this.availableParents = items;
         })
         .catch(() => {
           this.defaultParents = [];
@@ -186,7 +200,7 @@ export default {
       this.axios
         .get(this.parentSearchUrl(query))
         .then((response) => {
-          this.availableParents = response.data || [];
+          this.availableParents = response.data.items || [];
         })
         .catch(() => {
           this.availableParents = this.defaultParents;
