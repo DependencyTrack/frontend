@@ -60,7 +60,7 @@ export default {
           },
         )
         .then((response) => {
-          this.apiKey.comment = response.data.comment;
+          this.$set(this.apiKey, 'comment', response.data.comment);
           this.$toastr.s(this.$t('admin.api_key_comment_updated'));
           this.$root.$emit(
             'bv::hide::modal',
