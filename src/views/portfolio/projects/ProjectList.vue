@@ -23,6 +23,16 @@
         $t('message.show_inactive_projects')
       }}</span>
       <c-switch
+        style="margin-left: 1rem; margin-right: 0.5rem"
+        id="onlyLatestVersions"
+        color="primary"
+        v-model="onlyLatestVersions"
+        label
+        v-bind="labelIcon"
+      /><span class="text-muted">{{
+        $t('message.only_latest_project_versions')
+      }}</span>
+      <c-switch
         @click.native="saveViewState"
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showFlatView"
@@ -83,6 +93,11 @@ export default {
       localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
         ? localStorage.getItem('ProjectListShowFlatView') === 'true'
         : false;
+    this.onlyLatestVersions =
+      localStorage &&
+      localStorage.getItem('ProjectListOnlyLatestVersions') !== null
+        ? localStorage.getItem('ProjectListOnlyLatestVersions') === 'true'
+        : false;
   },
   methods: {
     initializeProjectCreateProjectModal: function () {
@@ -102,6 +117,9 @@ export default {
       };
       if (this.showInactiveProjects === false) {
         queryParams['active'] = true;
+      }
+      if (this.onlyLatestVersions === true) {
+        queryParams['onlyLatestVersions'] = true;
       }
       let tag = this.$route.query.tag;
       if (tag) {
@@ -256,6 +274,17 @@ export default {
       this.currentPage = 1;
       this.refreshTable();
     },
+    onlyLatestVersions() {
+      if (localStorage) {
+        localStorage.setItem(
+          'ProjectListOnlyLatestVersions',
+          this.onlyLatestVersions.toString(),
+        );
+      }
+      this.$refs.table.showLoading();
+      this.currentPage = 1;
+      this.refreshTable();
+    },
     showFlatView() {
       if (localStorage) {
         localStorage.setItem(
@@ -273,6 +302,7 @@ export default {
   data() {
     return {
       showInactiveProjects: this.showInactiveProjects,
+      onlyLatestVersions: this.onlyLatestVersions,
       showFlatView: this.showFlatView,
       isSearching: false,
       savedViewState: null,
