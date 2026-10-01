@@ -157,6 +157,15 @@
           v-on:total="totalVulnerabilities = $event"
         />
       </b-tab>
+      <b-tab ref="health" @click="routeTo('health')">
+        <template v-slot:title
+          ><i class="fa fa-heart"></i> {{ $t('message.health') }}
+          <b-badge v-if="healthLoaded" :variant="healthBadgeVariant">{{
+            healthBadgeLabel
+          }}</b-badge></template
+        >
+        <component-health :uuid="uuid" />
+      </b-tab>
     </b-tabs>
     <component-details-modal
       :component="cloneDeep(component)"
@@ -174,6 +183,7 @@ import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard';
 import ComponentVulnerabilities from './ComponentVulnerabilities';
+import ComponentHealth from './ComponentHealth';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
@@ -187,6 +197,7 @@ export default {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
     ComponentDashboard,
+    ComponentHealth,
     ComponentVulnerabilities,
     VueEasyPieChart,
     ComponentDetailsModal,
@@ -204,6 +215,24 @@ export default {
           return this.component.project.name;
         }
       }
+    },
+    healthBadgeVariant() {
+      if (this.scorecardScore == null) {
+        return 'tab-info';
+      }
+      if (this.scorecardScore >= 7.5) {
+        return 'tab-total';
+      }
+      if (this.scorecardScore >= 2.5) {
+        return 'tab-warn';
+      }
+      return 'tab-fail';
+    },
+    healthBadgeLabel() {
+      if (this.scorecardScore == null) {
+        return this.$t('message.health_no_score');
+      }
+      return Number(this.scorecardScore).toFixed(1);
     },
     componentLabel() {
       let label = this.component.name;
@@ -238,6 +267,8 @@ export default {
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
+      healthLoaded: false,
+      scorecardScore: null,
     };
   },
   methods: {
@@ -315,6 +346,22 @@ export default {
         0,
       );
     });
+
+    let healthUrl = `${this.$api.BASE_URL}/api/v2/components/${this.uuid}/health`;
+    this.axios
+      .get(healthUrl)
+      .then((response) => {
+        const data = response.data || {};
+        if (data.status === 'PROCESSED' && data.scorecard_score != null) {
+          this.scorecardScore = data.scorecard_score;
+        }
+      })
+      .catch(() => {
+        this.scorecardScore = null;
+      })
+      .finally(() => {
+        this.healthLoaded = true;
+      });
 
     this.getTabFromRoute().active = true;
   },

@@ -130,6 +130,7 @@ import HashFilterPill from '@/views/components/HashFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
+import { buildScorecardColumn } from '@/shared/scorecardColumn';
 
 const EXPAND_BY_COLUMN = {
   metrics: 'metrics',
@@ -151,6 +152,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'package_artifact_metadata.published_at': false,
   'hash_verification.status': false,
   last_inherited_risk_score: false,
+  scorecard_score: false,
   metrics: false,
 };
 
@@ -537,6 +539,10 @@ export default {
           visible: initialColumnVisible('last_inherited_risk_score'),
           class: 'tight',
         },
+        buildScorecardColumn({
+          $t: this.$t.bind(this),
+          visible: initialColumnVisible('scorecard_score'),
+        }),
         {
           title: this.$t('message.vulnerabilities'),
           field: 'metrics',
