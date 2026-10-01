@@ -13,6 +13,7 @@ export default {
     render: function (metrics) {
       const totalStyle = getStyle('--severity-unassigned');
       const auditedStyle = getStyle('--severity-low');
+      const  chartAxisStyle = getStyle('--chart-axis-color');
 
       let labels = [];
       let totalData = [];
@@ -83,6 +84,7 @@ export default {
                   drawOnChartArea: false,
                 },
                 ticks: {
+                  fontColor: chartAxisStyle,
                   callback: function (value) {
                     return common.formatTimestamp(value);
                   },
@@ -92,6 +94,7 @@ export default {
             yAxes: [
               {
                 ticks: {
+                  fontColor: chartAxisStyle,
                   beginAtZero: true,
                   maxTicksLimit: 1,
                 },
