@@ -19,17 +19,48 @@
       <p class="text-muted small">
         {{ $t('message.health_last_updated') }}: {{ formattedLastFetch }}
       </p>
+      <scorecard-checks
+        v-if="metrics.scorecard_checks && metrics.scorecard_checks.length"
+        class="mb-4"
+        :checks="metrics.scorecard_checks"
+        :score="metrics.scorecard_score"
+      />
+      <p v-else class="text-muted mb-4">{{ $t('message.health_no_checks') }}</p>
       <b-row>
-        <b-col md="6">
+        <b-col md="4">
+          <h5 class="mb-3">{{ $t('message.health_source_deps_dev') }}</h5>
           <dl class="row mb-0">
-            <dt class="col-sm-6">{{ $t('message.health_package_url') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.purl) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_status') }}</dt>
-            <dd class="col-sm-6">{{ statusLabel }}</dd>
+            <dt class="col-sm-6">
+              {{ $t('message.health_known_dependents') }}
+            </dt>
+            <dd class="col-sm-6">{{ display(metrics.dependents) }}</dd>
             <dt class="col-sm-6">{{ $t('message.health_stars') }}</dt>
             <dd class="col-sm-6">{{ display(metrics.stars) }}</dd>
             <dt class="col-sm-6">{{ $t('message.health_forks') }}</dt>
             <dd class="col-sm-6">{{ display(metrics.forks) }}</dd>
+            <dt class="col-sm-6">
+              {{ $t('message.health_project_metadata_as_of') }}
+            </dt>
+            <dd class="col-sm-6">
+              {{ formatEpoch(metrics.project_metadata_observed_at) }}
+            </dd>
+            <dt class="col-sm-6">
+              {{ $t('message.health_reference_version') }}
+            </dt>
+            <dd class="col-sm-6">
+              {{ display(metrics.scorecard_reference_version) }}
+            </dd>
+            <dt class="col-sm-6">
+              {{ $t('message.health_scorecard_generated') }}
+            </dt>
+            <dd class="col-sm-6">
+              {{ formatEpoch(metrics.scorecard_timestamp) }}
+            </dd>
+          </dl>
+        </b-col>
+        <b-col md="4">
+          <h5 class="mb-3">{{ $t('message.health_source_github') }}</h5>
+          <dl class="row mb-0">
             <dt class="col-sm-6">{{ $t('message.health_contributors') }}</dt>
             <dd class="col-sm-6">{{ display(metrics.contributors) }}</dd>
             <dt class="col-sm-6">{{ $t('message.health_weekly_commits') }}</dt>
@@ -46,16 +77,8 @@
             <dd class="col-sm-6">{{ formatEpoch(metrics.last_commit) }}</dd>
             <dt class="col-sm-6">{{ $t('message.health_bus_factor') }}</dt>
             <dd class="col-sm-6">{{ display(metrics.bus_factor) }}</dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_known_dependents') }}
-            </dt>
-            <dd class="col-sm-6">{{ display(metrics.dependents) }}</dd>
             <dt class="col-sm-6">{{ $t('message.health_files') }}</dt>
             <dd class="col-sm-6">{{ display(metrics.files) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_scorecard_score') }}</dt>
-            <dd class="col-sm-6">
-              {{ displayNumber(metrics.scorecard_score, 1) }}
-            </dd>
             <dt class="col-sm-6">
               {{ $t('message.health_average_issue_age') }}
             </dt>
@@ -66,86 +89,44 @@
             <dd class="col-sm-6">
               {{ displayBoolean(metrics.is_repo_archived) }}
             </dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_reference_version') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ display(metrics.scorecard_reference_version) }}
-            </dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_scorecard_generated') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ formatEpoch(metrics.scorecard_timestamp) }}
-            </dd>
           </dl>
         </b-col>
-        <b-col md="6">
+        <b-col md="4">
           <h5 class="mb-3">{{ $t('message.health_repository_features') }}</h5>
-          <ul class="list-unstyled">
-            <li>
+          <dl class="row mb-0">
+            <dt class="col-sm-6">{{ $t('message.health_readme') }}</dt>
+            <dd class="col-sm-6">
               <i
                 :class="featureIcon(metrics.has_readme)"
                 aria-hidden="true"
               ></i>
-              {{ $t('message.health_readme') }}:
-              {{ displayBoolean(metrics.has_readme) }}
-            </li>
-            <li>
+              <span class="sr-only">{{
+                displayBoolean(metrics.has_readme)
+              }}</span>
+            </dd>
+            <dt class="col-sm-6">{{ $t('message.health_code_of_conduct') }}</dt>
+            <dd class="col-sm-6">
               <i
                 :class="featureIcon(metrics.has_code_of_conduct)"
                 aria-hidden="true"
               ></i>
-              {{ $t('message.health_code_of_conduct') }}:
-              {{ displayBoolean(metrics.has_code_of_conduct) }}
-            </li>
-            <li>
+              <span class="sr-only">{{
+                displayBoolean(metrics.has_code_of_conduct)
+              }}</span>
+            </dd>
+            <dt class="col-sm-6">{{ $t('message.health_security_policy') }}</dt>
+            <dd class="col-sm-6">
               <i
                 :class="featureIcon(metrics.has_security_policy)"
                 aria-hidden="true"
               ></i>
-              {{ $t('message.health_security_policy') }}:
-              {{ displayBoolean(metrics.has_security_policy) }}
-            </li>
-          </ul>
+              <span class="sr-only">{{
+                displayBoolean(metrics.has_security_policy)
+              }}</span>
+            </dd>
+          </dl>
         </b-col>
       </b-row>
-      <h5 class="mt-3 mb-3">{{ $t('message.health_scorecard_checks') }}</h5>
-      <b-list-group
-        v-if="metrics.scorecard_checks && metrics.scorecard_checks.length"
-      >
-        <b-list-group-item
-          v-for="check in metrics.scorecard_checks"
-          :key="check.name"
-        >
-          <div class="d-flex justify-content-between">
-            <strong>{{ check.name }}</strong>
-            <span v-if="check.score != null"
-              >{{ displayNumber(check.score, 1) }}/10</span
-            >
-          </div>
-          <div v-if="check.description" class="text-muted small">
-            {{ check.description }}
-          </div>
-          <div v-if="check.reason">
-            <strong>{{ $t('message.health_reason') }}:</strong>
-            {{ check.reason }}
-          </div>
-          <ul v-if="check.details && check.details.length" class="mb-1 mt-2">
-            <li v-for="(detail, index) in check.details" :key="index">
-              {{ detail }}
-            </li>
-          </ul>
-          <a
-            v-if="check.documentation_url"
-            :href="check.documentation_url"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ $t('message.health_read_more') }}</a
-          >
-        </b-list-group-item>
-      </b-list-group>
-      <p v-else class="text-muted">{{ $t('message.health_no_checks') }}</p>
       <p class="text-muted small text-center mt-4 mb-0">
         {{ $t('message.health_attribution_sources') }}
         <a href="https://deps.dev" target="_blank" rel="noopener noreferrer"
@@ -167,9 +148,13 @@
 
 <script>
 import common from '../../../shared/common';
+import ScorecardChecks from './ScorecardChecks.vue';
 
 export default {
   name: 'ComponentHealth',
+  components: {
+    ScorecardChecks,
+  },
   props: {
     uuid: String,
   },
@@ -182,14 +167,6 @@ export default {
   computed: {
     formattedLastFetch() {
       return this.formatEpoch(this.metrics && this.metrics.last_fetch);
-    },
-    statusLabel() {
-      if (!this.metrics || !this.metrics.status) {
-        return this.$t('message.health_not_applicable');
-      }
-      const key = `message.health_status_${this.metrics.status.toLowerCase()}`;
-      const label = this.$t(key);
-      return label === key ? this.metrics.status : label;
     },
   },
   methods: {
