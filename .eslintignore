@@ -3,3 +3,4 @@ node_modules
 
 # Vendored third-party sources
 src/views/components/VueEasyPieChart.vue
+coverage
