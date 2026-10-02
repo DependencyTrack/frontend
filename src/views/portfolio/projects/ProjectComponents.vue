@@ -127,8 +127,8 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'hash_verification.status': false,
   license: true,
   occurrence_count: false,
+  scorecard_score: true,
   last_inherited_risk_score: true,
-  scorecard_score: false,
   metrics: true,
 };
 
@@ -458,6 +458,10 @@ export default {
             return `<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span> ${value}`;
           },
         },
+        buildScorecardColumn({
+          $t: this.$t.bind(this),
+          visible: initialColumnVisible('scorecard_score'),
+        }),
         {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
@@ -465,10 +469,6 @@ export default {
           visible: initialColumnVisible('last_inherited_risk_score'),
           class: 'tight',
         },
-        buildScorecardColumn({
-          $t: this.$t.bind(this),
-          visible: initialColumnVisible('scorecard_score'),
-        }),
         {
           title: this.$t('message.vulnerabilities'),
           field: 'metrics',
