@@ -163,8 +163,7 @@
           <b-badge
             v-if="healthLoaded"
             variant="tab-info"
-            class="health-score-badge"
-            :class="healthBadgeTone"
+            :style="healthBadgeStyle"
             >{{ healthBadgeLabel }}</b-badge
           ></template
         >
@@ -194,7 +193,10 @@ import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
-import { healthScoreTone } from './healthScoreTone';
+import {
+  HEALTH_SCORE_COLOR,
+  healthScoreTone,
+} from '../../../shared/healthScoreTone';
 import { formatScorecardScore } from '../../../shared/scorecardColumn';
 
 export default {
@@ -222,9 +224,10 @@ export default {
         }
       }
     },
-    healthBadgeTone() {
+    healthBadgeStyle() {
       const tone = healthScoreTone(this.scorecardScore);
-      return tone ? 'is-' + tone : null;
+      // !important beats the colour that .badge-tab-info forces
+      return tone ? { color: HEALTH_SCORE_COLOR[tone] + ' !important' } : null;
     },
     healthBadgeLabel() {
       if (this.scorecardScore == null) {
@@ -368,17 +371,5 @@ export default {
 }
 .badge {
   margin-right: 0.4rem;
-}
-.health-score-badge.is-green {
-  color: var(--severity-low) !important;
-}
-.health-score-badge.is-yellow {
-  color: var(--severity-medium) !important;
-}
-.health-score-badge.is-orange {
-  color: var(--severity-high) !important;
-}
-.health-score-badge.is-red {
-  color: var(--severity-critical) !important;
 }
 </style>

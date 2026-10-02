@@ -69,4 +69,4 @@ function compareScorecardChecks(left, right, mode, locale) {
   return left.inputIndex - right.inputIndex;
 }
 
-export { SCORECARD_RISK, scorecardRisk, compareScorecardChecks };
+export { scorecardRisk, compareScorecardChecks };

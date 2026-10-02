@@ -115,7 +115,7 @@
 
 <script>
 import { compareScorecardChecks, scorecardRisk } from './scorecardRisk';
-import { parseHealthScore } from './healthScoreTone';
+import { parseHealthScore } from '../../../shared/healthScoreTone';
 
 const ACRONYMS = new Set(['CI', 'CII', 'SAST']);
 const RISK_LABELS = {

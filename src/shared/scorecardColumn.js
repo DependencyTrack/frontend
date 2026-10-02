@@ -1,12 +1,8 @@
+import { parseHealthScore } from './healthScoreTone';
+
 function formatScorecardScore(value) {
-  if (value == null || value === '') {
-    return '-';
-  }
-  const score = Number(value);
-  if (Number.isNaN(score)) {
-    return '-';
-  }
-  return score.toFixed(1);
+  const score = parseHealthScore(value);
+  return score == null ? '-' : score.toFixed(1);
 }
 
 function buildScorecardColumn({ $t, visible }) {

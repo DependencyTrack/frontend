@@ -96,18 +96,13 @@
         <section class="panel">
           <div class="panelhead scorecard-head">
             <h2>{{ $t('message.health_scorecard_checks') }}</h2>
-            <select
+            <b-form-select
               v-model="checkSort"
+              :options="checkSortOptions"
+              size="sm"
               class="check-sort"
               :aria-label="$t('message.health_sort_checks')"
-            >
-              <option value="score">
-                {{ $t('message.health_lowest_scores_first') }}
-              </option>
-              <option value="risk">
-                {{ $t('message.health_highest_risk_first') }}
-              </option>
-            </select>
+            />
           </div>
           <scorecard-checks
             :checks="metrics.scorecard_checks"
@@ -144,32 +139,32 @@
             </div>
             <dl class="metrics">
               <dt>{{ $t('message.health_contributors') }}</dt>
-              <dd>{{ formatCount(metrics.contributors) }}</dd>
+              <dd>{{ formatNumber(metrics.contributors) }}</dd>
               <dt>{{ $t('message.health_weekly_commits') }}</dt>
-              <dd>{{ formatDecimal(metrics.commit_frequency_weekly, 1) }}</dd>
+              <dd>{{ formatNumber(metrics.commit_frequency_weekly, 1) }}</dd>
               <dt>{{ $t('message.health_open_issues') }}</dt>
-              <dd>{{ formatCount(metrics.open_issues) }}</dd>
+              <dd>{{ formatNumber(metrics.open_issues) }}</dd>
               <dt>{{ $t('message.health_open_pull_requests') }}</dt>
-              <dd>{{ formatCount(metrics.open_prs) }}</dd>
+              <dd>{{ formatNumber(metrics.open_prs) }}</dd>
               <dt>{{ $t('message.health_average_issue_age') }}</dt>
               <dd>{{ issueAgeLabel }}</dd>
               <dt>{{ $t('message.health_bus_factor') }}</dt>
-              <dd>{{ formatCount(metrics.bus_factor) }}</dd>
+              <dd>{{ formatNumber(metrics.bus_factor) }}</dd>
               <dt>{{ $t('message.health_files') }}</dt>
-              <dd>{{ formatCount(metrics.files) }}</dd>
+              <dd>{{ formatNumber(metrics.files) }}</dd>
             </dl>
             <div class="community">
               <div>
                 <span>{{ $t('message.health_stars') }}</span>
-                <strong>{{ formatCount(metrics.stars) }}</strong>
+                <strong>{{ formatNumber(metrics.stars) }}</strong>
               </div>
               <div>
                 <span>{{ $t('message.health_forks') }}</span>
-                <strong>{{ formatCount(metrics.forks) }}</strong>
+                <strong>{{ formatNumber(metrics.forks) }}</strong>
               </div>
               <div>
                 <span>{{ $t('message.health_known_dependents') }}</span>
-                <strong>{{ formatCount(metrics.dependents) }}</strong>
+                <strong>{{ formatNumber(metrics.dependents) }}</strong>
               </div>
             </div>
           </section>
@@ -205,7 +200,7 @@ import {
   HEALTH_SCORE_COLOR,
   healthScoreTone,
   parseHealthScore,
-} from './healthScoreTone';
+} from '../../../shared/healthScoreTone';
 import { formatScorecardScore } from '../../../shared/scorecardColumn';
 import common from '../../../shared/common';
 
@@ -227,6 +222,12 @@ export default {
   computed: {
     missingLabel() {
       return this.$t('message.health_missing');
+    },
+    checkSortOptions() {
+      return [
+        { value: 'score', text: this.$t('message.health_lowest_scores_first') },
+        { value: 'risk', text: this.$t('message.health_highest_risk_first') },
+      ];
     },
     retrievedAt() {
       return this.formatStamp(this.metrics && this.metrics.last_fetch, true);
@@ -266,7 +267,7 @@ export default {
       return this.missingLabel;
     },
     issueAgeLabel() {
-      const formatted = this.formatDecimal(
+      const formatted = this.formatNumber(
         this.metrics && this.metrics.avg_issue_age_days,
         1,
       );
@@ -392,7 +393,7 @@ export default {
     orMissing(value) {
       return this.isBlank(value) ? this.missingLabel : value;
     },
-    formatCount(value) {
+    formatNumber(value, digits) {
       if (this.isBlank(value)) {
         return this.missingLabel;
       }
@@ -400,20 +401,13 @@ export default {
       if (!Number.isFinite(numeric)) {
         return this.missingLabel;
       }
-      return new Intl.NumberFormat(this.$i18n.locale).format(numeric);
-    },
-    formatDecimal(value, digits) {
-      if (this.isBlank(value)) {
-        return this.missingLabel;
-      }
-      const numeric = Number(value);
-      if (!Number.isFinite(numeric)) {
-        return this.missingLabel;
-      }
-      return new Intl.NumberFormat(this.$i18n.locale, {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits,
-      }).format(numeric);
+      const fractionDigits =
+        digits == null
+          ? undefined
+          : { minimumFractionDigits: digits, maximumFractionDigits: digits };
+      return new Intl.NumberFormat(this.$i18n.locale, fractionDigits).format(
+        numeric,
+      );
     },
     featureLabel(value) {
       if (value === true) {
@@ -486,13 +480,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:color';
 @import '../../../assets/scss/variables';
-
-@function select-chevron($color) {
-  $argb: str-slice('#{color.ie-hex-str($color)}', 4);
-  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23#{$argb}' d='M0 0h10L5 6z'/%3E%3C/svg%3E");
-}
 
 .health-view {
   box-sizing: border-box;
@@ -657,36 +645,14 @@ summary:focus-visible {
 }
 
 .check-sort {
-  box-sizing: border-box;
   width: 160px;
   height: 24px;
   flex: 0 0 auto;
   margin: 0;
-  padding: 0 26px 0 8px;
-  border: 1px solid $input-border-color;
-  border-radius: 3px;
-  background-color: $input-bg;
-  background-image: select-chevron($grey-600);
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  color: $input-color;
-  font-family: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
   font-size: 11px;
-  font-weight: 400;
   line-height: 22px;
-  appearance: none;
-  cursor: pointer;
-}
-
-.check-sort:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.check-sort:disabled {
-  background-color: $input-disabled-bg;
-  color: $grey-600;
-  cursor: default;
 }
 
 h2 {
