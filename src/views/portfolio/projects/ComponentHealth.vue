@@ -1,154 +1,223 @@
 <template>
-  <b-card class="m-3" :title="$t('message.health_component_metrics')">
-    <div v-if="state === 'loading'" class="text-center py-4">
+  <div class="health-view">
+    <div v-if="state === 'loading'" class="state">
       {{ $t('message.loading') }}…
     </div>
-    <div v-else-if="state === 'empty'" class="text-center py-4">
+    <div v-else-if="state === 'empty'" class="state">
       {{ $t('message.health_no_metadata') }}
     </div>
-    <div v-else-if="state === 'in_progress'" class="text-center py-4">
+    <div v-else-if="state === 'in_progress'" class="state">
       {{ $t('message.health_in_progress') }}
     </div>
-    <div v-else-if="state === 'not_available'" class="text-center py-4">
+    <div v-else-if="state === 'not_available'" class="state">
       {{ $t('message.health_not_available') }}
     </div>
-    <div v-else-if="state === 'error'" class="text-center py-4">
+    <div v-else-if="state === 'error'" class="state">
       {{ $t('message.health_load_failed') }}
     </div>
-    <div v-else-if="metrics">
-      <p class="text-muted small">
-        {{ $t('message.health_last_updated') }}: {{ formattedLastFetch }}
-      </p>
-      <scorecard-checks
-        v-if="metrics.scorecard_checks && metrics.scorecard_checks.length"
-        class="mb-4"
-        :checks="metrics.scorecard_checks"
-        :score="metrics.scorecard_score"
-      />
-      <p v-else class="text-muted mb-4">{{ $t('message.health_no_checks') }}</p>
-      <b-row>
-        <b-col md="4">
-          <h5 class="mb-3">{{ $t('message.health_source_deps_dev') }}</h5>
-          <dl class="row mb-0">
-            <dt class="col-sm-6">
-              {{ $t('message.health_known_dependents') }}
-            </dt>
-            <dd class="col-sm-6">{{ display(metrics.dependents) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_stars') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.stars) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_forks') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.forks) }}</dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_project_metadata_as_of') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ formatEpoch(metrics.project_metadata_observed_at) }}
-            </dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_reference_version') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ display(metrics.scorecard_reference_version) }}
-            </dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_scorecard_generated') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ formatEpoch(metrics.scorecard_timestamp) }}
-            </dd>
-          </dl>
-        </b-col>
-        <b-col md="4">
-          <h5 class="mb-3">{{ $t('message.health_source_github') }}</h5>
-          <dl class="row mb-0">
-            <dt class="col-sm-6">{{ $t('message.health_contributors') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.contributors) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_weekly_commits') }}</dt>
-            <dd class="col-sm-6">
-              {{ displayNumber(metrics.commit_frequency_weekly, 2) }}
-            </dd>
-            <dt class="col-sm-6">{{ $t('message.health_open_issues') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.open_issues) }}</dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_open_pull_requests') }}
-            </dt>
-            <dd class="col-sm-6">{{ display(metrics.open_prs) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_last_commit') }}</dt>
-            <dd class="col-sm-6">{{ formatEpoch(metrics.last_commit) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_bus_factor') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.bus_factor) }}</dd>
-            <dt class="col-sm-6">{{ $t('message.health_files') }}</dt>
-            <dd class="col-sm-6">{{ display(metrics.files) }}</dd>
-            <dt class="col-sm-6">
-              {{ $t('message.health_average_issue_age') }}
-            </dt>
-            <dd class="col-sm-6">
-              {{ displayNumber(metrics.avg_issue_age_days, 1) }}
-            </dd>
-            <dt class="col-sm-6">{{ $t('message.health_archived') }}</dt>
-            <dd class="col-sm-6">
-              {{ displayBoolean(metrics.is_repo_archived) }}
-            </dd>
-          </dl>
-        </b-col>
-        <b-col md="4">
-          <h5 class="mb-3">{{ $t('message.health_repository_features') }}</h5>
-          <dl class="row mb-0">
-            <dt class="col-sm-6">{{ $t('message.health_readme') }}</dt>
-            <dd class="col-sm-6">
-              <i
-                :class="featureIcon(metrics.has_readme)"
-                aria-hidden="true"
-              ></i>
-              <span class="sr-only">{{
-                displayBoolean(metrics.has_readme)
-              }}</span>
-            </dd>
-            <dt class="col-sm-6">{{ $t('message.health_code_of_conduct') }}</dt>
-            <dd class="col-sm-6">
-              <i
-                :class="featureIcon(metrics.has_code_of_conduct)"
-                aria-hidden="true"
-              ></i>
-              <span class="sr-only">{{
-                displayBoolean(metrics.has_code_of_conduct)
-              }}</span>
-            </dd>
-            <dt class="col-sm-6">{{ $t('message.health_security_policy') }}</dt>
-            <dd class="col-sm-6">
-              <i
-                :class="featureIcon(metrics.has_security_policy)"
-                aria-hidden="true"
-              ></i>
-              <span class="sr-only">{{
-                displayBoolean(metrics.has_security_policy)
-              }}</span>
-            </dd>
-          </dl>
-        </b-col>
-      </b-row>
-      <p class="text-muted small text-center mt-4 mb-0">
-        {{ $t('message.health_attribution_sources') }}
-        <a href="https://deps.dev" target="_blank" rel="noopener noreferrer"
-          >deps.dev</a
-        >
-        {{ $t('message.health_attribution_and') }}
-        <a
-          href="https://docs.github.com/en/rest"
-          target="_blank"
-          rel="noopener noreferrer"
-          >{{ $t('message.health_attribution_github_api') }}</a
-        >.
-        <br />
-        {{ $t('message.health_attribution_disclaimer') }}
-      </p>
-    </div>
-  </b-card>
+    <template v-else-if="metrics">
+      <div class="heading">
+        <h1>{{ $t('message.health_component_metrics') }}</h1>
+        <span class="meta">{{
+          $t('message.health_retrieved', { when: retrievedShort })
+        }}</span>
+        <details class="sources">
+          <summary>{{ $t('message.health_sources_and_timestamps') }}</summary>
+          <div class="sources-panel">
+            <strong>{{ $t('message.health_data_provenance') }}</strong>
+            <dl>
+              <dt>{{ $t('message.health_sources') }}</dt>
+              <dd>{{ sourceLabel }}</dd>
+              <dt>{{ $t('message.health_retrieved_label') }}</dt>
+              <dd>{{ retrievedFull }}</dd>
+              <dt>{{ $t('message.health_project_metadata_as_of') }}</dt>
+              <dd>{{ metadataAsOf }}</dd>
+              <dt>{{ $t('message.health_scorecard_generated') }}</dt>
+              <dd>{{ scorecardGenerated }}</dd>
+              <dt>{{ $t('message.health_scorecard_engine') }}</dt>
+              <dd>{{ display(metrics.scorecard_reference_version) }}</dd>
+            </dl>
+          </div>
+        </details>
+      </div>
+      <div class="summary">
+        <div class="stat score-stat">
+          <div
+            class="score-ring"
+            :class="ringTone"
+            :style="ringColor ? { color: ringColor } : null"
+            role="img"
+            :aria-label="ringLabel"
+          >
+            <svg viewBox="0 0 60 60" aria-hidden="true">
+              <circle class="ring-track" cx="30" cy="30" r="26"></circle>
+              <circle
+                v-if="ringPercent > 0"
+                class="ring-score"
+                cx="30"
+                cy="30"
+                r="26"
+                pathLength="100"
+                :stroke-dasharray="ringDash"
+                transform="rotate(-90 30 30)"
+              ></circle>
+            </svg>
+            <span class="ring-number" aria-hidden="true">
+              <template v-if="ringAvailable">
+                {{ ringDisplay
+                }}<small>{{ $t('message.health_ring_scale') }}</small>
+              </template>
+              <template v-else>{{ missingLabel }}</template>
+            </span>
+          </div>
+          <div class="score-caption">
+            <span class="statlabel">{{
+              $t('message.health_openssf_scorecard')
+            }}</span>
+            <span class="meta">{{
+              $t('message.health_generated_on', { date: generatedDate })
+            }}</span>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="statlabel">{{ $t('message.health_last_commit') }}</span>
+          <strong class="repo-value">{{ lastCommitValue }}</strong>
+          <span class="meta">{{ lastCommitMeta }}</span>
+        </div>
+        <div class="stat">
+          <span class="statlabel">{{ $t('message.health_repository') }}</span>
+          <strong class="repo-value">{{ archivedLabel }}</strong>
+          <span class="meta">{{
+            $t('message.health_repository_metadata')
+          }}</span>
+        </div>
+      </div>
+      <div class="columns">
+        <section class="panel">
+          <div class="panelhead scorecard-head">
+            <h2>{{ $t('message.health_scorecard_checks') }}</h2>
+            <select
+              v-model="checkSort"
+              class="check-sort"
+              :aria-label="$t('message.health_sort_checks')"
+            >
+              <option value="score">
+                {{ $t('message.health_lowest_scores_first') }}
+              </option>
+              <option value="risk">
+                {{ $t('message.health_highest_risk_first') }}
+              </option>
+            </select>
+          </div>
+          <scorecard-checks
+            :checks="metrics.scorecard_checks"
+            :sort-mode="checkSort"
+          />
+        </section>
+        <div class="rightstack">
+          <section class="panel">
+            <div class="panelhead">
+              <h2>{{ $t('message.health_maintenance_community') }}</h2>
+              <span class="meta source-links">
+                <a
+                  v-if="githubHref"
+                  :href="githubHref"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ $t('message.health_source_github') }}</a
+                >
+                <template v-else>{{
+                  $t('message.health_source_github')
+                }}</template>
+                <span aria-hidden="true"> · </span>
+                <a
+                  v-if="depsDevHref"
+                  :href="depsDevHref"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ $t('message.health_source_deps_dev') }}</a
+                >
+                <template v-else>{{
+                  $t('message.health_source_deps_dev')
+                }}</template>
+              </span>
+            </div>
+            <dl class="metrics">
+              <dt>{{ $t('message.health_contributors') }}</dt>
+              <dd>{{ formatCount(metrics.contributors) }}</dd>
+              <dt>{{ $t('message.health_weekly_commits') }}</dt>
+              <dd>{{ formatDecimal(metrics.commit_frequency_weekly, 1) }}</dd>
+              <dt>{{ $t('message.health_open_issues') }}</dt>
+              <dd>{{ formatCount(metrics.open_issues) }}</dd>
+              <dt>{{ $t('message.health_open_pull_requests') }}</dt>
+              <dd>{{ formatCount(metrics.open_prs) }}</dd>
+              <dt>{{ $t('message.health_average_issue_age') }}</dt>
+              <dd>{{ issueAgeLabel }}</dd>
+              <dt>{{ $t('message.health_bus_factor') }}</dt>
+              <dd>{{ formatCount(metrics.bus_factor) }}</dd>
+              <dt>{{ $t('message.health_files') }}</dt>
+              <dd>{{ formatCount(metrics.files) }}</dd>
+            </dl>
+            <div class="community">
+              <div>
+                <span>{{ $t('message.health_stars') }}</span>
+                <strong>{{ formatCount(metrics.stars) }}</strong>
+              </div>
+              <div>
+                <span>{{ $t('message.health_forks') }}</span>
+                <strong>{{ formatCount(metrics.forks) }}</strong>
+              </div>
+              <div>
+                <span>{{ $t('message.health_known_dependents') }}</span>
+                <strong>{{ formatCount(metrics.dependents) }}</strong>
+              </div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panelhead">
+              <h2>{{ $t('message.health_repository_features') }}</h2>
+              <span class="meta">{{ $t('message.health_source_github') }}</span>
+            </div>
+            <dl class="metrics">
+              <dt>{{ $t('message.health_readme') }}</dt>
+              <dd :class="featureClass(metrics.has_readme)">
+                {{ featureLabel(metrics.has_readme) }}
+              </dd>
+              <dt>{{ $t('message.health_code_of_conduct') }}</dt>
+              <dd :class="featureClass(metrics.has_code_of_conduct)">
+                {{ featureLabel(metrics.has_code_of_conduct) }}
+              </dd>
+              <dt>{{ $t('message.health_security_policy') }}</dt>
+              <dd :class="featureClass(metrics.has_security_policy)">
+                {{ featureLabel(metrics.has_security_policy) }}
+              </dd>
+            </dl>
+          </section>
+        </div>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
-import common from '../../../shared/common';
 import ScorecardChecks from './ScorecardChecks.vue';
+import { HEALTH_SCORE_COLOR, healthScoreTone } from './healthScoreTone';
+import { formatScorecardScore } from '../../../shared/scorecardColumn';
+
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 export default {
   name: 'ComponentHealth',
@@ -162,57 +231,275 @@ export default {
     return {
       metrics: null,
       state: 'loading',
+      checkSort: 'score',
     };
   },
   computed: {
-    formattedLastFetch() {
-      return this.formatEpoch(this.metrics && this.metrics.last_fetch);
+    missingLabel() {
+      return this.$t('message.health_missing');
+    },
+    retrievedShort() {
+      return this.formatStamp(this.metrics && this.metrics.last_fetch, false);
+    },
+    retrievedFull() {
+      return this.formatStamp(this.metrics && this.metrics.last_fetch, true);
+    },
+    metadataAsOf() {
+      return this.formatStamp(
+        this.metrics && this.metrics.project_metadata_observed_at,
+        true,
+      );
+    },
+    scorecardGenerated() {
+      return this.formatStamp(
+        this.metrics && this.metrics.scorecard_timestamp,
+        true,
+      );
+    },
+    generatedDate() {
+      const parts = this.dateParts(
+        this.metrics && this.metrics.scorecard_timestamp,
+      );
+      if (!parts) {
+        return this.missingLabel;
+      }
+      return parts.day + ' ' + parts.month + ' ' + parts.year;
+    },
+    lastCommitValue() {
+      const parts = this.dateParts(this.metrics && this.metrics.last_commit);
+      if (!parts) {
+        return this.missingLabel;
+      }
+      return parts.day + ' ' + parts.month + ' ' + parts.year;
+    },
+    lastCommitMeta() {
+      return this.$t('message.health_repository_activity');
+    },
+    archivedLabel() {
+      const value = this.metrics && this.metrics.is_repo_archived;
+      if (value === true) {
+        return this.$t('message.health_archived');
+      }
+      if (value === false) {
+        return this.$t('message.health_not_archived');
+      }
+      return this.missingLabel;
+    },
+    issueAgeLabel() {
+      const formatted = this.formatDecimal(
+        this.metrics && this.metrics.avg_issue_age_days,
+        1,
+      );
+      if (formatted === this.missingLabel) {
+        return formatted;
+      }
+      return this.$t('message.health_days_value', { value: formatted });
+    },
+    githubHref() {
+      return this.externalHref(this.metrics && this.metrics.github_url);
+    },
+    depsDevHref() {
+      return this.externalHref(this.metrics && this.metrics.deps_dev_url);
+    },
+    sourceLabel() {
+      const names = [];
+      if (this.hasGithub) {
+        names.push(this.$t('message.health_source_github'));
+      }
+      if (this.hasDepsDev) {
+        names.push(this.$t('message.health_source_deps_dev'));
+      }
+      if (this.hasScorecard) {
+        names.push(this.$t('message.health_openssf_scorecard'));
+      }
+      return names.length ? names.join(' · ') : this.missingLabel;
+    },
+    hasGithub() {
+      return this.hasAny([
+        'github_url',
+        'contributors',
+        'commit_frequency_weekly',
+        'open_issues',
+        'open_prs',
+        'last_commit',
+        'bus_factor',
+        'files',
+        'is_repo_archived',
+        'has_readme',
+        'has_code_of_conduct',
+        'has_security_policy',
+      ]);
+    },
+    hasDepsDev() {
+      return this.hasAny([
+        'deps_dev_url',
+        'dependents',
+        'stars',
+        'forks',
+        'project_metadata_observed_at',
+      ]);
+    },
+    hasScorecard() {
+      return this.hasAny([
+        'scorecard_score',
+        'scorecard_checks',
+        'scorecard_timestamp',
+        'scorecard_reference_version',
+      ]);
+    },
+    ringScore() {
+      const raw = this.metrics && this.metrics.scorecard_score;
+      if (raw == null || raw === '') {
+        return null;
+      }
+      const score = Number(raw);
+      if (!Number.isFinite(score) || score < 0 || score > 10) {
+        return null;
+      }
+      return score;
+    },
+    ringAvailable() {
+      return this.ringScore != null;
+    },
+    ringDisplay() {
+      return this.ringAvailable ? formatScorecardScore(this.ringScore) : '';
+    },
+    ringPercent() {
+      if (!this.ringAvailable) {
+        return 0;
+      }
+      return (this.ringScore / 10) * 100;
+    },
+    ringTone() {
+      const tone = healthScoreTone(this.ringScore);
+      return tone ? 'is-' + tone : 'is-unavailable';
+    },
+    ringColor() {
+      const tone = healthScoreTone(this.ringScore);
+      return tone ? HEALTH_SCORE_COLOR[tone] : null;
+    },
+    ringDash() {
+      return this.ringPercent + ' 100';
+    },
+    ringLabel() {
+      if (!this.ringAvailable) {
+        return this.$t('message.health_scorecard_aria_unavailable');
+      }
+      return this.$t('message.health_scorecard_aria', {
+        score: this.ringDisplay,
+      });
     },
   },
   methods: {
+    hasAny(fields) {
+      return fields.some((field) => {
+        const value = this.metrics && this.metrics[field];
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        }
+        return value != null && value !== '';
+      });
+    },
+    externalHref(url) {
+      if (typeof url !== 'string' || url === '') {
+        return null;
+      }
+      try {
+        const parsed = new URL(url);
+        if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+          return parsed.href;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    },
     display(value) {
       if (value === null || value === undefined || value === '') {
-        return this.$t('message.health_not_applicable');
+        return this.missingLabel;
       }
       return value;
     },
-    displayNumber(value, digits) {
-      if (
-        value === null ||
-        value === undefined ||
-        Number.isNaN(Number(value))
-      ) {
-        return this.$t('message.health_not_applicable');
+    formatCount(value) {
+      if (value === null || value === undefined || value === '') {
+        return this.missingLabel;
       }
-      return Number(value).toFixed(digits);
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return this.missingLabel;
+      }
+      return new Intl.NumberFormat(this.$i18n.locale).format(numeric);
     },
-    displayBoolean(value) {
+    formatDecimal(value, digits) {
+      if (value === null || value === undefined || value === '') {
+        return this.missingLabel;
+      }
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        return this.missingLabel;
+      }
+      return new Intl.NumberFormat(this.$i18n.locale, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      }).format(numeric);
+    },
+    featureLabel(value) {
       if (value === true) {
-        return this.$t('message.health_yes');
+        return this.$t('message.health_present');
       }
       if (value === false) {
-        return this.$t('message.health_no');
+        return this.$t('message.health_not_present');
       }
-      return this.$t('message.health_not_applicable');
+      return this.$t('message.health_unknown');
     },
-    featureIcon(value) {
-      if (value === true) {
-        return 'fa fa-check text-success mr-1';
-      }
-      if (value === false) {
-        return 'fa fa-times text-danger mr-1';
-      }
-      return 'fa fa-question text-muted mr-1';
+    featureClass(value) {
+      return {
+        present: value === true,
+        absent: value !== true,
+      };
     },
-    formatEpoch(value) {
-      if (value == null) {
-        return this.$t('message.health_not_applicable');
+    dateParts(value) {
+      if (value == null || value === '') {
+        return null;
       }
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) {
-        return this.$t('message.health_not_applicable');
+        return null;
       }
-      return common.formatTimestamp(date.getTime(), true);
+      const pad = function pad(num) {
+        return num < 10 ? '0' + num : String(num);
+      };
+      return {
+        day: date.getDate(),
+        month: MONTHS[date.getMonth()],
+        year: date.getFullYear(),
+        hh: pad(date.getHours()),
+        mm: pad(date.getMinutes()),
+        ss: pad(date.getSeconds()),
+      };
+    },
+    formatStamp(value, includeSeconds) {
+      const parts = this.dateParts(value);
+      if (!parts) {
+        return this.missingLabel;
+      }
+      const time = includeSeconds
+        ? parts.hh + ':' + parts.mm + ':' + parts.ss
+        : parts.hh + ':' + parts.mm;
+      return parts.day + ' ' + parts.month + ' ' + parts.year + ', ' + time;
+    },
+    badgeScore(data) {
+      if (
+        !data ||
+        data.status !== 'PROCESSED' ||
+        data.scorecard_score == null
+      ) {
+        return null;
+      }
+      return data.scorecard_score;
+    },
+    publishScore(data) {
+      this.$emit('score', this.badgeScore(data));
     },
     fetchMetrics() {
       const url = `${this.$api.BASE_URL}/api/v2/components/${this.uuid}/health`;
@@ -222,26 +509,613 @@ export default {
           const data = response.data || {};
           if (data.status === 'IN_PROGRESS') {
             this.state = 'in_progress';
+            this.publishScore(null);
             return;
           }
           if (data.status === 'NOT_AVAILABLE') {
             this.state = 'not_available';
+            this.publishScore(null);
             return;
           }
           this.metrics = data;
           this.state = 'ready';
+          this.publishScore(data);
         })
         .catch((err) => {
           if (err.response && err.response.status === 404) {
             this.state = 'empty';
-            return;
+          } else {
+            this.state = 'error';
           }
-          this.state = 'error';
+          this.publishScore(null);
         });
     },
   },
   mounted() {
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      this.$route &&
+      this.$route.query &&
+      this.$route.query.healthPreview === '1'
+    ) {
+      import('./componentHealthFixture').then((module) => {
+        this.metrics = module.componentHealthFixture;
+        this.state = 'ready';
+        this.publishScore(module.componentHealthFixture);
+      });
+      return;
+    }
     this.fetchMetrics();
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@use 'sass:color';
+@import '../../../assets/scss/variables';
+
+@function select-chevron($color) {
+  $argb: str-slice('#{color.ie-hex-str($color)}', 4);
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23#{$argb}' d='M0 0h10L5 6z'/%3E%3C/svg%3E");
+}
+
+.health-view {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  color: $body-color;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.health-view * {
+  box-sizing: border-box;
+}
+
+.state {
+  padding: 16px 0;
+  color: $grey-600;
+  text-align: center;
+}
+
+.heading {
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  gap: 8px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 11px;
+  color: $grey-600;
+}
+
+.source-links a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.source-links a:hover,
+.source-links a:focus-visible {
+  color: var(--primary-lighter);
+  text-decoration: underline;
+}
+
+.sources {
+  position: relative;
+  font-size: 11px;
+}
+
+summary {
+  color: var(--primary);
+  cursor: pointer;
+}
+
+summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.sources-panel {
+  position: absolute;
+  right: 0;
+  top: 23px;
+  width: 310px;
+  padding: 12px;
+  background: $dropdown-bg;
+  border: 1px solid $dropdown-border-color;
+  border-radius: 3px;
+  z-index: 3;
+  font-size: 12px;
+  line-height: 19px;
+  overflow-wrap: anywhere;
+}
+
+.sources-panel dl {
+  margin: 8px 0 0;
+  display: block;
+  padding: 0;
+}
+
+.sources-panel dt {
+  color: $grey-600;
+  margin-top: 6px;
+}
+
+.sources-panel dd {
+  margin: 0;
+  text-align: left;
+}
+
+.summary {
+  height: 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 3px;
+}
+
+.stat {
+  padding: 6px 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.stat + .stat {
+  border-left: 1px solid $border-color;
+}
+
+.statlabel {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.stat .meta {
+  grid-column: 1 / -1;
+}
+
+.repo-value {
+  font-size: 16px;
+  color: $body-color;
+  white-space: nowrap;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  align-items: start;
+}
+
+.panel {
+  min-width: 0;
+  background: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 3px;
+}
+
+.panelhead {
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+  background: $card-cap-bg;
+  border-bottom: 1px solid $border-color;
+}
+
+.check-sort {
+  box-sizing: border-box;
+  width: 160px;
+  height: 24px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 26px 0 8px;
+  border: 1px solid $input-border-color;
+  border-radius: 3px;
+  background-color: $input-bg;
+  background-image: select-chevron($grey-600);
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  color: $input-color;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 22px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.check-sort:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.check-sort:disabled {
+  background-color: $input-disabled-bg;
+  color: $grey-600;
+  cursor: default;
+}
+
+h2 {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.rightstack {
+  display: grid;
+  gap: 10px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 10px;
+  padding: 3px 10px;
+  margin: 0;
+  line-height: 18px;
+  font-size: 12px;
+}
+
+dt {
+  font-weight: 400;
+  min-width: 0;
+}
+
+dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+.community {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid $border-color;
+  padding: 4px 10px;
+  gap: 8px;
+}
+
+.community span {
+  display: block;
+  color: $grey-600;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 400;
+}
+
+.community strong {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.present {
+  color: $notification-pass;
+  font-size: 11px;
+}
+
+.absent {
+  color: $grey-600;
+  font-size: 11px;
+}
+
+.stat.score-stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px;
+}
+
+.score-ring {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  position: relative;
+  color: $body-color;
+}
+
+.score-ring svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ring-track {
+  fill: none;
+  stroke: $progress-bg;
+  stroke-width: 3.5;
+}
+
+.ring-score {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.ring-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 19px;
+  font-variant-numeric: tabular-nums;
+  color: $body-color;
+}
+
+.ring-number small {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13px;
+  color: $grey-600;
+}
+
+.score-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.score-caption .statlabel {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (min-width: 1400px) {
+  .health-view {
+    padding: 20px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .heading {
+    height: 48px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .summary {
+    height: 92px;
+  }
+
+  .stat {
+    padding: 12px 18px;
+  }
+
+  .statlabel {
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .meta,
+  .sources {
+    font-size: 13px;
+  }
+
+  .columns {
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .panelhead {
+    height: 42px;
+    padding: 0 16px;
+  }
+
+  .check-sort {
+    width: 180px;
+    height: 30px;
+    font-size: 13px;
+    line-height: 28px;
+  }
+
+  h2 {
+    font-size: 15px;
+  }
+
+  .metrics {
+    font-size: 14px;
+    line-height: 26px;
+    padding: 8px 16px;
+  }
+
+  .rightstack {
+    gap: 20px;
+  }
+
+  .community {
+    padding: 12px 16px;
+  }
+
+  .community span,
+  .present,
+  .absent {
+    font-size: 13px;
+  }
+
+  .community strong {
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .repo-value {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 959px) {
+  .columns {
+    grid-template-columns: 1.3fr 1fr;
+  }
+
+  .summary {
+    height: auto;
+    min-height: 70px;
+  }
+
+  .stat {
+    grid-template-columns: 1fr;
+  }
+
+  .repo-value {
+    font-size: 16px;
+  }
+
+  .heading {
+    height: auto;
+    min-height: 38px;
+    flex-wrap: wrap;
+    padding: 6px 0;
+  }
+
+  .sources-panel {
+    max-width: calc(100vw - 26px);
+  }
+
+  .meta {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 650px) {
+  .health-view {
+    padding: 10px;
+  }
+
+  .scorecard-head {
+    height: auto;
+    min-height: 30px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    grid-template-columns: 1fr auto;
+    padding: 9px 12px;
+  }
+
+  .stat + .stat {
+    border-left: 0;
+    border-top: 1px solid $border-color;
+  }
+
+  .sources {
+    margin-left: auto;
+  }
+
+  .sources-panel {
+    left: auto;
+    right: 0;
+  }
+
+  .heading > .meta {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .heading {
+    height: auto;
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .stat.score-stat {
+    padding: 7px 18px;
+    gap: 18px;
+  }
+
+  .score-ring {
+    width: 76px;
+    height: 76px;
+    flex-basis: 76px;
+  }
+
+  .ring-number {
+    font-size: 24px;
+    line-height: 27px;
+  }
+
+  .ring-number small {
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .score-caption .statlabel {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 651px) and (max-width: 959px) {
+  .stat.score-stat {
+    gap: 9px;
+    padding: 5px 10px;
+  }
+
+  .score-caption .statlabel {
+    font-size: 11px;
+  }
+
+  .score-caption .meta {
+    line-height: 14px;
+  }
+}
+
+@media (max-width: 650px) {
+  .stat.score-stat {
+    padding: 10px 12px;
+    gap: 14px;
+  }
+
+  .score-ring {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+}
+</style>

@@ -160,11 +160,15 @@
       <b-tab ref="health" @click="routeTo('health')">
         <template v-slot:title
           ><i class="fa fa-heart"></i> {{ $t('message.health') }}
-          <b-badge v-if="healthLoaded" :variant="healthBadgeVariant">{{
-            healthBadgeLabel
-          }}</b-badge></template
+          <b-badge
+            v-if="healthLoaded"
+            variant="tab-info"
+            class="health-score-badge"
+            :class="healthBadgeTone"
+            >{{ healthBadgeLabel }}</b-badge
+          ></template
         >
-        <component-health :uuid="uuid" />
+        <component-health :uuid="uuid" v-on:score="onHealthScore" />
       </b-tab>
     </b-tabs>
     <component-details-modal
@@ -190,6 +194,8 @@ import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import { healthScoreTone } from './healthScoreTone';
+import { formatScorecardScore } from '../../../shared/scorecardColumn';
 
 export default {
   mixins: [permissionsMixin],
@@ -216,23 +222,15 @@ export default {
         }
       }
     },
-    healthBadgeVariant() {
-      if (this.scorecardScore == null) {
-        return 'tab-info';
-      }
-      if (this.scorecardScore >= 7.5) {
-        return 'tab-total';
-      }
-      if (this.scorecardScore >= 2.5) {
-        return 'tab-warn';
-      }
-      return 'tab-fail';
+    healthBadgeTone() {
+      const tone = healthScoreTone(this.scorecardScore);
+      return tone ? 'is-' + tone : null;
     },
     healthBadgeLabel() {
       if (this.scorecardScore == null) {
         return this.$t('message.health_no_score');
       }
-      return Number(this.scorecardScore).toFixed(1);
+      return formatScorecardScore(this.scorecardScore);
     },
     componentLabel() {
       let label = this.component.name;
@@ -291,6 +289,10 @@ export default {
           this.component.uuid,
       });
     },
+    onHealthScore(score) {
+      this.scorecardScore = score;
+      this.healthLoaded = true;
+    },
     routeTo(path) {
       if (path) {
         if (
@@ -347,22 +349,6 @@ export default {
       );
     });
 
-    let healthUrl = `${this.$api.BASE_URL}/api/v2/components/${this.uuid}/health`;
-    this.axios
-      .get(healthUrl)
-      .then((response) => {
-        const data = response.data || {};
-        if (data.status === 'PROCESSED' && data.scorecard_score != null) {
-          this.scorecardScore = data.scorecard_score;
-        }
-      })
-      .catch(() => {
-        this.scorecardScore = null;
-      })
-      .finally(() => {
-        this.healthLoaded = true;
-      });
-
     this.getTabFromRoute().active = true;
   },
   watch: {
@@ -382,5 +368,17 @@ export default {
 }
 .badge {
   margin-right: 0.4rem;
+}
+.health-score-badge.is-green {
+  color: var(--severity-low) !important;
+}
+.health-score-badge.is-yellow {
+  color: var(--severity-medium) !important;
+}
+.health-score-badge.is-orange {
+  color: var(--severity-high) !important;
+}
+.health-score-badge.is-red {
+  color: var(--severity-critical) !important;
 }
 </style>

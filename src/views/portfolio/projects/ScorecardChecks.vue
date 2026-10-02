@@ -1,38 +1,41 @@
 <template>
-  <div>
-    <div class="scorecard-board">
-      <div v-if="showOverallScore" class="scorecard-general">
-        <span class="scorecard-general-value" :class="scoreClass(score)">{{
-          $t('message.health_scorecard_score_out_of', {
-            score: formatOverallScore(score),
-          })
-        }}</span>
-      </div>
-      <ul v-if="normalizedChecks.length" class="scorecard-checks">
-        <li
-          v-for="check in normalizedChecks"
-          :key="check.name"
-          class="scorecard-check"
-        >
-          <span class="scorecard-check-name">{{ checkTitle(check.name) }}</span>
-          <span
-            class="scorecard-check-score"
-            :class="scoreClass(check.score)"
-            >{{ formatScore(check.score) }}</span
-          >
-          <button
-            type="button"
-            class="scorecard-check-action"
-            @click="openDetails(check)"
-          >
-            {{ $t('message.health_show_details') }}
-          </button>
-        </li>
-      </ul>
-      <p v-else class="scorecard-empty mb-0">
-        {{ $t('message.health_no_checks') }}
-      </p>
-    </div>
+  <div class="scorecard-checks">
+    <table v-if="sortedChecks.length" :aria-label="$t('message.scorecard')">
+      <thead>
+        <tr>
+          <th scope="col">{{ $t('message.health_checks_practices') }}</th>
+          <th scope="col">{{ $t('message.health_risk') }}</th>
+          <th scope="col">{{ $t('message.health_scale') }}</th>
+          <th scope="col">{{ $t('message.score') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="check in sortedChecks" :key="check.rowKey" class="check-row">
+          <td>
+            <button
+              type="button"
+              class="check-name"
+              aria-haspopup="dialog"
+              @click.stop="openDetails(check, $event)"
+            >
+              {{ check.title }}
+            </button>
+          </td>
+          <td>
+            <span class="risk-badge" :class="'is-' + check.risk">{{
+              check.riskLabel
+            }}</span>
+          </td>
+          <td>
+            <div class="meter" aria-hidden="true">
+              <span :style="{ width: check.barPercent + '%' }"></span>
+            </div>
+          </td>
+          <td>{{ check.scoreLabel }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p v-else class="empty">{{ $t('message.health_no_checks') }}</p>
 
     <b-modal
       v-model="detailsOpen"
@@ -40,18 +43,26 @@
       size="lg"
       scrollable
       centered
-      :title="selectedCheck ? checkTitle(selectedCheck.name) : ''"
+      hide-header-close
       :ok-title="$t('message.close')"
       ok-only
       ok-variant="secondary"
+      @hidden="restoreFocus"
     >
+      <template v-slot:modal-title>
+        <span>{{ selectedCheck ? selectedCheck.title : '' }}</span>
+        <span
+          v-if="selectedCheck"
+          class="risk-badge"
+          :class="'is-' + selectedCheck.risk"
+          >{{ selectedCheck.riskLabel }}</span
+        >
+      </template>
       <div v-if="selectedCheck">
         <div class="scorecard-detail-scoreline">
-          <span
-            class="scorecard-detail-score"
-            :class="scoreClass(selectedCheck.score)"
-            >{{ formatScore(selectedCheck.score) }}</span
-          >
+          <span class="scorecard-detail-score">{{
+            selectedCheck.scoreLabel
+          }}</span>
         </div>
         <p v-if="selectedCheck.description" class="text-muted">
           {{ selectedCheck.description }}
@@ -103,7 +114,16 @@
 </template>
 
 <script>
+import { compareScorecardChecks, scorecardRisk } from './scorecardRisk';
+
 const ACRONYMS = new Set(['CI', 'CII', 'SAST']);
+const RISK_LABELS = {
+  critical: 'severity.critical',
+  high: 'severity.high',
+  medium: 'severity.medium',
+  low: 'severity.low',
+  unknown: 'message.health_unknown',
+};
 
 export default {
   name: 'ScorecardChecks',
@@ -112,37 +132,40 @@ export default {
       type: Array,
       default: () => [],
     },
-    score: {
-      default: null,
+    sortMode: {
+      type: String,
+      default: 'score',
     },
   },
   data() {
     return {
       detailsOpen: false,
       selectedCheck: null,
+      focusReturn: null,
     };
   },
   computed: {
-    normalizedChecks() {
+    sortedChecks() {
+      const locale = this.$i18n.locale;
       return (this.checks || [])
-        .map((check) => this.normalizeCheck(check))
-        .filter((check) => {
-          const score = Number(check.score);
-          return !Number.isNaN(score) && score >= 0;
-        });
-    },
-    showOverallScore() {
-      const score = Number(this.score);
-      return (
-        this.score != null &&
-        this.score !== '' &&
-        !Number.isNaN(score) &&
-        score >= 0
-      );
+        .map((check, index) => this.normalizeCheck(check, index))
+        .sort((left, right) =>
+          compareScorecardChecks(left, right, this.sortMode, locale),
+        );
     },
   },
   methods: {
-    normalizeCheck(check) {
+    missing() {
+      return this.$t('message.health_missing');
+    },
+    isScored(value) {
+      if (value == null || value === '') {
+        return false;
+      }
+      const score = Number(value);
+      return Number.isFinite(score) && score >= 0 && score <= 10;
+    },
+    normalizeCheck(check, index) {
       const documentation =
         check && typeof check.documentation === 'object'
           ? check.documentation
@@ -151,9 +174,27 @@ export default {
       const details = Array.isArray(rawDetails)
         ? rawDetails.map((detail) => this.detailText(detail)).filter(Boolean)
         : [];
+      const score = check ? check.score : null;
+      const scored = this.isScored(score);
+      const numeric = scored ? Number(score) : null;
+      const name = (check && check.name) || '';
+      const risk = scorecardRisk(name);
       return {
-        name: (check && check.name) || '',
-        score: check ? check.score : null,
+        name,
+        rowKey: name || 'check-' + index,
+        inputIndex: index,
+        risk,
+        riskLabel: this.$t(RISK_LABELS[risk]),
+        title: this.checkTitle(name),
+        score,
+        numeric,
+        scored,
+        scoreLabel: scored
+          ? this.$t('message.health_scorecard_score_out_of', {
+              score: this.formatScore(numeric),
+            })
+          : this.missing(),
+        barPercent: scored ? (numeric / 10) * 100 : 0,
         description:
           (check && (check.description || documentation.short)) || '',
         reason: (check && check.reason) || '',
@@ -192,47 +233,8 @@ export default {
         })
         .join(' ');
     },
-    formatOverallScore(value) {
-      if (value == null || value === '') {
-        return this.$t('message.health_not_applicable');
-      }
-      const score = Number(value);
-      if (Number.isNaN(score)) {
-        return this.$t('message.health_not_applicable');
-      }
-      if (score < 0) {
-        return '-1';
-      }
-      return score.toFixed(1);
-    },
     formatScore(value) {
-      if (value == null || value === '') {
-        return this.$t('message.health_not_applicable');
-      }
-      const score = Number(value);
-      if (Number.isNaN(score)) {
-        return this.$t('message.health_not_applicable');
-      }
-      if (score < 0) {
-        return '-1';
-      }
-      if (Number.isInteger(score)) {
-        return String(score);
-      }
-      return score.toFixed(1);
-    },
-    scoreClass(value) {
-      const score = Number(value);
-      if (value == null || value === '' || Number.isNaN(score) || score < 0) {
-        return 'is-unknown';
-      }
-      if (score >= 7) {
-        return 'is-high';
-      }
-      if (score >= 4) {
-        return 'is-medium';
-      }
-      return 'is-low';
+      return String(value);
     },
     detailClass(detail) {
       if (typeof detail === 'string' && detail.startsWith('Warn:')) {
@@ -240,9 +242,17 @@ export default {
       }
       return '';
     },
-    openDetails(check) {
+    openDetails(check, event) {
+      this.focusReturn = event && event.currentTarget;
       this.selectedCheck = check;
       this.detailsOpen = true;
+    },
+    restoreFocus() {
+      const target = this.focusReturn;
+      this.focusReturn = null;
+      if (target && typeof target.focus === 'function') {
+        target.focus();
+      }
     },
     linkParts(text) {
       const value = text || '';
@@ -269,94 +279,220 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../assets/scss/variables';
-.scorecard-board {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.scorecard-general-value {
-  color: $body-color;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
 
 .scorecard-checks {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid $border-color;
-  border-radius: 0.25rem;
-  background: $grey-800;
-}
-
-.scorecard-check {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  color: $body-color;
-}
-
-.scorecard-check + .scorecard-check {
-  border-top: 1px solid $border-color;
-}
-
-.scorecard-check-name {
-  flex: 1 1 auto;
+  box-sizing: border-box;
   min-width: 0;
   color: $body-color;
 }
 
-.scorecard-check-score {
-  flex: 0 0 auto;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.1;
+.scorecard-checks * {
+  box-sizing: border-box;
 }
 
-.scorecard-check-action {
-  flex: 0 0 auto;
-  padding: 0.25rem 0.5rem;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background-color: $card-bg;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+th {
+  height: 22px;
+  padding: 0 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 400;
+  color: $table-head-color;
+  background: $table-head-bg;
+  border-bottom: 1px solid $border-color;
+}
+
+td {
+  height: 18px;
+  padding: 0 10px;
+  background-color: $card-bg;
+  border-bottom: 1px solid $border-color;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 96px;
+  text-align: center;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 24%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 73px;
+  padding-right: 10px;
+  padding-left: 4px;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 54px;
+  padding: 0.2em 0.4em;
   border: 1px solid $border-color;
   border-radius: 0.25rem;
+  background-color: $grey-900;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.risk-badge.is-critical {
+  color: var(--severity-critical);
+}
+
+.risk-badge.is-high {
+  color: var(--severity-high);
+}
+
+.risk-badge.is-medium {
+  color: var(--severity-medium);
+}
+
+.risk-badge.is-low {
+  color: var(--severity-low);
+}
+
+.risk-badge.is-unknown {
+  color: var(--severity-unassigned);
+}
+
+.check-name {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
   background: transparent;
-  color: $body-color;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 400;
+  line-height: inherit;
+  text-align: left;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
 }
 
-.scorecard-check-action:focus-visible {
-  outline: 2px solid currentcolor;
-  outline-offset: 1px;
+.check-row:hover td,
+.check-row:focus-within td {
+  background: $grey-800;
 }
 
-.scorecard-empty {
-  color: $body-color;
+.check-row:hover .check-name,
+.check-row:focus-within .check-name {
+  overflow: visible;
+  color: var(--primary-lighter);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.scorecard-check-score.is-high,
-.scorecard-detail-score.is-high,
-.scorecard-general-value.is-high {
-  color: $green;
+.check-name:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
-.scorecard-check-score.is-medium,
-.scorecard-detail-score.is-medium,
-.scorecard-general-value.is-medium {
-  color: $orange;
+.meter {
+  height: 4px;
+  background: $progress-bg;
+  border-radius: 2px;
 }
 
-.scorecard-check-score.is-low,
-.scorecard-detail-score.is-low,
-.scorecard-general-value.is-low {
-  color: $red;
+.meter span {
+  display: block;
+  height: 4px;
+  background: $secondary;
+  border-radius: 2px;
 }
 
-.scorecard-check-score.is-unknown,
-.scorecard-detail-score.is-unknown,
-.scorecard-general-value.is-unknown {
-  color: $body-color;
+.empty {
+  margin: 0;
+  padding: 8px 10px;
+  color: $grey-600;
+}
+
+@media (min-width: 1400px) {
+  table {
+    font-size: 14px;
+    line-height: 26px;
+  }
+
+  td {
+    height: 28px;
+    padding: 0 16px;
+  }
+
+  th {
+    height: 30px;
+    font-size: 13px;
+    padding: 0 16px;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 112px;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 79px;
+    padding-right: 16px;
+  }
+
+  .risk-badge {
+    min-width: 64px;
+    padding: 0.2em 0.45em;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 650px) {
+  .scorecard-checks {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 540px;
+  }
+
+  .check-name {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+  }
+}
+</style>
+
+<style lang="scss">
+@import '../../../assets/scss/variables';
+
+.scorecard-details-modal .modal-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .scorecard-label {
@@ -373,8 +509,10 @@ export default {
 }
 
 .scorecard-detail-score {
+  color: $body-color;
   font-size: 1.5rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .scorecard-detail-list {
@@ -397,21 +535,5 @@ export default {
 
 .scorecard-detail-list li.is-warn {
   color: $orange;
-}
-</style>
-
-<style lang="scss">
-@import '../../../assets/scss/variables';
-
-.scorecard-details-modal .modal-header .close {
-  color: $body-color;
-  text-shadow: none;
-  opacity: 1;
-}
-
-.scorecard-details-modal .modal-header .close:hover,
-.scorecard-details-modal .modal-header .close:focus {
-  color: $body-color;
-  opacity: 0.75;
 }
 </style>
