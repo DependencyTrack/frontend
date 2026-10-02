@@ -115,6 +115,7 @@
 
 <script>
 import { compareScorecardChecks, scorecardRisk } from './scorecardRisk';
+import { parseHealthScore } from './healthScoreTone';
 
 const ACRONYMS = new Set(['CI', 'CII', 'SAST']);
 const RISK_LABELS = {
@@ -145,6 +146,9 @@ export default {
     };
   },
   computed: {
+    missingLabel() {
+      return this.$t('message.health_missing');
+    },
     sortedChecks() {
       const locale = this.$i18n.locale;
       return (this.checks || [])
@@ -155,16 +159,6 @@ export default {
     },
   },
   methods: {
-    missing() {
-      return this.$t('message.health_missing');
-    },
-    isScored(value) {
-      if (value == null || value === '') {
-        return false;
-      }
-      const score = Number(value);
-      return Number.isFinite(score) && score >= 0 && score <= 10;
-    },
     normalizeCheck(check, index) {
       const documentation =
         check && typeof check.documentation === 'object'
@@ -175,8 +169,8 @@ export default {
         ? rawDetails.map((detail) => this.detailText(detail)).filter(Boolean)
         : [];
       const score = check ? check.score : null;
-      const scored = this.isScored(score);
-      const numeric = scored ? Number(score) : null;
+      const numeric = parseHealthScore(score);
+      const scored = numeric != null;
       const name = (check && check.name) || '';
       const risk = scorecardRisk(name);
       return {
@@ -191,9 +185,9 @@ export default {
         scored,
         scoreLabel: scored
           ? this.$t('message.health_scorecard_score_out_of', {
-              score: this.formatScore(numeric),
+              score: numeric,
             })
-          : this.missing(),
+          : this.missingLabel,
         barPercent: scored ? (numeric / 10) * 100 : 0,
         description:
           (check && (check.description || documentation.short)) || '',
@@ -232,9 +226,6 @@ export default {
           return lower;
         })
         .join(' ');
-    },
-    formatScore(value) {
-      return String(value);
     },
     detailClass(detail) {
       if (typeof detail === 'string' && detail.startsWith('Warn:')) {

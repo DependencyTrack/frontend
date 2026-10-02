@@ -5,12 +5,20 @@ const HEALTH_SCORE_COLOR = {
   red: 'var(--severity-critical)',
 };
 
-function healthScoreTone(score) {
-  if (score == null || score === '') {
+function parseHealthScore(raw) {
+  if (raw == null || raw === '') {
     return null;
   }
-  const value = Number(score);
-  if (!Number.isFinite(value) || value < 0 || value > 10) {
+  const score = Number(raw);
+  if (!Number.isFinite(score) || score < 0 || score > 10) {
+    return null;
+  }
+  return score;
+}
+
+function healthScoreTone(score) {
+  const value = parseHealthScore(score);
+  if (value == null) {
     return null;
   }
   if (value >= 7.5) {
@@ -25,4 +33,4 @@ function healthScoreTone(score) {
   return 'red';
 }
 
-export { HEALTH_SCORE_COLOR, healthScoreTone };
+export { HEALTH_SCORE_COLOR, healthScoreTone, parseHealthScore };

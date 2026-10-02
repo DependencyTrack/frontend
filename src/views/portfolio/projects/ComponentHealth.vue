@@ -19,7 +19,7 @@
       <div class="heading">
         <h1>{{ $t('message.health_component_metrics') }}</h1>
         <span class="meta">{{
-          $t('message.health_retrieved', { when: retrievedShort })
+          $t('message.health_retrieved', { when: retrievedAt })
         }}</span>
         <details class="sources">
           <summary>{{ $t('message.health_sources_and_timestamps') }}</summary>
@@ -29,13 +29,13 @@
               <dt>{{ $t('message.health_sources') }}</dt>
               <dd>{{ sourceLabel }}</dd>
               <dt>{{ $t('message.health_retrieved_label') }}</dt>
-              <dd>{{ retrievedFull }}</dd>
+              <dd>{{ retrievedAt }}</dd>
               <dt>{{ $t('message.health_project_metadata_as_of') }}</dt>
               <dd>{{ metadataAsOf }}</dd>
               <dt>{{ $t('message.health_scorecard_generated') }}</dt>
               <dd>{{ scorecardGenerated }}</dd>
               <dt>{{ $t('message.health_scorecard_engine') }}</dt>
-              <dd>{{ display(metrics.scorecard_reference_version) }}</dd>
+              <dd>{{ orMissing(metrics.scorecard_reference_version) }}</dd>
             </dl>
           </div>
         </details>
@@ -201,23 +201,13 @@
 
 <script>
 import ScorecardChecks from './ScorecardChecks.vue';
-import { HEALTH_SCORE_COLOR, healthScoreTone } from './healthScoreTone';
+import {
+  HEALTH_SCORE_COLOR,
+  healthScoreTone,
+  parseHealthScore,
+} from './healthScoreTone';
 import { formatScorecardScore } from '../../../shared/scorecardColumn';
-
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
+import common from '../../../shared/common';
 
 export default {
   name: 'ComponentHealth',
@@ -238,10 +228,7 @@ export default {
     missingLabel() {
       return this.$t('message.health_missing');
     },
-    retrievedShort() {
-      return this.formatStamp(this.metrics && this.metrics.last_fetch, false);
-    },
-    retrievedFull() {
+    retrievedAt() {
       return this.formatStamp(this.metrics && this.metrics.last_fetch, true);
     },
     metadataAsOf() {
@@ -257,20 +244,13 @@ export default {
       );
     },
     generatedDate() {
-      const parts = this.dateParts(
+      return this.formatStamp(
         this.metrics && this.metrics.scorecard_timestamp,
+        false,
       );
-      if (!parts) {
-        return this.missingLabel;
-      }
-      return parts.day + ' ' + parts.month + ' ' + parts.year;
     },
     lastCommitValue() {
-      const parts = this.dateParts(this.metrics && this.metrics.last_commit);
-      if (!parts) {
-        return this.missingLabel;
-      }
-      return parts.day + ' ' + parts.month + ' ' + parts.year;
+      return this.formatStamp(this.metrics && this.metrics.last_commit, false);
     },
     lastCommitMeta() {
       return this.$t('message.health_repository_activity');
@@ -348,15 +328,7 @@ export default {
       ]);
     },
     ringScore() {
-      const raw = this.metrics && this.metrics.scorecard_score;
-      if (raw == null || raw === '') {
-        return null;
-      }
-      const score = Number(raw);
-      if (!Number.isFinite(score) || score < 0 || score > 10) {
-        return null;
-      }
-      return score;
+      return parseHealthScore(this.metrics && this.metrics.scorecard_score);
     },
     ringAvailable() {
       return this.ringScore != null;
@@ -414,14 +386,14 @@ export default {
       }
       return null;
     },
-    display(value) {
-      if (value === null || value === undefined || value === '') {
-        return this.missingLabel;
-      }
-      return value;
+    isBlank(value) {
+      return value === null || value === undefined || value === '';
+    },
+    orMissing(value) {
+      return this.isBlank(value) ? this.missingLabel : value;
     },
     formatCount(value) {
-      if (value === null || value === undefined || value === '') {
+      if (this.isBlank(value)) {
         return this.missingLabel;
       }
       const numeric = Number(value);
@@ -431,7 +403,7 @@ export default {
       return new Intl.NumberFormat(this.$i18n.locale).format(numeric);
     },
     formatDecimal(value, digits) {
-      if (value === null || value === undefined || value === '') {
+      if (this.isBlank(value)) {
         return this.missingLabel;
       }
       const numeric = Number(value);
@@ -458,35 +430,11 @@ export default {
         absent: value !== true,
       };
     },
-    dateParts(value) {
-      if (value == null || value === '') {
-        return null;
-      }
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) {
-        return null;
-      }
-      const pad = function pad(num) {
-        return num < 10 ? '0' + num : String(num);
-      };
-      return {
-        day: date.getDate(),
-        month: MONTHS[date.getMonth()],
-        year: date.getFullYear(),
-        hh: pad(date.getHours()),
-        mm: pad(date.getMinutes()),
-        ss: pad(date.getSeconds()),
-      };
-    },
-    formatStamp(value, includeSeconds) {
-      const parts = this.dateParts(value);
-      if (!parts) {
+    formatStamp(value, includeTime) {
+      if (this.isBlank(value) || Number.isNaN(new Date(value).getTime())) {
         return this.missingLabel;
       }
-      const time = includeSeconds
-        ? parts.hh + ':' + parts.mm + ':' + parts.ss
-        : parts.hh + ':' + parts.mm;
-      return parts.day + ' ' + parts.month + ' ' + parts.year + ', ' + time;
+      return common.formatTimestamp(value, includeTime);
     },
     badgeScore(data) {
       if (
@@ -532,19 +480,6 @@ export default {
     },
   },
   mounted() {
-    if (
-      process.env.NODE_ENV !== 'production' &&
-      this.$route &&
-      this.$route.query &&
-      this.$route.query.healthPreview === '1'
-    ) {
-      import('./componentHealthFixture').then((module) => {
-        this.metrics = module.componentHealthFixture;
-        this.state = 'ready';
-        this.publishScore(module.componentHealthFixture);
-      });
-      return;
-    }
     this.fetchMetrics();
   },
 };
