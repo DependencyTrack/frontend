@@ -30,7 +30,7 @@
         v-model="showFlatView"
         label
         v-bind="labelIcon"
-        :disabled="isSearching"
+        :disabled="isSearching || hasRouteFilter"
         v-b-tooltip.hover
         :title="$t('message.switch_view')"
       /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
@@ -62,6 +62,12 @@ import PolicyViolationProgressBar from '../../components/PolicyViolationProgress
 import SeverityProgressBar from '../../components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
 
+// Filtered results are mostly child projects, which the tree view (onlyRoot=true) hides.
+const hasRouteFilter = ({ tag, team, classifier }) =>
+  !!(tag || team || classifier);
+const storedFlatView = () =>
+  !!localStorage && localStorage.getItem('ProjectListShowFlatView') === 'true';
+
 export default {
   mixins: [permissionsMixin, routerMixin],
   components: {
@@ -79,10 +85,13 @@ export default {
       localStorage.getItem('ProjectListShowInactiveProjects') !== null
         ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
         : false;
-    this.showFlatView =
-      localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
-        ? localStorage.getItem('ProjectListShowFlatView') === 'true'
-        : false;
+    // Like searching, a filter forces the flat view.
+    this.showFlatView = hasRouteFilter(this.$route.query) || storedFlatView();
+  },
+  computed: {
+    hasRouteFilter() {
+      return hasRouteFilter(this.$route.query);
+    },
   },
   methods: {
     initializeProjectCreateProjectModal: function () {
@@ -245,6 +254,10 @@ export default {
     $route() {
       this.refreshTable();
     },
+    hasRouteFilter(filtered) {
+      // Leaving a filter restores the stored preference.
+      this.showFlatView = filtered || this.isSearching || storedFlatView();
+    },
     showInactiveProjects() {
       if (localStorage) {
         localStorage.setItem(
@@ -257,7 +270,8 @@ export default {
       this.refreshTable();
     },
     showFlatView() {
-      if (localStorage) {
+      // A forced flat view is not the user's preference.
+      if (localStorage && !this.hasRouteFilter) {
         localStorage.setItem(
           'ProjectListShowFlatView',
           this.showFlatView.toString(),
@@ -541,7 +555,7 @@ export default {
         },
         onSearch: (text) => {
           this.isSearching = text.length !== 0;
-          if (this.isSearching) {
+          if (this.isSearching || this.hasRouteFilter) {
             this.showFlatView = true;
           } else {
             if (this.savedViewState !== null) {
