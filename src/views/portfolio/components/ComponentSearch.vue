@@ -298,7 +298,7 @@ export default {
                 row.uuid,
             );
             return row.project.directDependencies
-              ? `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              ? `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
                   `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
               : `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
           },
