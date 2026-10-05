@@ -9,6 +9,7 @@
       no-caret
       boundary="viewport"
       @show="$emit('show', $event)"
+      @shown="focusFirstControl"
       @hide="onDropdownHide"
     >
       <template #button-content>
@@ -34,8 +35,22 @@
           </span>
         </div>
       </template>
-      <b-dropdown-form class="filter-pill-form pt-2 pb-2" @submit.stop.prevent>
-        <slot></slot>
+      <b-dropdown-form class="filter-pill-form" @submit.stop.prevent>
+        <div class="filter-pill-body" ref="body" @keyup.enter="onEnter">
+          <slot></slot>
+        </div>
+        <div class="filter-pill-footer" v-if="!autoApply">
+          <b-link class="filter-pill-footer-clear" @click="$emit('clear')">{{
+            $t('message.clear')
+          }}</b-link>
+          <b-button
+            variant="primary"
+            size="sm"
+            :disabled="applyDisabled"
+            @click="$emit('apply')"
+            >{{ $t('message.apply') }}
+          </b-button>
+        </div>
       </b-dropdown-form>
     </b-dropdown>
     <button
@@ -71,6 +86,17 @@ export default {
       type: Boolean,
       required: true,
     },
+    // Disables the footer's apply button. Ignored when `autoApply` is set.
+    applyDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    // For pills whose control commits on change, such as a single-choice
+    // list. Hides the footer, leaving the pill's own button to clear.
+    autoApply: {
+      type: Boolean,
+      default: false,
+    },
   },
   beforeDestroy() {
     this._destroying = true;
@@ -87,6 +113,37 @@ export default {
         this.$emit('dismiss');
       }
       this.$emit('hide');
+    },
+    onEnter(event) {
+      // Links and buttons handle Enter themselves. Applying as well would
+      // close the dropdown immediately after they run.
+      const tag = event.target && event.target.tagName;
+      if (tag === 'A' || tag === 'BUTTON') {
+        return;
+      }
+      if (this.autoApply || this.applyDisabled) {
+        return;
+      }
+      this.$emit('apply');
+    },
+    // Runs on `shown`, not `show`. b-dropdown queues its own focusMenu() in a
+    // $nextTick from `show`, and that runs after ours and takes the focus back.
+    //
+    // Never focus a radio or checkbox. Arrow keys move *and* commit a radio
+    // selection, so an auto-apply pill would fire as soon as a keyboard user
+    // browsed its options. Free text beats a select regardless of DOM order.
+    focusFirstControl() {
+      const body = this.$refs.body;
+      if (!body) {
+        return;
+      }
+      const control =
+        body.querySelector(
+          'input:not([type="radio"]):not([type="checkbox"]):not([disabled])',
+        ) || body.querySelector('select:not([disabled])');
+      if (control) {
+        control.focus();
+      }
     },
   },
 };

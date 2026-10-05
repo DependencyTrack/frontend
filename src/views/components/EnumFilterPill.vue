@@ -5,28 +5,22 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    auto-apply
     @hide="onDropdownHide"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>= {{ displayValue }}</template>
 
-    <b-form-group class="mb-2">
-      <b-form-select
+    <div class="filter-pill-list">
+      <b-form-radio-group
         :id="`enum-filter-pill-value-${fieldName}`"
         v-model="tmpValue"
-        :options="selectOptions"
-        size="sm"
-      ></b-form-select>
-    </b-form-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpValue"
-        >{{ $t('message.apply') }}
-      </b-button>
+        :options="radioOptions"
+        :aria-label="fieldLabel"
+        stacked
+        @change="applyFilter"
+      ></b-form-radio-group>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -92,20 +86,10 @@ export default {
       }
       return this.value;
     },
-    selectOptions() {
-      return [
-        {
-          value: null,
-          text: `-- ${this.$t('message.select')} --`,
-          disabled: true,
-        },
-        ...this.options.map((opt) => {
-          if (typeof opt === 'object') {
-            return opt;
-          }
-          return { value: opt, text: opt };
-        }),
-      ];
+    radioOptions() {
+      return this.options.map((opt) =>
+        typeof opt === 'object' ? opt : { value: opt, text: opt },
+      );
     },
   },
   methods: {
@@ -119,12 +103,12 @@ export default {
         this.tmpValue = null;
       }
     },
-    applyFilter() {
-      if (!this.tmpValue) {
+    applyFilter(selected) {
+      if (!selected) {
         return;
       }
 
-      this.$emit('input', this.tmpValue);
+      this.$emit('input', selected);
       this.$refs.pill.hide();
     },
     clearFilter() {

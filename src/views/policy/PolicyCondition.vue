@@ -243,6 +243,7 @@ import common from '../../shared/common';
 import ActionableListGroupItem from '../components/ActionableListGroupItem';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import { celCompletionSource } from './celCompletions';
+import { celErrorsToMarkers } from '../../shared/utils';
 
 export default {
   props: {
@@ -620,17 +621,8 @@ export default {
               error.response.data &&
               error.response.data.celErrors
             ) {
-              this.editorMarkers = error.response.data.celErrors.map(
-                (celErr) => {
-                  return {
-                    startLineNumber: celErr.line,
-                    startColumn: celErr.column,
-                    endLineNumber: celErr.line,
-                    endColumn: celErr.column + 3, // Add a few columns to make it more visible
-                    message: celErr.message,
-                    severity: 8,
-                  };
-                },
+              this.editorMarkers = celErrorsToMarkers(
+                error.response.data.celErrors,
               );
             } else {
               this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -659,7 +651,7 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       }
@@ -682,7 +674,7 @@ export default {
             this.$toastr.s(this.$t('message.condition_deleted'));
             this.$emit('conditionRemoved');
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       } else {

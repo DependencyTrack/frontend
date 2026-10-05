@@ -28,6 +28,10 @@
         $t('message.close')
       }}</b-button>
       <b-button
+        v-permission:or="[
+          'PORTFOLIO_MANAGEMENT',
+          'PORTFOLIO_MANAGEMENT_CREATE',
+        ]"
         size="md"
         variant="primary"
         v-b-modal.projectCreatePropertyModal
@@ -57,7 +61,7 @@ export default {
           title: this.$t('message.group'),
           field: 'groupName',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -65,7 +69,7 @@ export default {
           title: this.$t('message.name'),
           field: 'propertyName',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -74,7 +78,7 @@ export default {
           field: 'propertyValue',
           sortable: false,
           editable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -82,7 +86,7 @@ export default {
           title: this.$t('message.type'),
           field: 'propertyType',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -91,7 +95,7 @@ export default {
           field: 'description',
           sortable: false,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -132,11 +136,11 @@ export default {
               propertyName: selections[i].propertyName,
             },
           })
-          .then((response) => {
+          .then(() => {
             this.$refs.table.refresh({ silent: true });
             this.$toastr.s(this.$t('message.property_deleted'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       }

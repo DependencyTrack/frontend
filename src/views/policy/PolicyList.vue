@@ -1,14 +1,5 @@
 <template>
-  <div
-    class="animated fadeIn"
-    v-permission:or="[
-      'POLICY_MANAGEMENT',
-      'POLICY_MANAGEMENT_CREATE',
-      'POLICY_MANAGEMENT_READ',
-      'POLICY_MANAGEMENT_UPDATE',
-      'POLICY_MANAGEMENT_DELETE',
-    ]"
-  >
+  <div class="animated fadeIn">
     <div id="policiesToolbar" class="bs-table-custom-toolbar">
       <b-button
         size="md"
@@ -54,7 +45,6 @@ import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 export default {
   mixins: [permissionsMixin, bootstrapTableMixin, routerMixin],
   components: {
-    BInputGroupFormSwitch,
     CreatePolicyModal,
   },
   mounted() {
@@ -62,7 +52,7 @@ export default {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('policyManagement:policies:rowDeleted', (index, row) => {
+    EventBus.$on('policyManagement:policies:rowDeleted', () => {
       this.refreshTable();
     });
   },
@@ -91,7 +81,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             return (
               common.formatNotificationLabel(row.violationState) +
               ` ${xssFilters.inHTMLData(value)}`
@@ -182,7 +172,12 @@ export default {
                         </b-col>
                       </b-row>
                     </div>
-                    <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="this.$t('admin.limit_to_tags')">
+                    <b-form-group v-if="limitToVisible === true" id="tagLimitsList" :label="invertTagMatch ? this.$t('admin.exclude_tags') : this.$t('admin.limit_to_tags')">
+                      <b-input-group-form-switch
+                        id="isInvertTagMatch"
+                        :label="$t('admin.invert_tag_match')"
+                        v-model="invertTagMatch"
+                      />
                       <div class="list-group">
                         <span v-for="tag in tags">
                           <actionable-list-group-item :value="formatLabel(tag.name, tag.id)" :delete-icon="true" v-on:actionClicked="deleteTagLimiter(tag.name)"/>
@@ -233,6 +228,7 @@ export default {
                 tags: row.tags,
                 includeChildren: row.includeChildren,
                 onlyLatestProjectVersion: row.onlyLatestProjectVersion,
+                invertTagMatch: row.invertTagMatch || false,
               };
             },
             methods: {
@@ -249,7 +245,7 @@ export default {
                 }
                 this.conditions.push({});
               },
-              removeCondition: function (condition, conditionIndex) {
+              removeCondition: function () {
                 this.conditions = [];
                 this.refreshPolicy();
                 //this.conditions.splice(conditionIndex, 1);
@@ -277,6 +273,7 @@ export default {
                     violationState: this.violationState,
                     includeChildren: this.includeChildren,
                     onlyLatestProjectVersion: this.onlyLatestProjectVersion,
+                    invertTagMatch: this.invertTagMatch,
                   })
                   .then((response) => {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
@@ -290,7 +287,7 @@ export default {
                     }
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -298,14 +295,14 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     EventBus.$emit(
                       'policyManagement:policies:rowDeleted',
                       index,
                     );
                     this.$toastr.s(this.$t('message.policy_deleted'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -317,12 +314,13 @@ export default {
                 this.conditions = policy.policyConditions;
                 this.includeChildren = policy.includeChildren;
                 this.onlyLatestProjectVersion = policy.onlyLatestProjectVersion;
+                this.invertTagMatch = policy.invertTagMatch;
               },
               deleteProjectLimiter: function (projectUuid) {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${projectUuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     let p = [];
                     for (let i = 0; i < this.projects.length; i++) {
                       if (this.projects[i].uuid !== projectUuid) {
@@ -332,7 +330,7 @@ export default {
                     this.projects = p;
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -358,7 +356,7 @@ export default {
                   let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
                   this.axios
                     .post(url)
-                    .then((response) => {
+                    .then(() => {
                       this.projects.push(selection);
                       this.$toastr.s(this.$t('message.updated'));
                     })
@@ -408,6 +406,9 @@ export default {
               onlyLatestProjectVersion() {
                 this.updatePolicy();
               },
+              invertTagMatch() {
+                this.updatePolicy();
+              },
             },
           });
         },
@@ -418,7 +419,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_POLICY}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('PolicyListPageSize', size.toString());
           }

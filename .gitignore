@@ -30,3 +30,7 @@ src/version.json
 # IntelliJ
 .idea/*
 !.idea/icon.svg
+
+# Claude Code
+.claude/worktrees/
+.claude/settings.local.json

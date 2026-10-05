@@ -107,7 +107,6 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
@@ -139,11 +138,11 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.custom_license_deleted'));
           this.$router.replace({ name: 'Licenses' });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

@@ -246,3 +246,32 @@ function compareEpochVersions(v1parts, v2parts) {
     return epochCompare;
   }
 }
+
+export async function fetchAllPages(axios, url) {
+  const items = [];
+  let pageUrl = url;
+  for (let page = 0; pageUrl && page < 10000; page++) {
+    const response = await axios.get(pageUrl);
+    items.push(...response.data.items);
+    const nextPageToken = response.data.next_page_token;
+    pageUrl = nextPageToken
+      ? common.setQueryParams(url, { page_token: nextPageToken })
+      : null;
+  }
+  return items;
+}
+
+export function celErrorsToMarkers(errors) {
+  if (!Array.isArray(errors)) {
+    return [];
+  }
+  return errors
+    .filter((err) => err.line)
+    .map((err) => ({
+      startLineNumber: err.line,
+      endLineNumber: err.line,
+      startColumn: err.column || 1,
+      endColumn: (err.column || 1) + 3,
+      message: err.message,
+    }));
+}

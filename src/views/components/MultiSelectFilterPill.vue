@@ -5,34 +5,26 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    :apply-disabled="tmpValue.length === 0"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>= {{ displayValue }}</template>
 
-    <div class="mb-2 d-flex justify-content-between">
-      <b-link size="sm" @click="selectAll">{{
-        $t('message.select_all')
-      }}</b-link>
-      <b-link size="sm" @click="deselectAll">{{
-        $t('message.clear_all')
-      }}</b-link>
+    <div class="filter-pill-actions mb-2">
+      <b-link @click="selectAll">{{ $t('message.select_all') }}</b-link>
+      <span class="filter-pill-actions-separator" aria-hidden="true">·</span>
+      <b-link @click="deselectAll">{{ $t('message.clear_all') }}</b-link>
     </div>
-    <b-form-checkbox-group
-      v-model="tmpValue"
-      :options="options"
-      stacked
-      class="mb-2"
-    ></b-form-checkbox-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="tmpValue.length === 0"
-        >{{ $t('message.apply') }}
-      </b-button>
+    <div class="filter-pill-list">
+      <b-form-checkbox-group
+        v-model="tmpValue"
+        :options="options"
+        :aria-label="fieldLabel"
+        stacked
+      ></b-form-checkbox-group>
     </div>
   </filter-pill-dropdown>
 </template>

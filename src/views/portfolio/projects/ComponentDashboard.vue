@@ -159,7 +159,6 @@
 <script>
 import common from '../../../shared/common';
 import { Callout } from '@coreui/vue';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
 import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
@@ -167,7 +166,6 @@ import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolatio
 export default {
   name: 'ComponentDashboard',
   components: {
-    ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
@@ -239,7 +237,7 @@ export default {
     refreshMetrics() {
       let uuid = this.$route.params.uuid;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/refresh`;
-      this.axios.get(url).then((response) => {
+      this.axios.get(url).then(() => {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },

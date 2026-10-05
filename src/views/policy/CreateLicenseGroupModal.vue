@@ -48,12 +48,12 @@ export default {
         .put(url, {
           name: this.name,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$root.$emit('bv::hide::modal', 'createLicenseGroupModal');
           this.$toastr.s(this.$t('message.license_group_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       this.resetValues();

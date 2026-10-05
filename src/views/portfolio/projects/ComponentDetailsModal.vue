@@ -475,10 +475,7 @@
         size="md"
         variant="outline-primary"
         v-b-modal.componentPropertiesModal
-        v-permission:or="[
-          PERMISSIONS.VIEW_PORTFOLIO,
-          PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
-        ]"
+        v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >{{ $t('message.properties') }}</b-button
       >
       <b-button size="md" variant="secondary" @click="cancel()">{{
@@ -501,7 +498,6 @@
 <script>
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
@@ -513,7 +509,6 @@ export default {
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    ComponentPropertiesModal,
   },
   props: {
     component: Object,
@@ -526,7 +521,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -555,7 +550,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -563,7 +558,7 @@ export default {
           title: this.$t('message.email'),
           field: 'email',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -571,7 +566,7 @@ export default {
           title: this.$t('message.phone'),
           field: 'phone',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -599,7 +594,7 @@ export default {
           title: this.$t('message.url'),
           field: 'url',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             let url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
@@ -612,7 +607,7 @@ export default {
           title: this.$t('message.type'),
           field: 'type',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -620,7 +615,7 @@ export default {
           title: this.$t('message.comment'),
           field: 'comment',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -685,7 +680,7 @@ export default {
           this.$emit('componentUpdated', response.data);
           this.$toastr.s(this.$t('message.component_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -696,13 +691,13 @@ export default {
         this.component.uuid;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.component_deleted'));
           this.$router.replace({
             path: '/projects/' + this.component.project.uuid,
           });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -722,7 +717,7 @@ export default {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

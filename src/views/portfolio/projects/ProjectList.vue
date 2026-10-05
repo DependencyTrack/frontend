@@ -242,7 +242,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.refreshTable();
     },
     showInactiveProjects() {
@@ -287,7 +287,7 @@ export default {
           sortable: true,
           routerFunc: () => this.$router,
           $t: (key, values) => this.$t(key, values),
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
                 name: 'Project',
@@ -308,7 +308,7 @@ export default {
           sortable: false,
           visible: false,
           routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          formatter(_value, row) {
             const router = this.routerFunc();
             let tag_string = '';
             if (row.tags) {
@@ -336,7 +336,7 @@ export default {
           sortable: false,
           visible: false,
           routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          formatter(_value, row) {
             const router = this.routerFunc();
             let team_string = '';
             if (row.teams) {
@@ -362,14 +362,14 @@ export default {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
         {
           title: this.$t('message.latest'),
           field: 'isLatest',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
@@ -386,7 +386,7 @@ export default {
           title: this.$t('message.last_bom_import'),
           field: 'lastBomImport',
           sortable: true,
-          formatter(timestamp, row, index) {
+          formatter(timestamp) {
             return typeof timestamp === 'number'
               ? common.formatTimestamp(timestamp, true)
               : '-';
@@ -405,7 +405,7 @@ export default {
         {
           title: this.$t('message.active'),
           field: 'active',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',

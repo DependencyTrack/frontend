@@ -103,12 +103,12 @@ export default {
           propertyType: this.propertyType,
           description: this.description,
         })
-        .then((response) => {
+        .then(() => {
           this.$root.$emit('bv::hide::modal', 'projectCreatePropertyModal');
           this.$root.$emit('bv::show::modal', 'projectPropertiesModal');
           this.$toastr.s(this.$t('message.property_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

@@ -5,42 +5,33 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedKey"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>{{ value.key }}={{ value.value }}</template>
 
-    <b-input-group size="sm" class="mb-2">
+    <b-input-group size="sm">
       <b-form-input
         :id="`label-filter-pill-key-${fieldName}`"
-        ref="keyInput"
         v-model="tmpKey"
         :placeholder="$t('message.key')"
+        :aria-label="$t('message.key')"
         :maxlength="maxLength"
         size="sm"
-        @keyup.enter="applyFilter"
       ></b-form-input>
       <b-input-group-append is-text>=</b-input-group-append>
       <b-form-input
         :id="`label-filter-pill-value-${fieldName}`"
         v-model="tmpValue"
         :placeholder="$t('message.value')"
+        :aria-label="$t('message.value')"
         :maxlength="maxLength"
         size="sm"
-        @keyup.enter="applyFilter"
       ></b-form-input>
     </b-input-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpKey || !tmpKey.trim()"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
   </filter-pill-dropdown>
 </template>
 
@@ -96,15 +87,11 @@ export default {
     hasFilter() {
       return !!(this.value && this.value.key);
     },
+    trimmedKey() {
+      return this.tmpKey ? this.tmpKey.trim() : '';
+    },
   },
   methods: {
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.keyInput) {
-          this.$refs.keyInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
@@ -118,12 +105,11 @@ export default {
       }
     },
     applyFilter() {
-      const trimmedKey = this.tmpKey ? this.tmpKey.trim() : '';
-      if (!trimmedKey) {
+      if (!this.trimmedKey) {
         return;
       }
       this.$emit('input', {
-        key: trimmedKey,
+        key: this.trimmedKey,
         value: this.tmpValue ? this.tmpValue.trim() : '',
       });
       this.$refs.pill.hide();

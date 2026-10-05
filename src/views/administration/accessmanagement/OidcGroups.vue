@@ -47,7 +47,7 @@ export default {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:oidcgroups:rowDeleted', (index, row) => {
+    EventBus.$on('admin:oidcgroups:rowDeleted', () => {
       this.refreshTable();
     });
   },
@@ -62,7 +62,7 @@ export default {
           title: this.$t('admin.oidc_group_name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -139,7 +139,7 @@ export default {
                     );
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -147,11 +147,11 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     EventBus.$emit('admin:oidcgroups:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.oidc_group_deleted'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -162,7 +162,7 @@ export default {
                   .then((response) => {
                     this.mappedTeams = response.data;
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },
@@ -176,12 +176,12 @@ export default {
                       group: this.oidcGroup.uuid,
                       team: selection.uuid,
                     })
-                    .then((response) => {
+                    .then(() => {
                       this.mappedTeams.push(selection);
                       this.mappedTeams.sort();
                       this.$toastr.s(this.$t('message.updated'));
                     })
-                    .catch((error) => {
+                    .catch(() => {
                       this.$toastr.w(this.$t('condition.unsuccessful_action'));
                     });
                 }
@@ -190,7 +190,7 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}/${this.oidcGroup.uuid}/team/${team.uuid}/mapping`;
                 this.axios
                   .delete(url)
-                  .then((response) => {
+                  .then(() => {
                     let remainingTeams = [];
                     for (let i = 0; i < this.mappedTeams.length; i++) {
                       if (this.mappedTeams[i].uuid !== team.uuid) {
@@ -200,7 +200,7 @@ export default {
                     this.mappedTeams = remainingTeams;
                     this.$toastr.s(this.$t('message.updated'));
                   })
-                  .catch((error) => {
+                  .catch(() => {
                     this.$toastr.w(this.$t('condition.unsuccessful_action'));
                   });
               },

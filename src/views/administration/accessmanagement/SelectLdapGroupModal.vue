@@ -50,7 +50,7 @@ export default {
           title: this.$t('admin.distinguished_name'),
           field: 'dn',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },

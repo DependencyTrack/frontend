@@ -121,10 +121,15 @@
             :options="availableTeams"
             :multiple="true"
             :close-on-select="false"
-            :placeholder="$t('message.component_team_desc')"
-            label="text"
-            track-by="value"
+            :placeholder="$t('message.search_team')"
+            label="name"
+            track-by="uuid"
             :disabled="isDisabled"
+            :searchable="true"
+            :internal-search="false"
+            :loading="isLoadingTeams"
+            @search-change="asyncFindTeams"
+            :show-no-results="true"
             :class="{ 'is-invalid': teamsState === false }"
             selectLabel=""
             deselectLabel=""
@@ -310,9 +315,10 @@ export default {
       requiresTeam: true,
       isDisabled: false,
       availableTeams: [],
+      defaultTeams: [],
       selectedTeams: [],
+      isLoadingTeams: false,
       project: { ...FORM_FIELD_DEFAULTS, classifier: DEFAULT_CLASSIFIER },
-      teams: [],
       showIdentity: false,
       isCreating: false,
     };
@@ -363,21 +369,39 @@ export default {
       );
     },
     async getAvailableTeams() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`;
-      let response = await this.axios.get(url);
-      this.availableTeams = response.data.map((team) => {
-        return { text: team.name, value: team.uuid };
-      });
-      this.teams = response.data;
-      if (this.requiresTeam && this.availableTeams.length === 1) {
-        this.selectedTeams = [this.availableTeams[0]];
-        this.isDisabled = true;
-      } else {
+      try {
+        const response = await this.axios.get(this.teamSearchUrl(''));
+        this.defaultTeams = response.data || [];
+        this.availableTeams = this.defaultTeams;
+        if (this.requiresTeam && this.availableTeams.length === 1) {
+          this.selectedTeams = [this.availableTeams[0]];
+          this.isDisabled = true;
+        } else {
+          this.isDisabled = false;
+        }
+      } catch (_error) {
+        this.defaultTeams = [];
+        this.availableTeams = [];
         this.isDisabled = false;
       }
-      this.availableTeams.sort(function (a, b) {
-        return a.text.localeCompare(b.text);
-      });
+    },
+    asyncFindTeams(query) {
+      if (!query) {
+        this.availableTeams = this.defaultTeams;
+        return;
+      }
+      this.isLoadingTeams = true;
+      this.axios
+        .get(this.teamSearchUrl(query))
+        .then((response) => {
+          this.availableTeams = response.data || [];
+        })
+        .catch(() => {
+          this.availableTeams = this.defaultTeams;
+        })
+        .finally(() => {
+          this.isLoadingTeams = false;
+        });
     },
     onCollectionToggle(value) {
       if (value) {
@@ -398,11 +422,9 @@ export default {
 
       this.isCreating = true;
       const url = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
-      const chosenTeams = this.teams
-        .filter((team) =>
-          this.selectedTeams.some((st) => st.value === team.uuid),
-        )
-        .map((team) => ({ ...team, apiKeys: [] }));
+      const chosenTeams = this.selectedTeams.map((team) => ({
+        uuid: team.uuid,
+      }));
       const parent = this.selectedParent
         ? { uuid: this.selectedParent.uuid }
         : null;
@@ -455,6 +477,16 @@ export default {
         },
       );
     },
+    teamSearchUrl(searchText) {
+      return common.setQueryParams(
+        `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/visible`,
+        {
+          pageSize: 10,
+          pageNumber: 1,
+          searchText: searchText || null,
+        },
+      );
+    },
     resetValues() {
       this.project = { ...FORM_FIELD_DEFAULTS, classifier: DEFAULT_CLASSIFIER };
       this.isDisabled = false;
@@ -463,6 +495,7 @@ export default {
       this.selectedParent = null;
       this.selectedTeams = [];
       this.availableParents = this.defaultParents;
+      this.availableTeams = this.defaultTeams;
       this.isCollection = false;
       this.showIdentity = false;
       this.isCreating = false;

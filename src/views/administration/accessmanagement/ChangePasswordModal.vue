@@ -88,10 +88,10 @@ export default {
             nonExpiryPassword: this.managedUser.nonExpiryPassword,
             suspended: this.managedUser.suspended,
           })
-          .then((response) => {
+          .then(() => {
             this.$toastr.s(this.$t('admin.password_updated'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
         this.$root.$emit('bv::hide::modal', 'changePasswordModal');

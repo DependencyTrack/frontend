@@ -6,37 +6,6 @@
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">
             {{ $t('message.project_vulnerabilities') }}
           </h4>
-          <table
-            v-if="!isCollectionProject"
-            class="small text-muted"
-            style="border: 0"
-          >
-            <tr>
-              <td>{{ $t('message.last_bom_import') }}:</td>
-              <td>{{ lastBomImport }}</td>
-            </tr>
-            <tr>
-              <td>{{ $t('message.last_vulnerability_analysis') }}:</td>
-              <td>{{ lastVulnAnalysis }}</td>
-            </tr>
-            <tr>
-              <td>{{ $t('message.last_measurement') }}:</td>
-              <td>
-                {{ lastMeasurement }}
-                <b-link
-                  v-permission:or="[
-                    'PORTFOLIO_MANAGEMENT',
-                    'PORTFOLIO_MANAGEMENT_UPDATE',
-                  ]"
-                  class="font-weight-bold"
-                  style="margin-left: 6px"
-                  v-on:click="refreshMetrics"
-                >
-                  <i class="fa fa-refresh"></i>
-                </b-link>
-              </td>
-            </tr>
-          </table>
         </b-col>
         <b-col sm="5" class="d-none d-md-block" />
         <b-col sm="2">
@@ -235,7 +204,6 @@ export default {
   },
   props: {
     uuid: String,
-    project: Object,
   },
   data() {
     return {
@@ -253,9 +221,6 @@ export default {
 
       vulnerabilities: 0,
       suppressed: 0,
-      lastMeasurement: 'n/a',
-      lastBomImport: 'n/a',
-      lastVulnAnalysis: 'n/a',
       options: [
         { value: 5, text: '5' },
         { value: 10, text: '10' },
@@ -297,16 +262,6 @@ export default {
         '0',
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
-      this.lastMeasurement = common.formatTimestamp(
-        metric.lastOccurrence,
-        true,
-      );
-    },
-    refreshMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/refresh`;
-      this.axios.get(url).then((response) => {
-        this.$toastr.s(this.$t('message.metric_refresh_requested'));
-      });
     },
     fetchMetrics() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
@@ -329,33 +284,7 @@ export default {
   mounted() {
     this.fetchMetrics();
   },
-  computed: {
-    isCollectionProject() {
-      return !!this.project.collectionLogic;
-    },
-  },
   watch: {
-    project(newProject) {
-      // Project is loaded asynchronously in the parent component and may not be
-      // initialized yet when the dashboard is mounted. Thus, initialize lastBomImport lazily.
-      if (newProject && newProject.lastBomImport) {
-        this.lastBomImport = common.formatTimestamp(
-          newProject.lastBomImport,
-          true,
-        );
-      } else {
-        this.lastBomImport = 'n/a';
-      }
-
-      if (newProject && newProject.lastVulnerabilityAnalysis) {
-        this.lastVulnAnalysis = common.formatTimestamp(
-          newProject.lastVulnerabilityAnalysis,
-          true,
-        );
-      } else {
-        this.lastVulnAnalysis = 'n/a';
-      }
-    },
     metricDays() {
       if (localStorage) {
         localStorage.setItem('projectMetricDays', this.metricDays);
