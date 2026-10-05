@@ -30,7 +30,7 @@
         v-model="showFlatView"
         label
         v-bind="labelIcon"
-        :disabled="isSearching"
+        :disabled="isSearching || hasRouteFilter"
         v-b-tooltip.hover
         :title="$t('message.switch_view')"
       /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
@@ -62,6 +62,10 @@ import PolicyViolationProgressBar from '../../components/PolicyViolationProgress
 import SeverityProgressBar from '../../components/SeverityProgressBar';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal';
 
+// Filtered results are mostly child projects, which the tree view (onlyRoot=true) hides.
+const hasRouteFilter = ({ tag, team, classifier }) =>
+  !!(tag || team || classifier);
+
 export default {
   mixins: [permissionsMixin, routerMixin],
   components: {
@@ -83,6 +87,15 @@ export default {
       localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
         ? localStorage.getItem('ProjectListShowFlatView') === 'true'
         : false;
+    // Like searching, a filter forces the flat view.
+    if (hasRouteFilter(this.$route.query)) {
+      this.showFlatView = true;
+    }
+  },
+  computed: {
+    hasRouteFilter() {
+      return hasRouteFilter(this.$route.query);
+    },
   },
   methods: {
     initializeProjectCreateProjectModal: function () {
