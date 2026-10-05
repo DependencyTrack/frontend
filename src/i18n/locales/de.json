@@ -1129,6 +1129,7 @@
     "scope": "Umfang",
     "score": "Punktzahl",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Suchen",
     "search_in": null,
     "search_parent": "Geben Sie zur Suche nach dem übergeordnetem Element etwas ein",

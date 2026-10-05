@@ -1129,6 +1129,7 @@
     "scope": "Alcance",
     "score": "Puntaje",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Buscar",
     "search_in": null,
     "search_parent": "Escriba para buscar padre",

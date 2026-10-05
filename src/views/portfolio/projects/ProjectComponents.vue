@@ -549,6 +549,7 @@ export default {
         'group',
         'internal',
         'resolved_license.license_id',
+        'scorecard_score',
         'last_inherited_risk_score',
         'metrics.vulnerabilities',
       ];

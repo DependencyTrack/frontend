@@ -1129,6 +1129,7 @@
     "scope": "Область застосування",
     "score": "Оцінка",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Пошук",
     "search_in": null,
     "search_parent": "Введіть для пошуку батьківського елемента",

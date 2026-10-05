@@ -1,0 +1,11 @@
+.scorecard-score-hint {
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom: 1px dashed var(--primary);
+  line-height: 1;
+  cursor: help;
+}
+.scorecard-score-hint:hover {
+  text-decoration: none;
+  border-bottom-style: solid;
+}

@@ -1129,6 +1129,7 @@
     "scope": "Porté",
     "score": "Score",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Recherche",
     "search_in": null,
     "search_parent": "Rechercher un parent",

@@ -1129,6 +1129,7 @@
     "scope": "Объем",
     "score": "Счет",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Поиск",
     "search_in": null,
     "search_parent": "Введите для поиска родителя",

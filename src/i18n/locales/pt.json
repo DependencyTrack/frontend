@@ -1129,6 +1129,7 @@
     "scope": "Âmbito",
     "score": "Pontuação",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Procurar",
     "search_in": null,
     "search_parent": "Digite para pesquisar pai",

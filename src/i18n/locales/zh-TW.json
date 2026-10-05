@@ -1129,6 +1129,7 @@
     "scope": "範圍",
     "score": "分數",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "搜尋",
     "search_in": "搜尋範圍",
     "search_parent": "輸入以搜尋父項",

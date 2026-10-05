@@ -1130,6 +1130,7 @@
     "scope": "범위",
     "score": "점수",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "검색",
     "search_in": "검색 범위",
     "search_parent": "상위 항목 검색하려면 입력하세요",

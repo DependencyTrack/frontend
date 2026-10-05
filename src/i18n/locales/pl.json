@@ -1129,6 +1129,7 @@
     "scope": "Zakres",
     "score": "Wynik",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Szukaj",
     "search_in": null,
     "search_parent": "Wpisz, aby wyszukać element nadrzędny",

@@ -215,15 +215,12 @@ export default {
       }
       return String(name)
         .split('-')
-        .map((part, index) => {
+        .map((part) => {
           if (ACRONYMS.has(part) && part === part.toUpperCase()) {
             return part;
           }
           const lower = part.toLowerCase();
-          if (index === 0) {
-            return lower.charAt(0).toUpperCase() + lower.slice(1);
-          }
-          return lower;
+          return lower.charAt(0).toUpperCase() + lower.slice(1);
         })
         .join(' ');
     },

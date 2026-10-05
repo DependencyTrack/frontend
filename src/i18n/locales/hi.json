@@ -1129,6 +1129,7 @@
     "scope": "दायरा",
     "score": "अंक",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "खोज",
     "search_in": null,
     "search_parent": "माता-पिता को खोजने के लिए टाइप करें",

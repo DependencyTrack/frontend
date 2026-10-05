@@ -1129,6 +1129,7 @@
     "scope": "Ambito",
     "score": "Punto",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "Ricerca",
     "search_in": null,
     "search_parent": "Digita per cercare genitore",

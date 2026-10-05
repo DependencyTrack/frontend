@@ -1129,6 +1129,7 @@
     "scope": "範囲",
     "score": "スコア",
     "scorecard": null,
+    "scorecard_current_repository_hint": null,
     "search": "検索",
     "search_in": null,
     "search_parent": "親を検索するには入力してください",
