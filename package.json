@@ -12,9 +12,9 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "serve": "npm run prebuild && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
-    "prebuild": "cross-env NODE_OPTIONS=--openssl-legacy-provider node update-embedded-version.js",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
+    "serve": "npm run update-embedded-version && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "update-embedded-version": "cross-env NODE_OPTIONS=--openssl-legacy-provider node update-embedded-version.js",
+    "build": "npm run update-embedded-version && cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "build-image": "npm run build && docker build -f docker/Dockerfile.alpine -t ghcr.io/dependencytrack/frontend:local .",
     "eslint": "eslint . --ext .js,.vue,.json,.md,.yaml --report-unused-disable-directives",
     "eslint-fix": "eslint --ext .js,.vue,.json,.md,.yaml --fix . --report-unused-disable-directives",
