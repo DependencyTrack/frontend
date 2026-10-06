@@ -15,6 +15,26 @@
         />{{ $t('admin.enable_bom_cyclonedx') }}
       </b-form-group>
       <b-form-group
+        :label="$t('admin.original_bom_retention')"
+        label-size="lg"
+        label-class="font-weight-bold pt-0 mb-2"
+      >
+        <label class="d-flex align-items-center mb-0">
+          <c-switch
+            color="primary"
+            v-model="isOriginalBomRetentionEnabled"
+            label
+            v-bind="labelIcon"
+          />
+          <span class="ml-1">
+            {{ $t('admin.retain_original_boms') }}
+          </span>
+        </label>
+        <b-form-text>
+          {{ $t('admin.original_bom_retention_help') }}
+        </b-form-text>
+      </b-form-group>
+      <b-form-group
         :label="$t('admin.bom_validation')"
         label-size="lg"
         label-class="font-weight-bold pt-0 mb-2"
@@ -107,6 +127,7 @@ export default {
   data() {
     return {
       isCycloneDXEnabled: false,
+      isOriginalBomRetentionEnabled: false,
       bomValidationMode: '',
       bomValidationTagExclusive: '',
       bomValidationTagsExclusive: [],
@@ -122,6 +143,11 @@ export default {
           groupName: 'artifact',
           propertyName: 'cyclonedx.enabled',
           propertyValue: this.isCycloneDXEnabled,
+        },
+        {
+          groupName: 'artifact',
+          propertyName: 'bom.original.retention.enabled',
+          propertyValue: this.isOriginalBomRetentionEnabled,
         },
         {
           groupName: 'artifact',
@@ -159,6 +185,11 @@ export default {
         switch (item.propertyName) {
           case 'cyclonedx.enabled':
             this.isCycloneDXEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'bom.original.retention.enabled':
+            this.isOriginalBomRetentionEnabled = common.toBoolean(
+              item.propertyValue,
+            );
             break;
           case 'bom.validation.mode':
             this.bomValidationMode = item.propertyValue;
