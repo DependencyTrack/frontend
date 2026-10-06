@@ -27,6 +27,7 @@ import {
   storeToken,
   clearToken,
   clearPermissions,
+  onTokenClearedElsewhere,
 } from './shared/permissions';
 import EventBus from './shared/eventbus';
 import VueRouter from 'vue-router';
@@ -120,6 +121,14 @@ export default {
       loadSystemCapabilities();
       this.fetchBannerConfig();
     }
+
+    // Another tab signed out: drop the in-memory token and leave protected pages.
+    onTokenClearedElsewhere(() => {
+      EventBus.$emit('authenticated', null);
+      if (!this.isLoginPage) {
+        this.$router.replace({ name: 'Login' });
+      }
+    });
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {

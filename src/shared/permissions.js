@@ -75,10 +75,32 @@ let storage = sessionStorage;
  * "local" picks localStorage; any other value keeps sessionStorage.
  */
 export const configureTokenStorage = function configureTokenStorage(mode) {
-  storage =
-    typeof mode === 'string' && mode.toLowerCase() === 'local'
-      ? localStorage
-      : sessionStorage;
+  const useLocal = typeof mode === 'string' && mode.toLowerCase() === 'local';
+  storage = useLocal ? localStorage : sessionStorage;
+  // Drop anything left behind by a previous mode so a stale token does not
+  // linger in the storage that is no longer read.
+  const unused = useLocal ? sessionStorage : localStorage;
+  unused.removeItem(TOKEN_KEY);
+  unused.removeItem(PERMISSIONS_KEY);
+};
+
+/**
+ * Invokes the callback when another tab removes the session token. Browsers
+ * only fire storage events for localStorage, so this is a no-op in session
+ * mode where tabs do not share a token anyway.
+ */
+export const onTokenClearedElsewhere = function onTokenClearedElsewhere(
+  callback,
+) {
+  window.addEventListener('storage', (event) => {
+    if (
+      event.storageArea === localStorage &&
+      event.key === TOKEN_KEY &&
+      event.newValue === null
+    ) {
+      callback();
+    }
+  });
 };
 
 /**
