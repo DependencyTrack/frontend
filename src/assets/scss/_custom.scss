@@ -93,7 +93,7 @@ html {
   border: 1px solid #5C9CCB;
 }
 .label-analyzer-internal {
-  color: $white;
+  color: $label-analyzer-internal-color;
 }
 .label-source {
   color: #222222;
@@ -181,7 +181,7 @@ label.required:after {
   content:" *";
 }
 input.required, select.required, textarea.required {
-  border-color: #ffd700;
+  border-color: $required-input-border-color;
 }
 
 /* usage: use outer div/span with class truncate-ellipsis or truncate-ellipsis-inline and inner span with content to truncate */
@@ -303,7 +303,7 @@ input.required, select.required, textarea.required {
 .nav-tabs .nav-link.active {
   background: $grey-700;
   border-bottom-color: $grey-700;
-  color: $white;
+  color: $nav-tabs-active-text-color;
 }
 .nav-tabs .nav-link.active:focus {
   background: $grey-700;
@@ -391,7 +391,7 @@ h6 {
   background-color: $switch-bg;
 }
 .switch-slider:before {
-  background-color: $grey-200;
+  background-color: $switch-handle-bg;
 }
 .card-footer > :not(:last-child) {
   margin-right: .25rem;
@@ -433,24 +433,24 @@ button:focus {
   outline: 0;
 }
 .badge-tab-total {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
+  border: 1px solid $badge-tab-border-color !important;
+  background-color: $badge-tab-bg !important;
   margin-left: 0.6em !important;
-  color: #21D983 !important;
+  color: $badge-tab-total-color !important;
 }
 .badge-tab-fail {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
+  border: 1px solid $badge-tab-border-color !important;
+  background-color: $badge-tab-bg !important;
   color: $notification-fail !important;
 }
 .badge-tab-warn {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
+  border: 1px solid $badge-tab-border-color !important;
+  background-color: $badge-tab-bg !important;
   color: $notification-warn !important;
 }
 .badge-tab-info {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
+  border: 1px solid $badge-tab-border-color !important;
+  background-color: $badge-tab-bg !important;
   color: $notification-info !important;
 }
 .badge-tag {
@@ -479,7 +479,7 @@ td a.detail-icon {
   color: $grey-600;
 }
 .b-calendar-grid-body .text-dark {
-  color: #ffffff !important;
+  color: $calendar-text-color !important;
 }
 .treegrid-indent {
   width: 10px;
@@ -518,13 +518,13 @@ td a.detail-icon {
 }
 
 .multiselect--active {
-  color: #bfcfdf;
+  color: $multiselect-color;
 }
 
 .multiselect__input,
 .multiselect__single {
   background: $grey-650;
-  color: #bfcfdf;
+  color: $multiselect-color;
   font-size: 0.875rem;
   font-weight: 400;
   padding-left: 0;
@@ -532,7 +532,7 @@ td a.detail-icon {
 }
 
 .multiselect__input::placeholder {
-  color: #bfcfdf;
+  color: $multiselect-color;
 }
 
 .multiselect__input:hover,
@@ -547,7 +547,7 @@ td a.detail-icon {
 
 .multiselect__select,
 .multiselect__select:before {
-  border-color: #2f353a transparent;
+  border-color: $multiselect-arrow-color transparent;
   z-index: 51;
 }
 
@@ -576,15 +576,15 @@ td a.detail-icon {
 }
 
 .multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: $multiselect-highlight-bg;
+  color: $multiselect-color;
   font-size: 0.875rem;
   font-weight: 400;
 }
 
 .multiselect__option--selected {
   background: $grey-650;
-  color: #bfcfdf;
+  color: $multiselect-color;
   font-size: 0.875rem;
   font-weight: 700;
 }
@@ -592,7 +592,7 @@ td a.detail-icon {
 .multiselect__tags {
   border: 1px solid $border-color;
   background: $grey-650;
-  color: #bfcfdf;
+  color: $multiselect-color;
   height: $input-height;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
@@ -600,8 +600,8 @@ td a.detail-icon {
 }
 
 .multiselect__option--selected.multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: $multiselect-highlight-bg;
+  color: $multiselect-color;
   font-weight: 700;
 }
 

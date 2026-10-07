@@ -1,0 +1,62 @@
+// $grey-* keep their dark theme role ($grey-700 = card background, $grey-200 = body text), not their lightness.
+$grey-100: #23282c;
+$grey-200: #2f353a;
+$grey-300: #5c6873;
+$grey-400: #73818f;
+$grey-500: #8f9ba6;
+$grey-600: #73818f;
+$grey-650: #ffffff;
+$grey-700: #ffffff;
+$grey-750: #f0f3f5;
+$grey-800: #e4e5e6;
+$grey-850: #ebedef;
+$grey-900: #c8ced3;
+
+$light-blue: #167495;
+$inverse-bg: #2f353a;
+
+$input-disabled-bg: #e4e7ea;
+$custom-control-indicator-bg: #ffffff;
+$custom-control-indicator-disabled-bg: #e4e7ea;
+$list-group-action-active-bg: #e4e7ea;
+$jumbotron-bg: #e4e7ea;
+$progress-bg: #e4e7ea;
+$pagination-disabled-bg: #f0f3f5;
+$popover-bg: #ffffff;
+$popover-border-color: rgba(0, 0, 0, 0.2);
+$popover-header-bg: #f7f7f7;
+$tags-input-border-color: #c8ced3;
+$switch-bg: #c8ced3;
+$switch-handle-bg: #ffffff;
+
+$sidebar-nav-title-color: $grey-400;
+$sidebar-nav-link-color: $grey-100;
+$sidebar-nav-link-active-color: $grey-100;
+$sidebar-nav-link-disabled-color: $grey-500;
+$sidebar-nav-dropdown-color: $grey-100;
+$sidebar-nav-dropdown-bg: rgba(0, 0, 0, 0.03);
+$sidebar-header-bg: rgba(0, 0, 0, 0.03);
+$sidebar-footer-bg: rgba(0, 0, 0, 0.03);
+$sidebar-minimizer-bg: rgba(0, 0, 0, 0.03);
+$sidebar-minimizer-hover-bg: rgba(0, 0, 0, 0.08);
+$sidebar-minimizer-hover-indicator-color: $grey-100;
+
+$nav-tabs-active-text-color: $grey-100;
+$label-analyzer-internal-color: $grey-100;
+$badge-tab-bg: $inverse-bg;
+$badge-tab-border-color: $inverse-bg;
+$severity-label-bg: $inverse-bg;
+$calendar-text-color: $grey-100;
+$tags-input-color: $grey-100;
+$tags-input-placeholder-color: $grey-400;
+$tags-input-autocomplete-bg: #ffffff;
+$multiselect-color: $grey-100;
+$multiselect-highlight-bg: #e4e7ea;
+$multiselect-arrow-color: $grey-400;
+$overlay-rgb: 0, 0, 0;
+$chart-grid-color: #e4e7ea;
+$chart-tick-color: #167495;
+$required-input-border-color: #b38600;
+$code-editor-bg: #ffffff;
+$code-editor-color: $grey-100;
+$code-editor-border-color: $grey-900;

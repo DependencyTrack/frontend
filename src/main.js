@@ -20,7 +20,7 @@ import VueToastr from 'vue-toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
-import { getContextPath } from './shared/utils';
+import { fallBackToDarkTheme, getContextPath, getTheme } from './shared/utils';
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -33,6 +33,17 @@ Vue.use(VueToastr, {
 });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
+
+// The dark theme is part of App.vue; the light theme overrides it.
+const themeLoaded =
+  getTheme() === 'light'
+    ? import(
+        /* webpackChunkName: "theme-light" */ '@/assets/scss/style-light.scss'
+      ).catch((error) => {
+        console.error('Failed to load light theme', error);
+        fallBackToDarkTheme();
+      })
+    : Promise.resolve();
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
@@ -104,13 +115,15 @@ function createVueApp() {
 
   Vue.prototype.$version = version;
 
-  new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: {
-      App,
-    },
-    i18n,
+  themeLoaded.then(() => {
+    new Vue({
+      el: '#app',
+      router,
+      template: '<App/>',
+      components: {
+        App,
+      },
+      i18n,
+    });
   });
 }

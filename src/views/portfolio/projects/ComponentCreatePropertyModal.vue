@@ -117,7 +117,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

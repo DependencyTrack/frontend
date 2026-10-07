@@ -3,6 +3,7 @@ import common from '../../shared/common';
 import i18n from '../../i18n';
 import { Scatter } from 'vue-chartjs';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 
 export default {
   extends: Scatter,
@@ -35,6 +36,8 @@ export default {
         }
       }
 
+      const gridColor = getStyle('--chart-grid-color');
+      const tickColor = getStyle('--chart-tick-color');
       this.renderChart(
         {
           labels: labels,
@@ -62,11 +65,11 @@ export default {
                   fontColor: '#73818F',
                 },
                 gridLines: {
-                  color: '#1C2937',
-                  zeroLineColor: '#1C2937',
+                  color: gridColor,
+                  zeroLineColor: gridColor,
                 },
                 ticks: {
-                  fontColor: '#21A8D8',
+                  fontColor: tickColor,
                   min: 0,
                   max: 10.0,
                 },
@@ -81,12 +84,12 @@ export default {
                   fontColor: '#73818F',
                 },
                 gridLines: {
-                  color: '#1C2937',
-                  zeroLineColor: '#1C2937',
+                  color: gridColor,
+                  zeroLineColor: gridColor,
                 },
                 ticks: {
                   display: true,
-                  fontColor: '#21A8D8',
+                  fontColor: tickColor,
                   min: 0,
                   max: 1.0,
                 },

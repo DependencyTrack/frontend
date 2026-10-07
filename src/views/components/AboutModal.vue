@@ -8,10 +8,18 @@
   >
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          class="logo-white"
+          width="200"
+        />
       </b-col>
       <b-col align="right">
-        <img src="@/assets/img/brand/owasp-logo-white.svg" width="120" />
+        <img
+          src="@/assets/img/brand/owasp-logo-white.svg"
+          class="logo-white"
+          width="120"
+        />
       </b-col>
     </b-row>
     <hr />

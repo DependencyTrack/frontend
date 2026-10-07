@@ -183,6 +183,28 @@ export function getContextPath() {
   }
 }
 
+const THEMES = ['dark', 'light'];
+
+// Read once: the stylesheet is chosen at startup, and another tab may change the stored value later.
+let activeTheme;
+
+export function getTheme() {
+  if (!activeTheme) {
+    let theme = null;
+    try {
+      theme = localStorage.getItem('Theme');
+    } catch (e) {
+      // Storage blocked by the browser; keep the default theme.
+    }
+    activeTheme = THEMES.includes(theme) ? theme : 'dark';
+  }
+  return activeTheme;
+}
+
+export function fallBackToDarkTheme() {
+  activeTheme = 'dark';
+}
+
 export function loadUserPreferencesForBootstrapTable(_this, id, columns) {
   const table = _this.$refs.table;
   if (!table) {
