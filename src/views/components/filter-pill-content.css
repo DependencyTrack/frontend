@@ -74,7 +74,7 @@
 }
 
 .filter-pill-list .custom-control:hover {
-  background: rgb(255 255 255 / 7%);
+  background: rgba(var(--overlay-rgb), 0.07);
 }
 
 /* Inline group caption, replaces a full-width b-form-group label */

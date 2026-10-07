@@ -9,10 +9,13 @@ import 'chart.js/auto';
 import common from '../../shared/common';
 import i18n from '../../i18n';
 import { Scatter } from 'vue-chartjs';
+import { getStyle } from '@/shared/utils';
 
 export default {
   components: { ScatterChart: Scatter },
   data() {
+    const gridColor = getStyle('--chart-grid-color');
+    const tickColor = getStyle('--chart-tick-color');
     return {
       chartData: null,
       options: {
@@ -45,10 +48,10 @@ export default {
               color: '#73818F',
             },
             grid: {
-              color: '#1C2937',
+              color: gridColor,
             },
             ticks: {
-              color: '#21A8D8',
+              color: tickColor,
             },
           },
           y: {
@@ -60,10 +63,10 @@ export default {
               color: '#73818F',
             },
             grid: {
-              color: '#1C2937',
+              color: gridColor,
             },
             ticks: {
-              color: '#21A8D8',
+              color: tickColor,
             },
           },
         },

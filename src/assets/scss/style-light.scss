@@ -1,0 +1,23 @@
+@import "theme-light";
+@import "style";
+
+// The login brand panel and welcome message are built around a dark background with white text and logo.
+.bg-grey-900 {
+  background-color: $inverse-bg;
+  color: $white;
+
+  .card-header {
+    background-color: transparent;
+    border-bottom-color: rgba($white, 0.2);
+  }
+}
+
+// Logo artwork in white, made for a dark background.
+.logo-white {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+// The one-time API key display renders text-white on a pre, which has a light background here.
+pre.text-white {
+  color: $body-color !important;
+}

@@ -15,7 +15,7 @@ import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import globals from './shared/globals';
 import version from './version.json';
-import { getContextPath } from './shared/utils';
+import { fallBackToDarkTheme, getContextPath, getTheme } from './shared/utils';
 
 configureCompat({ MODE: 2 });
 
@@ -32,6 +32,15 @@ for (const hook of ['created', 'beforeUpdate']) {
     }
   };
 }
+
+// The dark theme is part of App.vue; the light theme overrides it.
+const themeLoaded =
+  getTheme() === 'light'
+    ? import('@/assets/scss/style-light.scss').catch((error) => {
+        console.error('Failed to load light theme', error);
+        fallBackToDarkTheme();
+      })
+    : Promise.resolve();
 
 globals.$api = api;
 globals.$oidc = oidc;
@@ -116,5 +125,5 @@ function createVueApp() {
   app.directive('permission', permission);
   app.directive('scrollable-tabs', scrollableTabs);
   app.directive('multiselect-label', multiselectLabel);
-  app.mount('#app');
+  themeLoaded.then(() => app.mount('#app'));
 }

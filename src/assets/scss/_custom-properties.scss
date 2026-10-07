@@ -1,0 +1,31 @@
+:root {
+  --severity-critical: #{$severity-critical};
+  --severity-high: #{$severity-high};
+  --severity-medium: #{$severity-medium};
+  --severity-low: #{$severity-low};
+  --severity-info: #{$severity-info};
+  --severity-unassigned: #{$severity-unassigned};
+
+  --notification-fail: #{$notification-fail};
+  --notification-warn: #{$notification-warn};
+  --notification-info: #{$notification-info};
+  --notification-pass: #{$notification-pass};
+  --notification-note: #{$notification-note};
+
+  --component-active-color: #{$component-active-color};
+
+  --widget-1: #{$widget-1};
+  --widget-2: #{$widget-2};
+  --widget-3: #{$widget-3};
+  --widget-4: #{$widget-4};
+
+  --primary: #{$blue};
+  --primary-lighter: #{$light-blue};
+  --recessed: #{$recessed};
+  --overlay-rgb: #{$overlay-rgb};
+  --chart-grid-color: #{$chart-grid-color};
+  --chart-tick-color: #{$chart-tick-color};
+  --code-editor-bg: #{$code-editor-bg};
+  --code-editor-color: #{$code-editor-color};
+  --code-editor-border-color: #{$code-editor-border-color};
+}
