@@ -16,6 +16,7 @@ export default {
       const mediumStyle = getStyle('--severity-medium');
       const lowStyle = getStyle('--severity-low');
       const unassignedStyle = getStyle('--severity-unassigned');
+      const  chartAxisStyle = getStyle('--chart-axis-color');
 
       let labels = [];
       let criticalData = [];
@@ -116,6 +117,7 @@ export default {
                   drawOnChartArea: false,
                 },
                 ticks: {
+                  fontColor: chartAxisStyle,
                   callback: function (value) {
                     return common.formatTimestamp(value);
                   },
@@ -125,6 +127,7 @@ export default {
             yAxes: [
               {
                 ticks: {
+                  fontColor: chartAxisStyle,
                   beginAtZero: true,
                   maxTicksLimit: 1,
                 },
