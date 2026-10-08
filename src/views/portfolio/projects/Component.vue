@@ -157,6 +157,18 @@
           v-on:total="totalVulnerabilities = $event"
         />
       </b-tab>
+      <b-tab ref="health" @click="routeTo('health')">
+        <template v-slot:title
+          ><i class="fa fa-heart"></i> {{ $t('message.health') }}
+          <b-badge
+            v-if="healthLoaded"
+            variant="tab-info"
+            :style="healthBadgeStyle"
+            >{{ healthBadgeLabel }}</b-badge
+          ></template
+        >
+        <component-health :uuid="uuid" v-on:score="onHealthScore" />
+      </b-tab>
     </b-tabs>
     <component-details-modal
       :component="cloneDeep(component)"
@@ -174,12 +186,18 @@ import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard';
 import ComponentVulnerabilities from './ComponentVulnerabilities';
+import ComponentHealth from './ComponentHealth';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import {
+  HEALTH_SCORE_COLOR,
+  healthScoreTone,
+} from '../../../shared/healthScoreTone';
+import { formatScorecardScore } from '../../../shared/scorecardColumn';
 
 export default {
   mixins: [permissionsMixin],
@@ -187,6 +205,7 @@ export default {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
     ComponentDashboard,
+    ComponentHealth,
     ComponentVulnerabilities,
     VueEasyPieChart,
     ComponentDetailsModal,
@@ -204,6 +223,17 @@ export default {
           return this.component.project.name;
         }
       }
+    },
+    healthBadgeStyle() {
+      const tone = healthScoreTone(this.scorecardScore);
+      // !important beats the colour that .badge-tab-info forces
+      return tone ? { color: HEALTH_SCORE_COLOR[tone] + ' !important' } : null;
+    },
+    healthBadgeLabel() {
+      if (this.scorecardScore == null) {
+        return this.$t('message.health_no_score');
+      }
+      return formatScorecardScore(this.scorecardScore);
     },
     componentLabel() {
       let label = this.component.name;
@@ -238,6 +268,8 @@ export default {
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
+      healthLoaded: false,
+      scorecardScore: null,
     };
   },
   methods: {
@@ -259,6 +291,10 @@ export default {
           '/dependencyGraph/' +
           this.component.uuid,
       });
+    },
+    onHealthScore(score) {
+      this.scorecardScore = score;
+      this.healthLoaded = true;
     },
     routeTo(path) {
       if (path) {

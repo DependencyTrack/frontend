@@ -47,6 +47,8 @@ const RiskScore = () =>
   import('@/views/administration/configuration/RiskScore');
 const Telemetry = () =>
   import('@/views/administration/configuration/Telemetry.vue');
+const PackageHealth = () =>
+  import('@/views/administration/configuration/PackageHealth.vue');
 const SecretsManagement = () =>
   import('@/views/administration/secrets/SecretsManagement.vue');
 
@@ -237,6 +239,7 @@ function configRoutes() {
           alias: [
             '/components/:uuid/overview',
             '/components/:uuid/vulnerabilities',
+            '/components/:uuid/health',
           ],
           props: (route) => ({ uuid: route.params.uuid }),
           component: Component,
@@ -519,6 +522,23 @@ function configRoutes() {
             {
               path: 'configuration/telemetry',
               component: Telemetry,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'SYSTEM_CONFIGURATION',
+                  'SYSTEM_CONFIGURATION_CREATE',
+                  'SYSTEM_CONFIGURATION_READ',
+                  'SYSTEM_CONFIGURATION_UPDATE',
+                  'SYSTEM_CONFIGURATION_DELETE',
+                ],
+              },
+            },
+            {
+              path: 'configuration/packageHealth',
+              component: PackageHealth,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',

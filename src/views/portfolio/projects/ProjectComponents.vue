@@ -104,6 +104,7 @@ import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
+import { buildScorecardColumn } from '@/shared/scorecardColumn';
 
 const EXPAND_BY_COLUMN = {
   metrics: 'metrics',
@@ -126,6 +127,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'hash_verification.status': false,
   license: true,
   occurrence_count: false,
+  scorecard_score: true,
   last_inherited_risk_score: true,
   metrics: true,
 };
@@ -456,6 +458,10 @@ export default {
             return `<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span> ${value}`;
           },
         },
+        buildScorecardColumn({
+          $t: this.$t.bind(this),
+          visible: initialColumnVisible('scorecard_score'),
+        }),
         {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
@@ -543,6 +549,7 @@ export default {
         'group',
         'internal',
         'resolved_license.license_id',
+        'scorecard_score',
         'last_inherited_risk_score',
         'metrics.vulnerabilities',
       ];
