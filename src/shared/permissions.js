@@ -62,22 +62,63 @@ export const hasPermission = function hasPermission(permission) {
   }
 };
 
+const TOKEN_KEY = 'token';
+const PERMISSIONS_KEY = 'permissions';
+
+// Where the session token and the cached permissions live. sessionStorage is
+// scoped to one tab; localStorage is shared by every tab of the origin and
+// survives a browser restart. Selected once at startup from config.json.
+let storage = sessionStorage;
+
 /**
- * Stores the effective permissions array in session storage.
+ * Selects the storage for the session token and the cached permissions.
+ * "local" picks localStorage; any other value keeps sessionStorage.
+ */
+export const configureTokenStorage = function configureTokenStorage(mode) {
+  const useLocal = typeof mode === 'string' && mode.toLowerCase() === 'local';
+  storage = useLocal ? localStorage : sessionStorage;
+  // Drop anything left behind by a previous mode so a stale token does not
+  // linger in the storage that is no longer read.
+  const unused = useLocal ? sessionStorage : localStorage;
+  unused.removeItem(TOKEN_KEY);
+  unused.removeItem(PERMISSIONS_KEY);
+};
+
+/**
+ * Invokes the callback when another tab removes the session token. Browsers
+ * only fire storage events for localStorage, so this is a no-op in session
+ * mode where tabs do not share a token anyway.
+ */
+export const onTokenClearedElsewhere = function onTokenClearedElsewhere(
+  callback,
+) {
+  window.addEventListener('storage', (event) => {
+    if (
+      event.storageArea === localStorage &&
+      event.key === TOKEN_KEY &&
+      event.newValue === null
+    ) {
+      callback();
+    }
+  });
+};
+
+/**
+ * Stores the effective permissions array.
  */
 export const storePermissions = function storePermissions(permissions) {
   if (!Array.isArray(permissions)) {
     return;
   }
-  sessionStorage.setItem('permissions', JSON.stringify(permissions));
+  storage.setItem(PERMISSIONS_KEY, JSON.stringify(permissions));
 };
 
 /**
- * Retrieves the cached permissions from session storage.
+ * Retrieves the cached permissions.
  */
 export const getPermissions = function getPermissions() {
   try {
-    const stored = sessionStorage.getItem('permissions');
+    const stored = storage.getItem(PERMISSIONS_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
@@ -86,15 +127,29 @@ export const getPermissions = function getPermissions() {
 };
 
 /**
- * Clears the cached permissions from session storage.
+ * Clears the cached permissions.
  */
 export const clearPermissions = function clearPermissions() {
-  sessionStorage.removeItem('permissions');
+  storage.removeItem(PERMISSIONS_KEY);
 };
 
 /**
- * Retrieves the token from session storage.
+ * Stores the session token.
+ */
+export const storeToken = function storeToken(token) {
+  storage.setItem(TOKEN_KEY, token);
+};
+
+/**
+ * Clears the session token.
+ */
+export const clearToken = function clearToken() {
+  storage.removeItem(TOKEN_KEY);
+};
+
+/**
+ * Retrieves the session token.
  */
 export const getToken = function getToken() {
-  return sessionStorage.getItem('token');
+  return storage.getItem(TOKEN_KEY);
 };

@@ -24,6 +24,7 @@ else
   CONFIG=$(jq --argjson feature_flags "${feature_flags}" \
         '.API_BASE_URL = env.API_BASE_URL
         | .API_WITH_CREDENTIALS = env.API_WITH_CREDENTIALS
+        | .AUTH_TOKEN_STORAGE = env.AUTH_TOKEN_STORAGE
         | .FEATURE_FLAGS = $feature_flags
         | .OIDC_ISSUER = env.OIDC_ISSUER
         | .OIDC_CLIENT_ID = env.OIDC_CLIENT_ID

@@ -21,6 +21,7 @@ import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version';
 import { getContextPath } from './shared/utils';
+import { configureTokenStorage } from './shared/permissions';
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
@@ -62,6 +63,9 @@ axios
     } else {
       Vue.prototype.$oidc.LOGIN_BUTTON_TEXT = '';
     }
+
+    // Where the session token lives: per tab (default) or shared across tabs
+    configureTokenStorage(response.data.AUTH_TOKEN_STORAGE);
 
     // Feature flags
     Vue.prototype.$featureFlags = response.data.FEATURE_FLAGS;

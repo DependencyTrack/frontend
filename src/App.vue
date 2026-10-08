@@ -22,7 +22,13 @@ import Vue from 'vue';
 import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
-import { getToken, clearPermissions } from './shared/permissions';
+import {
+  getToken,
+  storeToken,
+  clearToken,
+  clearPermissions,
+  onTokenClearedElsewhere,
+} from './shared/permissions';
 import EventBus from './shared/eventbus';
 import VueRouter from 'vue-router';
 import Banner from './views/components/Banner.vue';
@@ -81,9 +87,9 @@ export default {
     EventBus.$on('authenticated', (token) => {
       sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       if (token) {
-        sessionStorage.setItem('token', token);
+        storeToken(token);
       } else {
-        sessionStorage.removeItem('token');
+        clearToken();
         clearPermissions();
         Vue.prototype.$systemCapabilities = undefined;
         EventBus.$emit('systemCapabilitiesUpdated', undefined);
@@ -115,6 +121,14 @@ export default {
       loadSystemCapabilities();
       this.fetchBannerConfig();
     }
+
+    // Another tab signed out: drop the in-memory token and leave protected pages.
+    onTokenClearedElsewhere(() => {
+      EventBus.$emit('authenticated', null);
+      if (!this.isLoginPage) {
+        this.$router.replace({ name: 'Login' });
+      }
+    });
 
     // Send XHR cross-site cookie credentials
     if (this.$api.WITH_CREDENTIALS) {
