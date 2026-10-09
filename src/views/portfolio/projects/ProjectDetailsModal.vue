@@ -921,10 +921,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>
-
 <style scoped>
 .tab-content .tab-pane {
   padding: 0 !important;

@@ -3,18 +3,18 @@ $grey-base:  #020304 !default;
 /* $grey-base:  #181b1e !default; */
 /* $grey-base:  #06080A !default; */
 /* $grey-base:  #050607 !default; */
-$grey-100:   lighten($grey-base, 85%);
-$grey-200:   lighten($grey-base, 80%);
-$grey-300:   lighten($grey-base, 70%);
-$grey-400:   lighten($grey-base, 60%);
-$grey-500:   lighten($grey-base, 50%);
-$grey-600:   lighten($grey-base, 40%);
-$grey-650:   lighten($grey-base, 25%);
-$grey-700:   lighten($grey-base, 15%);
-$grey-750:   lighten($grey-base, 12.5%);
-$grey-800:   lighten($grey-base, 10%);
-$grey-850:   lighten($grey-base, 7.5%);
-$grey-900:   lighten($grey-base, 5%);
+$grey-100:   lighten($grey-base, 85%) !default;
+$grey-200:   lighten($grey-base, 80%) !default;
+$grey-300:   lighten($grey-base, 70%) !default;
+$grey-400:   lighten($grey-base, 60%) !default;
+$grey-500:   lighten($grey-base, 50%) !default;
+$grey-600:   lighten($grey-base, 40%) !default;
+$grey-650:   lighten($grey-base, 25%) !default;
+$grey-700:   lighten($grey-base, 15%) !default;
+$grey-750:   lighten($grey-base, 12.5%) !default;
+$grey-800:   lighten($grey-base, 10%) !default;
+$grey-850:   lighten($grey-base, 7.5%) !default;
+$grey-900:   lighten($grey-base, 5%) !default;
 
 $secondary:  $grey-600 !default;
 
@@ -220,33 +220,30 @@ $widget-2: #A66BF8;
 $widget-3: #6D6BF8;
 $widget-4: #F86D6B;
 
-$recessed: $grey-850;
+$recessed: $grey-850 !default;
 
-:root {
-  --severity-critical: #{$severity-critical};
-  --severity-high: #{$severity-high};
-  --severity-medium: #{$severity-medium};
-  --severity-low: #{$severity-low};
-  --severity-info: #{$severity-info};
-  --severity-unassigned: #{$severity-unassigned};
+$nav-tabs-active-text-color:    $white !default;
+$label-analyzer-internal-color: $white !default;
+$badge-tab-bg:                  $grey-900 !default;
+$badge-tab-border-color:        #60768c !default;
+$badge-tab-total-color:         #21D983 !default;
+$switch-handle-bg:              $grey-200 !default;
+$calendar-text-color:           #ffffff !default;
+$tags-input-color:              #ffffff !default;
+$tags-input-placeholder-color:  #a4b1b6 !default;
+$tags-input-autocomplete-bg:    #283944 !default;
+$tags-input-selected-color:     $tags-input-autocomplete-bg !default;
+$multiselect-color:             #bfcfdf !default;
+$multiselect-highlight-bg:      #52525e !default;
+$multiselect-arrow-color:       #2f353a !default;
+$overlay-rgb:                   255, 255, 255 !default;
+$chart-grid-color:              #1C2937 !default;
+$chart-tick-color:              #21A8D8 !default;
+$required-input-border-color:   #ffd700 !default;
+$code-editor-bg:                #282c34 !default;
+$code-editor-color:             #abb2bf !default;
+$code-editor-border-color:      #52525e !default;
 
-  --notification-fail: #{$notification-fail};
-  --notification-warn: #{$notification-warn};
-  --notification-info: #{$notification-info};
-  --notification-pass: #{$notification-pass};
-  --notification-note: #{$notification-note};
-
-  --component-active-color: #{$component-active-color};
-
-  --widget-1: #{$widget-1};
-  --widget-2: #{$widget-2};
-  --widget-3: #{$widget-3};
-  --widget-4: #{$widget-4};
-
-  --primary: #{$blue};
-  --primary-lighter: #{$light-blue};
-  --recessed: #{$recessed};
-}
 
 // Modal override
 $modal-md: 600px !default;

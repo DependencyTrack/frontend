@@ -79,7 +79,7 @@ export default {
         el.style.marginLeft = index === 0 ? 'auto' : '0.5rem';
         el.style.flexShrink = '0';
         el.style.alignSelf = 'flex-start';
-        el.style.borderLeft = '1px solid rgb(255 255 255 / 10%)';
+        el.style.borderLeft = '1px solid rgba(var(--overlay-rgb), 0.1)';
         el.style.paddingLeft = '0.5rem';
         el.querySelectorAll('.form-control').forEach((input) => {
           input.classList.add('form-control-sm');

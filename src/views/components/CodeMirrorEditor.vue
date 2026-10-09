@@ -2,7 +2,8 @@
   <div
     ref="editor"
     :style="{
-      border: '1px solid #52525e',
+      border: '1px solid var(--code-editor-border-color)',
+      backgroundColor: 'var(--code-editor-bg)',
       borderRadius: '0.25rem',
       maxWidth: maxWidth,
       height: initialHeight,
@@ -20,6 +21,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { setDiagnostics } from '@codemirror/lint';
 import { autocompletion } from '@codemirror/autocomplete';
+import { getTheme } from '@/shared/utils';
 
 export default {
   name: 'CodeMirrorEditor',
@@ -67,7 +69,7 @@ export default {
         autocompletion({
           override: this.completionSource ? [this.completionSource] : [],
         }),
-        oneDark,
+        ...(getTheme() === 'dark' ? [oneDark] : []),
         ...(this.lineWrapping ? [EditorView.lineWrapping] : []),
         this.readOnlyCompartment.of(EditorState.readOnly.of(this.readOnly)),
         EditorView.updateListener.of((update) => {

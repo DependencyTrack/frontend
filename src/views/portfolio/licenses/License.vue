@@ -68,6 +68,7 @@
                 v-if="license.isOsiApproved"
                 src="@/assets/img//osi-logo.svg"
                 alt="OSI logo"
+                class="logo-white"
                 width="80"
               />
             </td>

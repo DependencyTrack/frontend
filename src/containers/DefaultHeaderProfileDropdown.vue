@@ -20,6 +20,9 @@
       <b-dropdown-form id="locale-picker-form" class="pl-2 pr-2">
         <LocalePicker />
       </b-dropdown-form>
+      <b-dropdown-form id="theme-picker-form" class="pl-2 pr-2 mt-1">
+        <ThemePicker />
+      </b-dropdown-form>
       <b-dropdown-divider />
       <b-dropdown-item @click="logout"
         ><i class="fa fa-sign-out text-primary" />
@@ -34,6 +37,7 @@ import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue';
 import EventBus from '../shared/eventbus';
 import globalVarsMixin from '../mixins/globalVarsMixin';
 import LocalePicker from '@/views/components/LocalePicker.vue';
+import ThemePicker from '@/views/components/ThemePicker.vue';
 
 export default {
   name: 'DefaultHeaderProfileDropdown',
@@ -41,6 +45,7 @@ export default {
   components: {
     AppHeaderDropdown,
     LocalePicker,
+    ThemePicker,
   },
   data: () => {
     return {
@@ -86,7 +91,8 @@ export default {
 }
 
 /* Remove default padding inherited from b-dropdown-form. */
-#locale-picker-form {
+#locale-picker-form,
+#theme-picker-form {
   padding: 0;
 }
 </style>

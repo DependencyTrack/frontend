@@ -9,6 +9,18 @@ module.exports = {
   devServer: {
     proxy: { '/api': { target: process.env.VUE_APP_SERVER_URL } },
   },
+  chainWebpack: (config) => {
+    // Only light theme users load this chunk; don't prefetch it for everyone.
+    if (!config.plugins.has('prefetch')) {
+      return;
+    }
+    config.plugin('prefetch').tap(([options]) => [
+      {
+        ...options,
+        fileBlacklist: [...(options.fileBlacklist || [/\.map/]), /theme-light/],
+      },
+    ]);
+  },
   configureWebpack: {
     devtool: 'source-map',
     plugins: [

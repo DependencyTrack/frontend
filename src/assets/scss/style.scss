@@ -1,5 +1,6 @@
 // If you want to override variables do it here
 @import "variables";
+@import "custom-properties";
 
 // Import styles
 @import "~@coreui/coreui/scss/coreui";
@@ -8,6 +9,8 @@
 
 // If you want to add something do it here
 @import "custom";
+@import "token-paginated-table";
+@import "vendors/vue-tags-input/vue-tags-input";
 
 // ie fixes
 @import "ie-fix";
