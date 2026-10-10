@@ -46,7 +46,7 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 
 export default {
   mixins: [permissionsMixin],

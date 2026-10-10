@@ -84,8 +84,8 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
 
 export default {

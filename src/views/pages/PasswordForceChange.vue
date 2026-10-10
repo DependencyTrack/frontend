@@ -92,10 +92,9 @@
 <script>
 import axios from 'axios';
 import { ValidationObserver } from 'vee-validate';
-import InformationalModal from '../modals/InformationalModal';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import InformationalModal from '../modals/InformationalModal.vue';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import { getRedirectUrl } from '../../shared/utils';
-const qs = require('querystring');
 
 export default {
   name: 'PasswordForceChange',
@@ -130,7 +129,7 @@ export default {
         },
       };
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, new URLSearchParams(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             this.$toastr.s(this.$t('message.password_change_success'));

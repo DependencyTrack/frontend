@@ -89,7 +89,7 @@
 <script>
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
-import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
+import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
@@ -98,7 +98,7 @@ import Vue from 'vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import { get } from 'lodash-es';
 import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';

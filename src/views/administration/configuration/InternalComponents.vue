@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
 export default {

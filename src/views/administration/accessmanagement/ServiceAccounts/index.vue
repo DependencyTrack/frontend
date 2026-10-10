@@ -96,13 +96,10 @@ export default {
         detailViewByClick: true,
         detailFormatter: (index, row) => {
           return this.vueFormatter({
-            render: () => (
-              <ServiceAccountDetails
-                row={row}
-                index={index}
-                rowEvents={this.rowEvents}
-              />
-            ),
+            render: (h) =>
+              h(ServiceAccountDetails, {
+                props: { row, index, rowEvents: this.rowEvents },
+              }),
           });
         },
         onExpandRow: this.vueFormatterInit,

@@ -1,10 +1,6 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
-import App from './App';
+import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
 import './validation';
@@ -19,7 +15,7 @@ import '@/views/components/filter-pill-content.css';
 import VueToastr from 'vue-toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
-import version from './version';
+import version from './version.json';
 import { getContextPath } from './shared/utils';
 
 Vue.use(BootstrapVue);

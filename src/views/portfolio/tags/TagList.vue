@@ -14,7 +14,7 @@
 
 <script>
 import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow.vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import * as permissions from '../../../shared/permissions';

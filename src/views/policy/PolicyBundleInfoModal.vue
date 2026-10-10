@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import common from '../../shared/common';
 export default {
   name: 'PolicyBundleInfoModal',

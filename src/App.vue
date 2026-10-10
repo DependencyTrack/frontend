@@ -178,7 +178,7 @@ export default {
           contentType.includes('application/json') &&
           Array.isArray(error.response.data) &&
           error.response.data.length > 0 &&
-          error.response.data[0].hasOwnProperty('invalidValue')
+          Object.hasOwn(error.response.data[0], 'invalidValue')
         ) {
           let validationError = error.response.data
             .map((failure) => `${failure.path}: ${failure.message}`)
@@ -277,11 +277,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@coreui/icons/css/free.min.css';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome.scss';
-$simple-line-font-path: '~simple-line-icons/fonts/';
-@import '~simple-line-icons/scss/simple-line-icons.scss';
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
+@import '@coreui/icons/css/free.min.css';
+$fa-font-path: 'font-awesome/fonts/';
+@import 'font-awesome/scss/font-awesome.scss';
+$simple-line-font-path: 'simple-line-icons/fonts/';
+@import 'simple-line-icons/scss/simple-line-icons.scss';
+@import 'bootstrap-vue/dist/bootstrap-vue.css';
 @import 'assets/scss/style';
 </style>

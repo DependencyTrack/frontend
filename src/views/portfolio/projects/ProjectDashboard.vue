@@ -186,11 +186,11 @@
 <script>
 import common from '../../../shared/common';
 import { Callout } from '@coreui/vue';
-import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
-import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress.vue';
+import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities.vue';
+import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
+import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState.vue';
+import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown.vue';
 
 export default {
   name: 'project-dashboard',

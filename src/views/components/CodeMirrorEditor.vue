@@ -152,7 +152,7 @@ export default {
               severity: 'error',
               message: marker.message,
             };
-          } catch (e) {
+          } catch {
             return null;
           }
         })

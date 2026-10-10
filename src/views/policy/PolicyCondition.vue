@@ -237,10 +237,10 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect.vue';
 import common from '../../shared/common';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
+import ActionableListGroupItem from '../components/ActionableListGroupItem.vue';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import { celCompletionSource } from './celCompletions';
 import { celErrorsToMarkers } from '../../shared/utils';

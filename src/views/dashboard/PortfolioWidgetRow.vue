@@ -64,10 +64,10 @@
 </template>
 
 <script>
-import WidgetPortfolioVulnerabilities from './WidgetPortfolioVulnerabilities';
-import WidgetProjectsAtRisk from './WidgetProjectsAtRisk';
-import WidgetVulnerableComponents from './WidgetVulnerableComponents';
-import WidgetInheritedRiskScore from './WidgetInheritedRiskScore';
+import WidgetPortfolioVulnerabilities from './WidgetPortfolioVulnerabilities.vue';
+import WidgetProjectsAtRisk from './WidgetProjectsAtRisk.vue';
+import WidgetVulnerableComponents from './WidgetVulnerableComponents.vue';
+import WidgetInheritedRiskScore from './WidgetInheritedRiskScore.vue';
 
 export default {
   components: {

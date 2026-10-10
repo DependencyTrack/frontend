@@ -29,9 +29,9 @@ import i18n from '../../../i18n';
 import EventBus from '../../../shared/eventbus';
 import BootstrapToggle from 'vue-bootstrap-toggle';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import CreateTemplateModal from './CreateTemplateModal';
-import CodeMirrorEditor from '../../components/CodeMirrorEditor';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import CreateTemplateModal from './CreateTemplateModal.vue';
+import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { jinja } from '@codemirror/lang-jinja';
 
 export default {

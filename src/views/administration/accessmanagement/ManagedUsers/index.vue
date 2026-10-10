@@ -115,9 +115,10 @@ export default {
         detailViewByClick: true,
         detailFormatter: (index, row) => {
           return this.vueFormatter({
-            render: () => (
-              <UserDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+            render: (h) =>
+              h(UserDetails, {
+                props: { row, index, rowEvents: this.rowEvents },
+              }),
           });
         },
         onExpandRow: this.vueFormatterInit,

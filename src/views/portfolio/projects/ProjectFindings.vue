@@ -51,7 +51,7 @@ import {
 } from '@/shared/utils';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
-import FindingAudit from './FindingAudit';
+import FindingAudit from './FindingAudit.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';

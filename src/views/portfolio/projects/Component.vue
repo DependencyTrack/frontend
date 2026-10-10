@@ -172,11 +172,11 @@ import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
-import ComponentDashboard from './ComponentDashboard';
-import ComponentVulnerabilities from './ComponentVulnerabilities';
+import ComponentDashboard from './ComponentDashboard.vue';
+import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import ComponentDetailsModal from './ComponentDetailsModal';
+import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
@@ -195,7 +195,7 @@ export default {
   title: '',
   computed: {
     projectLabel() {
-      if (this.component.hasOwnProperty('project')) {
+      if (Object.hasOwn(this.component, 'project')) {
         if (this.component.project.name && this.component.project.version) {
           return (
             this.component.project.name + ' ▸ ' + this.component.project.version
@@ -204,6 +204,7 @@ export default {
           return this.component.project.name;
         }
       }
+      return null;
     },
     componentLabel() {
       let label = this.component.name;

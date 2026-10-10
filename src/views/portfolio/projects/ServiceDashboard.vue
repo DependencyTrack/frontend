@@ -134,9 +134,9 @@
 <script>
 import common from '../../../shared/common';
 import { Callout } from '@coreui/vue';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
-import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
+import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState.vue';
+import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown.vue';
 
 export default {
   name: 'ServiceDashboard',

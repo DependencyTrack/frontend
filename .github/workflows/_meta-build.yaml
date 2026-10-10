@@ -61,11 +61,14 @@ jobs:
         run: |-
           npm ci
           npm run build --if-present
+          mv dist/cyclonedx/bom.* .
+          rmdir dist/cyclonedx
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag=v7.0.1
         with:
           name: assembled-frontend
+          include-hidden-files: true # Required to include dist/.well-known/sbom.
           path: |-
             dist/
             bom.*

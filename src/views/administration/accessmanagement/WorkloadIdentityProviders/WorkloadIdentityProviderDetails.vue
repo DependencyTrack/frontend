@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import EventBus from '../../../../shared/eventbus';
 import i18n from '../../../../i18n';
 import {

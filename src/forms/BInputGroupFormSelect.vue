@@ -12,7 +12,7 @@
 
       <b-form-select
         :id="`${id}-input`"
-        v-model="value"
+        :value="value"
         :options="options"
         :autofocus="isFocused"
         :disabled="disabled"

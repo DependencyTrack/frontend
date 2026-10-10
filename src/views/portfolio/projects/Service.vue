@@ -128,10 +128,10 @@
 import { cloneDeep } from 'lodash-es';
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
-import ServiceDashboard from './ServiceDashboard';
+import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import ServiceDetailsModal from './ServiceDetailsModal';
+import ServiceDetailsModal from './ServiceDetailsModal.vue';
 
 export default {
   mixins: [permissionsMixin],
@@ -142,7 +142,7 @@ export default {
   },
   computed: {
     projectLabel() {
-      if (this.service.hasOwnProperty('project')) {
+      if (Object.hasOwn(this.service, 'project')) {
         if (this.service.project.name && this.service.project.version) {
           return (
             this.service.project.name + ' ▸ ' + this.service.project.version
@@ -151,6 +151,7 @@ export default {
           return this.service.project.name;
         }
       }
+      return null;
     },
     serviceLabel() {
       if (this.service.name && this.service.version) {

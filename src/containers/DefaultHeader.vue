@@ -17,7 +17,7 @@
 </template>
 <script>
 import { Header as AppHeader, SidebarToggler } from '@coreui/vue';
-import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
+import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown.vue';
 
 export default {
   name: 'DefaultHeader',

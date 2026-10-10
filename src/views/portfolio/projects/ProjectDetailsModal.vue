@@ -588,8 +588,8 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import VueTagsInput from '@johmun/vue-tags-input';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';

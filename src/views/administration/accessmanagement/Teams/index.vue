@@ -21,7 +21,7 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../../shared/common';
-import CreateTeamModal from '../CreateTeamModal';
+import CreateTeamModal from '../CreateTeamModal.vue';
 import bootstrapTableMixin from '../../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../../shared/eventbus';
 import TeamDetails from './TeamDetails.vue';
@@ -117,9 +117,10 @@ export default {
         detailFormatter: (index, row) => {
           return this.vueFormatter({
             router: this.$router,
-            render: () => (
-              <TeamDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+            render: (h) =>
+              h(TeamDetails, {
+                props: { row, index, rowEvents: this.rowEvents },
+              }),
           });
         },
         onExpandRow: this.vueFormatterInit,

@@ -28,11 +28,11 @@
 
 <script>
 import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow.vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
-import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
+import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal.vue';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {

@@ -28,7 +28,7 @@
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 
 export default {
   name: 'createLicenseGroupModal',

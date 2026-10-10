@@ -564,7 +564,6 @@ export default {
       }
       return 'clickable-node';
     },
-    // eslint-disable-next-line no-unused-vars -- rendering breaks if the parameter is not named exactly `h`.
     renderContent: function (h, data) {
       if (
         this.highlightOutdatedComponents &&
@@ -572,26 +571,27 @@ export default {
         data.latestVersion &&
         data.latestVersion !== data.version
       ) {
-        return (
-          <div style="white-space: nowrap;">
-            {data.label + ' '}
-            <i
-              id={'icon' + data.id}
-              class="fa fa-exclamation-triangle status-warning"
-              aria-hidden="true"
-            ></i>
-            <b-tooltip
-              target={'icon' + data.id}
-              triggers="hover"
-              noninteractive="noninteractive"
-            >
-              {'Risk: Outdated component. Current version is: ' +
-                xssFilters.inHTMLData(data.latestVersion)}
-            </b-tooltip>
-          </div>
-        );
+        return h('div', { style: 'white-space: nowrap;' }, [
+          data.label + ' ',
+          h('i', {
+            class: 'fa fa-exclamation-triangle status-warning',
+            attrs: { id: 'icon' + data.id, 'aria-hidden': 'true' },
+          }),
+          h(
+            'b-tooltip',
+            {
+              props: {
+                target: 'icon' + data.id,
+                triggers: 'hover',
+                noninteractive: true,
+              },
+            },
+            'Risk: Outdated component. Current version is: ' +
+              xssFilters.inHTMLData(data.latestVersion),
+          ),
+        ]);
       } else {
-        return <div style="white-space: nowrap;">{data.label}</div>;
+        return h('div', { style: 'white-space: nowrap;' }, data.label);
       }
     },
     onExpand: async function (e, data) {
@@ -665,7 +665,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~vue2-org-tree/dist/style.css';
+@import 'vue2-org-tree/dist/style.css';
 .org-tree-container {
   background-color: inherit;
 }

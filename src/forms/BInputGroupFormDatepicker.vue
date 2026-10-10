@@ -78,7 +78,6 @@ export default {
   beforeMount() {
     this.isFocused = common.toBoolean(this.autofocus);
     this.isRequired = common.toBoolean(this.required);
-    this.readonly = common.toBoolean(this.readonly);
   },
   computed: {
     isDisabled() {

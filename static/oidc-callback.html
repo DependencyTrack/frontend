@@ -5,9 +5,10 @@
     <title>Waiting...</title>
 </head>
 <body>
-    <script src="js/axios.min.js"></script>
-    <script src="js/oidc-client.min.js"></script>
-    <script>
+    <script type="module">
+        import axios from "axios";
+        import Oidc from "oidc-client";
+
         const acceptableRootContextPaths = [
             '/dashboard', '/projects', '/components', '/services', '/vulnerabilities', '/licenses', '/policy', '/admin',
             '/project', '/component', '/vulnerability', '/license', '/login', '/change-password'

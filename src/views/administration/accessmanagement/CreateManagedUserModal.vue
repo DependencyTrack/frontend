@@ -107,7 +107,7 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 
 export default {
   mixins: [permissionsMixin],

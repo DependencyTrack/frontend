@@ -61,7 +61,7 @@ import common from '../../../shared/common';
 import FilterBar from '../../components/FilterBar.vue';
 import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
 import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
-import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
+import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss.vue';
 
 export default {
   props: {
