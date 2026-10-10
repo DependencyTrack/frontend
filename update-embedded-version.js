@@ -1,13 +1,13 @@
 const fs = require('fs');
 const filePath = './package.json';
 const versionPath = './src/version.json';
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 const packageJson = JSON.parse(fs.readFileSync(filePath).toString());
 
 const version = {
   version: packageJson.version,
-  uuid: uuidv4(),
+  uuid: randomUUID(),
   timestamp: new Date().toISOString(),
 };
 

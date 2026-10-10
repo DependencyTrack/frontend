@@ -104,11 +104,10 @@ import axios from 'axios';
 import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import InformationalModal from '../modals/InformationalModal';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
+import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
-const qs = require('querystring');
 import common from '../../shared/common';
 import * as permissions from '../../shared/permissions';
 import DOMPurify from 'dompurify';
@@ -179,7 +178,7 @@ export default {
       // redirect to url from query param but only if it is save for redirection
       const redirectTo = getRedirectUrl(this.$router);
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, new URLSearchParams(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             return this.fetchAndCheckPermissions(result.data, redirectTo);
@@ -305,7 +304,7 @@ export default {
           };
 
           this.axios
-            .post(url, qs.stringify(requestBody), config)
+            .post(url, new URLSearchParams(requestBody), config)
             .then((result) => {
               if (result.status === 200) {
                 const redirectTo = getRedirectUrl(this.$router);

@@ -26,11 +26,11 @@ import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import i18n from '../../../i18n';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
-import SelectProjectModal from './SelectProjectModal';
+import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
+import SelectProjectModal from './SelectProjectModal.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import router from '@/router';
 

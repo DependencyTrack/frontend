@@ -96,7 +96,7 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
-import CodeMirrorEditor from '../../components/CodeMirrorEditor';
+import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { jinja } from '@codemirror/lang-jinja';
 
 export default {

@@ -193,7 +193,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
   }
 
   const escapedLabel = xssFilters.inHTMLData($common.titleCase(analyzer));
-  let analyzerLabel = '';
+  let analyzerLabel;
   if (analyzerUrl) {
     const sanitizedUrl = xssFilters.uriInDoubleQuotedAttr(analyzerUrl);
     analyzerLabel = `<a href="${sanitizedUrl}" target="_blank">${escapedLabel} <i class="fa fa-external-link"></i></a>`;
@@ -570,7 +570,7 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
  */
 $common.sleep = function sleep(milliseconds) {
   const date = Date.now();
-  let currentDate = null;
+  let currentDate;
   do {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);

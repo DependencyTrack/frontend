@@ -14,7 +14,7 @@ export function isValidSessionLifetime(seconds) {
 export function isHttpsUrl(value) {
   try {
     return new URL(value).protocol === 'https:';
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -25,7 +25,7 @@ export function parseJwks(value) {
     return jwks && Array.isArray(jwks.keys) && jwks.keys.length > 0
       ? jwks
       : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

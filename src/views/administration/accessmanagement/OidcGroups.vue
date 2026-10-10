@@ -26,13 +26,13 @@
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import i18n from '../../../i18n';
-import CreateOidcGroupModal from './CreateOidcGroupModal';
+import CreateOidcGroupModal from './CreateOidcGroupModal.vue';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
+import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import SelectTeamModal from './SelectTeamModal';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import SelectTeamModal from './SelectTeamModal.vue';
 
 export default {
   props: {

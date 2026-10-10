@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 // API Permissions
 export const BOM_UPLOAD = 'BOM_UPLOAD';
 export const VIEW_PORTFOLIO = 'VIEW_PORTFOLIO';
@@ -80,7 +79,7 @@ export const getPermissions = function getPermissions() {
     const stored = sessionStorage.getItem('permissions');
     const parsed = stored ? JSON.parse(stored) : [];
     return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
+  } catch {
     return [];
   }
 };

@@ -26,19 +26,19 @@
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import i18n from '../../../i18n';
-import CreateAlertModal from './CreateAlertModal';
+import CreateAlertModal from './CreateAlertModal.vue';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
-import SelectProjectModal from '../../portfolio/projects/SelectProjectModal';
-import SelectTeamModal from '../../administration/accessmanagement/SelectTeamModal';
+import ActionableListGroupItem from '../../components/ActionableListGroupItem.vue';
+import SelectProjectModal from '../../portfolio/projects/SelectProjectModal.vue';
+import SelectTeamModal from '../../administration/accessmanagement/SelectTeamModal.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BToggleableDisplayButton from '../../components/BToggleableDisplayButton';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BToggleableDisplayButton from '../../components/BToggleableDisplayButton.vue';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import VueTagsInput from '@johmun/vue-tags-input';
 import { Switch as cSwitch } from '@coreui/vue';
-import ExtensionConfigForm from '../../components/ExtensionConfigForm';
-import CodeMirrorEditor from '../../components/CodeMirrorEditor';
+import ExtensionConfigForm from '../../components/ExtensionConfigForm.vue';
+import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { createCelCompletionSource } from '../../policy/celCompletions';
 import { celErrorsToMarkers } from '../../../shared/utils';
 

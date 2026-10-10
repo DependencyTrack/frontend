@@ -2,7 +2,7 @@
 
 ## Stack
 
-Vue 2 SPA (Vue CLI, BootstrapVue, CoreUI). Node >= 22, npm >= 10.
+Vue 2 SPA (Vite, BootstrapVue, CoreUI). Node >= 22, npm >= 10.
 
 ## Commands
 

@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import PolicyList from './PolicyList';
-import LicenseGroupList from './LicenseGroupList';
-import VulnerabilityPolicyList from './VulnerabilityPolicyList';
+import PolicyList from './PolicyList.vue';
+import LicenseGroupList from './LicenseGroupList.vue';
+import VulnerabilityPolicyList from './VulnerabilityPolicyList.vue';
 
 export default {
   components: {
@@ -82,7 +82,7 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp('/policy\/([^\\/?#]*)', 'gi');
+      let pattern = new RegExp('/policy/([^\\/?#]*)', 'gi');
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
     },

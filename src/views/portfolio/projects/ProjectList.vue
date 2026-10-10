@@ -58,9 +58,9 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
-import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
-import ProjectCreateProjectModal from './ProjectCreateProjectModal';
+import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar.vue';
+import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
+import ProjectCreateProjectModal from './ProjectCreateProjectModal.vue';
 
 // Filtered results are mostly child projects, which the tree view (onlyRoot=true) hides.
 const hasRouteFilter = ({ tag, team, classifier }) =>

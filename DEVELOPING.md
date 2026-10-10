@@ -14,7 +14,7 @@
 | Technology                                      | Purpose           |
 | :---------------------------------------------- | :---------------- |
 | [Vue 2](https://v2.vuejs.org/)                  | UI framework      |
-| [Vue CLI](https://cli.vuejs.org/)               | Build tooling     |
+| [Vite](https://vite.dev/)                       | Build tooling     |
 | [BootstrapVue](https://bootstrap-vue.org/)      | Component library |
 | [CoreUI](https://coreui.io/vue/)                | Admin template    |
 | [Vue Router](https://v3.router.vuejs.org/)      | Routing           |

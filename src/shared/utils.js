@@ -158,7 +158,7 @@ export function isUrlSaveForRedirect(redirectUrl) {
         .map((r) => contextRoot + r)
         .some((p) => redirectUrl.startsWith(p))
     );
-  } catch (invalidUrl) {
+  } catch {
     return false;
   }
 }

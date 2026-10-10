@@ -34,7 +34,7 @@ jobs:
         continue-on-error: false
       - name: Lint ESLint
         run: npm run eslint
-        continue-on-error: true
+        continue-on-error: false
 
   lint-i18n:
     name: Lint i18n

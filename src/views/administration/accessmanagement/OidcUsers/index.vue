@@ -25,7 +25,7 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../../shared/common';
-import CreateOidcUserModal from '../CreateOidcUserModal';
+import CreateOidcUserModal from '../CreateOidcUserModal.vue';
 import bootstrapTableMixin from '../../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../../shared/eventbus';
 import UserDetails from './UserDetails.vue';
@@ -109,9 +109,10 @@ export default {
         detailViewByClick: true,
         detailFormatter: (index, row) => {
           return this.vueFormatter({
-            render: () => (
-              <UserDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+            render: (h) =>
+              h(UserDetails, {
+                props: { row, index, rowEvents: this.rowEvents },
+              }),
           });
         },
         onExpandRow: this.vueFormatterInit,

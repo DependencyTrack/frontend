@@ -115,7 +115,7 @@ import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
 import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
 import i18n from '../../../../i18n';

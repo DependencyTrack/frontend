@@ -31,10 +31,10 @@ import {
   SidebarNav,
   Breadcrumb,
 } from '@coreui/vue';
-import DefaultHeader from './DefaultHeader';
-import DefaultFooter from './DefaultFooter';
+import DefaultHeader from './DefaultHeader.vue';
+import DefaultFooter from './DefaultFooter.vue';
 import EventBus from '../shared/eventbus';
-import ProfileEditModal from '../views/components/ProfileEditModal';
+import ProfileEditModal from '../views/components/ProfileEditModal.vue';
 import * as permissions from '../shared/permissions';
 import * as featureFlags from '@/shared/featureFlags';
 

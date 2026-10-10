@@ -145,7 +145,7 @@ import CreateWorkloadIdentityBindingModal from '../CreateWorkloadIdentityBinding
 import WorkloadIdentityBindingListGroupItem from '../WorkloadIdentityBindingListGroupItem.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import { fetchAllPages } from '@/shared/utils';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';

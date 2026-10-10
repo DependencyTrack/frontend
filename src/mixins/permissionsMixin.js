@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as permissions from '../shared/permissions';
 
 const PERMISSIONS = {};

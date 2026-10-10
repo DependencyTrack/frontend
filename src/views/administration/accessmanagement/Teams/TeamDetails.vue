@@ -163,15 +163,15 @@
 
 <script>
 import EventBus from '../../../../shared/eventbus';
-import ActionableListGroupItem from '../../../components/ActionableListGroupItem';
+import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
-import SelectLdapGroupModal from '../SelectLdapGroupModal';
-import SelectOidcGroupModal from '../SelectOidcGroupModal';
-import SelectPermissionModal from '../SelectPermissionModal';
+import SelectLdapGroupModal from '../SelectLdapGroupModal.vue';
+import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
+import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput.vue';
 import i18n from '../../../../i18n';
-import _ from 'lodash';
+import { omit } from 'lodash-es';
 
 export default {
   i18n,
@@ -255,7 +255,7 @@ export default {
         this.team = response.data;
         EventBus.$emit(this.rowEvents.update, this.index, this.team);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
@@ -266,7 +266,7 @@ export default {
         await this.axios.delete(endpoint, requestBody);
         EventBus.$emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.team_deleted'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
@@ -390,7 +390,7 @@ export default {
         await this.axios.delete(endpoint);
         this.syncVariables('removeLdapMapping', mapping);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
@@ -447,7 +447,7 @@ export default {
         const response = await this.axios.delete(endpoint);
         this.syncVariables('team', response.data);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
@@ -492,7 +492,7 @@ export default {
           this.team = data;
         },
         addKey: () => {
-          updateTeamArray('apiKeys', (arr) => [...arr, _.omit(data, 'key')]);
+          updateTeamArray('apiKeys', (arr) => [...arr, omit(data, 'key')]);
         },
         removeKey: () => {
           updateTeamArray('apiKeys', (arr) =>
@@ -502,9 +502,7 @@ export default {
         replaceKey: () => {
           const updater = (arr) =>
             arr.map((key) =>
-              key.publicId === data.old.publicId
-                ? _.omit(data.new, 'key')
-                : key,
+              key.publicId === data.old.publicId ? omit(data.new, 'key') : key,
             );
           updateTeamArray('apiKeys', updater);
         },

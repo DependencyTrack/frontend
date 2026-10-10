@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import { Switch as cSwitch } from '@coreui/vue';
 
 export default {

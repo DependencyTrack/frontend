@@ -38,7 +38,7 @@
 
 <script>
 import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';

@@ -12,7 +12,7 @@
   </TheFooter>
 </template>
 <script>
-import AboutModal from '../views/components/AboutModal';
+import AboutModal from '../views/components/AboutModal.vue';
 import { Footer as TheFooter } from '@coreui/vue';
 import globalVarsMixin from '../mixins/globalVarsMixin';
 

@@ -280,8 +280,8 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import VueTagsInput from '@johmun/vue-tags-input';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
@@ -379,7 +379,7 @@ export default {
         } else {
           this.isDisabled = false;
         }
-      } catch (_error) {
+      } catch {
         this.defaultTeams = [];
         this.availableTeams = [];
         this.isDisabled = false;

@@ -16,7 +16,7 @@
 
 <script>
 import EventBus from '../../shared/eventbus';
-import AdminMenu from './AdminMenu';
+import AdminMenu from './AdminMenu.vue';
 
 export default {
   components: {

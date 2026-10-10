@@ -122,7 +122,7 @@ import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import xssFilters from 'xss-filters';
-import SeverityProgressBar from '@/views/components/SeverityProgressBar';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';

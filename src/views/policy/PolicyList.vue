@@ -27,19 +27,19 @@
 <script>
 import common from '../../shared/common';
 import xssFilters from 'xss-filters';
-import CreatePolicyModal from './CreatePolicyModal';
+import CreatePolicyModal from './CreatePolicyModal.vue';
 import permissionsMixin from '../../mixins/permissionsMixin';
 import routerMixin from '../../mixins/routerMixin';
 import i18n from '../../i18n';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import ActionableListGroupItem from '../components/ActionableListGroupItem.vue';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import EventBus from '../../shared/eventbus';
 import bootstrapTableMixin from '../../mixins/bootstrapTableMixin';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
-import PolicyCondition from './PolicyCondition';
-import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton';
-import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal';
-import SelectTagModal from '@/views/portfolio/tags/SelectTagModal';
+import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect.vue';
+import PolicyCondition from './PolicyCondition.vue';
+import BToggleableDisplayButton from '@/views/components/BToggleableDisplayButton.vue';
+import SelectProjectModal from '@/views/portfolio/projects/SelectProjectModal.vue';
+import SelectTagModal from '@/views/portfolio/tags/SelectTagModal.vue';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 
 export default {

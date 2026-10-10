@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let endpoint = '';
+      let endpoint;
       if (this.username) {
         endpoint = `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
         return endpoint;
