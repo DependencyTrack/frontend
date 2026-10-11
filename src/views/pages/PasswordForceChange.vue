@@ -6,65 +6,64 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
-                  <b-form @submit.prevent="passes(changePassword)">
-                    <h1>{{ $t('message.password_force_change') }}</h1>
-                    <p class="text-muted">
-                      {{ $t('message.password_force_change_desc') }}
-                    </p>
-                    <b-validated-input-group-form-input
-                      id="username"
-                      :label="$t('message.username')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-user"
-                      type="text"
-                      autocomplete="username email"
-                      v-model="input.username"
-                    />
-                    <b-validated-input-group-form-input
-                      id="current-password"
-                      :label="$t('message.password_current')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="current-password"
-                      v-model="input.password"
-                    />
-                    <b-validated-input-group-form-input
-                      id="new-password"
-                      :label="$t('message.password_new')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="off"
-                      v-model="input.newPassword"
-                    />
-                    <b-validated-input-group-form-input
-                      id="confirm-password"
-                      :label="$t('message.password_confirm')"
-                      input-group-size="mb-3"
-                      rules="required|confirmed:new-password"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="off"
-                      v-model="input.confirmPassword"
-                    />
-                    <b-row>
-                      <b-col>
-                        <b-button
-                          block
-                          variant="primary"
-                          class="px-4"
-                          type="submit"
-                          >{{ $t('message.password_change') }}</b-button
-                        >
-                      </b-col>
-                    </b-row>
-                  </b-form>
-                </validation-observer>
+                <b-form @submit.prevent="changePassword">
+                  <h1>{{ $t('message.password_force_change') }}</h1>
+                  <p class="text-muted">
+                    {{ $t('message.password_force_change_desc') }}
+                  </p>
+                  <b-validated-input-group-form-input
+                    id="username"
+                    :label="$t('message.username')"
+                    input-group-size="mb-3"
+                    required
+                    icon="icon-user"
+                    type="text"
+                    autocomplete="username email"
+                    v-model="input.username"
+                  />
+                  <b-validated-input-group-form-input
+                    id="current-password"
+                    :label="$t('message.password_current')"
+                    input-group-size="mb-3"
+                    required
+                    icon="icon-lock"
+                    type="password"
+                    autocomplete="current-password"
+                    v-model="input.password"
+                  />
+                  <b-validated-input-group-form-input
+                    id="new-password"
+                    :label="$t('message.password_new')"
+                    input-group-size="mb-3"
+                    required
+                    icon="icon-lock"
+                    type="password"
+                    autocomplete="off"
+                    v-model="input.newPassword"
+                  />
+                  <b-validated-input-group-form-input
+                    id="confirm-password"
+                    :label="$t('message.password_confirm')"
+                    input-group-size="mb-3"
+                    required
+                    :custom-validity="passwordMismatch"
+                    icon="icon-lock"
+                    type="password"
+                    autocomplete="off"
+                    v-model="input.confirmPassword"
+                  />
+                  <b-row>
+                    <b-col>
+                      <b-button
+                        block
+                        variant="primary"
+                        class="px-4"
+                        type="submit"
+                        >{{ $t('message.password_change') }}</b-button
+                      >
+                    </b-col>
+                  </b-row>
+                </b-form>
               </b-card-body>
             </b-card>
             <b-card
@@ -91,7 +90,6 @@
 
 <script>
 import axios from 'axios';
-import { ValidationObserver } from 'vee-validate';
 import InformationalModal from '../modals/InformationalModal.vue';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import { getRedirectUrl } from '../../shared/utils';
@@ -101,7 +99,6 @@ export default {
   components: {
     BValidatedInputGroupFormInput,
     InformationalModal,
-    ValidationObserver,
   },
   data() {
     return {
@@ -113,6 +110,15 @@ export default {
         confirmPassword: '',
       },
     };
+  },
+  computed: {
+    passwordMismatch() {
+      return this.input.confirmPassword === this.input.newPassword
+        ? ''
+        : this.$t('validation.confirmed', {
+            _field_: this.$t('message.password_confirm'),
+          });
+    },
   },
   methods: {
     changePassword() {

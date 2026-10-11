@@ -14,7 +14,7 @@
         id="kenna-connector.id"
         :label="$t('admin.integration_kenna_connector_id')"
         input-group-size="mb-3"
-        rules="required"
+        required
         type="text"
         v-model="connectorId"
         lazy="true"

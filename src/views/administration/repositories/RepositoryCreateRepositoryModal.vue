@@ -12,14 +12,14 @@
         id="identifier"
         :label="$t('admin.identifier')"
         input-group-size="mb-3"
-        rules="required"
+        required
         v-model="identifier"
       />
       <b-validated-input-group-form-input
         id="url"
         :label="$t('admin.url')"
         input-group-size="mb-3"
-        rules="required"
+        required
         type="url"
         v-model="url"
       />

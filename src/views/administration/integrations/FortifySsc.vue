@@ -14,7 +14,7 @@
         id="fortify-ssc-url"
         :label="$t('admin.url')"
         input-group-size="mb-3"
-        rules="required"
+        required
         type="url"
         v-model="url"
         lazy="true"

@@ -11,7 +11,7 @@
       id="identifier"
       :label="this.$t('message.name')"
       input-group-size="mb-3"
-      rules="required"
+      required
       v-model="name"
     />
 

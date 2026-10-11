@@ -68,6 +68,10 @@ export default [
           message: "Use setPageTitle from 'shared/utils'.",
         },
         { name: 'vue-toastr', message: 'Use this.$toastr.' },
+        {
+          name: 'vee-validate',
+          message: 'Use native constraint validation.',
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
