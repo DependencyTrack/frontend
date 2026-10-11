@@ -6,7 +6,6 @@ import {
 } from '@/shared/problemDetails';
 import flexVerCompare from 'flexver/dist/module';
 import Vue from 'vue';
-import xssFilters from 'xss-filters';
 
 export function handleTableLoadError(problem, { fallback = true } = {}) {
   if (
@@ -33,7 +32,7 @@ export function handleTableLoadError(problem, { fallback = true } = {}) {
     }
     Vue.prototype.$toastr.w(
       i18n.t('message.table_sort_preference_reset', {
-        field: xssFilters.inHTMLData(staleField),
+        field: staleField,
       }),
     );
     return true;

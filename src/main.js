@@ -10,7 +10,7 @@ import VueAxios from 'vue-axios';
 import '@/directives/VuePermission';
 import '@/directives/ScrollableTabs';
 import '@/views/components/filter-pill-content.css';
-import VueToastr from 'vue-toastr';
+import toastr from './plugins/toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import version from './version.json';
@@ -18,13 +18,7 @@ import { getContextPath } from './shared/utils';
 
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios);
-Vue.use(VueToastr, {
-  defaultTimeout: 5000,
-  defaultProgressBar: false,
-  defaultProgressBarValue: 0,
-  defaultPosition: 'toast-top-right',
-  defaultCloseOnHover: false,
-});
+Vue.use(toastr);
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;

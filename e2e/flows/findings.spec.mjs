@@ -43,3 +43,20 @@ test('audit a finding', async ({ page, problems }) => {
   await page.getByRole('button', { name: 'Add Comment' }).click();
   await expect(auditTrail).toHaveValue(/Looks exploitable/);
 });
+
+test('reset a findings sort the API no longer supports', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^GET \/api\/v1\/finding\/project\/.* 400$/);
+  await login(page);
+  await page.evaluate(() =>
+    localStorage.setItem('ProjectFindingsSortName', 'unknown'),
+  );
+  await page.goto(`projects/${seed().project.uuid}/findings`);
+  await expect(
+    page
+      .getByRole('alert')
+      .filter({ hasText: 'Sorting by "unknown" is no longer supported.' }),
+  ).toBeVisible();
+});
