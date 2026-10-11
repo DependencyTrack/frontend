@@ -72,10 +72,10 @@
         :description="$t('admin.workload_identity_condition_description')"
       >
         <code-mirror-editor
-          :value="condition"
+          :modelValue="condition"
           :markers="conditionMarkers"
           :completion-source="celCompletionSource"
-          @input="onConditionInput"
+          @update:modelValue="onConditionInput"
           @save="createBinding"
         />
       </b-form-group>

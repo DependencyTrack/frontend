@@ -43,10 +43,11 @@
 import common from '../shared/common';
 
 export default {
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
-    value: String,
+    modelValue: String,
     inputGroupSize: String,
     icon: String,
     type: String,
@@ -64,6 +65,7 @@ export default {
       type: Boolean,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       isFocused: false,
@@ -80,10 +82,10 @@ export default {
   computed: {
     innerValue: {
       get: function () {
-        if (this.value && this.value.length > 0) {
+        if (this.modelValue && this.modelValue.length > 0) {
           //
         }
-        return this.value;
+        return this.modelValue;
       },
       set: function (newValue) {
         return newValue;
@@ -93,7 +95,7 @@ export default {
       const vm = this;
       return Object.assign({}, this.$listeners, {
         input: function (event) {
-          vm.$emit('input', event);
+          vm.$emit('update:modelValue', event);
         },
       });
     },
@@ -113,7 +115,7 @@ export default {
         return this.state;
       }
       if (common.toBoolean(this.lazy) && common.toBoolean(this.required)) {
-        if (this.value && this.value.length > 0) {
+        if (this.modelValue && this.modelValue.length > 0) {
           return true;
         } else if (this.hadFocus) {
           return false;
@@ -121,7 +123,7 @@ export default {
           return undefined;
         }
       }
-      if (this.value && this.value.length > 0) {
+      if (this.modelValue && this.modelValue.length > 0) {
         return true;
       } else {
         return undefined;

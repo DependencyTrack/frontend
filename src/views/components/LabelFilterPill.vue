@@ -11,7 +11,7 @@
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>{{ value.key }}={{ value.value }}</template>
+    <template #value>{{ modelValue.key }}={{ modelValue.value }}</template>
 
     <b-input-group size="sm">
       <b-form-input
@@ -41,6 +41,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'LabelFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -58,11 +59,12 @@ export default {
       type: Number,
       default: 255,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpKey: '',
@@ -70,7 +72,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.key) {
@@ -85,7 +87,7 @@ export default {
   },
   computed: {
     hasFilter() {
-      return !!(this.value && this.value.key);
+      return !!(this.modelValue && this.modelValue.key);
     },
     trimmedKey() {
       return this.tmpKey ? this.tmpKey.trim() : '';
@@ -97,8 +99,8 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpKey = this.value.key;
-        this.tmpValue = this.value.value || '';
+        this.tmpKey = this.modelValue.key;
+        this.tmpValue = this.modelValue.value || '';
       } else {
         this.tmpKey = '';
         this.tmpValue = '';
@@ -108,7 +110,7 @@ export default {
       if (!this.trimmedKey) {
         return;
       }
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         key: this.trimmedKey,
         value: this.tmpValue ? this.tmpValue.trim() : '',
       });
@@ -118,7 +120,7 @@ export default {
       this.tmpKey = '';
       this.tmpValue = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

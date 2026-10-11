@@ -31,6 +31,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'EnumFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -54,18 +55,19 @@ export default {
         return true;
       },
     },
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: null,
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val || null;
@@ -74,17 +76,18 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value !== null && this.value !== '';
+      return this.modelValue !== null && this.modelValue !== '';
     },
     displayValue() {
-      if (!this.value) return '';
+      if (!this.modelValue) return '';
       const option = this.options.find(
-        (opt) => (typeof opt === 'object' ? opt.value : opt) === this.value,
+        (opt) =>
+          (typeof opt === 'object' ? opt.value : opt) === this.modelValue,
       );
       if (option && typeof option === 'object') {
         return option.text;
       }
-      return this.value;
+      return this.modelValue;
     },
     radioOptions() {
       return this.options.map((opt) =>
@@ -98,7 +101,7 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpValue = this.value;
+        this.tmpValue = this.modelValue;
       } else {
         this.tmpValue = null;
       }
@@ -108,13 +111,13 @@ export default {
         return;
       }
 
-      this.$emit('input', selected);
+      this.$emit('update:modelValue', selected);
       this.$refs.pill.hide();
     },
     clearFilter() {
       this.tmpValue = null;
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

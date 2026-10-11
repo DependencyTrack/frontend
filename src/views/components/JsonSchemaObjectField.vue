@@ -5,10 +5,10 @@
         <json-schema-form-field
           :schema="enrichSchema(propSchema, propName, schema)"
           :property-name="`${propertyName}.${propName}`"
-          :value="currentValue[propName]"
+          :modelValue="currentValue[propName]"
           :validation-error="validationErrors[propName]"
           :validation-errors="nestedErrorMap[propName] || {}"
-          @input="onPropertyChange(propName, $event)"
+          @update:modelValue="onPropertyChange(propName, $event)"
         />
       </div>
     </b-card-body>
@@ -27,6 +27,7 @@ export default {
   components: {
     JsonSchemaFormField,
   },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     schema: {
       type: Object,
@@ -36,7 +37,7 @@ export default {
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => ({}),
     },
@@ -45,9 +46,10 @@ export default {
       default: () => ({}),
     },
   },
+  emits: ['update:modelValue'],
   computed: {
     currentValue() {
-      return this.value || {};
+      return this.modelValue || {};
     },
     nestedErrorMap() {
       return buildNestedValidationErrorMap(this.validationErrors);
@@ -56,7 +58,10 @@ export default {
   methods: {
     enrichSchema,
     onPropertyChange(propName, propValue) {
-      this.$emit('input', { ...this.currentValue, [propName]: propValue });
+      this.$emit('update:modelValue', {
+        ...this.currentValue,
+        [propName]: propValue,
+      });
     },
   },
 };

@@ -79,7 +79,7 @@
           :label="$t('message.username')"
           input-group-size="mb-3"
           type="text"
-          :value="row.username"
+          :modelValue="row.username"
           :readonly="true"
         />
         <b-input-group-form-input

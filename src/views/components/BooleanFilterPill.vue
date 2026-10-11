@@ -28,6 +28,7 @@
 <script>
 export default {
   name: 'BooleanFilterPill',
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -41,14 +42,15 @@ export default {
       type: String,
       default: null,
     },
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
   },
+  emits: ['update:modelValue'],
   methods: {
     clearFilter() {
-      this.$emit('input', false);
+      this.$emit('update:modelValue', false);
     },
   },
 };

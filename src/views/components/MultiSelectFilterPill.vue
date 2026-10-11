@@ -35,6 +35,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'MultiSelectFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -52,18 +53,19 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: [],
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val && val.length > 0 ? [...val] : [];
@@ -72,11 +74,11 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.length > 0;
+      return this.modelValue && this.modelValue.length > 0;
     },
     displayValue() {
-      if (!this.value || this.value.length === 0) return '';
-      return this.value
+      if (!this.modelValue || this.modelValue.length === 0) return '';
+      return this.modelValue
         .map((v) => {
           const option = this.options.find(
             (opt) => (typeof opt === 'object' ? opt.value : opt) === v,
@@ -100,7 +102,7 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpValue = [...this.value];
+        this.tmpValue = [...this.modelValue];
       } else {
         this.tmpValue = [];
       }
@@ -109,13 +111,13 @@ export default {
       if (this.tmpValue.length === 0) {
         return;
       }
-      this.$emit('input', [...this.tmpValue]);
+      this.$emit('update:modelValue', [...this.tmpValue]);
       this.$refs.pill.hide();
     },
     clearFilter() {
       this.tmpValue = [];
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

@@ -7,7 +7,7 @@
       <b-form-checkbox
         :id="fieldId"
         switch
-        :checked="value"
+        :checked="modelValue"
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
         @change="onBooleanChange"
@@ -50,6 +50,7 @@
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
         @input="onInput"
+        @update:modelValue="onInput"
       />
       <b-form-invalid-feedback v-if="!isComplexType" :id="feedbackId">
         {{ validationError }}
@@ -71,6 +72,7 @@ export default {
     Showdown,
     SecretRefSelect,
   },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     schema: {
       type: Object,
@@ -80,7 +82,7 @@ export default {
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       type: [String, Number, Boolean, Array, Object],
       default: null,
     },
@@ -97,6 +99,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:modelValue'],
   computed: {
     fieldId() {
       return `field-${this.propertyName}`;
@@ -169,7 +172,7 @@ export default {
       if (this.schema.type === 'object') {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
           schema: this.schema,
           propertyName: this.propertyName,
           validationErrors: this.validationErrors,
@@ -179,7 +182,7 @@ export default {
       if (this.schema.type === 'array') {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
           schema: this.schema,
           propertyName: this.propertyName,
           validationErrors: this.validationErrors,
@@ -190,14 +193,14 @@ export default {
       if (this.isSecretRef) {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
         };
       }
 
       if (this.schema.enum) {
         return {
           ...baseProps,
-          value: this.value,
+          value: this.modelValue,
           options: this.enumOptions,
           required: !!this.schema.isRequired,
         };
@@ -205,7 +208,7 @@ export default {
 
       return {
         ...baseProps,
-        value: this.value,
+        value: this.modelValue,
         type: this.getInputType(),
         required: !!this.schema.isRequired,
         placeholder: this.placeholder,
@@ -264,10 +267,10 @@ export default {
       } else if (this.schema.type === 'string' && !this.isArrayItem) {
         processedValue = newValue === '' ? null : newValue;
       }
-      this.$emit('input', processedValue);
+      this.$emit('update:modelValue', processedValue);
     },
     onBooleanChange(newValue) {
-      this.$emit('input', !!newValue);
+      this.$emit('update:modelValue', !!newValue);
     },
   },
 };

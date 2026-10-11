@@ -13,7 +13,7 @@
   >
     <template #value
       ><span :title="operatorLabel"
-        >{{ operatorAbbrev }} "{{ value.value }}"</span
+        >{{ operatorAbbrev }} "{{ modelValue.value }}"</span
       ></template
     >
 
@@ -51,6 +51,7 @@ const supportedOperators = [
 export default {
   name: 'TextFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -79,18 +80,19 @@ export default {
       type: Number,
       default: 255,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: '',
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val && val.value ? val.value : '';
@@ -99,7 +101,9 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.operator && this.value.value;
+      return (
+        this.modelValue && this.modelValue.operator && this.modelValue.value
+      );
     },
     trimmedValue() {
       return this.tmpValue ? this.tmpValue.trim() : '';
@@ -127,14 +131,14 @@ export default {
       this.$refs.pill.open();
     },
     onDropdownHide() {
-      this.tmpValue = this.hasFilter ? this.value.value : '';
+      this.tmpValue = this.hasFilter ? this.modelValue.value : '';
     },
     applyFilter() {
       if (!this.trimmedValue) {
         return;
       }
 
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         operator: this.operator,
         value: this.trimmedValue,
       });
@@ -143,7 +147,7 @@ export default {
     clearFilter() {
       this.tmpValue = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

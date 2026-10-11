@@ -27,10 +27,10 @@
             <json-schema-form-field
               :schema="enrichSchema(propSchema, propName, schema)"
               :property-name="propName"
-              :value="formData[propName]"
+              :modelValue="formData[propName]"
               :validation-error="getValidationError(propName)"
               :validation-errors="nestedErrorMap[propName] || {}"
-              @input="onFieldChange(propName, $event)"
+              @update:modelValue="onFieldChange(propName, $event)"
             />
           </div>
         </div>

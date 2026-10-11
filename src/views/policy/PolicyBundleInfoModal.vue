@@ -37,7 +37,7 @@
             id="bundle-created"
             input-group-size="mb-3"
             type="text"
-            :value="bundleCreated"
+            :modelValue="bundleCreated"
             lazy="true"
             feedback="false"
             autofocus="false"
@@ -46,7 +46,7 @@
           />
           <b-input-group-form-input
             id="bundle-last-sync"
-            :value="bundleLastSynced"
+            :modelValue="bundleLastSynced"
             feedback="false"
             :label="$t('message.policy_bundle_sync_timestamp')"
             disabled="true"
