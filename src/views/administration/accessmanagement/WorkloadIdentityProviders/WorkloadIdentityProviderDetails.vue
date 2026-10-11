@@ -53,7 +53,8 @@
         >
           <b-form-input
             :id="`${idPrefix}-lifetime`"
-            v-model.number="sessionLifetimeSeconds"
+            v-model="sessionLifetimeSeconds"
+            number
             type="number"
             :min="minSessionLifetime"
             :max="maxSessionLifetime"

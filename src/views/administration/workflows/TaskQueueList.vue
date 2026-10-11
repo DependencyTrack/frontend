@@ -41,7 +41,8 @@
             ref="capacityInput"
             type="number"
             min="1"
-            v-model.number="editCapacityValue"
+            v-model="editCapacityValue"
+            number
           />
         </b-form-group>
       </b-form>
