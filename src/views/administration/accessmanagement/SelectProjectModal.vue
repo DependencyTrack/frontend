@@ -7,16 +7,15 @@
     :title="$t('admin.select_project')"
   >
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
-        color="primary"
         v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_inactive_projects')
+        }}</span></b-form-checkbox
+      >
     </div>
     <bootstrap-table
       ref="table"
@@ -43,24 +42,16 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
-import { Switch as cSwitch } from '@coreui/vue';
 import router from '@/router';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    cSwitch,
-  },
   props: {
     teamUuid: String,
   },
   data() {
     return {
       showInactiveProjects: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',

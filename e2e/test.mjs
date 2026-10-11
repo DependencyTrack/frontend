@@ -96,16 +96,3 @@ function formatDate(date) {
   const pad = (n) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
-
-// CoreUI's <c-switch> hides its checkbox with display: none, and its text is a sibling, not a label.
-export function switchNear(page, text) {
-  return page
-    .getByRole('group')
-    .filter({ hasText: text })
-    .last()
-    .getByRole('checkbox', { includeHidden: true });
-}
-
-export async function toggleSwitch(checkbox) {
-  await checkbox.evaluate((input) => input.click());
-}

@@ -12,28 +12,29 @@
       >
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
-        color="primary"
         v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
-      <c-switch
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_inactive_projects')
+        }}</span></b-form-checkbox
+      >
+      <b-form-checkbox
         @click.native="saveViewState"
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showFlatView"
-        color="primary"
         v-model="showFlatView"
-        label
-        v-bind="labelIcon"
         :disabled="isSearching || hasRouteFilter"
-        v-b-tooltip.hover
-        :title="$t('message.switch_view')"
-      /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
+        v-b-tooltip.hover="$t('message.switch_view')"
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_flat_view')
+        }}</span></b-form-checkbox
+      >
     </div>
     <bootstrap-table
       ref="table"
@@ -51,7 +52,6 @@
 
 <script>
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import { Switch as cSwitch } from '@coreui/vue';
 import MurmurHash2 from 'imurmurhash';
 import Vue from 'vue';
 import xssFilters from 'xss-filters';
@@ -72,7 +72,6 @@ const storedFlatView = () =>
 export default {
   mixins: [permissionsMixin, routerMixin],
   components: {
-    cSwitch,
     ProjectCreateProjectModal,
   },
   props: {
@@ -291,10 +290,6 @@ export default {
       showFlatView: this.showFlatView,
       isSearching: false,
       savedViewState: null,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('message.project_name'),

@@ -58,29 +58,21 @@
           lazy="true"
           @keyup="debouncedUpdateUser"
         />
-        <c-switch
+        <b-form-checkbox
           id="forcePasswordChange"
-          color="primary"
           v-model="forcePasswordChange"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.change_password_next_login') }}
-        <br />
-        <c-switch
+          switch
+          >{{ $t('admin.change_password_next_login') }}</b-form-checkbox
+        >
+        <b-form-checkbox
           id="nonExpiryPassword"
-          color="primary"
           v-model="nonExpiryPassword"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.password_never_expires') }}
-        <br />
-        <c-switch
-          id="suspended"
-          color="primary"
-          v-model="suspended"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.suspended') }}
+          switch
+          >{{ $t('admin.password_never_expires') }}</b-form-checkbox
+        >
+        <b-form-checkbox id="suspended" v-model="suspended" switch>{{
+          $t('admin.suspended')
+        }}</b-form-checkbox>
         <div style="text-align: right">
           <b-button
             variant="outline-primary"
@@ -113,7 +105,6 @@ import ChangePasswordModal from '../ChangePasswordModal.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
@@ -126,7 +117,6 @@ export default {
   },
   mixins: [permissionsMixin, userManagementMixin],
   components: {
-    cSwitch,
     ActionableListGroupItem,
     SelectTeamModal,
     SelectPermissionModal,
@@ -144,10 +134,6 @@ export default {
       nonExpiryPassword: this.row.nonExpiryPassword,
       suspended: this.row.suspended,
       counter: 0,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   watch: {

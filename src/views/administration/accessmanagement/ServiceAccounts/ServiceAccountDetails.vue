@@ -89,13 +89,9 @@
           type="text"
           v-model="email"
         />
-        <c-switch
-          id="suspended"
-          color="primary"
-          v-model="suspended"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.suspended') }}
+        <b-form-checkbox id="suspended" v-model="suspended" switch>{{
+          $t('admin.suspended')
+        }}</b-form-checkbox>
         <p class="text-muted small mt-2">
           {{ $t('admin.service_account_suspend_description') }}
         </p>
@@ -137,7 +133,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
 import CreateServiceAccountApiKeyModal from '../CreateServiceAccountApiKeyModal.vue';
@@ -158,7 +153,6 @@ export default {
   },
   mixins: [userManagementMixin],
   components: {
-    cSwitch,
     ActionableListGroupItem,
     ApiKeyListGroupItem,
     CreateServiceAccountApiKeyModal,
@@ -177,10 +171,6 @@ export default {
       apiKeys: [],
       workloadIdentityBindings: [],
       loaded: false,
-      labelIcon: {
-        dataOn: '✓',
-        dataOff: '✕',
-      },
     };
   },
   computed: {

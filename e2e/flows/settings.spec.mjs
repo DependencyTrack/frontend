@@ -1,4 +1,4 @@
-import { test, expect, login, switchNear, toggleSwitch } from '../test.mjs';
+import { test, expect, login } from '../test.mjs';
 
 const property = { groupName: 'general', propertyName: 'badge.enabled' };
 
@@ -9,9 +9,11 @@ test('change and save a setting that uses a switch', async ({ page, api }) => {
   try {
     await login(page);
     await page.goto('admin/configuration/general');
-    const badges = switchNear(page, 'Enable unauthenticated SVG badge access');
+    const label = 'Enable unauthenticated SVG badge access';
+    const badges = page.getByLabel(label);
     await expect(badges).toBeChecked();
-    await toggleSwitch(badges);
+    // Bootstrap 4's switch label covers its checkbox, so uncheck() can't click it.
+    await page.getByText(label).click();
     await expect(badges).not.toBeChecked();
     await page.getByRole('button', { name: 'Update' }).click();
     await expect(page.getByText('Configuration saved')).toBeVisible();

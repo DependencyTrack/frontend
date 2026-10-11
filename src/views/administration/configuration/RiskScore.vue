@@ -6,13 +6,12 @@
     <b-card no-body :header="headers.customRiskScore">
       <b-card-body>
         <p>{{ $t('admin.risk_score_weighting_description') }}</p>
-        <c-switch
+        <b-form-checkbox
           id="weight.history.enabled"
-          color="primary"
           v-model="customRiskScore.enabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_risk_score_history_check') }}
+          switch
+          >{{ $t('admin.enable_risk_score_history_check') }}</b-form-checkbox
+        >
         <b-validated-input-group-form-input
           id="custom-risk-score-critical"
           :label="$t('admin.risk_score_weight_critical')"
@@ -83,7 +82,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
@@ -93,7 +91,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
   },
   data() {

@@ -11,24 +11,17 @@
         lazy="true"
       />
       <b-form-group>
-        <c-switch
-          id="notificationEnabled"
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />
-        {{ $t('admin.enabled') }}
-        <br />
-        <c-switch
+        <b-form-checkbox id="notificationEnabled" v-model="enabled" switch>{{
+          $t('admin.enabled')
+        }}</b-form-checkbox>
+        <b-form-checkbox
           id="notificationLogSuccessfulPublish"
-          color="primary"
           v-model="logSuccessfulPublish"
-          label
-          v-bind="labelIcon"
-          :title="$t('admin.alert_log_successful_publish_help')"
-        />
-        {{ $t('admin.alert_log_successful_publish') }}
+          switch
+          ><span :title="$t('admin.alert_log_successful_publish_help')">{{
+            $t('admin.alert_log_successful_publish')
+          }}</span></b-form-checkbox
+        >
       </b-form-group>
       <b-form-group
         id="fieldset-3"
@@ -143,14 +136,12 @@
         />
       </b-form-group>
       <div v-if="limitToVisible === true">
-        <c-switch
+        <b-form-checkbox
           id="isNotifyChildrenEnabled"
-          color="primary"
           v-model="notifyChildren"
-          label
-          v-bind="labelIcon"
-        />
-        {{ $t('admin.include_active_children') }}
+          switch
+          >{{ $t('admin.include_active_children') }}</b-form-checkbox
+        >
       </div>
     </b-col>
     <b-col sm="6">
@@ -305,13 +296,9 @@
       <b-form-group
         v-if="isScheduled"
         :title="$t('admin.alert_schedule_skip_publish_if_unchanged_tooltip')"
-        ><c-switch
-          v-model="scheduleSkipUnchanged"
-          color="primary"
-          label
-          v-bind="labelIcon"
-        />
-        {{ $t('admin.alert_schedule_skip_publish_if_unchanged') }}</b-form-group
+        ><b-form-checkbox v-model="scheduleSkipUnchanged" switch>{{
+          $t('admin.alert_schedule_skip_publish_if_unchanged')
+        }}</b-form-checkbox></b-form-group
       >
       <div style="text-align: right">
         <b-button
@@ -434,7 +421,6 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import BToggleableDisplayButton from '../../components/BToggleableDisplayButton.vue';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import VueTagsInput from '@johmun/vue-tags-input';
-import { Switch as cSwitch } from '@coreui/vue';
 import ExtensionConfigForm from '../../components/ExtensionConfigForm.vue';
 import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { createCelCompletionSource } from '../../policy/celCompletions';
@@ -453,7 +439,6 @@ export default {
     BToggleableDisplayButton,
     BInputGroupFormInput,
     VueTagsInput,
-    cSwitch,
     ExtensionConfigForm,
     CodeMirrorEditor,
   },
@@ -487,10 +472,6 @@ export default {
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
       addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       availableLevels: [
         {
           value: 'INFORMATIONAL',

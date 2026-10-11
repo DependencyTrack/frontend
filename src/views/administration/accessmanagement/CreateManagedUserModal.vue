@@ -72,21 +72,18 @@
           :label="$t('admin.password_confirm')"
           :feedback-text="$t('admin.required_confirmPassword')"
         />
-        <c-switch
+        <b-form-checkbox
           id="forcePasswordChange"
-          color="primary"
           v-model="forcePasswordChange"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.change_password_next_login') }}
-        <br />
-        <c-switch
+          switch
+          >{{ $t('admin.change_password_next_login') }}</b-form-checkbox
+        >
+        <b-form-checkbox
           id="nonExpiryPassword"
-          color="primary"
           v-model="nonExpiryPassword"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.password_never_expires') }}
+          switch
+          >{{ $t('admin.password_never_expires') }}</b-form-checkbox
+        >
       </b-col>
     </b-row>
     <template v-slot:modal-footer="{ cancel }">
@@ -106,14 +103,12 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
     BInputGroupFormInput,
-    cSwitch,
   },
   data() {
     return {
@@ -124,10 +119,6 @@ export default {
       confirmPassword: null,
       forcePasswordChange: false,
       nonExpiryPassword: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   computed: {

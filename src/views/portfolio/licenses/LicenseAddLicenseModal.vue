@@ -50,33 +50,21 @@
               rows="3"
             />
           </b-form-group>
-          <c-switch
-            id="input-5"
+          <b-form-checkbox
             class="mx-1"
-            color="primary"
             v-model="license.isOsiApproved"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.osi_approved') }} <br />
-          <c-switch
-            id="input-5"
+            switch
+            >{{ $t('message.osi_approved') }}</b-form-checkbox
+          >
+          <b-form-checkbox class="mx-1" v-model="license.isFsfLibre" switch>{{
+            $t('message.fsf_libre')
+          }}</b-form-checkbox>
+          <b-form-checkbox
             class="mx-1"
-            color="primary"
-            v-model="license.isFsfLibre"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.fsf_libre') }} <br />
-          <c-switch
-            id="input-5"
-            class="mx-1"
-            color="primary"
             v-model="license.isDeprecatedLicenseId"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.deprecated') }}
+            switch
+            >{{ $t('message.deprecated') }}</b-form-checkbox
+          >
         </b-card>
       </b-tab>
       <b-tab>
@@ -145,21 +133,15 @@
 
 <script>
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   name: 'LicenseAddLicenseModal',
   components: {
     BInputGroupFormInput,
-    cSwitch,
   },
   data() {
     return {
       license: {},
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

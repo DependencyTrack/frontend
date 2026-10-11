@@ -21,4 +21,8 @@ test('audit a policy violation', async ({ page }) => {
   await page.getByLabel('Comment', { exact: true }).fill('Accepted risk');
   await page.getByRole('button', { name: 'Add Comment' }).click();
   await expect(auditTrail).toHaveValue(/Accepted risk/);
+  const details = page.getByRole('row').filter({ has: auditTrail });
+  await details.getByText('Suppressed', { exact: true }).click();
+  await expect(details.getByLabel('Suppressed', { exact: true })).toBeChecked();
+  await expect(auditTrail).toHaveValue(/Suppressed/);
 });

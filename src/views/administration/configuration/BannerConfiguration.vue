@@ -10,23 +10,20 @@
             label-class="font-weight-bold pt-0 mb-2"
           >
             <div>
-              <c-switch
+              <b-form-checkbox
                 id="activateBanner"
-                color="primary"
                 v-model="activateBanner"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.banner_activate') }}
+                switch
+                >{{ $t('admin.banner_activate') }}</b-form-checkbox
+              >
             </div>
-            <div>
-              <c-switch
+            <div :title="$t('admin.banner_dismissable_help')">
+              <b-form-checkbox
                 id="makeBannerDismissable"
-                color="primary"
                 v-model="makeBannerDismissable"
-                label
-                v-bind="labelIcon"
-                :title="$t('admin.banner_dismissable_help')"
-              />{{ $t('admin.banner_dismissable') }}
+                switch
+                >{{ $t('admin.banner_dismissable') }}</b-form-checkbox
+              >
             </div>
             <label for="message">{{ $t('admin.banner_message') }}:</label>
             <textarea
@@ -57,13 +54,9 @@
             </div>
             <label class="mt-3">{{ $t('admin.banner_custom_mode') }}:</label>
             <div>
-              <c-switch
-                id="customMode"
-                color="primary"
-                v-model="customMode"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.banner_enable_custom') }}
+              <b-form-checkbox id="customMode" v-model="customMode" switch>{{
+                $t('admin.banner_enable_custom')
+              }}</b-form-checkbox>
             </div>
             <div v-if="customMode" class="mt-2">
               <label for="HTMLConfig"
@@ -100,7 +93,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import { html } from '@codemirror/lang-html';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -119,7 +111,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     CodeMirrorEditor,
   },
   data() {

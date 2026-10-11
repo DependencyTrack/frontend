@@ -379,18 +379,6 @@ h6 {
   font-weight: 600;
   text-transform: uppercase;
 }
-.switch {
-  vertical-align: middle;
-  margin-top: .5rem;
-  margin-bottom: .5rem;
-  margin-right: 1rem;
-}
-.switch-slider {
-  background-color: $switch-bg;
-}
-.switch-slider:before {
-  background-color: $grey-200;
-}
 .card-footer > :not(:last-child) {
   margin-right: .25rem;
 }

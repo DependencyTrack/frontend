@@ -93,10 +93,6 @@ export default {
       notificationLevel: 'INFORMATIONAL',
       publisher: null,
       triggerType: 'EVENT',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       availableScopes: [
         { value: 'PORTFOLIO', text: 'Portfolio' },
         { value: 'SYSTEM', text: 'System' },

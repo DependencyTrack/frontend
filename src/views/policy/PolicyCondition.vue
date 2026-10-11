@@ -214,13 +214,7 @@
       </b-col>
 
       <b-col md="6" lg="7" class="d-flex align-items-center">
-        <c-switch
-          v-model="value"
-          color="primary"
-          class="m-0"
-          label
-          v-bind="labelIcon"
-        />
+        <b-form-checkbox v-model="value" class="m-0" switch />
       </b-col>
       <b-col cols="auto" class="d-flex align-items-end">
         <b-button
@@ -236,7 +230,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect.vue';
 import common from '../../shared/common';
@@ -255,7 +248,6 @@ export default {
     BInputGroupFormSelect,
     BInputGroupFormInput,
     CodeMirrorEditor,
-    cSwitch,
   },
   created() {
     if (this.condition) {
@@ -289,10 +281,6 @@ export default {
         major: null,
         minor: null,
         patch: null,
-      },
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
       },
       savedState: null,
       subjects: [

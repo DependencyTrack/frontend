@@ -1,14 +1,11 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <b-form-group :label="$t('admin.integration_fortify_ssc_enable')">
-        <c-switch
-          id="enabled"
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />
+      <b-form-group
+        :label="$t('admin.integration_fortify_ssc_enable')"
+        label-for="enabled"
+      >
+        <b-form-checkbox id="enabled" v-model="enabled" switch />
       </b-form-group>
       <b-validated-input-group-form-input
         id="fortify-ssc-url"
@@ -37,7 +34,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
@@ -49,7 +45,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
   },
@@ -58,10 +53,6 @@ export default {
       enabled: false,
       url: '',
       token: '',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

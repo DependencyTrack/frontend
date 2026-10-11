@@ -44,10 +44,6 @@ export default {
   data() {
     return {
       currentSelection: this.currentTeams.slice(),
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',

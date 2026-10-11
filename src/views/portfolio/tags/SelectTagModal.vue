@@ -58,10 +58,6 @@ export default {
   data() {
     return {
       showInactiveTags: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
