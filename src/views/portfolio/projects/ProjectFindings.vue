@@ -43,7 +43,6 @@ import $ from 'jquery';
 import xssFilters from 'xss-filters';
 
 import common from '@/shared/common';
-import i18n from '@/i18n';
 import {
   applyTotalCountHeaders,
   compareVersions,
@@ -54,7 +53,7 @@ import filterPillsMixin from '@/mixins/filterPillsMixin';
 import FindingAudit from './FindingAudit.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
-import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
+import KevCell from '@/views/components/KevCell.vue';
 
 export default {
   props: {
@@ -247,26 +246,10 @@ export default {
             if (value !== true) {
               return '';
             }
-            return this.vueFormatter({
-              i18n,
-              components: { KevAssertionsModal },
-              template: `
-                <div class="text-center">
-                  <b-link
-                    v-b-modal="\`kevAssertionsModal-${index}\`"
-                    :title="$t('message.kev_show_assertions')"
-                    class="text-danger"
-                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
-                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
-                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  source: row.vulnerability.source,
-                  vulnId: row.vulnerability.vulnId,
-                };
-              },
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
+              index,
             });
           },
         },
@@ -316,7 +299,7 @@ export default {
       data: [],
       options: {
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         search: true,
@@ -355,17 +338,10 @@ export default {
         detailFormatter: (_index, row) => {
           return (
             row &&
-            this.vueFormatter({
-              i18n,
-              propsData: {
-                finding: row,
-                projectUuid: this.uuid,
-              },
-              ...FindingAudit,
-            })
+            this.cell(FindingAudit, { finding: row, projectUuid: this.uuid })
           );
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },

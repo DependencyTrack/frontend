@@ -52,7 +52,6 @@ import {
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
-import i18n from '@/i18n';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
@@ -60,7 +59,7 @@ import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
 import FilterBar from '../../components/FilterBar.vue';
 import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
-import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
+import KevCell from '../../components/KevCell.vue';
 import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss.vue';
 
 export default {
@@ -183,26 +182,10 @@ export default {
             if (value !== true) {
               return '';
             }
-            return this.vueFormatter({
-              i18n,
-              components: { KevAssertionsModal },
-              template: `
-                <div class="text-center">
-                  <b-link
-                    v-b-modal="\`kevAssertionsModal-${index}\`"
-                    :title="$t('message.kev_show_assertions')"
-                    class="text-danger"
-                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
-                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
-                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  source: row.vulnerability.source,
-                  vulnId: row.vulnerability.vulnId,
-                };
-              },
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
+              index,
             });
           },
         },
@@ -294,7 +277,7 @@ export default {
         },
         url: this.apiUrl(),
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         onPageChange: (_, size) => {
