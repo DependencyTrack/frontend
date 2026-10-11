@@ -12,6 +12,9 @@
     },
     {
       "bom-ref": "jackson-core",
+      "evidence": {
+        "occurrences": [{ "location": "lib/jackson-core-2.13.2.jar" }]
+      },
       "group": "com.fasterxml.jackson.core",
       "licenses": [{ "license": { "id": "Apache-2.0" } }],
       "name": "jackson-core",

@@ -39,7 +39,7 @@ export default async function globalSetup() {
     ],
   });
 
-  // KEV assertions have no write API, only the mirror of the CISA feed writes them.
+  // The API can't write KEV assertions, EPSS scores or aliases, and EPSS only reaches an internal vulnerability through a CVE alias.
   execFileSync(
     'docker',
     [
@@ -53,7 +53,12 @@ export default async function globalSetup() {
       '-U',
       'dtrack',
       '-c',
-      `INSERT INTO "KEV_ASSERTION" ("ASSERTER", "VULN_SOURCE", "VULN_ID", "REQUIRED_ACTION") VALUES ('cisa', 'INTERNAL', '${vulnId}', 'Apply the vendor fix.')`,
+      `INSERT INTO "KEV_ASSERTION" ("ASSERTER", "VULN_SOURCE", "VULN_ID", "REQUIRED_ACTION") VALUES ('cisa', 'INTERNAL', '${vulnId}', 'Apply the vendor fix.');
+      INSERT INTO "EPSS" ("CVE", "SCORE", "PERCENTILE") VALUES ('CVE-${vulnId}', 0.5, 0.9);
+      INSERT INTO "VULNERABILITY_ALIAS" ("GROUP_ID", "SOURCE", "VULN_ID")
+        SELECT g.id, a.source, a.vuln_id
+          FROM (SELECT gen_random_uuid() AS id) AS g,
+               (VALUES ('INTERNAL', '${vulnId}'), ('NVD', 'CVE-${vulnId}')) AS a (source, vuln_id)`,
     ],
     { stdio: 'inherit' },
   );
@@ -66,12 +71,27 @@ export default async function globalSetup() {
     autoCreate: true,
     bom: bom.toString('base64'),
   });
-  await poll('BOM processing', async () => {
-    const { processing, status } = await api.get(
-      `/v1/event/token/${upload.token}`,
-    );
-    return !processing && status === 'COMPLETED';
+  await completed(api, 'BOM processing', upload.token);
+
+  const violationPolicy = await api.send('PUT', '/v1/policy', {
+    name: uniqueName('e2e-violation'),
+    operator: 'ANY',
+    violationState: 'WARN',
   });
+  await api.send('PUT', `/v1/policy/${violationPolicy.uuid}/condition`, {
+    subject: 'PACKAGE_URL',
+    operator: 'MATCHES',
+    value: purl,
+  });
+  await api.send(
+    'POST',
+    `/v1/policy/${violationPolicy.uuid}/project/${upload.projectUuid}`,
+  );
+  const analysis = await api.send(
+    'POST',
+    `/v1/finding/project/${upload.projectUuid}/analyze`,
+  );
+  await completed(api, 'policy evaluation', analysis.token);
 
   await api.get(`/v1/metrics/project/${upload.projectUuid}/refresh`);
   await api.get('/v1/metrics/portfolio/refresh');
@@ -137,6 +157,13 @@ async function waitForHealth() {
     },
     180_000,
   );
+}
+
+function completed(api, what, token) {
+  return poll(what, async () => {
+    const { processing, status } = await api.get(`/v1/event/token/${token}`);
+    return !processing && status === 'COMPLETED';
+  });
 }
 
 async function poll(what, condition, timeoutMs = 30_000) {

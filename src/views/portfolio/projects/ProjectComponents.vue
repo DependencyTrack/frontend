@@ -90,6 +90,7 @@
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
 import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal.vue';
+import ModalLinkCell from '@/views/components/ModalLinkCell.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
@@ -100,7 +101,6 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import { get } from 'lodash-es';
-import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
@@ -188,6 +188,7 @@ export default {
         queryParams: () => ({}),
         onPostBody: () => {
           this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
           // Reloading a page rebuilds the rows, dropping any selection.
           this.updateSelectionCount();
@@ -435,21 +436,14 @@ export default {
           visible: initialColumnVisible('occurrence_count'),
           formatter: (value, row, index) => {
             if (value) {
-              return this.vueFormatter({
-                i18n,
-                components: { ComponentOccurrenceListModal },
-                template: `
-                  <div>
-                    <b-link v-b-modal="\`componentOccurrenceListModal-${index}\`">{{ value }}</b-link>
-                    <component-occurrence-list-modal :component-uuid="componentUuid" :component-name="componentName" :index="index"/>
-                  </div>`,
-                data() {
-                  return {
-                    index: index,
-                    componentUuid: row.uuid,
-                    componentName: row.name,
-                    value: value,
-                  };
+              return this.cell(ModalLinkCell, {
+                text: value,
+                modalId: `componentOccurrenceListModal-${index}`,
+                modal: ComponentOccurrenceListModal,
+                modalProps: {
+                  componentUuid: row.uuid,
+                  componentName: row.name,
+                  index,
                 },
               });
             }
