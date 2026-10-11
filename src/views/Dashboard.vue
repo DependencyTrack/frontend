@@ -46,60 +46,62 @@
         style="height: 200px; margin-top: 40px"
         :height="200"
       ></chart-portfolio-vulnerabilities>
-      <div slot="footer">
-        <b-row class="text-center">
-          <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('severity.critical') }}</div>
-            <strong>{{ critical }} ({{ criticalPercent }}%)</strong>
-            <b-progress
-              height="{}"
-              class="progress-xs mt-2 severity-critical"
-              :precision="1"
-              v-bind:value="criticalPercent"
-            ></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('severity.high') }}</div>
-            <strong>{{ high }} ({{ highPercent }}%)</strong>
-            <b-progress
-              height="{}"
-              class="progress-xs mt-2 severity-high"
-              :precision="1"
-              v-bind:value="highPercent"
-            ></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('severity.medium') }}</div>
-            <strong>{{ medium }} ({{ mediumPercent }}%)</strong>
-            <b-progress
-              height="{}"
-              class="progress-xs mt-2 severity-medium"
-              :precision="1"
-              v-bind:value="mediumPercent"
-            ></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('severity.low') }}</div>
-            <strong>{{ low }} ({{ lowPercent }}%)</strong>
-            <b-progress
-              height="{}"
-              class="progress-xs mt-2 severity-low"
-              :precision="1"
-              v-bind:value="lowPercent"
-            ></b-progress>
-          </b-col>
-          <b-col class="mb-sm-2 mb-0">
-            <div class="text-muted">{{ $t('severity.unassigned') }}</div>
-            <strong>{{ unassigned }} ({{ unassignedPercent }}%)</strong>
-            <b-progress
-              height="{}"
-              class="progress-xs mt-2 status-failed"
-              :precision="1"
-              v-bind:value="unassignedPercent"
-            ></b-progress>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div>
+          <b-row class="text-center">
+            <b-col class="mb-sm-2 mb-0">
+              <div class="text-muted">{{ $t('severity.critical') }}</div>
+              <strong>{{ critical }} ({{ criticalPercent }}%)</strong>
+              <b-progress
+                height="{}"
+                class="progress-xs mt-2 severity-critical"
+                :precision="1"
+                v-bind:value="criticalPercent"
+              ></b-progress>
+            </b-col>
+            <b-col class="mb-sm-2 mb-0">
+              <div class="text-muted">{{ $t('severity.high') }}</div>
+              <strong>{{ high }} ({{ highPercent }}%)</strong>
+              <b-progress
+                height="{}"
+                class="progress-xs mt-2 severity-high"
+                :precision="1"
+                v-bind:value="highPercent"
+              ></b-progress>
+            </b-col>
+            <b-col class="mb-sm-2 mb-0">
+              <div class="text-muted">{{ $t('severity.medium') }}</div>
+              <strong>{{ medium }} ({{ mediumPercent }}%)</strong>
+              <b-progress
+                height="{}"
+                class="progress-xs mt-2 severity-medium"
+                :precision="1"
+                v-bind:value="mediumPercent"
+              ></b-progress>
+            </b-col>
+            <b-col class="mb-sm-2 mb-0">
+              <div class="text-muted">{{ $t('severity.low') }}</div>
+              <strong>{{ low }} ({{ lowPercent }}%)</strong>
+              <b-progress
+                height="{}"
+                class="progress-xs mt-2 severity-low"
+                :precision="1"
+                v-bind:value="lowPercent"
+              ></b-progress>
+            </b-col>
+            <b-col class="mb-sm-2 mb-0">
+              <div class="text-muted">{{ $t('severity.unassigned') }}</div>
+              <strong>{{ unassigned }} ({{ unassignedPercent }}%)</strong>
+              <b-progress
+                height="{}"
+                class="progress-xs mt-2 status-failed"
+                :precision="1"
+                v-bind:value="unassignedPercent"
+              ></b-progress>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
 
     <b-row>
@@ -123,46 +125,54 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-policy-violations-state>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('policy_violation.fails') }}</div>
-                <strong
-                  >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-failed"
-                  :precision="1"
-                  v-bind:value="failViolationsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('policy_violation.warns') }}</div>
-                <strong
-                  >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-warning"
-                  :precision="1"
-                  v-bind:value="warnViolationsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('policy_violation.infos') }}</div>
-                <strong
-                  >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-info"
-                  :precision="1"
-                  v-bind:value="infoViolationsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.fails') }}
+                  </div>
+                  <strong
+                    >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-failed"
+                    :precision="1"
+                    v-bind:value="failViolationsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.warns') }}
+                  </div>
+                  <strong
+                    >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-warning"
+                    :precision="1"
+                    v-bind:value="warnViolationsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.infos') }}
+                  </div>
+                  <strong
+                    >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-info"
+                    :precision="1"
+                    v-bind:value="infoViolationsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -188,58 +198,60 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-policy-violations-classification>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('policy_violation.security') }}
-                </div>
-                <strong
-                  >{{ securityViolations }} ({{
-                    securityViolationsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-failed"
-                  :precision="1"
-                  v-bind:value="securityViolationsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('policy_violation.operational') }}
-                </div>
-                <strong
-                  >{{ operationalViolations }} ({{
-                    operationalViolationsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-warning"
-                  :precision="1"
-                  v-bind:value="operationalViolationsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('policy_violation.license') }}
-                </div>
-                <strong
-                  >{{ licenseViolations }} ({{
-                    licenseViolationsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-info"
-                  :precision="1"
-                  v-bind:value="licenseViolationsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.security') }}
+                  </div>
+                  <strong
+                    >{{ securityViolations }} ({{
+                      securityViolationsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-failed"
+                    :precision="1"
+                    v-bind:value="securityViolationsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.operational') }}
+                  </div>
+                  <strong
+                    >{{ operationalViolations }} ({{
+                      operationalViolationsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-warning"
+                    :precision="1"
+                    v-bind:value="operationalViolationsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('policy_violation.license') }}
+                  </div>
+                  <strong
+                    >{{ licenseViolations }} ({{
+                      licenseViolationsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-info"
+                    :precision="1"
+                    v-bind:value="licenseViolationsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
     </b-row>
@@ -263,40 +275,44 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-auditing-findings-progress>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('message.findings_unaudited') }}
-                </div>
-                <strong
-                  >{{ unauditedFindings }} ({{
-                    unauditedFindingsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 severity-unassigned"
-                  :precision="1"
-                  v-bind:value="unauditedFindingsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('message.findings_audited') }}
-                </div>
-                <strong
-                  >{{ auditedFindings }} ({{ auditedFindingsPercent }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 severity-low"
-                  :precision="1"
-                  v-bind:value="auditedFindingsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.findings_unaudited') }}
+                  </div>
+                  <strong
+                    >{{ unauditedFindings }} ({{
+                      unauditedFindingsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 severity-unassigned"
+                    :precision="1"
+                    v-bind:value="unauditedFindingsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.findings_audited') }}
+                  </div>
+                  <strong
+                    >{{ auditedFindings }} ({{
+                      auditedFindingsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 severity-low"
+                    :precision="1"
+                    v-bind:value="auditedFindingsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -322,42 +338,44 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-auditing-violations-progress>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('message.violations_unaudited') }}
-                </div>
-                <strong
-                  >{{ unauditedViolations }} ({{
-                    unauditedViolationsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 severity-unassigned"
-                  :precision="1"
-                  v-bind:value="unauditedViolationsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">
-                  {{ $t('message.violations_audited') }}
-                </div>
-                <strong
-                  >{{ auditedViolations }} ({{
-                    auditedViolationsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 severity-low"
-                  :precision="1"
-                  v-bind:value="auditedViolationsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.violations_unaudited') }}
+                  </div>
+                  <strong
+                    >{{ unauditedViolations }} ({{
+                      unauditedViolationsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 severity-unassigned"
+                    :precision="1"
+                    v-bind:value="unauditedViolationsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.violations_audited') }}
+                  </div>
+                  <strong
+                    >{{ auditedViolations }} ({{
+                      auditedViolationsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 severity-low"
+                    :precision="1"
+                    v-bind:value="auditedViolationsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
     </b-row>
@@ -380,38 +398,42 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-project-vulnerabilities>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('message.non_vulnerable') }}</div>
-                <strong
-                  >{{ nonVulnerableProjects }} ({{
-                    nonVulnerableProjectsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-passed"
-                  :precision="1"
-                  v-bind:value="nonVulnerableProjectsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('message.vulnerable') }}</div>
-                <strong
-                  >{{ vulnerableProjects }} ({{
-                    vulnerableProjectsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-warning"
-                  :precision="1"
-                  v-bind:value="vulnerableProjectsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.non_vulnerable') }}
+                  </div>
+                  <strong
+                    >{{ nonVulnerableProjects }} ({{
+                      nonVulnerableProjectsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-passed"
+                    :precision="1"
+                    v-bind:value="nonVulnerableProjectsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">{{ $t('message.vulnerable') }}</div>
+                  <strong
+                    >{{ vulnerableProjects }} ({{
+                      vulnerableProjectsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-warning"
+                    :precision="1"
+                    v-bind:value="vulnerableProjectsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
       <b-col sm="6">
@@ -431,38 +453,42 @@
             style="height: 200px; margin-top: 40px"
             :height="200"
           ></chart-component-vulnerabilities>
-          <div slot="footer">
-            <b-row class="text-center">
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('message.non_vulnerable') }}</div>
-                <strong
-                  >{{ nonVulnerableComponents }} ({{
-                    nonVulnerableComponentsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-passed"
-                  :precision="1"
-                  v-bind:value="nonVulnerableComponentsPercent"
-                ></b-progress>
-              </b-col>
-              <b-col class="mb-sm-2 mb-0">
-                <div class="text-muted">{{ $t('message.vulnerable') }}</div>
-                <strong
-                  >{{ vulnerableComponents }} ({{
-                    vulnerableComponentsPercent
-                  }}%)</strong
-                >
-                <b-progress
-                  height="{}"
-                  class="progress-xs mt-2 status-warning"
-                  :precision="1"
-                  v-bind:value="vulnerableComponentsPercent"
-                ></b-progress>
-              </b-col>
-            </b-row>
-          </div>
+          <template v-slot:footer>
+            <div>
+              <b-row class="text-center">
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">
+                    {{ $t('message.non_vulnerable') }}
+                  </div>
+                  <strong
+                    >{{ nonVulnerableComponents }} ({{
+                      nonVulnerableComponentsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-passed"
+                    :precision="1"
+                    v-bind:value="nonVulnerableComponentsPercent"
+                  ></b-progress>
+                </b-col>
+                <b-col class="mb-sm-2 mb-0">
+                  <div class="text-muted">{{ $t('message.vulnerable') }}</div>
+                  <strong
+                    >{{ vulnerableComponents }} ({{
+                      vulnerableComponentsPercent
+                    }}%)</strong
+                  >
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2 status-warning"
+                    :precision="1"
+                    v-bind:value="vulnerableComponentsPercent"
+                  ></b-progress>
+                </b-col>
+              </b-row>
+            </div>
+          </template>
         </b-card>
       </b-col>
     </b-row>

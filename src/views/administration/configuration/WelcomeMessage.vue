@@ -43,9 +43,11 @@
       <b-row class="justify-content-center">
         <b-col md="8">
           <b-card v-if="isWelcomeMessage" class="bg-grey-900">
-            <div slot="header">
-              <h4>{{ $t('admin.preview') }}</h4>
-            </div>
+            <template v-slot:header>
+              <div>
+                <h4>{{ $t('admin.preview') }}</h4>
+              </div>
+            </template>
             <p><span v-html="sanitizedWelcomeMessage" /></p>
           </b-card>
         </b-col>

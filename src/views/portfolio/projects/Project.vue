@@ -285,87 +285,90 @@
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="project-info-footer" slot="footer">
-        <b-row align-v="center">
-          <b-col>
-            <b-link
-              class="font-weight-bold font-xs text-muted"
-              @click="initializeProjectDetailsModal"
-              >{{ $t('message.view_details') }}
-              <i class="fa fa-angle-right font-lg"></i
-            ></b-link>
-          </b-col>
-          <b-col md="auto" class="btn-spaced-group text-right">
-            <b-button
-              id="upload-bom-button"
-              v-if="!isCollectionProject"
-              variant="outline-primary"
-              v-b-modal.projectUploadBomModal
-              v-permission="PERMISSIONS.BOM_UPLOAD"
-            >
-              <span class="fa fa-upload"></span> {{ $t('message.upload_bom') }}
-            </b-button>
-            <b-tooltip target="upload-bom-button" triggers="hover focus">{{
-              $t('message.upload_bom_tooltip')
-            }}</b-tooltip>
+      <template v-slot:footer>
+        <div id="project-info-footer">
+          <b-row align-v="center">
+            <b-col>
+              <b-link
+                class="font-weight-bold font-xs text-muted"
+                @click="initializeProjectDetailsModal"
+                >{{ $t('message.view_details') }}
+                <i class="fa fa-angle-right font-lg"></i
+              ></b-link>
+            </b-col>
+            <b-col md="auto" class="btn-spaced-group text-right">
+              <b-button
+                id="upload-bom-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                v-b-modal.projectUploadBomModal
+                v-permission="PERMISSIONS.BOM_UPLOAD"
+              >
+                <span class="fa fa-upload"></span>
+                {{ $t('message.upload_bom') }}
+              </b-button>
+              <b-tooltip target="upload-bom-button" triggers="hover focus">{{
+                $t('message.upload_bom_tooltip')
+              }}</b-tooltip>
 
-            <b-button
-              id="apply-vex-button"
-              v-if="!isCollectionProject"
-              variant="outline-primary"
-              v-b-modal.projectUploadVexModal
-              v-permission:or="[
-                PERMISSIONS.VULNERABILITY_ANALYSIS,
-                PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-              ]"
-            >
-              <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
-            </b-button>
-            <b-tooltip target="apply-vex-button" triggers="hover focus">{{
-              $t('message.apply_vex_tooltip')
-            }}</b-tooltip>
+              <b-button
+                id="apply-vex-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                v-b-modal.projectUploadVexModal
+                v-permission:or="[
+                  PERMISSIONS.VULNERABILITY_ANALYSIS,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+                ]"
+              >
+                <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
+              </b-button>
+              <b-tooltip target="apply-vex-button" triggers="hover focus">{{
+                $t('message.apply_vex_tooltip')
+              }}</b-tooltip>
 
-            <b-button
-              v-if="!isCollectionProject"
-              variant="outline-primary"
-              v-b-modal.projectExportModal
-              v-permission:or="[
-                PERMISSIONS.VIEW_PORTFOLIO,
-                PERMISSIONS.VIEW_VULNERABILITY,
-                PERMISSIONS.VULNERABILITY_ANALYSIS,
-                PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-              ]"
-            >
-              <span class="fa fa-download"></span> {{ $t('message.export') }}
-            </b-button>
+              <b-button
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                v-b-modal.projectExportModal
+                v-permission:or="[
+                  PERMISSIONS.VIEW_PORTFOLIO,
+                  PERMISSIONS.VIEW_VULNERABILITY,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
+                ]"
+              >
+                <span class="fa fa-download"></span> {{ $t('message.export') }}
+              </b-button>
 
-            <b-button
-              id="reanalyze-button"
-              v-if="!isCollectionProject"
-              variant="outline-primary"
-              @click="reAnalyze()"
-              :disabled="isAnalysisRequested"
-              v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
-            >
-              <span class="fa fa-refresh"></span>
-              {{ $t('message.project_reanalyze') }}
-            </b-button>
-            <b-tooltip
-              target="reanalyze-button"
-              triggers="hover focus"
-              :disabled="isAnalysisRequested"
-              >{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip
-            >
+              <b-button
+                id="reanalyze-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                @click="reAnalyze()"
+                :disabled="isAnalysisRequested"
+                v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+              >
+                <span class="fa fa-refresh"></span>
+                {{ $t('message.project_reanalyze') }}
+              </b-button>
+              <b-tooltip
+                target="reanalyze-button"
+                triggers="hover focus"
+                :disabled="isAnalysisRequested"
+                >{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip
+              >
 
-            <ExternalReferencesDropdown
-              v-if="project.externalReferences"
-              class="d-none d-md-inline-block"
-              size="md"
-              :externalReferences="project.externalReferences"
-            />
-          </b-col>
-        </b-row>
-      </div>
+              <ExternalReferencesDropdown
+                v-if="project.externalReferences"
+                class="d-none d-md-inline-block"
+                size="md"
+                :externalReferences="project.externalReferences"
+              />
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-tabs
       v-scrollable-tabs

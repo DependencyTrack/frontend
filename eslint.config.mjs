@@ -49,6 +49,8 @@ export default [
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-deprecated-delete-set': 'error',
+      'vue/no-deprecated-slot-attribute': 'error',
+      'vue/no-deprecated-slot-scope-attribute': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
     },
   },
