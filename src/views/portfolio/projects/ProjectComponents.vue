@@ -187,7 +187,6 @@ export default {
         },
         queryParams: () => ({}),
         onPostBody: () => {
-          this.vueFormatterInit();
           this.mountCells();
           this.initializeTooltips();
           // Reloading a page rebuilds the rows, dropping any selection.
@@ -399,7 +398,7 @@ export default {
         },
         buildHashVerificationColumn({
           $t: this.$t.bind(this),
-          vueFormatter: this.vueFormatter,
+          cell: this.cell,
           visible: initialColumnVisible('hash_verification.status'),
         }),
         {

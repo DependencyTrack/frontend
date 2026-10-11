@@ -527,7 +527,7 @@ export default {
         },
         buildHashVerificationColumn({
           $t: this.$t.bind(this),
-          vueFormatter: this.vueFormatter,
+          cell: this.cell,
           visible: initialColumnVisible('hash_verification.status'),
         }),
         {
@@ -578,7 +578,7 @@ export default {
         sortOrder: 'asc',
         customSort: () => {},
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         onSort: (name, order) => {

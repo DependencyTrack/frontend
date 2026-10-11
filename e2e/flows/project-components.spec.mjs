@@ -17,3 +17,18 @@ test('show the occurrences of a component', async ({ page }) => {
   });
   await expect(modal).toContainText('lib/jackson-core-2.13.2.jar');
 });
+
+test('verify the hashes of a component', async ({ page }) => {
+  const { project } = seed();
+  await login(page);
+  await page.goto(`projects/${project.uuid}/components`);
+  await page.getByRole('button', { name: 'Columns' }).click();
+  await page.getByRole('checkbox', { name: 'Integrity' }).check();
+  await page
+    .getByRole('row')
+    .filter({ hasText: 'jackson-core' })
+    .getByRole('button', { name: 'Hashes match' })
+    .click();
+  const modal = page.getByRole('dialog', { name: 'Hash verification' });
+  await expect(modal).toContainText('0a6a0e0620d51833feffc67bccb51937b2345763');
+});
