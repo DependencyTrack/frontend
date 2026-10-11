@@ -9,24 +9,17 @@
       <b-input-group-prepend v-if="icon"
         ><b-input-group-text><i :class="icon"></i></b-input-group-text
       ></b-input-group-prepend>
-      <b-form-datepicker
+      <b-form-input
         :id="`${id}-input`"
+        type="date"
         :class="inputClasses"
-        v-model="innerValue"
-        :placeholder="label"
+        :value="dateValue"
         :state="feedbackState()"
         :autocomplete="autocomplete"
         :required="isRequired"
         :readonly="readonly"
         :disabled="isDisabled"
-        :reset-button="!isRequired && !isDisabled"
-        :label-reset-button="$t('message.reset')"
         v-on="inputListeners"
-        :date-format-options="{
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        }"
         v-on:blur="hadFocus = true"
       />
       <b-input-group-append v-if="tooltip"
@@ -85,16 +78,8 @@ export default {
     isDisabled() {
       return common.toBoolean(this.disabled);
     },
-    innerValue: {
-      get: function () {
-        if (this.modelValue && this.modelValue.length > 0) {
-          //
-        }
-        return this.modelValue;
-      },
-      set: function (newValue) {
-        return newValue;
-      },
+    dateValue() {
+      return this.modelValue?.substring(0, 10);
     },
     inputListeners: function () {
       const vm = this;

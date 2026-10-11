@@ -82,34 +82,19 @@ export async function filter(within, text) {
   await box.press('Enter');
 }
 
-// Tests pick dates only through these helpers, so replacing the datepicker only changes them.
 export async function pickDate(page, label, date) {
-  await page.getByRole('button', { name: label }).click();
-  const calendar = page.getByRole('dialog');
-  await expect(
-    calendar.getByRole('button', { name: 'Next month' }),
-  ).toBeVisible();
-  const day = calendar.getByRole('button', {
-    name: new RegExp(`^${formatDate(date)}`),
-  });
-  for (let i = 0; i < 24 && !(await day.isVisible()); i++) {
-    await calendar.getByRole('button', { name: 'Next month' }).click();
-  }
-  await day.click();
+  await page.getByLabel(label, { exact: true }).fill(formatDate(date));
 }
 
 export async function expectDate(page, label, date) {
-  await expect(page.getByRole('button', { name: label })).toHaveAccessibleName(
-    `${label} ${formatDate(date)}`,
+  await expect(page.getByLabel(label, { exact: true })).toHaveValue(
+    formatDate(date),
   );
 }
 
 function formatDate(date) {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 // CoreUI's <c-switch> hides its checkbox with display: none, and its text is a sibling, not a label.
