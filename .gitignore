@@ -34,3 +34,7 @@ src/version.json
 # Claude Code
 .claude/worktrees/
 .claude/settings.local.json
+
+# Playwright
+/e2e/test-results/
+/e2e/playwright-report/

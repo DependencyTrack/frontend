@@ -15,13 +15,15 @@
     "serve": "npm run update-embedded-version && vite",
     "update-embedded-version": "node update-embedded-version.js",
     "build": "npm run update-embedded-version && vite build",
+    "preview": "vite preview",
     "build-image": "npm run build && docker build -f docker/Dockerfile.alpine -t ghcr.io/dependencytrack/frontend:local .",
     "eslint": "eslint . --report-unused-disable-directives",
     "eslint-fix": "eslint . --fix --report-unused-disable-directives",
     "prettier": "prettier --check --cache '**/*.{js,mjs,vue,json,md,yaml}'",
     "prettier-fix": "prettier --write --cache '**/*.{js,mjs,vue,json,md,yaml}'",
     "vue-i18n-extract": "vue-i18n-extract report --ci",
-    "remove-unused-i18n": "vue-i18n-extract --remove"
+    "remove-unused-i18n": "vue-i18n-extract --remove",
+    "e2e": "playwright test -c e2e"
   },
   "dependencies": {
     "@codemirror/autocomplete": "6.20.2",
@@ -71,9 +73,11 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.0",
     "@vitejs/plugin-vue2": "2.3.4",
     "eslint": "10.12.0",
     "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-playwright": "2.12.1",
     "eslint-plugin-prettier": "5.5.6",
     "eslint-plugin-vue": "10.11.1",
     "globals": "17.13.0",
