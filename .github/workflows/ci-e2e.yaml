@@ -1,0 +1,74 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - 'main' # Default branch
+      - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
+  pull_request:
+    branches:
+      - 'main' # Default branch
+      - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
+
+permissions: {}
+
+jobs:
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # tag=v7.0.1
+        with:
+          persist-credentials: false
+      - name: Select API Server Image
+        env:
+          BRANCH: ${{ github.base_ref || github.ref_name }}
+        run: |-
+          MAJOR=$(jq -r '.version | split(".")[0]' package.json)
+          TOKEN=$(curl -fsS 'https://ghcr.io/token?scope=repository:dependencytrack/apiserver:pull' | jq -r '.token')
+          TAGS=$(curl -fsS -H "Authorization: Bearer ${TOKEN}" 'https://ghcr.io/v2/dependencytrack/apiserver/tags/list?n=10000' | jq -r '.tags[]')
+          VERSION="${MAJOR}-snapshot"
+          if [[ "$BRANCH" == feature-* ]]; then
+            # The API server publishes feature branches under the lowercased branch name, with '/' as '-'.
+            FEATURE="${BRANCH,,}"
+            FEATURE="${FEATURE//\//-}"
+            if grep -qxF "$FEATURE" <<< "$TAGS"; then VERSION="$FEATURE"; fi
+          elif [[ "$BRANCH" =~ ^([0-9]+\.[0-9]+)\.x$ ]]; then
+            # The API server doesn't publish snapshots of release branches yet, so fall back to the line's latest release.
+            MINOR="${BASH_REMATCH[1]}"
+            RELEASE=$(grep -xE "${MINOR//./\\.}\.[0-9]+" <<< "$TAGS" | sort -V | tail -n1 || true)
+            if grep -qxF "${MINOR}-snapshot" <<< "$TAGS"; then
+              VERSION="${MINOR}-snapshot"
+            elif [[ -n "$RELEASE" ]]; then
+              VERSION="$RELEASE"
+            fi
+          fi
+          echo "Using ghcr.io/dependencytrack/apiserver:${VERSION}"
+          echo "APISERVER_VERSION=${VERSION}" >> "$GITHUB_ENV"
+      - name: Start API Server
+        run: docker compose -f e2e/compose.yaml up -d
+      - name: Set up NodeJs
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # tag=v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps --only-shell chromium
+      - name: Run Tests
+        run: npm run e2e
+      - name: Print API Server Logs
+        if: failure()
+        run: docker compose -f e2e/compose.yaml logs
+      - name: Upload Playwright Report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag=v7.0.1
+        with:
+          name: playwright-report
+          path: e2e/playwright-report
+          retention-days: 7
