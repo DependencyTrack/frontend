@@ -1,15 +1,8 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import { test, expect, login, search, filter } from '../test.mjs';
 
 // The add buttons in row details are icons without an accessible name.
 const addButton = '.expanded-row .fa-plus-square';
-
-// The OIDC group table searches the loaded rows without an API request, so search() would wait forever.
-async function filter(page, text) {
-  const box = page.getByRole('searchbox', { name: 'Search' });
-  await box.fill(text);
-  await box.press('Enter');
-}
 
 test('map a team to an OIDC group in its row details', async ({
   page,

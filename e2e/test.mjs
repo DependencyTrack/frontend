@@ -75,6 +75,13 @@ export async function search(page, text, within = page) {
   await expect(loading).toHaveCount(0);
 }
 
+// Client-side tables search the loaded rows without an API request, so search() would wait forever.
+export async function filter(within, text) {
+  const box = within.getByRole('searchbox', { name: 'Search' });
+  await box.fill(text);
+  await box.press('Enter');
+}
+
 // Tests pick dates only through these helpers, so replacing the datepicker only changes them.
 export async function pickDate(page, label, date) {
   await page.getByRole('button', { name: label }).click();
