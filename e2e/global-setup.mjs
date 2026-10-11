@@ -30,7 +30,7 @@ export default async function globalSetup() {
   const api = await Api.login();
   const purl = 'pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.13.2.2';
   const vulnId = uniqueName('E2E');
-  await api.send('PUT', '/v1/vulnerability', {
+  const vuln = await api.send('PUT', '/v1/vulnerability', {
     vulnId,
     cvssV3Vector: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H',
     cwes: [502],
@@ -103,7 +103,6 @@ export default async function globalSetup() {
   const components = await api.get(
     `/v1/component/project/${upload.projectUuid}`,
   );
-  const findings = await api.get(`/v1/finding/project/${upload.projectUuid}`);
   const services = await api.get(`/v1/service/project/${upload.projectUuid}`);
   const policy = await api.send('POST', '/v2/vuln-policies', {
     name: uniqueName('e2e-policy'),
@@ -120,8 +119,7 @@ export default async function globalSetup() {
     componentUuid: components.find((c) => c.purl === purl).uuid,
     serviceUuid: services[0].uuid,
     vulnId,
-    vulnUuid: findings.find((f) => f.vulnerability.vulnId === vulnId)
-      .vulnerability.uuid,
+    vulnUuid: vuln.uuid,
     vulnPolicyUuid: policy.uuid,
     workflowRunId: runs.items[0].id,
   };

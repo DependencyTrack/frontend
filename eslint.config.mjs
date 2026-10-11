@@ -67,6 +67,7 @@ export default [
           name: 'vue-page-title',
           message: "Use setPageTitle from 'shared/utils'.",
         },
+        { name: 'vue-toastr', message: 'Use this.$toastr.' },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
