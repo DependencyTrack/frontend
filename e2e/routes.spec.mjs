@@ -26,9 +26,17 @@ const license = 'licenses/Apache-2.0';
 const noAnalysis = /^GET \/api\/v1\/analysis\?.* 404$/;
 
 const routes = [
-  { path: 'dashboard', landmark: heading('Portfolio Vulnerabilities') },
+  {
+    path: 'dashboard',
+    landmark: heading('Portfolio Vulnerabilities'),
+    title: () => 'Dashboard',
+  },
   { path: 'projects', landmark: button('Create Project') },
-  { path: project, landmark: projectHeader },
+  {
+    path: project,
+    landmark: projectHeader,
+    title: (seed) => `${seed.project.name} ▸ 1.0.0`,
+  },
   { path: `${project}/overview`, landmark: projectHeader },
   {
     path: `${project}/components`,
@@ -64,7 +72,11 @@ const routes = [
   { path: `${project}/epss`, landmark: tab(/Exploit Predictions/) },
   { path: `${project}/policyViolations`, landmark: tab(/Policy Violations/) },
   { path: 'components', landmark: column('Package URL (PURL)') },
-  { path: component, landmark: componentHeader },
+  {
+    path: component,
+    landmark: componentHeader,
+    title: () => 'com.fasterxml.jackson.core ▸ jackson-databind ▸ 2.13.2.2',
+  },
   { path: `${component}/overview`, landmark: componentHeader },
   {
     path: `${component}/vulnerabilities`,
@@ -73,13 +85,18 @@ const routes = [
   {
     path: 'services/:service',
     landmark: header(() => 'e2e-service'),
+    title: () => 'e2e-service ▸ 1.0.0',
     // ServiceDetailsModal binds service.provider.name, and the seeded service has no provider.
     allow: [
       /TypeError: Cannot read properties of undefined \(reading 'name'\)/,
     ],
   },
   { path: 'vulnerabilities', landmark: button('Create Vulnerability') },
-  { path: vulnerability, landmark: vulnHeader },
+  {
+    path: vulnerability,
+    landmark: vulnHeader,
+    title: (seed) => `Vulnerability ${seed.vulnId} (INTERNAL)`,
+  },
   {
     path: `${vulnerability}/overview`,
     landmark: vulnHeader,
@@ -92,7 +109,11 @@ const routes = [
   },
   { path: 'tags', landmark: column('Collection Projects') },
   { path: 'licenses', landmark: button('Add License') },
-  { path: license, landmark: inTab(/Overview/, cell('Apache License 2.0')) },
+  {
+    path: license,
+    landmark: inTab(/Overview/, cell('Apache License 2.0')),
+    title: () => 'License Apache License 2.0',
+  },
   {
     path: `${license}/overview`,
     landmark: inTab(/Overview/, cell('Apache License 2.0')),
@@ -280,6 +301,16 @@ test.describe('authenticated', () => {
       ).toBeVisible();
       // eslint-disable-next-line playwright/no-networkidle -- Lets the problems fixture see requests that finish after the landmark appears.
       await page.waitForLoadState('networkidle');
+    });
+  }
+
+  for (const route of routes.filter((r) => r.title)) {
+    test(`${route.path} title`, async ({ page, problems }) => {
+      route.allow?.forEach((pattern) => problems.allow(pattern));
+      await page.goto(resolve(route.path));
+      await expect(page).toHaveTitle(
+        `Dependency-Track - ${route.title(seed())}`,
+      );
     });
   }
 });

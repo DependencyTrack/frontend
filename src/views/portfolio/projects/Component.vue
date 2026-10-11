@@ -177,6 +177,7 @@ import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard.vue';
 import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
@@ -194,7 +195,6 @@ export default {
     ComponentDetailsModal,
     ExternalReferencesDropdown,
   },
-  title: '',
   computed: {
     projectLabel() {
       if (Object.hasOwn(this.component, 'project')) {
@@ -300,7 +300,7 @@ export default {
         this.component.project.uuid,
         this.projectLabel,
       );
-      this.$title = this.componentLabel;
+      setPageTitle(this.componentLabel);
     });
 
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
