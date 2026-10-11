@@ -2,9 +2,11 @@ import { uniqueName } from '../api.mjs';
 import { test, expect, login } from '../test.mjs';
 
 test('edit a project in the details modal', async ({ page, api }) => {
+  const removed = uniqueName('tag');
   const { uuid } = await api.send('PUT', '/v1/project', {
     name: uniqueName('e2e-details'),
     version: '1.0.0',
+    tags: [{ name: removed }],
   });
   const description = uniqueName('description');
   const tag = uniqueName('tag');
@@ -14,6 +16,7 @@ test('edit a project in the details modal', async ({ page, api }) => {
 
   const modal = page.getByRole('dialog', { name: 'Project Details' });
   await modal.getByLabel('Description').fill(description);
+  await modal.getByRole('button', { name: `Remove ${removed}` }).click();
   await modal.getByPlaceholder('Add Tag').fill(tag);
   await modal.getByPlaceholder('Add Tag').press('Enter');
   await modal.getByText('Is latest version').click();
@@ -23,6 +26,7 @@ test('edit a project in the details modal', async ({ page, api }) => {
 
   await page.reload();
   await expect(page.getByRole('main').getByText(tag)).toBeVisible();
+  await expect(page.getByRole('main').getByText(removed)).toBeHidden();
   await page.getByText('View Details').click();
   await expect(modal.getByLabel('Description')).toHaveValue(description);
   await expect(modal.getByLabel('Is latest version')).toBeChecked();

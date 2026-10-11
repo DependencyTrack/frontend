@@ -44,16 +44,11 @@
                   $t('admin.enabled_for_tags')
                 }}</b-form-radio>
               </b-input-group-text>
-              <vue-tags-input
-                id="input-4"
-                v-model="bomValidationTagInclusive"
-                :tags="bomValidationTagsInclusive"
-                :add-on-key="addOnKeys"
+              <tags-input
+                id="bomValidationTagsInclusive"
+                v-model="bomValidationTagsInclusive"
                 :placeholder="$t('message.add_tag')"
-                @tags-changed="
-                  (newTags) => (this.bomValidationTagsInclusive = newTags)
-                "
-                class="w-100 bg-transparent text-lowercase"
+                class="text-lowercase"
               />
             </b-input-group>
             <b-input-group class="mb-2">
@@ -62,16 +57,11 @@
                   $t('admin.disabled_for_tags')
                 }}</b-form-radio>
               </b-input-group-text>
-              <vue-tags-input
-                id="input-4"
-                v-model="bomValidationTagExclusive"
-                :tags="bomValidationTagsExclusive"
-                :add-on-key="addOnKeys"
+              <tags-input
+                id="bomValidationTagsExclusive"
+                v-model="bomValidationTagsExclusive"
                 :placeholder="$t('message.add_tag')"
-                @tags-changed="
-                  (newTags) => (this.bomValidationTagsExclusive = newTags)
-                "
-                class="w-100 bg-transparent text-lowercase"
+                class="text-lowercase"
               />
             </b-input-group>
           </b-form-radio-group>
@@ -88,7 +78,7 @@
 
 <script>
 import common from '../../../shared/common';
-import VueTagsInput from '@johmun/vue-tags-input';
+import TagsInput from '../../../forms/TagsInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
 export default {
@@ -97,17 +87,14 @@ export default {
     header: String,
   },
   components: {
-    VueTagsInput,
+    TagsInput,
   },
   data() {
     return {
       isCycloneDXEnabled: false,
       bomValidationMode: '',
-      bomValidationTagExclusive: '',
       bomValidationTagsExclusive: [],
-      bomValidationTagInclusive: '',
       bomValidationTagsInclusive: [],
-      addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
     };
   },
   methods: {
@@ -126,20 +113,12 @@ export default {
         {
           groupName: 'artifact',
           propertyName: 'bom.validation.tags.exclusive',
-          propertyValue: JSON.stringify(
-            this.bomValidationTagsExclusive.map((tag) => {
-              return tag.text;
-            }),
-          ),
+          propertyValue: JSON.stringify(this.bomValidationTagsExclusive),
         },
         {
           groupName: 'artifact',
           propertyName: 'bom.validation.tags.inclusive',
-          propertyValue: JSON.stringify(
-            this.bomValidationTagsInclusive.map((tag) => {
-              return tag.text;
-            }),
-          ),
+          propertyValue: JSON.stringify(this.bomValidationTagsInclusive),
         },
       ]);
     },
@@ -159,18 +138,10 @@ export default {
             this.bomValidationMode = item.propertyValue;
             break;
           case 'bom.validation.tags.exclusive':
-            this.bomValidationTagsExclusive = JSON.parse(
-              item.propertyValue,
-            ).map((tagName) => {
-              return { text: tagName };
-            });
+            this.bomValidationTagsExclusive = JSON.parse(item.propertyValue);
             break;
           case 'bom.validation.tags.inclusive':
-            this.bomValidationTagsInclusive = JSON.parse(
-              item.propertyValue,
-            ).map((tagName) => {
-              return { text: tagName };
-            });
+            this.bomValidationTagsInclusive = JSON.parse(item.propertyValue);
             break;
         }
       }
@@ -178,7 +149,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

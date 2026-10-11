@@ -100,17 +100,13 @@
           :label="$t('message.project_add_collection_tag')"
           label-for="input-collectionTags"
         >
-          <vue-tags-input
+          <tags-input
             id="input-collectionTags"
-            v-model="collectionTagTyping"
-            :tags="collectionTags"
-            :add-on-key="addOnKeys"
+            v-model="collectionTags"
             :placeholder="$t('message.project_add_collection_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="
-              (newCollectionTags) => (this.collectionTags = newCollectionTags)
-            "
-            class="mw-100 bg-transparent text-lowercase"
+            :suggestions="tagsAutoCompleteItems"
+            @search="searchTags"
+            class="mw-100 text-lowercase"
             :max-tags="1"
           />
         </b-form-group>
@@ -176,15 +172,13 @@
           :label="this.$t('message.tags')"
           label-for="input-4"
         >
-          <vue-tags-input
+          <tags-input
             id="input-4"
-            v-model="tag"
-            :tags="tags"
-            :add-on-key="addOnKeys"
+            v-model="tags"
             :placeholder="$t('message.add_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="(newTags) => (this.tags = newTags)"
-            class="mw-100 bg-transparent text-lowercase"
+            :suggestions="tagsAutoCompleteItems"
+            @search="searchTags"
+            class="mw-100 text-lowercase"
           />
         </b-form-group>
         <hr class="my-3" />
@@ -282,7 +276,7 @@
 <script>
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
-import VueTagsInput from '@johmun/vue-tags-input';
+import TagsInput from '../../../forms/TagsInput.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
@@ -308,7 +302,7 @@ export default {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    VueTagsInput,
+    TagsInput,
     Multiselect,
   },
   data() {
@@ -410,7 +404,6 @@ export default {
       } else {
         this.project.classifier = DEFAULT_CLASSIFIER;
         this.project.collectionLogic = null;
-        this.collectionTagTyping = '';
         this.collectionTags = [];
       }
     },
@@ -429,11 +422,11 @@ export default {
       const parent = this.selectedParent
         ? { uuid: this.selectedParent.uuid }
         : null;
-      const tagsNode = this.tags.map((tag) => ({ name: tag.text }));
+      const tagsNode = this.tags.map((name) => ({ name }));
       const collectionTag =
         this.project.collectionLogic === COLLECTION_LOGIC_AGGREGATE_TAG &&
         this.collectionTags.length > 0
-          ? { name: this.collectionTags[0].text }
+          ? { name: this.collectionTags[0] }
           : null;
       this.axios
         .put(url, {
@@ -507,7 +500,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

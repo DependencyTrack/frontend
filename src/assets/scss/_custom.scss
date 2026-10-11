@@ -449,6 +449,21 @@ button:focus {
   background-color: transparent;
   border: 1px solid $primary;
 }
+.tags-input {
+  row-gap: 0.25rem;
+}
+.tags-input:focus-within {
+  border-color: $input-focus-border-color;
+  box-shadow: $input-focus-box-shadow;
+}
+.tags-input input {
+  outline: 0;
+}
+.tags-input .close {
+  font-size: inherit;
+  line-height: inherit;
+  text-shadow: none;
+}
 .badge-team {
     color: $primary;
     background-color: transparent;

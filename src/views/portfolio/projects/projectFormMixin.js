@@ -47,13 +47,10 @@ export default {
       submitted: false,
       isCollection: false,
       fieldFeedback: { ...INITIAL_FIELD_FEEDBACK },
-      tag: '',
       tags: [],
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
-      collectionTagTyping: '',
       collectionTags: [],
-      addOnKeys: [9, 13, 32, ':', ';', ','],
       isLoading: false,
       defaultParents: [],
       availableParents: [],
@@ -70,12 +67,6 @@ export default {
   watch: {
     'project.version'(v) {
       if (!v) this.project.isLatest = false;
-    },
-    tag(input) {
-      this.searchTags(input);
-    },
-    collectionTagTyping(input) {
-      this.searchTags(input);
     },
   },
   computed: {
@@ -138,8 +129,6 @@ export default {
     },
     resetTagInputs() {
       clearTimeout(this.tagsAutoCompleteDebounce);
-      this.tag = '';
-      this.collectionTagTyping = '';
       this.tagsAutoCompleteItems = [];
     },
     applyValidationErrors(error) {
@@ -206,9 +195,7 @@ export default {
           input,
         )}&pageNumber=1&pageSize=6`;
         this.axios.get(url).then((response) => {
-          this.tagsAutoCompleteItems = response.data.map((tag) => ({
-            text: tag.name,
-          }));
+          this.tagsAutoCompleteItems = response.data.map((tag) => tag.name);
         });
       }, 250);
     },
