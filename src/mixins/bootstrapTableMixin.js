@@ -3,11 +3,6 @@ import Vue from 'vue';
 let nextCellId = 0;
 
 export default {
-  data() {
-    return {
-      vueFormatters: [],
-    };
-  },
   created() {
     this.pendingCells = new Map();
     this.mountedCells = [];
@@ -16,27 +11,6 @@ export default {
     this.mountedCells.forEach((cell) => cell.$destroy());
   },
   methods: {
-    vueFormatter(obj) {
-      const key = `_vue_formatter_${this.vueFormatters.length}`;
-      this.vueFormatters.push({
-        el: `.${key}`,
-        name: key,
-        ...obj,
-      });
-      return `<div class="${key}"/>`;
-    },
-    vueFormatterInit() {
-      if (!this.vueFormatters.length) {
-        return;
-      }
-      for (let i = this.vueFormatters.length - 1; i >= 0; i--) {
-        const formatter = this.vueFormatters[i];
-        if (document.getElementsByClassName(formatter.name)) {
-          new Vue(formatter);
-          this.vueFormatters.splice(i, 1);
-        }
-      }
-    },
     // Returns a placeholder for a formatter, which mountCells() replaces with the component.
     cell(component, props) {
       const id = nextCellId++;

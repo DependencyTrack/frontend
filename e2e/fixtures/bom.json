@@ -16,6 +16,12 @@
         "occurrences": [{ "location": "lib/jackson-core-2.13.2.jar" }]
       },
       "group": "com.fasterxml.jackson.core",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "0a6a0e0620d51833feffc67bccb51937b2345763"
+        }
+      ],
       "licenses": [{ "license": { "id": "Apache-2.0" } }],
       "name": "jackson-core",
       "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.13.2",

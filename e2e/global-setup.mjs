@@ -39,7 +39,7 @@ export default async function globalSetup() {
     ],
   });
 
-  // The API can't write KEV assertions, EPSS scores or aliases, and EPSS only reaches an internal vulnerability through a CVE alias.
+  // The API can't write KEV assertions, EPSS scores, aliases or package metadata, and EPSS only reaches an internal vulnerability through a CVE alias.
   execFileSync(
     'docker',
     [
@@ -58,7 +58,11 @@ export default async function globalSetup() {
       INSERT INTO "VULNERABILITY_ALIAS" ("GROUP_ID", "SOURCE", "VULN_ID")
         SELECT g.id, a.source, a.vuln_id
           FROM (SELECT gen_random_uuid() AS id) AS g,
-               (VALUES ('INTERNAL', '${vulnId}'), ('NVD', 'CVE-${vulnId}')) AS a (source, vuln_id)`,
+               (VALUES ('INTERNAL', '${vulnId}'), ('NVD', 'CVE-${vulnId}')) AS a (source, vuln_id);
+      INSERT INTO "PACKAGE_METADATA" ("PURL", "RESOLVED_AT") VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core', now()) ON CONFLICT DO NOTHING;
+      INSERT INTO "PACKAGE_ARTIFACT_METADATA" ("PURL", "PACKAGE_PURL", "HASH_SHA1", "RESOLVED_FROM")
+        VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core@2.13.2', 'pkg:maven/com.fasterxml.jackson.core/jackson-core', '0a6a0e0620d51833feffc67bccb51937b2345763', 'central')
+        ON CONFLICT DO NOTHING`,
     ],
     { stdio: 'inherit' },
   );
@@ -107,7 +111,9 @@ export default async function globalSetup() {
     analysis: { state: 'IN_TRIAGE' },
     operation_mode: 'LOG',
   });
-  const runs = await api.get('/v2/internal/workflow-runs');
+  const runs = await api.get(
+    '/v2/internal/workflow-runs?workflow_name=import-bom',
+  );
 
   const seed = {
     project: { uuid: upload.projectUuid, ...project },

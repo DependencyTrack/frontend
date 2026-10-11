@@ -17,8 +17,6 @@ export default defineConfig(({ mode }) => {
           find: '@',
           replacement: fileURLToPath(new URL('src', import.meta.url)),
         },
-        // Runtime templates in `template:` strings need the compiler build.
-        { find: /^vue$/, replacement: 'vue/dist/vue.esm.js' },
       ],
     },
     css: {
