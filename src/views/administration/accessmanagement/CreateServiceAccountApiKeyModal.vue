@@ -46,7 +46,8 @@
       >
         <b-form-input
           :id="`${modalId}-custom-lifetime`"
-          v-model.number="customDays"
+          v-model="customDays"
+          number
           type="number"
           min="1"
           step="1"

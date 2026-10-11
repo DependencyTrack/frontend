@@ -129,7 +129,8 @@
       >
         <b-form-input
           id="workload-identity-provider-lifetime-input"
-          v-model.number="sessionLifetimeSeconds"
+          v-model="sessionLifetimeSeconds"
+          number
           type="number"
           :min="minSessionLifetime"
           :max="maxSessionLifetime"
