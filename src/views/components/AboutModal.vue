@@ -43,7 +43,7 @@
           </li>
           <li>
             <i class="fa-li fa fa-book" aria-hidden="true"></i
-            ><a href="https://docs.dependencytrack.org/">Documentation</a>
+            ><a href="https://dependencytrack.github.io/docs/">Documentation</a>
           </li>
           <li>
             <i class="fa-li fa fa-github" aria-hidden="true"></i
