@@ -38,6 +38,12 @@ export default [
           message:
             'Use EventBus from shared/eventbus. Vue 3 removed $on, $off and $once.',
         },
+        {
+          selector:
+            "CallExpression[callee.property.name='$emit'][arguments.0.value='input']",
+          message:
+            "Emit update:modelValue for a modelValue prop. Vue 3's v-model doesn't use input and value.",
+        },
       ],
       'vue/no-restricted-syntax': [
         'error',
@@ -46,6 +52,12 @@ export default [
             "VElement[rawName='b-form-input'] > VStartTag VDirectiveKey[name.name='model'] > VIdentifier[name='number']",
           message:
             'Use the number prop. v-model.number on <b-form-input> breaks under @vue/compat.',
+        },
+        {
+          selector:
+            "CallExpression[callee.name='$emit'][arguments.0.value='input']",
+          message:
+            "Emit update:modelValue for a modelValue prop. Vue 3's v-model doesn't use input and value.",
         },
       ],
       'no-restricted-imports': [
@@ -59,6 +71,10 @@ export default [
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-deprecated-delete-set': 'error',
+      'vue/no-deprecated-model-definition': [
+        'error',
+        { allowVue3Compat: true },
+      ],
       'vue/no-deprecated-slot-attribute': 'error',
       'vue/no-deprecated-slot-scope-attribute': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],

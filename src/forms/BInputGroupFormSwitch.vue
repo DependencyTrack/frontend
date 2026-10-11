@@ -33,31 +33,34 @@ export default {
   components: {
     cSwitch,
   },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String, // fallback label if labelOn or labelOff not set
     labelOn: String, // if set will be used for "on" state
     labelOff: String, // if set will be used for "off" state
-    value: Boolean,
+    modelValue: Boolean,
     inputGroupSize: String,
     readonly: Boolean,
     disabled: Boolean,
     showPlaceholderLabel: Boolean, // can be used to show an empty label on top, useful to put on same row as other inputs
     tooltip: String,
   },
+  emits: ['update:modelValue', 'change'],
   data() {
     return {
       labelIcon: {
         dataOn: '\u2713',
         dataOff: '\u2715',
       },
-      currentLabel: (this.value ? this.labelOn : this.labelOff) || this.label,
+      currentLabel:
+        (this.modelValue ? this.labelOn : this.labelOff) || this.label,
     };
   },
   computed: {
     innerValue: {
       get: function () {
-        return common.toBoolean(this.value);
+        return common.toBoolean(this.modelValue);
       },
       set: function (newValue) {
         this.currentLabel =
@@ -69,7 +72,7 @@ export default {
       const vm = this;
       return Object.assign({}, this.$listeners, {
         change: function (event) {
-          vm.$emit('input', event); // model doesn't update otherwise?
+          vm.$emit('update:modelValue', event); // model doesn't update otherwise?
           vm.$emit('change', event);
         },
       });

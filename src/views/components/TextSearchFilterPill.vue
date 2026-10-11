@@ -13,7 +13,7 @@
   >
     <template #value
       ><span :title="$t('message.operator_contains')"
-        >~ "{{ value.value }}"</span
+        >~ "{{ modelValue.value }}"</span
       ></template
     >
 
@@ -43,6 +43,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'TextSearchFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -60,11 +61,12 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpFields: this.allFieldValues(),
@@ -72,7 +74,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.fields && val.value) {
@@ -88,10 +90,10 @@ export default {
   computed: {
     hasFilter() {
       return (
-        this.value &&
-        this.value.fields &&
-        this.value.fields.length > 0 &&
-        this.value.value
+        this.modelValue &&
+        this.modelValue.fields &&
+        this.modelValue.fields.length > 0 &&
+        this.modelValue.value
       );
     },
     trimmedValue() {
@@ -107,8 +109,8 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpFields = [...this.value.fields];
-        this.tmpValue = this.value.value;
+        this.tmpFields = [...this.modelValue.fields];
+        this.tmpValue = this.modelValue.value;
       } else {
         this.tmpFields = this.allFieldValues();
         this.tmpValue = '';
@@ -116,7 +118,7 @@ export default {
     },
     applyFilter() {
       if (!this.trimmedValue || this.tmpFields.length === 0) return;
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         fields: [...this.tmpFields],
         value: this.trimmedValue,
       });
@@ -126,7 +128,7 @@ export default {
       this.tmpFields = this.allFieldValues();
       this.tmpValue = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

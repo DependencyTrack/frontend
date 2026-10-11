@@ -64,6 +64,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'NumericRangeFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -89,11 +90,12 @@ export default {
       type: Number,
       default: 0.1,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpFrom: '',
@@ -101,7 +103,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val) {
@@ -118,12 +120,15 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && (this.value.from !== null || this.value.to !== null);
+      return (
+        this.modelValue &&
+        (this.modelValue.from !== null || this.modelValue.to !== null)
+      );
     },
     displayValue() {
-      if (!this.value) return '';
-      const from = this.value.from;
-      const to = this.value.to;
+      if (!this.modelValue) return '';
+      const from = this.modelValue.from;
+      const to = this.modelValue.to;
       if (from !== null && to !== null) {
         return `${from} – ${to}`;
       } else if (from !== null) {
@@ -185,12 +190,12 @@ export default {
     onDropdownHide() {
       if (this.hasFilter) {
         this.tmpFrom =
-          this.value.from !== null && this.value.from !== undefined
-            ? String(this.value.from)
+          this.modelValue.from !== null && this.modelValue.from !== undefined
+            ? String(this.modelValue.from)
             : '';
         this.tmpTo =
-          this.value.to !== null && this.value.to !== undefined
-            ? String(this.value.to)
+          this.modelValue.to !== null && this.modelValue.to !== undefined
+            ? String(this.modelValue.to)
             : '';
       } else {
         this.tmpFrom = '';
@@ -199,7 +204,7 @@ export default {
     },
     applyFilter() {
       if (this.applyDisabled) return;
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         from: this.tmpFrom ? Number(this.tmpFrom) : null,
         to: this.tmpTo ? Number(this.tmpTo) : null,
       });
@@ -209,7 +214,7 @@ export default {
       this.tmpFrom = '';
       this.tmpTo = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

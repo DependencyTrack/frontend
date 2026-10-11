@@ -75,6 +75,7 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'DateTimeRangeFilterPill',
   components: { FilterPillDropdown },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     fieldName: {
       type: String,
@@ -96,11 +97,12 @@ export default {
       type: Boolean,
       default: false,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpSince: '',
@@ -108,7 +110,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler() {
         this.syncFromValue();
@@ -117,16 +119,18 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && (this.value.since || this.value.before);
+      return (
+        this.modelValue && (this.modelValue.since || this.modelValue.before)
+      );
     },
     displayValue() {
-      if (!this.value) return '';
+      if (!this.modelValue) return '';
 
-      const since = this.value.since
-        ? this.formatDisplayValue(this.value.since, false)
+      const since = this.modelValue.since
+        ? this.formatDisplayValue(this.modelValue.since, false)
         : '';
-      const before = this.value.before
-        ? this.formatDisplayValue(this.value.before, true)
+      const before = this.modelValue.before
+        ? this.formatDisplayValue(this.modelValue.before, true)
         : '';
 
       if (since && before) {
@@ -144,7 +148,7 @@ export default {
   // when converting between the user-visible date and the stored value.
   methods: {
     syncFromValue() {
-      const val = this.value;
+      const val = this.modelValue;
       this.tmpSince =
         val && val.since ? this.toInputValue(val.since, false) : '';
       this.tmpBefore =
@@ -235,7 +239,7 @@ export default {
         return;
       }
 
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         since: this.toEmitValue(this.tmpSince, false),
         before: this.toEmitValue(this.tmpBefore, true),
       });
@@ -245,7 +249,7 @@ export default {
       this.tmpSince = '';
       this.tmpBefore = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

@@ -44,10 +44,11 @@ export default {
   components: {
     ValidationProvider,
   },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
-    value: String,
+    modelValue: String,
     inputGroupSize: String,
     icon: String,
     rules: String,
@@ -58,6 +59,7 @@ export default {
     tooltip: String,
     lazy: String,
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       isFocused: false,
@@ -71,7 +73,7 @@ export default {
   computed: {
     innerValue: {
       get: function () {
-        return this.value;
+        return this.modelValue;
       },
       set: function (newValue) {
         return newValue;
@@ -82,7 +84,7 @@ export default {
 
       return Object.assign({}, this.$listeners, {
         input: function (event) {
-          vm.$emit('input', event);
+          vm.$emit('update:modelValue', event);
         },
       });
     },

@@ -60,16 +60,18 @@ export default {
   components: {
     Multiselect,
   },
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: {
       type: String,
       default: 'secret-ref-select',
     },
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       availableSecrets: [],
@@ -80,7 +82,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       async handler(newValue) {
         if (
@@ -162,7 +164,7 @@ export default {
       if (selected) {
         this.secretNotFound = false;
       }
-      this.$emit('input', value);
+      this.$emit('update:modelValue', value);
     },
   },
 };

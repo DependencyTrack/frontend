@@ -7,7 +7,7 @@
           :label="$t('message.name')"
           input-group-size="mb-3"
           type="text"
-          :value="row.name"
+          :modelValue="row.name"
           :readonly="true"
         />
         <b-input-group-form-input
@@ -15,7 +15,7 @@
           :label="$t('message.type')"
           input-group-size="mb-3"
           type="text"
-          :value="row.type"
+          :modelValue="row.type"
           :readonly="true"
         />
         <b-form-group

@@ -236,8 +236,8 @@ export default {
                       <span class="fa fa-warning"></span> {{ $t('admin.alert_schedule_summary_warning') }}
                     </p>
                     <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_cron_expression')" :required="true" type="text" v-model="scheduleCron"/>
-                    <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_last_triggered_at')" :readonly="true" type="text" :value="this.scheduleLastTriggeredAt" :state="null"/>
-                    <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_next_trigger_at')" :readonly="true" type="text" :value="this.scheduleNextTriggerAt" :state="null"/>
+                    <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_last_triggered_at')" :readonly="true" type="text" :modelValue="this.scheduleLastTriggeredAt" :state="null"/>
+                    <b-input-group-form-input v-if="isScheduled" :label="$t('admin.alert_schedule_next_trigger_at')" :readonly="true" type="text" :modelValue="this.scheduleNextTriggerAt" :state="null"/>
                     <b-form-group v-if="isScheduled" :title="$t('admin.alert_schedule_skip_publish_if_unchanged_tooltip')"><c-switch v-model="scheduleSkipUnchanged" color="primary" label v-bind="labelIcon"/> {{ $t('admin.alert_schedule_skip_publish_if_unchanged') }}</b-form-group>
                     <div style="text-align:right">
                       <b-button variant="outline-primary" v-permission="PERMISSIONS.SYSTEM_CONFIGURATION" @click="testNotification">{{ $t('admin.perform_test') }}</b-button>

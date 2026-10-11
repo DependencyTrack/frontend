@@ -23,8 +23,9 @@ import { autocompletion } from '@codemirror/autocomplete';
 
 export default {
   name: 'CodeMirrorEditor',
+  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
-    value: String,
+    modelValue: String,
     readOnly: Boolean,
     markers: {
       type: Array,
@@ -51,6 +52,7 @@ export default {
       default: null,
     },
   },
+  emits: ['update:modelValue', 'save'],
   data() {
     return {
       view: null,
@@ -60,7 +62,7 @@ export default {
   mounted() {
     const self = this;
     const state = EditorState.create({
-      doc: this.value || '',
+      doc: this.modelValue || '',
       extensions: [
         basicSetup,
         this.language || javascript(),
@@ -73,7 +75,7 @@ export default {
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             const val = update.state.doc.toString();
-            self.$emit('input', val);
+            self.$emit('update:modelValue', val);
             self.updateMinHeight(update.state.doc);
             if (self.$refs.editor) {
               self.$refs.editor.dispatchEvent(new Event('keyup'));
@@ -161,7 +163,7 @@ export default {
     },
   },
   watch: {
-    value(newVal) {
+    modelValue(newVal) {
       if (this.view && newVal !== this.view.state.doc.toString()) {
         this.view.dispatch({
           changes: {
