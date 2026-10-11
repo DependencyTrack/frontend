@@ -55,9 +55,9 @@ export async function login(
   await expect(page).not.toHaveURL(/\/login/);
 }
 
-export async function search(page, text) {
-  const box = page.getByRole('searchbox', { name: 'Search' });
-  const loading = page
+export async function search(page, text, within = page) {
+  const box = within.getByRole('searchbox', { name: 'Search' });
+  const loading = within
     .getByText('Loading, please wait')
     .filter({ visible: true });
   await expect(box).toBeVisible();

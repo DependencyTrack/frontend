@@ -95,14 +95,13 @@ export default {
         detailViewIcon: false,
         detailViewByClick: true,
         detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            render: (h) =>
-              h(ServiceAccountDetails, {
-                props: { row, index, rowEvents: this.rowEvents },
-              }),
+          return this.cell(ServiceAccountDetails, {
+            row,
+            index,
+            rowEvents: this.rowEvents,
           });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
       },
     };
