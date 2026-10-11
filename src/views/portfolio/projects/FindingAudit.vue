@@ -201,16 +201,13 @@
             v-b-tooltip.hover
             :title="this.$t('message.analysis_tooltip')"
           />
-          <bootstrap-toggle
+          <b-form-checkbox
             v-model="isSuppressed"
-            :options="{
-              on: this.$t('message.suppressed'),
-              off: this.$t('message.suppress'),
-              onstyle: 'warning',
-              offstyle: 'outline-disabled',
-            }"
             :disabled="analysisState === null"
-          />
+            class="align-self-center"
+            switch
+            >{{ this.$t('message.suppressed') }}</b-form-checkbox
+          >
         </b-input-group>
       </b-form-group>
       <b-row
@@ -309,7 +306,6 @@
 
 <script>
 import common from '@/shared/common';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
@@ -528,9 +524,6 @@ export default {
   },
   beforeMount() {
     this.finding && this.getAnalysis();
-  },
-  components: {
-    BootstrapToggle,
   },
 };
 </script>

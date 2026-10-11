@@ -8,16 +8,13 @@
       content-cols="auto"
     >
       <b-input-group :class="inputGroupSize">
-        <c-switch
+        <b-form-checkbox
           :id="`${id}-input`"
-          color="primary"
           v-model="innerValue"
-          label
-          v-bind="labelIcon"
           :readonly="readonly"
           :disabled="disabled"
-          v-b-tooltip.hover
-          :title="tooltip"
+          v-b-tooltip.hover="tooltip"
+          switch
           v-on="inputListeners"
         />
       </b-input-group>
@@ -27,12 +24,8 @@
 
 <script>
 import common from '../shared/common';
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
-  components: {
-    cSwitch,
-  },
   model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
@@ -49,10 +42,6 @@ export default {
   emits: ['update:modelValue', 'change'],
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       currentLabel:
         (this.modelValue ? this.labelOn : this.labelOff) || this.label,
     };
@@ -82,9 +71,8 @@ export default {
 };
 </script>
 <style scoped>
-.switch {
-  margin-right: 0;
-  margin-top: 0.25rem;
+.custom-switch {
+  margin-top: calc(0.375rem + 1px);
 }
 .form-group {
   flex-direction: row-reverse;

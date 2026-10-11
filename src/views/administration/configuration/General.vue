@@ -11,13 +11,12 @@
           v-model="baseUrl"
           tooltip="This URL is used to construct links back to Dependency-Track from external systems."
         />
-        <c-switch
+        <b-form-checkbox
           id="isBadgesEnabled"
-          color="primary"
           v-model="isBadgesEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_svg_badge') }}
+          switch
+          >{{ $t('admin.enable_svg_badge') }}</b-form-checkbox
+        >
       </b-form-group>
       <b-form-group>
         <b-form-group
@@ -27,13 +26,12 @@
         >
           <p>{{ $t('admin.default_language_desc') }}</p>
           <div id="customToolbar">
-            <c-switch
+            <b-form-checkbox
               id="default-language-enabled"
-              color="primary"
               v-model="isDefaultLanguageEnabled"
-              label
-              v-bind="labelIcon"
-            />{{ $t('admin.default_language_enable') }}
+              switch
+              >{{ $t('admin.default_language_enable') }}</b-form-checkbox
+            >
           </div>
         </b-form-group>
         <b-input-group>
@@ -71,7 +69,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -82,7 +79,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
   },
   data() {
@@ -91,10 +87,6 @@ export default {
       isBadgesEnabled: false,
       isDefaultLanguageEnabled: false,
       defaultLanguage: 'en',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

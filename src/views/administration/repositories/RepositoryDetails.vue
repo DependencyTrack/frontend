@@ -12,28 +12,19 @@
           autofocus="true"
         />
         <div class="mb-3">
-          <c-switch
-            color="primary"
-            v-model="enabled"
-            label
-            v-bind="labelIcon"
-          />{{ $t('admin.enabled') }}
+          <b-form-checkbox v-model="enabled" switch>{{
+            $t('admin.enabled')
+          }}</b-form-checkbox>
         </div>
         <div class="mb-3">
-          <c-switch
-            color="primary"
-            v-model="internal"
-            label
-            v-bind="labelIcon"
-          />{{ $t('admin.internal') }}
+          <b-form-checkbox v-model="internal" switch>{{
+            $t('admin.internal')
+          }}</b-form-checkbox>
         </div>
         <div class="mb-3">
-          <c-switch
-            color="primary"
-            v-model="authenticationRequired"
-            label
-            v-bind="labelIcon"
-          />{{ $t('admin.repository_authentication') }}
+          <b-form-checkbox v-model="authenticationRequired" switch>{{
+            $t('admin.repository_authentication')
+          }}</b-form-checkbox>
         </div>
         <div v-if="authenticationRequired" class="ml-4">
           <b-validated-input-group-form-input
@@ -67,7 +58,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
 import EventBus from '../../../shared/eventbus';
@@ -78,7 +68,6 @@ export default {
     index: Number,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
   },
@@ -93,10 +82,6 @@ export default {
       password: this.row.password,
       enabled: this.row.enabled,
       uuid: this.row.uuid,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

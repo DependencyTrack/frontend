@@ -10,13 +10,12 @@
             label-class="font-weight-bold pt-0 mb-2"
           >
             <div id="customToolbar">
-              <c-switch
+              <b-form-checkbox
                 id="isWelcomeMessage"
-                color="primary"
                 v-model="isWelcomeMessage"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.welcome_message_enable') }}
+                switch
+                >{{ $t('admin.welcome_message_enable') }}</b-form-checkbox
+              >
             </div>
             <textarea
               ref="editor"
@@ -57,7 +56,6 @@
 </template>
 <script>
 import axios from 'axios';
-import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 import DOMPurify from 'dompurify';
@@ -66,9 +64,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {

@@ -6,13 +6,12 @@
         label-size="lg"
         label-class="font-weight-bold pt-0 mb-2"
       >
-        <c-switch
+        <b-form-checkbox
           id="submission-enabled"
-          color="primary"
           v-model="isSubmissionEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ this.$t('admin.enable_telemetry_submission') }}
+          switch
+          >{{ this.$t('admin.enable_telemetry_submission') }}</b-form-checkbox
+        >
       </b-form-group>
       <b-form-group
         label-size="lg"
@@ -43,7 +42,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 
@@ -71,9 +69,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {

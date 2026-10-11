@@ -1,22 +1,20 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <b-form-group :label="$t('admin.integration_defectdojo_enable')">
-        <c-switch
-          id="enabled"
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />
+      <b-form-group
+        :label="$t('admin.integration_defectdojo_enable')"
+        label-for="enabled"
+      >
+        <b-form-checkbox id="enabled" v-model="enabled" switch />
       </b-form-group>
-      <b-form-group :label="$t('admin.integration_defectdojo_reimport_enable')">
-        <c-switch
+      <b-form-group
+        :label="$t('admin.integration_defectdojo_reimport_enable')"
+        label-for="reimport-enabled"
+      >
+        <b-form-checkbox
           id="reimport-enabled"
-          color="primary"
           v-model="reimportEnabled"
-          label
-          v-bind="labelIcon"
+          switch
         />
       </b-form-group>
       <b-validated-input-group-form-input
@@ -46,7 +44,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
@@ -58,7 +55,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
   },
@@ -68,10 +64,6 @@ export default {
       reimportEnabled: false,
       url: '',
       apiKey: '',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

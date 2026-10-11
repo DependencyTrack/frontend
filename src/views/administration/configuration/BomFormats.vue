@@ -7,12 +7,9 @@
         label-size="lg"
         label-class="font-weight-bold pt-0 mb-2"
       >
-        <c-switch
-          color="primary"
-          v-model="isCycloneDXEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_bom_cyclonedx') }}
+        <b-form-checkbox v-model="isCycloneDXEnabled" switch>{{
+          $t('admin.enable_bom_cyclonedx')
+        }}</b-form-checkbox>
       </b-form-group>
       <b-form-group
         :label="$t('admin.bom_validation')"
@@ -90,7 +87,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import common from '../../../shared/common';
 import VueTagsInput from '@johmun/vue-tags-input';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -101,7 +97,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     VueTagsInput,
   },
   data() {

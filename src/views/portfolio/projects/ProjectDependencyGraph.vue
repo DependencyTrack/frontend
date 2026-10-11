@@ -16,25 +16,26 @@
         !this.notFound
       "
     >
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1.5rem; margin-right: 0.5rem"
         id="showCompleteGraph"
-        color="primary"
         v-model="showCompleteGraph"
-        label
-        v-bind="labelIcon"
-      />
-      <span class="text-muted">{{ $t('message.show_complete_graph') }}</span>
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_complete_graph')
+        }}</span></b-form-checkbox
+      >
     </span>
-    <c-switch
+    <b-form-checkbox
       style="margin-left: 1.5rem; margin-right: 0.5rem"
       id="highlightOutdatedComponents"
-      color="primary"
       v-model="highlightOutdatedComponents"
-      label
-      v-bind="labelIcon"
-    />
-    <span class="text-muted">{{ $t('message.show_update_information') }}</span
+      inline
+      switch
+      ><span class="text-muted">{{
+        $t('message.show_update_information')
+      }}</span></b-form-checkbox
     ><br />
     <span v-if="this.notFound">
       <span class="text-muted">{{
@@ -60,13 +61,11 @@
 import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
     Vue2OrgTree,
-    cSwitch,
   },
   props: {
     project: Object,
@@ -105,10 +104,6 @@ export default {
       showCompleteGraph: this.showCompleteGraph,
       notFound: false,
       highlightOutdatedComponents: this.highlightOutdatedComponents,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       searchedComponentUuids: {},
     };
   },

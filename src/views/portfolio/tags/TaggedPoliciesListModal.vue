@@ -76,10 +76,6 @@ export default {
       permissions.POLICY_MANAGEMENT_UPDATE,
     ]);
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',

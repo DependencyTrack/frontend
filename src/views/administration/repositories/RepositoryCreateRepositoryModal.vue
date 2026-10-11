@@ -31,28 +31,19 @@
         :label="$t('admin.repository_type')"
       />
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enabled') }}
+        <b-form-checkbox v-model="enabled" switch>{{
+          $t('admin.enabled')
+        }}</b-form-checkbox>
       </div>
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="internal"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.internal') }}
+        <b-form-checkbox v-model="internal" switch>{{
+          $t('admin.internal')
+        }}</b-form-checkbox>
       </div>
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="repository_authentication"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.repository_authentication') }}
+        <b-form-checkbox v-model="repository_authentication" switch>{{
+          $t('admin.repository_authentication')
+        }}</b-form-checkbox>
       </div>
       <div v-if="repository_authentication" class="ml-4">
         <b-validated-input-group-form-input
@@ -83,7 +74,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
@@ -94,7 +84,6 @@ export default {
     type: String,
   },
   components: {
-    cSwitch,
     BInputGroupFormSelect,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
@@ -114,10 +103,6 @@ export default {
       username: null,
       password: null,
       enabled: true,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       repositoryTypes: [
         { value: 'COMPOSER', text: 'PHP (Composer)' },
         { value: 'CPAN', text: 'Perl (CPAN)' },

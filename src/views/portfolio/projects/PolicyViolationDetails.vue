@@ -179,16 +179,12 @@
             @change="makeAnalysis"
             style="flex: 0 1 auto; width: auto; margin-right: 2rem"
           />
-          <bootstrap-toggle
+          <b-form-checkbox
             v-model="isSuppressed"
-            :options="{
-              on: $t('message.suppressed'),
-              off: $t('message.suppress'),
-              onstyle: 'warning',
-              offstyle: 'outline-disabled',
-            }"
-            :disabled="false"
-          />
+            class="align-self-center"
+            switch
+            >{{ $t('message.suppressed') }}</b-form-checkbox
+          >
         </b-input-group>
       </b-form-group>
     </b-col>
@@ -197,15 +193,11 @@
 
 <script>
 import common from '@/shared/common';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import permissionsMixin from '@/mixins/permissionsMixin';
 
 export default {
   props: {
     violation: Object,
-  },
-  components: {
-    BootstrapToggle,
   },
   mixins: [permissionsMixin],
   data() {

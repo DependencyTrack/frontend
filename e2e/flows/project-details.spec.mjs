@@ -16,6 +16,7 @@ test('edit a project in the details modal', async ({ page, api }) => {
   await modal.getByLabel('Description').fill(description);
   await modal.getByPlaceholder('Add Tag').fill(tag);
   await modal.getByPlaceholder('Add Tag').press('Enter');
+  await modal.getByText('Is latest version').click();
   await modal.getByRole('button', { name: 'Update' }).click();
   await expect(page.getByText('Project updated')).toBeVisible();
   await expect(modal).toBeHidden();
@@ -24,4 +25,5 @@ test('edit a project in the details modal', async ({ page, api }) => {
   await expect(page.getByRole('main').getByText(tag)).toBeVisible();
   await page.getByText('View Details').click();
   await expect(modal.getByLabel('Description')).toHaveValue(description);
+  await expect(modal.getByLabel('Is latest version')).toBeChecked();
 });

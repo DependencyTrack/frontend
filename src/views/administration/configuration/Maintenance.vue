@@ -39,15 +39,9 @@
         label-class="font-weight-bold pt-0 mb-0"
       >
         <b-form-group>
-          <label class="d-flex align-items-center mb-0">
-            <c-switch
-              color="primary"
-              v-model="enableProjectRetention"
-              label
-              v-bind="switchLabelIcon"
-            />
-            <span class="ml-1">{{ $t('admin.project_retention_enable') }}</span>
-          </label>
+          <b-form-checkbox v-model="enableProjectRetention" switch>{{
+            $t('admin.project_retention_enable')
+          }}</b-form-checkbox>
           <b-form-text>
             {{ $t('admin.project_retention_enable_help') }}
           </b-form-text>
@@ -110,15 +104,9 @@
         label-size="lg"
         label-class="font-weight-bold pt-0 mb-0"
       >
-        <label class="d-flex align-items-center mb-0">
-          <c-switch
-            color="primary"
-            v-model="tagsDeleteUnused"
-            label
-            v-bind="switchLabelIcon"
-          />
-          <span class="ml-1">{{ $t('admin.tags_delete_unused') }}</span>
-        </label>
+        <b-form-checkbox v-model="tagsDeleteUnused" switch>{{
+          $t('admin.tags_delete_unused')
+        }}</b-form-checkbox>
         <b-form-text>
           {{ $t('admin.tags_delete_unused_help') }}
         </b-form-text>
@@ -146,7 +134,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
@@ -154,9 +141,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {
@@ -167,10 +151,6 @@ export default {
       projectRetentionVersions: 5,
       tagsDeleteUnused: null,
       initialSnapshot: '',
-      switchLabelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   computed: {

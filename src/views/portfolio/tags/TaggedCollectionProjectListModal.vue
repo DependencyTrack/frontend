@@ -49,10 +49,6 @@ export default {
   },
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('message.name'),

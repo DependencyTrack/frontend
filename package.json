@@ -59,7 +59,6 @@
     "simple-line-icons": "2.5.5",
     "vue": "2.7.16",
     "vue-axios": "3.5.2",
-    "vue-bootstrap-toggle": "1.1.4",
     "vue-chartjs": "3.5.1",
     "vue-i18n": "8.28.2",
     "vue-multiselect": "2.1.9",
@@ -86,10 +85,7 @@
     "xmlbuilder2": "4.0.3"
   },
   "overrides": {
-    "fast-uri": "3.1.2",
-    "vue-bootstrap-toggle": {
-      "merge": "2.1.1"
-    }
+    "fast-uri": "3.1.2"
   },
   "engines": {
     "node": ">= 22",

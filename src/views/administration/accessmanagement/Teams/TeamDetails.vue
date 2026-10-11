@@ -205,10 +205,6 @@ export default {
       ldapUsers: this.row.ldapUsers,
       oidcUsers: this.row.oidcUsers,
       serviceAccounts: this.row.serviceAccounts,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       storageIdentifier: `TeamDetail:${this.row.uuid}`,
     };
   },

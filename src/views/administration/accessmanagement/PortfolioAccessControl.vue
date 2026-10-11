@@ -2,13 +2,9 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <c-switch
-          id="isAclEnabled"
-          color="primary"
-          v-model="isAclEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_acl') }}
+        <b-form-checkbox id="isAclEnabled" v-model="isAclEnabled" switch>{{
+          $t('admin.enable_acl')
+        }}</b-form-checkbox>
       </div>
       <bootstrap-table
         ref="table"
@@ -25,7 +21,6 @@
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import PortfolioAccessControlDetails from './PortfolioAccessControlDetails.vue';
 
@@ -34,16 +29,9 @@ export default {
     header: String,
   },
   mixins: [bootstrapTableMixin, configPropertyMixin],
-  components: {
-    cSwitch,
-  },
   data() {
     return {
       isAclEnabled: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('admin.team_name'),
