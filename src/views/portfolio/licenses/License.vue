@@ -109,12 +109,12 @@
 <script>
 import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 
 export default {
   mixins: [permissionsMixin],
   components: {},
-  title: '',
   computed: {
     licenseLabel() {
       if (this.license.name) {
@@ -179,7 +179,7 @@ export default {
     this.axios.get(url).then((response) => {
       this.license = response.data;
       EventBus.emit('addCrumb', this.licenseLabel);
-      this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
+      setPageTitle(`${this.$t('message.license')} ${this.licenseLabel}`);
     });
     this.getTabFromRoute().active = true;
   },

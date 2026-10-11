@@ -132,6 +132,7 @@ import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal.vue';
 
@@ -194,7 +195,7 @@ export default {
     syncServiceFields: function (service) {
       this.service = service;
       EventBus.emit('addCrumb', this.serviceLabel);
-      this.$title = this.serviceLabel;
+      setPageTitle(this.serviceLabel);
     },
   },
   beforeMount() {
@@ -211,7 +212,7 @@ export default {
         this.service.project.uuid,
         this.projectLabel,
       );
-      this.$title = this.serviceLabel;
+      setPageTitle(this.serviceLabel);
     });
     /* TODO: Add when server supports service metrics
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${this.uuid}/current`;

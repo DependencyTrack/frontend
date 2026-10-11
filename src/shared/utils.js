@@ -163,6 +163,12 @@ export function isUrlSaveForRedirect(redirectUrl) {
   }
 }
 
+export function setPageTitle(title) {
+  if (title) {
+    document.title = `Dependency-Track - ${title}`;
+  }
+}
+
 /**
  * Returns the context from which the webapp is running.
  */

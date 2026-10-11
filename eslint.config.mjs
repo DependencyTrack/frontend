@@ -51,6 +51,10 @@ export default [
       'no-restricted-imports': [
         'error',
         { name: 'vue-debounce', message: "Use debounce from 'lodash-es'." },
+        {
+          name: 'vue-page-title',
+          message: "Use setPageTitle from 'shared/utils'.",
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',

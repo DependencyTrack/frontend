@@ -8,7 +8,7 @@ import {
   hasPermission,
   storePermissions,
 } from '../shared/permissions';
-import { getContextPath } from '../shared/utils';
+import { getContextPath, setPageTitle } from '../shared/utils';
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer.vue');
@@ -1354,5 +1354,7 @@ router.beforeEach((to, _from, next) => {
     next();
   }
 });
+
+router.afterEach((to) => setPageTitle(to.meta.title));
 
 export default router;

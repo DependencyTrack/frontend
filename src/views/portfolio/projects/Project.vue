@@ -547,6 +547,7 @@ import ProjectDependencyGraph from './ProjectDependencyGraph.vue';
 import ProjectServices from './ProjectServices.vue';
 import ProjectDashboard from './ProjectDashboard.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal.vue';
 import ProjectPropertiesModal from './ProjectPropertiesModal.vue';
@@ -581,7 +582,6 @@ export default {
     ProjectEpss,
     ExternalReferencesDropdown,
   },
-  title: '',
   computed: {
     projectLabel() {
       if (this.project.name && this.project.version) {
@@ -671,7 +671,7 @@ export default {
     syncProjectFields: function (project) {
       this.project = project;
       EventBus.emit('addCrumb', this.projectLabel);
-      this.$title = this.projectLabel;
+      setPageTitle(this.projectLabel);
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
@@ -728,7 +728,7 @@ export default {
             0,
           );
           EventBus.emit('addCrumb', this.projectLabel);
-          this.$title = this.projectLabel;
+          setPageTitle(this.projectLabel);
         });
     },
     initializeProjectDetailsModal: function () {

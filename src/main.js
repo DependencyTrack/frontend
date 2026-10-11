@@ -7,7 +7,6 @@ import './validation';
 import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import VuePageTitle from 'vue-page-title';
 import '@/directives/VuePermission';
 import '@/directives/ScrollableTabs';
 import '@/views/components/filter-pill-content.css';
@@ -26,7 +25,6 @@ Vue.use(VueToastr, {
   defaultPosition: 'toast-top-right',
   defaultCloseOnHover: false,
 });
-Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 
 Vue.prototype.$api = api;
 Vue.prototype.$oidc = oidc;
