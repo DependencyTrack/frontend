@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { request } from '@playwright/test';
 import {
@@ -37,6 +38,25 @@ export default async function globalSetup() {
       { identityType: 'PURL', identity: purl, versionType: 'EXACT' },
     ],
   });
+
+  // KEV assertions have no write API, only the mirror of the CISA feed writes them.
+  execFileSync(
+    'docker',
+    [
+      'compose',
+      '-f',
+      new URL('compose.yaml', import.meta.url).pathname,
+      'exec',
+      '-T',
+      'postgres',
+      'psql',
+      '-U',
+      'dtrack',
+      '-c',
+      `INSERT INTO "KEV_ASSERTION" ("ASSERTER", "VULN_SOURCE", "VULN_ID", "REQUIRED_ACTION") VALUES ('cisa', 'INTERNAL', '${vulnId}', 'Apply the vendor fix.')`,
+    ],
+    { stdio: 'inherit' },
+  );
 
   const project = { name: uniqueName('e2e-project'), version: '1.0.0' };
   const bom = await readFile(new URL('fixtures/bom.json', import.meta.url));
