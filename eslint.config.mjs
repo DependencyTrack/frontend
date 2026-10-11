@@ -21,6 +21,14 @@ export default [
       globals: globals.browser,
     },
     rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "MemberExpression[object.property.name='$i18n'][property.name='t']",
+          message: 'Use this.$t(), $i18n has no t() in vue-i18n 9+.',
+        },
+      ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
