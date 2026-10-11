@@ -347,14 +347,14 @@ export default {
       return data;
     },
     onFieldChange(propName, value) {
-      this.$set(this.formData, propName, value);
+      this.formData = { ...this.formData, [propName]: value };
 
       const prefix = `${propName}.`;
-      Object.keys(this.validationErrors).forEach((key) => {
-        if (key === propName || key.startsWith(prefix)) {
-          this.$delete(this.validationErrors, key);
-        }
-      });
+      this.validationErrors = Object.fromEntries(
+        Object.entries(this.validationErrors).filter(
+          ([key]) => key !== propName && !key.startsWith(prefix),
+        ),
+      );
     },
     validateForm() {
       if (!this.schema) {

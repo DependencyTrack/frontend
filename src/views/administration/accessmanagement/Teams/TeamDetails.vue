@@ -27,6 +27,13 @@
               :api-key="apiKeys[key]"
               v-on:removeClicked="removeApiKey(apiKeys[key])"
               v-on:regenerateClicked="regenerateApiKey(apiKeys[key])"
+              v-on:commentUpdated="
+                (comment) =>
+                  syncVariables('replaceKey', {
+                    old: apiKeys[key],
+                    new: { ...apiKeys[key], comment },
+                  })
+              "
             />
             <actionable-list-group-item
               :add-icon="true"
@@ -483,7 +490,7 @@ export default {
       const updateTeamArray = (prop, updater) => {
         const arr = this.team[prop] ?? [];
         const result = updater(arr);
-        this.$set(this.team, prop, result);
+        this.team = { ...this.team, [prop]: result };
       };
 
       // operations that should be done on the team instance

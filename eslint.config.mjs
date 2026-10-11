@@ -48,8 +48,14 @@ export default [
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
+      'vue/no-deprecated-delete-set': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
     },
+  },
+  {
+    // Its $set calls go away with vue2-org-tree.
+    files: ['src/views/portfolio/projects/ProjectDependencyGraph.vue'],
+    rules: { 'vue/no-deprecated-delete-set': 'off' },
   },
   {
     files: ['*.js', '*.mjs'],

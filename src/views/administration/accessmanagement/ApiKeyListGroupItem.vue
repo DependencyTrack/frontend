@@ -68,6 +68,7 @@
       v-if="editable"
       :key-id="keyId"
       :api-key="apiKey"
+      v-on:commentUpdated="(comment) => $emit('commentUpdated', comment)"
     />
     <p class="my-2" :class="{ 'text-muted font-italic': !apiKey.comment }">
       {{ comment }}
