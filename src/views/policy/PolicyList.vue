@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
 import common from '../../shared/common';
 import xssFilters from 'xss-filters';
 import CreatePolicyModal from './CreatePolicyModal.vue';
@@ -123,7 +124,7 @@ export default {
                   <b-col sm="6">
                     <b-input-group-form-input id="identifier" :label="this.$t('message.name')" input-group-size="mb-3"
                         required="true" type="text" v-model="name" lazy="true" autofocus="true"
-                        v-debounce:750ms="updatePolicy" :debounce-events="'keyup'" />
+                        @keyup="debouncedUpdatePolicy" />
                   </b-col>
                   <b-col sm="3">
                     <b-input-group-form-select id="input-repository-type" required="true"
@@ -230,6 +231,9 @@ export default {
                 onlyLatestProjectVersion: row.onlyLatestProjectVersion,
                 invertTagMatch: row.invertTagMatch || false,
               };
+            },
+            created() {
+              this.debouncedUpdatePolicy = debounce(this.updatePolicy, 750);
             },
             methods: {
               formatLabel: function (labelName, labelProperty) {

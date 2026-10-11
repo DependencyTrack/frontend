@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
 import i18n from '../../../i18n';
@@ -92,7 +93,7 @@ export default {
                   <b-col sm="6">
                     <b-input-group-form-input id="input-oidcgroup-name" :label="$t('admin.oidc_group_name')" input-group-size="mb-3"
                                               required="true" type="text" v-model="oidcGroup.name" lazy="true" autofocus="true"
-                                              v-debounce:750ms="updateOidcGroup" :debounce-events="'keyup'" />
+                                              @keyup="debouncedUpdateOidcGroup" />
                     <b-form-group :label="this.$t('admin.mapped_teams')">
                       <div class="list-group">
                         <span v-for="mappedTeam in mappedTeams">
@@ -121,6 +122,12 @@ export default {
                 oidcGroup: row,
                 mappedTeams: [],
               };
+            },
+            created() {
+              this.debouncedUpdateOidcGroup = debounce(
+                this.updateOidcGroup,
+                750,
+              );
             },
             methods: {
               updateOidcGroup: function () {

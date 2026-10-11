@@ -7,7 +7,6 @@ import './validation';
 import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import vueDebounce from 'vue-debounce';
 import VuePageTitle from 'vue-page-title';
 import '@/directives/VuePermission';
 import '@/directives/ScrollableTabs';
@@ -27,7 +26,6 @@ Vue.use(VueToastr, {
   defaultPosition: 'toast-top-right',
   defaultCloseOnHover: false,
 });
-Vue.use(vueDebounce, { defaultTime: '750ms' });
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 
 Vue.prototype.$api = api;

@@ -11,8 +11,7 @@
           v-model="name"
           lazy="true"
           autofocus="true"
-          v-debounce:750ms="updateTeam"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateTeam"
         />
         <b-form-group :label="this.$t('admin.api_keys')">
           <p class="text-muted small">
@@ -171,7 +170,7 @@ import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
 import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput.vue';
 import i18n from '../../../../i18n';
-import { omit } from 'lodash-es';
+import { debounce, omit } from 'lodash-es';
 
 export default {
   i18n,
@@ -242,6 +241,9 @@ export default {
           new Date(this.apiKeys[a].created) - new Date(this.apiKeys[b].created),
       );
     },
+  },
+  created() {
+    this.debouncedUpdateTeam = debounce(this.updateTeam, 750);
   },
   methods: {
     apiKeysToDict: function (apiKeys) {

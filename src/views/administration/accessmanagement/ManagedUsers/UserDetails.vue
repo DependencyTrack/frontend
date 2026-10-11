@@ -46,8 +46,7 @@
           type="text"
           v-model="fullname"
           lazy="true"
-          v-debounce:750ms="updateUser"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateUser"
         />
         <b-input-group-form-input
           id="input-managed-user-email"
@@ -57,8 +56,7 @@
           type="text"
           v-model="email"
           lazy="true"
-          v-debounce:750ms="updateUser"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateUser"
         />
         <c-switch
           id="forcePasswordChange"
@@ -109,6 +107,7 @@
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ChangePasswordModal from '../ChangePasswordModal.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
@@ -163,6 +162,9 @@ export default {
     suspended() {
       this.updateUser();
     },
+  },
+  created() {
+    this.debouncedUpdateUser = debounce(this.updateUser, 750);
   },
   methods: {
     openPermissionModal() {

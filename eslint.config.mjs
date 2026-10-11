@@ -38,6 +38,10 @@ export default [
             'Use the number prop. v-model.number on <b-form-input> breaks under @vue/compat.',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        { name: 'vue-debounce', message: "Use debounce from 'lodash-es'." },
+      ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
