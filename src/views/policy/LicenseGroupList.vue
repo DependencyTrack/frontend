@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
 import common from '../../shared/common';
 import xssFilters from 'xss-filters';
 import CreateLicenseGroupModal from './CreateLicenseGroupModal.vue';
@@ -112,7 +113,7 @@ export default {
                     <b-col sm="6">
                       <b-input-group-form-input id="input-license-group-name" :label="$t('message.name')" input-group-size="mb-3"
                                                 required="true" type="text" v-model="name" lazy="true" autofocus="true"
-                                                v-debounce:750ms="updateLicenseGroup" :debounce-events="'keyup'" />
+                                                @keyup="debouncedUpdateLicenseGroup" />
                     </b-col>
                     <b-col sm="6">
                     </b-col>
@@ -172,6 +173,12 @@ export default {
                 name: row.name,
                 licenses: row.licenses,
               };
+            },
+            created() {
+              this.debouncedUpdateLicenseGroup = debounce(
+                this.updateLicenseGroup,
+                750,
+              );
             },
             methods: {
               updateLicenseGroup: function () {
