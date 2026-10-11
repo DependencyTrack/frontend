@@ -23,7 +23,8 @@ export default {
       this.$watch(dataKey, (val) => {
         if (!isBoolean) {
           const hasValue = Array.isArray(val) ? val.length > 0 : !!val;
-          if (hasValue) this.$set(this.pendingFilters, name, false);
+          if (hasValue)
+            this.pendingFilters = { ...this.pendingFilters, [name]: false };
         }
         if (!this._clearing && typeof this.refreshTable === 'function') {
           this.refreshTable();
@@ -108,7 +109,7 @@ export default {
         this[name] = true;
         return;
       }
-      this.$set(this.pendingFilters, name, true);
+      this.pendingFilters = { ...this.pendingFilters, [name]: true };
       this.$nextTick(() => {
         this.$nextTick(() => {
           const ref = this.$refs['filter_' + name];
@@ -119,7 +120,7 @@ export default {
       });
     },
     onFilterDismiss(name) {
-      this.$set(this.pendingFilters, name, false);
+      this.pendingFilters = { ...this.pendingFilters, [name]: false };
     },
     clearAllFilters() {
       this._clearing = true;
