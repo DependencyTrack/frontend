@@ -90,6 +90,7 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import EventBus from '../../../shared/eventbus';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 
@@ -136,7 +137,7 @@ export default {
     };
   },
   created() {
-    this.$root.$on('object-event', (data) => {
+    EventBus.on('object-event', (data) => {
       this.affectedComponent = data;
       this.okButton = this.$t('message.edit');
       this.title = this.$t('message.edit_affected_component');
@@ -209,7 +210,7 @@ export default {
       cancel();
     },
     beforeDestroy() {
-      this.$root.$off('object-event');
+      EventBus.off('object-event');
     },
   },
 };

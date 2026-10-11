@@ -184,7 +184,7 @@ export default {
           suspended: this.suspended,
         })
         .then((response) => {
-          EventBus.$emit(this.rowEvents.update, this.index, response.data);
+          EventBus.emit(this.rowEvents.update, this.index, response.data);
           this.$toastr.s(this.$t('message.updated'));
         })
         .catch(() => {

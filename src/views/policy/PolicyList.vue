@@ -49,17 +49,17 @@ export default {
     CreatePolicyModal,
   },
   mounted() {
-    EventBus.$on('policyManagement:policies:rowUpdate', (index, row) => {
+    EventBus.on('policyManagement:policies:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('policyManagement:policies:rowDeleted', () => {
+    EventBus.on('policyManagement:policies:rowDeleted', () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off('policyManagement:policies:rowUpdate');
-    EventBus.$off('policyManagement:policies:rowDeleted');
+    EventBus.off('policyManagement:policies:rowUpdate');
+    EventBus.off('policyManagement:policies:rowDeleted');
   },
   methods: {
     tableLoaded: function (data) {
@@ -258,7 +258,7 @@ export default {
                 let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
                 this.axios.get(url).then((response) => {
                   this.policy = response.data;
-                  EventBus.$emit(
+                  EventBus.emit(
                     'policyManagement:policies:rowUpdate',
                     index,
                     this.policy,
@@ -283,7 +283,7 @@ export default {
                     // prevent that "limit to" details are hidden after updates where table does not need to refresh
                     if (refreshTableRow) {
                       this.policy = response.data;
-                      EventBus.$emit(
+                      EventBus.emit(
                         'policyManagement:policies:rowUpdate',
                         index,
                         this.policy,
@@ -300,7 +300,7 @@ export default {
                 this.axios
                   .delete(url)
                   .then(() => {
-                    EventBus.$emit(
+                    EventBus.emit(
                       'policyManagement:policies:rowDeleted',
                       index,
                     );

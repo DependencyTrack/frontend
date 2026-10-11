@@ -106,7 +106,7 @@ export default {
   },
   mounted() {
     this.fetchAvailableExtensions();
-    EventBus.$on('admin:templates:cloneTemplate', (template) => {
+    EventBus.on('admin:templates:cloneTemplate', (template) => {
       this.name = `${template.name} - clone`;
       this.extensionName = template.extensionName;
       this.description = template.description;

@@ -252,7 +252,7 @@ export default {
     },
     syncComponentFields: function (component) {
       this.component = component;
-      EventBus.$emit('addCrumb', this.componentLabel);
+      EventBus.emit('addCrumb', this.componentLabel);
     },
     redirectToDependencyGraph: function () {
       this.$router.push({
@@ -293,7 +293,7 @@ export default {
     let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
     this.axios.get(componentUrl).then((response) => {
       this.component = response.data;
-      EventBus.$emit(
+      EventBus.emit(
         'addCrumb',
         this.componentLabel,
         'Project',
@@ -327,7 +327,7 @@ export default {
     },
   },
   destroyed() {
-    EventBus.$emit('crumble');
+    EventBus.emit('crumble');
   },
 };
 </script>

@@ -82,7 +82,7 @@ export default {
   components: {},
   methods: {
     emitEvent: function (plugin) {
-      EventBus.$emit('admin:plugin', plugin);
+      EventBus.emit('admin:plugin', plugin);
     },
     getMenuFromRoute: function () {
       let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');

@@ -214,7 +214,7 @@ export default {
           }
           if (result.data.includes(permissions.VIEW_PORTFOLIO)) {
             permissions.storePermissions(result.data);
-            EventBus.$emit('authenticated', token);
+            EventBus.emit('authenticated', token);
             redirectTo
               ? this.$router.replace(redirectTo)
               : this.$router.replace({ name: 'Dashboard' });

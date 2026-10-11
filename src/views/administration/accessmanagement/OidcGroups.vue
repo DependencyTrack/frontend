@@ -44,17 +44,17 @@ export default {
     CreateOidcGroupModal,
   },
   mounted() {
-    EventBus.$on('admin:oidcgroups:rowUpdate', (index, row) => {
+    EventBus.on('admin:oidcgroups:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:oidcgroups:rowDeleted', () => {
+    EventBus.on('admin:oidcgroups:rowDeleted', () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off('admin:oidcgroups:rowUpdate');
-    EventBus.$off('admin:oidcgroups:rowDeleted');
+    EventBus.off('admin:oidcgroups:rowUpdate');
+    EventBus.off('admin:oidcgroups:rowDeleted');
   },
   data() {
     return {
@@ -139,7 +139,7 @@ export default {
                   })
                   .then((response) => {
                     this.team = response.data;
-                    EventBus.$emit(
+                    EventBus.emit(
                       'admin:oidcgroups:rowUpdate',
                       index,
                       this.team,
@@ -155,7 +155,7 @@ export default {
                 this.axios
                   .delete(url)
                   .then(() => {
-                    EventBus.$emit('admin:oidcgroups:rowDeleted', index);
+                    EventBus.emit('admin:oidcgroups:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.oidc_group_deleted'));
                   })
                   .catch(() => {

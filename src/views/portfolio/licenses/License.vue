@@ -178,7 +178,7 @@ export default {
     let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
     this.axios.get(url).then((response) => {
       this.license = response.data;
-      EventBus.$emit('addCrumb', this.licenseLabel);
+      EventBus.emit('addCrumb', this.licenseLabel);
       this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
     });
     this.getTabFromRoute().active = true;
@@ -189,7 +189,7 @@ export default {
     },
   },
   destroyed() {
-    EventBus.$emit('crumble');
+    EventBus.emit('crumble');
   },
 };
 </script>

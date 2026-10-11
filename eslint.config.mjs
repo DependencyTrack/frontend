@@ -32,6 +32,12 @@ export default [
           selector: "MemberExpression[property.name='$children']",
           message: 'Use a template ref. Vue 3 removed $children.',
         },
+        {
+          selector:
+            'CallExpression[callee.property.name=/^\\$(on|off|once)$/]:not([arguments.0.value=/^bv::/])',
+          message:
+            'Use EventBus from shared/eventbus. Vue 3 removed $on, $off and $once.',
+        },
       ],
       'vue/no-restricted-syntax': [
         'error',

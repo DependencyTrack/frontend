@@ -66,7 +66,7 @@ export default {
         localStorage.setItem('sessionInvalidate', Date.now().toLocaleString());
         localStorage.removeItem('sessionInvalidate');
         // Clear token and permissions.
-        EventBus.$emit('authenticated', null);
+        EventBus.emit('authenticated', null);
         this.$router.replace({ name: 'Login' });
       });
     },

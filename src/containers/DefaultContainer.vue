@@ -287,10 +287,10 @@ export default {
     },
   },
   created() {
-    EventBus.$on('crumble', () => {
+    EventBus.on('crumble', () => {
       this.breadcrumbs = [];
     });
-    EventBus.$on(
+    EventBus.on(
       'addCrumb',
       (crumb, subSectionName, subSectionUuid, subsectionLabel) => {
         if (crumb) {

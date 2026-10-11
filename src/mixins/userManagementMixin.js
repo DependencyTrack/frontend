@@ -100,13 +100,13 @@ export default {
     },
     _successfulResponse_update: function (response) {
       if (this.rowEvents && this.rowEvents.update)
-        EventBus.$emit(this.rowEvents.update, this.index, response.data);
+        EventBus.emit(this.rowEvents.update, this.index, response.data);
       this.$toastr.s(this.$t('message.updated'));
     },
 
     _successfulResponse_delete: function () {
       if (this.rowEvents && this.rowEvents.delete)
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
       this.$toastr.s(this.$t('admin.user_deleted'));
     },
 

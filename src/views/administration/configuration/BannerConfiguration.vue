@@ -182,7 +182,7 @@ export default {
         },
       ]);
       if (success) {
-        EventBus.$emit('banner-updated');
+        EventBus.emit('banner-updated');
       }
     },
   },

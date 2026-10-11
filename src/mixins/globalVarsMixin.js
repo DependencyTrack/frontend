@@ -22,11 +22,11 @@ export default {
     if (this.$currentUser) {
       this.currentUser = this.$currentUser;
     } else {
-      EventBus.$emit('profileUpdated');
+      EventBus.emit('profileUpdated');
     }
   },
   mounted() {
-    EventBus.$on('profileUpdated', () => {
+    EventBus.on('profileUpdated', () => {
       axios
         .get(
           `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`,

@@ -670,7 +670,7 @@ export default {
     },
     syncProjectFields: function (project) {
       this.project = project;
-      EventBus.$emit('addCrumb', this.projectLabel);
+      EventBus.emit('addCrumb', this.projectLabel);
       this.$title = this.projectLabel;
     },
     initialize: function () {
@@ -727,12 +727,12 @@ export default {
             this.project.metrics.policyViolationsFail,
             0,
           );
-          EventBus.$emit('addCrumb', this.projectLabel);
+          EventBus.emit('addCrumb', this.projectLabel);
           this.$title = this.projectLabel;
         });
     },
     initializeProjectDetailsModal: function () {
-      this.$root.$emit('initializeProjectDetailsModal');
+      EventBus.emit('initializeProjectDetailsModal');
     },
     reAnalyze: function () {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
@@ -828,7 +828,7 @@ export default {
     },
   },
   destroyed() {
-    EventBus.$emit('crumble');
+    EventBus.emit('crumble');
   },
 };
 </script>

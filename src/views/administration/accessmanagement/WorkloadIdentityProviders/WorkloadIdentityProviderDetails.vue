@@ -265,7 +265,7 @@ export default {
           jwks: this.sendsJwks ? parseJwks(this.jwks) : undefined,
         });
         const response = await this.axios.get(this.providerUrl);
-        EventBus.$emit(this.rowEvents.update, this.index, response.data);
+        EventBus.emit(this.rowEvents.update, this.index, response.data);
         this.$toastr.s(this.$t('message.updated'));
       } catch (error) {
         console.error(error);
@@ -287,7 +287,7 @@ export default {
       if (!confirmed) return;
       try {
         await this.axios.delete(this.providerUrl);
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.workload_identity_provider_deleted'));
       } catch (error) {
         console.error(error);
