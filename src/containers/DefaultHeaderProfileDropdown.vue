@@ -1,9 +1,9 @@
 <template>
   <AppHeaderDropdown right no-caret>
-    <template slot="header">
+    <template v-slot:header>
       <i class="fa fa-user-circle-o" style="font-size: 1.6em"></i>
     </template>
-    <template slot="dropdown">
+    <template v-slot:dropdown>
       <b-dropdown-header boundary="viewport" tag="div" class="text-center">
         {{ $t('message.connected_as') }}
         <strong>{{ user }}</strong>

@@ -105,25 +105,27 @@
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="component-info-footer" slot="footer">
-        <b-row>
-          <b-col>
-            <b-link
-              class="font-weight-bold font-xs btn-block text-muted"
-              v-b-modal.componentDetailsModal
-              >{{ $t('message.view_details') }}
-              <i class="fa fa-angle-right float-right font-lg"></i
-            ></b-link>
-          </b-col>
-          <b-col v-if="component.externalReferences" md="auto">
-            <b-row class="d-none d-md-flex float-right">
-              <ExternalReferencesDropdown
-                :externalReferences="component.externalReferences"
-              />
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div id="component-info-footer">
+          <b-row>
+            <b-col>
+              <b-link
+                class="font-weight-bold font-xs btn-block text-muted"
+                v-b-modal.componentDetailsModal
+                >{{ $t('message.view_details') }}
+                <i class="fa fa-angle-right float-right font-lg"></i
+              ></b-link>
+            </b-col>
+            <b-col v-if="component.externalReferences" md="auto">
+              <b-row class="d-none d-md-flex float-right">
+                <ExternalReferencesDropdown
+                  :externalReferences="component.externalReferences"
+                />
+              </b-row>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-tabs
       class="body-bg-color"

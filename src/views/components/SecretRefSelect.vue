@@ -22,7 +22,7 @@
       @search-change="onSearchChange"
       @input="onInput"
     >
-      <template slot="singleLabel" slot-scope="{ option }">
+      <template v-slot:singleLabel="{ option }">
         <span>{{ option.name }}</span>
         <i
           v-if="secretNotFound"
@@ -30,7 +30,7 @@
           :title="$t('admin.secret_not_found')"
         ></i>
       </template>
-      <template slot="option" slot-scope="{ option }">
+      <template v-slot:option="{ option }">
         <div class="secret-option">
           <strong>{{ option.name }}</strong>
           <small v-if="option.description" class="text-muted d-block">
@@ -38,10 +38,10 @@
           </small>
         </div>
       </template>
-      <template slot="noResult">
+      <template v-slot:noResult>
         {{ $t('admin.no_secrets_found') }}
       </template>
-      <template slot="noOptions">
+      <template v-slot:noOptions>
         {{ $t('admin.type_to_search_secrets') }}
       </template>
     </multiselect>

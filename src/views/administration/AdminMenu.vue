@@ -6,15 +6,12 @@
       v-for="section in menu"
       v-bind:key="section.id"
     >
-      <div
-        slot="header"
-        v-if="isPermitted(section.permission)"
-        v-b-toggle="section.id"
-        style="cursor: pointer"
-      >
-        <i class="fa fa-align-justify"></i
-        ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
-      </div>
+      <template v-if="isPermitted(section.permission)" v-slot:header>
+        <div v-b-toggle="section.id" style="cursor: pointer">
+          <i class="fa fa-align-justify"></i
+          ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
+        </div>
+      </template>
       <b-collapse
         ref="accordion"
         v-if="isPermitted(section.permission)"

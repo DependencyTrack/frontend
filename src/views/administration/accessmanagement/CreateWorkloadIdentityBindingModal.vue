@@ -36,13 +36,13 @@
           deselect-label=""
           @search-change="onProviderSearchChange"
         >
-          <template slot="option" slot-scope="{ option }">
+          <template v-slot:option="{ option }">
             <strong>{{ option.name }}</strong>
             <small class="text-muted d-block"
               >{{ option.type }} &middot; {{ option.issuer }}</small
             >
           </template>
-          <template slot="noResult">
+          <template v-slot:noResult>
             {{ $t('admin.no_workload_identity_providers_found') }}
           </template>
         </multiselect>

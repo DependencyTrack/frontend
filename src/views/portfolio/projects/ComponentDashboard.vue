@@ -44,68 +44,72 @@
         style="height: 200px; margin-top: 40px"
         :height="200"
       ></chart-portfolio-vulnerabilities>
-      <div slot="footer">
-        <b-row>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-critical">
-                  <small class="text-muted">{{ $t('severity.critical') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentCritical }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-high">
-                  <small class="text-muted">{{ $t('severity.high') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentHigh }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-medium">
-                  <small class="text-muted">{{ $t('severity.medium') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentMedium }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-low">
-                  <small class="text-muted">{{ $t('severity.low') }}</small
-                  ><br />
-                  <strong class="h5">{{ currentLow }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-unassigned">
-                  <small class="text-muted">{{
-                    $t('severity.unassigned')
-                  }}</small
-                  ><br />
-                  <strong class="h4">{{ currentUnassigned }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-info">
-                  <small class="text-muted">{{
-                    $t('message.risk_score')
-                  }}</small
-                  ><br />
-                  <strong class="h5">{{ currentRiskScore }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div>
+          <b-row>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="severity-critical">
+                    <small class="text-muted">{{
+                      $t('severity.critical')
+                    }}</small
+                    ><br />
+                    <strong class="h4">{{ currentCritical }}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="severity-high">
+                    <small class="text-muted">{{ $t('severity.high') }}</small
+                    ><br />
+                    <strong class="h4">{{ currentHigh }}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="severity-medium">
+                    <small class="text-muted">{{ $t('severity.medium') }}</small
+                    ><br />
+                    <strong class="h4">{{ currentMedium }}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="severity-low">
+                    <small class="text-muted">{{ $t('severity.low') }}</small
+                    ><br />
+                    <strong class="h5">{{ currentLow }}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <Callout variant="severity-unassigned">
+                    <small class="text-muted">{{
+                      $t('severity.unassigned')
+                    }}</small
+                    ><br />
+                    <strong class="h4">{{ currentUnassigned }}</strong>
+                  </Callout>
+                </b-col>
+                <b-col sm="6">
+                  <Callout variant="severity-info">
+                    <small class="text-muted">{{
+                      $t('message.risk_score')
+                    }}</small
+                    ><br />
+                    <strong class="h5">{{ currentRiskScore }}</strong>
+                  </Callout>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-row>
       <b-col sm="6">

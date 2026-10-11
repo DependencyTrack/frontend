@@ -90,14 +90,16 @@
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="service-info-footer" slot="footer">
-        <b-link
-          class="font-weight-bold font-xs btn-block text-muted"
-          v-b-modal.serviceDetailsModal
-          >{{ $t('message.view_details') }}
-          <i class="fa fa-angle-right float-right font-lg"></i
-        ></b-link>
-      </div>
+      <template v-slot:footer>
+        <div id="service-info-footer">
+          <b-link
+            class="font-weight-bold font-xs btn-block text-muted"
+            v-b-modal.serviceDetailsModal
+            >{{ $t('message.view_details') }}
+            <i class="fa fa-angle-right float-right font-lg"></i
+          ></b-link>
+        </div>
+      </template>
     </b-card>
     <b-tabs
       class="body-bg-color"
