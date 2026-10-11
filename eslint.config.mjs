@@ -28,6 +28,10 @@ export default [
             "MemberExpression[object.property.name='$i18n'][property.name='t']",
           message: 'Use this.$t(), $i18n has no t() in vue-i18n 9+.',
         },
+        {
+          selector: "MemberExpression[property.name='$children']",
+          message: 'Use a template ref. Vue 3 removed $children.',
+        },
       ],
       'vue/no-restricted-syntax': [
         'error',
