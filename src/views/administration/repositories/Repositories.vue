@@ -58,17 +58,17 @@ export default {
     },
   },
   mounted() {
-    EventBus.$on('admin:repository:rowUpdate', (index, row) => {
+    EventBus.on('admin:repository:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:repository:rowDeleted', () => {
+    EventBus.on('admin:repository:rowDeleted', () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off('admin:repository:rowUpdate');
-    EventBus.$off('admin:repository:rowDeleted');
+    EventBus.off('admin:repository:rowUpdate');
+    EventBus.off('admin:repository:rowDeleted');
   },
   data() {
     return {
@@ -205,7 +205,7 @@ export default {
                 this.axios
                   .delete(url)
                   .then(() => {
-                    EventBus.$emit('admin:repository:rowDeleted', index);
+                    EventBus.emit('admin:repository:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.repository_deleted'));
                   })
                   .catch(() => {
@@ -227,7 +227,7 @@ export default {
                   })
                   .then((response) => {
                     this.repository = response.data;
-                    EventBus.$emit(
+                    EventBus.emit(
                       'admin:repository:rowUpdate',
                       index,
                       this.repository,

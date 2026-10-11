@@ -247,7 +247,7 @@ export default {
           email: this.email || '',
           suspended: this.suspended,
         });
-        EventBus.$emit(this.rowEvents.update, this.index, {
+        EventBus.emit(this.rowEvents.update, this.index, {
           email: this.email || null,
           suspended: this.suspended,
         });
@@ -270,7 +270,7 @@ export default {
       if (!confirmed) return;
       try {
         await this.axios.delete(this.serviceAccountUrl);
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.service_account_deleted'));
       } catch (error) {
         console.error(error);

@@ -262,7 +262,7 @@ export default {
       try {
         const response = await this.axios.post(endpoint, requestBody);
         this.team = response.data;
-        EventBus.$emit(this.rowEvents.update, this.index, this.team);
+        EventBus.emit(this.rowEvents.update, this.index, this.team);
         this.$toastr.s(this.$t('message.updated'));
       } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -273,7 +273,7 @@ export default {
       const requestBody = { data: { uuid: this.team.uuid } };
       try {
         await this.axios.delete(endpoint, requestBody);
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.team_deleted'));
       } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -478,7 +478,7 @@ export default {
         const response = await this.axios.get(endpoint);
         response.data.permissions = response.data.permissions ?? [];
         response.data.apiKeys = response.data.apiKeys ?? [];
-        EventBus.$emit(this.rowEvents.update, this.index, response.data);
+        EventBus.emit(this.rowEvents.update, this.index, response.data);
       } catch (error) {
         console.error(error);
         this.$toastr.w(this.$t('condition.unsuccessful_action'));

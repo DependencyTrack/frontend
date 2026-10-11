@@ -11,13 +11,10 @@ export default {
     this._onSystemCapabilitiesUpdated = (capabilities) => {
       this.systemCapabilities = capabilities;
     };
-    EventBus.$on(
-      'systemCapabilitiesUpdated',
-      this._onSystemCapabilitiesUpdated,
-    );
+    EventBus.on('systemCapabilitiesUpdated', this._onSystemCapabilitiesUpdated);
   },
   beforeDestroy() {
-    EventBus.$off(
+    EventBus.off(
       'systemCapabilitiesUpdated',
       this._onSystemCapabilitiesUpdated,
     );

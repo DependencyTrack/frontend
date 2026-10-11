@@ -1310,7 +1310,7 @@ router.beforeEach((to, _from, next) => {
             .catch(() => {
               // token is stale
               // notify app about this
-              EventBus.$emit('authenticated', null);
+              EventBus.emit('authenticated', null);
               // redirect to login page
               redirectToLogin();
             });
@@ -1339,7 +1339,7 @@ router.beforeEach((to, _from, next) => {
             checkAndProceed();
           })
           .catch(() => {
-            EventBus.$emit('authenticated', null);
+            EventBus.emit('authenticated', null);
             redirectToLogin();
           });
       } else {

@@ -62,23 +62,23 @@ export default {
 
     const loadSystemCapabilities = () => {
       Vue.prototype.$systemCapabilities = undefined;
-      EventBus.$emit('systemCapabilitiesUpdated', undefined);
+      EventBus.emit('systemCapabilitiesUpdated', undefined);
       this.axios
         .get(
           `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_SYSTEM_CAPABILITIES}`,
         )
         .then((result) => {
           Vue.prototype.$systemCapabilities = result.data.capabilities;
-          EventBus.$emit('systemCapabilitiesUpdated', result.data.capabilities);
+          EventBus.emit('systemCapabilitiesUpdated', result.data.capabilities);
         })
         .catch((error) => {
           console.error('Failed to load system capabilities', error);
           Vue.prototype.$systemCapabilities = undefined;
-          EventBus.$emit('systemCapabilitiesUpdated', undefined);
+          EventBus.emit('systemCapabilitiesUpdated', undefined);
         });
     };
 
-    EventBus.$on('authenticated', (token) => {
+    EventBus.on('authenticated', (token) => {
       sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       if (token) {
         sessionStorage.setItem('token', token);
@@ -86,7 +86,7 @@ export default {
         sessionStorage.removeItem('token');
         clearPermissions();
         Vue.prototype.$systemCapabilities = undefined;
-        EventBus.$emit('systemCapabilitiesUpdated', undefined);
+        EventBus.emit('systemCapabilitiesUpdated', undefined);
       }
       setAuthHeader(token);
       if (token) {
@@ -98,7 +98,7 @@ export default {
       this.bannerInstanceKey++;
     });
 
-    EventBus.$on('banner-updated', async () => {
+    EventBus.on('banner-updated', async () => {
       sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       await this.fetchBannerConfig();
       this.bannerInstanceKey++;

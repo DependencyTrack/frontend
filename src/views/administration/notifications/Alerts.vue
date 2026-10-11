@@ -51,17 +51,17 @@ export default {
     CreateAlertModal,
   },
   mounted() {
-    EventBus.$on('admin:alerts:rowUpdate', (index, row) => {
+    EventBus.on('admin:alerts:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:alerts:rowDeleted', () => {
+    EventBus.on('admin:alerts:rowDeleted', () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off('admin:alerts:rowUpdate');
-    EventBus.$off('admin:alerts:rowDeleted');
+    EventBus.off('admin:alerts:rowUpdate');
+    EventBus.off('admin:alerts:rowDeleted');
   },
   data() {
     return {
@@ -549,7 +549,7 @@ export default {
                     }
                     this.filterExpressionMarkers = [];
                     this.alert = response.data;
-                    EventBus.$emit('admin:alerts:rowUpdate', index, this.alert);
+                    EventBus.emit('admin:alerts:rowUpdate', index, this.alert);
                     this.$toastr.s(this.$t('message.updated'));
                   })
                   .catch(() => {
@@ -565,7 +565,7 @@ export default {
                     },
                   })
                   .then(() => {
-                    EventBus.$emit('admin:alerts:rowDeleted', index);
+                    EventBus.emit('admin:alerts:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.alert_deleted'));
                   })
                   .catch(() => {

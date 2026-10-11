@@ -593,6 +593,7 @@ import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import VueTagsInput from '@johmun/vue-tags-input';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
@@ -755,7 +756,7 @@ export default {
     };
   },
   beforeMount() {
-    this.$root.$on('initializeProjectDetailsModal', async () => {
+    EventBus.on('initializeProjectDetailsModal', async () => {
       this.project = {
         ...FORM_FIELD_DEFAULTS,
         ...cloneDeep(this.projectInput),
@@ -776,7 +777,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.$root.$off('initializeProjectDetailsModal');
+    EventBus.off('initializeProjectDetailsModal');
   },
   methods: {
     onShow() {

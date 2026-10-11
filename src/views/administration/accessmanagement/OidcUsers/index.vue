@@ -42,17 +42,17 @@ export default {
     CreateOidcUserModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       this.$refs.table.updateRow({ index, row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     return {

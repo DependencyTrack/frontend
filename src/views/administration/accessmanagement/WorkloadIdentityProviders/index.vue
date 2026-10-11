@@ -44,18 +44,18 @@ export default {
     CreateWorkloadIdentityProviderModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       const table = this.$refs.table.$refs.table;
       table.updateRow({ index, row, replace: true });
       table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     const textFormatter = (value) =>

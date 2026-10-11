@@ -43,20 +43,20 @@ export default {
     CreateTemplateModal,
   },
   mounted() {
-    EventBus.$on('admin:templates:rowUpdate', (index, row) => {
+    EventBus.on('admin:templates:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('admin:templates:rowDeleted', () => {
+    EventBus.on('admin:templates:rowDeleted', () => {
       this.refreshTable();
     });
-    EventBus.$on('admin:templates:cloneTemplate', () => {
+    EventBus.on('admin:templates:cloneTemplate', () => {
       this.$bvModal.show('createTemplateModal');
     });
   },
   beforeDestroy() {
-    EventBus.$off('admin:templates:rowUpdate');
-    EventBus.$off('admin:templates:rowDeleted');
+    EventBus.off('admin:templates:rowUpdate');
+    EventBus.off('admin:templates:rowDeleted');
   },
   data() {
     return {
@@ -161,7 +161,7 @@ export default {
                   })
                   .then((response) => {
                     this.template = response.data;
-                    EventBus.$emit(
+                    EventBus.emit(
                       'admin:templates:rowUpdate',
                       index,
                       this.template,
@@ -178,7 +178,7 @@ export default {
                   .delete(url)
                   .then((response) => {
                     this.template = response.data;
-                    EventBus.$emit('admin:templates:rowDeleted', index);
+                    EventBus.emit('admin:templates:rowDeleted', index);
                     this.$toastr.s(this.$t('admin.template_deleted'));
                   })
                   .catch(() => {
@@ -186,7 +186,7 @@ export default {
                   });
               },
               cloneNotificationPublisher: function () {
-                EventBus.$emit('admin:templates:cloneTemplate', this.template);
+                EventBus.emit('admin:templates:cloneTemplate', this.template);
               },
             },
           });

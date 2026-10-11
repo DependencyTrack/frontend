@@ -193,7 +193,7 @@ export default {
     },
     syncServiceFields: function (service) {
       this.service = service;
-      EventBus.$emit('addCrumb', this.serviceLabel);
+      EventBus.emit('addCrumb', this.serviceLabel);
       this.$title = this.serviceLabel;
     },
   },
@@ -204,7 +204,7 @@ export default {
     let serviceUrl = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${this.uuid}`;
     this.axios.get(serviceUrl).then((response) => {
       this.service = response.data;
-      EventBus.$emit(
+      EventBus.emit(
         'addCrumb',
         this.serviceLabel,
         'Project',
@@ -226,7 +226,7 @@ export default {
  */
   },
   destroyed() {
-    EventBus.$emit('crumble');
+    EventBus.emit('crumble');
   },
 };
 </script>

@@ -287,6 +287,7 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 import projectFormMixin, {
@@ -324,7 +325,7 @@ export default {
     };
   },
   beforeMount() {
-    this.$root.$on('initializeProjectCreateProjectModal', async () => {
+    EventBus.on('initializeProjectCreateProjectModal', async () => {
       this.resetValues();
       await this.getACLEnabled();
       await this.getAvailableTeams();
@@ -333,7 +334,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.$root.$off('initializeProjectCreateProjectModal');
+    EventBus.off('initializeProjectCreateProjectModal');
   },
   computed: {
     teamsState() {

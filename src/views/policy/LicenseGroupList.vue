@@ -44,17 +44,17 @@ export default {
     CreateLicenseGroupModal,
   },
   mounted() {
-    EventBus.$on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
+    EventBus.on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on('policyManagement:licenseGroups:rowDeleted', () => {
+    EventBus.on('policyManagement:licenseGroups:rowDeleted', () => {
       this.refreshTable();
     });
   },
   beforeDestroy() {
-    EventBus.$off('policyManagement:licenseGroups:rowUpdate');
-    EventBus.$off('policyManagement:licenseGroups:rowDeleted');
+    EventBus.off('policyManagement:licenseGroups:rowUpdate');
+    EventBus.off('policyManagement:licenseGroups:rowDeleted');
   },
   methods: {
     tableLoaded: function (data) {
@@ -190,7 +190,7 @@ export default {
                   })
                   .then((response) => {
                     this.licenseGroup = response.data;
-                    EventBus.$emit(
+                    EventBus.emit(
                       'policyManagement:licenseGroups:rowUpdate',
                       index,
                       this.licenseGroup,
@@ -206,7 +206,7 @@ export default {
                 this.axios
                   .delete(url)
                   .then(() => {
-                    EventBus.$emit(
+                    EventBus.emit(
                       'policyManagement:licenseGroups:rowDeleted',
                       index,
                     );

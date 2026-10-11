@@ -77,7 +77,7 @@ export default {
           email: this.email,
         })
         .then(() => {
-          EventBus.$emit('profileUpdated');
+          EventBus.emit('profileUpdated');
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.profile_updated'));
         })

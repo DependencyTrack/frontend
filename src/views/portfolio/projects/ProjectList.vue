@@ -58,6 +58,7 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar.vue';
 import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal.vue';
@@ -95,7 +96,7 @@ export default {
   },
   methods: {
     initializeProjectCreateProjectModal: function () {
-      this.$root.$emit('initializeProjectCreateProjectModal');
+      EventBus.emit('initializeProjectCreateProjectModal');
     },
     apiUrl: function (parentUuid) {
       if (this.uuid && !parentUuid) {
