@@ -1,49 +1,40 @@
 <template>
-  <validation-provider
-    :vid="id"
-    :name="label"
-    :rules="rules"
-    :mode="mode"
-    v-slot="{ errors, valid }"
-  >
-    <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
-      <b-input-group :class="inputGroupSize">
-        <b-input-group-prepend v-if="icon"
-          ><b-input-group-text><i :class="icon"></i></b-input-group-text
-        ></b-input-group-prepend>
-        <b-form-input
-          :id="`${id}-input`"
-          :type="type"
-          :class="inputClasses"
-          v-model="innerValue"
-          :placeholder="label"
-          :state="errorHandlingMethod(errors, valid)"
-          :autocomplete="autocomplete"
-          :autofocus="isFocused"
-          :required="isRequired"
-          v-on="inputListeners"
-        />
-        <b-input-group-append v-if="tooltip"
-          ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-            ><i class="cui-info font-lg"></i></b-input-group-text
-        ></b-input-group-append>
-      </b-input-group>
-      <b-form-invalid-feedback :state="errorHandlingMethod(errors, valid)">
-        {{ errors[0] }}
-      </b-form-invalid-feedback>
-    </b-form-group>
-  </validation-provider>
+  <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
+    <b-input-group :class="inputGroupSize">
+      <b-input-group-prepend v-if="icon"
+        ><b-input-group-text><i :class="icon"></i></b-input-group-text
+      ></b-input-group-prepend>
+      <b-form-input
+        ref="input"
+        :id="`${id}-input`"
+        :type="type"
+        :class="inputClasses"
+        v-model="innerValue"
+        :placeholder="label"
+        :state="state"
+        :autocomplete="autocomplete"
+        :autofocus="isFocused"
+        :required="required"
+        :min="min"
+        :max="max"
+        v-on="inputListeners"
+      />
+      <b-input-group-append v-if="tooltip"
+        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
+          ><i class="cui-info font-lg"></i></b-input-group-text
+      ></b-input-group-append>
+    </b-input-group>
+    <b-form-invalid-feedback :state="state">
+      {{ dirty ? error : '' }}
+    </b-form-invalid-feedback>
+  </b-form-group>
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate';
 import common from '../shared/common';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
-  components: {
-    ValidationProvider,
-  },
   model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
@@ -51,7 +42,10 @@ export default {
     modelValue: String,
     inputGroupSize: String,
     icon: String,
-    rules: String,
+    required: Boolean,
+    min: [String, Number],
+    max: [String, Number],
+    customValidity: String,
     mode: String,
     type: String,
     autocomplete: String,
@@ -63,12 +57,26 @@ export default {
   data() {
     return {
       isFocused: false,
+      dirty: false,
+      valid: null,
+      error: null,
     };
   },
   beforeMount() {
     if (this.autofocus === true || this.autofocus === 'true') {
       this.isFocused = true;
     }
+  },
+  mounted() {
+    this.validate();
+  },
+  watch: {
+    modelValue() {
+      this.$nextTick(this.validate);
+    },
+    customValidity() {
+      this.$nextTick(this.validate);
+    },
   },
   computed: {
     innerValue: {
@@ -84,34 +92,52 @@ export default {
 
       return Object.assign({}, this.$listeners, {
         input: function (event) {
+          vm.dirty = true;
           vm.$emit('update:modelValue', event);
         },
       });
     },
-    isRequired: function () {
-      return !!(this.rules && this.rules.includes('required'));
-    },
     inputClasses: function () {
       let classes = 'form-control';
-      if (
-        !common.toBoolean(this.lazy) &&
-        this.rules &&
-        this.rules.includes('required')
-      ) {
+      if (!common.toBoolean(this.lazy) && this.required) {
         classes += ' required';
       }
       return classes;
     },
-  },
-  methods: {
-    errorHandlingMethod: function (errors, valid) {
-      if (!this.rules) {
+    state: function () {
+      if (
+        this.mode === 'passive' ||
+        !(this.required || this.min != null || this.max != null)
+      ) {
         return null;
       }
       if (common.toBoolean(this.lazy)) {
-        return errors[0] ? false : valid ? true : null;
+        return this.valid ? true : this.dirty ? false : null;
+      }
+      return this.valid;
+    },
+  },
+  methods: {
+    validate: function () {
+      const input = this.$refs.input.$el;
+      input.setCustomValidity(this.customValidity || '');
+      const { validity } = input;
+      const field = { _field_: this.label };
+      this.valid = validity.valid;
+      if (validity.valueMissing) {
+        this.error = this.$t('validation.required', field);
+      } else if (validity.rangeUnderflow) {
+        this.error = this.$t('validation.min_value', {
+          ...field,
+          min: this.min,
+        });
+      } else if (validity.rangeOverflow) {
+        this.error = this.$t('validation.max_value', {
+          ...field,
+          max: this.max,
+        });
       } else {
-        return errors[0] ? false : valid ? true : false;
+        this.error = input.validationMessage;
       }
     },
   },

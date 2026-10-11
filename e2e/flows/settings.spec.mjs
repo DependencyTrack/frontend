@@ -21,6 +21,20 @@ test('change and save a setting that uses a switch', async ({ page, api }) => {
   }
 });
 
+test('explain why a risk score weight is invalid', async ({ page }) => {
+  await login(page);
+  await page.goto('admin/configuration/riskscore');
+  const critical = page.getByRole('spinbutton', { name: 'Critical' });
+  await critical.fill('11');
+  await expect(
+    page.getByText('Critical (default: 10) value should be under 10'),
+  ).toBeVisible();
+  await critical.fill('');
+  await expect(
+    page.getByText('Critical (default: 10) is required'),
+  ).toBeVisible();
+});
+
 async function badgesEnabled(api) {
   const properties = await api.get('/v1/configProperty');
   return properties.find(

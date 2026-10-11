@@ -6,7 +6,7 @@
           id="base_url"
           :label="$t('admin.base_url')"
           input-group-size="mb-3"
-          rules="required"
+          required
           type="url"
           v-model="baseUrl"
           tooltip="This URL is used to construct links back to Dependency-Track from external systems."

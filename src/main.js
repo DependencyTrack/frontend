@@ -3,7 +3,6 @@ import BootstrapVue from 'bootstrap-vue';
 import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
-import './validation';
 import './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';

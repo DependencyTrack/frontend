@@ -11,70 +11,65 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
-                  <b-form @submit.prevent.stop="passes(login)">
-                    <h1>{{ $t('message.login') }}</h1>
-                    <p class="text-muted">{{ $t('message.login_desc') }}</p>
-                    <b-validated-input-group-form-input
-                      id="username"
-                      :label="$t('message.username')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-user"
-                      type="text"
-                      autocomplete="username email"
-                      v-model="input.username"
-                      autofocus="true"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-validated-input-group-form-input
-                      name="password"
-                      :label="$t('message.password')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-lock"
-                      type="password"
-                      autcomplete="currentpassword"
-                      v-model="input.password"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-row style="margin-bottom: 1rem">
-                      <b-col cols="6" v-show="showLoginForm">
-                        <b-button
-                          variant="primary"
-                          type="submit"
-                          class="px-4"
-                          >{{ $t('message.login') }}</b-button
-                        >
-                      </b-col>
-                      <b-col cols="6" v-show="oidcAvailable">
-                        <b-button
-                          :style="{ float: showLoginForm ? 'right' : 'none' }"
-                          v-on:click="oidcLogin()"
-                        >
-                          <span v-if="oidcCheckLoginButtonTextSetted()">{{
-                            oidcLoginButtonText()
-                          }}</span>
-                          <img
-                            alt="OpenID Logo"
-                            src="@/assets/img/openid-logo.svg"
-                            width="60px"
-                            v-else
-                          />
-                        </b-button>
-                      </b-col>
-                    </b-row>
-                    <b-link
-                      v-show="oidcAvailable && !showLoginForm"
-                      v-on:click="showLoginForm = true"
-                      >{{ $t('message.login_more_options') }}</b-link
-                    >
-                  </b-form>
-                </validation-observer>
+                <b-form @submit.prevent.stop="login">
+                  <h1>{{ $t('message.login') }}</h1>
+                  <p class="text-muted">{{ $t('message.login_desc') }}</p>
+                  <b-validated-input-group-form-input
+                    id="username"
+                    :label="$t('message.username')"
+                    input-group-size="mb-3"
+                    required
+                    mode="passive"
+                    icon="icon-user"
+                    type="text"
+                    autocomplete="username email"
+                    v-model="input.username"
+                    autofocus="true"
+                    lazy="true"
+                    v-show="showLoginForm"
+                  />
+                  <b-validated-input-group-form-input
+                    name="password"
+                    :label="$t('message.password')"
+                    input-group-size="mb-3"
+                    required
+                    mode="passive"
+                    icon="icon-lock"
+                    type="password"
+                    autcomplete="currentpassword"
+                    v-model="input.password"
+                    lazy="true"
+                    v-show="showLoginForm"
+                  />
+                  <b-row style="margin-bottom: 1rem">
+                    <b-col cols="6" v-show="showLoginForm">
+                      <b-button variant="primary" type="submit" class="px-4">{{
+                        $t('message.login')
+                      }}</b-button>
+                    </b-col>
+                    <b-col cols="6" v-show="oidcAvailable">
+                      <b-button
+                        :style="{ float: showLoginForm ? 'right' : 'none' }"
+                        v-on:click="oidcLogin()"
+                      >
+                        <span v-if="oidcCheckLoginButtonTextSetted()">{{
+                          oidcLoginButtonText()
+                        }}</span>
+                        <img
+                          alt="OpenID Logo"
+                          src="@/assets/img/openid-logo.svg"
+                          width="60px"
+                          v-else
+                        />
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                  <b-link
+                    v-show="oidcAvailable && !showLoginForm"
+                    v-on:click="showLoginForm = true"
+                    >{{ $t('message.login_more_options') }}</b-link
+                  >
+                </b-form>
               </b-card-body>
             </b-card>
             <b-card
@@ -103,7 +98,6 @@
 import axios from 'axios';
 import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import { ValidationObserver } from 'vee-validate';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
@@ -117,7 +111,6 @@ export default {
   components: {
     InformationalModal,
     BValidatedInputGroupFormInput,
-    ValidationObserver,
   },
   data() {
     return {
