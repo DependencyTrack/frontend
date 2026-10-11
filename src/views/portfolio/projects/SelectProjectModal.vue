@@ -60,7 +60,7 @@ export default {
       });
     },
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', this.$children[0].id);
+      this.$root.$emit('bv::hide::modal', 'selectProjectModal');
       this.$emit('selection', this.$refs.table.getSelections());
     },
   },

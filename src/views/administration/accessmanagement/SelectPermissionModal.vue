@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', this.$children[0].id);
+      this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
       this.$emit('selection', this.currentSelection);
     },
     updateCurrentSelection() {
