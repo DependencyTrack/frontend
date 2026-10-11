@@ -1,3 +1,4 @@
+import { uniqueName } from '../api.mjs';
 import { test, expect, login } from '../test.mjs';
 
 const property = { groupName: 'general', propertyName: 'badge.enabled' };
@@ -35,6 +36,43 @@ test('explain why a risk score weight is invalid', async ({ page }) => {
   await expect(
     page.getByText('Critical (default: 10) is required'),
   ).toBeVisible();
+});
+
+test('validate only the BOMs of projects with a tag', async ({ page, api }) => {
+  const properties = await api.get('/v1/configProperty');
+  const original = properties.filter((p) =>
+    ['bom.validation.mode', 'bom.validation.tags.inclusive'].includes(
+      p.propertyName,
+    ),
+  );
+  const tag = uniqueName('tag');
+  try {
+    await login(page);
+    await page.goto('admin/configuration/bomFormats');
+    await page.getByText('Enabled for tags').click();
+    await page.getByPlaceholder('Add Tag').first().fill(tag);
+    await page.getByPlaceholder('Add Tag').first().press('Enter');
+    await page.getByRole('button', { name: 'Update' }).click();
+    await expect(page.getByText('Configuration saved')).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByText(tag)).toBeVisible();
+    const saved = await api.get('/v1/configProperty');
+    expect(
+      saved.find((p) => p.propertyName === 'bom.validation.tags.inclusive')
+        .propertyValue,
+    ).toBe(JSON.stringify([tag]));
+  } finally {
+    await api.send(
+      'POST',
+      '/v1/configProperty/aggregate',
+      original.map(({ groupName, propertyName, propertyValue }) => ({
+        groupName,
+        propertyName,
+        propertyValue,
+      })),
+    );
+  }
 });
 
 async function badgesEnabled(api) {

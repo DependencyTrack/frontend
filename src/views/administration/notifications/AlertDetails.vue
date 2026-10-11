@@ -124,15 +124,13 @@
         id="tagLimits"
         :label="this.$t('admin.limit_to_tags')"
       >
-        <vue-tags-input
+        <tags-input
           id="limitToTagsInput"
-          v-model="tag"
-          :tags="tags"
-          :add-on-key="addOnKeys"
+          v-model="tags"
           :placeholder="$t('message.add_tag')"
-          :autocomplete-items="tagsAutoCompleteItems"
-          @tags-changed="(newTags) => (this.tags = newTags)"
-          class="mw-100 bg-transparent text-lowercase"
+          :suggestions="tagsAutoCompleteItems"
+          @search="searchTags"
+          class="mw-100 text-lowercase"
         />
       </b-form-group>
       <div v-if="limitToVisible === true">
@@ -420,7 +418,7 @@ import SelectTeamModal from '../../administration/accessmanagement/SelectTeamMod
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BToggleableDisplayButton from '../../components/BToggleableDisplayButton.vue';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
-import VueTagsInput from '@johmun/vue-tags-input';
+import TagsInput from '../../../forms/TagsInput.vue';
 import ExtensionConfigForm from '../../components/ExtensionConfigForm.vue';
 import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { createCelCompletionSource } from '../../policy/celCompletions';
@@ -438,7 +436,7 @@ export default {
     SelectTeamModal,
     BToggleableDisplayButton,
     BInputGroupFormInput,
-    VueTagsInput,
+    TagsInput,
     ExtensionConfigForm,
     CodeMirrorEditor,
   },
@@ -467,11 +465,9 @@ export default {
       scheduleCron: this.row.scheduleCron,
       scheduleSkipUnchanged: this.row.scheduleSkipUnchanged,
       limitToVisible: false,
-      tag: '', // The contents of a tag as its being typed into the vue-tag-input
-      tags: [], // An array of tags bound to the vue-tag-input
+      tags: [],
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
-      addOnKeys: [9, 13, 32, ':', ';', ','], // Separators used when typing tags into the vue-tag-input
       availableLevels: [
         {
           value: 'INFORMATIONAL',
@@ -572,13 +568,10 @@ export default {
     filterExpression() {
       this.filterExpressionMarkers = [];
     },
-    tag: 'searchTags',
   },
   methods: {
     initializeTags: function () {
-      this.tags = (this.alert.tags || []).map((tag) => ({
-        text: tag.name,
-      }));
+      this.tags = (this.alert.tags || []).map((tag) => tag.name);
     },
     formatProjectLabel: function (projectName, projectVersion) {
       if (projectName && projectVersion) {
@@ -653,9 +646,7 @@ export default {
         publisherConfig: publisherConfig,
         notifyOn: this.notifyOn,
         filterExpression: this.filterExpression,
-        tags: this.tags.map((tag) => {
-          return { name: tag.text };
-        }),
+        tags: this.tags.map((name) => ({ name })),
       };
       if (this.triggerType === 'SCHEDULE') {
         payload.scheduleCron = this.scheduleCron;
@@ -805,17 +796,15 @@ export default {
         this.filterExpression = this.filterExpression + '\n\n' + tpl.cel;
       }
     },
-    searchTags: function () {
-      if (!this.tag) {
+    searchTags: function (input) {
+      if (!input) {
         return;
       }
       clearTimeout(this.tagsAutoCompleteDebounce);
       this.tagsAutoCompleteDebounce = setTimeout(() => {
-        const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?searchText=${encodeURIComponent(this.tag)}&pageNumber=1&pageSize=6`;
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_TAG}?searchText=${encodeURIComponent(input)}&pageNumber=1&pageSize=6`;
         this.axios.get(url).then((response) => {
-          this.tagsAutoCompleteItems = response.data.map((tag) => {
-            return { text: tag.name };
-          });
+          this.tagsAutoCompleteItems = response.data.map((tag) => tag.name);
         });
       }, 250);
     },

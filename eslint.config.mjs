@@ -81,6 +81,10 @@ export default [
           name: 'vue-bootstrap-toggle',
           message: 'Use <b-form-checkbox switch>.',
         },
+        {
+          name: '@johmun/vue-tags-input',
+          message: "Use TagsInput from 'forms/TagsInput.vue'.",
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',

@@ -260,7 +260,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
 .custom-control {
   padding-bottom: 0.3rem;
 }

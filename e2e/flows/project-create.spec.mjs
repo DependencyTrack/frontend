@@ -29,3 +29,53 @@ test('create a project with tags and a parent', async ({ page, api }) => {
   const created = await api.get(`/v1/project/${uuid}`);
   expect(created.parent?.uuid).toBe(parent.uuid);
 });
+
+test('create a collection project of the children with a tag', async ({
+  page,
+  api,
+  problems,
+}) => {
+  // ProjectList's table callbacks still run after creating the project navigates away from it.
+  problems.allow(/^pageerror: .*'hideLoading'/);
+  const tag = uniqueName('tag');
+  await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-tagged'),
+    tags: [{ name: tag }],
+  });
+  const name = uniqueName('e2e-collection');
+  await login(page);
+  await page.goto('projects');
+  await page.getByRole('button', { name: 'Create Project' }).click();
+
+  const modal = page.getByRole('dialog', { name: 'Create Project' });
+  await modal.getByLabel('Project Name').fill(name);
+  await modal.getByText('Collection project').click();
+  await modal
+    .getByLabel('Project Collection Logic')
+    .selectOption({ label: 'Aggregate direct children with tag' });
+  const input = modal.getByPlaceholder(
+    'Aggregate data of children with this tag',
+  );
+  await input.fill(tag.slice(0, -1));
+  // The browser draws the suggestions, so they're only in the DOM as datalist options.
+  await expect(
+    modal.locator(`#input-collectionTags-suggestions option[value="${tag}"]`),
+  ).toBeAttached();
+  // Playwright can't open the browser's dropdown, so do what picking a suggestion does.
+  await input.evaluate((el, value) => {
+    el.value = value;
+    el.dispatchEvent(
+      new InputEvent('input', { inputType: 'insertReplacementText' }),
+    );
+  }, tag);
+  await expect(
+    modal.getByRole('button', { name: `Remove ${tag}` }),
+  ).toBeVisible();
+  await modal.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByText('Project created')).toBeVisible();
+  await expect(page).toHaveTitle(new RegExp(name));
+
+  const uuid = new URL(page.url()).pathname.split('/').pop();
+  const created = await api.get(`/v1/project/${uuid}`);
+  expect(created.collectionTag?.name).toBe(tag);
+});
