@@ -56,7 +56,6 @@
   </div>
 </template>
 <script>
-import i18n from '../../../../i18n';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
@@ -64,7 +63,6 @@ import SelectPermissionModal from '../SelectPermissionModal.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },

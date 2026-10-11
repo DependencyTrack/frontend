@@ -176,11 +176,9 @@ import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
 import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput.vue';
-import i18n from '../../../../i18n';
 import { debounce, omit } from 'lodash-es';
 
 export default {
-  i18n,
   mixins: [permissionsMixin],
   components: {
     ActionableListGroupItem,

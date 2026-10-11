@@ -144,7 +144,6 @@
 <script>
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import EventBus from '../../../../shared/eventbus';
-import i18n from '../../../../i18n';
 import {
   MIN_SESSION_LIFETIME_SECONDS,
   MAX_SESSION_LIFETIME_SECONDS,
@@ -154,7 +153,6 @@ import {
 } from '../workloadIdentity';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },

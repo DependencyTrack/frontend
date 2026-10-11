@@ -149,10 +149,8 @@ import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import { fetchAllPages } from '@/shared/utils';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
-import i18n from '../../../../i18n';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },
