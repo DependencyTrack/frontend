@@ -109,6 +109,18 @@ export default [
       'vue/no-deprecated-slot-attribute': 'error',
       'vue/no-deprecated-slot-scope-attribute': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
+      // Bootstrap 4 names, see src/assets/scss/_bootstrap5.scss.
+      // https://getbootstrap.com/docs/5.0/migration/
+      // https://getbootstrap.com/docs/5.3/migration/
+      'vue/no-restricted-class': [
+        'error',
+        '/^[mp][lr](-(sm|md|lg|xl))?-(n?[0-5]|auto)$/',
+        '/^(float|text)(-(sm|md|lg|xl))?-(left|right)$/',
+        '/^(font-weight-.+|font-italic|text-monospace|sr-only(-focusable)?)$/',
+        '/^(border-(left|right)|badge-(pill|primary|secondary|success|danger|warning|info|light|dark)|btn-block|form-group)$/',
+        '/^((rounded|dropdown-menu)-(left|right)|thead-(light|dark)|text-(hide|justify)|form-(row|inline)|input-group-(append|prepend))$/',
+        '/^(no-gutters|media(-body)?|jumbotron|card-(deck|columns)|pre-scrollable|embed-responsive.*|custom-(control|checkbox|radio|switch|select|file|range).*)$/',
+      ],
     },
   },
   {

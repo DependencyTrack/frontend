@@ -103,7 +103,7 @@
             >{{ $t('message.update') }}</b-button
           >
           <b-button
-            class="ml-2"
+            class="ms-2"
             variant="outline-danger"
             @click="deleteServiceAccount"
             >{{ $t('message.delete') }}</b-button

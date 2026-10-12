@@ -3,10 +3,10 @@
     <div>
       <!-- left side here -->
     </div>
-    <div class="ml-auto">
+    <div class="ms-auto">
       <a href="#" v-b-modal.aboutModal>{{ dtrack.application }}</a
       >&nbsp;
-      <span class="mr-1">v{{ dtrack.version }}</span>
+      <span class="me-1">v{{ dtrack.version }}</span>
     </div>
     <about-modal />
   </TheFooter>

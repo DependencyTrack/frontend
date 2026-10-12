@@ -26,7 +26,7 @@
             $t('admin.repository_authentication')
           }}</b-form-checkbox>
         </div>
-        <div v-if="authenticationRequired" class="ml-4">
+        <div v-if="authenticationRequired" class="ms-4">
           <b-validated-input-group-form-input
             id="username"
             :label="$t('admin.username')"
@@ -37,7 +37,7 @@
             <label for="password"
               >{{ $t('admin.password') }}
               <i
-                class="fa fa-key text-warning ml-1"
+                class="fa fa-key text-warning ms-1"
                 :title="$t('admin.secret_reference_field')"
               ></i
             ></label>
@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mt-3">
-          <b-button type="submit" variant="primary" class="mr-2">{{
+          <b-button type="submit" variant="primary" class="me-2">{{
             $t('message.update')
           }}</b-button>
           <b-button variant="outline-danger" @click="deleteRepository">{{

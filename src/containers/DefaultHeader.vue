@@ -10,7 +10,7 @@
       alt="Dependency-Track Logo"
     />
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
-    <b-navbar-nav class="ml-auto">
+    <b-navbar-nav class="ms-auto">
       <DefaultHeaderProfileDropdown />
     </b-navbar-nav>
   </AppHeader>

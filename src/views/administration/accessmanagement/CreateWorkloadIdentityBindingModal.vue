@@ -58,7 +58,7 @@
         <b-form-input
           :id="`${modalId}-subject`"
           v-model="subject"
-          class="text-monospace"
+          class="font-monospace"
           maxlength="512"
           type="text"
           required

@@ -4,7 +4,7 @@
       <b-form-group
         :label="this.$t('admin.preferences')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
       >
         <b-form-checkbox
           id="submission-enabled"
@@ -15,7 +15,7 @@
       </b-form-group>
       <b-form-group
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
         :label="this.$t('admin.telemetry_last_submission')"
         :description="lastSubmissionDataDescription"
         label-for="last-submission-data"

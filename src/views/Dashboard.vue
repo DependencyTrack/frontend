@@ -15,7 +15,7 @@
                 'PORTFOLIO_MANAGEMENT',
                 'PORTFOLIO_MANAGEMENT_UPDATE',
               ]"
-              class="font-weight-bold"
+              class="fw-bold"
               style="margin-left: 6px"
               v-on:click="refreshMetrics"
               ><i class="fa fa-refresh"></i

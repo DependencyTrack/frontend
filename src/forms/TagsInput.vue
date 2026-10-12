@@ -5,13 +5,13 @@
     <span
       v-for="tag in modelValue"
       :key="tag"
-      class="badge badge-tag mr-1 d-inline-flex align-items-center"
+      class="badge badge-tag me-1 d-inline-flex align-items-center"
     >
       {{ tag }}
       <button
         v-if="!readonly"
         type="button"
-        class="close text-reset ml-1"
+        class="close text-reset ms-1"
         :aria-label="`${$t('message.remove')} ${tag}`"
         @click="remove(tag)"
       >

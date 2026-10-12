@@ -2,7 +2,7 @@
   <b-card no-body>
     <template v-if="cardHeader" #header>
       {{ cardHeader }}
-      <b-badge v-if="hasUnsavedChanges" variant="info" class="ml-2">
+      <b-badge v-if="hasUnsavedChanges" variant="info" class="ms-2">
         {{ $t('message.unsaved_changes_badge') }}
       </b-badge>
     </template>
@@ -22,7 +22,7 @@
           <div
             v-for="(propSchema, propName) in schema.properties"
             :key="propName"
-            class="form-group"
+            class="mb-3"
           >
             <json-schema-form-field
               :schema="enrichSchema(propSchema, propName, schema)"
@@ -45,7 +45,7 @@
           <div class="skeleton-line skeleton-line--field"></div>
           <div class="skeleton-line skeleton-line--label"></div>
           <div class="skeleton-line skeleton-line--field"></div>
-          <span class="sr-only">{{ $t('message.loading') }}</span>
+          <span class="visually-hidden">{{ $t('message.loading') }}</span>
         </div>
       </b-card-body>
       <b-card-footer v-if="!hideSubmitButton">
@@ -62,7 +62,7 @@
           v-if="testable"
           variant="outline-secondary"
           :disabled="isOperationInProgress || !schema"
-          class="ml-2"
+          class="ms-2"
           @click="testConfig"
         >
           <b-spinner v-if="isTestInProgress" small />
@@ -72,7 +72,7 @@
         <b-button
           variant="outline-danger"
           :disabled="isOperationInProgress || !hasUnsavedChanges"
-          class="ml-2"
+          class="ms-2"
           @click="resetChanges"
         >
           <i class="fa fa-undo" />
@@ -104,7 +104,7 @@
           show
           class="mb-2"
         >
-          <i :class="getCheckIcon(check.status)" class="mr-2"></i>
+          <i :class="getCheckIcon(check.status)" class="me-2"></i>
           <span v-if="check.status === 'PASSED'">
             {{ $t('admin.test_check_passed', { name: check.name }) }}
           </span>

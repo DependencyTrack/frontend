@@ -7,7 +7,7 @@
           <b-form-group
             label="Banner"
             label-size="lg"
-            label-class="font-weight-bold pt-0 mb-2"
+            label-class="fw-bold pt-0 mb-2"
           >
             <div>
               <b-form-checkbox

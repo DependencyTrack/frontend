@@ -20,7 +20,7 @@
       <b-col sm="12">
         <b-form-group>
           <div>
-            <div class="font-weight-bold mb-2">
+            <div class="fw-bold mb-2">
               <b-row>
                 <b-col md="8">{{ $t('message.name') }}</b-col>
                 <b-col md="3">{{ $t('message.spdx_license_id') }}</b-col>

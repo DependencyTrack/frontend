@@ -189,13 +189,13 @@
           aria-controls="identity-collapse"
           class="btn btn-link d-flex align-items-center mb-2 p-0 text-decoration-none text-reset w-100"
         >
-          <i class="fa fa-cube mr-2"></i>
+          <i class="fa fa-cube me-2"></i>
           <strong>{{ $t('message.identity') }}</strong>
-          <small v-if="!showIdentity" class="text-muted ml-2">{{
+          <small v-if="!showIdentity" class="text-muted ms-2">{{
             identityHint
           }}</small>
           <i
-            class="fa ml-auto"
+            class="fa ms-auto"
             :class="showIdentity ? 'fa-chevron-up' : 'fa-chevron-down'"
           ></i>
         </button>
@@ -266,7 +266,7 @@
         :disabled="isCreating"
         @click="createProject()"
       >
-        <b-spinner v-if="isCreating" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isCreating" small class="me-1"></b-spinner>
         {{ $t('message.create') }}
       </b-button>
     </template>

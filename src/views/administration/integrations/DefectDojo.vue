@@ -29,7 +29,7 @@
       <label for="defectdojo-apiKey"
         >{{ $t('admin.api_token') }}
         <i
-          class="fa fa-key text-warning ml-1"
+          class="fa fa-key text-warning ms-1"
           :title="$t('admin.secret_reference_field')"
         ></i
       ></label>

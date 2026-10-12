@@ -20,7 +20,7 @@
       no-body
     >
       <b-card-header class="d-flex align-items-center">
-        <i class="fa fa-fire text-danger mr-2" aria-hidden="true"></i>
+        <i class="fa fa-fire text-danger me-2" aria-hidden="true"></i>
         <strong>{{
           assertion.asserter_display_name ||
           (assertion.asserter || '').toUpperCase()
@@ -28,7 +28,7 @@
         <b-badge
           v-if="assertion.known_ransomware === true"
           variant="danger"
-          class="ml-2"
+          class="ms-2"
         >
           {{ $t('message.known_ransomware') }}
         </b-badge>

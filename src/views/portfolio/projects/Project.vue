@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"
+              class="fa fa-sitemap bg-primary p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">
               <b-row>
@@ -29,24 +29,24 @@
                         aria-expanded="false"
                         v-b-tooltip.hover
                         :title="$t('message.switch_version')"
-                        class="version-dropdown-toggle badge badge-pill border"
+                        class="version-dropdown-toggle badge rounded-pill border"
                         ><i class="fa fa-caret-down" aria-hidden="true"></i
                         ><span
-                          class="ml-1"
+                          class="ms-1"
                           :class="{
-                            'text-muted font-italic': !project.version,
+                            'text-muted fst-italic': !project.version,
                           }"
                           >{{
                             project.version || $t('message.no_version')
                           }}</span
                         ><i
                           v-if="project.isLatest"
-                          class="fa fa-star text-warning ml-1"
+                          class="fa fa-star text-warning ms-1"
                           aria-hidden="true"
                         ></i
                         ><span
                           v-if="versionCount > 1"
-                          class="version-count border-left"
+                          class="version-count border-start"
                           >{{ versionCount }}</span
                         ></a
                       >
@@ -65,7 +65,7 @@
                           "
                         >
                           <i
-                            class="fa fa-plus mr-1 add-version-icon"
+                            class="fa fa-plus me-1 add-version-icon"
                             aria-hidden="true"
                           ></i
                           >{{ $t('message.add_version') }}
@@ -89,12 +89,12 @@
                             <span v-if="projectVersion.version">{{
                               projectVersion.version
                             }}</span>
-                            <span v-else class="text-muted font-italic">{{
+                            <span v-else class="text-muted fst-italic">{{
                               $t('message.no_version')
                             }}</span>
                             <i
                               v-if="projectVersion.isLatest"
-                              class="fa fa-star text-warning ml-1"
+                              class="fa fa-star text-warning ms-1"
                               aria-hidden="true"
                               v-b-tooltip.hover
                               :title="$t('message.latest_version')"
@@ -118,12 +118,12 @@
                               <span v-if="projectVersion.version">{{
                                 projectVersion.version
                               }}</span>
-                              <span v-else class="text-muted font-italic">{{
+                              <span v-else class="text-muted fst-italic">{{
                                 $t('message.no_version')
                               }}</span>
                               <i
                                 v-if="projectVersion.isLatest"
-                                class="fa fa-star text-warning ml-1"
+                                class="fa fa-star text-warning ms-1"
                                 aria-hidden="true"
                                 v-b-tooltip.hover
                                 :title="$t('message.latest_version')"
@@ -147,7 +147,7 @@
                 </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
-                    class="text-muted font-xs font-italic align-text-top text-truncate"
+                    class="text-muted font-xs fst-italic align-text-top text-truncate"
                     style="max-width: 100ch"
                     v-b-tooltip.hover="{ title: project.description }"
                     >{{ project.description }}</span
@@ -162,7 +162,7 @@
             -->
             <div class="text-muted font-xs">
               <b-row>
-                <b-col class="text-lowercase font-weight-bold" md="auto">
+                <b-col class="text-lowercase fw-bold" md="auto">
                   <span v-for="tag in project.tags" :key="tag.name">
                     <b-badge
                       :to="{ name: 'Projects', query: { tag: tag.name } }"
@@ -176,7 +176,7 @@
             <div v-if="!isCollectionProject" class="font-xs mt-1">
               <b-row>
                 <b-col md="auto">
-                  <span class="text-muted mr-1"
+                  <span class="text-muted me-1"
                     >{{ $t('message.last_bom_import') }}:</span
                   >
                   <span
@@ -186,7 +186,7 @@
                     >{{ relativeTime(project.lastBomImport) }}</span
                   >
                   <span class="text-muted mx-2">&middot;</span>
-                  <span class="text-muted mr-1"
+                  <span class="text-muted me-1"
                     >{{ $t('message.last_analysis') }}:</span
                   >
                   <span
@@ -197,7 +197,7 @@
                   >
                   <span
                     v-if="isAnalysisRequested"
-                    class="text-muted font-italic ml-2"
+                    class="text-muted fst-italic ms-2"
                     >&middot; {{ $t('message.analysis_requested') }}</span
                   >
                 </b-col>
@@ -205,7 +205,7 @@
             </div>
           </b-col>
           <b-col md="auto">
-            <b-row class="d-none d-md-flex float-right">
+            <b-row class="d-none d-md-flex float-end">
               <vue-easy-pie-chart
                 style="margin-right: 1rem"
                 :bar-color="severityCritical"
@@ -290,13 +290,13 @@
           <b-row align-v="center">
             <b-col>
               <b-link
-                class="font-weight-bold font-xs text-muted"
+                class="fw-bold font-xs text-muted"
                 @click="initializeProjectDetailsModal"
                 >{{ $t('message.view_details') }}
                 <i class="fa fa-angle-right font-lg"></i
               ></b-link>
             </b-col>
-            <b-col md="auto" class="btn-spaced-group text-right">
+            <b-col md="auto" class="btn-spaced-group text-end">
               <b-button
                 id="upload-bom-button"
                 v-if="!isCollectionProject"

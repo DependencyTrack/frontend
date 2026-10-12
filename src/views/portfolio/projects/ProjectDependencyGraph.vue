@@ -52,7 +52,7 @@
             :class="{ searched: isSearched(node) }"
           >
             <i
-              class="fa fa-fw text-muted mr-1"
+              class="fa fa-fw text-muted me-1"
               :class="nodeIcon(node)"
               aria-hidden="true"
             /><span v-if="node.group" class="text-muted">{{ node.group }}/</span
@@ -61,7 +61,7 @@
             <span
               v-if="isOutdated(node)"
               v-b-tooltip.hover.noninteractive
-              class="badge badge-warning ml-2"
+              class="badge text-bg-warning ms-2"
               :title="
                 'Risk: Outdated component. Current version is: ' +
                 node.latestVersion

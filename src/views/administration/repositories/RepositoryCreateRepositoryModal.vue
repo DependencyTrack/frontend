@@ -45,7 +45,7 @@
           $t('admin.repository_authentication')
         }}</b-form-checkbox>
       </div>
-      <div v-if="repository_authentication" class="ml-4">
+      <div v-if="repository_authentication" class="ms-4">
         <b-validated-input-group-form-input
           id="username"
           :label="$t('admin.username')"

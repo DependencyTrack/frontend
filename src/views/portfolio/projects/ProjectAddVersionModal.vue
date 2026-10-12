@@ -119,7 +119,7 @@
         variant="primary"
         :disabled="isSubmitButtonDisabled || isCloning"
       >
-        <b-spinner v-if="isCloning" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isCloning" small class="me-1"></b-spinner>
         {{ $t('message.create') }}
       </b-button>
     </template>

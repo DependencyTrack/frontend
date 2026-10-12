@@ -44,7 +44,7 @@
               {{ item.name }}
               <i
                 v-if="item.configurable === false"
-                class="fa fa-info-circle float-right"
+                class="fa fa-info-circle float-end"
                 :title="$t('admin.extension_no_config')"
                 aria-hidden="true"
               ></i>

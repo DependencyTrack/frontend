@@ -38,7 +38,7 @@
         :disabled="file == null || isUploading"
         @click="upload()"
       >
-        <b-spinner v-if="isUploading" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isUploading" small class="me-1"></b-spinner>
         {{ $t('message.upload') }}
       </b-button>
     </template>

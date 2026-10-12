@@ -6,7 +6,7 @@
 
     <p>
       <i
-        :class="['fa', 'mr-2', statusIcon, statusColorClass]"
+        :class="['fa', 'me-2', statusIcon, statusColorClass]"
         aria-hidden="true"
       ></i>
       <strong>{{ statusLabel }}</strong>
@@ -34,16 +34,16 @@
           ></i>
         </div>
         <dl class="row mb-0">
-          <dt class="col-sm-3 font-weight-normal">
+          <dt class="col-sm-3 fw-normal">
             {{ $t('message.hash_verification.component_hash') }}
           </dt>
-          <dd class="col-sm-9 text-monospace text-break mb-1">
+          <dd class="col-sm-9 font-monospace text-break mb-1">
             {{ row.componentHash }}
           </dd>
-          <dt class="col-sm-3 font-weight-normal">
+          <dt class="col-sm-3 fw-normal">
             {{ $t('message.hash_verification.repository_hash') }}
           </dt>
-          <dd class="col-sm-9 text-monospace text-break mb-0">
+          <dd class="col-sm-9 font-monospace text-break mb-0">
             {{ row.repositoryHash }}
           </dd>
         </dl>
