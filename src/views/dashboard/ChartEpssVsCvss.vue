@@ -1,17 +1,77 @@
+<template>
+  <div>
+    <scatter-chart v-if="chartData" :data="chartData" :options="options" />
+  </div>
+</template>
+
 <script>
+import 'chart.js/auto';
 import common from '../../shared/common';
 import i18n from '../../i18n';
 import { Scatter } from 'vue-chartjs';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 export default {
-  extends: Scatter,
-  props: {
-    height: Number,
+  components: { ScatterChart: Scatter },
+  data() {
+    return {
+      chartData: null,
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const { vulnId, componentLabel, x, y } = context.raw;
+                return [
+                  `${i18n.t('message.component')}: ${componentLabel}`,
+                  `${i18n.t('message.vulnerability')}: ${vulnId}`,
+                  `${i18n.t('message.cvss')}: ${x}`,
+                  `${i18n.t('message.epss')}: ${y}`,
+                ];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            min: 0,
+            max: 10.0,
+            title: {
+              display: true,
+              text: 'CVSS',
+              color: '#73818F',
+            },
+            grid: {
+              color: '#1C2937',
+            },
+            ticks: {
+              color: '#21A8D8',
+            },
+          },
+          y: {
+            min: 0,
+            max: 1.0,
+            title: {
+              display: true,
+              text: 'EPSS',
+              color: '#73818F',
+            },
+            grid: {
+              color: '#1C2937',
+            },
+            ticks: {
+              color: '#21A8D8',
+            },
+          },
+        },
+      },
+    };
   },
   methods: {
     render: function (findings) {
-      let labels = [];
       let cveData = [];
       if (findings && findings.length > 0) {
         for (let i = 0; i < findings.length; i++) {
@@ -21,104 +81,31 @@ export default {
             finding.component.name,
             finding.component.version,
           );
-          labels.push({
-            vulnId: finding.vulnerability.vulnId,
-            componentLabel: componentLabel,
-          });
           let cvssScore =
             typeof finding.vulnerability.cvssV4Score === 'number'
               ? finding.vulnerability.cvssV4Score
               : typeof finding.vulnerability.cvssV3BaseScore === 'number'
                 ? finding.vulnerability.cvssV3BaseScore
                 : finding.vulnerability.cvssV2BaseScore;
-          cveData.push({ x: cvssScore, y: finding.vulnerability.epssScore });
+          cveData.push({
+            x: cvssScore,
+            y: finding.vulnerability.epssScore,
+            vulnId: finding.vulnerability.vulnId,
+            componentLabel: componentLabel,
+          });
         }
       }
 
-      this.renderChart(
-        {
-          labels: labels,
-          datasets: [
-            {
-              fill: false,
-              borderColor: 'rgba(166, 107, 248, 0.5)',
-              borderWidth: 8,
-              backgroundColor: '#A66BF8',
-              data: cveData,
-            },
-          ],
-        },
-        {
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
+      this.chartData = {
+        datasets: [
+          {
+            borderColor: 'rgba(166, 107, 248, 0.5)',
+            borderWidth: 8,
+            backgroundColor: '#A66BF8',
+            data: cveData,
           },
-          scales: {
-            xAxes: [
-              {
-                scaleLabel: {
-                  display: true,
-                  labelString: 'CVSS',
-                  fontColor: '#73818F',
-                },
-                gridLines: {
-                  color: '#1C2937',
-                  zeroLineColor: '#1C2937',
-                },
-                ticks: {
-                  fontColor: '#21A8D8',
-                  min: 0,
-                  max: 10.0,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'EPSS',
-                  fontColor: '#73818F',
-                },
-                gridLines: {
-                  color: '#1C2937',
-                  zeroLineColor: '#1C2937',
-                },
-                ticks: {
-                  display: true,
-                  fontColor: '#21A8D8',
-                  min: 0,
-                  max: 1.0,
-                },
-              },
-            ],
-          },
-          tooltips: {
-            enabled: false,
-            custom: CustomTooltips,
-            intersect: true,
-            mode: 'index',
-            position: 'nearest',
-            callbacks: {
-              label: function (tooltipItem, data) {
-                let label = data.labels[tooltipItem.index];
-                let vulnId = label.vulnId;
-                let componentLabel = label.componentLabel;
-                return (
-                  `${i18n.t('message.component')}<br>` +
-                  `${i18n.t('message.vulnerability')}<br/>` +
-                  `${i18n.t('message.cvss')}<br/>` +
-                  `${i18n.t('message.epss')}: ` +
-                  `${componentLabel.replace(':', '&#58;')}<br/>` +
-                  `${vulnId}<br/>` +
-                  `${tooltipItem.xLabel}<br/>` +
-                  tooltipItem.yLabel
-                );
-              },
-            },
-          },
-        },
-      );
+        ],
+      };
     },
   },
 };

@@ -26,10 +26,8 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartProjectVulnerabilities"
-        chartId="chartProjectVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
-        :height="200"
       ></chart-portfolio-vulnerabilities>
       <template v-slot:footer>
         <div>
@@ -114,10 +112,8 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-state>
         </b-card>
       </b-col>
@@ -157,10 +153,8 @@
           </b-row>
           <chart-component-vulnerabilities
             ref="chartComponentVulnerabilities"
-            chartId="chartComponentVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-component-vulnerabilities>
         </b-card>
       </b-col>
@@ -176,10 +170,8 @@
           </b-row>
           <chart-auditing-findings-progress
             ref="chartAuditingFindingsProgress"
-            chartId="chartAuditingFindingsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-auditing-findings-progress>
         </b-card>
       </b-col>

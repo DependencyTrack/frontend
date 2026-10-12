@@ -14,10 +14,8 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartServiceVulnerabilities"
-        chartId="chartServiceVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
-        :height="200"
       ></chart-portfolio-vulnerabilities>
       <template v-slot:footer>
         <div>
@@ -102,10 +100,8 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-state>
         </b-card>
       </b-col>
