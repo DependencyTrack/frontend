@@ -17,6 +17,7 @@
         :label-for="`${modalId}-provider`"
       >
         <multiselect
+          v-multiselect-label
           :id="`${modalId}-provider`"
           v-model="provider"
           :placeholder="$t('admin.select_workload_identity_provider')"

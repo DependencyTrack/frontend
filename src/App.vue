@@ -18,13 +18,12 @@
 
 <script>
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import Vue from 'vue';
 import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import VueRouter from 'vue-router';
+import globals from './shared/globals';
 import Banner from './views/components/Banner.vue';
 import {
   BANNER_DISMISSED_KEY,
@@ -61,19 +60,17 @@ export default {
     };
 
     const loadSystemCapabilities = () => {
-      Vue.prototype.$systemCapabilities = undefined;
+      globals.$systemCapabilities = undefined;
       EventBus.emit('systemCapabilitiesUpdated', undefined);
       this.axios
-        .get(
-          `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_SYSTEM_CAPABILITIES}`,
-        )
+        .get(`${this.$api.BASE_URL}/${this.$api.URL_SYSTEM_CAPABILITIES}`)
         .then((result) => {
-          Vue.prototype.$systemCapabilities = result.data.capabilities;
+          globals.$systemCapabilities = result.data.capabilities;
           EventBus.emit('systemCapabilitiesUpdated', result.data.capabilities);
         })
         .catch((error) => {
           console.error('Failed to load system capabilities', error);
-          Vue.prototype.$systemCapabilities = undefined;
+          globals.$systemCapabilities = undefined;
           EventBus.emit('systemCapabilitiesUpdated', undefined);
         });
     };
@@ -85,7 +82,7 @@ export default {
       } else {
         sessionStorage.removeItem('token');
         clearPermissions();
-        Vue.prototype.$systemCapabilities = undefined;
+        globals.$systemCapabilities = undefined;
         EventBus.emit('systemCapabilitiesUpdated', undefined);
       }
       setAuthHeader(token);
@@ -251,12 +248,8 @@ export default {
         if (window.location.pathname !== to && event.preventDefault) {
           event.preventDefault();
           this.$router.push(to + url.search).catch((e) => {
-            const { isNavigationFailure, NavigationFailureType } = VueRouter;
-            // inform about navigation errors but ignore redirect errors that may be caused by the navigation guard when redirecting to the login page
-            if (!isNavigationFailure(e, NavigationFailureType.redirected)) {
-              this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
-              console.error(e);
-            }
+            this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
+            console.error(e);
           });
         }
       }

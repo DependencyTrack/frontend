@@ -562,7 +562,7 @@
     "component_name_desc": "サプライヤーから提供されたコンポーネントの名前",
     "component_namespace_group_vendor": "名前空間 / グループ / ベンダー",
     "component_operating_system": "オペレーティング システム",
-    "component_package_url_desc": "ライブラリとフレームワークには有効なパッケージ URL が必要です。PURL 構文: pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "ライブラリとフレームワークには有効なパッケージ URL が必要です。PURL 構文: pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "プラットフォーム",
     "component_properties": "コンポーネントのプロパティ",
     "component_search": "コンポーネント検索",

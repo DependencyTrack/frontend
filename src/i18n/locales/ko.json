@@ -563,7 +563,7 @@
     "component_name_desc": "공급자가 제공한 컴포넌트의 이름",
     "component_namespace_group_vendor": "네임스페이스 / 그룹 / 벤더",
     "component_operating_system": "운영체제",
-    "component_package_url_desc": "라이브러리와 프레임워크에는 유효한 Package URL이 필요합니다. PURL 문법: pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "라이브러리와 프레임워크에는 유효한 Package URL이 필요합니다. PURL 문법: pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "플랫폼",
     "component_properties": "컴포넌트 속성",
     "component_search": "컴포넌트 검색",

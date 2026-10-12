@@ -1,9 +1,6 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import axios from 'axios';
 import api from '../shared/api.json';
-
-Vue.use(VueI18n);
 
 async function getDefaultLanguage() {
   try {
@@ -67,7 +64,9 @@ function matchLocale(requestedLocale) {
   return 'en';
 }
 
-const i18n = new VueI18n({
+const i18n = createI18n({
+  legacy: false,
+  globalInjection: true,
   locale: 'en',
   fallbackLocale: 'en',
   messages: localeMessages,
@@ -80,7 +79,7 @@ getDefaultLanguage().then((defaultLanguage) => {
       navigator.language ||
       navigator.userLanguage,
   );
-  i18n.locale = matchedLocale;
+  i18n.global.locale.value = matchedLocale;
 });
 
 export default i18n;

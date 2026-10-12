@@ -1,65 +1,78 @@
-import Vue from 'vue';
+import { createApp, configureCompat, vModelDynamic } from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
-import './plugins/table.js';
+import BootstrapTable from './plugins/table.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import '@/directives/VuePermission';
-import '@/directives/ScrollableTabs';
+import permission from '@/directives/VuePermission';
+import scrollableTabs from '@/directives/ScrollableTabs';
+import multiselectLabel from '@/directives/MultiselectLabel';
 import '@/views/components/filter-pill-content.css';
 import toastr from './plugins/toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
+import globals from './shared/globals';
 import version from './version.json';
 import { getContextPath } from './shared/utils';
 
-Vue.use(BootstrapVue);
-Vue.use(VueAxios, axios);
-Vue.use(toastr);
+configureCompat({ MODE: 2 });
 
-Vue.prototype.$api = api;
-Vue.prototype.$oidc = oidc;
+// BootstrapVue's v-model patch sets the _assign key that Vue used before 3.3.5,
+// see https://github.com/bootstrap-vue/bootstrap-vue/issues/7181.
+for (const hook of ['created', 'beforeUpdate']) {
+  const original = vModelDynamic[hook];
+  vModelDynamic[hook] = function (el, binding, vnode, prevVNode) {
+    original.call(this, el, binding, vnode, prevVNode);
+    for (const key of Object.getOwnPropertySymbols(el)) {
+      if (key.description === '_assign' && !el[key]) {
+        el[key] = () => {};
+      }
+    }
+  };
+}
+
+globals.$api = api;
+globals.$oidc = oidc;
 const contextPath = getContextPath();
 axios
   .get(contextPath + '/static/config.json')
   .then((response) => {
     if (response.data.API_BASE_URL && response.data.API_BASE_URL !== '') {
-      Vue.prototype.$api.BASE_URL = response.data.API_BASE_URL;
+      globals.$api.BASE_URL = response.data.API_BASE_URL;
     } else {
-      Vue.prototype.$api.BASE_URL = contextPath;
+      globals.$api.BASE_URL = contextPath;
     }
 
     // Send XHR cross-site cookie credentials
-    Vue.prototype.$api.WITH_CREDENTIALS =
+    globals.$api.WITH_CREDENTIALS =
       response.data.API_WITH_CREDENTIALS &&
       response.data.API_WITH_CREDENTIALS.toLowerCase() === 'true';
 
     // OpenID Connect
-    Vue.prototype.$oidc.ISSUER = response.data.OIDC_ISSUER;
-    Vue.prototype.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
-    Vue.prototype.$oidc.SCOPE = response.data.OIDC_SCOPE;
-    Vue.prototype.$oidc.FLOW = response.data.OIDC_FLOW;
+    globals.$oidc.ISSUER = response.data.OIDC_ISSUER;
+    globals.$oidc.CLIENT_ID = response.data.OIDC_CLIENT_ID;
+    globals.$oidc.SCOPE = response.data.OIDC_SCOPE;
+    globals.$oidc.FLOW = response.data.OIDC_FLOW;
     if (response.data.OIDC_LOGIN_BUTTON_TEXT) {
-      Vue.prototype.$oidc.LOGIN_BUTTON_TEXT =
-        response.data.OIDC_LOGIN_BUTTON_TEXT;
+      globals.$oidc.LOGIN_BUTTON_TEXT = response.data.OIDC_LOGIN_BUTTON_TEXT;
     } else {
-      Vue.prototype.$oidc.LOGIN_BUTTON_TEXT = '';
+      globals.$oidc.LOGIN_BUTTON_TEXT = '';
     }
 
     // Feature flags
-    Vue.prototype.$featureFlags = response.data.FEATURE_FLAGS;
-    Vue.prototype.$isFeatureEnabled = (featureName) => {
-      const flags = Vue.prototype.$featureFlags;
+    globals.$featureFlags = response.data.FEATURE_FLAGS;
+    globals.$isFeatureEnabled = (featureName) => {
+      const flags = globals.$featureFlags;
       return (
         flags &&
         Object.prototype.hasOwnProperty.call(flags, featureName) &&
         flags[featureName] === true
       );
     };
-    Vue.prototype.$isAnyFeatureEnabled = (featureNames) => {
-      return featureNames.some((name) => Vue.prototype.$isFeatureEnabled(name));
+    globals.$isAnyFeatureEnabled = (featureNames) => {
+      return featureNames.some((name) => globals.$isFeatureEnabled(name));
     };
 
     createVueApp();
@@ -82,17 +95,26 @@ function createVueApp() {
   the version of dtrack, timestamp, uuid, Alpine version, etc.
   */
   axios
-    .get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
+    .get(`${globals.$api.BASE_URL}/${globals.$api.URL_ABOUT}`)
     .then((result) => {
-      Vue.prototype.$dtrack = result.data;
+      globals.$dtrack = result.data;
     });
 
-  Vue.prototype.$version = version;
+  globals.$version = version;
 
-  new Vue({
-    el: '#app',
-    router,
-    render: (h) => h(App),
-    i18n,
-  });
+  const app = createApp(App);
+  app.config.globalProperties = Object.assign(
+    globals,
+    app.config.globalProperties,
+  );
+  app.use(BootstrapVue);
+  app.use(VueAxios, axios);
+  app.use(toastr);
+  app.use(router);
+  app.use(i18n);
+  app.component('BootstrapTable', BootstrapTable);
+  app.directive('permission', permission);
+  app.directive('scrollable-tabs', scrollableTabs);
+  app.directive('multiselect-label', multiselectLabel);
+  app.mount('#app');
 }

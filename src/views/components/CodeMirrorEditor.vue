@@ -24,6 +24,7 @@ import { autocompletion } from '@codemirror/autocomplete';
 export default {
   name: 'CodeMirrorEditor',
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     modelValue: String,
     readOnly: Boolean,

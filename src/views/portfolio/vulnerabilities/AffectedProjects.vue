@@ -55,7 +55,7 @@ export default {
             const url = this.$router.resolve({
               name: 'Project Vulnerability Lookup',
               params: { uuid: row.uuid, vulnerability: this.vulnerability },
-            }).route.fullPath;
+            }).fullPath;
 
             let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             if (row.dependencyGraphAvailable) {

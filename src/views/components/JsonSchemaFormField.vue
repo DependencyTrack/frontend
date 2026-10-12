@@ -60,11 +60,21 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import Showdown from './Showdown.vue';
 import SecretRefSelect from './SecretRefSelect.vue';
 
-const JsonSchemaObjectField = () => import('./JsonSchemaObjectField.vue');
-const JsonSchemaArrayField = () => import('./JsonSchemaArrayField.vue');
+// Without its own compatConfig, @vue/compat renames modelValue to value on the async wrapper.
+const asyncField = (load) =>
+  Object.assign(defineAsyncComponent(load), {
+    compatConfig: { COMPONENT_V_MODEL: false },
+  });
+const JsonSchemaObjectField = asyncField(
+  () => import('./JsonSchemaObjectField.vue'),
+);
+const JsonSchemaArrayField = asyncField(
+  () => import('./JsonSchemaArrayField.vue'),
+);
 
 export default {
   name: 'JsonSchemaFormField',
@@ -73,6 +83,7 @@ export default {
     SecretRefSelect,
   },
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     schema: {
       type: Object,

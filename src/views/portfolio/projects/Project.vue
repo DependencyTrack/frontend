@@ -798,9 +798,9 @@ export default {
       .then(() => {
         this.$nextTick(() => {
           if (this.$route.params.componentUuids) {
-            this.$refs.dependencygraph.active = true;
+            this.$refs.dependencygraph.activate();
           } else {
-            this.getTabFromRoute().active = true;
+            this.getTabFromRoute().activate();
           }
         });
       })
@@ -808,7 +808,7 @@ export default {
         console.error(e);
         this.$toastr.e(this.$t('condition.forbidden'));
         this.$router.replace({ path: '/projects/' + this.uuid });
-        this.$refs.overview.active = true;
+        this.$refs.overview.activate();
       });
   },
   watch: {

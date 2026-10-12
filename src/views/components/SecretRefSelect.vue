@@ -1,6 +1,7 @@
 <template>
   <div>
     <multiselect
+      v-multiselect-label
       :id="id"
       v-model="selectedSecret"
       :placeholder="$t('admin.select_secret_placeholder')"
@@ -20,7 +21,7 @@
       select-label=""
       deselect-label=""
       @search-change="onSearchChange"
-      @input="onInput"
+      @update:modelValue="onInput"
     >
       <template v-slot:singleLabel="{ option }">
         <span>{{ option.name }}</span>
@@ -61,6 +62,7 @@ export default {
     Multiselect,
   },
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     id: {
       type: String,

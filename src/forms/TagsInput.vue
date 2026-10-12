@@ -42,6 +42,7 @@ const SEPARATORS = ['Enter', ' ', ':', ';', ','];
 
 export default {
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     id: { type: String, required: true },
     modelValue: { type: Array, default: () => [] },

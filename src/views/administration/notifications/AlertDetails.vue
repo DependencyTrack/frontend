@@ -499,54 +499,54 @@ export default {
         [],
       ),
       filterExpressionReferenceFields: [
-        { key: 'variable', label: i18n.t('message.variable') },
-        { key: 'type', label: i18n.t('message.type') },
-        { key: 'description', label: i18n.t('message.description') },
+        { key: 'variable', label: i18n.global.t('message.variable') },
+        { key: 'type', label: i18n.global.t('message.type') },
+        { key: 'description', label: i18n.global.t('message.description') },
       ],
       filterExpressionReferenceItems: [
         {
           variable: 'level',
           type: 'int',
-          description: i18n.t('admin.filter_expression_var_level'),
+          description: i18n.global.t('admin.filter_expression_var_level'),
         },
         {
           variable: 'scope',
           type: 'int',
-          description: i18n.t('admin.filter_expression_var_scope'),
+          description: i18n.global.t('admin.filter_expression_var_scope'),
         },
         {
           variable: 'group',
           type: 'int',
-          description: i18n.t('admin.filter_expression_var_group'),
+          description: i18n.global.t('admin.filter_expression_var_group'),
         },
         {
           variable: 'title',
           type: 'string',
-          description: i18n.t('admin.filter_expression_var_title'),
+          description: i18n.global.t('admin.filter_expression_var_title'),
         },
         {
           variable: 'content',
           type: 'string',
-          description: i18n.t('admin.filter_expression_var_content'),
+          description: i18n.global.t('admin.filter_expression_var_content'),
         },
         {
           variable: 'timestamp',
           type: 'Timestamp',
-          description: i18n.t('admin.filter_expression_var_timestamp'),
+          description: i18n.global.t('admin.filter_expression_var_timestamp'),
         },
         {
           variable: 'subject',
           type: 'dyn',
-          description: i18n.t('admin.filter_expression_var_subject'),
+          description: i18n.global.t('admin.filter_expression_var_subject'),
         },
       ],
       filterExpressionTemplates: [
         {
-          label: i18n.t('admin.filter_expression_tpl_severity'),
+          label: i18n.global.t('admin.filter_expression_tpl_severity'),
           cel: 'subject.vulnerability.severity == "CRITICAL"',
         },
         {
-          label: i18n.t('admin.filter_expression_tpl_project_name'),
+          label: i18n.global.t('admin.filter_expression_tpl_project_name'),
           cel: 'subject.project.name == "my-project"',
         },
       ],

@@ -562,7 +562,7 @@
     "component_name_desc": "Le nom du composant tel que fourni par le fournisseur",
     "component_namespace_group_vendor": "Espace de noms/groupe/fournisseur",
     "component_operating_system": "Système d'exploitation",
-    "component_package_url_desc": "Une PackageURL valide est requise pour les bibliothèques et les frameworks. Syntaxe PURL : pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "Une PackageURL valide est requise pour les bibliothèques et les frameworks. Syntaxe PURL : pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "Plate-forme",
     "component_properties": "Propriétés des composants",
     "component_search": "Recherche de composants",

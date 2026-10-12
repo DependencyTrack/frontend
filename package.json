@@ -35,11 +35,12 @@
     "@coreui/coreui": "2.1.16",
     "@coreui/icons": "0.4.1",
     "@coreui/vue": "2.1.2",
+    "@vue/compat": "3.5.43",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "axios": "1.20.0",
     "bootstrap": "4.6.2",
-    "bootstrap-table": "1.22.6",
+    "bootstrap-table": "1.27.3",
     "bootstrap-vue": "2.23.1",
     "chart.js": "4.5.1",
     "codemirror": "6.0.2",
@@ -55,18 +56,18 @@
     "showdown": "2.1.0",
     "showdown-htmlescape": "0.1.9",
     "simple-line-icons": "2.5.5",
-    "vue": "2.7.16",
+    "vue": "3.5.43",
     "vue-axios": "3.5.2",
     "vue-chartjs": "5.3.4",
-    "vue-i18n": "8.28.2",
-    "vue-multiselect": "2.1.9",
-    "vue-router": "3.6.5",
+    "vue-i18n": "11.4.14",
+    "vue-multiselect": "3.5.0",
+    "vue-router": "4.6.4",
     "xss-filters": "1.2.7"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.0",
-    "@vitejs/plugin-vue2": "2.3.4",
+    "@vitejs/plugin-vue": "6.0.10",
     "eslint": "10.12.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-playwright": "2.12.1",
@@ -77,12 +78,18 @@
     "prettier-plugin-sort-json": "4.0.0",
     "rollup-plugin-sbom": "4.0.1",
     "sass": "1.105.1",
-    "vite": "7.3.7",
+    "vite": "8.3.4",
     "vue-i18n-extract": "git+https://git@github.com/Spittal/vue-i18n-extract.git#f856484d2f62abbd931d84676519f529062d94da",
     "xmlbuilder2": "4.0.3"
   },
   "overrides": {
-    "fast-uri": "3.1.2"
+    "fast-uri": "3.1.2",
+    "portal-vue": {
+      "vue": "$vue"
+    },
+    "vue-clickaway": {
+      "vue": "$vue"
+    }
   },
   "engines": {
     "node": ">= 22",

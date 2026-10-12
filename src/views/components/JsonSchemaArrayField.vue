@@ -48,18 +48,10 @@
       class="form-text text-muted d-block mt-1"
     >
       <span v-if="schema.minItems">
-        {{
-          $tc('admin.json_schema_form.min_items', schema.minItems, {
-            n: schema.minItems,
-          })
-        }}
+        {{ $t('admin.json_schema_form.min_items', schema.minItems) }}
       </span>
       <span v-if="schema.maxItems">
-        {{
-          $tc('admin.json_schema_form.max_items', schema.maxItems, {
-            n: schema.maxItems,
-          })
-        }}
+        {{ $t('admin.json_schema_form.max_items', schema.maxItems) }}
       </span>
     </small>
 
@@ -90,6 +82,7 @@ export default {
     Showdown,
   },
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     schema: {
       type: Object,

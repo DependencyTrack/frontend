@@ -562,7 +562,7 @@
     "component_name_desc": "Назва компонента, надана постачальником",
     "component_namespace_group_vendor": "Простір імен / група / постачальник",
     "component_operating_system": "Операційна система",
-    "component_package_url_desc": "Для бібліотек та фреймворків потрібна дійсна URL-адреса пакета. Синтаксис PURL: pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "Для бібліотек та фреймворків потрібна дійсна URL-адреса пакета. Синтаксис PURL: pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "Платформа",
     "component_properties": "Властивості компонента",
     "component_search": "Пошук компонентів",

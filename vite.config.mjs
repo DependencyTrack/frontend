@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
-import vue from '@vitejs/plugin-vue2';
+import vue from '@vitejs/plugin-vue';
 import sbom from 'rollup-plugin-sbom';
 
 export default defineConfig(({ mode }) => {
@@ -8,11 +8,14 @@ export default defineConfig(({ mode }) => {
   return {
     base: './',
     plugins: [
-      vue(),
+      vue({
+        template: { compilerOptions: { compatConfig: { MODE: 2 } } },
+      }),
       { ...sbom({ outFormats: ['json', 'xml'] }), apply: 'build' },
     ],
     resolve: {
       alias: [
+        { find: /^vue$/, replacement: '@vue/compat' },
         {
           find: '@',
           replacement: fileURLToPath(new URL('src', import.meta.url)),
@@ -37,18 +40,8 @@ export default defineConfig(({ mode }) => {
       proxy: env.VUE_APP_SERVER_URL ? { '/api': env.VUE_APP_SERVER_URL } : {},
     },
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         input: ['index.html', 'static/oidc-callback.html'],
-        onwarn(warning, warn) {
-          // rollup-plugin-sbom always tries to register rolldown as a tool, even without it.
-          if (
-            warning.plugin === 'rollup-plugin-sbom' &&
-            warning.message.includes('"rolldown"')
-          ) {
-            return;
-          }
-          warn(warning);
-        },
       },
     },
   };

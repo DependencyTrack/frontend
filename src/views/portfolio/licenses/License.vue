@@ -180,7 +180,8 @@ export default {
       EventBus.emit('addCrumb', this.licenseLabel);
       setPageTitle(`${this.$t('message.license')} ${this.licenseLabel}`);
     });
-    this.getTabFromRoute().active = true;
+    // <b-tabs> registers its tabs after this hook.
+    this.$nextTick(() => this.getTabFromRoute().activate());
   },
   watch: {
     $route() {

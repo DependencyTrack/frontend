@@ -303,7 +303,7 @@ export default {
               this.routerFunc().resolve({
                 name: 'Project',
                 params: { uuid: row.uuid },
-              }).route.fullPath,
+              }).fullPath,
             );
             let collectionIcon = '';
             if (row.collectionLogic) {
