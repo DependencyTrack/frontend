@@ -168,6 +168,17 @@ export function setPageTitle(title) {
   }
 }
 
+export function getStyle(property) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(property)
+    .trim();
+}
+
+export function hexToRgba(hex, opacity) {
+  const [r, g, b] = hex.match(/[0-9a-f]{2}/gi).map((x) => parseInt(x, 16));
+  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
+}
+
 /**
  * Returns the context from which the webapp is running.
  */

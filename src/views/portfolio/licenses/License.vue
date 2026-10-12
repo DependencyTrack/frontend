@@ -107,9 +107,8 @@
 </template>
 
 <script>
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import EventBus from '../../../shared/eventbus';
-import { setPageTitle } from '../../../shared/utils';
+import { getStyle, setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 
 export default {

@@ -1,7 +1,7 @@
 <script>
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
+import { getStyle, hexToRgba } from '@/shared/utils';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 export default {

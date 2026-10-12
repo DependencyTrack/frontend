@@ -128,11 +128,10 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
-import { setPageTitle } from '../../../shared/utils';
+import { getStyle, setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal.vue';
 

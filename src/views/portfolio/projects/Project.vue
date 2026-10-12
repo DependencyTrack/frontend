@@ -539,7 +539,6 @@
 <script>
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ProjectComponents from './ProjectComponents.vue';
 import ProjectList from './ProjectList.vue';
@@ -547,7 +546,7 @@ import ProjectDependencyGraph from './ProjectDependencyGraph.vue';
 import ProjectServices from './ProjectServices.vue';
 import ProjectDashboard from './ProjectDashboard.vue';
 import EventBus from '../../../shared/eventbus';
-import { setPageTitle } from '../../../shared/utils';
+import { getStyle, setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal.vue';
 import ProjectPropertiesModal from './ProjectPropertiesModal.vue';

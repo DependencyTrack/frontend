@@ -85,6 +85,10 @@ export default [
           name: '@johmun/vue-tags-input',
           message: "Use TagsInput from 'forms/TagsInput.vue'.",
         },
+        {
+          name: '@coreui/coreui/dist/js/coreui-utilities',
+          message: "Use getStyle and hexToRgba from 'shared/utils'.",
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
