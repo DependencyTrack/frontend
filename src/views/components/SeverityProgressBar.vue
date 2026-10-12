@@ -58,7 +58,6 @@ export default {
     medium: Number,
     low: Number,
     unassigned: Number,
-    $t: Function,
   },
   data() {
     return {

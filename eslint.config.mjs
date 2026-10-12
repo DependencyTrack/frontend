@@ -34,6 +34,12 @@ export default [
         },
         {
           selector:
+            "MemberExpression[object.name='Vue'][property.name='extend']",
+          message:
+            'Use cell() from bootstrapTableMixin. Vue 3 removed Vue.extend.',
+        },
+        {
+          selector:
             'CallExpression[callee.property.name=/^\\$(on|off|once)$/]:not([arguments.0.value=/^bv::/])',
           message:
             'Use EventBus from shared/eventbus. Vue 3 removed $on, $off and $once.',

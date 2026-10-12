@@ -21,16 +21,16 @@
 
 <script>
 import $ from 'jquery';
-import Vue from 'vue';
 import common from '../../../shared/common';
 import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import xssFilters from 'xss-filters';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import FilterBar from '../../components/FilterBar.vue';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
-  mixins: [filterPillsMixin],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
     FilterBar,
   },
@@ -94,27 +94,23 @@ export default {
               return '-'; // No vulnerability info available
             }
 
-            // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            return progressBar.$el.outerHTML;
           }.bind(this),
         },
       ],
       data: [],
       options: {
-        onPostBody: this.initializeTooltips,
+        onPostBody: () => {
+          this.mountCells();
+          this.initializeTooltips();
+        },
         search: true,
         showColumns: true,
         showRefresh: true,

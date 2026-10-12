@@ -15,6 +15,20 @@ test('filter components by name with a filter pill', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'jackson-core' })).toHaveCount(0);
 });
 
+test('show the vulnerabilities of a component in a tooltip', async ({
+  page,
+}) => {
+  await login(page);
+  await page.goto('components?name_contains=jackson-databind');
+  await page.getByRole('button', { name: 'Columns' }).click();
+  await page.getByRole('checkbox', { name: 'Vulnerabilities' }).check();
+  await page.keyboard.press('Escape');
+  await page.getByRole('progressbar').filter({ visible: true }).first().hover();
+  await expect(
+    page.getByRole('tooltip').filter({ hasText: 'Severity' }),
+  ).toBeVisible();
+});
+
 test('verify the hashes of a component', async ({ page }) => {
   const sha1 = '0a6a0e0620d51833feffc67bccb51937b2345763';
   await login(page);
