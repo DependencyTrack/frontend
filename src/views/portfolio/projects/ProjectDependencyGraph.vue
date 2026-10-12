@@ -2,70 +2,94 @@
   <div style="text-align: center; font-size: xxx-large" v-if="this.loading">
     Loading, please wait...
   </div>
-  <div
-    v-else
-    style="overflow-x: hidden; overflow-y: hidden; cursor: grab"
-    @mousedown="mouseDownHandler"
-  >
-    <span
-      v-if="
-        this.$route.params.componentUuids &&
-        this.$route.params.componentUuids.length > 0 &&
-        this.project.directDependencies &&
-        this.project.directDependencies.length > 0 &&
-        !this.notFound
-      "
-    >
+  <div v-else class="dependency-graph">
+    <div class="dependency-graph-controls">
+      <span
+        v-if="
+          this.$route.params.componentUuids &&
+          this.$route.params.componentUuids.length > 0 &&
+          this.project.directDependencies &&
+          this.project.directDependencies.length > 0 &&
+          !this.notFound
+        "
+      >
+        <b-form-checkbox
+          style="margin-left: 1.5rem; margin-right: 0.5rem"
+          id="showCompleteGraph"
+          v-model="showCompleteGraph"
+          inline
+          switch
+          ><span class="text-muted">{{
+            $t('message.show_complete_graph')
+          }}</span></b-form-checkbox
+        >
+      </span>
       <b-form-checkbox
         style="margin-left: 1.5rem; margin-right: 0.5rem"
-        id="showCompleteGraph"
-        v-model="showCompleteGraph"
+        id="highlightOutdatedComponents"
+        v-model="highlightOutdatedComponents"
         inline
         switch
         ><span class="text-muted">{{
-          $t('message.show_complete_graph')
+          $t('message.show_update_information')
         }}</span></b-form-checkbox
       >
-    </span>
-    <b-form-checkbox
-      style="margin-left: 1.5rem; margin-right: 0.5rem"
-      id="highlightOutdatedComponents"
-      v-model="highlightOutdatedComponents"
-      inline
-      switch
-      ><span class="text-muted">{{
-        $t('message.show_update_information')
-      }}</span></b-form-checkbox
-    ><br />
+    </div>
     <span v-if="this.notFound">
       <span class="text-muted">{{
         $t('message.not_found_in_dependency_graph')
       }}</span
       ><br />
     </span>
-    <vue2-org-tree
-      :data="data"
-      :horizontal="true"
-      :collapsable="collapsable"
-      :label-class-name="labelClassName"
-      :render-content="renderContent"
-      selected-class-name="bg-tomato"
-      selected-key="selectedKey"
-      @on-expand="onExpand"
-      @on-node-click="onNodeClick"
-    />
+    <ul>
+      <dependency-graph-node :node="data" @toggle="onToggle">
+        <template #default="{ node }">
+          <component
+            :is="nodePath(node) ? 'router-link' : 'span'"
+            :to="nodePath(node)"
+            :title="node.purl"
+            class="dependency-graph-node"
+            :class="{ searched: isSearched(node) }"
+          >
+            <i
+              class="fa fa-fw text-muted mr-1"
+              :class="nodeIcon(node)"
+              aria-hidden="true"
+            /><span v-if="node.group" class="text-muted">{{ node.group }}/</span
+            >{{ node.name }}
+            <span class="text-muted">{{ node.version }}</span>
+            <span
+              v-if="isOutdated(node)"
+              v-b-tooltip.hover.noninteractive
+              class="badge badge-warning ml-2"
+              :title="
+                'Risk: Outdated component. Current version is: ' +
+                node.latestVersion
+              "
+              ><i class="fa fa-arrow-up" aria-hidden="true" />
+              {{ node.latestVersion }}</span
+            >
+          </component>
+        </template>
+      </dependency-graph-node>
+    </ul>
   </div>
 </template>
 
 <script>
-import Vue2OrgTree from 'vue2-org-tree';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import xssFilters from 'xss-filters';
+import DependencyGraphNode from './DependencyGraphNode.vue';
+
+function purlNamespace(purl) {
+  const path = purl?.split(/[?#]/)[0].replace(/^pkg:[^/]+\//, '');
+  const slash = path?.lastIndexOf('/');
+  return slash > 0 ? decodeURIComponent(path.slice(0, slash)) : undefined;
+}
 
 export default {
   mixins: [permissionsMixin],
   components: {
-    Vue2OrgTree,
+    DependencyGraphNode,
   },
   props: {
     project: Object,
@@ -96,10 +120,6 @@ export default {
       data: {},
       response: Object,
       nodeId: 0,
-      expandAll: true,
-      horizontal: false,
-      collapsable: true,
-      pos: { top: 0, left: 0, x: 0, y: 0 },
       loading: false,
       showCompleteGraph: this.showCompleteGraph,
       notFound: false,
@@ -121,7 +141,8 @@ export default {
       if (this.showCompleteGraph) {
         this.data = {
           id: this.nodeId,
-          label: this.createNodeLabel(this.project),
+          name: this.project.name,
+          version: this.project.version,
           objectType: 'PROJECT',
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(
             this.response.data,
@@ -143,7 +164,8 @@ export default {
       } else {
         this.data = {
           id: this.nodeId,
-          label: this.createNodeLabel(this.project),
+          name: this.project.name,
+          version: this.project.version,
           objectType: 'PROJECT',
           children: this.transformDependenciesToOrgTreeWithSearchedDependency(
             this.response.data,
@@ -187,8 +209,10 @@ export default {
       // prepare base object
       const data = {
         id: this.nodeId,
-        label: this.createNodeLabel(this.project),
+        name: this.project.name,
+        version: this.project.version,
         objectType: 'PROJECT',
+        expand: true,
       };
       // do not assign data to this.data yet, otherwise tree breaks :(
 
@@ -270,61 +294,6 @@ export default {
         }
       });
     },
-    mouseDownHandler: function (event) {
-      if (
-        event.button === 0 &&
-        !event.target.classList.contains('clickable-node') &&
-        !event.target.classList.contains('org-tree-node-btn')
-      ) {
-        this.$el.style.cursor = 'grabbing';
-        this.$el.style.userSelect = 'none';
-        this.pos = {
-          left: this.$el.scrollLeft,
-          top: document.documentElement.scrollTop,
-          x: event.clientX,
-          y: event.clientY,
-        };
-        document.addEventListener('mousemove', this.mouseMoveHandler);
-        document.addEventListener('mouseup', this.mouseUpHandler);
-      } else if (event.button === 1) {
-        this.$el.style.cursor = 'default';
-        this.$el.style.userSelect = 'none';
-        this.pos = {
-          left: this.$el.scrollLeft,
-          top: document.documentElement.scrollTop,
-          x: event.clientX,
-          y: event.clientY,
-        };
-        document.addEventListener(
-          'mousemove',
-          this.mouseMoveHandlerMiddleMouseButton,
-        );
-        document.addEventListener('mouseup', this.mouseUpHandler);
-      }
-    },
-    mouseMoveHandler: function (event) {
-      const dx = event.clientX - this.pos.x;
-      const dy = event.clientY - this.pos.y;
-
-      document.documentElement.scrollTop = this.pos.top - dy;
-      this.$el.scrollLeft = this.pos.left - dx;
-    },
-    mouseMoveHandlerMiddleMouseButton: function (event) {
-      const dx = event.clientX - this.pos.x;
-
-      this.$el.scrollLeft = this.pos.left + dx;
-    },
-    mouseUpHandler: function () {
-      document.removeEventListener('mousemove', this.mouseMoveHandler);
-      document.removeEventListener(
-        'mousemove',
-        this.mouseMoveHandlerMiddleMouseButton,
-      );
-      document.removeEventListener('mouseup', this.mouseUpHandler);
-
-      this.$el.style.cursor = 'grab';
-      this.$el.style.removeProperty('user-select');
-    },
     transformDependenciesToOrgTree: function (
       dependencies,
       getChildren,
@@ -343,10 +312,10 @@ export default {
           }
           if (
             !childNode.gatheredKeys.some(
-              (gatheredKey) => gatheredKey === childNode.label,
+              (gatheredKey) => gatheredKey === childNode.uuid,
             )
           ) {
-            childNode.gatheredKeys.push(childNode.label);
+            childNode.gatheredKeys.push(childNode.uuid);
             children.push(childNode);
           }
         }
@@ -375,33 +344,27 @@ export default {
             let childNode = this.transformDependencyToOrgTree(
               dependencies[directDependency.uuid],
             );
-            childNode.gatheredKeys.push(childNode.label);
+            childNode.gatheredKeys.push(childNode.uuid);
             children.push(childNode);
             if (
               onlySearched &&
               this.searchedComponentUuids[directDependency.uuid]
             ) {
-              this.$set(
-                childNode,
-                'children',
+              childNode.children =
                 this.getChildrenFromDependencyWithSearchedDependency(
                   dependencies,
                   dependencies[directDependency.uuid],
                   childNode,
                   false,
-                ),
-              );
+                );
             } else {
-              this.$set(
-                childNode,
-                'children',
+              childNode.children =
                 this.getChildrenFromDependencyWithSearchedDependency(
                   dependencies,
                   dependencies[directDependency.uuid],
                   childNode,
                   onlySearched,
-                ),
-              );
+                );
             }
           }
         });
@@ -431,34 +394,28 @@ export default {
             }
             if (
               !childNode.gatheredKeys.some(
-                (gatheredKey) => gatheredKey === childNode.label,
+                (gatheredKey) => gatheredKey === childNode.uuid,
               )
             ) {
-              childNode.gatheredKeys.push(childNode.label);
+              childNode.gatheredKeys.push(childNode.uuid);
               children.push(childNode);
               if (onlySearched && this.searchedComponentUuids[dependency]) {
-                this.$set(
-                  childNode,
-                  'children',
+                childNode.children =
                   this.getChildrenFromDependencyWithSearchedDependency(
                     dependencies,
                     dependencies[dependency],
                     childNode,
                     false,
-                  ),
-                );
+                  );
                 this.collapse(childNode.children);
               } else {
-                this.$set(
-                  childNode,
-                  'children',
+                childNode.children =
                   this.getChildrenFromDependencyWithSearchedDependency(
                     dependencies,
                     dependencies[dependency],
                     childNode,
                     onlySearched,
-                  ),
-                );
+                  );
               }
             }
           }
@@ -470,12 +427,15 @@ export default {
       this.nodeId++;
       return {
         id: this.nodeId,
-        label: this.createNodeLabel(dependency),
+        group: dependency.group || purlNamespace(dependency.purl),
+        name: dependency.name,
         version: dependency.version,
         objectType: dependency.objectType || 'COMPONENT',
         uuid: dependency.uuid,
+        purl: dependency.purl,
         fetchedChildren: !!dependency.expandDependencyGraph,
         gatheredKeys: [],
+        children: null,
         expand: !!dependency.expandDependencyGraph,
         latestVersion:
           dependency.latestVersion || dependency.repositoryMeta?.latestVersion,
@@ -501,16 +461,12 @@ export default {
               treeNode.latestVersion = dependency.latestVersion;
               if (dependency.directDependencies) {
                 let jsonObject = JSON.parse(dependency.directDependencies);
-                this.$set(
+                treeNode.children = this.transformDependenciesToOrgTree(
+                  jsonObject,
+                  false,
                   treeNode,
-                  'children',
-                  this.transformDependenciesToOrgTree(
-                    jsonObject,
-                    false,
-                    treeNode,
-                    dependency.uuid,
-                    'COMPONENT',
-                  ),
+                  dependency.uuid,
+                  'COMPONENT',
                 );
               }
             }
@@ -528,93 +484,46 @@ export default {
         return null;
       }
     },
-    createNodeLabel: function (identity) {
-      // Could be a project or a directDependency object.
-      // Projects don't have the objectType property.
-      const isProject = !identity.objectType;
-      if (!isProject && identity.purlCoordinates) {
-        return identity.purlCoordinates;
-      } else if (!isProject && identity.purl) {
-        return identity.purl;
-      } else {
-        let label = '';
-        if (identity.groupId) {
-          label += identity.groupId + ' ';
-        }
-        if (identity.name) {
-          label += identity.name;
-        }
-        if (identity.version) {
-          label += ' ' + identity.version;
-        }
-        return label;
+    nodePath: function (node) {
+      if (node.objectType === 'COMPONENT') {
+        return '/components/' + node.uuid;
+      } else if (node.objectType === 'SERVICE') {
+        return '/services/' + node.uuid;
       }
+      return null;
     },
-    labelClassName: function (data) {
-      if (
+    nodeIcon: function (node) {
+      return (
+        { PROJECT: 'fa-sitemap', SERVICE: 'fa-exchange' }[node.objectType] ||
+        'fa-cube'
+      );
+    },
+    isSearched: function (node) {
+      return (
         this.$route.params.componentUuids &&
-        this.searchedComponentUuids[data.uuid]
-      ) {
-        return 'clickable-node searched';
-      }
-      return 'clickable-node';
+        this.searchedComponentUuids[node.uuid]
+      );
     },
-    renderContent: function (h, data) {
-      if (
+    isOutdated: function (node) {
+      return (
         this.highlightOutdatedComponents &&
-        data.version &&
-        data.latestVersion &&
-        data.latestVersion !== data.version
-      ) {
-        return h('div', { style: 'white-space: nowrap;' }, [
-          data.label + ' ',
-          h('i', {
-            class: 'fa fa-exclamation-triangle status-warning',
-            attrs: { id: 'icon' + data.id, 'aria-hidden': 'true' },
-          }),
-          h(
-            'b-tooltip',
-            {
-              props: {
-                target: 'icon' + data.id,
-                triggers: 'hover',
-                noninteractive: true,
-              },
-            },
-            'Risk: Outdated component. Current version is: ' +
-              xssFilters.inHTMLData(data.latestVersion),
-          ),
-        ]);
-      } else {
-        return h('div', { style: 'white-space: nowrap;' }, data.label);
-      }
+        node.version &&
+        node.latestVersion &&
+        node.latestVersion !== node.version
+      );
     },
-    onExpand: async function (e, data) {
-      if (!data.fetchedChildren) {
-        e.target.style.cursor = 'wait';
-        if (data.objectType === 'COMPONENT') {
-          await this.getChildrens(data.children, data.uuid, data.objectType);
+    onToggle: async function (node) {
+      if (!node.fetchedChildren) {
+        if (node.objectType === 'COMPONENT') {
+          await this.getChildrens(node.children, node.uuid, node.objectType);
         }
-        data.fetchedChildren = true;
-        e.target.style.cursor = 'pointer';
-        this.$set(data, 'expand', true);
+        node.fetchedChildren = true;
+        node.expand = true;
       } else {
-        if ('expand' in data) {
-          data.expand = !data.expand;
-          if (!data.expand && data.children) {
-            this.collapse(data.children);
-          }
-        } else {
-          this.$set(data, 'expand', true);
+        node.expand = !node.expand;
+        if (!node.expand && node.children) {
+          this.collapse(node.children);
         }
-      }
-    },
-    onNodeClick: function (_e, data) {
-      this.$set(data, 'selectedKey', !data.selectedKey);
-      if (data.objectType === 'COMPONENT') {
-        this.$router.push({ path: '/components/' + data.uuid });
-      } else if (data.objectType === 'SERVICE') {
-        this.$router.push({ path: '/services/' + data.uuid });
       }
     },
     collapse: function (list) {
@@ -626,25 +535,6 @@ export default {
         child.fetchedChildren = false;
         child.children && _this.collapse(child.children);
       });
-    },
-    expandChange: function () {
-      this.toggleExpand(this.data, this.expandAll);
-    },
-    toggleExpand: function (data, val) {
-      var _this = this;
-      if (Array.isArray(data)) {
-        data.forEach(function (item) {
-          _this.$set(item, 'expand', val);
-          if (item.children) {
-            _this.toggleExpand(item.children, val);
-          }
-        });
-      } else {
-        this.$set(data, 'expand', val);
-        if (data.children) {
-          _this.toggleExpand(data.children, val);
-        }
-      }
     },
     createSearchedComponentLookupTable: function (componentUuids) {
       this.searchedComponentUuids = {};
@@ -660,104 +550,113 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'vue2-org-tree/dist/style.css';
-.org-tree-container {
-  background-color: inherit;
+$dependency-graph-line: rgba(32, 168, 216, 0.35);
+
+// CoreUI's hidden makes .app-body a scroll container, so pinned rows couldn't stick to the page.
+.app-body:has(.tab-pane.active .dependency-graph) {
+  overflow-x: clip;
 }
-.org-tree-node-label .org-tree-node-label-inner {
-  border: 1px solid #20a8d8;
-  padding: 1px 2.5px;
-  font-size: 0.675rem;
+
+.dependency-graph {
+  white-space: nowrap;
 }
-.org-tree-node-label:hover {
-  cursor: pointer;
+.dependency-graph-controls {
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #2b3a48;
 }
-.org-tree-node-btn {
-  background-color: #105770;
-  color: #ffffff;
-  border: none;
-  pointer-events: initial;
+.dependency-graph ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.25rem;
 }
-.org-tree-node-btn:hover {
-  background-color: #20a8d8;
+.dependency-graph > ul {
+  padding-left: 2.75rem;
 }
-.horizontal .org-tree-node:not(:only-child):after {
-  border-top: 1px solid #20a8d8;
+.dependency-graph li {
+  position: relative;
 }
-.horizontal .org-tree-node:not(:first-child):before,
-.horizontal .org-tree-node:not(:last-child):after {
-  border-left: 1px solid #20a8d8;
+.dependency-graph-row {
+  display: flex;
+  align-items: center;
+  height: 2.375rem;
 }
-.horizontal .org-tree-node-children:before {
-  border-top: 1px solid #20a8d8;
+.dependency-graph-row.pinned {
+  position: sticky;
+  // Below the fixed app header.
+  top: calc(55px + var(--depth) * 2.375rem);
+  z-index: calc(100 - var(--depth));
+  background: #131d26;
+  // Also covers the indent, so tree lines don't show through left of the row.
+  box-shadow: calc(-2.75rem - var(--depth) * 1.25rem) 0 0 #131d26;
 }
-.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after {
-  border-bottom: 1px solid #20a8d8;
-}
-// Fixes white line instead of blue line to only-child nodes
-.horizontal .org-tree-node:only-child:before {
-  border-bottom-color: #20a8d8;
-}
-// Horizontal line to a node
-.horizontal .org-tree-node:after,
-.horizontal .org-tree-node:before,
-.horizontal .org-tree-node.is-leaf:before,
-.org-tree-node.is-leaf:after {
-  width: 10px;
-  height: 50%;
-}
-// Horizontal line from a node
-.horizontal .org-tree-node-children {
-  padding-left: 10px;
-}
-.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after,
-.horizontal .org-tree-node-children:before {
-  width: 10px;
-}
-// Margin between nodes
-.horizontal .org-tree-node,
-.horizontal .org-tree-node.collapsed,
-.horizontal .org-tree-node.is-leaf {
-  padding: 0;
-}
-.horizontal .org-tree-node-label {
-  padding: 5px 0px 5px 10px;
-}
-// Button size and position
-.horizontal .org-tree-node-btn {
-  width: 17px;
-  height: 17px;
-  margin: -9px 0px 0px 1.5px;
-}
-// Inner button vertical line
-.org-tree-node-btn:before {
-  left: 3px;
-  right: 3px;
-  top: 50%;
-}
-// Inner button horizontal line
-.org-tree-node-btn:after {
-  top: 3px;
-  bottom: 3px;
-  left: 50%;
-}
-// Fix wrong pointer
-.org-tree-node-label:hover {
-  cursor: default;
-}
-.org-tree-node-label .org-tree-node-label-inner {
-  cursor: pointer;
-}
-// Enable dragging nodes without scrolling by dragging
-.org-tree-node-label-inner {
-  pointer-events: initial;
-}
-// Enable scrolling by dragging in empty space between nodes
-.org-tree-node-label {
+// Fades out the row scrolling under a pinned one instead of cutting it off.
+.dependency-graph-row.pinned::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: calc(-2.75rem - var(--depth) * 1.25rem);
+  right: 0;
+  height: 12px;
+  background: linear-gradient(#131d26, rgba(19, 29, 38, 0));
   pointer-events: none;
 }
-.org-tree-node-label-inner.clickable-node.searched {
-  border: 2.5px solid #4dbd74;
+.dependency-graph ul ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.875rem;
+  top: 0;
+  width: 0.625rem;
+  height: 1.1875rem;
+  border-left: 1px solid $dependency-graph-line;
+  border-bottom: 1px solid $dependency-graph-line;
+  border-bottom-left-radius: 4px;
+}
+.dependency-graph ul ul > li.leaf::before {
+  width: 1.5rem;
+}
+// Carries the parent's line down past this node to the next sibling.
+.dependency-graph ul ul > li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: -1.875rem;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid $dependency-graph-line;
+}
+.dependency-graph-toggle {
+  width: 1.25rem;
+  margin-left: -1.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #73818f;
+}
+.dependency-graph-toggle:hover {
+  color: #20a8d8;
+}
+.dependency-graph-toggle:focus-visible {
+  outline: 2px solid #20a8d8;
+}
+.dependency-graph-node {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0.75rem;
+  line-height: 1.75rem;
+  border: 1px solid #2b3a48;
+  border-radius: 1rem;
+  background: #151f29;
+}
+a.dependency-graph-node:hover {
+  border-color: #20a8d8;
+  text-decoration: none;
+}
+.dependency-graph-node.searched {
+  border-color: #4dbd74;
+  color: #4dbd74;
   font-weight: bold;
 }
 </style>

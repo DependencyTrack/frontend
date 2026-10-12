@@ -93,6 +93,11 @@ export default [
           name: '@coreui/coreui-plugin-chartjs-custom-tooltips',
           message: "Use Chart.js's built-in tooltips.",
         },
+        {
+          name: 'vue2-org-tree',
+          message:
+            "Use DependencyGraphNode from 'portfolio/projects/DependencyGraphNode.vue'.",
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
@@ -105,11 +110,6 @@ export default [
       'vue/no-deprecated-slot-scope-attribute': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
     },
-  },
-  {
-    // Its $set calls go away with vue2-org-tree.
-    files: ['src/views/portfolio/projects/ProjectDependencyGraph.vue'],
-    rules: { 'vue/no-deprecated-delete-set': 'off' },
   },
   {
     files: ['*.js', '*.mjs'],
