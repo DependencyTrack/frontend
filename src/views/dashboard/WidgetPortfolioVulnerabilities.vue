@@ -1,14 +1,22 @@
+<template>
+  <div>
+    <line-chart v-if="chartData" :data="chartData" :options="options" />
+  </div>
+</template>
+
 <script>
+import 'chart.js/auto';
 import { Line } from 'vue-chartjs';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@/shared/utils';
 import common from '../../shared/common';
 
 export default {
-  extends: Line,
-  props: {
-    height: Number,
-    width: Number,
+  components: { LineChart: Line },
+  data() {
+    return {
+      chartData: null,
+      options: null,
+    };
   },
   methods: {
     render: function (metrics) {
@@ -24,71 +32,74 @@ export default {
         {
           label: this.$t('message.vulnerabilities'),
           backgroundColor: hexToRgba(widgetColor, 10),
+          fill: true,
           borderColor: widgetColor,
           pointHoverBackgroundColor: '#fff',
           data: chartData,
         },
       ];
 
-      this.renderChart(
-        {
-          labels: chartLabels,
-          datasets: datasets,
-        },
-        {
-          tooltips: {
-            enabled: false,
-            custom: CustomTooltips,
+      this.chartData = {
+        labels: chartLabels,
+        datasets: datasets,
+      };
+      this.options = {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
             callbacks: {
-              title: function (tooltipItems, data) {
+              labelColor: function (context) {
+                return {
+                  borderColor: context.dataset.borderColor,
+                  backgroundColor: context.dataset.borderColor,
+                };
+              },
+              title: function (tooltipItems) {
+                const { chart, dataIndex } = tooltipItems[0];
                 return common.formatTimestamp(
-                  data.labels[tooltipItems[0].index],
+                  chart.data.labels[dataIndex],
                   true,
                 );
               },
             },
           },
-          maintainAspectRatio: false,
-          legend: {
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            border: {
+              display: false,
+            },
+            ticks: {
+              font: {
+                size: 2,
+              },
+              color: 'transparent',
+            },
+          },
+          y: {
             display: false,
-          },
-          scales: {
-            xAxes: [
-              {
-                gridLines: {
-                  color: 'transparent',
-                  zeroLineColor: 'transparent',
-                },
-                ticks: {
-                  fontSize: 2,
-                  fontColor: 'transparent',
-                },
-              },
-            ],
-            yAxes: [
-              {
-                display: false,
-                ticks: {
-                  display: false,
-                  min: 0,
-                  max: Math.max.apply(Math, datasets[0].data) + 5,
-                },
-              },
-            ],
-          },
-          elements: {
-            line: {
-              tension: 0.00001,
-              borderWidth: 2,
-            },
-            point: {
-              radius: 0,
-              hitRadius: 10,
-              hoverRadius: 4,
-            },
+            min: 0,
+            max: Math.max.apply(Math, datasets[0].data) + 5,
           },
         },
-      );
+        elements: {
+          line: {
+            tension: 0.00001,
+            borderWidth: 2,
+          },
+          point: {
+            radius: 0,
+            hitRadius: 10,
+            hoverRadius: 4,
+          },
+        },
+      };
     },
   },
 };

@@ -1,3 +1,4 @@
+import { seed } from '../api.mjs';
 import { test, expect, login } from '../test.mjs';
 
 test('dashboard charts show the seeded metrics', async ({ page }) => {
@@ -12,6 +13,17 @@ test('dashboard charts show the seeded metrics', async ({ page }) => {
   for (const canvas of await canvases.all()) {
     await expect.poll(() => canvas.evaluate(isDrawn)).toBe(true);
   }
+});
+
+test('exploit predictions chart shows the seeded findings', async ({
+  page,
+}) => {
+  const { project, vulnId } = seed();
+  await login(page);
+  await page.goto(`projects/${project.uuid}/epss`);
+  await expect(page.getByRole('row').filter({ hasText: vulnId })).toBeVisible();
+  const chart = page.getByRole('tabpanel').locator('canvas');
+  await expect.poll(() => chart.evaluate(isDrawn)).toBe(true);
 });
 
 function isDrawn(canvas) {

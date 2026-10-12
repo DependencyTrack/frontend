@@ -41,10 +41,8 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartPortfolioVulnerabilities"
-        chartId="chartPortfolioVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
-        :height="200"
       ></chart-portfolio-vulnerabilities>
       <template v-slot:footer>
         <div>
@@ -120,10 +118,8 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-state>
           <template v-slot:footer>
             <div>
@@ -193,10 +189,8 @@
           </b-row>
           <chart-policy-violations-classification
             ref="chartPolicyViolationsClassification"
-            chartId="chartPolicyViolationsClassification"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-classification>
           <template v-slot:footer>
             <div>
@@ -270,10 +264,8 @@
           </b-row>
           <chart-auditing-findings-progress
             ref="chartAuditingFindingsProgress"
-            chartId="chartAuditingFindingsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-auditing-findings-progress>
           <template v-slot:footer>
             <div>
@@ -333,10 +325,8 @@
           </b-row>
           <chart-auditing-violations-progress
             ref="chartAuditingViolationsProgress"
-            chartId="chartAuditingViolationsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-auditing-violations-progress>
           <template v-slot:footer>
             <div>
@@ -393,10 +383,8 @@
           </b-row>
           <chart-project-vulnerabilities
             ref="chartProjectVulnerabilities"
-            chartId="chartProjectVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-project-vulnerabilities>
           <template v-slot:footer>
             <div>
@@ -448,10 +436,8 @@
           </b-row>
           <chart-component-vulnerabilities
             ref="chartComponentVulnerabilities"
-            chartId="chartComponentVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-component-vulnerabilities>
           <template v-slot:footer>
             <div>
@@ -903,11 +889,3 @@ export default {
   },
 };
 </script>
-
-<style>
-/* IE fix */
-#card-chart-01,
-#card-chart-02 {
-  width: 100% !important;
-}
-</style>

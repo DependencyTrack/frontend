@@ -89,6 +89,10 @@ export default [
           name: '@coreui/coreui/dist/js/coreui-utilities',
           message: "Use getStyle and hexToRgba from 'shared/utils'.",
         },
+        {
+          name: '@coreui/coreui-plugin-chartjs-custom-tooltips',
+          message: "Use Chart.js's built-in tooltips.",
+        },
       ],
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',

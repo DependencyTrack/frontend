@@ -2,10 +2,8 @@
   <div>
     <chart-epss-vs-cvss
       ref="chartEpssVsCvss"
-      chartId="chartEpssVsCvss"
       class="chart-wrapper"
       style="height: 400px; margin-top: 40px"
-      :height="400"
     />
 
     <!--
