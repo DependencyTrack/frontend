@@ -14,3 +14,23 @@ test('search the project list and open a project', async ({ page }) => {
     page.getByRole('heading', { name: 'Project Vulnerabilities' }),
   ).toBeVisible();
 });
+
+test('show the metrics of a project in tooltips', async ({ page }) => {
+  const { project } = seed();
+  await login(page);
+  await page.goto('projects');
+  await search(page, project.name);
+  const bars = page
+    .getByRole('row')
+    .filter({ hasText: project.name })
+    .getByRole('progressbar')
+    .filter({ visible: true });
+  await bars.first().hover();
+  await expect(
+    page.getByRole('tooltip').filter({ hasText: 'Violation State' }),
+  ).toBeVisible();
+  await bars.last().hover();
+  await expect(
+    page.getByRole('tooltip').filter({ hasText: 'Severity' }),
+  ).toBeVisible();
+});

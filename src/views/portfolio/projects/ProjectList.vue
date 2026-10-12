@@ -53,8 +53,8 @@
 <script>
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 import MurmurHash2 from 'imurmurhash';
-import Vue from 'vue';
 import xssFilters from 'xss-filters';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
@@ -70,7 +70,7 @@ const storedFlatView = () =>
   !!localStorage && localStorage.getItem('ProjectListShowFlatView') === 'true';
 
 export default {
-  mixins: [permissionsMixin, routerMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
     ProjectCreateProjectModal,
   },
@@ -161,6 +161,7 @@ export default {
       });
     },
     onPostBody: function () {
+      this.mountCells();
       if (!this.showFlatView && !this.isSearching) {
         let columns = this.$refs.table.getOptions().columns;
 
@@ -435,15 +436,7 @@ export default {
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
-            let ComponentClass = Vue.extend(PolicyViolationProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                metrics,
-                $t: this.$t.bind(this),
-              },
-            });
-            progressBar.$mount();
-            return progressBar.$el.outerHTML;
+            return this.cell(PolicyViolationProgressBar, { metrics });
           }.bind(this),
         },
         {
@@ -456,21 +449,14 @@ export default {
               return '-'; // No vulnerability info available
             }
 
-            // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            return progressBar.$el.outerHTML;
           }.bind(this),
         },
       ],

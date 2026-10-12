@@ -62,7 +62,6 @@
 export default {
   props: {
     metrics: Object,
-    $t: Function,
   },
   data() {
     return {

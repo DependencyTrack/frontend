@@ -95,7 +95,6 @@ import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import $ from 'jquery';
-import Vue from 'vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
@@ -465,22 +464,14 @@ export default {
             if (metrics == null) {
               return '-';
             }
-            const ComponentClass = Vue.extend(SeverityProgressBar);
-            const progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            const html = progressBar.$el.outerHTML;
-            progressBar.$destroy();
-            return html;
           },
         },
       ];
