@@ -63,3 +63,29 @@ test('limit a policy to a project in its row details', async ({
   await page.getByRole('button', { name: 'Limit To' }).click();
   await expect(page.getByText(project)).toBeVisible();
 });
+
+test('show the conditions of a policy in its row details', async ({
+  page,
+  api,
+}) => {
+  const policy = uniqueName('e2e-policy');
+  const { uuid } = await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+  await api.send('PUT', `/v1/policy/${uuid}/condition`, {
+    subject: 'PACKAGE_URL',
+    operator: 'MATCHES',
+    value: 'pkg:maven/com.example/e2e',
+  });
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  await expect(page.getByLabel('Subject')).toHaveValue('PACKAGE_URL');
+  await expect(page.getByLabel('Value')).toHaveValue(
+    'pkg:maven/com.example/e2e',
+  );
+});
