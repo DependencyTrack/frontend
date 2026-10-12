@@ -26,7 +26,7 @@
         <span>{{ option.name }}</span>
         <i
           v-if="secretNotFound"
-          class="fa fa-exclamation-triangle text-danger ml-1"
+          class="fa fa-exclamation-triangle text-danger ms-1"
           :title="$t('admin.secret_not_found')"
         ></i>
       </template>

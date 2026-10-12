@@ -50,13 +50,13 @@
           <b-badge
             v-if="filterExpressionMarkers.length > 0"
             variant="danger"
-            class="ml-1"
+            class="ms-1"
             >!</b-badge
           >
         </b-button>
         <span
           v-if="filterExpression"
-          class="ml-2 text-muted font-sm"
+          class="ms-2 text-muted font-sm"
           style="font-family: monospace"
           :title="filterExpression"
           >{{
@@ -349,7 +349,7 @@
           "
           variant="outline-info"
           size="sm"
-          class="mr-2"
+          class="me-2"
         >
           <i class="fa fa-book"></i>
           {{ $t('admin.filter_expression_reference') }}
@@ -371,7 +371,7 @@
           v-if="filterExpression"
           variant="outline-danger"
           size="sm"
-          class="ml-2"
+          class="ms-2"
           @click="filterExpression = ''"
         >
           <i class="fa fa-times"></i> {{ $t('message.clear') }}

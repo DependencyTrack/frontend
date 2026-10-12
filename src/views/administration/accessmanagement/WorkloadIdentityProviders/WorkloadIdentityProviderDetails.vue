@@ -103,14 +103,14 @@
               v-for="keyId in row.jwks_key_ids"
               :key="keyId"
               variant="secondary"
-              class="text-monospace ml-1"
+              class="font-monospace ms-1"
               >{{ keyId }}</b-badge
             >
           </p>
           <b-form-textarea
             :id="`${idPrefix}-jwks`"
             v-model="jwks"
-            class="text-monospace"
+            class="font-monospace"
             rows="6"
             placeholder='{ "keys": [ ... ] }'
             :state="jwksState"
@@ -125,12 +125,12 @@
             variant="outline-primary"
             :disabled="!hasChanges || !isValid || submitting"
             @click="updateProvider"
-            ><b-spinner v-if="submitting" small class="mr-1" />{{
+            ><b-spinner v-if="submitting" small class="me-1" />{{
               $t('message.update')
             }}</b-button
           >
           <b-button
-            class="ml-2"
+            class="ms-2"
             variant="outline-danger"
             @click="deleteProvider"
             >{{ $t('message.delete') }}</b-button

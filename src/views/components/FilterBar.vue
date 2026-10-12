@@ -22,7 +22,7 @@
           :key="filter.name"
           :title="filter.description || null"
           @click="$emit('show-filter', filter.name)"
-          ><span :class="['fa', filter.icon, 'mr-2']" aria-hidden="true"></span
+          ><span :class="['fa', filter.icon, 'me-2']" aria-hidden="true"></span
           >{{ filter.label }}</b-dropdown-item
         >
       </b-dropdown>

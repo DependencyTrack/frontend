@@ -112,7 +112,7 @@
         <b-form-textarea
           id="workload-identity-provider-jwks-input"
           v-model="jwks"
-          class="text-monospace"
+          class="font-monospace"
           rows="6"
           placeholder='{ "keys": [ ... ] }'
           required
@@ -150,7 +150,7 @@
         variant="primary"
         :disabled="!isValid || submitting"
         @click="ok()"
-        ><b-spinner v-if="submitting" small class="mr-1" />{{
+        ><b-spinner v-if="submitting" small class="me-1" />{{
           $t('message.create')
         }}</b-button
       >

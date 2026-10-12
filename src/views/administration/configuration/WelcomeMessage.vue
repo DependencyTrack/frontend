@@ -7,7 +7,7 @@
           <b-form-group
             :label="$t('admin.welcome_message')"
             label-size="lg"
-            label-class="font-weight-bold pt-0 mb-2"
+            label-class="fw-bold pt-0 mb-2"
           >
             <div id="customToolbar">
               <b-form-checkbox

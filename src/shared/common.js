@@ -43,7 +43,7 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   }
   return `<a href="${
     router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
-  }" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(
+  }" class="badge badge-tag text-lowercase me-1">${xssFilters.inHTMLData(
     tag.name,
   )}</a>`;
 };
@@ -57,7 +57,7 @@ $common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
   }
   return `<a href="${
     router.resolve({ name: 'Projects', query: { team: team.name } }).href
-  }" class="badge badge-team text-lowercase mr-1">${xssFilters.inHTMLData(
+  }" class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
     team.name,
   )}</a>`;
 };
@@ -72,7 +72,7 @@ $common.formatVulnerabilityTagLabel = function formatVulnerabilityTagLabel(
   if (!tag) {
     return '';
   }
-  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`;
+  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase me-1">${xssFilters.inHTMLData(tag.name)}</a>`;
 };
 
 /**

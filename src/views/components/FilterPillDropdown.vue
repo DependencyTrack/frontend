@@ -16,7 +16,7 @@
         <div class="d-flex align-items-center" v-if="!hasFilter">
           <span
             v-if="icon"
-            :class="['fa', icon, 'mr-1']"
+            :class="['fa', icon, 'me-1']"
             aria-hidden="true"
           ></span>
           {{ fieldLabel }}
@@ -25,7 +25,7 @@
           <span class="filter-pill-segment filter-pill-segment-field">
             <span
               v-if="icon"
-              :class="['fa', icon, 'mr-1']"
+              :class="['fa', icon, 'me-1']"
               aria-hidden="true"
             ></span>
             {{ fieldLabel }}

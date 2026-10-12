@@ -2,7 +2,7 @@
   <b-card no-body>
     <template #header>
       {{ header }}
-      <b-badge v-if="hasUnsavedChanges" variant="info" class="ml-2">
+      <b-badge v-if="hasUnsavedChanges" variant="info" class="ms-2">
         {{ $t('message.unsaved_changes_badge') }}
       </b-badge>
     </template>
@@ -10,7 +10,7 @@
       <b-form-group
         :label="$t('admin.metrics')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
         <b-form-group :label="$t('admin.retention')">
           <b-form-text class="mb-2">
@@ -26,7 +26,7 @@
               class="flex-grow-1"
             />
             <span
-              class="ml-2 font-weight-bold"
+              class="ms-2 fw-bold"
               style="min-width: 6em; text-align: right; white-space: nowrap"
               >{{ metricsRetentionDays }} {{ $t('admin.days') }}</span
             >
@@ -36,7 +36,7 @@
       <b-form-group
         :label="$t('message.projects')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
         <b-form-group>
           <b-form-checkbox v-model="enableProjectRetention" switch>{{
@@ -71,7 +71,7 @@
                 class="flex-grow-1"
               />
               <span
-                class="ml-2 font-weight-bold"
+                class="ms-2 fw-bold"
                 style="min-width: 6em; text-align: right; white-space: nowrap"
                 >{{ projectRetentionDays }} {{ $t('admin.days') }}</span
               >
@@ -91,7 +91,7 @@
                 class="flex-grow-1"
               />
               <span
-                class="ml-2 font-weight-bold"
+                class="ms-2 fw-bold"
                 style="min-width: 6em; text-align: right; white-space: nowrap"
                 >{{ projectRetentionVersions }}</span
               >
@@ -102,7 +102,7 @@
       <b-form-group
         :label="$t('admin.tags')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
         <b-form-checkbox v-model="tagsDeleteUnused" switch>{{
           $t('admin.tags_delete_unused')
@@ -122,7 +122,7 @@
       >
       <b-button
         variant="outline-danger"
-        class="ml-2"
+        class="ms-2"
         :disabled="!hasUnsavedChanges"
         @click="resetChanges"
       >

@@ -1,19 +1,19 @@
 <template>
   <b-list-group-item>
     <div class="d-flex w-100 justify-content-between">
-      <span class="text-truncate mr-3">
+      <span class="text-truncate me-3">
         <span
           class="text-muted"
           v-b-tooltip.hover
           :title="$t('admin.api_key_public_id_tooltip')"
           >{{ $t('admin.api_key_public_id') }}:</span
         >
-        <span class="text-monospace ml-2">{{ apiKey.publicId }}</span>
+        <span class="font-monospace ms-2">{{ apiKey.publicId }}</span>
       </span>
       <div class="d-flex flex-shrink-0">
         <b-badge
           v-if="expiryState"
-          class="ml-3 align-self-center"
+          class="ms-3 align-self-center"
           :variant="expiryState === 'expired' ? 'danger' : 'warning'"
           v-b-tooltip.hover
           :title="$t('admin.api_key_replace_tooltip')"
@@ -25,7 +25,7 @@
         >
         <span
           v-if="apiKey.legacy"
-          class="ml-3"
+          class="ms-3"
           v-b-tooltip.hover
           :title="$t('admin.old_key_format')"
           ><i
@@ -36,7 +36,7 @@
         <b-button
           v-if="editable"
           size="sm"
-          class="action-icon ml-3"
+          class="action-icon ms-3"
           v-b-tooltip.hover
           v-b-modal="`editApiKeyCommentModal-${keyId}`"
           :title="$t('admin.edit_api_key_comment')"
@@ -46,7 +46,7 @@
         <b-button
           v-if="editable"
           size="sm"
-          class="action-icon ml-3"
+          class="action-icon ms-3"
           v-on:click="$emit('regenerateClicked')"
           v-b-tooltip.hover
           :title="$t('admin.regenerate_api_key_title')"
@@ -55,7 +55,7 @@
         </b-button>
         <b-button
           size="sm"
-          class="action-icon ml-3"
+          class="action-icon ms-3"
           v-on:click="$emit('removeClicked')"
           v-b-tooltip.hover
           :title="$t('admin.remove_api_key')"
@@ -70,7 +70,7 @@
       :api-key="apiKey"
       v-on:commentUpdated="(comment) => $emit('commentUpdated', comment)"
     />
-    <p class="my-2" :class="{ 'text-muted font-italic': !apiKey.comment }">
+    <p class="my-2" :class="{ 'text-muted fst-italic': !apiKey.comment }">
       {{ comment }}
     </p>
     <small class="api-key-timestamps text-muted">

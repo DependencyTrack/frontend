@@ -5,7 +5,7 @@
       <b-form-group
         :label="$t('admin.bom_formats')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
       >
         <b-form-checkbox v-model="isCycloneDXEnabled" switch>{{
           $t('admin.enable_bom_cyclonedx')
@@ -14,7 +14,7 @@
       <b-form-group
         :label="$t('admin.bom_validation')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
       >
         <b-form-group
           :label="$t('admin.bom_validation_mode')"

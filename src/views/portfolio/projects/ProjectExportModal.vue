@@ -59,8 +59,8 @@
         :disabled="isDownloading"
         @click="download()"
       >
-        <b-spinner v-if="isDownloading" small class="mr-1"></b-spinner>
-        <span v-else class="fa fa-download mr-1"></span>
+        <b-spinner v-if="isDownloading" small class="me-1"></b-spinner>
+        <span v-else class="fa fa-download me-1"></span>
         {{ $t('message.download') }}
       </b-button>
     </template>

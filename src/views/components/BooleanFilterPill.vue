@@ -4,7 +4,7 @@
       <span class="filter-pill-segment">
         <span
           v-if="icon"
-          :class="['fa', icon, 'mr-1']"
+          :class="['fa', icon, 'me-1']"
           aria-hidden="true"
         ></span>
         {{ fieldLabel }}

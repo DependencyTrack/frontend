@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-dropdown :size="size" class="mr-2" variant="outline-primary" right>
+    <b-dropdown :size="size" class="me-2" variant="outline-primary" right>
       <template #button-content>
         <span
           ><i

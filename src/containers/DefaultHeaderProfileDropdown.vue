@@ -17,7 +17,7 @@
         {{ $t('message.change_password') }}</b-dropdown-item
       >
       <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
-      <b-dropdown-form id="locale-picker-form" class="pl-2 pr-2">
+      <b-dropdown-form id="locale-picker-form" class="ps-2 pe-2">
         <LocalePicker />
       </b-dropdown-form>
       <b-dropdown-divider />

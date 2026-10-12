@@ -22,7 +22,7 @@
         <b-form-group
           :label="$t('admin.default_language')"
           label-size="lg"
-          label-class="font-weight-bold pt-0 mb-2"
+          label-class="fw-bold pt-0 mb-2"
         >
           <p>{{ $t('admin.default_language_desc') }}</p>
           <div id="customToolbar">
@@ -49,7 +49,7 @@
               :value="locale"
               :title="$t(`language.${locale}`)"
             >
-              <span class="mr-2">{{ localeToFlag(locale) }}</span>
+              <span class="me-2">{{ localeToFlag(locale) }}</span>
               {{ locale.toUpperCase() }}</b-form-select-option
             >
           </b-form-select>

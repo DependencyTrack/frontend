@@ -28,7 +28,7 @@
           aria-hidden="true"
         ></span>
         <label
-          class="pagination-meta-text mb-0 mr-2"
+          class="pagination-meta-text mb-0 me-2"
           for="pagination-page-size-select"
         >
           {{ $t('message.rows_per_page') }}

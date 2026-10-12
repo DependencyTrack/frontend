@@ -2,15 +2,15 @@
   <div>
     <b-card :no-body="true" class="mb-3">
       <b-card-body v-if="run" class="p-3 clearfix">
-        <i class="fa fa-random bg-primary p-3 font-2xl mr-3 float-left"></i>
+        <i class="fa fa-random bg-primary p-3 font-2xl me-3 float-start"></i>
         <div class="h5 mb-0 mt-1">
           {{ run.workflow_name }}
-          <span class="text-muted font-weight-normal">
+          <span class="text-muted fw-normal">
             v{{ run.workflow_version }}
           </span>
           <b-badge
             :variant="statusVariant(normalizedStatus)"
-            class="ml-2 align-middle"
+            class="ms-2 align-middle"
           >
             <i :class="'fa ' + statusIcon(normalizedStatus)"></i>
             {{ statusLabel(normalizedStatus) }}
@@ -66,7 +66,7 @@
                       name: 'WorkflowRunList',
                       query: { label: `${key}=${val}` },
                     }"
-                    class="badge badge-info label-badge mr-1 mb-1"
+                    class="badge text-bg-info label-badge me-1 mb-1"
                     :title="`${key}=${val}`"
                     >{{ key }}={{ val }}</router-link
                   >
@@ -91,7 +91,7 @@
         <b-card :header="$t('admin.events')">
           <b-card-body>
             <div v-if="pollTimer" class="text-muted text-center mb-3">
-              <i class="fa fa-spinner fa-spin mr-1"></i>
+              <i class="fa fa-spinner fa-spin me-1"></i>
               {{ $t('admin.pending_events') }}
             </div>
             <div
@@ -107,14 +107,12 @@
               :style="eventBorderStyle(event)"
             >
               <div class="d-flex align-items-center mb-1">
-                <span class="font-weight-bold mr-2">{{
-                  eventTypeLabel(event)
-                }}</span>
-                <small class="text-muted ml-auto">{{
+                <span class="fw-bold me-2">{{ eventTypeLabel(event) }}</span>
+                <small class="text-muted ms-auto">{{
                   formatTs(event.event.timestamp)
                 }}</small>
               </div>
-              <div class="event-body pl-3">
+              <div class="event-body ps-3">
                 <template v-if="eventType(event) === 'runCreated'">
                   <div v-if="event.event.runCreated.parentRunId">
                     <strong>{{ $t('admin.workflow_parent_run') }}:</strong>

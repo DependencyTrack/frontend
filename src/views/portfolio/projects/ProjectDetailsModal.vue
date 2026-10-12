@@ -572,7 +572,7 @@
           PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
         ]"
       >
-        <b-spinner v-if="isUpdating" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isUpdating" small class="me-1"></b-spinner>
         {{ $t('message.update') }}
       </b-button>
     </template>

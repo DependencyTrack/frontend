@@ -8,7 +8,7 @@
         "
       >
         <label>Aliases</label>
-        <b-card class="font-weight-bold">
+        <b-card class="fw-bold">
           <b-card-text>
             <span
               v-for="alias in resolveVulnAliases(

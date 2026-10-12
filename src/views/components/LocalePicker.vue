@@ -14,7 +14,7 @@
         :value="locale"
         :title="$t(`language.${locale}`)"
       >
-        <span class="mr-2">{{ localeToFlag(locale) }}</span>
+        <span class="me-2">{{ localeToFlag(locale) }}</span>
         {{ locale.toUpperCase() }}
       </b-form-select-option>
     </b-form-select>

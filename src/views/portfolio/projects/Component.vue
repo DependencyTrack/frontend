@@ -4,7 +4,7 @@
       <b-card-body class="p-3 clearfix">
         <b-row>
           <b-col>
-            <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
+            <i class="fa fa-cube bg-primary p-3 font-2xl me-3 float-start"></i>
             <div class="h5 mb-0 mt-2">
               {{ componentLabel }}&nbsp;
               <b-badge
@@ -25,7 +25,7 @@
             ></i>
           </b-col>
           <b-col>
-            <b-row class="d-none d-md-flex float-right">
+            <b-row class="d-none d-md-flex float-end">
               <vue-easy-pie-chart
                 style="margin-right: 1rem"
                 :bar-color="severityCritical"
@@ -110,14 +110,14 @@
           <b-row>
             <b-col>
               <b-link
-                class="font-weight-bold font-xs btn-block text-muted"
+                class="fw-bold font-xs d-block w-100 text-muted"
                 v-b-modal.componentDetailsModal
                 >{{ $t('message.view_details') }}
-                <i class="fa fa-angle-right float-right font-lg"></i
+                <i class="fa fa-angle-right float-end font-lg"></i
               ></b-link>
             </b-col>
             <b-col v-if="component.externalReferences" md="auto">
-              <b-row class="d-none d-md-flex float-right">
+              <b-row class="d-none d-md-flex float-end">
                 <ExternalReferencesDropdown
                   :externalReferences="component.externalReferences"
                 />

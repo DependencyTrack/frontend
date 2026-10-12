@@ -189,7 +189,7 @@
         </b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col lg="8" class="ml-3">
+        <b-col lg="8" class="ms-3">
           <CodeMirrorEditor
             id="input-value"
             v-model="value"
