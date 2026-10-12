@@ -172,12 +172,11 @@
 <script>
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard.vue';
 import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
-import { setPageTitle } from '../../../shared/utils';
+import { getStyle, setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
