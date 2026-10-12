@@ -318,7 +318,8 @@ export default {
       );
     });
 
-    this.getTabFromRoute().active = true;
+    // <b-tabs> registers its tabs after this hook.
+    this.$nextTick(() => this.getTabFromRoute().activate());
   },
   watch: {
     $route() {

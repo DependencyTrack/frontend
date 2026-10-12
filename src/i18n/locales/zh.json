@@ -562,7 +562,7 @@
     "component_name_desc": "供应商提供的组件名称",
     "component_namespace_group_vendor": "命名空间/组/供应商",
     "component_operating_system": "操作系统",
-    "component_package_url_desc": "库和框架需要有效的包 URL。PURL 语法：pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "库和框架需要有效的包 URL。PURL 语法：pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "平台",
     "component_properties": "组件属性",
     "component_search": "组件搜索",

@@ -562,7 +562,7 @@
     "component_name_desc": "O nome do componente conforme fornecido pelo fornecedor",
     "component_namespace_group_vendor": "Namespace/grupo/fornecedor",
     "component_operating_system": "Sistema operacional",
-    "component_package_url_desc": "Um URL de pacote válido é necessário para bibliotecas e estruturas. Sintaxe PURL: pkg:tipo/namespace/nome@versão?qualificadores#subcaminho",
+    "component_package_url_desc": "Um URL de pacote válido é necessário para bibliotecas e estruturas. Sintaxe PURL: pkg:tipo/namespace/nome{'@'}versão?qualificadores#subcaminho",
     "component_platform": "Plataforma",
     "component_properties": "Propriedades do Componente",
     "component_search": "Pesquisa de Componentes",

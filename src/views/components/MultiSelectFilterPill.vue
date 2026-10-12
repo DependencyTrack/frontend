@@ -36,6 +36,7 @@ export default {
   name: 'MultiSelectFilterPill',
   components: { FilterPillDropdown },
   model: { prop: 'modelValue', event: 'update:modelValue' },
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     fieldName: {
       type: String,

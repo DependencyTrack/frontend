@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import axios from 'axios';
 import EventBus from '@/shared/eventbus';
 
@@ -14,7 +13,7 @@ export default {
       this.dtrack = this.$dtrack;
     } else {
       axios
-        .get(`${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_ABOUT}`)
+        .get(`${this.$api.BASE_URL}/${this.$api.URL_ABOUT}`)
         .then((result) => {
           this.dtrack = result.data;
         });
@@ -28,9 +27,7 @@ export default {
   mounted() {
     EventBus.on('profileUpdated', () => {
       axios
-        .get(
-          `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_USER_SELF}`,
-        )
+        .get(`${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`)
         .then((result) => {
           this.currentUser = result.data;
         });

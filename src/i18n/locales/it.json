@@ -562,7 +562,7 @@
     "component_name_desc": "Il nome del componente fornito dal fornitore",
     "component_namespace_group_vendor": "Spazio dei nomi/gruppo/fornitore",
     "component_operating_system": "Sistema operativo",
-    "component_package_url_desc": "Per librerie e framework è richiesto un URL del pacchetto valido. Sintassi PURL: pkg:tipo/spazio dei nomi/nome@versione?qualificatori#sottopercorso",
+    "component_package_url_desc": "Per librerie e framework è richiesto un URL del pacchetto valido. Sintassi PURL: pkg:tipo/spazio dei nomi/nome{'@'}versione?qualificatori#sottopercorso",
     "component_platform": "Piattaforma",
     "component_properties": "Proprietà del componente",
     "component_search": "Ricerca componente",

@@ -4,7 +4,8 @@ import { test, expect, login } from './test.mjs';
 const heading = (name) => (main) => main.getByRole('heading', { name });
 const tab = (name) => (main) => main.getByRole('tab', { name, selected: true });
 const button = (name) => (main) => main.getByRole('button', { name });
-const column = (name) => (main) => main.getByRole('columnheader', { name });
+// bootstrap-table makes empty tables presentational, so their headers have no role.
+const column = (name) => (main) => main.locator('th', { hasText: name });
 const cell = (name) => (main) => main.getByRole('cell', { name, exact: true });
 const text = (value) => (main) => main.getByText(value);
 const link = (name) => (main) => main.getByRole('link', { name, exact: true });
@@ -187,14 +188,28 @@ const routes = [
   },
   { path: 'admin/secrets/management', landmark: text('Secret Management') },
   {
+    path: 'admin/analyzers',
+    landmark: text(/Whether the internal vulnerability analyzer/),
+  },
+  {
     path: 'admin/analyzers/internal',
     landmark: text(/Whether the internal vulnerability analyzer/),
+  },
+  {
+    path: 'admin/vulnerabilitySources',
+    landmark: text(/Whether the NVD data source/),
+    allow: [/^GET \/api\/v2\/vuln-data-sources\/nvd\/mirror-runs\/latest 404$/],
   },
   {
     path: 'admin/vulnerabilitySources/nvd',
     landmark: text(/Whether the NVD data source/),
     // Mirroring is off in compose.yaml.
     allow: [/^GET \/api\/v2\/vuln-data-sources\/nvd\/mirror-runs\/latest 404$/],
+  },
+  {
+    path: 'admin/kevSources',
+    landmark: text(/Whether the CISA KEV data source/),
+    allow: [/^GET \/api\/v2\/kev-data-sources\/cisa\/mirror-runs\/latest 404$/],
   },
   {
     path: 'admin/kevSources/cisa',
@@ -313,6 +328,68 @@ test.describe('authenticated', () => {
       );
     });
   }
+
+  for (const [path, name, target] of [
+    [project, /Components/, `${project}/components`],
+    [component, /Vulnerabilities/, `${component}/vulnerabilities`],
+    [vulnerability, /Affected Projects/, `${vulnerability}/affectedProjects`],
+    [license, /License Text/, `${license}/licenseText`],
+    ['policy', /License Groups/, 'policy/licenseGroups'],
+    [
+      'vulnerabilityAudit',
+      /Grouped Vulnerabilities/,
+      'vulnerabilityAudit/grouped',
+    ],
+  ]) {
+    test(`${path} tab ${target}`, async ({ page }) => {
+      await page.goto(resolve(path));
+      await page.getByRole('tab', { name }).click();
+      await expect(page).toHaveURL((url) =>
+        url.pathname.endsWith(`/${resolve(target)}`),
+      );
+    });
+  }
+
+  for (const [path, name] of [
+    [`${project}/findings`, 'Projects'],
+    ['policy/licenseGroups', 'Policy Management'],
+    ['vulnerabilityAudit/grouped', 'Vulnerability Audit'],
+  ]) {
+    test(`${path} highlights ${name} in the sidebar`, async ({ page }) => {
+      await page.goto(resolve(path));
+      await expect(
+        page.getByRole('navigation').getByRole('link', { name }),
+      ).toHaveClass(/\bactive\b/);
+    });
+  }
+
+  test('highlight only the open admin menu item', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    await page.getByRole('tab', { name: 'BOM Formats' }).click();
+    await expect(page.getByRole('tab', { name: 'BOM Formats' })).toHaveClass(
+      /\bactive\b/,
+    );
+    await expect(
+      page.getByRole('tab', { name: 'General', exact: true }),
+    ).not.toHaveClass(/\bactive\b/);
+  });
+
+  test('highlight the admin menu item of a page below it', async ({ page }) => {
+    await page.goto(resolve('admin/workflows/runs/:workflowRun'));
+    await expect(page.getByRole('tab', { name: 'Workflow Runs' })).toHaveClass(
+      /\bactive\b/,
+    );
+  });
+
+  test('title the admin page after the open menu item', async ({ page }) => {
+    const header = page.locator('.tab-content .card-header').first();
+    await page.goto('admin/configuration/bomFormats');
+    await expect(header).toHaveText('BOM Formats');
+    await page.getByRole('tab', { name: 'Welcome Message' }).click();
+    await expect(header).toHaveText('Welcome Message');
+    await page.goBack();
+    await expect(header).toHaveText('BOM Formats');
+  });
 });
 
 test('login', async ({ page }) => {

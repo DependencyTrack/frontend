@@ -562,7 +562,7 @@
     "component_name_desc": "Nazwa komponentu podana przez dostawcę",
     "component_namespace_group_vendor": "Przestrzeń nazw / grupa / dostawca",
     "component_operating_system": "System operacyjny",
-    "component_package_url_desc": "W przypadku bibliotek i struktur wymagany jest prawidłowy adres URL pakietu. Składnia PURL: pkg:typ/przestrzeń nazw/nazwa@wersja?kwalifikatory#podścieżka",
+    "component_package_url_desc": "W przypadku bibliotek i struktur wymagany jest prawidłowy adres URL pakietu. Składnia PURL: pkg:typ/przestrzeń nazw/nazwa{'@'}wersja?kwalifikatory#podścieżka",
     "component_platform": "Platforma",
     "component_properties": "Właściwości komponentu",
     "component_search": "Wyszukiwanie komponentów",

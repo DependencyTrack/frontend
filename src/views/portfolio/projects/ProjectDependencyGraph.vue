@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import DependencyGraphNode from './DependencyGraphNode.vue';
 
@@ -448,7 +449,8 @@ export default {
         let treeNodeMap = new Map();
 
         for (let treeNode of treeNodes) {
-          treeNodeMap.set(treeNode.uuid, treeNode);
+          // The nodes may not be in this.data yet, and Vue 3 only sees changes made through its proxy.
+          treeNodeMap.set(treeNode.uuid, reactive(treeNode));
         }
 
         let response = await this.axios.get(url);

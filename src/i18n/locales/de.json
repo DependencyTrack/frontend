@@ -562,7 +562,7 @@
     "component_name_desc": "Der vom Anbieter angegebene Name der Komponente",
     "component_namespace_group_vendor": "Namespace/Gruppe/Anbieter",
     "component_operating_system": "Betriebssystem",
-    "component_package_url_desc": "Für Bibliotheken und Frameworks ist eine gültige Paket-URL erforderlich. PURL-Syntax: pkg:type/namespace/name@version?qualifiers#subpath",
+    "component_package_url_desc": "Für Bibliotheken und Frameworks ist eine gültige Paket-URL erforderlich. PURL-Syntax: pkg:type/namespace/name{'@'}version?qualifiers#subpath",
     "component_platform": "Plattform",
     "component_properties": "Komponenteneigenschaften",
     "component_search": "Komponentensuche",

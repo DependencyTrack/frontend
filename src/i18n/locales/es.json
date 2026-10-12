@@ -562,7 +562,7 @@
     "component_name_desc": "El nombre del componente proporcionado por el proveedor.",
     "component_namespace_group_vendor": "Espacio de nombres/grupo/proveedor",
     "component_operating_system": "Sistema operativo",
-    "component_package_url_desc": "Se requiere una URL de paquete válida para bibliotecas y marcos. Sintaxis PURL: paquete:tipo/espacio de nombres/nombre@versión?calificadores#subruta",
+    "component_package_url_desc": "Se requiere una URL de paquete válida para bibliotecas y marcos. Sintaxis PURL: paquete:tipo/espacio de nombres/nombre{'@'}versión?calificadores#subruta",
     "component_platform": "Plataforma",
     "component_properties": "Propiedades de los componentes",
     "component_search": "Búsqueda de componentes",

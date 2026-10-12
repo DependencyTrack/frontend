@@ -26,10 +26,10 @@ export default {
               label: function (context) {
                 const { vulnId, componentLabel, x, y } = context.raw;
                 return [
-                  `${i18n.t('message.component')}: ${componentLabel}`,
-                  `${i18n.t('message.vulnerability')}: ${vulnId}`,
-                  `${i18n.t('message.cvss')}: ${x}`,
-                  `${i18n.t('message.epss')}: ${y}`,
+                  `${i18n.global.t('message.component')}: ${componentLabel}`,
+                  `${i18n.global.t('message.vulnerability')}: ${vulnId}`,
+                  `${i18n.global.t('message.cvss')}: ${x}`,
+                  `${i18n.global.t('message.epss')}: ${y}`,
                 ];
               },
             },

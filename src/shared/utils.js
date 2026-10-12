@@ -5,7 +5,7 @@ import {
   TIMEOUT_PROBLEM_TYPE,
 } from '@/shared/problemDetails';
 import flexVerCompare from 'flexver/dist/module';
-import Vue from 'vue';
+import { toastr } from '@/plugins/toastr';
 
 export function handleTableLoadError(problem, { fallback = true } = {}) {
   if (
@@ -30,19 +30,19 @@ export function handleTableLoadError(problem, { fallback = true } = {}) {
         localStorage.removeItem(prefix + 'SortOrder');
       }
     }
-    Vue.prototype.$toastr.w(
-      i18n.t('message.table_sort_preference_reset', {
+    toastr.w(
+      i18n.global.t('message.table_sort_preference_reset', {
         field: staleField,
       }),
     );
     return true;
   }
   if (problem && problem.type === TIMEOUT_PROBLEM_TYPE) {
-    Vue.prototype.$toastr.w(i18n.t('message.table_load_timeout'));
+    toastr.w(i18n.global.t('message.table_load_timeout'));
     return true;
   }
   if (fallback) {
-    Vue.prototype.$toastr.e(i18n.t('message.table_load_error'));
+    toastr.e(i18n.global.t('message.table_load_error'));
   }
   return false;
 }
@@ -115,9 +115,9 @@ export function getUrlVar(name) {
  * @returns {string} redirect to url if it save for redirection
  */
 export function getRedirectUrl(router) {
-  return router.currentRoute.query.redirect &&
-    isUrlSaveForRedirect(router.currentRoute.query.redirect)
-    ? router.currentRoute.query.redirect
+  return router.currentRoute.value.query.redirect &&
+    isUrlSaveForRedirect(router.currentRoute.value.query.redirect)
+    ? router.currentRoute.value.query.redirect
     : undefined;
 }
 

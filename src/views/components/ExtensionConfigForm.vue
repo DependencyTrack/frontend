@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import { markRaw } from 'vue';
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import common from '../../shared/common';
@@ -272,11 +273,14 @@ export default {
     },
   },
   async mounted() {
-    this.ajv = new Ajv({
-      allErrors: true,
-      strict: false,
-      validateFormats: true,
-    });
+    // Ajv keys its caches by object identity, which a reactive proxy breaks.
+    this.ajv = markRaw(
+      new Ajv({
+        allErrors: true,
+        strict: false,
+        validateFormats: true,
+      }),
+    );
     addFormats(this.ajv);
     await this.fetchSchemaAndConfig();
   },

@@ -1,10 +1,9 @@
 /*
  * Permissions Vue Directive
  */
-import Vue from 'vue';
 import { hasPermission } from '../shared/permissions';
 
-Vue.directive('permission', function (el, binding) {
+export default function (el, binding) {
   if (Array.isArray(binding.value)) {
     let permitted = false;
     if (binding.arg === 'and') {
@@ -31,4 +30,4 @@ Vue.directive('permission', function (el, binding) {
       el.style.display = 'none';
     }
   }
-});
+}

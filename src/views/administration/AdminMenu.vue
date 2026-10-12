@@ -35,11 +35,11 @@
               class="list-group-item list-group-item-action"
               :class="{
                 'admin-menu-item-readonly': item.configurable === false,
+                'open active': item === currentItem,
               }"
               data-toggle="list"
               role="tab"
               :to="'/admin/' + item.route"
-              @click="emitEvent(item)"
             >
               {{ item.name }}
               <i
@@ -80,6 +80,20 @@ import {
 export default {
   mixins: [permissionsMixin],
   components: {},
+  computed: {
+    // Router 4 marks a link active only on its own route, not on the pages below it.
+    currentItem() {
+      const path = this.$route.path;
+      return this.menu
+        .flatMap((section) => section.children)
+        .find(
+          (item) =>
+            !item.header &&
+            (path === `/admin/${item.route}` ||
+              path.startsWith(`/admin/${item.route}/`)),
+        );
+    },
+  },
   methods: {
     emitEvent: function (plugin) {
       EventBus.emit('admin:plugin', plugin);
@@ -152,6 +166,14 @@ export default {
     this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
   },
   watch: {
+    currentItem: {
+      immediate: true,
+      handler(item) {
+        if (item) {
+          this.emitEvent(item);
+        }
+      },
+    },
     $route() {
       this.$refs.accordion.forEach((menu) => (menu.show = false));
       this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());

@@ -280,7 +280,13 @@ export default {
               permissions.hasPermission(permission),
             ))
         ) {
-          array.push(item);
+          // Router 4 marks a link active only on its own route, Router 3 also on the paths below it.
+          const path = this.$route.path;
+          const active =
+            item.url && (path === item.url || path.startsWith(`${item.url}/`));
+          array.push(
+            active ? { ...item, attributes: { class: 'open active' } } : item,
+          );
         }
       }
       return array;
