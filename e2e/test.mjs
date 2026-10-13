@@ -78,8 +78,23 @@ export async function search(page, text, within = page) {
 // Client-side tables search the loaded rows without an API request, so search() would wait forever.
 export async function filter(within, text) {
   const box = within.getByRole('searchbox', { name: 'Search' });
+  const searched = await box.page().evaluateHandle(() => ({
+    done: new Promise((resolve) => {
+      const $ = window.jQuery;
+      const onSearch = (event) => {
+        // The searchbox's native search event on Enter also reaches this handler.
+        if (event.namespace === 'bs.table') {
+          $(document).off('search.bs.table', onSearch);
+          resolve();
+        }
+      };
+      $(document).on('search.bs.table', onSearch);
+    }),
+  }));
   await box.fill(text);
   await box.press('Enter');
+  // The table searches 500 ms later, and that re-render collapses rows expanded before it.
+  await searched.evaluate(({ done }) => done);
 }
 
 export async function pickDate(page, label, date) {

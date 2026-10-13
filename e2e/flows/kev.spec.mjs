@@ -5,7 +5,14 @@ async function auditSearch(page, vulnId) {
   await page.getByRole('button', { name: 'Add filter' }).click();
   await page.getByRole('menuitem', { name: 'Search' }).click();
   await page.getByRole('textbox', { name: 'Search' }).fill(vulnId);
+  const searched = page.waitForResponse(
+    (res) =>
+      res.url().includes('/api/') &&
+      res.url().includes(encodeURIComponent(vulnId)),
+  );
   await page.getByRole('button', { name: 'Apply' }).click();
+  // Clicking a row before the filtered reload re-renders the table would lose its modal.
+  await (await searched).finished();
 }
 
 const pages = {
