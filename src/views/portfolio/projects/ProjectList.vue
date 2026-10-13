@@ -23,7 +23,6 @@
         }}</span></b-form-checkbox
       >
       <b-form-checkbox
-        @click.native="saveViewState"
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showFlatView"
         v-model="showFlatView"
@@ -241,9 +240,6 @@ export default {
         .get(`${url}&pageNumber=1&pageSize=1`)
         .then((response) => Number(response.headers['x-total-count']) > 0);
     },
-    saveViewState: function () {
-      this.savedViewState = this.showFlatView;
-    },
   },
   watch: {
     $route() {
@@ -266,7 +262,7 @@ export default {
     },
     showFlatView() {
       // A forced flat view is not the user's preference.
-      if (localStorage && !this.hasRouteFilter) {
+      if (localStorage && !this.hasRouteFilter && !this.isSearching) {
         localStorage.setItem(
           'ProjectListShowFlatView',
           this.showFlatView.toString(),
@@ -289,7 +285,6 @@ export default {
       // Like searching, a filter forces the flat view.
       showFlatView: hasRouteFilter(this.$route.query) || storedFlatView(),
       isSearching: false,
-      savedViewState: null,
       columns: [
         {
           title: this.$t('message.project_name'),
@@ -535,15 +530,8 @@ export default {
         },
         onSearch: (text) => {
           this.isSearching = text.length !== 0;
-          if (this.isSearching || this.hasRouteFilter) {
-            this.showFlatView = true;
-          } else {
-            if (this.savedViewState !== null) {
-              this.showFlatView = !this.savedViewState;
-            } else {
-              this.showFlatView = false;
-            }
-          }
+          this.showFlatView =
+            this.isSearching || this.hasRouteFilter || storedFlatView();
           this.setSearchTextQuery(text);
         },
         onPageChange: (number, size) => {
