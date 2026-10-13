@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="componentCreatePropertyModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -67,8 +67,12 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
   name: 'ComponentCreatePropertyModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },
@@ -102,8 +106,8 @@ export default {
           description: this.description,
         })
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'componentCreatePropertyModal');
-          this.$root.$emit('bv::show::modal', 'componentPropertiesModal');
+          this.visible = false;
+          this.$emit('propertyCreated');
           this.$toastr.s(this.$t('message.property_created'));
         });
     },

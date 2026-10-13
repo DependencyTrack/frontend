@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="`taggedCollectionProjectListModal-${index}`"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -28,13 +28,14 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import router from '@/router';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
     tag: String,
-    index: Number,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/collectionProject`;

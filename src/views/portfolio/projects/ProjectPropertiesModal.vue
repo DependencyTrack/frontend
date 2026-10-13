@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectPropertiesModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -34,7 +34,7 @@
         ]"
         size="md"
         variant="primary"
-        v-b-modal.projectCreatePropertyModal
+        @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
       >
     </template>
@@ -44,9 +44,12 @@
 <script>
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectPropertiesModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

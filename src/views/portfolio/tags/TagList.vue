@@ -58,14 +58,13 @@ export default {
       permissions.TAG_MANAGEMENT,
       permissions.TAG_MANAGEMENT_DELETE,
     ]);
-    const countCell = (modal, modalId) => (value, row, index) =>
+    const countCell = (modal) => (value, row) =>
       value === 0
         ? value
         : this.cell(ModalLinkCell, {
             text: value,
-            modalId: `${modalId}-${index}`,
             modal,
-            modalProps: { tag: row.name, index },
+            modalProps: { tag: row.name },
           });
     return {
       errorsByTagName: {},
@@ -87,46 +86,31 @@ export default {
           title: this.$t('message.projects'),
           field: 'projectCount',
           sortable: true,
-          formatter: countCell(
-            TaggedProjectListModal,
-            'taggedProjectListModal',
-          ),
+          formatter: countCell(TaggedProjectListModal),
         },
         {
           title: this.$t('message.collection_projects'),
           field: 'collectionProjectCount',
           sortable: true,
-          formatter: countCell(
-            TaggedCollectionProjectListModal,
-            'taggedCollectionProjectListModal',
-          ),
+          formatter: countCell(TaggedCollectionProjectListModal),
         },
         {
           title: this.$t('message.policies'),
           field: 'policyCount',
           sortable: true,
-          formatter: countCell(
-            TaggedPoliciesListModal,
-            'taggedPoliciesListModal',
-          ),
+          formatter: countCell(TaggedPoliciesListModal),
         },
         {
           title: this.$t('message.vulnerabilities'),
           field: 'vulnerabilityCount',
           sortable: true,
-          formatter: countCell(
-            TaggedVulnerabilityListModal,
-            'taggedVulnerabilityListModal',
-          ),
+          formatter: countCell(TaggedVulnerabilityListModal),
         },
         {
           title: this.$t('admin.alerts'),
           field: 'notificationRuleCount',
           sortable: true,
-          formatter: countCell(
-            TaggedNotificationRuleListModal,
-            'taggedNotificationRuleListModal',
-          ),
+          formatter: countCell(TaggedNotificationRuleListModal),
         },
       ],
       data: [],

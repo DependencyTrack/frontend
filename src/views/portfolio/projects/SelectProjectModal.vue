@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectProjectModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -29,9 +29,11 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     // Current projects should be a list of UUIDs since names can be duplicate
     username: { type: String, default: null },
@@ -60,7 +62,7 @@ export default {
       });
     },
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+      this.visible = false;
       this.$emit('selection', this.$refs.table.getSelections());
     },
   },

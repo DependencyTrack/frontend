@@ -111,7 +111,8 @@
             <b-col>
               <b-link
                 class="fw-bold font-xs d-block w-100 text-muted"
-                v-b-modal.componentDetailsModal
+                role="button"
+                @click="showComponentDetailsModal = true"
                 >{{ $t('message.view_details') }}
                 <i class="fa fa-angle-right float-end font-lg"></i
               ></b-link>
@@ -161,11 +162,21 @@
       </b-tab>
     </b-tabs>
     <component-details-modal
+      v-model="showComponentDetailsModal"
       :component="cloneDeep(component)"
       v-on:componentUpdated="syncComponentFields"
+      v-on:showProperties="showComponentPropertiesModal = true"
     />
-    <component-properties-modal :uuid="this.uuid" />
-    <component-create-property-modal :uuid="this.uuid" />
+    <component-properties-modal
+      v-model="showComponentPropertiesModal"
+      :uuid="this.uuid"
+      v-on:createProperty="showComponentCreatePropertyModal = true"
+    />
+    <component-create-property-modal
+      v-model="showComponentCreatePropertyModal"
+      :uuid="this.uuid"
+      v-on:propertyCreated="showComponentPropertiesModal = true"
+    />
   </div>
 </template>
 
@@ -223,6 +234,9 @@ export default {
   },
   data() {
     return {
+      showComponentDetailsModal: false,
+      showComponentPropertiesModal: false,
+      showComponentCreatePropertyModal: false,
       severityCritical: this.getStyle('--severity-critical'),
       severityHigh: this.getStyle('--severity-high'),
       severityMedium: this.getStyle('--severity-medium'),

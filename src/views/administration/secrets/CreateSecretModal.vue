@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createSecretModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -65,9 +65,11 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',
@@ -98,7 +100,7 @@ export default {
             this.$t('message.record_created_message'),
             this.$t('message.record_created_title'),
           );
-          this.$root.$emit('bv::hide::modal', 'createSecretModal');
+          this.visible = false;
           this.resetValues();
         })
         .catch((err) => {

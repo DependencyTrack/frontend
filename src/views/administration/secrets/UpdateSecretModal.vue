@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="updateSecretModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -44,9 +44,11 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     secret: {
       type: Object,
@@ -110,7 +112,7 @@ export default {
             );
           }
 
-          this.$root.$emit('bv::hide::modal', 'updateSecretModal');
+          this.visible = false;
           this.resetValues();
         })
         .catch((err) => {

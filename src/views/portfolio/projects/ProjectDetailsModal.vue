@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectDetailsModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -548,7 +548,7 @@
         size="md"
         variant="outline-primary"
         :disabled="isUpdating"
-        v-b-modal.projectPropertiesModal
+        @click="$emit('showProperties')"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
           PERMISSIONS.PORTFOLIO_MANAGEMENT_READ,
@@ -596,6 +596,7 @@ import projectFormMixin, {
   COLLECTION_LOGIC_AGGREGATE_TAG,
   FORM_FIELD_DEFAULTS,
 } from './projectFormMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 const IDENTITY_TAB_INDEX = 1;
 
@@ -606,7 +607,9 @@ export default {
     availableClassifiersMixin,
     availableCollectionLogicsMixin,
     projectFormMixin,
+    modalMixin,
   ],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
@@ -766,7 +769,7 @@ export default {
         this.selectedParent = this.parent;
       }
       this.fetchDefaultParents();
-      this.$root.$emit('bv::show::modal', 'projectDetailsModal');
+      this.visible = true;
     });
   },
   beforeUnmount() {
@@ -842,7 +845,7 @@ export default {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));
           this.parent = this.selectedParent;
-          this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
+          this.visible = false;
         })
         .catch((error) => {
           this.isUpdating = false;
@@ -852,7 +855,7 @@ export default {
         });
     },
     deleteProject: async function () {
-      this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
+      this.visible = false;
       let confirmed = await this.$bvModal.msgBoxConfirm(
         this.$t('message.project_delete_message'),
         {

@@ -39,8 +39,7 @@ export default [
             'Use cell() from bootstrapTableMixin. Vue 3 removed Vue.extend.',
         },
         {
-          selector:
-            'CallExpression[callee.property.name=/^\\$(on|off|once)$/]:not([arguments.0.value=/^bv::/])',
+          selector: 'CallExpression[callee.property.name=/^\\$(on|off|once)$/]',
           message:
             'Use EventBus from shared/eventbus. Vue 3 removed $on, $off and $once.',
         },
@@ -49,6 +48,17 @@ export default [
             "CallExpression[callee.property.name='$emit'][arguments.0.value='input']",
           message:
             "Emit update:modelValue for a modelValue prop. Vue 3's v-model doesn't use input and value.",
+        },
+        {
+          selector: 'CallExpression[arguments.0.value=/^bv::(\\w+::)?modal/]',
+          message:
+            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
+        },
+        {
+          selector:
+            "MemberExpression[object.property.name='$bvModal'][property.name=/^(show|hide)$/]",
+          message:
+            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
         },
       ],
       'vue/no-restricted-syntax': [
@@ -64,6 +74,22 @@ export default [
             "CallExpression[callee.name='$emit'][arguments.0.value='input']",
           message:
             "Emit update:modelValue for a modelValue prop. Vue 3's v-model doesn't use input and value.",
+        },
+        {
+          selector: 'CallExpression[arguments.0.value=/^bv::(\\w+::)?modal/]',
+          message:
+            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
+        },
+        {
+          selector:
+            "MemberExpression[object.name='$bvModal'][property.name=/^(show|hide)$/]",
+          message:
+            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
+        },
+        {
+          selector: "VAttribute[directive=true][key.name.name='b-modal']",
+          message:
+            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
         },
       ],
       'no-restricted-imports': [

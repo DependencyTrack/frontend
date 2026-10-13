@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createManagedUserModal
+          @click="showCreateManagedUserModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
@@ -18,7 +18,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-managed-user-modal v-on:refreshTable="refreshTable" />
+    <create-managed-user-modal
+      v-model="showCreateManagedUserModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -54,6 +57,7 @@ export default {
   },
   data() {
     return {
+      showCreateManagedUserModal: false,
       rowEvents: {
         update: 'admin:managedusers:rowUpdate',
         delete: 'admin:managedusers:rowDeleted',

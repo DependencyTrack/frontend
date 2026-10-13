@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectProjectModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -43,9 +43,11 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import router from '@/router';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     teamUuid: String,
   },

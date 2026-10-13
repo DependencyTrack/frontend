@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="repositoryCreateRepositoryModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -77,9 +77,12 @@
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'RepositoryCreateRepositoryModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     type: String,
   },
@@ -134,17 +137,11 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.repository_created'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            'repositoryCreateRepositoryModal',
-          );
+          this.visible = false;
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            'repositoryCreateRepositoryModal',
-          );
+          this.visible = false;
         });
       this.resetValues();
     },

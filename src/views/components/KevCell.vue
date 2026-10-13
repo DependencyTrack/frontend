@@ -1,7 +1,8 @@
 <template>
   <div class="text-center">
     <b-link
-      v-b-modal="`kevAssertionsModal-${index}`"
+      role="button"
+      @click="showKevAssertionsModal = true"
       :title="$t('message.kev_show_assertions')"
       class="text-danger"
       style="
@@ -13,7 +14,11 @@
       "
       ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link
     >
-    <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index" />
+    <kev-assertions-modal
+      v-model="showKevAssertionsModal"
+      :source="source"
+      :vuln-id="vulnId"
+    />
   </div>
 </template>
 
@@ -25,7 +30,11 @@ export default {
   props: {
     source: String,
     vulnId: String,
-    index: Number,
+  },
+  data() {
+    return {
+      showKevAssertionsModal: false,
+    };
   },
 };
 </script>

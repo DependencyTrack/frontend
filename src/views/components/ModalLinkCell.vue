@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-link v-b-modal="modalId">{{ text }}</b-link>
-    <component :is="modal" v-bind="modalProps" />
+    <b-link role="button" @click="visible = true">{{ text }}</b-link>
+    <component :is="modal" v-model="visible" v-bind="modalProps" />
   </div>
 </template>
 
@@ -9,9 +9,13 @@
 export default {
   props: {
     text: [String, Number],
-    modalId: String,
     modal: Object,
     modalProps: Object,
+  },
+  data() {
+    return {
+      visible: false,
+    };
   },
 };
 </script>

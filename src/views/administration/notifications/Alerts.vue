@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createAlertModal
+          @click="showCreateAlertModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_alert') }}
         </b-button>
@@ -18,7 +18,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-alert-modal v-on:refreshTable="refreshTable" />
+    <create-alert-modal
+      v-model="showCreateAlertModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -53,6 +56,7 @@ export default {
   },
   data() {
     return {
+      showCreateAlertModal: false,
       columns: [
         {
           title: this.$t('message.name'),

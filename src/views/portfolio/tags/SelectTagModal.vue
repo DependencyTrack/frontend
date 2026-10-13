@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectTagModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -32,12 +32,14 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
     policy: Object,
   },
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}`;

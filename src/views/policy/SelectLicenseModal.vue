@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectLicenseModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -30,10 +30,12 @@
 <script>
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 import common from '../../shared/common';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       columns: [

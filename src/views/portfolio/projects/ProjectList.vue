@@ -45,7 +45,7 @@
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
-    <project-create-project-modal />
+    <project-create-project-modal v-model="showProjectCreateProjectModal" />
   </div>
 </template>
 
@@ -277,6 +277,7 @@ export default {
   },
   data() {
     return {
+      showProjectCreateProjectModal: false,
       showInactiveProjects:
         localStorage &&
         localStorage.getItem('ProjectListShowInactiveProjects') !== null

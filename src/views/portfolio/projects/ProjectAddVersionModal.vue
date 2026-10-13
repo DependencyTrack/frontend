@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectAddVersionModal"
+    v-model="visible"
     @shown="focusVersionInput"
     @hide="resetValues()"
     size="md"
@@ -128,9 +128,12 @@
 
 <script>
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectAddVersionModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: { BInputGroupFormSwitch },
   props: {
     uuid: String,
@@ -219,7 +222,7 @@ export default {
           includes: includes,
         })
         .then((response) => {
-          this.$root.$emit('bv::hide::modal', 'projectAddVersionModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.project_created'));
           this.$router.push({
             name: 'Project',

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="componentDetailsModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -474,7 +474,7 @@
       <b-button
         size="md"
         variant="outline-primary"
-        v-b-modal.componentPropertiesModal
+        @click="$emit('showProperties')"
         v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >{{ $t('message.properties') }}</b-button
       >
@@ -502,10 +502,12 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ComponentDetailsModal',
-  mixins: [permissionsMixin, availableClassifiersMixin],
+  mixins: [permissionsMixin, availableClassifiersMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
@@ -648,7 +650,7 @@ export default {
   },
   methods: {
     updateComponent: function () {
-      this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
       this.axios
         .post(url, {
@@ -685,7 +687,7 @@ export default {
         });
     },
     deleteComponent: function () {
-      this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
+      this.visible = false;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` +
         this.component.uuid;

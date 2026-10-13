@@ -6,7 +6,7 @@
           size="md"
           variant="outline-primary"
           v-if="canCreate"
-          v-b-modal.createSecretModal
+          @click="showCreateSecretModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
         </b-button>
@@ -20,8 +20,12 @@
       >
       </token-paginated-table>
     </b-card-body>
-    <create-secret-modal v-on:refreshTable="refreshTable" />
+    <create-secret-modal
+      v-model="showCreateSecretModal"
+      v-on:refreshTable="refreshTable"
+    />
     <update-secret-modal
+      v-model="showUpdateSecretModal"
       v-on:refreshTable="refreshTable"
       :secret="selectedRow"
     />
@@ -56,6 +60,8 @@ export default {
   },
   data() {
     return {
+      showCreateSecretModal: false,
+      showUpdateSecretModal: false,
       selectedRow: null,
       searchText: null,
       columns: [
@@ -176,9 +182,7 @@ export default {
   methods: {
     onEditClicked(row) {
       this.selectedRow = row;
-      this.$nextTick(() => {
-        this.$bvModal.show('updateSecretModal');
-      });
+      this.showUpdateSecretModal = true;
     },
     onDeleteClicked(row) {
       this.$bvModal

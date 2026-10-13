@@ -17,7 +17,6 @@
       </main>
     </div>
     <DefaultFooter />
-    <profile-edit-modal />
   </div>
 </template>
 
@@ -34,14 +33,12 @@ import {
 import DefaultHeader from './DefaultHeader.vue';
 import DefaultFooter from './DefaultFooter.vue';
 import EventBus from '../shared/eventbus';
-import ProfileEditModal from '../views/components/ProfileEditModal.vue';
 import * as permissions from '../shared/permissions';
 import * as featureFlags from '@/shared/featureFlags';
 
 export default {
   name: 'DefaultContainer',
   components: {
-    ProfileEditModal,
     AppSidebar,
     Breadcrumb,
     SidebarForm,

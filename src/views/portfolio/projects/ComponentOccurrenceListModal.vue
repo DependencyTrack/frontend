@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="`componentOccurrenceListModal-${index}`"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -23,12 +23,14 @@
 
 <script>
 import common from '@/shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     componentUuid: String,
     componentName: String,
-    index: Number,
   },
   methods: {
     apiUrl: function () {

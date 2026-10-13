@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="`editApiKeyCommentModal-${keyId}`"
+    v-model="visible"
     @show="resetValues()"
     size="md"
     hide-header-close
@@ -32,9 +32,11 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -62,10 +64,7 @@ export default {
         .then((response) => {
           this.$emit('commentUpdated', response.data.comment);
           this.$toastr.s(this.$t('admin.api_key_comment_updated'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            `editApiKeyCommentModal-${this.keyId}`,
-          );
+          this.visible = false;
         });
     },
     resetValues: function () {

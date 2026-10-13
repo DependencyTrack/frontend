@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="componentPropertiesModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -37,7 +37,7 @@
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
           PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
         ]"
-        v-b-modal.componentCreatePropertyModal
+        @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
       >
     </template>
@@ -48,10 +48,12 @@
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ComponentPropertiesModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

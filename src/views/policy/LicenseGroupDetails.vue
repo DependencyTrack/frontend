@@ -58,9 +58,7 @@
             <div>
               <actionable-list-group-item
                 :add-icon="true"
-                v-on:actionClicked="
-                  $root.$emit('bv::show::modal', 'selectLicenseModal')
-                "
+                v-on:actionClicked="showSelectLicenseModal = true"
               />
             </div>
           </div>
@@ -72,7 +70,10 @@
         </div>
       </b-col>
     </b-row>
-    <select-license-modal v-on:selection="updateLicenseSelection" />
+    <select-license-modal
+      v-model="showSelectLicenseModal"
+      v-on:selection="updateLicenseSelection"
+    />
   </div>
 </template>
 
@@ -97,6 +98,7 @@ export default {
   },
   data() {
     return {
+      showSelectLicenseModal: false,
       licenseGroup: this.row,
       name: this.row.name,
       licenses: this.row.licenses,
@@ -154,7 +156,7 @@ export default {
         });
     },
     updateLicenseSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectLicenseModal');
+      this.showSelectLicenseModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}/license/${selection.uuid}`;

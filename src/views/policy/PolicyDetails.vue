@@ -78,9 +78,7 @@
                 PERMISSIONS.POLICY_MANAGEMENT_UPDATE,
               ]"
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectProjectModal')
-              "
+              v-on:actionClicked="showSelectProjectModal = true"
             />
           </div>
         </b-form-group>
@@ -130,9 +128,7 @@
                 PERMISSIONS.POLICY_MANAGEMENT_UPDATE,
               ]"
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTagModal')
-              "
+              v-on:actionClicked="showSelectTagModal = true"
             />
           </div>
         </b-form-group>
@@ -152,8 +148,15 @@
         </div>
       </b-col>
     </b-row>
-    <select-project-modal v-on:selection="updateProjectSelection" />
-    <select-tag-modal :policy="policy" v-on:selection="updateTagSelection" />
+    <select-project-modal
+      v-model="showSelectProjectModal"
+      v-on:selection="updateProjectSelection"
+    />
+    <select-tag-modal
+      v-model="showSelectTagModal"
+      :policy="policy"
+      v-on:selection="updateTagSelection"
+    />
   </div>
 </template>
 
@@ -188,6 +191,8 @@ export default {
   },
   data() {
     return {
+      showSelectProjectModal: false,
+      showSelectTagModal: false,
       policy: this.row,
       name: this.row.name,
       operator: this.row.operator,
@@ -327,7 +332,7 @@ export default {
       });
     },
     updateProjectSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+      this.showSelectProjectModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/project/${selection.uuid}`;
@@ -347,7 +352,7 @@ export default {
       }
     },
     updateTagSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectTagModal');
+      this.showSelectTagModal = false;
       let promises = [];
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];

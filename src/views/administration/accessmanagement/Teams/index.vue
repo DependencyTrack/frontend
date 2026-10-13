@@ -2,7 +2,11 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button size="md" variant="outline-primary" v-b-modal.createTeamModal>
+        <b-button
+          size="md"
+          variant="outline-primary"
+          @click="showCreateTeamModal = true"
+        >
           <span class="fa fa-plus"></span> {{ $t('admin.create_team') }}
         </b-button>
       </div>
@@ -14,7 +18,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-team-modal v-on:refreshTable="refreshTable" />
+    <create-team-modal
+      v-model="showCreateTeamModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -50,6 +57,7 @@ export default {
   },
   data() {
     return {
+      showCreateTeamModal: false,
       rowEvents: {
         update: 'admin:teams:rowUpdate',
         delete: 'admin:teams:rowDeleted',

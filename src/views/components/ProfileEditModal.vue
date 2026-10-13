@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="profileEditModal"
+    v-model="visible"
     size="md"
     @show="getSelf"
     @hidden="resetValues"
@@ -48,10 +48,12 @@
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import globalVarsMixin from '@/mixins/globalVarsMixin';
 import EventBus from '@/shared/eventbus';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProfileEditModal',
-  mixins: [globalVarsMixin],
+  mixins: [globalVarsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -84,7 +86,7 @@ export default {
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'profileEditModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.username = null;

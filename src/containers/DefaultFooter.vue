@@ -4,11 +4,13 @@
       <!-- left side here -->
     </div>
     <div class="ms-auto">
-      <a href="#" v-b-modal.aboutModal>{{ dtrack.application }}</a
+      <a href="#" role="button" @click.prevent="showAboutModal = true">{{
+        dtrack.application
+      }}</a
       >&nbsp;
       <span class="me-1">v{{ dtrack.version }}</span>
     </div>
-    <about-modal />
+    <about-modal v-model="showAboutModal" />
   </TheFooter>
 </template>
 <script>
@@ -22,6 +24,11 @@ export default {
   components: {
     AboutModal,
     TheFooter,
+  },
+  data() {
+    return {
+      showAboutModal: false,
+    };
   },
 };
 </script>

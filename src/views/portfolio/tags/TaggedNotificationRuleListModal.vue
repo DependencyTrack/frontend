@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="`taggedNotificationRuleListModal-${index}`"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -30,13 +30,14 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import * as permissions from '../../../shared/permissions';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
     tag: String,
-    index: Number,
   },
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/notificationRule`;

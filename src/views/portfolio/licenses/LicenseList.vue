@@ -5,7 +5,7 @@
       <b-button
         size="md"
         variant="outline-primary"
-        v-b-modal.licenseAddLicenseModal
+        @click="showLicenseAddLicenseModal = true"
         v-permission:or="[
           PERMISSIONS.SYSTEM_CONFIGURATION,
           PERMISSIONS.SYSTEM_CONFIGURATION_CREATE,
@@ -22,7 +22,10 @@
       @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
-    <license-add-license-modal v-on:refreshTable="refreshTable" />
+    <license-add-license-modal
+      v-model="showLicenseAddLicenseModal"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
@@ -58,6 +61,7 @@ export default {
   },
   data() {
     return {
+      showLicenseAddLicenseModal: false,
       columns: [
         {
           title: this.$t('message.name'),

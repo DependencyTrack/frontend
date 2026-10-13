@@ -8,7 +8,7 @@
         {{ $t('message.connected_as') }}
         <strong>{{ user }}</strong>
       </b-dropdown-header>
-      <b-dropdown-item v-if="canUpdateProfile()" v-b-modal.profileEditModal
+      <b-dropdown-item v-if="canUpdateProfile()" @click="$emit('editProfile')"
         ><i class="fa fa-user text-primary" />
         {{ $t('message.profile_update') }}</b-dropdown-item
       >

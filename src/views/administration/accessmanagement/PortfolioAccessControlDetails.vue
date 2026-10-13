@@ -13,15 +13,14 @@
           </span>
           <actionable-list-group-item
             :add-icon="true"
-            v-on:actionClicked="
-              $root.$emit('bv::show::modal', 'selectProjectModal')
-            "
+            v-on:actionClicked="showSelectProjectModal = true"
           />
         </div>
       </b-form-group>
     </b-col>
     <b-col sm="6"> </b-col>
     <select-project-modal
+      v-model="showSelectProjectModal"
       v-on:selection="updateProjectSelection"
       :teamUuid="team.uuid"
     />
@@ -46,6 +45,7 @@ export default {
   },
   data() {
     return {
+      showSelectProjectModal: false,
       team: this.row,
       projects: this.row.mappedLdapGroups,
     };
@@ -67,7 +67,7 @@ export default {
       return sanitizedHref;
     },
     updateProjectSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+      this.showSelectProjectModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}`;

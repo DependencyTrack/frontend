@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createManagedUserModal"
+    v-model="visible"
     size="lg"
     @hide="resetValues()"
     hide-header-close
@@ -104,9 +104,11 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -164,7 +166,7 @@ export default {
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'createManagedUserModal');
+      this.visible = false;
       this.resetValues();
     },
     resetValues: function () {

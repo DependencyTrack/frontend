@@ -90,7 +90,10 @@
         </b-col>
       </b-row>
     </div>
-    <informational-modal v-bind:message="loginError" />
+    <informational-modal
+      v-model="showInformationalModal"
+      v-bind:message="loginError"
+    />
   </div>
 </template>
 
@@ -114,6 +117,7 @@ export default {
   },
   data() {
     return {
+      showInformationalModal: false,
       isWelcomeMessage: true,
       welcomeMessage: '',
       loginError: '',
@@ -186,10 +190,10 @@ export default {
               });
               return;
             }
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_unauthorized');
           } else if (err.response.status === 403) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_forbidden');
           }
         });
@@ -212,12 +216,12 @@ export default {
               ? this.$router.replace(redirectTo)
               : this.$router.replace({ name: 'Dashboard' });
           } else {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_permission_required');
           }
         })
         .catch(() => {
-          this.$bvModal.show('modal-informational');
+          this.showInformationalModal = true;
           this.loginError = this.$t('condition.unsuccessful_action');
         });
     },
@@ -306,10 +310,10 @@ export default {
             })
             .catch((err) => {
               if (err.response.status === 401) {
-                this.$bvModal.show('modal-informational');
+                this.showInformationalModal = true;
                 this.loginError = this.$t('message.login_unauthorized');
               } else if (err.response.status === 403) {
-                this.$bvModal.show('modal-informational');
+                this.showInformationalModal = true;
                 this.loginError = this.$t('message.login_forbidden');
               }
             })

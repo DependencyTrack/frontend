@@ -1,6 +1,21 @@
 import { uniqueName } from '../api.mjs';
 import { test, expect, login, search, filter } from '../test.mjs';
 
+test('create a license group', async ({ page }) => {
+  const name = uniqueName('e2e-license-group');
+  await login(page);
+  await page.goto('policy/licenseGroups');
+  await page.getByRole('button', { name: 'Create License Group' }).click();
+  const modal = page.getByRole('dialog', { name: 'Create License Group' });
+  await modal.getByLabel('Name').fill(name);
+  await modal.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByText('License group created')).toBeVisible();
+  await expect(modal).toBeHidden();
+
+  await search(page, name);
+  await expect(page.getByRole('cell', { name, exact: true })).toBeVisible();
+});
+
 test('add a license to a license group in its row details', async ({
   page,
   api,
@@ -18,6 +33,7 @@ test('add a license to a license group in its row details', async ({
   await filter(modal, '0BSD');
   await modal.getByRole('row', { name: /0BSD/ }).getByRole('checkbox').check();
   await modal.getByRole('button', { name: 'Select' }).click();
+  await expect(modal).toBeHidden();
   await expect(
     page.getByText('Updated', { exact: true }).filter({ visible: true }),
   ).toBeVisible();
@@ -26,6 +42,21 @@ test('add a license to a license group in its row details', async ({
   await search(page, group);
   await page.getByRole('cell', { name: group, exact: true }).click();
   await expect(page.getByRole('link', { name: '0BSD' })).toBeVisible();
+});
+
+test('create a policy', async ({ page }) => {
+  const name = uniqueName('e2e-policy');
+  await login(page);
+  await page.goto('policy/policies');
+  await page.getByRole('button', { name: 'Create Policy' }).click();
+  const modal = page.getByRole('dialog', { name: 'Create Policy' });
+  await modal.getByLabel('Name').fill(name);
+  await modal.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByText('Policy created')).toBeVisible();
+  await expect(modal).toBeHidden();
+
+  await search(page, name);
+  await expect(page.getByRole('cell', { name })).toBeVisible();
 });
 
 test('limit a policy to a project in its row details', async ({

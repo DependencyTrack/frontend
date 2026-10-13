@@ -26,7 +26,7 @@
           size="sm"
           variant="outline-primary"
           :title="$t('message.add_component')"
-          v-b-modal.projectAddComponentModal
+          @click="showProjectAddComponentModal = true"
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
@@ -80,6 +80,7 @@
       @visible-columns="onVisibleColumns"
     />
     <project-add-component-modal
+      v-model="showProjectAddComponentModal"
       :uuid="this.uuid"
       v-on:refreshTable="onComponentAdded"
     />
@@ -170,6 +171,7 @@ export default {
     );
     const sort = readSort();
     return {
+      showProjectAddComponentModal: false,
       onlyOutdated: false,
       onlyDirect: false,
       booleanFilters: ['onlyOutdated', 'onlyDirect'],
@@ -432,16 +434,14 @@ export default {
           sortable: false,
           class: 'tight',
           visible: initialColumnVisible('occurrence_count'),
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value) {
               return this.cell(ModalLinkCell, {
                 text: value,
-                modalId: `componentOccurrenceListModal-${index}`,
                 modal: ComponentOccurrenceListModal,
                 modalProps: {
                   componentUuid: row.uuid,
                   componentName: row.name,
-                  index,
                 },
               });
             }

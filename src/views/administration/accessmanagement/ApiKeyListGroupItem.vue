@@ -38,7 +38,7 @@
           size="sm"
           class="action-icon ms-3"
           v-b-tooltip.hover
-          v-b-modal="`editApiKeyCommentModal-${keyId}`"
+          @click="showEditApiKeyCommentModal = true"
           :title="$t('admin.edit_api_key_comment')"
         >
           <span class="fa fa-edit"></span>
@@ -65,6 +65,7 @@
       </div>
     </div>
     <edit-api-key-comment-modal
+      v-model="showEditApiKeyCommentModal"
       v-if="editable"
       :key-id="keyId"
       :api-key="apiKey"
@@ -107,6 +108,11 @@ export default {
   },
   components: {
     EditApiKeyCommentModal,
+  },
+  data() {
+    return {
+      showEditApiKeyCommentModal: false,
+    };
   },
   computed: {
     keyId: function () {

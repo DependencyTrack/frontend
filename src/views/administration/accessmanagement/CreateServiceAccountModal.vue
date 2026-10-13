@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createServiceAccountModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -57,9 +57,12 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
 const NAME_PATTERN = /^(?![sS][vV][cC]:)[a-zA-Z0-9][a-zA-Z0-9+=,.:@_-]*$/;
 
 export default {
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',
@@ -90,7 +93,7 @@ export default {
         );
         this.$emit('refreshTable');
         this.$toastr.s(this.$t('admin.service_account_created'));
-        this.$bvModal.hide('createServiceAccountModal');
+        this.visible = false;
       } catch (error) {
         console.error(error);
       }

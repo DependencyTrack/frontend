@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createLicenseGroupModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -28,11 +28,13 @@
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 
 export default {
   name: 'createLicenseGroupModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BValidatedInputGroupFormInput,
   },
@@ -50,7 +52,7 @@ export default {
         })
         .then(() => {
           this.$emit('refreshTable');
-          this.$root.$emit('bv::hide::modal', 'createLicenseGroupModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.license_group_created'));
         })
         .catch(() => {

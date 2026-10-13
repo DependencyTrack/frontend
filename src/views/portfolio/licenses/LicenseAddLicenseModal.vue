@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="licenseAddLicenseModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -133,9 +133,12 @@
 
 <script>
 import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'LicenseAddLicenseModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -168,7 +171,7 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         })
         .finally(() => {
-          this.$root.$emit('bv::hide::modal', 'licenseAddLicenseModal');
+          this.visible = false;
         });
     },
     resetValues: function () {
