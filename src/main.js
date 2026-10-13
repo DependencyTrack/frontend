@@ -16,6 +16,7 @@ import oidc from './shared/oidc.json';
 import globals from './shared/globals';
 import version from './version.json';
 import { getContextPath } from './shared/utils';
+import { configureTokenStorage } from './shared/permissions';
 
 configureCompat({ MODE: 2 });
 
@@ -60,6 +61,9 @@ axios
     } else {
       globals.$oidc.LOGIN_BUTTON_TEXT = '';
     }
+
+    // Where the session token lives: per tab (default) or shared across tabs
+    configureTokenStorage(response.data.AUTH_TOKEN_STORAGE);
 
     // Feature flags
     globals.$featureFlags = response.data.FEATURE_FLAGS;
