@@ -34,3 +34,17 @@ test('show the metrics of a project in tooltips', async ({ page }) => {
     page.getByRole('tooltip').filter({ hasText: 'Severity' }),
   ).toBeVisible();
 });
+
+test('keep the flat view after clearing a search', async ({ page }) => {
+  const { project } = seed();
+  await login(page);
+  await page.goto('projects');
+  const flatView = page.getByLabel('Show flat project view');
+  await page.getByText('Show flat project view').click();
+  await expect(flatView).toBeChecked();
+  await search(page, project.name);
+  await page.getByRole('searchbox', { name: 'Search' }).clear();
+  await page.getByRole('searchbox', { name: 'Search' }).press('Enter');
+  await expect(flatView).toBeEnabled();
+  await expect(flatView).toBeChecked();
+});

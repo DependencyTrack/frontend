@@ -116,6 +116,7 @@ export default [
       ],
       'vue/no-deprecated-slot-attribute': 'error',
       'vue/no-deprecated-slot-scope-attribute': 'error',
+      'vue/no-deprecated-v-on-native-modifier': 'error',
       'vue/no-deprecated-v-bind-sync': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
       'vue/no-v-model-argument': 'off',
