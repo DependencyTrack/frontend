@@ -65,13 +65,6 @@ export default {
     BooleanFilterPill,
   },
   beforeCreate() {
-    this.showSuppressedFindings =
-      !!localStorage &&
-      localStorage.getItem('ProjectFindingsShowSuppressedFindings') === 'true';
-    this.showKevOnly =
-      !!localStorage &&
-      localStorage.getItem('ProjectFindingsShowKevOnly') === 'true';
-
     if (this.$route.params.vulnerability) {
       if (this.$route.params.affectedComponent) {
         // search for the last portion of the finding's matrix ID
@@ -84,10 +77,18 @@ export default {
       } // the route doesn't allow a component to be specified without a vulnerability
     }
   },
+  created() {
+    this.options.url = this.apiUrl();
+  },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      showKevOnly: this.showKevOnly,
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
+          'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowKevOnly') === 'true',
       booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
@@ -345,7 +346,6 @@ export default {
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
         onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectFindingsPageSize', size.toString());

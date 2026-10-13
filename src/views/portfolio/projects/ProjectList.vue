@@ -79,14 +79,8 @@ export default {
     // this must be set to the corresponding project.
     uuid: String,
   },
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('ProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
-        : false;
-    // Like searching, a filter forces the flat view.
-    this.showFlatView = hasRouteFilter(this.$route.query) || storedFlatView();
+  created() {
+    this.options.url = this.apiUrl();
   },
   computed: {
     hasRouteFilter() {
@@ -287,8 +281,13 @@ export default {
   },
   data() {
     return {
-      showInactiveProjects: this.showInactiveProjects,
-      showFlatView: this.showFlatView,
+      showInactiveProjects:
+        localStorage &&
+        localStorage.getItem('ProjectListShowInactiveProjects') !== null
+          ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
+          : false,
+      // Like searching, a filter forces the flat view.
+      showFlatView: hasRouteFilter(this.$route.query) || storedFlatView(),
       isSearching: false,
       savedViewState: null,
       columns: [
@@ -497,7 +496,6 @@ export default {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },
-        url: this.apiUrl(),
         // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
         onClickRow: (row, $element) => {
           if (!this.showFlatView && !this.isSearching) {

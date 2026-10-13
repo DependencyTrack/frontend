@@ -96,23 +96,6 @@ export default {
     project: Object,
     uuid: String,
   },
-  beforeCreate() {
-    this.highlightOutdatedComponents =
-      localStorage &&
-      localStorage.getItem(
-        'ProjectDependencyGraphHighlightOutdatedComponents',
-      ) !== null
-        ? localStorage.getItem(
-            'ProjectDependencyGraphHighlightOutdatedComponents',
-          ) === 'true'
-        : false;
-    this.showCompleteGraph =
-      localStorage &&
-      localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
-        ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
-          'true'
-        : false;
-  },
   mounted() {
     this.computeData();
   },
@@ -122,9 +105,22 @@ export default {
       response: Object,
       nodeId: 0,
       loading: false,
-      showCompleteGraph: this.showCompleteGraph,
+      showCompleteGraph:
+        localStorage &&
+        localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') !== null
+          ? localStorage.getItem('ProjectDependencyGraphShowCompleteGraph') ===
+            'true'
+          : false,
       notFound: false,
-      highlightOutdatedComponents: this.highlightOutdatedComponents,
+      highlightOutdatedComponents:
+        localStorage &&
+        localStorage.getItem(
+          'ProjectDependencyGraphHighlightOutdatedComponents',
+        ) !== null
+          ? localStorage.getItem(
+              'ProjectDependencyGraphHighlightOutdatedComponents',
+            ) === 'true'
+          : false,
       searchedComponentUuids: {},
     };
   },
