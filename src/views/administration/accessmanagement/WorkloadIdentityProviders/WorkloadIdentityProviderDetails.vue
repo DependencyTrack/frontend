@@ -272,7 +272,7 @@ export default {
       }
     },
     async deleteProvider() {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.delete_workload_identity_provider_confirm'),
         {
           title: this.$t('admin.delete_workload_identity_provider'),

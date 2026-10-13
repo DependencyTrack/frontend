@@ -56,9 +56,9 @@ export default [
         },
         {
           selector:
-            "MemberExpression[object.property.name='$bvModal'][property.name=/^(show|hide)$/]",
+            "MemberExpression[object.type='ThisExpression'][property.name='$bvModal']",
           message:
-            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
+            'Open modals through v-model and confirmations through this.$confirm(). BootstrapVueNext has no $bvModal.',
         },
       ],
       'vue/no-restricted-syntax': [
@@ -81,10 +81,9 @@ export default [
             'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
         },
         {
-          selector:
-            "MemberExpression[object.name='$bvModal'][property.name=/^(show|hide)$/]",
+          selector: "Identifier[name='$bvModal']",
           message:
-            'Open and close modals through v-model. BootstrapVueNext has no $root events and no $bvModal.show/hide.',
+            'Open modals through v-model and confirmations through this.$confirm(). BootstrapVueNext has no $bvModal.',
         },
         {
           selector: "VAttribute[directive=true][key.name.name='b-modal']",

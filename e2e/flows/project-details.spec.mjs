@@ -1,5 +1,5 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login } from '../test.mjs';
+import { test, expect, login, search } from '../test.mjs';
 
 test('edit a project in the details modal', async ({ page, api }) => {
   const removed = uniqueName('tag');
@@ -30,4 +30,46 @@ test('edit a project in the details modal', async ({ page, api }) => {
   await page.getByText('View Details').click();
   await expect(modal.getByLabel('Description')).toHaveValue(description);
   await expect(modal.getByLabel('Is latest version')).toBeChecked();
+});
+
+test('delete a project from its details', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  const { uuid } = await api.send('PUT', '/v1/project', { name });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  await page
+    .getByRole('dialog', { name: 'Project Details' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Confirm Project Deletion' })
+    .getByRole('button', { name: 'OK' })
+    .click();
+  await expect(page.getByText('Project deleted')).toBeVisible();
+  await expect(page).toHaveURL(/\/projects$/);
+});
+
+test('close the delete confirmation when leaving the project', async ({
+  page,
+  api,
+}) => {
+  const name = uniqueName('e2e-delete');
+  await api.send('PUT', '/v1/project', { name });
+  await login(page);
+  await page.goto('projects');
+  await search(page, name);
+  await page.getByRole('link', { name, exact: true }).click();
+  await page.getByText('View Details').click();
+  await page
+    .getByRole('dialog', { name: 'Project Details' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  const confirm = page.getByRole('dialog', {
+    name: 'Confirm Project Deletion',
+  });
+  await expect(confirm).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(/\/projects(\?.*)?$/);
+  await expect(confirm).toBeHidden();
 });

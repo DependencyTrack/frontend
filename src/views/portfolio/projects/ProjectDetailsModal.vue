@@ -856,7 +856,7 @@ export default {
     },
     deleteProject: async function () {
       this.visible = false;
-      let confirmed = await this.$bvModal.msgBoxConfirm(
+      let confirmed = await this.$confirm(
         this.$t('message.project_delete_message'),
         {
           title: this.$t('message.project_delete_title'),

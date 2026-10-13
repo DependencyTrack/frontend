@@ -185,23 +185,21 @@ export default {
       this.showUpdateSecretModal = true;
     },
     onDeleteClicked(row) {
-      this.$bvModal
-        .msgBoxConfirm(
-          this.$t('admin.confirm_secret_deletion_message', { name: row.name }),
-          {
-            title: this.$t('admin.confirm_secret_deletion'),
-            size: 'md',
-            okVariant: 'danger',
-            okTitle: this.$t('message.delete'),
-            cancelTitle: this.$t('message.cancel'),
-            centered: true,
-          },
-        )
-        .then((confirmed) => {
-          if (confirmed) {
-            this.deleteSecret(row.name);
-          }
-        });
+      this.$confirm(
+        this.$t('admin.confirm_secret_deletion_message', { name: row.name }),
+        {
+          title: this.$t('admin.confirm_secret_deletion'),
+          size: 'md',
+          okVariant: 'danger',
+          okTitle: this.$t('message.delete'),
+          cancelTitle: this.$t('message.cancel'),
+          centered: true,
+        },
+      ).then((confirmed) => {
+        if (confirmed) {
+          this.deleteSecret(row.name);
+        }
+      });
     },
     deleteSecret(name) {
       this.axios
