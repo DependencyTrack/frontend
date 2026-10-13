@@ -247,7 +247,7 @@ export default {
       }
     },
     async deleteServiceAccount() {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.delete_service_account_confirm'),
         {
           title: this.$t('admin.delete_service_account'),
@@ -267,7 +267,7 @@ export default {
       }
     },
     async removeApiKey(apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.remove_api_key_confirm'),
         {
           title: this.$t('admin.remove_api_key'),
@@ -291,7 +291,7 @@ export default {
       }
     },
     async removeWorkloadIdentityBinding(binding) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.remove_workload_identity_binding_confirm'),
         {
           title: this.$t('admin.remove_workload_identity_binding'),

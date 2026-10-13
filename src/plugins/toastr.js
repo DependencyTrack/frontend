@@ -26,6 +26,14 @@ export default {
       i: toast('info', true),
     });
     app.config.globalProperties.$toastr = toastr;
+    let confirms = 0;
+    app.config.globalProperties.$confirm = (message, options) => {
+      const id = `confirm-${++confirms}`;
+      const stop = owner.$router.afterEach(() => owner.$bvModal.hide(id));
+      return owner.$bvModal
+        .msgBoxConfirm(message, { ...options, id })
+        .finally(stop);
+    };
   },
 };
 

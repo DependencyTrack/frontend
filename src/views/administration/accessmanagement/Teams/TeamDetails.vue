@@ -165,6 +165,24 @@
       v-model="showSelectOidcGroupModal"
       v-on:selection="updateOidcGroupSelection"
     />
+    <b-modal
+      v-model="showApiKeyModal"
+      :title="shownApiKey.title"
+      ok-only
+      button-size="sm"
+      centered
+      size="md"
+      hide-header-close
+      footer-class="d-flex justify-content-center"
+      body-class="d-flex flex-column align-items-center"
+    >
+      <p class="text-center">{{ shownApiKey.message }}</p>
+      <pre
+        class="b-input-group-form-input text-white plaintext"
+        style="overflow-x: auto"
+        >{{ shownApiKey.key }}</pre
+      >
+    </b-modal>
   </div>
 </template>
 
@@ -199,6 +217,8 @@ export default {
       showSelectPermissionModal: false,
       showSelectLdapGroupModal: false,
       showSelectOidcGroupModal: false,
+      showApiKeyModal: false,
+      shownApiKey: {},
       team: this.row,
       name: this.row.name,
       apiKeys: this.apiKeysToDict(this.row.apiKeys ?? []),
@@ -277,37 +297,16 @@ export default {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
-    popup: async function (title, message, key) {
-      const h = this.$createElement;
-      const titleVNode = h('div', {
-        domProps: { innerHTML: title },
-      });
-      const messageVNode = h('div', { class: ['foobar'] }, [
-        h('p', { class: ['text-center'] }, [message]),
-        h(
-          'pre',
-          {
-            class: ['b-input-group-form-input', 'text-white', 'plaintext'],
-            style: { overflowX: 'auto' },
-          },
-          key,
-        ),
-      ]);
-      return this.$bvModal.msgBoxOk([messageVNode], {
-        title: [titleVNode],
-        buttonSize: 'sm',
-        centered: true,
-        size: 'md',
-        footerClass: 'd-flex justify-content-center',
-        bodyClass: 'd-flex flex-column align-items-center',
-      });
+    popup: function (title, message, key) {
+      this.shownApiKey = { title, message, key };
+      this.showApiKeyModal = true;
     },
     async createApiKey() {
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
       try {
         const response = await this.axios.put(endpoint);
         this.$toastr.s(this.$t('message.updated'));
-        await this.popup(
+        this.popup(
           this.$t('admin.new_api_key_title'),
           this.$t('admin.new_api_key'),
           response.data.key,
@@ -319,7 +318,7 @@ export default {
       }
     },
     async regenerateApiKey(apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.regenerate_api_key_confirm'),
         {
           title: this.$t('admin.regenerate_api_key_title'),
@@ -334,7 +333,7 @@ export default {
       try {
         const response = await this.axios.post(endpoint);
         this.$toastr.s(this.$t('message.updated'));
-        await this.popup(
+        this.popup(
           this.$t('admin.regenerate_api_key_title'),
           this.$t('admin.regenerate_api_key'),
           response.data.key,
@@ -346,7 +345,7 @@ export default {
       }
     },
     removeApiKey: async function (apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.remove_api_key_confirm'),
         {
           title: this.$t('admin.remove_api_key'),

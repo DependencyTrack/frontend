@@ -228,7 +228,7 @@ export default {
         retentionThresholdReduced;
 
       if (needsConfirmation) {
-        const confirmed = await this.$bvModal.msgBoxConfirm(
+        const confirmed = await this.$confirm(
           this.$t('admin.maintenance_destructive_confirm_message'),
           {
             title: this.$t('admin.maintenance_destructive_confirm_title'),
