@@ -10,7 +10,7 @@
       <span class="fa fa-plus-square" v-if="this.addIcon"></span>
       <span class="fa fa-trash-o" v-if="this.deleteIcon"></span>
     </b-button>
-    <slot v-if="$slots && $slots.default && !!$slots.default[0]"></slot>
+    <slot v-if="$slots.default"></slot>
     <span v-else
       ><a v-if="this.href" :href="href">{{ value }}</a
       ><span v-else>{{ value }}</span
