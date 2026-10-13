@@ -104,11 +104,6 @@ export default [
           message: 'Use native constraint validation.',
         },
         {
-          name: '@coreui/vue',
-          importNames: ['Switch'],
-          message: 'Use <b-form-checkbox switch>.',
-        },
-        {
           name: 'vue-bootstrap-toggle',
           message: 'Use <b-form-checkbox switch>.',
         },

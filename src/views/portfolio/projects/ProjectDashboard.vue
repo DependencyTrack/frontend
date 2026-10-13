@@ -35,60 +35,60 @@
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="severity-critical">
+                  <div class="callout callout-severity-critical">
                     <small class="text-muted">{{
                       $t('severity.critical')
                     }}</small
                     ><br />
                     <strong class="h4">{{ currentCritical }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="severity-high">
+                  <div class="callout callout-severity-high">
                     <small class="text-muted">{{ $t('severity.high') }}</small
                     ><br />
                     <strong class="h4">{{ currentHigh }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="severity-medium">
+                  <div class="callout callout-severity-medium">
                     <small class="text-muted">{{ $t('severity.medium') }}</small
                     ><br />
                     <strong class="h4">{{ currentMedium }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="severity-low">
+                  <div class="callout callout-severity-low">
                     <small class="text-muted">{{ $t('severity.low') }}</small
                     ><br />
                     <strong class="h5">{{ currentLow }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="severity-unassigned">
+                  <div class="callout callout-severity-unassigned">
                     <small class="text-muted">{{
                       $t('severity.unassigned')
                     }}</small
                     ><br />
                     <strong class="h4">{{ currentUnassigned }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="severity-info">
+                  <div class="callout callout-severity-info">
                     <small class="text-muted">{{
                       $t('message.risk_score')
                     }}</small
                     ><br />
                     <strong class="h5">{{ currentRiskScore }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
@@ -181,7 +181,6 @@
 
 <script>
 import common from '../../../shared/common';
-import { Callout } from '@coreui/vue';
 import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress.vue';
 import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities.vue';
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
@@ -196,7 +195,6 @@ export default {
     ChartAuditingFindingsProgress,
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
-    Callout,
   },
   props: {
     uuid: String,

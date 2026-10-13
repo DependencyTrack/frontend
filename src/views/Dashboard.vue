@@ -486,66 +486,66 @@
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.projects')
                     }}</small
                     ><br />
                     <strong class="h4">{{ totalProjects }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="danger">
+                  <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_projects')
                     }}</small
                     ><br />
                     <strong class="h4">{{ vulnerableProjects }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.components')
                     }}</small
                     ><br />
                     <strong class="h4">{{ totalComponents }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="danger">
+                  <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_components')
                     }}</small
                     ><br />
                     <strong class="h4">{{ vulnerableComponents }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="danger">
+                  <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.portfolio_vulnerabilities')
                     }}</small
                     ><br />
                     <strong class="h4">{{ vulnerabilities }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="warning">
+                  <div class="callout callout-warning">
                     <small class="text-muted">{{
                       $t('message.suppressed')
                     }}</small
                     ><br />
                     <strong class="h4">{{ suppressed }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
@@ -554,44 +554,44 @@
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.policy_violations')
                     }}</small
                     ><br />
                     <strong class="h4">{{ totalViolations }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.license')
                     }}</small
                     ><br />
                     <strong class="h4">{{ licenseViolations }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
             <b-col sm="12" lg="4">
               <b-row>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.operational')
                     }}</small
                     ><br />
                     <strong class="h4">{{ operationalViolations }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
                 <b-col sm="6">
-                  <Callout variant="info">
+                  <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.security')
                     }}</small
                     ><br />
                     <strong class="h4">{{ securityViolations }}</strong>
-                  </Callout>
+                  </div>
                 </b-col>
               </b-row>
             </b-col>
@@ -612,14 +612,12 @@ import ChartAuditingViolationsProgress from './dashboard/ChartAuditingViolations
 import ChartPolicyViolationsState from './dashboard/ChartPolicyViolationsState.vue';
 import ChartPolicyViolationsClassification from './dashboard/ChartPolicyViolationsClassification.vue';
 import ChartComponentVulnerabilities from './dashboard/ChartComponentVulnerabilities.vue';
-import { Callout } from '@coreui/vue';
 import permissionsMixin from '../mixins/permissionsMixin';
 
 export default {
   name: 'dashboard',
   mixins: [permissionsMixin],
   components: {
-    Callout,
     PortfolioWidgetRow,
     ChartPortfolioVulnerabilities,
     ChartProjectVulnerabilities,

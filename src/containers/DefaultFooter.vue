@@ -1,5 +1,5 @@
 <template>
-  <TheFooter>
+  <footer class="app-footer">
     <div>
       <!-- left side here -->
     </div>
@@ -11,11 +11,10 @@
       <span class="me-1">v{{ dtrack.version }}</span>
     </div>
     <about-modal v-model="showAboutModal" />
-  </TheFooter>
+  </footer>
 </template>
 <script>
 import AboutModal from '../views/components/AboutModal.vue';
-import { Footer as TheFooter } from '@coreui/vue';
 import globalVarsMixin from '../mixins/globalVarsMixin';
 
 export default {
@@ -23,7 +22,6 @@ export default {
   mixins: [globalVarsMixin],
   components: {
     AboutModal,
-    TheFooter,
   },
   data() {
     return {

@@ -2,15 +2,53 @@
   <div class="app">
     <DefaultHeader />
     <div class="app-body">
-      <AppSidebar ref="sidebar" fixed>
-        <SidebarHeader />
-        <SidebarForm />
-        <SidebarNav :navItems="permissibleNav"></SidebarNav>
-        <SidebarFooter />
-        <SidebarMinimizer />
-      </AppSidebar>
+      <div ref="sidebar" class="sidebar">
+        <nav class="sidebar-nav">
+          <ul class="nav">
+            <template v-for="item in permissibleNav">
+              <li v-if="item.title" :key="item.name" class="nav-title">
+                {{ item.name }}
+              </li>
+              <li
+                v-else
+                :key="item.url"
+                class="nav-item"
+                @click="hideMobileSidebar"
+              >
+                <router-link
+                  :to="item.url"
+                  class="nav-link"
+                  v-bind="item.attributes"
+                >
+                  <i class="nav-icon" :class="item.icon"></i> {{ item.name }}
+                </router-link>
+              </li>
+            </template>
+          </ul>
+        </nav>
+        <button
+          class="sidebar-minimizer"
+          type="button"
+          @click="handleMinimizedUpdate"
+        ></button>
+      </div>
       <main class="main">
-        <Breadcrumb :list="list" />
+        <ol class="breadcrumb">
+          <template v-for="(crumb, index) in list">
+            <li
+              v-if="crumb.name || crumb.meta.label"
+              :key="index"
+              class="breadcrumb-item"
+            >
+              <span v-if="index === list.length - 1" class="active">{{
+                (crumb.meta && crumb.meta.label) || crumb.name
+              }}</span>
+              <router-link v-else :to="crumb">{{
+                (crumb.meta && crumb.meta.label) || crumb.name
+              }}</router-link>
+            </li>
+          </template>
+        </ol>
         <div class="container-fluid">
           <router-view></router-view>
         </div>
@@ -21,15 +59,6 @@
 </template>
 
 <script>
-import {
-  Sidebar as AppSidebar,
-  SidebarFooter,
-  SidebarForm,
-  SidebarHeader,
-  SidebarMinimizer,
-  SidebarNav,
-  Breadcrumb,
-} from '@coreui/vue';
 import DefaultHeader from './DefaultHeader.vue';
 import DefaultFooter from './DefaultFooter.vue';
 import EventBus from '../shared/eventbus';
@@ -39,13 +68,6 @@ import * as featureFlags from '@/shared/featureFlags';
 export default {
   name: 'DefaultContainer',
   components: {
-    AppSidebar,
-    Breadcrumb,
-    SidebarForm,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarNav,
-    SidebarMinimizer,
     DefaultFooter,
     DefaultHeader,
   },
@@ -63,11 +85,6 @@ export default {
         {
           title: true,
           name: this.$t('message.portfolio'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
@@ -103,11 +120,6 @@ export default {
         {
           title: true,
           name: this.$t('message.global_audit'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permissions: [
             permissions.VIEW_VULNERABILITY,
             permissions.VIEW_POLICY_VIOLATION,
@@ -134,11 +146,6 @@ export default {
         {
           title: true,
           name: this.$t('message.administration'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permission: [
             permissions.SYSTEM_CONFIGURATION,
             permissions.SYSTEM_CONFIGURATION_CREATE,
@@ -177,8 +184,20 @@ export default {
   methods: {
     handleMinimizedUpdate() {
       this.isSidebarMinimized = !this.isSidebarMinimized;
+      document.body.classList.toggle(
+        'sidebar-minimized',
+        this.isSidebarMinimized,
+      );
       if (localStorage) {
         localStorage.setItem('isSidebarMinimized', this.isSidebarMinimized);
+      }
+    },
+    hideMobileSidebar() {
+      document.body.classList.remove('sidebar-show');
+    },
+    onDocumentClick(event) {
+      if (!this.$refs.sidebar.contains(event.target)) {
+        this.hideMobileSidebar();
       }
     },
     generateBreadcrumbs: function generateBreadcrumbs(
@@ -232,20 +251,19 @@ export default {
       localStorage && localStorage.getItem('isSidebarMinimized') !== null
         ? localStorage.getItem('isSidebarMinimized') === 'true'
         : false;
-    const sidebar = document.body;
-    if (sidebar) {
-      if (this.isSidebarMinimized) {
-        sidebar.classList.add('sidebar-minimized');
-      } else {
-        sidebar.classList.remove('sidebar-minimized');
-      }
-    }
-    this.$nextTick(() => {
-      const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
-      if (sidebarMinimizer) {
-        sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
-      }
-    });
+    document.body.classList.add(
+      'header-fixed',
+      'sidebar-fixed',
+      'sidebar-lg-show',
+    );
+    document.body.classList.toggle(
+      'sidebar-minimized',
+      this.isSidebarMinimized,
+    );
+    document.addEventListener('click', this.onDocumentClick);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.onDocumentClick);
   },
   computed: {
     name() {
