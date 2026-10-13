@@ -77,7 +77,7 @@ export default {
 .form-group {
   flex-direction: row-reverse;
 }
-.form-group >>> label.col-form-label {
+.form-group :deep(label.col-form-label) {
   padding-left: 0 !important;
 }
 </style>

@@ -7,7 +7,7 @@ export default {
     this.pendingCells = new Map();
     this.mountedCells = [];
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.mountedCells.forEach(({ container }) => render(null, container));
   },
   methods: {

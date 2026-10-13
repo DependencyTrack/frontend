@@ -222,21 +222,21 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .status-badge {
+:deep(.status-badge) {
   font-size: 0.85em;
   padding: 0.35em 0.65em;
 }
-::v-deep button.status-badge-interactive {
+:deep(button.status-badge-interactive) {
   border: none;
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
   transition: opacity 0.15s;
 }
-::v-deep .status-badge-interactive:hover {
+:deep(.status-badge-interactive:hover) {
   opacity: 0.8;
 }
-::v-deep button.capacity-value {
+:deep(button.capacity-value) {
   background: transparent;
   border: none;
   border-bottom: 1px dashed currentColor;
@@ -245,7 +245,7 @@ export default {
   padding: 0;
   cursor: pointer;
 }
-::v-deep .capacity-value .fa-pencil {
+:deep(.capacity-value .fa-pencil) {
   font-size: 0.85em;
 }
 </style>

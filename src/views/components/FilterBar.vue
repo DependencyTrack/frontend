@@ -37,10 +37,7 @@
         {{ $t('message.clear_all') }}
       </b-button>
     </div>
-    <div
-      v-if="$slots.actions || $scopedSlots.actions"
-      class="filter-bar-actions"
-    >
+    <div v-if="$slots.actions" class="filter-bar-actions">
       <slot name="actions" />
     </div>
   </div>

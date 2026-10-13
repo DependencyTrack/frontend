@@ -22,13 +22,13 @@
   color: inherit;
 }
 
-.filter-pill-wrapper >>> .btn-outline-primary {
+.filter-pill-wrapper :deep(.btn-outline-primary) {
   border-radius: 20px;
   font-size: 0.85rem;
 }
 
 /* Strip button chrome when wrapper owns the pill border */
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary {
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary) {
   padding: 0;
   border: none !important;
   background: transparent !important;
@@ -37,16 +37,16 @@
 }
 
 /* Restore visual feedback for dropdown-open / focus / active states */
-.filter-pill-wrapper.filter-pill-active >>> .show > .btn-outline-primary,
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary:focus,
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary:active {
+.filter-pill-wrapper.filter-pill-active :deep(.show > .btn-outline-primary),
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
   background: var(--primary) !important;
   color: #fff !important;
 }
 
 /* The form owns all padding, and clipping keeps the footer flush with the
    menu's rounded bottom corners. */
-.filter-pill-wrapper >>> .dropdown-menu {
+.filter-pill-wrapper :deep(.dropdown-menu) {
   padding: 0;
   overflow: hidden;
 }

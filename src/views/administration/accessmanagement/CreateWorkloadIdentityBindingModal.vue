@@ -182,7 +182,7 @@ export default {
       return !!this.provider && this.subjectState === true;
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearTimeout(this.searchDebounceTimer);
   },
   methods: {

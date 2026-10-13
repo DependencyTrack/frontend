@@ -50,7 +50,7 @@ export default {
       this.$bvModal.show('createTemplateModal');
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('admin:templates:rowUpdate');
     EventBus.off('admin:templates:rowDeleted');
   },

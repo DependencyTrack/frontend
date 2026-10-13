@@ -47,7 +47,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('admin:oidcgroups:rowUpdate');
     EventBus.off('admin:oidcgroups:rowDeleted');
   },

@@ -225,7 +225,7 @@ export default {
     });
  */
   },
-  destroyed() {
+  unmounted() {
     EventBus.emit('crumble');
   },
 };

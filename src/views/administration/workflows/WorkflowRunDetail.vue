@@ -398,7 +398,7 @@ export default {
     this.fetchRun();
     this.fetchEvents();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopPolling();
   },
   watch: {

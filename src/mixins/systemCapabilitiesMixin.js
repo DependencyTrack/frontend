@@ -13,7 +13,7 @@ export default {
     };
     EventBus.on('systemCapabilitiesUpdated', this._onSystemCapabilitiesUpdated);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off(
       'systemCapabilitiesUpdated',
       this._onSystemCapabilitiesUpdated,

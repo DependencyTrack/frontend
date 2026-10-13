@@ -181,7 +181,7 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .card-body {
+:deep(.card-body) {
   min-width: 0;
 }
 

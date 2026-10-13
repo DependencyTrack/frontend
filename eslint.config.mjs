@@ -108,13 +108,17 @@ export default [
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-deprecated-delete-set': 'error',
+      'vue/no-deprecated-destroyed-lifecycle': 'error',
+      'vue/no-deprecated-dollar-scopedslots-api': 'error',
       'vue/no-deprecated-model-definition': [
         'error',
         { allowVue3Compat: true },
       ],
       'vue/no-deprecated-slot-attribute': 'error',
       'vue/no-deprecated-slot-scope-attribute': 'error',
+      'vue/no-deprecated-v-bind-sync': 'error',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
+      'vue/no-v-model-argument': 'off',
       // Bootstrap 4 names, see src/assets/scss/_bootstrap5.scss.
       // https://getbootstrap.com/docs/5.0/migration/
       // https://getbootstrap.com/docs/5.3/migration/

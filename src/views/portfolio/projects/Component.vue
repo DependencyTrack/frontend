@@ -326,7 +326,7 @@ export default {
       this.getTabFromRoute().activate();
     },
   },
-  destroyed() {
+  unmounted() {
     EventBus.emit('crumble');
   },
 };

@@ -104,7 +104,7 @@ export default {
   border-left: 4px solid var(--danger);
   background-color: color-mix(in srgb, var(--danger) 6%, transparent);
 }
-.kev-assertion-card ::v-deep .card-header {
+.kev-assertion-card :deep(.card-header) {
   background-color: color-mix(in srgb, var(--danger) 12%, transparent);
   border-bottom-color: color-mix(in srgb, var(--danger) 30%, transparent);
 }

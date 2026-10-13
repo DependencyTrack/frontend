@@ -284,7 +284,7 @@ export default {
     addFormats(this.ajv);
     await this.fetchSchemaAndConfig();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.abortController?.abort();
   },
   methods: {
@@ -601,7 +601,7 @@ export default {
 .extension-config-form__description {
   margin-bottom: 1rem;
 }
-.extension-config-form__description >>> p:last-child {
+.extension-config-form__description :deep(p:last-child) {
   margin-bottom: 0;
 }
 .extension-config-form__skeleton {
