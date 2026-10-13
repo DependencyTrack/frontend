@@ -1,9 +1,9 @@
 <template>
   <b-form-group :id="id" :label="label" :label-for="`${id}-input`">
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"
+      <template v-if="icon" #prepend
         ><b-input-group-text><i :class="icon"></i></b-input-group-text
-      ></b-input-group-prepend>
+      ></template>
       <b-form-input
         ref="input"
         :id="`${id}-input`"
@@ -19,10 +19,10 @@
         :max="max"
         v-on="inputListeners"
       />
-      <b-input-group-append v-if="tooltip"
-        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
+      <template v-if="tooltip" #append
+        ><b-input-group-text v-b-tooltip.hover="tooltip"
           ><i class="cui-info font-lg"></i></b-input-group-text
-      ></b-input-group-append>
+      ></template>
     </b-input-group>
     <b-form-invalid-feedback :state="state">
       {{ dirty ? error : '' }}

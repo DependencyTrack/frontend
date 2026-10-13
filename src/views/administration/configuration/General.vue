@@ -35,9 +35,11 @@
           </div>
         </b-form-group>
         <b-input-group>
-          <b-input-group-prepend :title="this.$t('message.language')" is-text>
-            <span class="fa fa-language text-primary"></span>
-          </b-input-group-prepend>
+          <template #prepend>
+            <b-input-group-text :title="$t('message.language')">
+              <span class="fa fa-language text-primary"></span>
+            </b-input-group-text>
+          </template>
           <b-form-select
             class="bg-widget"
             v-model="defaultLanguage"

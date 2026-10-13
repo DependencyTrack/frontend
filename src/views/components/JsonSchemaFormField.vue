@@ -33,9 +33,8 @@
         {{ label }}
         <i
           v-if="isSecretRef"
-          v-b-tooltip.hover
+          v-b-tooltip.hover="$t('admin.secret_reference_field_tooltip')"
           class="fa fa-key text-warning ms-1"
-          :title="$t('admin.secret_reference_field_tooltip')"
         ></i>
       </template>
       <template

@@ -60,12 +60,11 @@
             <span class="text-muted">{{ node.version }}</span>
             <span
               v-if="isOutdated(node)"
-              v-b-tooltip.hover.noninteractive
-              class="badge text-bg-warning ms-2"
-              :title="
+              v-b-tooltip.hover.noninteractive="
                 'Risk: Outdated component. Current version is: ' +
                 node.latestVersion
               "
+              class="badge text-bg-warning ms-2"
               ><i class="fa fa-arrow-up" aria-hidden="true" />
               {{ node.latestVersion }}</span
             >
