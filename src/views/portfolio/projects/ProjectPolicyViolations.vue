@@ -51,16 +51,16 @@ export default {
     FilterBar,
     BooleanFilterPill,
   },
-  beforeCreate() {
-    this.showSuppressedViolations =
-      !!localStorage &&
-      localStorage.getItem(
-        'ProjectPolicyViolationsShowSuppressedViolations',
-      ) === 'true';
+  created() {
+    this.options.url = this.apiUrl();
   },
   data() {
     return {
-      showSuppressedViolations: this.showSuppressedViolations,
+      showSuppressedViolations:
+        !!localStorage &&
+        localStorage.getItem(
+          'ProjectPolicyViolationsShowSuppressedViolations',
+        ) === 'true',
       booleanFilters: ['showSuppressedViolations'],
       columns: [
         {
@@ -188,7 +188,6 @@ export default {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },
-        url: this.apiUrl(),
         onPostBody: this.initializeTooltips,
         onPageChange: (_number, size) => {
           if (localStorage) {

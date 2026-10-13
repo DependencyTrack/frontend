@@ -30,13 +30,8 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 
 export default {
   mixins: [permissionsMixin],
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
-          'true'
-        : false;
+  created() {
+    this.options.url = this.apiUrl();
   },
   props: {
     source: String,
@@ -45,7 +40,12 @@ export default {
   },
   data() {
     return {
-      showInactiveProjects: this.showInactiveProjects,
+      showInactiveProjects:
+        localStorage &&
+        localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
+          ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
+            'true'
+          : false,
       columns: [
         {
           title: this.$t('message.name'),
@@ -104,7 +104,6 @@ export default {
         icons: {
           refresh: 'fa-refresh',
         },
-        url: this.apiUrl(),
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;

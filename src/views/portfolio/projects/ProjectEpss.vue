@@ -70,18 +70,17 @@ export default {
     BooleanFilterPill,
     ChartEpssVsCvss,
   },
-  beforeCreate() {
-    this.showSuppressedFindings =
-      !!localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true';
-    this.showKevOnly =
-      !!localStorage &&
-      localStorage.getItem('ProjectEpssShowKevOnly') === 'true';
+  created() {
+    this.options.url = this.apiUrl();
   },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      showKevOnly: this.showKevOnly,
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowKevOnly') === 'true',
       booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
@@ -273,7 +272,6 @@ export default {
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
         onPostBody: () => {
           this.mountCells();
           this.initializeTooltips();
