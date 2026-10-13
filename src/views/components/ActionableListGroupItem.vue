@@ -4,8 +4,7 @@
       size="sm"
       class="pull-right action-icon"
       v-on:click="$emit('actionClicked')"
-      v-b-tooltip.hover
-      :title="tooltip"
+      v-b-tooltip.hover="tooltip"
     >
       <span class="fa fa-plus-square" v-if="this.addIcon"></span>
       <span class="fa fa-trash-o" v-if="this.deleteIcon"></span>

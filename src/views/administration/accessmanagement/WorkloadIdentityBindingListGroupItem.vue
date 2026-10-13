@@ -6,8 +6,7 @@
         size="sm"
         class="action-icon ms-3 flex-shrink-0"
         v-on:click="$emit('removeClicked')"
-        v-b-tooltip.hover
-        :title="$t('admin.remove_workload_identity_binding')"
+        v-b-tooltip.hover="$t('admin.remove_workload_identity_binding')"
       >
         <span class="fa fa-trash-o"></span>
       </b-button>

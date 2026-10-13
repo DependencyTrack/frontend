@@ -9,8 +9,7 @@
               {{ componentLabel }}&nbsp;
               <b-badge
                 :variant="component.isInternal ? 'tab-total' : 'tab-info'"
-                v-b-tooltip.hover
-                :title="$t('message.component_classification_desc')"
+                v-b-tooltip.hover="$t('message.component_classification_desc')"
                 >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
               >
               <b-badge></b-badge>
@@ -20,8 +19,7 @@
               style="cursor: pointer"
               aria-hidden="true"
               @click="this.redirectToDependencyGraph"
-              v-b-tooltip.hover.bottom
-              :title="$t('message.show_in_dependency_graph')"
+              v-b-tooltip.hover.bottom="$t('message.show_in_dependency_graph')"
             ></i>
           </b-col>
           <b-col>
@@ -37,8 +35,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.critical')"
+                v-b-tooltip.hover="$t('severity.critical')"
                 >{{ currentCritical }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -52,8 +49,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.high')"
+                v-b-tooltip.hover="$t('severity.high')"
                 >{{ currentHigh }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -67,8 +63,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.medium')"
+                v-b-tooltip.hover="$t('severity.medium')"
                 >{{ currentMedium }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -82,8 +77,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.low')"
+                v-b-tooltip.hover="$t('severity.low')"
                 >{{ currentLow }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -97,8 +91,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.unassigned')"
+                v-b-tooltip.hover="$t('severity.unassigned')"
                 >{{ currentUnassigned }}</vue-easy-pie-chart
               >
             </b-row>

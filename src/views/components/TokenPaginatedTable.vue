@@ -90,7 +90,8 @@
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style';
+@import '@/assets/scss/variables';
+@import '@coreui/coreui/scss/variables';
 
 .page-indicator {
   padding: $pagination-padding-y 0.75rem;

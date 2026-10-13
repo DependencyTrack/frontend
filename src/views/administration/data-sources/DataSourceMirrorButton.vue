@@ -1,8 +1,7 @@
 <template>
   <span class="ms-2 text-nowrap">
     <span
-      v-b-tooltip.hover.focus
-      :title="tooltipTitle"
+      v-b-tooltip.hover.focus="tooltipTitle"
       :tabindex="disabled ? 0 : -1"
       class="d-inline-block"
     >

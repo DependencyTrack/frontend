@@ -198,8 +198,7 @@
             :options="analysisChoices"
             @change="makeAnalysis"
             style="flex: 0 1 auto; width: auto; margin-right: 2rem"
-            v-b-tooltip.hover
-            :title="this.$t('message.analysis_tooltip')"
+            v-b-tooltip.hover="this.$t('message.analysis_tooltip')"
           />
           <b-form-checkbox
             v-model="isSuppressed"
@@ -232,8 +231,7 @@
                 :disabled="
                   analysisState === null || analysisState !== 'NOT_AFFECTED'
                 "
-                v-b-tooltip.hover
-                :title="$t('message.justification_tooltip')"
+                v-b-tooltip.hover="$t('message.justification_tooltip')"
               />
             </b-input-group>
           </b-form-group>
@@ -250,8 +248,7 @@
                 :options="responseChoices"
                 :disabled="analysisState === null"
                 @change="makeAnalysis"
-                v-b-tooltip.hover
-                :title="this.$t('message.response_tooltip')"
+                v-b-tooltip.hover="this.$t('message.response_tooltip')"
               />
             </b-input-group>
           </b-form-group>
@@ -280,8 +277,7 @@
               this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
             ])
           "
-          v-b-tooltip.hover
-          :title="this.$t('message.analysis_details_tooltip')"
+          v-b-tooltip.hover="this.$t('message.analysis_details_tooltip')"
         />
         <div class="pull-right">
           <b-button

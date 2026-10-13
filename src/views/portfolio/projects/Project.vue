@@ -27,8 +27,7 @@
                         role="button"
                         aria-haspopup="true"
                         aria-expanded="false"
-                        v-b-tooltip.hover
-                        :title="$t('message.switch_version')"
+                        v-b-tooltip.hover="$t('message.switch_version')"
                         class="version-dropdown-toggle badge rounded-pill border"
                         ><i class="fa fa-caret-down" aria-hidden="true"></i
                         ><span
@@ -91,8 +90,7 @@
                               v-if="projectVersion.isLatest"
                               class="fa fa-star text-warning ms-1"
                               aria-hidden="true"
-                              v-b-tooltip.hover
-                              :title="$t('message.latest_version')"
+                              v-b-tooltip.hover="$t('message.latest_version')"
                             ></i>
                           </b-dropdown-item>
                         </span>
@@ -120,8 +118,7 @@
                                 v-if="projectVersion.isLatest"
                                 class="fa fa-star text-warning ms-1"
                                 aria-hidden="true"
-                                v-b-tooltip.hover
-                                :title="$t('message.latest_version')"
+                                v-b-tooltip.hover="$t('message.latest_version')"
                               ></i>
                             </b-dropdown-item>
                           </span>
@@ -212,8 +209,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.critical')"
+                v-b-tooltip.hover="$t('vulnerability.critical')"
                 >{{ currentCritical }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -227,8 +223,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.high')"
+                v-b-tooltip.hover="$t('vulnerability.high')"
                 >{{ currentHigh }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -242,8 +237,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.medium')"
+                v-b-tooltip.hover="$t('vulnerability.medium')"
                 >{{ currentMedium }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -257,8 +251,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.low')"
+                v-b-tooltip.hover="$t('vulnerability.low')"
                 >{{ currentLow }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -272,8 +265,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.unassigned')"
+                v-b-tooltip.hover="$t('vulnerability.unassigned')"
                 >{{ currentUnassigned }}</vue-easy-pie-chart
               >
             </b-row>
@@ -302,7 +294,7 @@
                 <span class="fa fa-upload"></span>
                 {{ $t('message.upload_bom') }}
               </b-button>
-              <b-tooltip target="upload-bom-button" triggers="hover focus">{{
+              <b-tooltip target="upload-bom-button">{{
                 $t('message.upload_bom_tooltip')
               }}</b-tooltip>
 
@@ -318,7 +310,7 @@
               >
                 <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
               </b-button>
-              <b-tooltip target="apply-vex-button" triggers="hover focus">{{
+              <b-tooltip target="apply-vex-button">{{
                 $t('message.apply_vex_tooltip')
               }}</b-tooltip>
 
@@ -349,7 +341,6 @@
               </b-button>
               <b-tooltip
                 target="reanalyze-button"
-                triggers="hover focus"
                 :disabled="isAnalysisRequested"
                 >{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip
               >
@@ -450,14 +441,12 @@
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
           <b-badge
             variant="tab-total"
-            v-b-tooltip.hover
-            :title="$t('message.total_findings_excluding_aliases')"
+            v-b-tooltip.hover="$t('message.total_findings_excluding_aliases')"
             >{{ totalFindings }}</b-badge
           >
           <b-badge
             variant="tab-info"
-            v-b-tooltip.hover
-            :title="$t('message.total_findings_including_aliases')"
+            v-b-tooltip.hover="$t('message.total_findings_including_aliases')"
             >{{ totalFindingsIncludingAliases }}</b-badge
           >
         </template>
@@ -487,26 +476,22 @@
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
           <b-badge
             variant="tab-total"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.total')"
+            v-b-tooltip.hover="$t('policy_violation.total')"
             >{{ totalViolations }}</b-badge
           >
           <b-badge
             variant="tab-info"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.infos')"
+            v-b-tooltip.hover="$t('policy_violation.infos')"
             >{{ infoViolations }}</b-badge
           >
           <b-badge
             variant="tab-warn"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.warns')"
+            v-b-tooltip.hover="$t('policy_violation.warns')"
             >{{ warnViolations }}</b-badge
           >
           <b-badge
             variant="tab-fail"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.fails')"
+            v-b-tooltip.hover="$t('policy_violation.fails')"
             >{{ failViolations }}</b-badge
           >
         </template>

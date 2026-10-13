@@ -18,7 +18,9 @@
     >
 
     <b-input-group size="sm">
-      <b-input-group-prepend is-text>{{ operatorLabel }}</b-input-group-prepend>
+      <template #prepend>
+        <b-input-group-text>{{ operatorLabel }}</b-input-group-text>
+      </template>
       <b-form-input
         :id="`text-filter-pill-value-${fieldName}`"
         v-model="tmpValue"

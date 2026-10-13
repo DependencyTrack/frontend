@@ -22,8 +22,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.critical')"
+                v-b-tooltip.hover="$t('severity.critical')"
                 >{{ currentCritical }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -37,8 +36,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.high')"
+                v-b-tooltip.hover="$t('severity.high')"
                 >{{ currentHigh }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -52,8 +50,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.medium')"
+                v-b-tooltip.hover="$t('severity.medium')"
                 >{{ currentMedium }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -67,8 +64,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.low')"
+                v-b-tooltip.hover="$t('severity.low')"
                 >{{ currentLow }}</vue-easy-pie-chart
               >
               <vue-easy-pie-chart
@@ -82,8 +78,7 @@
                 :percent="100"
                 :size="50"
                 :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.unassigned')"
+                v-b-tooltip.hover="$t('severity.unassigned')"
                 >{{ currentUnassigned }}</vue-easy-pie-chart
               >
             </b-row>
