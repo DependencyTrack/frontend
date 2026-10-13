@@ -769,7 +769,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'projectDetailsModal');
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('initializeProjectDetailsModal');
   },
   methods: {

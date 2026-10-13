@@ -388,7 +388,7 @@ export default {
     this.loadPage(this.baseUrl);
     this.emitVisibleColumns();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }

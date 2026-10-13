@@ -50,7 +50,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off(this.rowEvents.update);
     EventBus.off(this.rowEvents.delete);
   },

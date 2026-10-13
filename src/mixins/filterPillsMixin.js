@@ -51,7 +51,7 @@ export default {
       }
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const table = this._queryEl('table');
     if (table) {
       jQuery(table).off('post-body.bs.table.filterPillsMixin');

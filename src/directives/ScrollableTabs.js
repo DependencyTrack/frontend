@@ -26,7 +26,7 @@ function createButton(nav, direction) {
 }
 
 export default {
-  inserted(el) {
+  mounted(el) {
     const nav = el.querySelector('.nav-tabs');
     if (!nav) {
       return;
@@ -61,7 +61,7 @@ export default {
       mutationObserver.disconnect();
     };
   },
-  unbind(el) {
+  unmounted(el) {
     if (el.$scrollableTabsCleanup) {
       el.$scrollableTabsCleanup();
     }

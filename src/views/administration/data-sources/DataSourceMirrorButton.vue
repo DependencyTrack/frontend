@@ -133,7 +133,7 @@ export default {
   mounted() {
     this.fetchStatus();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopPolling();
     this.abortController?.abort();
   },

@@ -63,7 +63,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('admin:repository:rowUpdate');
     EventBus.off('admin:repository:rowDeleted');
   },

@@ -112,7 +112,7 @@ export default {
     });
     window.addEventListener('resize', this.updateOffset);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.updateOffset);
     this.clearOffset();
   },

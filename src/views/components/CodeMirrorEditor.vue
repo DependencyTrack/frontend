@@ -113,7 +113,7 @@ export default {
       this.applyMarkers(this.markers);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.view) {
       this.view.destroy();
       this.view = null;

@@ -98,7 +98,7 @@ export default {
       default: false,
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this._destroying = true;
   },
   methods: {

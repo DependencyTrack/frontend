@@ -327,7 +327,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('initializeProjectCreateProjectModal');
   },
   computed: {

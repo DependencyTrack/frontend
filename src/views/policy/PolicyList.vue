@@ -48,7 +48,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('policyManagement:policies:rowUpdate');
     EventBus.off('policyManagement:policies:rowDeleted');
   },

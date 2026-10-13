@@ -47,7 +47,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('admin:alerts:rowUpdate');
     EventBus.off('admin:alerts:rowDeleted');
   },

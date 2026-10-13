@@ -48,7 +48,7 @@ export default {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     EventBus.off('policyManagement:licenseGroups:rowUpdate');
     EventBus.off('policyManagement:licenseGroups:rowDeleted');
   },

@@ -106,7 +106,7 @@ export default {
   mounted() {
     this.fetchSecrets('');
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }

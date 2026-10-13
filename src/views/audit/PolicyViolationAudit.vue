@@ -145,7 +145,7 @@ export default {
       ];
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this._refreshTimer) {
       clearTimeout(this._refreshTimer);
     }
