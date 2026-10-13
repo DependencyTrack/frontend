@@ -175,14 +175,13 @@ export default {
           field: 'vulnerability.isKev',
           sortable: false,
           class: 'tight',
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value !== true) {
               return '';
             }
             return this.cell(KevCell, {
               source: row.vulnerability.source,
               vulnId: row.vulnerability.vulnId,
-              index,
             });
           },
         },

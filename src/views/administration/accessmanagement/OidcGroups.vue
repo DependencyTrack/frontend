@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createOidcGroupModal
+          @click="showCreateOidcGroupModal = true"
         >
           <span class="fa fa-plus"></span>
           {{ $t('admin.create_oidc_group') }}
@@ -18,7 +18,10 @@
         :options="options"
       ></bootstrap-table>
     </b-card-body>
-    <create-oidc-group-modal v-on:refreshTable="refreshTable" />
+    <create-oidc-group-modal
+      v-model="showCreateOidcGroupModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -53,6 +56,7 @@ export default {
   },
   data() {
     return {
+      showCreateOidcGroupModal: false,
       columns: [
         {
           title: this.$t('admin.oidc_group_name'),

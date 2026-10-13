@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createServiceAccountModal
+          @click="showCreateServiceAccountModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
         </b-button>
@@ -17,7 +17,10 @@
         :options="options"
       />
     </b-card-body>
-    <create-service-account-modal v-on:refreshTable="refreshTable" />
+    <create-service-account-modal
+      v-model="showCreateServiceAccountModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -56,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showCreateServiceAccountModal: false,
       searchText: null,
       rowEvents: {
         update: 'admin:serviceaccounts:rowUpdate',

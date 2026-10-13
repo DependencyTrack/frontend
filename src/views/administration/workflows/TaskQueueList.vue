@@ -30,7 +30,7 @@
       </b-card-body>
     </b-card>
     <b-modal
-      id="editCapacityModal"
+      v-model="showEditCapacityModal"
       :title="$t('admin.edit_capacity')"
       @ok.prevent="onCapacityConfirm"
       @shown="$refs.capacityInput.focus()"
@@ -63,6 +63,7 @@ export default {
   },
   data() {
     return {
+      showEditCapacityModal: false,
       types: ['WORKFLOW', 'ACTIVITY'],
       tabIndex: this.$route.query.type === 'ACTIVITY' ? 1 : 0,
       editCapacityRow: null,
@@ -184,17 +185,17 @@ export default {
     openEditCapacity(row) {
       this.editCapacityRow = row;
       this.editCapacityValue = row.capacity;
-      this.$bvModal.show('editCapacityModal');
+      this.showEditCapacityModal = true;
     },
     async onCapacityConfirm(bvModalEvent) {
       bvModalEvent.preventDefault();
       if (await this.submitCapacity()) {
-        this.$bvModal.hide('editCapacityModal');
+        this.showEditCapacityModal = false;
       }
     },
     async onCapacitySubmit() {
       if (await this.submitCapacity()) {
-        this.$bvModal.hide('editCapacityModal');
+        this.showEditCapacityModal = false;
       }
     },
     async submitCapacity() {

@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createOidcUserModal
+          @click="showCreateOidcUserModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
@@ -18,7 +18,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-oidc-user-modal v-on:refreshTable="refreshTable" />
+    <create-oidc-user-modal
+      v-model="showCreateOidcUserModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -56,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showCreateOidcUserModal: false,
       rowEvents: {
         update: 'admin:oidcusers:rowUpdate',
         delete: 'admin:oidcusers:rowDeleted',

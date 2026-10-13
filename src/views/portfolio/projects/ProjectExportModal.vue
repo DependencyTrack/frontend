@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectExportModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -70,6 +70,7 @@
 <script>
 import common from '@/shared/common';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 const CYCLONEDX_VERSIONS = [
   { value: '1.0', formats: ['XML'] },
@@ -84,7 +85,8 @@ const CYCLONEDX_VERSIONS = [
 
 export default {
   name: 'ProjectExportModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },
@@ -181,7 +183,7 @@ export default {
           `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
         )
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'projectExportModal');
+          this.visible = false;
         })
         .finally(() => {
           this.isDownloading = false;

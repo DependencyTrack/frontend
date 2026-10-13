@@ -15,7 +15,7 @@
               v-if="!suspended"
               :add-icon="true"
               :tooltip="$t('admin.new_api_key_title')"
-              v-on:actionClicked="openCreateApiKeyModal()"
+              v-on:actionClicked="showCreateServiceAccountApiKeyModal = true"
             />
           </div>
         </b-form-group>
@@ -30,9 +30,7 @@
             <actionable-list-group-item
               :add-icon="true"
               :tooltip="$t('admin.create_workload_identity_binding')"
-              v-on:actionClicked="
-                $bvModal.show(`createWorkloadIdentityBindingModal-${row.name}`)
-              "
+              v-on:actionClicked="showCreateWorkloadIdentityBindingModal = true"
             />
           </div>
         </b-form-group>
@@ -48,9 +46,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTeamModal')
-              "
+              v-on:actionClicked="showSelectTeamModal = true"
             />
           </div>
         </b-form-group>
@@ -66,9 +62,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectPermissionModal')
-              "
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -113,19 +107,23 @@
     </b-row>
     <template v-if="loaded">
       <select-team-modal
+        v-model="showSelectTeamModal"
         :currentTeams="teams"
         v-on:selection="updateTeamSelection"
       />
       <select-permission-modal
+        v-model="showSelectPermissionModal"
         :currentPermissions="permissions"
         v-on:selection="updatePermissionSelection"
       />
     </template>
     <create-service-account-api-key-modal
+      v-model="showCreateServiceAccountApiKeyModal"
       :name="row.name"
       v-on:created="loadApiKeys"
     />
     <create-workload-identity-binding-modal
+      v-model="showCreateWorkloadIdentityBindingModal"
       :name="row.name"
       v-on:created="loadWorkloadIdentityBindings"
     />
@@ -164,6 +162,10 @@ export default {
   },
   data() {
     return {
+      showSelectTeamModal: false,
+      showSelectPermissionModal: false,
+      showCreateServiceAccountApiKeyModal: false,
+      showCreateWorkloadIdentityBindingModal: false,
       email: this.row.email,
       suspended: this.row.suspended,
       teams: [],
@@ -263,9 +265,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
-    openCreateApiKeyModal() {
-      this.$bvModal.show(`createServiceAccountApiKeyModal-${this.row.name}`);
     },
     async removeApiKey(apiKey) {
       const confirmed = await this.$bvModal.msgBoxConfirm(

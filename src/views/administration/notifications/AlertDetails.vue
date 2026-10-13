@@ -92,9 +92,7 @@
           </span>
           <actionable-list-group-item
             :add-icon="true"
-            v-on:actionClicked="
-              $root.$emit('bv::show::modal', 'selectTeamModal')
-            "
+            v-on:actionClicked="showSelectTeamModal = true"
           ></actionable-list-group-item>
         </div>
       </b-form-group>
@@ -113,9 +111,7 @@
           </span>
           <actionable-list-group-item
             :add-icon="true"
-            v-on:actionClicked="
-              $root.$emit('bv::show::modal', 'selectProjectModal')
-            "
+            v-on:actionClicked="showSelectProjectModal = true"
           />
         </div>
       </b-form-group>
@@ -403,8 +399,14 @@
         initial-height="200px"
       />
     </b-modal>
-    <select-project-modal v-on:selection="updateProjectSelection" />
-    <select-team-modal v-on:selection="updateTeamSelection"></select-team-modal>
+    <select-project-modal
+      v-model="showSelectProjectModal"
+      v-on:selection="updateProjectSelection"
+    />
+    <select-team-modal
+      v-model="showSelectTeamModal"
+      v-on:selection="updateTeamSelection"
+    ></select-team-modal>
   </b-row>
 </template>
 
@@ -442,6 +444,8 @@ export default {
   },
   data() {
     return {
+      showSelectProjectModal: false,
+      showSelectTeamModal: false,
       alert: this.row,
       uuid: this.row.uuid,
       name: this.row.name,
@@ -725,7 +729,7 @@ export default {
         });
     },
     updateProjectSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectProjectModal');
+      this.showSelectProjectModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/project/${selection.uuid}`;
@@ -745,7 +749,7 @@ export default {
       }
     },
     updateTeamSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+      this.showSelectTeamModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}/${this.uuid}/team/${selection.uuid}`;

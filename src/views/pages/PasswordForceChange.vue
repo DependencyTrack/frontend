@@ -84,7 +84,10 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="passwordChangeError" />
+    <InformationalModal
+      v-model="showInformationalModal"
+      v-bind:message="passwordChangeError"
+    />
   </div>
 </template>
 
@@ -102,6 +105,7 @@ export default {
   },
   data() {
     return {
+      showInformationalModal: false,
       passwordChangeError: '',
       input: {
         username: '',
@@ -150,10 +154,10 @@ export default {
         })
         .catch((err) => {
           if (err.response.status === 401) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.passwordChangeError = this.$t('message.password_unauthorized');
           } else if (err.response.status === 406) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.passwordChangeError = this.$t(
               'message.password_not_acceptable',
             );

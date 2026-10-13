@@ -53,9 +53,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectPermissionModal')
-              "
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -70,9 +68,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectLdapGroupModal')
-              "
+              v-on:actionClicked="showSelectLdapGroupModal = true"
             />
           </div>
         </b-form-group>
@@ -87,9 +83,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectOidcGroupModal')
-              "
+              v-on:actionClicked="showSelectOidcGroupModal = true"
             />
           </div>
         </b-form-group>
@@ -159,11 +153,18 @@
       </b-col>
     </b-row>
     <select-permission-modal
+      v-model="showSelectPermissionModal"
       :currentPermissions="permissions"
       v-on:selection="updatePermissionSelection"
     />
-    <select-ldap-group-modal v-on:selection="updateLdapGroupSelection" />
-    <select-oidc-group-modal v-on:selection="updateOidcGroupSelection" />
+    <select-ldap-group-modal
+      v-model="showSelectLdapGroupModal"
+      v-on:selection="updateLdapGroupSelection"
+    />
+    <select-oidc-group-modal
+      v-model="showSelectOidcGroupModal"
+      v-on:selection="updateOidcGroupSelection"
+    />
   </div>
 </template>
 
@@ -195,6 +196,9 @@ export default {
   },
   data() {
     return {
+      showSelectPermissionModal: false,
+      showSelectLdapGroupModal: false,
+      showSelectOidcGroupModal: false,
       team: this.row,
       name: this.row.name,
       apiKeys: this.apiKeysToDict(this.row.apiKeys ?? []),
@@ -364,7 +368,7 @@ export default {
       }
     },
     updateLdapGroupSelection: async function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectLdapGroupModal');
+      this.showSelectLdapGroupModal = false;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}`;
       try {
         const responses = await Promise.all(
@@ -398,7 +402,7 @@ export default {
       }
     },
     updateOidcGroupSelection: async function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectOidcGroupModal');
+      this.showSelectOidcGroupModal = false;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
       try {
         const responses = await Promise.all(

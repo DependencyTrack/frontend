@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="serviceDetailsModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -216,10 +216,12 @@ import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ServiceDetailsModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -416,7 +418,7 @@ export default {
   },
   methods: {
     updateService: function () {
-      this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
       console.log(this.service);
       this.axios
@@ -430,7 +432,7 @@ export default {
         });
     },
     deleteService: function () {
-      this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
+      this.visible = false;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios

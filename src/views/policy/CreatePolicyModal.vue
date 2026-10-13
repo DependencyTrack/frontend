@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createPolicyModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -69,10 +69,12 @@
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'createPolicyModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',
@@ -121,7 +123,7 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.policy_created'));
-          this.$root.$emit('bv::hide::modal', 'createPolicyModal');
+          this.visible = false;
         })
         .finally(() => {
           this.submitting = false;

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="aboutModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -122,10 +122,12 @@
 <script>
 import common from '../../shared/common';
 import globalVarsMixin from '../../mixins/globalVarsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'AboutModal',
-  mixins: [globalVarsMixin],
+  mixins: [globalVarsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   computed: {
     serverTimestamp: function () {
       return common.formatTimestamp(this.dtrack.timestamp, true);

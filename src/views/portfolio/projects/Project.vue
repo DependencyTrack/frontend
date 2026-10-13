@@ -57,12 +57,7 @@
                             PERMISSIONS.PORTFOLIO_MANAGEMENT,
                             PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
                           ]"
-                          @click.prevent="
-                            $root.$emit(
-                              'bv::show::modal',
-                              'projectAddVersionModal',
-                            )
-                          "
+                          @click.prevent="showProjectAddVersionModal = true"
                         >
                           <i
                             class="fa fa-plus me-1 add-version-icon"
@@ -301,7 +296,7 @@
                 id="upload-bom-button"
                 v-if="!isCollectionProject"
                 variant="outline-primary"
-                v-b-modal.projectUploadBomModal
+                @click="showProjectUploadBomModal = true"
                 v-permission="PERMISSIONS.BOM_UPLOAD"
               >
                 <span class="fa fa-upload"></span>
@@ -315,7 +310,7 @@
                 id="apply-vex-button"
                 v-if="!isCollectionProject"
                 variant="outline-primary"
-                v-b-modal.projectUploadVexModal
+                @click="showProjectUploadVexModal = true"
                 v-permission:or="[
                   PERMISSIONS.VULNERABILITY_ANALYSIS,
                   PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
@@ -330,7 +325,7 @@
               <b-button
                 v-if="!isCollectionProject"
                 variant="outline-primary"
-                v-b-modal.projectExportModal
+                @click="showProjectExportModal = true"
                 v-permission:or="[
                   PERMISSIONS.VIEW_PORTFOLIO,
                   PERMISSIONS.VIEW_VULNERABILITY,
@@ -523,16 +518,36 @@
       </b-tab>
     </b-tabs>
     <project-details-modal
+      v-model="showProjectDetailsModal"
       :project-input="project"
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
+      v-on:showProperties="showProjectPropertiesModal = true"
     />
-    <project-properties-modal :key="this.uuid" :uuid="this.uuid" />
-    <project-create-property-modal :uuid="this.uuid" />
-    <project-add-version-modal :uuid="this.uuid" />
-    <project-upload-bom-modal :uuid="this.uuid" />
-    <project-upload-vex-modal :uuid="this.uuid" />
-    <project-export-modal :uuid="this.uuid" />
+    <project-properties-modal
+      v-model="showProjectPropertiesModal"
+      :key="this.uuid"
+      :uuid="this.uuid"
+      v-on:createProperty="showProjectCreatePropertyModal = true"
+    />
+    <project-create-property-modal
+      v-model="showProjectCreatePropertyModal"
+      :uuid="this.uuid"
+      v-on:propertyCreated="showProjectPropertiesModal = true"
+    />
+    <project-add-version-modal
+      v-model="showProjectAddVersionModal"
+      :uuid="this.uuid"
+    />
+    <project-upload-bom-modal
+      v-model="showProjectUploadBomModal"
+      :uuid="this.uuid"
+    />
+    <project-upload-vex-modal
+      v-model="showProjectUploadVexModal"
+      :uuid="this.uuid"
+    />
+    <project-export-modal v-model="showProjectExportModal" :uuid="this.uuid" />
   </div>
 </template>
 
@@ -630,6 +645,13 @@ export default {
   },
   data() {
     return {
+      showProjectDetailsModal: false,
+      showProjectPropertiesModal: false,
+      showProjectCreatePropertyModal: false,
+      showProjectAddVersionModal: false,
+      showProjectUploadBomModal: false,
+      showProjectUploadVexModal: false,
+      showProjectExportModal: false,
       severityCritical: this.getStyle('--severity-critical'),
       severityHigh: this.getStyle('--severity-high'),
       severityMedium: this.getStyle('--severity-medium'),

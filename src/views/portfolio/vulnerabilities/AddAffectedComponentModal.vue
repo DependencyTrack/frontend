@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="addAffectedComponentModal"
+    v-model="visible"
     @hide="resetValues()"
     size="lg"
     hide-header-close
@@ -93,9 +93,11 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
 import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
@@ -185,7 +187,7 @@ export default {
         this.affectedComponent.versionEndExcluding = null;
       }
       this.$emit('affectedComponentAdded', this.affectedComponent);
-      this.$root.$emit('bv::hide::modal', 'addAffectedComponentModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.affectedComponent = {

@@ -12,7 +12,7 @@ export function buildHashVerificationColumn({ $t, cell, visible }) {
     field: 'hash_verification.status',
     sortable: false,
     visible,
-    formatter: (_, row, index) => {
+    formatter: (_, row) => {
       const artifact = row.package_artifact_metadata;
       // When package_artifact_metadata wasn't expanded/returned by the API,
       // render a blank cell. The NO_REPOSITORY_HASH icon is only shown when
@@ -40,7 +40,6 @@ export function buildHashVerificationColumn({ $t, cell, visible }) {
       }
 
       return cell(HashVerificationCell, {
-        modalId: `hashVerificationModal-${index}`,
         status,
         tooltipTitle,
         iconClass: info.icon,

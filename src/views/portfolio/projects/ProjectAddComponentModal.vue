@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectAddComponentModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -260,10 +260,12 @@ import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectAddComponentModal',
-  mixins: [permissionsMixin, availableClassifiersMixin],
+  mixins: [permissionsMixin, availableClassifiersMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
@@ -284,7 +286,7 @@ export default {
   },
   methods: {
     createComponent: function () {
-      this.$root.$emit('bv::hide::modal', 'projectAddComponentModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/project/${this.uuid}`;
       this.axios
         .put(url, {

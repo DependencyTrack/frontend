@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectCweModal"
+    v-model="visible"
     size="md"
     hide-header-close
     :title="$t('message.select_cwe')"
@@ -30,9 +30,11 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       columns: [

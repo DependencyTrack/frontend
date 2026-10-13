@@ -87,8 +87,7 @@
     </b-form>
 
     <b-modal
-      id="testResultsModal"
-      ref="testResultsModal"
+      v-model="showTestResultsModal"
       :title="$t('admin.test_results')"
       ok-only
       :ok-title="$t('message.close')"
@@ -186,6 +185,7 @@ export default {
   },
   data() {
     return {
+      showTestResultsModal: false,
       schema: null,
       formData: {},
       initialSnapshot: '',
@@ -564,7 +564,7 @@ export default {
         );
 
         this.testResults = response.data;
-        this.$refs.testResultsModal.show();
+        this.showTestResultsModal = true;
       } finally {
         this.isTestInProgress = false;
       }

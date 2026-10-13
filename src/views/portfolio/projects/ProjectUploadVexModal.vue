@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectUploadVexModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -46,8 +46,12 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
   name: 'ProjectUploadVexModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },
@@ -76,7 +80,7 @@ export default {
       this.axios
         .post(url, data, config)
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'projectUploadVexModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.vex_uploaded'));
         })
         .finally(() => {

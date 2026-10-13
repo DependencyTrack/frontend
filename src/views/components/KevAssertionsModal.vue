@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="`kevAssertionsModal-${index}`"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -70,13 +70,15 @@
 
 <script>
 import common from '@/shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'KevAssertionsModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     source: String,
     vulnId: String,
-    index: [Number, String],
   },
   data() {
     return {

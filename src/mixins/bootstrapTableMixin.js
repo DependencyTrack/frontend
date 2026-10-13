@@ -28,7 +28,6 @@ export default {
       this.pendingCells.forEach(({ component, props }, id) => {
         const el = document.querySelector(`[data-cell-id="${id}"]`);
         if (el) {
-          // Without a parent, the cell is a root of its own, so that bv::show::modal on $root only reaches this cell's modals.
           const vnode = h(component, props);
           vnode.appContext = this.$.appContext;
           const container = document.createElement('div');

@@ -94,7 +94,8 @@
         <div id="service-info-footer">
           <b-link
             class="fw-bold font-xs d-block w-100 text-muted"
-            v-b-modal.serviceDetailsModal
+            role="button"
+            @click="showServiceDetailsModal = true"
             >{{ $t('message.view_details') }}
             <i class="fa fa-angle-right float-end font-lg"></i
           ></b-link>
@@ -120,6 +121,7 @@
       </b-tab>
     </b-tabs>
     <service-details-modal
+      v-model="showServiceDetailsModal"
       :service="cloneDeep(service)"
       v-on:serviceUpdated="syncServiceFields"
     />
@@ -165,6 +167,7 @@ export default {
   },
   data() {
     return {
+      showServiceDetailsModal: false,
       severityCritical: this.getStyle('--severity-critical'),
       severityHigh: this.getStyle('--severity-high'),
       severityMedium: this.getStyle('--severity-medium'),

@@ -1,7 +1,8 @@
 <template>
   <div>
     <b-link
-      v-b-modal="modalId"
+      role="button"
+      @click="showHashVerificationModal = true"
       class="hash-verification-trigger"
       data-toggle="tooltip"
       data-placement="bottom"
@@ -11,7 +12,7 @@
       <i :class="['fa', iconClass, colorClass]" aria-hidden="true"></i>
     </b-link>
     <hash-verification-modal
-      :modal-id="modalId"
+      v-model="showHashVerificationModal"
       :status="status"
       :component-hashes="componentHashes"
       :repository-hashes="repositoryHashes"
@@ -26,7 +27,6 @@ import HashVerificationModal from './HashVerificationModal.vue';
 export default {
   components: { HashVerificationModal },
   props: {
-    modalId: String,
     status: String,
     tooltipTitle: String,
     iconClass: String,
@@ -34,6 +34,11 @@ export default {
     componentHashes: Object,
     repositoryHashes: Object,
     repositoryIdentifier: String,
+  },
+  data() {
+    return {
+      showHashVerificationModal: false,
+    };
   },
 };
 </script>

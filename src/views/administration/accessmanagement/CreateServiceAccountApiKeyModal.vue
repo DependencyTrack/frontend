@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="modalId"
+    v-model="visible"
     size="md"
     hide-header-close
     no-close-on-backdrop
@@ -77,7 +77,11 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     name: { type: String, required: true },
   },

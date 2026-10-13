@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.repositoryCreateRepositoryModal
+          @click="showRepositoryCreateRepositoryModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_repository') }}
         </b-button>
@@ -19,6 +19,7 @@
       </bootstrap-table>
     </b-card-body>
     <repository-create-repository-modal
+      v-model="showRepositoryCreateRepositoryModal"
       :type="type"
       v-on:refreshTable="refreshTable"
     />
@@ -69,6 +70,7 @@ export default {
   },
   data() {
     return {
+      showRepositoryCreateRepositoryModal: false,
       columns: [
         {
           title: this.$t('admin.identifier'),

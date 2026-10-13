@@ -1,6 +1,7 @@
 <template>
   <b-modal
-    id="createTemplateModal"
+    v-model="visible"
+    @hide="resetValues()"
     size="md"
     hide-header-close
     no-stacking
@@ -98,9 +99,11 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
 import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { jinja } from '@codemirror/lang-jinja';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     CodeMirrorEditor,
   },
@@ -112,11 +115,6 @@ export default {
       this.description = template.description;
       this.mimeType = template.templateMimeType;
       this.template = template.template;
-    });
-    this.$root.$on('bv::modal::hide', (_, modalId) => {
-      if (modalId === 'createTemplateModal') {
-        this.resetValues();
-      }
     });
   },
   data() {
@@ -165,7 +163,7 @@ export default {
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'createTemplateModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.name = null;

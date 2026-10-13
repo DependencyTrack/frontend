@@ -23,9 +23,7 @@
           </span>
           <actionable-list-group-item
             :add-icon="true"
-            v-on:actionClicked="
-              $root.$emit('bv::show::modal', 'selectTeamModal')
-            "
+            v-on:actionClicked="showSelectTeamModal = true"
           />
         </div>
       </b-form-group>
@@ -37,7 +35,10 @@
         }}</b-button>
       </div>
     </b-col>
-    <select-team-modal v-on:selection="updateTeamSelection" />
+    <select-team-modal
+      v-model="showSelectTeamModal"
+      v-on:selection="updateTeamSelection"
+    />
   </b-row>
 </template>
 
@@ -62,6 +63,7 @@ export default {
   },
   data() {
     return {
+      showSelectTeamModal: false,
       oidcGroup: this.row,
       mappedTeams: [],
     };
@@ -110,7 +112,7 @@ export default {
         });
     },
     updateTeamSelection: function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectTeamModal');
+      this.showSelectTeamModal = false;
       for (let i = 0; i < selections.length; i++) {
         let selection = selections[i];
         let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;

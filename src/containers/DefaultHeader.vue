@@ -11,20 +11,30 @@
     />
     <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
     <b-navbar-nav class="ms-auto">
-      <DefaultHeaderProfileDropdown />
+      <DefaultHeaderProfileDropdown
+        @editProfile="showProfileEditModal = true"
+      />
     </b-navbar-nav>
+    <profile-edit-modal v-model="showProfileEditModal" />
   </AppHeader>
 </template>
 <script>
 import { Header as AppHeader, SidebarToggler } from '@coreui/vue';
 import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown.vue';
+import ProfileEditModal from '../views/components/ProfileEditModal.vue';
 
 export default {
   name: 'DefaultHeader',
   components: {
     AppHeader,
     DefaultHeaderProfileDropdown,
+    ProfileEditModal,
     SidebarToggler,
+  },
+  data() {
+    return {
+      showProfileEditModal: false,
+    };
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectPermissionModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     :title="$t('admin.select_permission')"
@@ -30,9 +30,11 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [],
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     currentPermissions: {
       type: Array,
@@ -121,7 +123,7 @@ export default {
   },
   methods: {
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', 'selectPermissionModal');
+      this.visible = false;
       this.$emit('selection', this.currentSelection);
     },
     updateCurrentSelection() {

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :id="modalId"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-close-on-backdrop
@@ -103,8 +103,11 @@ import { createCelCompletionSource } from '@/views/policy/celCompletions';
 import common from '@/shared/common';
 import { celErrorsToMarkers } from '@/shared/utils';
 import { SUBJECT_PATTERN } from './workloadIdentity';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     name: { type: String, required: true },
   },
@@ -243,7 +246,7 @@ export default {
         });
         this.$emit('created');
         this.$toastr.s(this.$t('admin.workload_identity_binding_created'));
-        this.$bvModal.hide(this.modalId);
+        this.visible = false;
       } catch (error) {
         const response = error.response;
         if (response && response.status === 400 && response.data) {

@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createTemplateModal
+          @click="showCreateTemplateModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_template') }}
         </b-button>
@@ -18,7 +18,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-template-modal v-on:refreshTable="refreshTable" />
+    <create-template-modal
+      v-model="showCreateTemplateModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -47,7 +50,7 @@ export default {
       this.refreshTable();
     });
     EventBus.on('admin:templates:cloneTemplate', () => {
-      this.$bvModal.show('createTemplateModal');
+      this.showCreateTemplateModal = true;
     });
   },
   beforeUnmount() {
@@ -56,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showCreateTemplateModal: false,
       columns: [
         {
           title: this.$t('message.name'),

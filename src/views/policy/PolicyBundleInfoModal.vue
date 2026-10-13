@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="policyBundleInfoModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     :title="$t('message.policy_bundle_info')"
@@ -65,8 +65,11 @@
 <script>
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import common from '../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'PolicyBundleInfoModal',
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },

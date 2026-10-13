@@ -5,7 +5,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createLdapUserModal
+          @click="showCreateLdapUserModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
@@ -19,7 +19,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-ldap-user-modal v-on:refreshTable="refreshTable" />
+    <create-ldap-user-modal
+      v-model="showCreateLdapUserModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -55,6 +58,7 @@ export default {
   },
   data() {
     return {
+      showCreateLdapUserModal: false,
       rowEvents: {
         update: 'admin:ldapusers:rowUpdate',
         delete: 'admin:ldapusers:rowDeleted',

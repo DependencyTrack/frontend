@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="projectCreateProjectModal"
+    v-model="visible"
     @hide="resetValues()"
     size="md"
     hide-header-close
@@ -289,6 +289,7 @@ import projectFormMixin, {
   DEFAULT_CLASSIFIER,
   FORM_FIELD_DEFAULTS,
 } from './projectFormMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -297,7 +298,9 @@ export default {
     availableClassifiersMixin,
     availableCollectionLogicsMixin,
     projectFormMixin,
+    modalMixin,
   ],
+  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
@@ -324,7 +327,7 @@ export default {
       await this.getACLEnabled();
       await this.getAvailableTeams();
       this.fetchDefaultParents();
-      this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
+      this.visible = true;
     });
   },
   beforeUnmount() {
@@ -450,7 +453,7 @@ export default {
         .then((response) => {
           this.isCreating = false;
           this.$toastr.s(this.$t('message.project_created'));
-          this.$root.$emit('bv::hide::modal', 'projectCreateProjectModal');
+          this.visible = false;
           this.$router.push({ path: '/projects/' + response.data.uuid });
         })
         .catch((error) => {

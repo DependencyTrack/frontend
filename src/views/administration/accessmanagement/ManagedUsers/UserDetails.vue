@@ -14,9 +14,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTeamModal')
-              "
+              v-on:actionClicked="showSelectTeamModal = true"
             />
           </div>
         </b-form-group>
@@ -32,7 +30,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="openPermissionModal"
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -76,7 +74,7 @@
         <div style="text-align: right">
           <b-button
             variant="outline-primary"
-            @click="$root.$emit('bv::show::modal', 'changePasswordModal')"
+            @click="showChangePasswordModal = true"
             >{{ $t('admin.change_password') }}</b-button
           >
           <b-button variant="outline-danger" @click="deleteUser">{{
@@ -86,15 +84,20 @@
       </b-col>
     </b-row>
     <select-team-modal
+      v-model="showSelectTeamModal"
       :currentTeams="teams"
       v-on:selection="updateTeamSelection"
     />
     <select-permission-modal
+      v-model="showSelectPermissionModal"
       :currentPermissions="permissions"
       v-on:selection="updatePermissionSelection"
     />
 
-    <change-password-modal :managed-user="this.row" />
+    <change-password-modal
+      v-model="showChangePasswordModal"
+      :managed-user="this.row"
+    />
   </div>
 </template>
 
@@ -125,6 +128,9 @@ export default {
   },
   data() {
     return {
+      showSelectTeamModal: false,
+      showSelectPermissionModal: false,
+      showChangePasswordModal: false,
       username: this.row.username,
       teams: this.row.teams,
       permissions: this.row.permissions,
@@ -151,9 +157,6 @@ export default {
     this.debouncedUpdateUser = debounce(this.updateUser, 750);
   },
   methods: {
-    openPermissionModal() {
-      this.$root.$emit('bv::show::modal', 'selectPermissionModal');
-    },
     updateUser: function () {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
       this.axios

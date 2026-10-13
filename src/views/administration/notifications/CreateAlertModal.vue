@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createAlertModal"
+    v-model="visible"
     size="md"
     hide-header-close
     no-stacking
@@ -83,9 +83,11 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import axios from 'axios';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: null,
@@ -119,7 +121,7 @@ export default {
   },
   methods: {
     createAlert: function () {
-      this.$root.$emit('bv::hide::modal', 'createAlertModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
       if (this.triggerType === 'SCHEDULE') {
         url = `${url}/scheduled`;

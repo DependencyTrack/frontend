@@ -4,7 +4,7 @@
       <b-button
         size="md"
         variant="outline-primary"
-        v-b-modal.createPolicyModal
+        @click="showCreatePolicyModal = true"
         v-permission:or="[
           PERMISSIONS.POLICY_MANAGEMENT,
           PERMISSIONS.POLICY_MANAGEMENT_CREATE,
@@ -20,7 +20,10 @@
       :options="options"
       @on-load-success="tableLoaded"
     />
-    <create-policy-modal v-on:refreshTable="refreshTable" />
+    <create-policy-modal
+      v-model="showCreatePolicyModal"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
@@ -68,6 +71,7 @@ export default {
   },
   data() {
     return {
+      showCreatePolicyModal: false,
       columns: [
         {
           title: this.$t('message.name'),

@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="selectTeamModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -32,6 +32,7 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
@@ -40,7 +41,8 @@ export default {
       default: () => [],
     },
   },
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       currentSelection: this.currentTeams.slice(),
@@ -120,8 +122,7 @@ export default {
   },
   methods: {
     handleSelection: function () {
-      // this.$root.$emit('bv::hide::modal', this.$children[0].id);
-      this.$bvModal.hide('selectTeamModal');
+      this.visible = false;
       this.$emit('selection', this.currentSelection);
     },
     addSelection(row) {

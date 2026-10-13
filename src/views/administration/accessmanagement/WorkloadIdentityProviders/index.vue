@@ -8,7 +8,7 @@
         <b-button
           size="md"
           variant="outline-primary"
-          v-b-modal.createWorkloadIdentityProviderModal
+          @click="showCreateWorkloadIdentityProviderModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
         </b-button>
@@ -20,7 +20,10 @@
         :options="options"
       />
     </b-card-body>
-    <create-workload-identity-provider-modal v-on:refreshTable="refreshTable" />
+    <create-workload-identity-provider-modal
+      v-model="showCreateWorkloadIdentityProviderModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -61,6 +64,7 @@ export default {
     const textFormatter = (value) =>
       xssFilters.inHTMLData(common.valueWithDefault(value, ''));
     return {
+      showCreateWorkloadIdentityProviderModal: false,
       searchText: null,
       rowEvents: {
         update: 'admin:workloadidentityproviders:rowUpdate',

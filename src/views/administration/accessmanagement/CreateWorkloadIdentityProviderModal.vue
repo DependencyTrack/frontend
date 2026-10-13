@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="createWorkloadIdentityProviderModal"
+    v-model="visible"
     size="lg"
     hide-header-close
     no-stacking
@@ -167,8 +167,11 @@ import {
   isHttpsUrl,
   parseJwks,
 } from './workloadIdentity';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
+  mixins: [modalMixin],
+  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',
@@ -282,7 +285,7 @@ export default {
         );
         this.$emit('refreshTable');
         this.$toastr.s(this.$t('admin.workload_identity_provider_created'));
-        this.$bvModal.hide('createWorkloadIdentityProviderModal');
+        this.visible = false;
       } catch (error) {
         console.error(error);
       } finally {
