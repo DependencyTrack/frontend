@@ -62,6 +62,7 @@ export default {
       default: 0,
     },
   },
+  emits: ['show-filter', 'clear-all'],
 };
 </script>
 

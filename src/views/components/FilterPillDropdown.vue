@@ -101,6 +101,7 @@ export default {
       default: false,
     },
   },
+  emits: ['show', 'clear', 'apply', 'dismiss', 'hide'],
   beforeUnmount() {
     this._destroying = true;
   },

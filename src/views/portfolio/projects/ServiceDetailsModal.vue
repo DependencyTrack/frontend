@@ -224,6 +224,7 @@ export default {
   props: {
     service: Object,
   },
+  emits: ['serviceUpdated'],
   data() {
     return {
       contactsTableColumns: [

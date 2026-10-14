@@ -164,6 +164,7 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',

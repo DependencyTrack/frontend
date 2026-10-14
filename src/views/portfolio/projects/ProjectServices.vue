@@ -37,6 +37,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['total'],
   data() {
     return {
       columns: [

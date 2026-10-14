@@ -64,6 +64,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['total'],
   mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
     FilterBar,

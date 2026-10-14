@@ -79,6 +79,7 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: null,

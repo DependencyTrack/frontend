@@ -72,6 +72,7 @@ export default {
       default: 0,
     },
   },
+  emits: ['start', 'stop', 'step'],
   watch: {
     percent(val) {
       this.update(val);

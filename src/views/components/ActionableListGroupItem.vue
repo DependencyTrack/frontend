@@ -28,6 +28,7 @@ export default {
     variant: String,
     href: String,
   },
+  emits: ['actionClicked'],
 };
 </script>
 

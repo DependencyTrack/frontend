@@ -38,6 +38,7 @@ export default {
     vulnId: String,
     vulnerability: String,
   },
+  emits: ['total'],
   data() {
     return {
       showInactiveProjects:

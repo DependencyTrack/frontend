@@ -49,6 +49,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['createProperty'],
   data() {
     return {
       columns: [

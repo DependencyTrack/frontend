@@ -39,6 +39,7 @@ export default {
       default: () => [],
     },
   },
+  emits: ['selection'],
   mixins: [permissionsMixin, modalMixin],
   data() {
     return {

@@ -48,6 +48,7 @@ export default {
   props: {
     teamUuid: String,
   },
+  emits: ['selection'],
   data() {
     return {
       showInactiveProjects: false,

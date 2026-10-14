@@ -38,6 +38,7 @@ export default {
   components: {
     LocalePicker,
   },
+  emits: ['editProfile'],
   data: () => {
     return {
       itemsCount: 42,

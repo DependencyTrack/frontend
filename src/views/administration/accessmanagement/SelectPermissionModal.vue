@@ -34,6 +34,7 @@ export default {
       default: () => [],
     },
   },
+  emits: ['selection'],
   data() {
     return {
       currentSelection: [],

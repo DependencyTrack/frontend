@@ -51,6 +51,7 @@ export default {
       default: null,
     },
   },
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',

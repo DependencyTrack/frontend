@@ -505,6 +505,7 @@ export default {
   props: {
     component: Object,
   },
+  emits: ['showProperties', 'componentUpdated'],
   data() {
     return {
       selectableLicenses: [],

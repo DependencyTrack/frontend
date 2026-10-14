@@ -35,6 +35,7 @@ export default {
   props: {
     policy: Object,
   },
+  emits: ['selection'],
   mixins: [permissionsMixin, modalMixin],
   methods: {
     apiUrl: function () {

@@ -100,6 +100,7 @@ export default {
     apiKey: Object,
     editable: { type: Boolean, default: true },
   },
+  emits: ['regenerateClicked', 'removeClicked', 'commentUpdated'],
   components: {
     EditApiKeyCommentModal,
   },

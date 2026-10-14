@@ -41,6 +41,7 @@ export default {
   components: {
     CreatePolicyModal,
   },
+  emits: ['total'],
   mounted() {
     EventBus.on('policyManagement:policies:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });

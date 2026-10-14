@@ -101,6 +101,7 @@ export default {
   components: {
     CodeMirrorEditor,
   },
+  emits: ['refreshTable'],
   mounted() {
     this.fetchAvailableExtensions();
     EventBus.on('admin:templates:cloneTemplate', (template) => {

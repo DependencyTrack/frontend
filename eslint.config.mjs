@@ -28,6 +28,7 @@ export default [
       'no-unused-vars': ['error', { args: 'all', argsIgnorePattern: '^_' }],
       'vue/multi-word-component-names': 'off',
       'vue/no-mutating-props': ['error', { shallowOnly: true }],
+      'vue/require-explicit-emits': 'error',
       // Bootstrap 4 names.
       // https://getbootstrap.com/docs/5.0/migration/
       // https://getbootstrap.com/docs/5.3/migration/

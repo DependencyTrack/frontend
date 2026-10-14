@@ -191,6 +191,7 @@ export default {
       default: 300,
     },
   },
+  emits: ['total', 'visible-columns'],
   data() {
     const userOptions = this.options || {};
     const userOnColumnSwitch = userOptions.onColumnSwitch;

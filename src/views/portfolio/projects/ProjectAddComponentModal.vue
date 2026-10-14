@@ -269,6 +269,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       selectableLicenses: [],
