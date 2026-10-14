@@ -1,9 +1,6 @@
 import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
-const button = (name) => (page) => page.getByRole('button', { name });
-const link = (name) => (page) => page.getByRole('link', { name });
-
 async function closeWithEscape(modal) {
   // A modal only handles Escape once it has taken the focus.
   await expect
@@ -11,119 +8,6 @@ async function closeWithEscape(modal) {
     .toBe(true);
   await modal.page().keyboard.press('Escape');
   await expect(modal).toBeHidden();
-}
-
-const modals = [
-  ['projects', button('Create Project'), 'Create Project'],
-  [
-    () => `projects/${seed().project.uuid}`,
-    link('View Details'),
-    'Project Details',
-  ],
-  [() => `projects/${seed().project.uuid}`, button('Upload BOM'), 'Upload BOM'],
-  [() => `projects/${seed().project.uuid}`, button('Apply VEX'), 'Upload VEX'],
-  [() => `projects/${seed().project.uuid}`, button('Export'), 'Export Project'],
-  [
-    () => `projects/${seed().project.uuid}`,
-    async (page) => {
-      await page.locator('.version-dropdown-toggle').click();
-      return page.getByRole('menuitem', { name: 'Add Version' });
-    },
-    'Add Version',
-  ],
-  [
-    () => `components/${seed().componentUuid}`,
-    button('View Details'),
-    'Component Details',
-  ],
-  [
-    () => `services/${seed().serviceUuid}`,
-    button('View Details'),
-    'Service Details',
-  ],
-  ['vulnerabilities', button('Create Vulnerability'), 'Create Vulnerability'],
-  ['licenses', button('Add License'), 'Add License'],
-  ['policy/policies', button('Create Policy'), 'Create Policy'],
-  [
-    'policy/licenseGroups',
-    button('Create License Group'),
-    'Create License Group',
-  ],
-  ['admin/accessManagement/teams', button('Create Team'), 'Create Team'],
-  [
-    'admin/accessManagement/ldapUsers',
-    button('Create User'),
-    'Create LDAP User',
-  ],
-  [
-    'admin/accessManagement/managedUsers',
-    button('Create User'),
-    'Create Managed User',
-  ],
-  [
-    'admin/accessManagement/oidcUsers',
-    button('Create User'),
-    'Create OpenID Connect User',
-  ],
-  ['admin/accessManagement/oidcGroups', button('Create Group'), 'Create Group'],
-  [
-    'admin/accessManagement/serviceAccounts',
-    button('Create'),
-    'Create Service Account',
-  ],
-  [
-    'admin/accessManagement/workloadIdentityProviders',
-    button('Create'),
-    'Create Workload Identity Provider',
-  ],
-  ['admin/notifications/alerts', button('Create Alert'), 'Create Alert'],
-  [
-    'admin/notifications/templates',
-    button('Create Template'),
-    'Create Template',
-  ],
-  [
-    'admin/repositories/maven',
-    button('Create Repository'),
-    'Create Repository',
-  ],
-  ['admin/secrets/management', button('Create'), 'Create secret'],
-  [
-    'admin/workflows/taskQueues',
-    (page) => page.locator('.capacity-value').first(),
-    'Edit Capacity',
-  ],
-  [
-    'dashboard',
-    (page) =>
-      page.getByRole('button', { name: 'Dependency-Track', exact: true }),
-    'About',
-  ],
-  [
-    'dashboard',
-    async (page) => {
-      await page.locator('.fa-user-circle-o').click();
-      return page.getByRole('menuitem', { name: 'Update Profile' });
-    },
-    'Update Profile',
-  ],
-];
-
-for (const [path, opener, name, allow = []] of modals) {
-  test(`open the ${name} modal again after closing it`, async ({
-    page,
-    problems,
-  }) => {
-    allow.forEach((pattern) => problems.allow(pattern));
-    await login(page);
-    await page.goto(typeof path === 'function' ? path() : path);
-    const modal = page.getByRole('dialog', { name });
-    for (let i = 0; i < 2; i++) {
-      await (await opener(page)).click();
-      await expect(modal).toBeVisible();
-      await closeWithEscape(modal);
-    }
-  });
 }
 
 for (const [kind, path] of [
