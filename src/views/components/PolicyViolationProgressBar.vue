@@ -8,31 +8,29 @@
     </b-progress>
   </span>
   <span v-else class="progress">
-    <span :id="'progressbar' + hoverId" class="table-progress">
-      <b-progress
-        class="table-progress"
-        :max="metrics.policyViolationsTotal"
-        show-value
-      >
-        <b-progress-bar
-          :value="metrics.policyViolationsInfo"
-          class="severity-info-bg text-dark"
-        ></b-progress-bar>
-        <b-progress-bar
-          :value="metrics.policyViolationsWarn"
-          class="severity-warn-bg text-dark"
-        ></b-progress-bar>
-        <b-progress-bar
-          :value="metrics.policyViolationsFail"
-          class="severity-fail-bg"
-        ></b-progress-bar>
-      </b-progress>
-    </span>
-    <b-tooltip
-      :target="'progressbar' + hoverId"
-      placement="left"
-      noninteractive
-    >
+    <b-tooltip placement="left" noninteractive>
+      <template #target>
+        <span class="table-progress">
+          <b-progress
+            class="table-progress"
+            :max="metrics.policyViolationsTotal"
+            show-value
+          >
+            <b-progress-bar
+              :value="metrics.policyViolationsInfo"
+              class="severity-info-bg text-dark"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="metrics.policyViolationsWarn"
+              class="severity-warn-bg text-dark"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="metrics.policyViolationsFail"
+              class="severity-fail-bg"
+            ></b-progress-bar>
+          </b-progress>
+        </span>
+      </template>
       <div style="text-align: left">
         <h5>{{ $t('message.type') }}</h5>
         <p>
@@ -62,12 +60,6 @@
 export default {
   props: {
     metrics: Object,
-  },
-  data() {
-    return {
-      // Workaround for vue references to the progress-bars. Using the ref targets doesn't seem to work.
-      hoverId: Math.random().toString(36),
-    };
   },
 };
 </script>

@@ -7,7 +7,6 @@
       size="sm"
       variant="outline-primary"
       no-caret
-      boundary="viewport"
       @show="$emit('show', $event)"
       @shown="focusFirstControl"
       @hide="onDropdownHide"
@@ -35,7 +34,11 @@
           </span>
         </div>
       </template>
-      <b-dropdown-form class="filter-pill-form" @submit.stop.prevent>
+      <b-dropdown-form
+        class="filter-pill-form"
+        @submit.stop.prevent
+        @click.stop
+      >
         <div class="filter-pill-body" ref="body" @keyup.enter="onEnter">
           <slot></slot>
         </div>
@@ -126,9 +129,6 @@ export default {
       }
       this.$emit('apply');
     },
-    // Runs on `shown`, not `show`. b-dropdown queues its own focusMenu() in a
-    // $nextTick from `show`, and that runs after ours and takes the focus back.
-    //
     // Never focus a radio or checkbox. Arrow keys move *and* commit a radio
     // selection, so an auto-apply pill would fire as soon as a keyboard user
     // browsed its options. Free text beats a select regardless of DOM order.

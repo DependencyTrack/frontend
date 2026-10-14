@@ -2,7 +2,7 @@
   <li class="list-group-item align-middle">
     <b-button
       size="sm"
-      class="pull-right action-icon"
+      class="float-end action-icon"
       v-on:click="$emit('actionClicked')"
       v-b-tooltip.hover="tooltip"
     >
@@ -32,7 +32,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.list-group-item .form-group {
+.list-group-item .b-form-group {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
@@ -48,10 +48,10 @@ export default {
   font-size: 1.2rem;
 }
 .action-icon .fa-plus-square {
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 .action-icon .fa-trash-o {
-  color: var(--danger);
+  color: var(--bs-danger);
 }
 .list-group-item:last-child {
   margin-bottom: -1px;

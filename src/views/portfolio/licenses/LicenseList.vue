@@ -3,7 +3,6 @@
     <portfolio-widget-row :fetch="true" />
     <div id="licensesToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
         variant="outline-primary"
         @click="showLicenseAddLicenseModal = true"
         v-permission:or="[

@@ -1,13 +1,9 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
         ref="overview"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
         @click="routeTo()"
       >
@@ -206,9 +202,9 @@ td {
   white-space: nowrap;
 }
 .fa-check-square-o {
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 .fa-square-o {
-  color: var(--secondary);
+  color: var(--bs-secondary);
 }
 </style>

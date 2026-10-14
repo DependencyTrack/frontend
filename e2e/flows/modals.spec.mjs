@@ -6,7 +6,9 @@ const link = (name) => (page) => page.getByRole('link', { name });
 
 async function closeWithEscape(modal) {
   // A modal only handles Escape once it has taken the focus.
-  await expect(modal.locator(':focus')).toBeAttached();
+  await expect
+    .poll(() => modal.evaluate((el) => el.contains(document.activeElement)))
+    .toBe(true);
   await modal.page().keyboard.press('Escape');
   await expect(modal).toBeHidden();
 }

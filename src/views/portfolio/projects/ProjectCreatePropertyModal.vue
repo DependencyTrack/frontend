@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_project_property')"
   >
@@ -13,7 +11,7 @@
       label-for="input-1"
       label-class="required"
     >
-      <b-form-input id="input-1" v-model="groupName" class="required" trim />
+      <b-form-input id="input-1" v-model.trim="groupName" class="required" />
     </b-form-group>
     <b-form-group
       id="fieldset-2"
@@ -21,7 +19,7 @@
       label-for="input-2"
       label-class="required"
     >
-      <b-form-input id="input-2" v-model="propertyName" class="required" trim />
+      <b-form-input id="input-2" v-model.trim="propertyName" class="required" />
     </b-form-group>
     <b-form-group
       id="fieldset-3"
@@ -31,9 +29,8 @@
     >
       <b-form-textarea
         id="input-3"
-        v-model="propertyValue"
+        v-model.trim="propertyValue"
         class="required"
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -54,13 +51,13 @@
       :label="this.$t('message.description')"
       label-for="input-5"
     >
-      <b-form-textarea id="input-5" v-model="description" trim />
+      <b-form-textarea id="input-5" v-model.trim="description" />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createProperty()">{{
+      <b-button variant="primary" @click="createProperty()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -73,7 +70,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ProjectCreatePropertyModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

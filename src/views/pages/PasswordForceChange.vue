@@ -55,9 +55,8 @@
                   <b-row>
                     <b-col>
                       <b-button
-                        block
                         variant="primary"
-                        class="px-4"
+                        class="px-4 w-100"
                         type="submit"
                         >{{ $t('message.password_change') }}</b-button
                       >
@@ -68,7 +67,7 @@
             </b-card>
             <b-card
               no-body
-              class="text-white bg-grey-900 py-5 d-md-down-none"
+              class="text-white py-5 d-none d-lg-flex"
               style="width: 44%"
             >
               <b-card-body class="text-center">

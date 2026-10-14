@@ -7,16 +7,21 @@
       v-bind:key="section.id"
     >
       <template v-if="isPermitted(section.permission)" v-slot:header>
-        <div v-b-toggle="section.id" style="cursor: pointer">
+        <button
+          type="button"
+          class="btn btn-link d-block w-100 border-0 p-0 text-reset text-decoration-none text-start"
+          :aria-expanded="openSection === section.id ? 'true' : 'false'"
+          :aria-controls="section.id"
+          @click="toggleSection(section.id)"
+        >
           <i class="fa fa-align-justify"></i
           ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
-        </div>
+        </button>
       </template>
       <b-collapse
-        ref="accordion"
         v-if="isPermitted(section.permission)"
         :id="section.id"
-        accordion="admin-accordion"
+        :model-value="openSection === section.id"
         role="tabpanel"
       >
         <div class="list-group" id="list-tab" role="tablist">
@@ -37,7 +42,6 @@
                 'admin-menu-item-readonly': item.configurable === false,
                 'open active': item === currentItem,
               }"
-              data-toggle="list"
               role="tab"
               :to="'/admin/' + item.route"
             >
@@ -95,6 +99,9 @@ export default {
     },
   },
   methods: {
+    toggleSection(id) {
+      this.openSection = this.openSection === id ? null : id;
+    },
     emitEvent: function (plugin) {
       EventBus.emit('admin:plugin', plugin);
     },
@@ -163,7 +170,7 @@ export default {
     );
   },
   mounted() {
-    this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+    this.openSection = this.getMenuFromRoute();
   },
   watch: {
     currentItem: {
@@ -175,12 +182,12 @@ export default {
       },
     },
     $route() {
-      this.$refs.accordion.forEach((menu) => (menu.show = false));
-      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+      this.openSection = this.getMenuFromRoute();
     },
   },
   data() {
     return {
+      openSection: null,
       menu: [
         {
           name: this.$t('admin.configuration'),

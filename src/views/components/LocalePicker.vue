@@ -8,10 +8,10 @@
     <b-form-select
       class="bg-widget"
       v-model="selectedItem"
-      @change="onLocaleSelected"
+      @update:model-value="onLocaleSelected"
     >
       <b-form-select-option
-        v-for="locale in $i18n.availableLocales"
+        v-for="locale in availableLocales"
         :key="`locale-${locale}`"
         :value="locale"
         :title="$t(`language.${locale}`)"
@@ -24,10 +24,13 @@
 </template>
 
 <script>
+import { availableLocales } from '@/i18n';
+
 export default {
   data() {
     return {
       selectedItem: null,
+      availableLocales,
     };
   },
   beforeMount() {

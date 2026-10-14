@@ -2,11 +2,11 @@
 @import "variables";
 
 // Import styles
-@import "@coreui/coreui/scss/coreui";
+@import "bootstrap/scss/bootstrap";
+
+@import "coreui";
 
 @import "code";
-
-@import "bootstrap5";
 
 // If you want to add something do it here
 @import "custom";

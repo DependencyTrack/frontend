@@ -77,9 +77,7 @@
               type="text"
               v-model="coordinatesVersion"
             ></b-form-input>
-            <b-tooltip
-              target="input-value-coordinates-version"
-              triggers="hover focus"
+            <b-tooltip target="input-value-coordinates-version"
               >{{ $t('message.coordinates_version_tooltip') }}
             </b-tooltip>
           </b-input-group>
@@ -123,24 +121,16 @@
               oninput="validity.valid||(value='');"
               v-model="versionDistance.patch"
             ></b-form-input>
-            <b-tooltip
-              target="input-value-distance-epoch"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-epoch"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-major"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-major"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-minor"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-minor"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-patch"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-patch"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
           </b-input-group>
@@ -148,6 +138,7 @@
       </b-col>
       <b-col cols="auto" class="d-flex align-items-end">
         <b-button
+          class="mb-3"
           variant="outline-primary"
           :disabled="!isDirty"
           @click="saveCondition"
@@ -180,6 +171,7 @@
         </b-col>
         <b-col cols="auto" class="d-flex align-items-end">
           <b-button
+            class="mb-3"
             variant="outline-primary"
             :disabled="!isDirty"
             @click="saveCondition"
@@ -218,6 +210,7 @@
       </b-col>
       <b-col cols="auto" class="d-flex align-items-end">
         <b-button
+          class="mb-3"
           variant="outline-primary"
           :disabled="!isDirty"
           @click="saveCondition"

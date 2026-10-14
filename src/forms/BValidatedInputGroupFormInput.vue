@@ -17,11 +17,10 @@
         :required="required"
         :min="min"
         :max="max"
-        v-on="inputListeners"
       />
       <template v-if="tooltip" #append
         ><b-input-group-text v-b-tooltip.hover="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
+          ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
       ></template>
     </b-input-group>
     <b-form-invalid-feedback :state="state">
@@ -35,7 +34,6 @@ import common from '../shared/common';
 
 export default {
   name: 'BValidatedInputGroupFormInput',
-  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
@@ -84,18 +82,9 @@ export default {
         return this.modelValue;
       },
       set: function (newValue) {
-        return newValue;
+        this.dirty = true;
+        this.$emit('update:modelValue', newValue);
       },
-    },
-    inputListeners: function () {
-      const vm = this;
-
-      return Object.assign({}, this.$listeners, {
-        input: function (event) {
-          vm.dirty = true;
-          vm.$emit('update:modelValue', event);
-        },
-      });
     },
     inputClasses: function () {
       let classes = 'form-control';

@@ -34,10 +34,9 @@
       >
         <b-form-input
           id="input-1"
-          :value="finding.vulnerability.title"
+          :model-value="finding.vulnerability.title"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -48,10 +47,9 @@
       >
         <b-form-input
           id="input-2"
-          :value="finding.vulnerability.subtitle"
+          :model-value="finding.vulnerability.subtitle"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -62,11 +60,10 @@
       >
         <b-form-textarea
           id="input-3"
-          :value="finding.vulnerability.description"
+          :model-value="finding.vulnerability.description"
           rows="7"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -77,11 +74,10 @@
       >
         <b-form-textarea
           id="input-4"
-          :value="finding.vulnerability.recommendation"
+          :model-value="finding.vulnerability.recommendation"
           rows="7"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -92,10 +88,9 @@
       >
         <b-form-input
           id="input-5"
-          :value="finding.vulnerability.cvssV2Vector"
+          :model-value="finding.vulnerability.cvssV2Vector"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -106,10 +101,9 @@
       >
         <b-form-input
           id="input-6"
-          :value="finding.vulnerability.cvssV3Vector"
+          :model-value="finding.vulnerability.cvssV3Vector"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -120,10 +114,9 @@
       >
         <b-form-input
           id="input-cvssv4-vector"
-          :value="finding.vulnerability.cvssV4Vector"
+          :model-value="finding.vulnerability.cvssV4Vector"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -134,10 +127,9 @@
       >
         <b-form-input
           id="input-owasp-vector"
-          :value="owaspVector"
+          :model-value="owaspVector"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
     </b-col>
@@ -149,11 +141,10 @@
       >
         <b-form-textarea
           id="auditTrailField"
-          v-model="auditTrail"
+          v-model.trim="auditTrail"
           rows="7"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -169,12 +160,11 @@
       >
         <b-form-textarea
           id="input-8"
-          v-model="comment"
+          v-model.trim="comment"
           rows="4"
           class="form-control"
-          trim
         />
-        <div class="pull-right">
+        <div class="float-end">
           <b-button size="sm" variant="outline-primary" @click="addComment"
             ><span class="fa fa-comment-o"></span>
             {{ this.$t('message.add_comment') }}</b-button
@@ -196,7 +186,7 @@
           <b-form-select
             v-model="analysisState"
             :options="analysisChoices"
-            @change="makeAnalysis"
+            @update:model-value="makeAnalysis"
             style="flex: 0 1 auto; width: auto; margin-right: 2rem"
             v-b-tooltip.hover="this.$t('message.analysis_tooltip')"
           />
@@ -227,7 +217,7 @@
               <b-form-select
                 v-model="analysisJustification"
                 :options="justificationChoices"
-                @change="makeAnalysis"
+                @update:model-value="makeAnalysis"
                 :disabled="
                   analysisState === null || analysisState !== 'NOT_AFFECTED'
                 "
@@ -247,7 +237,7 @@
                 v-model="analysisResponse"
                 :options="responseChoices"
                 :disabled="analysisState === null"
-                @change="makeAnalysis"
+                @update:model-value="makeAnalysis"
                 v-b-tooltip.hover="this.$t('message.response_tooltip')"
               />
             </b-input-group>
@@ -279,7 +269,7 @@
           "
           v-b-tooltip.hover="this.$t('message.analysis_details_tooltip')"
         />
-        <div class="pull-right">
+        <div class="float-end">
           <b-button
             v-if="
               this.isPermitted([

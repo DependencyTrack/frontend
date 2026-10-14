@@ -1,8 +1,6 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_secret')"
     @ok="onOk"
@@ -38,9 +36,8 @@
       >
         <b-form-textarea
           id="value-input"
-          v-model="value"
+          v-model.trim="value"
           :placeholder="$t('admin.create_secret_value_placeholder')"
-          trim
           required
         />
       </b-form-group>
@@ -69,7 +66,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',

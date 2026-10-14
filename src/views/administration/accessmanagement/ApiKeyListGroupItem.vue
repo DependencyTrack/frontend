@@ -155,7 +155,7 @@ export default {
   column-gap: 0.5rem;
 }
 
-.list-group-item .form-group {
+.list-group-item .b-form-group {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
@@ -174,14 +174,14 @@ export default {
 }
 
 .action-icon .fa-edit {
-  color: var(--secondary);
+  color: var(--bs-secondary);
 }
 
 .action-icon .fa-repeat {
-  color: var(--secondary);
+  color: var(--bs-secondary);
 }
 
 .action-icon .fa-trash-o {
-  color: var(--danger);
+  color: var(--bs-danger);
 }
 </style>

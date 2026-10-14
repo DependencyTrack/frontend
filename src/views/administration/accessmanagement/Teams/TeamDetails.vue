@@ -171,8 +171,6 @@
       ok-only
       button-size="sm"
       centered
-      size="md"
-      hide-header-close
       footer-class="d-flex justify-content-center"
       body-class="d-flex flex-column align-items-center"
     >

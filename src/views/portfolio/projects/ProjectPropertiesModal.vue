@@ -2,7 +2,6 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.project_properties')"
   >
@@ -13,18 +12,17 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
         v-permission:or="[
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_DELETE',
         ]"
-        size="md"
         variant="outline-danger"
         @click="deleteProperty"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
@@ -32,7 +30,6 @@
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_CREATE',
         ]"
-        size="md"
         variant="primary"
         @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
@@ -49,7 +46,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ProjectPropertiesModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

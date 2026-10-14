@@ -19,7 +19,7 @@
         :options="radioOptions"
         :aria-label="fieldLabel"
         stacked
-        @change="applyFilter"
+        @update:model-value="applyFilter"
       ></b-form-radio-group>
     </div>
   </filter-pill-dropdown>
@@ -31,8 +31,6 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'EnumFilterPill',
   components: { FilterPillDropdown },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     fieldName: {
       type: String,

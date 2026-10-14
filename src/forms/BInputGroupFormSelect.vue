@@ -12,20 +12,19 @@
 
       <b-form-select
         :id="`${id}-input`"
-        :value="modelValue"
+        v-model="innerValue"
         :options="options"
         :autofocus="isFocused"
         :disabled="disabled"
         :required="isRequired"
         :state="feedbackState()"
         :class="inputClasses"
-        v-on="inputListeners"
         v-on:blur="hadFocus = true"
       />
 
       <template v-if="tooltip" #append
         ><b-input-group-text v-b-tooltip.hover="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
+          ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
       ></template>
     </b-input-group>
     <b-form-invalid-feedback
@@ -41,7 +40,6 @@
 import common from '../shared/common';
 
 export default {
-  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
@@ -63,7 +61,7 @@ export default {
       type: Boolean,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'change'],
   data() {
     return {
       isFocused: false,
@@ -76,13 +74,14 @@ export default {
     this.isRequired = common.toBoolean(this.required);
   },
   computed: {
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        input: function (event) {
-          vm.$emit('update:modelValue', event);
-        },
-      });
+    innerValue: {
+      get() {
+        return this.modelValue;
+      },
+      set(newValue) {
+        this.$emit('update:modelValue', newValue);
+        this.$emit('change', newValue);
+      },
     },
     inputClasses: function () {
       return this.isRequired ? 'required' : null;

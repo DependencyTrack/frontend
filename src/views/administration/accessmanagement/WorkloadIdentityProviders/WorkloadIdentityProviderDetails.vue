@@ -25,10 +25,9 @@
         >
           <b-form-input
             :id="`${idPrefix}-issuer`"
-            v-model="issuer"
+            v-model.trim="issuer"
             maxlength="255"
             type="text"
-            trim
           />
         </b-form-group>
         <b-form-group
@@ -38,10 +37,9 @@
         >
           <b-form-input
             :id="`${idPrefix}-audience`"
-            v-model="audience"
+            v-model.trim="audience"
             maxlength="255"
             type="text"
-            trim
           />
         </b-form-group>
         <b-form-group
@@ -53,8 +51,7 @@
         >
           <b-form-input
             :id="`${idPrefix}-lifetime`"
-            v-model="sessionLifetimeSeconds"
-            number
+            v-model.number="sessionLifetimeSeconds"
             type="number"
             :min="minSessionLifetime"
             :max="maxSessionLifetime"
@@ -80,10 +77,9 @@
         >
           <b-form-input
             :id="`${idPrefix}-jwks-url`"
-            v-model="jwksUrl"
+            v-model.trim="jwksUrl"
             maxlength="2048"
             type="url"
-            trim
             :state="jwksUrlState"
           />
         </b-form-group>

@@ -1,6 +1,8 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import Components from 'unplugin-vue-components/vite';
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next/resolvers';
 import sbom from 'rollup-plugin-sbom';
 
 export default defineConfig(({ mode }) => {
@@ -8,14 +10,12 @@ export default defineConfig(({ mode }) => {
   return {
     base: './',
     plugins: [
-      vue({
-        template: { compilerOptions: { compatConfig: { MODE: 2 } } },
-      }),
+      vue(),
+      Components({ resolvers: [BootstrapVueNextResolver()], dts: false }),
       { ...sbom({ outFormats: ['json', 'xml'] }), apply: 'build' },
     ],
     resolve: {
       alias: [
-        { find: /^vue$/, replacement: '@vue/compat' },
         {
           find: '@',
           replacement: fileURLToPath(new URL('src', import.meta.url)),

@@ -61,8 +61,6 @@ export default {
   components: {
     Multiselect,
   },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     id: {
       type: String,

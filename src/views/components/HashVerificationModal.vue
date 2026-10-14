@@ -1,6 +1,6 @@
 <template>
-  <b-modal v-model="visible" size="lg" hide-header-close ok-only>
-    <template v-slot:modal-title>{{
+  <b-modal v-model="visible" size="lg" ok-only>
+    <template v-slot:title>{{
       $t('message.hash_verification.modal_title')
     }}</template>
 
@@ -64,7 +64,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'HashVerificationModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     status: {
       type: String,

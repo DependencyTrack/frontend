@@ -11,7 +11,6 @@
       </div>
       <div class="progress-group-bars">
         <b-progress
-          height="{}"
           class="progress-xs"
           :value="securityPercent"
           variant="violation-type"
@@ -29,7 +28,6 @@
       </div>
       <div class="progress-group-bars">
         <b-progress
-          height="{}"
           class="progress-xs"
           :value="licensePercent"
           variant="violation-type"
@@ -49,7 +47,6 @@
       </div>
       <div class="progress-group-bars">
         <b-progress
-          height="{}"
           class="progress-xs"
           :value="operationalPercent"
           variant="violation-type"

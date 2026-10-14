@@ -2,7 +2,6 @@
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
         variant="outline-primary"
         @click="initializeProjectCreateProjectModal"
         v-permission:or="[
@@ -330,7 +329,7 @@ export default {
                   ?.map((tag) => common.formatProjectTagLabel(router, tag))
                   .join(' ');
                 tag_string += `</span>`;
-                tag_string += `<a href="#" title="show all tags" class="badge badge-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`;
+                tag_string += `<a href="#" title="show all tags" class="badge text-bg-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`;
               }
             }
             return tag_string;

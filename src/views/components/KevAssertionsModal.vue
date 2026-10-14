@@ -1,12 +1,6 @@
 <template>
-  <b-modal
-    v-model="visible"
-    size="lg"
-    hide-header-close
-    no-stacking
-    @show="fetchAssertions"
-  >
-    <template v-slot:modal-title>
+  <b-modal v-model="visible" size="lg" no-stacking @show="fetchAssertions">
+    <template v-slot:title>
       {{ $t('message.kev_assertions') }}: {{ vulnId }}
     </template>
     <p>{{ $t('message.kev_explanation') }}</p>
@@ -60,8 +54,8 @@
         </dl>
       </b-card-body>
     </b-card>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">
         {{ $t('message.close') }}
       </b-button>
     </template>
@@ -75,7 +69,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'KevAssertionsModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     source: String,
     vulnId: String,
@@ -102,12 +95,12 @@ export default {
 
 <style scoped>
 .kev-assertion-card {
-  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
-  border-left: 4px solid var(--danger);
-  background-color: color-mix(in srgb, var(--danger) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bs-danger) 40%, transparent);
+  border-left: 4px solid var(--bs-danger);
+  background-color: color-mix(in srgb, var(--bs-danger) 6%, transparent);
 }
 .kev-assertion-card :deep(.card-header) {
-  background-color: color-mix(in srgb, var(--danger) 12%, transparent);
-  border-bottom-color: color-mix(in srgb, var(--danger) 30%, transparent);
+  background-color: color-mix(in srgb, var(--bs-danger) 12%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--bs-danger) 30%, transparent);
 }
 </style>

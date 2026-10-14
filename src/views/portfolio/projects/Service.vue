@@ -5,12 +5,12 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-exchange bg-primary p-3 font-2xl me-3 float-start"
+              class="fa fa-exchange text-bg-primary p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">{{ serviceLabel }}</div>
           </b-col>
           <b-col>
-            <b-row class="d-none d-md-flex float-end">
+            <div class="d-none d-md-flex float-end">
               <vue-easy-pie-chart
                 style="margin-right: 1rem"
                 :bar-color="severityCritical"
@@ -81,7 +81,7 @@
                 v-b-tooltip.hover="$t('severity.unassigned')"
                 >{{ currentUnassigned }}</vue-easy-pie-chart
               >
-            </b-row>
+            </div>
           </b-col>
         </b-row>
       </b-card-body>
@@ -97,13 +97,9 @@
         </div>
       </template>
     </b-card>
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
       >
         <template v-slot:title

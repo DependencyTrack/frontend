@@ -2,7 +2,6 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     no-close-on-backdrop
     :title="$t('admin.create_workload_identity_provider')"
@@ -20,12 +19,11 @@
       >
         <b-form-input
           id="workload-identity-provider-name-input"
-          v-model="name"
+          v-model.trim="name"
           maxlength="63"
           type="text"
           autofocus
           required
-          trim
           :state="nameState"
         />
       </b-form-group>
@@ -49,11 +47,10 @@
       >
         <b-form-input
           id="workload-identity-provider-issuer-input"
-          v-model="issuer"
+          v-model.trim="issuer"
           maxlength="255"
           type="text"
           required
-          trim
           :placeholder="issuerPlaceholder"
         />
       </b-form-group>
@@ -65,11 +62,10 @@
       >
         <b-form-input
           id="workload-identity-provider-audience-input"
-          v-model="audience"
+          v-model.trim="audience"
           maxlength="255"
           type="text"
           required
-          trim
           placeholder="https://dependencytrack.example.com"
         />
       </b-form-group>
@@ -93,11 +89,10 @@
       >
         <b-form-input
           id="workload-identity-provider-jwks-url-input"
-          v-model="jwksUrl"
+          v-model.trim="jwksUrl"
           maxlength="2048"
           type="url"
           required
-          trim
           :state="jwksUrlState"
         />
       </b-form-group>
@@ -129,8 +124,7 @@
       >
         <b-form-input
           id="workload-identity-provider-lifetime-input"
-          v-model="sessionLifetimeSeconds"
-          number
+          v-model.number="sessionLifetimeSeconds"
           type="number"
           :min="minSessionLifetime"
           :max="maxSessionLifetime"
@@ -141,12 +135,11 @@
       </b-form-group>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel, ok }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel, ok }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="!isValid || submitting"
         @click="ok()"
@@ -171,7 +164,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',

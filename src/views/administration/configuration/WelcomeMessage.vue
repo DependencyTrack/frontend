@@ -41,7 +41,7 @@
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
-          <b-card v-if="isWelcomeMessage" class="bg-grey-900">
+          <b-card v-if="isWelcomeMessage">
             <template v-slot:header>
               <div>
                 <h4>{{ $t('admin.preview') }}</h4>

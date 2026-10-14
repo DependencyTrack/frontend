@@ -2,7 +2,6 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.occurrences_of_component', { name: componentName })"
   >
@@ -13,8 +12,8 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">
         {{ $t('message.cancel') }}
       </b-button>
     </template>
@@ -27,7 +26,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     componentUuid: String,
     componentName: String,

@@ -75,8 +75,6 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'DateTimeRangeFilterPill',
   components: { FilterPillDropdown },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     fieldName: {
       type: String,

@@ -2,7 +2,6 @@
   <div class="animated fadeIn">
     <div id="policiesToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
         variant="outline-primary"
         @click="showCreatePolicyModal = true"
         v-permission:or="[

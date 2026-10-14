@@ -3,7 +3,6 @@
     <b-card-body>
       <div id="repositoryToolbar" class="bs-table-custom-toolbar">
         <b-button
-          size="md"
           variant="outline-primary"
           @click="showRepositoryCreateRepositoryModal = true"
         >

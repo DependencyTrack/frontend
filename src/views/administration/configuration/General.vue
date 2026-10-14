@@ -46,7 +46,7 @@
             :disabled="!isDefaultLanguageEnabled"
           >
             <b-form-select-option
-              v-for="locale in $i18n.availableLocales"
+              v-for="locale in availableLocales"
               :key="`locale-${locale}`"
               :value="locale"
               :title="$t(`language.${locale}`)"
@@ -74,6 +74,7 @@
 import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
+import { availableLocales } from '@/i18n';
 
 export default {
   mixins: [configPropertyMixin],
@@ -89,6 +90,7 @@ export default {
       isBadgesEnabled: false,
       isDefaultLanguageEnabled: false,
       defaultLanguage: 'en',
+      availableLocales,
     };
   },
   methods: {

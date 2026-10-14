@@ -22,7 +22,7 @@
         :maxlength="maxLength"
         size="sm"
       ></b-form-input>
-      <b-input-group-append is-text>=</b-input-group-append>
+      <b-input-group-text>=</b-input-group-text>
       <b-form-input
         :id="`label-filter-pill-value-${fieldName}`"
         v-model="tmpValue"
@@ -41,8 +41,6 @@ import FilterPillDropdown from '@/views/components/FilterPillDropdown.vue';
 export default {
   name: 'LabelFilterPill',
   components: { FilterPillDropdown },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     fieldName: {
       type: String,

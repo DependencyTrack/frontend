@@ -1,5 +1,5 @@
-import { createApp, configureCompat, vModelDynamic } from 'vue';
-import BootstrapVue from 'bootstrap-vue';
+import { createApp } from 'vue';
+import { createBootstrap } from 'bootstrap-vue-next';
 import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
@@ -16,22 +16,6 @@ import oidc from './shared/oidc.json';
 import globals from './shared/globals';
 import version from './version.json';
 import { getContextPath } from './shared/utils';
-
-configureCompat({ MODE: 2 });
-
-// BootstrapVue's v-model patch sets the _assign key that Vue used before 3.3.5,
-// see https://github.com/bootstrap-vue/bootstrap-vue/issues/7181.
-for (const hook of ['created', 'beforeUpdate']) {
-  const original = vModelDynamic[hook];
-  vModelDynamic[hook] = function (el, binding, vnode, prevVNode) {
-    original.call(this, el, binding, vnode, prevVNode);
-    for (const key of Object.getOwnPropertySymbols(el)) {
-      if (key.description === '_assign' && !el[key]) {
-        el[key] = () => {};
-      }
-    }
-  };
-}
 
 globals.$api = api;
 globals.$oidc = oidc;
@@ -107,7 +91,16 @@ function createVueApp() {
     globals,
     app.config.globalProperties,
   );
-  app.use(BootstrapVue);
+  app.use(
+    createBootstrap({
+      // Except noHeaderClose, BootstrapVue's defaults, which our templates rely on.
+      components: {
+        BModal: { lazy: true, unmountLazy: true, noHeaderClose: true },
+        BFormCheckbox: { uncheckedValue: false },
+        BDropdown: { wrapperClass: 'btn-group' },
+      },
+    }),
+  );
   app.use(VueAxios, axios);
   app.use(toastr);
   app.use(router);

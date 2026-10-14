@@ -90,13 +90,14 @@
 </template>
 
 <style lang="scss" scoped>
+@import 'bootstrap/scss/functions';
 @import '@/assets/scss/variables';
-@import '@coreui/coreui/scss/variables';
+@import 'bootstrap/scss/variables';
 
 .page-indicator {
   padding: $pagination-padding-y 0.75rem;
   font-weight: $font-weight-normal;
-  line-height: $pagination-line-height;
+  line-height: $line-height-sm;
   color: $body-color;
   cursor: default;
   user-select: none;
@@ -124,8 +125,8 @@
   position: relative;
   display: block;
   padding: $pagination-padding-y 1.25rem;
-  margin-left: -$pagination-border-width;
-  line-height: $pagination-line-height;
+  margin-left: -$border-width;
+  line-height: $line-height-sm;
   color: $pagination-color;
   text-decoration: if($link-decoration == none, null, none);
   background-color: $pagination-bg;

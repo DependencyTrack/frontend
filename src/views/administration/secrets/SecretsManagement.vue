@@ -3,7 +3,6 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          size="md"
           variant="outline-primary"
           v-if="canCreate"
           @click="showCreateSecretModal = true"

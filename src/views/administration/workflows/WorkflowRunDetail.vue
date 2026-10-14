@@ -2,7 +2,9 @@
   <div>
     <b-card :no-body="true" class="mb-3">
       <b-card-body v-if="run" class="p-3 clearfix">
-        <i class="fa fa-random bg-primary p-3 font-2xl me-3 float-start"></i>
+        <i
+          class="fa fa-random text-bg-primary p-3 font-2xl me-3 float-start"
+        ></i>
         <div class="h5 mb-0 mt-1">
           {{ run.workflow_name }}
           <span class="text-muted fw-normal">

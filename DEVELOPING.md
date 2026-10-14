@@ -11,18 +11,17 @@
 
 ## Core Technologies
 
-| Technology                                      | Purpose           |
-| :---------------------------------------------- | :---------------- |
-| [Vue 2](https://v2.vuejs.org/)                  | UI framework      |
-| [Vite](https://vite.dev/)                       | Build tooling     |
-| [BootstrapVue](https://bootstrap-vue.org/)      | Component library |
-| [CoreUI](https://coreui.io/vue/)                | Admin template    |
-| [Vue Router](https://v3.router.vuejs.org/)      | Routing           |
-| [vue-i18n](https://kazupon.github.io/vue-i18n/) | Localization      |
-| [Axios](https://axios-http.com/)                | HTTP client       |
-| [ESLint](https://eslint.org/)                   | Linting           |
-| [Prettier](https://prettier.io/)                | Formatting        |
-| [Playwright](https://playwright.dev/)           | End-to-end tests  |
+| Technology                                                                   | Purpose           |
+| :--------------------------------------------------------------------------- | :---------------- |
+| [Vue 3](https://vuejs.org/)                                                  | UI framework      |
+| [Vite](https://vite.dev/)                                                    | Build tooling     |
+| [BootstrapVueNext](https://bootstrap-vue-next.github.io/bootstrap-vue-next/) | Component library |
+| [Vue Router](https://router.vuejs.org/)                                      | Routing           |
+| [vue-i18n](https://vue-i18n.intlify.dev/)                                    | Localization      |
+| [Axios](https://axios-http.com/)                                             | HTTP client       |
+| [ESLint](https://eslint.org/)                                                | Linting           |
+| [Prettier](https://prettier.io/)                                             | Formatting        |
+| [Playwright](https://playwright.dev/)                                        | End-to-end tests  |
 
 ## Install
 

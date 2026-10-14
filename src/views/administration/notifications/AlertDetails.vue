@@ -330,6 +330,7 @@
     </b-col>
     <b-modal
       v-model="showFilterExpressionModal"
+      :no-header-close="false"
       :title="$t('admin.filter_expression')"
       size="lg"
     >

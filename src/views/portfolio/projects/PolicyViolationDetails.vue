@@ -9,10 +9,9 @@
         >
           <b-form-input
             id="input-1"
-            :value="violation.component.group"
+            :model-value="violation.component.group"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
         <b-form-group
@@ -22,10 +21,9 @@
         >
           <b-form-input
             id="input-2"
-            :value="violation.component.name"
+            :model-value="violation.component.name"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
         <b-form-group
@@ -35,10 +33,9 @@
         >
           <b-form-input
             id="input-3"
-            :value="violation.component.version"
+            :model-value="violation.component.version"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
       </div>
@@ -52,10 +49,9 @@
         >
           <b-form-input
             id="input-1"
-            :value="violation.component.cpe"
+            :model-value="violation.component.cpe"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
       </div>
@@ -69,10 +65,9 @@
         >
           <b-form-input
             id="input-1"
-            :value="violation.component.purl"
+            :model-value="violation.component.purl"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
       </div>
@@ -86,10 +81,9 @@
         >
           <b-form-input
             id="input-1"
-            :value="violation.component.swid"
+            :model-value="violation.component.swid"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
       </div>
@@ -108,10 +102,9 @@
         >
           <b-form-input
             id="input-1"
-            :value="violation.component.resolvedLicense.licenseId"
+            :model-value="violation.component.resolvedLicense.licenseId"
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
       </div>
@@ -123,11 +116,10 @@
       >
         <b-form-textarea
           id="failedCondition-input"
-          :value="conditionString"
+          :model-value="conditionString"
           rows="3"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
     </b-col>
@@ -139,11 +131,10 @@
       >
         <b-form-textarea
           id="auditTrailField"
-          :value="auditTrail"
+          :model-value="auditTrail"
           rows="7"
           class="form-control disabled"
           readonly
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -154,12 +145,11 @@
       >
         <b-form-textarea
           id="input-8"
-          v-model="comment"
+          v-model.trim="comment"
           rows="4"
           class="form-control"
-          trim
         />
-        <div class="pull-right">
+        <div class="float-end">
           <b-button size="sm" variant="outline-primary" @click="addComment"
             ><span class="fa fa-comment-o"></span
             >{{ $t('message.add_comment') }}</b-button
@@ -176,7 +166,7 @@
           <b-form-select
             v-model="analysisState"
             :options="analysisChoices"
-            @change="makeAnalysis"
+            @update:model-value="makeAnalysis"
             style="flex: 0 1 auto; width: auto; margin-right: 2rem"
           />
           <b-form-checkbox

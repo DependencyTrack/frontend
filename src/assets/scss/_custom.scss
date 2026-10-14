@@ -49,19 +49,19 @@ html {
 .table-progress {
   width: 100% !important;
 }
-.severity-critical-bg, .bg-severity-critical, .bg-CRITICAL {
+.severity-critical-bg, .text-bg-CRITICAL {
   background: $severity-critical none;
 }
-.severity-high-bg, .bg-severity.high, .bg-HIGH {
+.severity-high-bg, .text-bg-HIGH {
   background: $severity-high none;
 }
-.severity-medium-bg, .bg-severity-medium, .bg-MEDIUM {
+.severity-medium-bg, .text-bg-MEDIUM {
   background: $severity-medium none;
 }
-.severity-low-bg, .bg-severity-low, .bg-LOW {
+.severity-low-bg, .text-bg-LOW {
   background: $severity-low none;
 }
-.severity-info-bg, .bg-severity-info, .bg-INFO {
+.severity-info-bg, .text-bg-INFO {
   background: $severity-info none;
 }
 .severity-warn-bg {
@@ -70,10 +70,10 @@ html {
 .severity-fail-bg {
   background: $severity-critical none;
 }
-.bg-violation-type {
+.text-bg-violation-type {
   background: $widget-3;
 }
-.severity-unassigned-bg, .bg-severity-unassigned, .bg-UNASSIGNED {
+.severity-unassigned-bg, .text-bg-UNASSIGNED {
   background: $severity-unassigned none;
 }
 .severity-bug-icon {
@@ -85,9 +85,6 @@ html {
   height:40px;
   color:#ffffff;
   background-color: $severity-label-bg;
-}
-.pointer:hover {
-  cursor: pointer;
 }
 .label-analyzer {
   border: 1px solid #5C9CCB;
@@ -170,12 +167,6 @@ html {
 .table td.tight, .table th.tight {
   width: 1%;
 }
-.table td.expand, .table th.expand {
-  width: 10%;
-}
-.table td.expand-20, .table th.expand-20 {
-  width: 20%;
-}
 label.required:after {
   color: #d62728;
   content:" *";
@@ -184,7 +175,7 @@ input.required, select.required, textarea.required {
   border-color: #ffd700;
 }
 
-/* usage: use outer div/span with class truncate-ellipsis or truncate-ellipsis-inline and inner span with content to truncate */
+/* usage: use outer div/span with class truncate-ellipsis and inner span with content to truncate */
 .truncate-ellipsis {
   display: table;
   table-layout: fixed;
@@ -192,17 +183,6 @@ input.required, select.required, textarea.required {
   white-space: nowrap;
 }
 .truncate-ellipsis > * {
-  display: table-cell;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.truncate-ellipsis-inline {
-  display: inline-table;
-  table-layout: fixed;
-  width: 100%;
-  white-space: nowrap;
-}
-.truncate-ellipsis-inline > * {
   display: table-cell;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -300,15 +280,6 @@ input.required, select.required, textarea.required {
 .nav-tabs .nav-link:hover {
   background-color: $grey-750;
 }
-.nav-tabs .nav-link.active {
-  background: $grey-700;
-  border-bottom-color: $grey-700;
-  color: $white;
-}
-.nav-tabs .nav-link.active:focus {
-  background: $grey-700;
-  border-bottom-color: $grey-700;
-}
 .card-footer-action:hover {
   background: $grey-800;
 }
@@ -330,8 +301,16 @@ input.required, select.required, textarea.required {
 .callout-severity-unassigned {
   border-left-color: $severity-unassigned;
 }
-.b-toast .toast-body {
+.toast-body {
   white-space: pre-line;
+}
+// Bootstrap's subtle colors suit a light page. These are its dark mode's.
+:root {
+  @each $color, $value in $theme-colors {
+    --#{$prefix}#{$color}-text-emphasis: #{tint-color($value, 40%)};
+    --#{$prefix}#{$color}-bg-subtle: #{shade-color($value, 80%)};
+    --#{$prefix}#{$color}-border-subtle: #{shade-color($value, 40%)};
+  }
 }
 
 .expanded-row {
@@ -347,10 +326,6 @@ input.required, select.required, textarea.required {
   margin-right: 0.5rem;
 }
 
-.btn-outline-primary.focus {
-  box-shadow: 0 0 0 0;
-}
-
 .btn-outline-primary.disabled.active, .btn-outline-primary:disabled.active {
   background-color: darken($blue, 20);
   color: $white;
@@ -363,17 +338,6 @@ input.required, select.required, textarea.required {
   white-space: pre-wrap;
 }
 
-/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
-.toggle-off {
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-}
-.toggle.off {
-  border-color: rgba(0, 0, 0, .25);
-}
-.toggle-handle {
-  background-color: $toggle-handle-bg;
-  border: thin rgba(0, 0, 0, .25) solid;
-}
 h6 {
   font-size: 1.0em;
   font-weight: 600;
@@ -409,42 +373,67 @@ h6 {
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-wrap::before {
   background: $grey-750  !important;;
 }
-.was-validated .form-control:invalid, .form-control.is-invalid {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-}
 .bg-widget {
   background-color: $grey-750;
 }
 button:focus {
   outline: 0;
 }
-.badge-tab-total {
+// Bootstrap 4's .form-group spacing: the group's margin replaces its last child's.
+.b-form-group {
+  margin-bottom: 1rem;
+
+  > :last-child,
+  > :has(+ .invalid-feedback:last-child) {
+    margin-bottom: 0 !important;
+  }
+}
+// BFormText renders an inline <small>.
+.form-text {
+  display: block;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+.form-control[readonly] {
+  background-color: $input-disabled-bg;
+}
+// BootstrapVueNext's file input takes the page background.
+.b-form-file-control {
+  background-color: $input-bg;
+}
+.badge.rounded-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+}
+.text-bg-tab-total {
   border: 1px solid #60768c !important;
   background-color: $grey-900 !important;
   margin-left: 0.6em !important;
   color: #21D983 !important;
 }
-.badge-tab-fail {
+.text-bg-tab-fail {
   border: 1px solid #60768c !important;
   background-color: $grey-900 !important;
   color: $notification-fail !important;
 }
-.badge-tab-warn {
+.text-bg-tab-warn {
   border: 1px solid #60768c !important;
   background-color: $grey-900 !important;
   color: $notification-warn !important;
 }
-.badge-tab-info {
+.text-bg-tab-info {
   border: 1px solid #60768c !important;
   background-color: $grey-900 !important;
   color: $notification-info !important;
 }
-.badge-tag {
+.text-bg-tag {
   color: $primary;
   background-color: transparent;
   border: 1px solid $primary;
 }
-.badge-tag:hover {
+.text-bg-tag:hover {
   color: $light-blue;
   background-color: transparent;
   border: 1px solid $primary;
@@ -458,11 +447,6 @@ button:focus {
 }
 .tags-input input {
   outline: 0;
-}
-.tags-input .close {
-  font-size: inherit;
-  line-height: inherit;
-  text-shadow: none;
 }
 .badge-team {
     color: $primary;
@@ -478,9 +462,6 @@ td a.detail-icon {
   font-size: 150%;
   line-height: 1.0;
   color: $grey-600;
-}
-.b-calendar-grid-body .text-dark {
-  color: #ffffff !important;
 }
 .treegrid-indent {
   width: 10px;
@@ -606,18 +587,12 @@ td a.detail-icon {
   font-weight: 700;
 }
 
-// keep elements together on the same line, e.g switch and label
-.keep-together {
-  display: inline;
-  white-space: nowrap;
-}
-
 .icon-cellend {
   float: right;
   padding-top: 0.3rem;
 }
 
-@include media-breakpoint-up($breakpoint-mobile-up) {
+@include media-breakpoint-up(lg) {
   .header-fixed {
     .app-header {
       top: var(--banner-offset, 0);
@@ -640,7 +615,7 @@ td a.detail-icon {
   }
 }
 
-@include media-breakpoint-down($breakpoint-mobile-down) {
+@include media-breakpoint-down(lg) {
   .app-header {
     top: var(--banner-offset, 0);
   }

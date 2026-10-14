@@ -6,7 +6,6 @@
       </p>
       <div id="customToolbar">
         <b-button
-          size="md"
           variant="outline-primary"
           @click="showCreateWorkloadIdentityProviderModal = true"
         >
