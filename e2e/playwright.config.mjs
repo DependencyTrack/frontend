@@ -7,6 +7,8 @@ export default defineConfig({
   globalSetup: './global-setup.mjs',
   forbidOnly: !!process.env.CI,
   fullyParallel: true,
+  workers: process.env.CI ? 4 : undefined,
+  retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI
     ? [
         ['github'],
@@ -15,7 +17,7 @@ export default defineConfig({
     : 'list',
   use: {
     baseURL: `${APP_URL}/`,
-    trace: 'retain-on-failure',
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
