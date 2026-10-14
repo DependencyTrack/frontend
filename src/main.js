@@ -5,7 +5,6 @@ import router from './router';
 import i18n from './i18n';
 import BootstrapTable from './plugins/table.js';
 import axios from 'axios';
-import VueAxios from 'vue-axios';
 import permission from '@/directives/VuePermission';
 import scrollableTabs from '@/directives/ScrollableTabs';
 import multiselectLabel from '@/directives/MultiselectLabel';
@@ -101,7 +100,7 @@ function createVueApp() {
       },
     }),
   );
-  app.use(VueAxios, axios);
+  app.config.globalProperties.axios = axios;
   app.use(toastr);
   app.use(router);
   app.use(i18n);
