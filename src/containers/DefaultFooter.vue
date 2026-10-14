@@ -15,11 +15,10 @@
 </template>
 <script>
 import AboutModal from '../views/components/AboutModal.vue';
-import globalVarsMixin from '../mixins/globalVarsMixin';
+import state from '../shared/state';
 
 export default {
   name: 'DefaultFooter',
-  mixins: [globalVarsMixin],
   components: {
     AboutModal,
   },
@@ -27,6 +26,9 @@ export default {
     return {
       showAboutModal: false,
     };
+  },
+  computed: {
+    dtrack: () => state.dtrack,
   },
 };
 </script>

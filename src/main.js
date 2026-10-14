@@ -13,6 +13,7 @@ import toastr from './plugins/toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import globals from './shared/globals';
+import state from './shared/state';
 import { getContextPath } from './shared/utils';
 
 globals.$api = api;
@@ -71,15 +72,10 @@ axios
  * https://github.com/DependencyTrack/frontend/issues/34
  */
 function createVueApp() {
-  /*
-  Register global $dtrack variable which will be the response body from /api/version.
-  $dtrack can then be used anywhere in the app to get information about the server,
-  the version of dtrack, timestamp, uuid, Alpine version, etc.
-  */
   axios
     .get(`${globals.$api.BASE_URL}/${globals.$api.URL_ABOUT}`)
     .then((result) => {
-      globals.$dtrack = result.data;
+      state.dtrack = result.data;
     });
 
   globals.$version = __VERSION__;

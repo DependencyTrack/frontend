@@ -29,12 +29,11 @@
 
 <script>
 import EventBus from '../shared/eventbus';
-import globalVarsMixin from '../mixins/globalVarsMixin';
+import state from '../shared/state';
 import LocalePicker from '@/views/components/LocalePicker.vue';
 
 export default {
   name: 'DefaultHeaderProfileDropdown',
-  mixins: [globalVarsMixin],
   components: {
     LocalePicker,
   },
@@ -45,6 +44,7 @@ export default {
     };
   },
   computed: {
+    currentUser: () => state.currentUser,
     user() {
       return this.currentUser.fullname || this.currentUser.username;
     },

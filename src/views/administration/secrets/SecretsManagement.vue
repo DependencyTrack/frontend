@@ -36,19 +36,14 @@ import common from '../../../shared/common';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import routerMixin from '@/mixins/routerMixin';
-import systemCapabilitiesMixin from '@/mixins/systemCapabilitiesMixin';
+import state from '@/shared/state';
 import xssFilters from 'xss-filters';
 import CreateSecretModal from '@/views/administration/secrets/CreateSecretModal.vue';
 import UpdateSecretModal from '@/views/administration/secrets/UpdateSecretModal.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 export default {
-  mixins: [
-    bootstrapTableMixin,
-    permissionsMixin,
-    routerMixin,
-    systemCapabilitiesMixin,
-  ],
+  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   props: {
     header: String,
   },
@@ -147,7 +142,7 @@ export default {
   },
   computed: {
     isReadOnly() {
-      return this.systemCapabilities?.secret_management?.read_only !== false;
+      return state.systemCapabilities?.secret_management?.read_only !== false;
     },
     canCreate() {
       return (
