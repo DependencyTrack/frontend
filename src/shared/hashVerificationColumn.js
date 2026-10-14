@@ -32,7 +32,7 @@ export function buildHashVerificationColumn({ $t, cell, visible }) {
       if (!isClickable) {
         const titleAttr = xssFilters.inDoubleQuotedAttr(tooltipTitle);
         return (
-          `<span data-toggle="tooltip" data-placement="bottom" role="img" ` +
+          `<span data-bs-toggle="tooltip" data-bs-placement="bottom" role="img" ` +
           `aria-label="${titleAttr}" title="${titleAttr}">` +
           `<i class="fa ${info.icon} ${info.color}" aria-hidden="true"></i>` +
           `</span>`

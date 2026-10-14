@@ -275,7 +275,7 @@ export default {
       this.visibleColumns = fields;
     },
     initializeTooltips() {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
@@ -406,7 +406,7 @@ export default {
                 row.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },

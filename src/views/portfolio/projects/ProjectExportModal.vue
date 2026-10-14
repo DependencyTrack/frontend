@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isDownloading"
     :no-close-on-esc="isDownloading"
@@ -45,20 +43,14 @@
       />
     </b-form-group>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="secondary"
         :disabled="isDownloading"
         @click="cancel()"
         >{{ $t('message.cancel') }}</b-button
       >
-      <b-button
-        size="md"
-        variant="primary"
-        :disabled="isDownloading"
-        @click="download()"
-      >
+      <b-button variant="primary" :disabled="isDownloading" @click="download()">
         <b-spinner v-if="isDownloading" small class="me-1"></b-spinner>
         <span v-else class="fa fa-download me-1"></span>
         {{ $t('message.download') }}
@@ -86,7 +78,6 @@ const CYCLONEDX_VERSIONS = [
 export default {
   name: 'ProjectExportModal',
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

@@ -1,9 +1,7 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
     @hide="resetValues()"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_team')"
   >
@@ -20,11 +18,11 @@
       :feedback-text="$t('admin.required_team_name')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createUser()">{{
+      <b-button variant="primary" @click="createUser()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -38,7 +36,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },

@@ -1,10 +1,5 @@
 <template>
-  <b-modal
-    v-model="visible"
-    size="lg"
-    hide-header-close
-    :title="$t('admin.select_permission')"
-  >
+  <b-modal v-model="visible" size="lg" :title="$t('admin.select_permission')">
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -12,12 +7,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="selectionHasChanged"
         @click="handleSelection"
@@ -34,7 +28,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     currentPermissions: {
       type: Array,

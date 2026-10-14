@@ -2,12 +2,11 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.service_details')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
@@ -183,9 +182,8 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         @click="deleteService()"
         v-permission:or="[
@@ -194,11 +192,10 @@
         ]"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="updateService()"
         v-permission:or="[
@@ -221,7 +218,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ServiceDetailsModal',
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -452,12 +448,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

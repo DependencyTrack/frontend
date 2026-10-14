@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isUploading"
     :no-close-on-esc="isUploading"
@@ -17,23 +15,17 @@
       :browseText="$t('message.browse')"
     ></b-form-file>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isUploading" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isUploading"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="secondary"
         :disabled="isUploading"
         @click="file = null"
         >{{ $t('message.reset') }}</b-button
       >
       <b-button
-        size="md"
         variant="primary"
         :disabled="file == null || isUploading"
         @click="upload()"
@@ -51,7 +43,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ProjectUploadVexModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

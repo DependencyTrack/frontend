@@ -81,8 +81,6 @@ export default {
     JsonSchemaFormField,
     Showdown,
   },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     schema: {
       type: Object,

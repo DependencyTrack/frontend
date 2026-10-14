@@ -2,10 +2,9 @@
   <div>
     <b-card no-body>
       <b-tabs
-        v-model="tabIndex"
+        v-model:index="tabIndex"
         class="body-bg-color"
-        style="border-left: 0; border-right: 0; border-top: 0"
-        @input="onTabChange"
+        @update:index="onTabChange"
       >
         <b-tab>
           <template v-slot:title>
@@ -31,6 +30,7 @@
     </b-card>
     <b-modal
       v-model="showEditCapacityModal"
+      :no-header-close="false"
       :title="$t('admin.edit_capacity')"
       @ok.prevent="onCapacityConfirm"
       @shown="$refs.capacityInput.focus()"
@@ -41,8 +41,7 @@
             ref="capacityInput"
             type="number"
             min="1"
-            v-model="editCapacityValue"
-            number
+            v-model.number="editCapacityValue"
           />
         </b-form-group>
       </b-form>
@@ -99,12 +98,12 @@ export default {
                 ? this.$t('admin.click_to_pause')
                 : this.$t('admin.click_to_resume');
               return (
-                `<button type="button" class="badge badge-${variant} status-badge status-badge-interactive" ` +
-                `title="${xssFilters.inHTMLData(tooltip)}">` +
+                `<button type="button" class="badge text-bg-${variant} status-badge status-badge-interactive" ` +
+                `title="${xssFilters.inDoubleQuotedAttr(tooltip)}">` +
                 `<i class="fa ${icon}"></i> ${label}</button>`
               );
             }
-            return `<span class="badge badge-${variant} status-badge"><i class="fa ${icon}"></i> ${label}</span>`;
+            return `<span class="badge text-bg-${variant} status-badge"><i class="fa ${icon}"></i> ${label}</span>`;
           },
           events: {
             'click .status-badge-interactive': (_event, _, row) => {

@@ -13,8 +13,7 @@ test('change and save a setting that uses a switch', async ({ page, api }) => {
     const label = 'Enable unauthenticated SVG badge access';
     const badges = page.getByLabel(label);
     await expect(badges).toBeChecked();
-    // Bootstrap 4's switch label covers its checkbox, so uncheck() can't click it.
-    await page.getByText(label).click();
+    await badges.uncheck();
     await expect(badges).not.toBeChecked();
     await page.getByRole('button', { name: 'Update' }).click();
     await expect(page.getByText('Configuration saved')).toBeVisible();
@@ -89,3 +88,21 @@ function setBadgesEnabled(api, value) {
     { ...property, propertyValue: value },
   ]);
 }
+
+test('open one admin menu section at a time', async ({ page }) => {
+  await login(page);
+  await page.goto('admin/configuration/general');
+  const general = page.getByRole('tab', { name: 'General', exact: true });
+  const teams = page.getByRole('tab', { name: 'Teams' });
+  await expect(general).toBeVisible();
+  await expect(teams).toBeHidden();
+  const accessManagement = page.getByRole('button', {
+    name: 'Access Management',
+  });
+  await accessManagement.click();
+  await expect(teams).toBeVisible();
+  await expect(general).toBeHidden();
+  await expect(accessManagement).toHaveAttribute('aria-expanded', 'true');
+  await accessManagement.press('Enter');
+  await expect(teams).toBeHidden();
+});

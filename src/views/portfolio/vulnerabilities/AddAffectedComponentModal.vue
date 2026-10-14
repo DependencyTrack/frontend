@@ -1,11 +1,5 @@
 <template>
-  <b-modal
-    v-model="visible"
-    @hide="resetValues()"
-    size="lg"
-    hide-header-close
-    :title="title"
-  >
+  <b-modal v-model="visible" @hide="resetValues()" size="lg" :title="title">
     <b-row>
       <b-col md="3">
         <b-input-group-form-select
@@ -77,11 +71,11 @@
       </b-col>
     </b-row>
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="composeObject()">{{
+      <b-button variant="primary" @click="composeObject()">{{
         okButton
       }}</b-button>
     </template>
@@ -97,7 +91,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,

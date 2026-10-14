@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_project')"
   >
@@ -252,16 +250,11 @@
       </b-card>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isCreating" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isCreating"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="primary"
         :disabled="isCreating"
         @click="createProject()"
@@ -300,7 +293,6 @@ export default {
     projectFormMixin,
     modalMixin,
   ],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,

@@ -11,11 +11,10 @@
           <b-form-input
             v-if="template.defaultPublisher"
             id="input-2"
-            v-model="template.extensionName"
+            v-model.trim="template.extensionName"
             disabled
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
         <b-input-group-form-input
@@ -36,12 +35,11 @@
           <b-form-textarea
             v-if="template.defaultPublisher"
             id="input-3"
-            v-model="template.description"
+            v-model.trim="template.description"
             rows="4"
             disabled
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
         <b-input-group-form-input
@@ -63,11 +61,10 @@
         >
           <b-form-input
             id="input-4"
-            v-model="template.templateMimeType"
+            v-model.trim="template.templateMimeType"
             disabled
             class="form-control disabled"
             readonly
-            trim
           />
         </b-form-group>
         <b-input-group-form-input

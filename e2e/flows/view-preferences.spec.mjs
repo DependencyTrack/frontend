@@ -91,6 +91,10 @@ for (const { view, url, label, table, param } of switches) {
     await expect(page.getByLabel(label)).toBeChecked();
     await reloadExpectingTable(page, table, param);
     await expect(page.getByLabel(label)).toBeChecked();
+    await page.getByText(label).click();
+    await expect(page.getByLabel(label)).not.toBeChecked();
+    await page.reload();
+    await expect(page.getByLabel(label)).not.toBeChecked();
   });
 }
 

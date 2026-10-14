@@ -1,13 +1,9 @@
 <template>
   <div class="animated fadeIn">
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
         ref="policies"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
         @click="routeTo()"
       >
@@ -29,8 +25,7 @@
       </b-tab>
       <b-tab
         ref="vulnerability"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         @click="routeTo('vulnerability')"
       >
         <template v-slot:title

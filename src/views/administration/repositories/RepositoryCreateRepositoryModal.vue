@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_repository')"
   >
@@ -58,17 +56,13 @@
         </div>
       </div>
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button
-        size="md"
-        variant="primary"
-        type="submit"
-        form="createRepositoryForm"
-        >{{ $t('message.create') }}</b-button
-      >
+      <b-button variant="primary" type="submit" form="createRepositoryForm">{{
+        $t('message.create')
+      }}</b-button>
     </template>
   </b-modal>
 </template>
@@ -82,7 +76,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'RepositoryCreateRepositoryModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     type: String,
   },

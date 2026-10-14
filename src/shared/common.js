@@ -43,7 +43,7 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   }
   return `<a href="${
     router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
-  }" class="badge badge-tag text-lowercase me-1">${xssFilters.inHTMLData(
+  }" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(
     tag.name,
   )}</a>`;
 };
@@ -72,7 +72,7 @@ $common.formatVulnerabilityTagLabel = function formatVulnerabilityTagLabel(
   if (!tag) {
     return '';
   }
-  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase me-1">${xssFilters.inHTMLData(tag.name)}</a>`;
+  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(tag.name)}</a>`;
 };
 
 /**
@@ -115,10 +115,10 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
 
   return `
      <div style="height:24px;margin:-4px;">
-        <div class="${severityClass} text-center pull-left" style="width:24px; height:24px; color:#ffffff">
+        <div class="${severityClass} text-center float-start" style="width:24px; height:24px; color:#ffffff">
             <i class="fa fa-bug" style="font-size:12px; padding:6px" aria-hidden="true"></i>
          </div>
-         <div class="text-center pull-left" style="height:24px;">
+         <div class="text-center float-start" style="height:24px;">
              <div style="font-size:12px; padding:4px"><span class="severity-value">${severityLabel}</span></div>
          </div>
      </div>`;
@@ -154,7 +154,7 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
 $common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
   if (cweId && cweName) {
     return (
-      "<span data-toggle='tooltip' data-placement='bottom' title='" +
+      "<span data-bs-toggle='tooltip' data-bs-placement='bottom' title='" +
       cweName +
       "'>CWE-" +
       cweId +

@@ -8,7 +8,7 @@
       <span class="navbar-toggler-icon" />
     </button>
     <img
-      class="d-lg-inline d-md-none d-sm-none bv-d-xs-down-none"
+      class="d-none d-lg-inline"
       style="margin-left: 10px"
       src="@/assets/img/brand/dt-logo-symbol.svg"
       width="30"
@@ -16,7 +16,7 @@
       alt="Dependency-Track Logo"
     />
     <button
-      class="navbar-toggler d-md-down-none"
+      class="navbar-toggler d-none d-lg-inline-block"
       type="button"
       @click.stop="toggleSidebar('sidebar-lg-show')"
     >

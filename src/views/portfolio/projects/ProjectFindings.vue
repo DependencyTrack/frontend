@@ -106,7 +106,7 @@ export default {
                 row.component.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -124,8 +124,8 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
@@ -137,14 +137,14 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               } else {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               }
@@ -407,7 +407,7 @@ export default {
       }
     },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },

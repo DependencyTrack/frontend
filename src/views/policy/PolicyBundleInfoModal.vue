@@ -2,11 +2,10 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     :title="$t('message.policy_bundle_info')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
@@ -54,8 +53,8 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
     </template>
@@ -69,7 +68,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'PolicyBundleInfoModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },
@@ -95,12 +93,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

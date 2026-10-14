@@ -42,6 +42,22 @@ test('audit a finding', async ({ page, problems }) => {
   await page.getByLabel('Comment', { exact: true }).fill('Looks exploitable');
   await page.getByRole('button', { name: 'Add Comment' }).click();
   await expect(auditTrail).toHaveValue(/Looks exploitable/);
+
+  // Leaves the shared finding unsuppressed for the other tests.
+  await page.route('**/api/v1/analysis', (route) =>
+    route.fulfill({ json: route.request().postDataJSON() }),
+  );
+  const suppressed = page.getByRole('checkbox', {
+    name: 'Suppressed',
+    exact: true,
+  });
+  const update = () => page.waitForRequest('**/api/v1/analysis');
+  let request = update();
+  await suppressed.check();
+  expect((await request).postDataJSON().isSuppressed).toBe(true);
+  request = update();
+  await suppressed.uncheck();
+  expect((await request).postDataJSON().isSuppressed).toBe(false);
 });
 
 test('reset a findings sort the API no longer supports', async ({

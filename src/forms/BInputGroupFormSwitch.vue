@@ -11,11 +11,9 @@
         <b-form-checkbox
           :id="`${id}-input`"
           v-model="innerValue"
-          :readonly="readonly"
           :disabled="disabled"
           v-b-tooltip.hover="tooltip"
           switch
-          v-on="inputListeners"
         />
       </b-input-group>
     </b-form-group>
@@ -26,7 +24,6 @@
 import common from '../shared/common';
 
 export default {
-  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String, // fallback label if labelOn or labelOff not set
@@ -34,7 +31,6 @@ export default {
     labelOff: String, // if set will be used for "off" state
     modelValue: Boolean,
     inputGroupSize: String,
-    readonly: Boolean,
     disabled: Boolean,
     showPlaceholderLabel: Boolean, // can be used to show an empty label on top, useful to put on same row as other inputs
     tooltip: String,
@@ -54,30 +50,24 @@ export default {
       set: function (newValue) {
         this.currentLabel =
           (newValue ? this.labelOn : this.labelOff) || this.label;
-        return common.toBoolean(newValue);
+        this.$emit('update:modelValue', newValue);
+        this.$emit('change', newValue);
       },
-    },
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        change: function (event) {
-          vm.$emit('update:modelValue', event); // model doesn't update otherwise?
-          vm.$emit('change', event);
-        },
-      });
     },
   },
   methods: {},
 };
 </script>
 <style scoped>
-.custom-switch {
+.form-switch {
   margin-top: calc(0.375rem + 1px);
 }
-.form-group {
+/* The gutter of Bootstrap 4's .form-row. */
+.b-form-group > :deep(.row) {
   flex-direction: row-reverse;
+  --bs-gutter-x: 10px;
 }
-.form-group :deep(label.col-form-label) {
+.b-form-group :deep(label.col-form-label) {
   padding-left: 0 !important;
 }
 </style>

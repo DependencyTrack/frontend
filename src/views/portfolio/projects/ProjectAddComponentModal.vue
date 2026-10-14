@@ -1,13 +1,11 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.component_details')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
@@ -237,12 +235,11 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="createComponent()"
         v-permission:or="[
@@ -265,7 +262,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ProjectAddComponentModal',
   mixins: [permissionsMixin, availableClassifiersMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
@@ -368,12 +364,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

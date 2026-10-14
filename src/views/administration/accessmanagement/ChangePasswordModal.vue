@@ -1,9 +1,7 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
     @hide="resetValues()"
-    hide-header-close
     no-stacking
     :title="$t('admin.change_password')"
   >
@@ -33,11 +31,11 @@
       :feedback-text="$t('admin.required_confirmPassword')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="updatePassword()">{{
+      <b-button variant="primary" @click="updatePassword()">{{
         $t('message.update')
       }}</b-button>
     </template>
@@ -51,7 +49,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },

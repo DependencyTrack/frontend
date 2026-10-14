@@ -4,8 +4,8 @@
       role="button"
       @click="showHashVerificationModal = true"
       class="hash-verification-trigger"
-      data-toggle="tooltip"
-      data-placement="bottom"
+      data-bs-toggle="tooltip"
+      data-bs-placement="bottom"
       :title="tooltipTitle"
       :aria-label="tooltipTitle"
     >

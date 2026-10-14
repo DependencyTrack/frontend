@@ -176,7 +176,7 @@ const routes = [
   },
   {
     path: 'admin/configuration/maintenance',
-    landmark: (main) => main.getByRole('group', { name: 'Retention' }),
+    landmark: (main) => main.getByRole('slider', { name: 'Retention' }),
   },
   {
     path: 'admin/configuration/riskscore',
@@ -393,8 +393,11 @@ test.describe('authenticated', () => {
 });
 
 test('login', async ({ page }) => {
+  const scripts = [];
+  page.on('request', (req) => scripts.push(req.url()));
   await page.goto('login');
   await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
+  expect(scripts.filter((url) => url.includes('oidc-client'))).toEqual([]);
 });
 
 test('change-password', async ({ page }) => {

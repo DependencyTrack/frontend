@@ -88,6 +88,7 @@
 
     <b-modal
       v-model="showTestResultsModal"
+      :no-header-close="false"
       :title="$t('admin.test_results')"
       ok-only
       :ok-title="$t('message.close')"

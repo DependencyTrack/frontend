@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_license_group')"
   >
@@ -15,11 +13,11 @@
       v-model="name"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createLicenseGroup()">{{
+      <b-button variant="primary" @click="createLicenseGroup()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -34,7 +32,6 @@ import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormI
 export default {
   name: 'createLicenseGroupModal',
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BValidatedInputGroupFormInput,
   },

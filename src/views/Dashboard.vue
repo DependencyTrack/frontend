@@ -51,7 +51,6 @@
               <div class="text-muted">{{ $t('severity.critical') }}</div>
               <strong>{{ critical }} ({{ criticalPercent }}%)</strong>
               <b-progress
-                height="{}"
                 class="progress-xs mt-2 severity-critical"
                 :precision="1"
                 v-bind:value="criticalPercent"
@@ -61,7 +60,6 @@
               <div class="text-muted">{{ $t('severity.high') }}</div>
               <strong>{{ high }} ({{ highPercent }}%)</strong>
               <b-progress
-                height="{}"
                 class="progress-xs mt-2 severity-high"
                 :precision="1"
                 v-bind:value="highPercent"
@@ -71,7 +69,6 @@
               <div class="text-muted">{{ $t('severity.medium') }}</div>
               <strong>{{ medium }} ({{ mediumPercent }}%)</strong>
               <b-progress
-                height="{}"
                 class="progress-xs mt-2 severity-medium"
                 :precision="1"
                 v-bind:value="mediumPercent"
@@ -81,7 +78,6 @@
               <div class="text-muted">{{ $t('severity.low') }}</div>
               <strong>{{ low }} ({{ lowPercent }}%)</strong>
               <b-progress
-                height="{}"
                 class="progress-xs mt-2 severity-low"
                 :precision="1"
                 v-bind:value="lowPercent"
@@ -91,7 +87,6 @@
               <div class="text-muted">{{ $t('severity.unassigned') }}</div>
               <strong>{{ unassigned }} ({{ unassignedPercent }}%)</strong>
               <b-progress
-                height="{}"
                 class="progress-xs mt-2 status-failed"
                 :precision="1"
                 v-bind:value="unassignedPercent"
@@ -132,7 +127,6 @@
                     >{{ failViolations }} ({{ failViolationsPercent }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-failed"
                     :precision="1"
                     v-bind:value="failViolationsPercent"
@@ -146,7 +140,6 @@
                     >{{ warnViolations }} ({{ warnViolationsPercent }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-warning"
                     :precision="1"
                     v-bind:value="warnViolationsPercent"
@@ -160,7 +153,6 @@
                     >{{ infoViolations }} ({{ infoViolationsPercent }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-info"
                     :precision="1"
                     v-bind:value="infoViolationsPercent"
@@ -205,7 +197,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-failed"
                     :precision="1"
                     v-bind:value="securityViolationsPercent"
@@ -221,7 +212,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-warning"
                     :precision="1"
                     v-bind:value="operationalViolationsPercent"
@@ -237,7 +227,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-info"
                     :precision="1"
                     v-bind:value="licenseViolationsPercent"
@@ -280,7 +269,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 severity-unassigned"
                     :precision="1"
                     v-bind:value="unauditedFindingsPercent"
@@ -296,7 +284,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 severity-low"
                     :precision="1"
                     v-bind:value="auditedFindingsPercent"
@@ -341,7 +328,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 severity-unassigned"
                     :precision="1"
                     v-bind:value="unauditedViolationsPercent"
@@ -357,7 +343,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 severity-low"
                     :precision="1"
                     v-bind:value="auditedViolationsPercent"
@@ -399,7 +384,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-passed"
                     :precision="1"
                     v-bind:value="nonVulnerableProjectsPercent"
@@ -413,7 +397,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-warning"
                     :precision="1"
                     v-bind:value="vulnerableProjectsPercent"
@@ -452,7 +435,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-passed"
                     :precision="1"
                     v-bind:value="nonVulnerableComponentsPercent"
@@ -466,7 +448,6 @@
                     }}%)</strong
                   >
                   <b-progress
-                    height="{}"
                     class="progress-xs mt-2 status-warning"
                     :precision="1"
                     v-bind:value="vulnerableComponentsPercent"

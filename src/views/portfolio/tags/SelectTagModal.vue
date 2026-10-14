@@ -2,9 +2,7 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
-    v-permission="'VIEW_PORTFOLIO'"
     :title="$t('message.select_tag')"
   >
     <bootstrap-table
@@ -14,12 +12,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="$emit('selection', $refs.table.getSelections())"
         >{{ $t('message.select') }}</b-button
@@ -39,7 +36,6 @@ export default {
     policy: Object,
   },
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}`;

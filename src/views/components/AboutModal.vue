@@ -1,11 +1,5 @@
 <template>
-  <b-modal
-    v-model="visible"
-    size="lg"
-    hide-header-close
-    no-stacking
-    :title="$t('message.about')"
-  >
+  <b-modal v-model="visible" size="lg" no-stacking :title="$t('message.about')">
     <b-row>
       <b-col>
         <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
@@ -108,11 +102,11 @@
         </ul>
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <div class="mx-auto">
         Copyright &copy; OWASP Foundation. All Rights Reserved.
       </div>
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{
+      <b-button variant="outline-primary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
     </template>
@@ -127,7 +121,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'AboutModal',
   mixins: [globalVarsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   computed: {
     serverTimestamp: function () {
       return common.formatTimestamp(this.dtrack.timestamp, true);

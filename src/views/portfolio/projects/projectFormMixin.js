@@ -4,9 +4,7 @@ export const COLLECTION_LOGIC_AGGREGATE_TAG =
   'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
 
 // Empty project-form shape. Source of truth for the fields the modals bind via
-// v-model. Declared up-front because Vue 2 doesn't make keys added after
-// initialization reactive, which silently breaks watchers and computed
-// properties (e.g. projectNameState, showCollectionTags).
+// v-model.
 export const FORM_FIELD_DEFAULTS = Object.freeze({
   name: null,
   version: null,

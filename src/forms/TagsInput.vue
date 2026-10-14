@@ -5,18 +5,16 @@
     <span
       v-for="tag in modelValue"
       :key="tag"
-      class="badge badge-tag me-1 d-inline-flex align-items-center"
+      class="badge text-bg-tag me-1 d-inline-flex align-items-center"
     >
       {{ tag }}
       <button
         v-if="!readonly"
         type="button"
-        class="close text-reset ms-1"
+        class="btn-close btn-close-white ms-1"
         :aria-label="`${$t('message.remove')} ${tag}`"
         @click="remove(tag)"
-      >
-        &times;
-      </button>
+      ></button>
     </span>
     <input
       v-if="!maxTags || modelValue.length < maxTags"
@@ -41,8 +39,6 @@
 const SEPARATORS = ['Enter', ' ', ':', ';', ','];
 
 export default {
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     id: { type: String, required: true },
     modelValue: { type: Array, default: () => [] },

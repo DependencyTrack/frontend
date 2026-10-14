@@ -1,8 +1,6 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
-    hide-header-close
     no-close-on-backdrop
     :title="$t('admin.new_api_key_title')"
     @show="resetValues"
@@ -23,9 +21,8 @@
       >
         <b-form-input
           :id="`${modalId}-comment`"
-          v-model="comment"
+          v-model.trim="comment"
           type="text"
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -46,8 +43,7 @@
       >
         <b-form-input
           :id="`${modalId}-custom-lifetime`"
-          v-model="customDays"
-          number
+          v-model.number="customDays"
           type="number"
           min="1"
           step="1"
@@ -56,16 +52,15 @@
         />
       </b-form-group>
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button v-if="key" size="md" variant="primary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button v-if="key" variant="primary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <template v-else>
-        <b-button size="md" variant="secondary" @click="cancel()">{{
+        <b-button variant="secondary" @click="cancel()">{{
           $t('message.cancel')
         }}</b-button>
         <b-button
-          size="md"
           variant="primary"
           :disabled="expiresInDays === null"
           @click="createApiKey"
@@ -81,7 +76,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     name: { type: String, required: true },
   },

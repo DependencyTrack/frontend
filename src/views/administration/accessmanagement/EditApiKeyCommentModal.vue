@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @show="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.edit_api_key_comment')"
   >
@@ -18,11 +16,11 @@
       :label="$t('admin.api_key_comment')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="updateComment()">{{
+      <b-button variant="primary" @click="updateComment()">{{
         $t('message.update')
       }}</b-button>
     </template>
@@ -36,7 +34,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormInput,
   },

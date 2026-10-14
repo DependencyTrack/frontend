@@ -13,7 +13,7 @@
         :id="`${id}-input`"
         :type="type"
         :class="inputClasses"
-        v-model="innerValue"
+        v-model.trim="innerValue"
         :placeholder="label"
         :state="feedbackState()"
         :autocomplete="autocomplete"
@@ -21,13 +21,11 @@
         :required="isRequired"
         :readonly="readonly"
         :disabled="isDisabled"
-        v-on="inputListeners"
         v-on:blur="hadFocus = true"
-        trim
       />
       <template v-if="tooltip" #append
         ><b-input-group-text v-b-tooltip.hover="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
+          ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
       ></template>
     </b-input-group>
     <b-form-invalid-feedback
@@ -43,7 +41,6 @@
 import common from '../shared/common';
 
 export default {
-  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
@@ -59,7 +56,7 @@ export default {
     lazy: String,
     required: String,
     readonly: Boolean,
-    disabled: String,
+    disabled: [String, Boolean],
     state: {
       default: undefined,
       type: Boolean,
@@ -88,16 +85,8 @@ export default {
         return this.modelValue;
       },
       set: function (newValue) {
-        return newValue;
+        this.$emit('update:modelValue', newValue);
       },
-    },
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        input: function (event) {
-          vm.$emit('update:modelValue', event);
-        },
-      });
     },
     inputClasses: function () {
       return this.isRequired ? 'required' : null;

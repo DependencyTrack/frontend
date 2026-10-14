@@ -2,7 +2,6 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-close-on-backdrop
     :title="$t('admin.create_workload_identity_binding')"
     @show="onShow"
@@ -58,12 +57,11 @@
       >
         <b-form-input
           :id="`${modalId}-subject`"
-          v-model="subject"
+          v-model.trim="subject"
           class="font-monospace"
           maxlength="512"
           type="text"
           required
-          trim
           :placeholder="subjectPlaceholder"
           :state="subjectState"
         />
@@ -81,12 +79,11 @@
         />
       </b-form-group>
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="!isValid || submitting"
         @click="createBinding"
@@ -107,7 +104,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     name: { type: String, required: true },
   },

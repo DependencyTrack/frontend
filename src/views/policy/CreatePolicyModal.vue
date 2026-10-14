@@ -1,8 +1,6 @@
 <template>
   <b-modal
     v-model="visible"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_policy')"
     :ok-title="$t('message.create')"
@@ -24,13 +22,12 @@
       >
         <b-form-input
           id="name-input"
-          v-model="name"
+          v-model.trim="name"
           type="text"
           maxlength="255"
-          trim
           autofocus
           aria-required="true"
-          @input="nameInvalidFeedback = null"
+          @update:model-value="nameInvalidFeedback = null"
         />
       </b-form-group>
 
@@ -74,7 +71,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'createPolicyModal',
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: '',

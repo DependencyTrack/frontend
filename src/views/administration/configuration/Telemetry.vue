@@ -22,7 +22,7 @@
       >
         <b-form-textarea
           id="last-submission-data"
-          :value="lastSubmissionDataString"
+          :model-value="lastSubmissionDataString"
           rows="3"
           max-rows="6"
           readonly
@@ -30,13 +30,9 @@
       </b-form-group>
     </b-card-body>
     <b-card-footer>
-      <b-button
-        size="md"
-        class="px-4"
-        variant="outline-primary"
-        @click="saveChanges"
-        >{{ $t('message.update') }}</b-button
-      >
+      <b-button class="px-4" variant="outline-primary" @click="saveChanges">{{
+        $t('message.update')
+      }}</b-button>
     </b-card-footer>
   </b-card>
 </template>

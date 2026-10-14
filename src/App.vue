@@ -1,19 +1,21 @@
 <template>
-  <div class="app-shell">
-    <Banner
-      v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
-      :key="bannerInstanceKey"
-      class="app-banner"
-      :dismissable="bannerConfig.makeBannerDismissable"
-      :color-scheme="bannerConfig.colorScheme"
-      :message="bannerConfig.message"
-      :custom-mode="!!bannerConfig.customMode"
-      :html="bannerConfig.customMode ? bannerConfig.html : ''"
-    />
-    <main class="app-content">
-      <router-view />
-    </main>
-  </div>
+  <b-app>
+    <div class="app-shell">
+      <Banner
+        v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
+        :key="bannerInstanceKey"
+        class="app-banner"
+        :dismissable="bannerConfig.makeBannerDismissable"
+        :color-scheme="bannerConfig.colorScheme"
+        :message="bannerConfig.message"
+        :custom-mode="!!bannerConfig.customMode"
+        :html="bannerConfig.customMode ? bannerConfig.html : ''"
+      />
+      <main class="app-content">
+        <router-view />
+      </main>
+    </div>
+  </b-app>
 </template>
 
 <script>
@@ -270,11 +272,10 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@coreui/icons/css/free.min.css';
 $fa-font-path: 'font-awesome/fonts/';
 @import 'font-awesome/scss/font-awesome.scss';
 $simple-line-font-path: 'simple-line-icons/fonts/';
 @import 'simple-line-icons/scss/simple-line-icons.scss';
-@import 'bootstrap-vue/dist/bootstrap-vue.css';
+@import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 @import 'assets/scss/style';
 </style>

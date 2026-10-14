@@ -3,7 +3,7 @@
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
-          <b-card v-if="isWelcomeMessage" no-body class="bg-grey-900 p-4 m-0">
+          <b-card v-if="isWelcomeMessage" no-body class="p-4 m-0">
             <div>
               <p><span v-html="welcomeMessage" /></p>
             </div>
@@ -74,7 +74,7 @@
             </b-card>
             <b-card
               no-body
-              class="text-white bg-grey-900 py-5 d-md-down-none"
+              class="text-white py-5 d-none d-lg-flex"
               style="width: 44%"
             >
               <b-card-body class="text-center">
@@ -99,7 +99,6 @@
 
 <script>
 import axios from 'axios';
-import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
 import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import InformationalModal from '../modals/InformationalModal.vue';
@@ -126,19 +125,7 @@ export default {
         password: '',
       },
       oidcAvailable: false,
-      oidcUserManager: new Oidc.UserManager({
-        userStore: new Oidc.WebStorageStateStore(),
-        authority: this.$oidc.ISSUER,
-        client_id: this.$oidc.CLIENT_ID,
-        redirect_uri:
-          getContextPath() !== ''
-            ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
-            : `${window.location.origin}/static/oidc-callback.html`,
-        response_type:
-          this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
-        scope: this.$oidc.SCOPE,
-        loadUserInfo: false,
-      }),
+      oidcUserManager: null,
       showLoginForm: false,
     };
   },
@@ -226,11 +213,7 @@ export default {
         });
     },
     isOidcAvailableInFrontend() {
-      return (
-        this.oidcUserManager.settings.authority &&
-        this.oidcUserManager.settings.client_id &&
-        this.oidcUserManager.settings.scope
-      );
+      return this.$oidc.ISSUER && this.$oidc.CLIENT_ID && this.$oidc.SCOPE;
     },
     checkOidcAvailability() {
       if (!this.isOidcAvailableInFrontend()) {
@@ -274,13 +257,27 @@ export default {
   },
   mounted() {
     this.checkOidcAvailability()
-      .then((oidcAvailable) => {
-        this.oidcAvailable = oidcAvailable;
-        this.showLoginForm = !oidcAvailable;
-
+      .then(async (oidcAvailable) => {
         if (!oidcAvailable) {
+          this.showLoginForm = true;
           return;
         }
+
+        const { default: Oidc } = await import('oidc-client');
+        this.oidcUserManager = new Oidc.UserManager({
+          userStore: new Oidc.WebStorageStateStore(),
+          authority: this.$oidc.ISSUER,
+          client_id: this.$oidc.CLIENT_ID,
+          redirect_uri:
+            getContextPath() !== ''
+              ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
+              : `${window.location.origin}/static/oidc-callback.html`,
+          response_type:
+            this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
+          scope: this.$oidc.SCOPE,
+          loadUserInfo: false,
+        });
+        this.oidcAvailable = true;
 
         this.oidcUserManager.getUser().then((oidcUser) => {
           // oidcUser will only be set when coming from oidc-callback.html

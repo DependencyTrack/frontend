@@ -5,15 +5,15 @@
 .filter-pill-wrapper.filter-pill-active {
   display: inline-flex;
   align-items: stretch;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--bs-primary);
   border-radius: 20px;
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover,
 .filter-pill-wrapper.filter-pill-active:has(.show) {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
   color: #fff;
 }
 
@@ -40,7 +40,7 @@
 .filter-pill-wrapper.filter-pill-active :deep(.show > .btn-outline-primary),
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
-  background: var(--primary) !important;
+  background: var(--bs-primary) !important;
   color: #fff !important;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .filter-pill-segment-value {
-  color: var(--primary-lighter);
+  color: var(--bs-info);
 }
 
 /* --- External clear button (sibling of b-dropdown) --- */
@@ -158,14 +158,14 @@
   align-items: stretch;
   font-size: 0.85rem;
   padding: 0;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--bs-primary);
   border-radius: 20px;
-  color: var(--primary);
+  color: var(--bs-primary);
   white-space: nowrap;
 }
 
 .boolean-filter-pill:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
   color: #fff;
 }

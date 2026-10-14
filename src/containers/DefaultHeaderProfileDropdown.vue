@@ -1,9 +1,9 @@
 <template>
-  <b-nav-item-dropdown right no-caret>
+  <b-nav-item-dropdown placement="bottom-end" no-caret>
     <template #button-content>
       <i class="fa fa-user-circle-o" style="font-size: 1.6em"></i>
     </template>
-    <b-dropdown-header boundary="viewport" tag="div" class="text-center">
+    <b-dropdown-header tag="div" class="text-center">
       {{ $t('message.connected_as') }}
       <strong>{{ user }}</strong>
     </b-dropdown-header>
@@ -16,7 +16,7 @@
       {{ $t('message.change_password') }}</b-dropdown-item
     >
     <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
-    <b-dropdown-form id="locale-picker-form" class="ps-2 pe-2">
+    <b-dropdown-form id="locale-picker-form" class="ps-2 pe-2" @click.stop>
       <LocalePicker />
     </b-dropdown-form>
     <b-dropdown-divider />
@@ -77,10 +77,6 @@ export default {
 </script>
 
 <style>
-.app-header .navbar-nav .dropdown-menu-right {
-  right: inherit;
-}
-
 /* Remove default padding inherited from b-dropdown-form. */
 #locale-picker-form {
   padding: 0;

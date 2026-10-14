@@ -2,7 +2,6 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.component_properties')"
   >
@@ -15,9 +14,8 @@
       @on-uncheck="onRowSelectionChange"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         @click="deleteProperty"
         v-permission:or="[
@@ -27,11 +25,10 @@
         :disabled="!hasRowsSelected"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
@@ -53,7 +50,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ComponentPropertiesModal',
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     uuid: String,
   },

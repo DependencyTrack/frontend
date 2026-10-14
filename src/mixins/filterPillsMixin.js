@@ -2,6 +2,7 @@ import jQuery from 'jquery';
 
 export default {
   data: () => ({
+    booleanFilters: [],
     pendingFilters: {},
   }),
   computed: {

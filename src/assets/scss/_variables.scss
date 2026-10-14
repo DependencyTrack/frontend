@@ -16,6 +16,17 @@ $grey-800:   lighten($grey-base, 10%);
 $grey-850:   lighten($grey-base, 7.5%);
 $grey-900:   lighten($grey-base, 5%);
 
+// CoreUI's grays, which Bootstrap uses wherever we don't override it
+$gray-100:   #f0f3f5 !default;
+$gray-200:   #e4e7ea !default;
+$gray-300:   #c8ced3 !default;
+$gray-400:   #acb4bc !default;
+$gray-500:   #8f9ba6 !default;
+$gray-600:   #73818f !default;
+$gray-700:   #5c6873 !default;
+$gray-800:   #2f353a !default;
+$gray-900:   #23282c !default;
+
 $secondary:  $grey-600 !default;
 
 $white:      #fff;
@@ -27,8 +38,32 @@ $yellow:     #ffc107 !default;
 $green:      #4dbd74 !default;
 $light-blue: #6DD9FF !default;
 
+$info:       $light-blue !default;
+$dark:       $gray-800 !default;
+
+$color-contrast-dark: $gray-900 !default;
+$min-contrast-ratio:  2 !default;
+
 $body-bg:       $grey-800 !default;
 $body-color:    $grey-200 !default;
+$body-secondary-color: $gray-600 !default;
+$body-secondary-bg:    $grey-800 !default;
+$body-tertiary-bg:     $grey-750 !default;
+
+$font-size-base: .875rem !default;
+
+$enable-rfs:            false !default;
+$enable-smooth-scroll:  false !default;
+$enable-dark-mode:      false !default;
+
+$link-decoration:       none !default;
+$link-hover-decoration: underline !default;
+
+$grid-gutter-width: 30px !default;
+
+$border-radius:     .25rem !default;
+$border-radius-sm:  .2rem !default;
+$border-radius-lg:  .3rem !default;
 
 $severity-critical: $red;
 $severity-high: $orange;
@@ -51,17 +86,9 @@ $notification-note: #777777;
 $border-color:                      $grey-900 !default;
 $component-active-color:            $grey-750 !default;
 
-// Aside
-
-$aside-menu-color:                  $grey-100 !default;
-$aside-menu-bg:                     $grey-700 !default;
-
-// Avatars
-
-$avatar-status-border-color:        $grey-700 !default;
-
 // Dropdowns
 
+$dropdown-padding-y:                0 !default;
 $dropdown-bg:                       $grey-700 !default;
 $dropdown-border-color:             $border-color !default;
 $dropdown-divider-bg:               $grey-750 !default;
@@ -73,6 +100,10 @@ $dropdown-link-hover-bg:            $grey-800 !default;
 $dropdown-link-disabled-color:      $grey-600 !default;
 
 $dropdown-header-color:             $grey-200 !default;
+
+$dropdown-item-padding-y:           10px !default;
+$dropdown-item-padding-x:           20px !default;
+$dropdown-header-padding-y:         8px !default;
 
 // Forms
 
@@ -92,13 +123,10 @@ $input-group-addon-color:               $input-color !default;
 $input-group-addon-bg:                  $grey-750 !default;
 $input-group-addon-border-color:        $input-border-color !default;
 
-$custom-control-indicator-bg:           $grey-300 !default;
+$form-check-input-bg:                   $grey-300 !default;
+$form-range-track-bg:                   $gray-300 !default;
 
-$custom-control-indicator-disabled-bg:          $grey-200 !default;
-$custom-control-label-disabled-color:           $grey-600 !default;
-
-$custom-select-disabled-bg: $input-disabled-bg !default;
-$custom-select-disabled-color: $input-color !default;
+$form-select-disabled-color: $input-color !default;
 
   // Modals
 
@@ -113,23 +141,30 @@ $nav-link-disabled-color:           $grey-600 !default;
 
 $nav-tabs-border-color:             $border-color !default;
 $nav-tabs-link-hover-border-color:  $border-color $border-color $border-color !default;
-$nav-tabs-link-active-color:        $grey-100 !default;
-$nav-tabs-link-active-bg:           $grey-750 !default;
-$nav-tabs-link-active-border-color: $border-color $border-color $border-color !default;
+$nav-tabs-link-active-color:        $white !default;
+$nav-tabs-link-active-bg:           $grey-700 !default;
+$nav-tabs-link-active-border-color: $border-color $border-color $grey-700 !default;
 
-$tab-content-bg:                    $grey-700 !default;
+// Alerts
 
-$toggle-handle-bg:          $grey-600 !default;
+$alert-padding-y:                   .75rem !default;
+$alert-padding-x:                   1.25rem !default;
+
+// Badges
+
+$badge-padding-y:                   .25em !default;
+$badge-padding-x:                   .4em !default;
 
 // Navbar
+$navbar-height:            55px !default;
 $navbar-bg:                $grey-700 !default;
 $navbar-color:             $grey-300 !default;
 $navbar-hover-color:       $grey-200 !default;
 $navbar-active-color:      $grey-200 !default;
-$navbar-disabled-color:    $grey-600 !default;
 
 // Pagination
 
+$pagination-padding-y:              .5rem !default;
 $pagination-bg:                     $grey-750 !default;
 $pagination-border-color:           $border-color !default;
 
@@ -141,18 +176,17 @@ $pagination-disabled-bg:            $grey-900 !default;
 $pagination-disabled-border-color:  $border-color !default;
 
 // Breadcrumb
+$breadcrumb-padding-y:     .75rem !default;
+$breadcrumb-padding-x:     1rem !default;
+$breadcrumb-margin-bottom: 1.5rem !default;
 $breadcrumb-bg:            $grey-700 !default;
 $breadcrumb-divider-color: $grey-100 !default;
 $breadcrumb-active-color:  $grey-100 !default;
 
-// Breadcrumb menu
-$breadcrumb-menu-color:    $grey-100 !default;
-
-// Jumbotron
-
-$jumbotron-bg:             $grey-600 !default;
-
 // Cards
+$card-spacer-y:            1.25rem !default;
+$card-spacer-x:            1.25rem !default;
+$card-cap-padding-y:       .75rem !default;
 $card-bg:                  $grey-700 !default;
 $card-border-color:        $border-color !default;
 $card-cap-bg:              $grey-750 !default;
@@ -160,13 +194,6 @@ $card-cap-bg:              $grey-750 !default;
 // Sidebar
 $sidebar-color:                       $grey-100 !default;
 $sidebar-bg:                          $grey-700 !default;
-$sidebar-borders: (
-  right: (
-    size:                             1px,
-    style:                            solid,
-    color:                            $border-color
-  )
-) !default;
 
 $sidebar-nav-link-active-bg:          $grey-750 !default;
 
@@ -182,6 +209,8 @@ $progress-bg:                       $grey-650 !default;
 
 // List group
 
+$list-group-item-padding-y:         .75rem !default;
+$list-group-item-padding-x:         1.25rem !default;
 $list-group-bg:                     $grey-750 !default;
 $list-group-border-color:           $border-color !default;
 $list-group-hover-bg:               $grey-800 !default;
@@ -189,6 +218,7 @@ $list-group-hover-bg:               $grey-800 !default;
 $list-group-disabled-color:         $grey-600 !default;
 
 $list-group-action-color:           $grey-200 !default;
+$list-group-action-hover-color:     $list-group-action-color !default;
 
 $list-group-action-active-color:    $body-color !default;
 $list-group-action-active-bg:       $grey-200 !default;
@@ -198,14 +228,24 @@ $list-group-action-active-bg:       $grey-200 !default;
 
 // Tables
 
+$table-cell-padding-y:        .75rem !default;
+$table-cell-padding-x:        .75rem !default;
+$table-cell-padding-y-sm:     .3rem !default;
+$table-cell-padding-x-sm:     .3rem !default;
+$table-color:                 $body-color !default;
 $table-bg:                    transparent !default;
 $table-border-color:          $border-color !default;
 
-$table-head-bg:               $grey-750 !default;
-$table-head-color:            $body-color !default;
+// Toasts
+$toast-header-color:            inherit !default;
+$toast-header-background-color: transparent !default;
 
-// List group with accent
-$list-group-accent-divider-bg: $grey-800 !default;
+// Close buttons
+$btn-close-filter: invert(1) grayscale(100%) brightness(200%) !default;
+
+// Tooltips
+$tooltip-color:        $white !default;
+$tooltip-bg:           #000 !default;
 
 // Popovers
 $popover-bg:           $grey-900 !default;
@@ -240,8 +280,6 @@ $recessed: $grey-850;
   --widget-3: #{$widget-3};
   --widget-4: #{$widget-4};
 
-  --primary: #{$blue};
-  --primary-lighter: #{$light-blue};
   --recessed: #{$recessed};
 }
 

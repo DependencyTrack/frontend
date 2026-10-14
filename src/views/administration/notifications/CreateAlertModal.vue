@@ -1,11 +1,5 @@
 <template>
-  <b-modal
-    v-model="visible"
-    size="md"
-    hide-header-close
-    no-stacking
-    :title="$t('admin.create_alert')"
-  >
+  <b-modal v-model="visible" no-stacking :title="$t('admin.create_alert')">
     <b-form-group
       id="fieldset-1"
       :label="this.$t('message.name')"
@@ -14,10 +8,9 @@
     >
       <b-form-input
         id="input-1"
-        v-model="name"
+        v-model.trim="name"
         class="required"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -64,16 +57,15 @@
           { text: $t('admin.alert_trigger_type_event'), value: 'EVENT' },
           { text: $t('admin.alert_trigger_type_schedule'), value: 'SCHEDULE' },
         ]"
-        name="radios-btn-default"
         button-variant="outline-primary"
         buttons
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createAlert()">{{
+      <b-button variant="primary" @click="createAlert()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -87,7 +79,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   data() {
     return {
       name: null,

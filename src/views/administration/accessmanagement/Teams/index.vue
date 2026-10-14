@@ -2,11 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button
-          size="md"
-          variant="outline-primary"
-          @click="showCreateTeamModal = true"
-        >
+        <b-button variant="outline-primary" @click="showCreateTeamModal = true">
           <span class="fa fa-plus"></span> {{ $t('admin.create_team') }}
         </b-button>
       </div>

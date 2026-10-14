@@ -2,19 +2,14 @@
   <b-modal
     v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.project_details')"
     @show="onShow"
     @hide="resetValues()"
   >
     <b-form ref="form" novalidate @submit.stop.prevent="updateProject()">
-      <b-tabs
-        v-model="activeTabIndex"
-        class="body-bg-color"
-        style="border: 0; padding: 0"
-      >
-        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+      <b-tabs v-model:index="activeTabIndex" class="body-bg-color">
+        <b-tab class="body-bg-color border-0 p-0">
           <template v-slot:title
             ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
           >
@@ -253,7 +248,7 @@
             />
           </b-card>
         </b-tab>
-        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+        <b-tab class="body-bg-color border-0 p-0">
           <template v-slot:title
             ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
           >
@@ -332,11 +327,7 @@
             />
           </b-card>
         </b-tab>
-        <b-tab
-          class="body-bg-color"
-          style="border: 0; padding: 0"
-          v-if="project.manufacturer"
-        >
+        <b-tab class="body-bg-color border-0 p-0" v-if="project.manufacturer">
           <template v-slot:title
             ><i class="fa fa-industry"></i>
             {{ $t('message.manufacturer') }}</template
@@ -383,11 +374,7 @@
             </b-form-group>
           </b-card>
         </b-tab>
-        <b-tab
-          class="body-bg-color"
-          style="border: 0; padding: 0"
-          v-if="project.supplier"
-        >
+        <b-tab class="body-bg-color border-0 p-0" v-if="project.supplier">
           <template v-slot:title
             ><i class="fa fa-building-o"></i>
             {{ $t('message.supplier') }}</template
@@ -450,7 +437,7 @@
           </b-card>
         </b-tab>
         <b-tab
-          style="border: 0; padding: 0"
+          class="border-0 p-0"
           v-if="
             project.metadata &&
             (project.metadata.authors || project.metadata.supplier)
@@ -532,9 +519,8 @@
       </b-tabs>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         :disabled="isUpdating"
         @click="deleteProject()"
@@ -545,7 +531,6 @@
         >{{ $t('message.delete') }}</b-button
       >
       <b-button
-        size="md"
         variant="outline-primary"
         :disabled="isUpdating"
         @click="$emit('showProperties')"
@@ -555,15 +540,10 @@
         ]"
         >{{ $t('message.properties') }}</b-button
       >
+      <b-button variant="secondary" :disabled="isUpdating" @click="cancel()">{{
+        $t('message.close')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isUpdating"
-        @click="cancel()"
-        >{{ $t('message.close') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="primary"
         :disabled="isUpdating"
         @click="updateProject()"
@@ -609,7 +589,6 @@ export default {
     projectFormMixin,
     modalMixin,
   ],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
@@ -918,12 +897,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

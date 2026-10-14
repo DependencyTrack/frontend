@@ -13,18 +13,18 @@
         :id="`${id}-input`"
         type="date"
         :class="inputClasses"
-        :value="dateValue"
+        :model-value="dateValue"
         :state="feedbackState()"
         :autocomplete="autocomplete"
         :required="isRequired"
         :readonly="readonly"
         :disabled="isDisabled"
-        v-on="inputListeners"
+        @update:model-value="$emit('update:modelValue', $event)"
         v-on:blur="hadFocus = true"
       />
       <template v-if="tooltip" #append
         ><b-input-group-text v-b-tooltip.hover="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
+          ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
       ></template>
     </b-input-group>
     <b-form-invalid-feedback
@@ -40,7 +40,6 @@
 import common from '../shared/common';
 
 export default {
-  model: { prop: 'modelValue', event: 'update:modelValue' },
   props: {
     id: String,
     label: String,
@@ -80,14 +79,6 @@ export default {
     },
     dateValue() {
       return this.modelValue?.substring(0, 10);
-    },
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        input: function (event) {
-          vm.$emit('update:modelValue', event);
-        },
-      });
     },
     inputClasses: function () {
       return this.isRequired ? 'required' : null;

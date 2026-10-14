@@ -7,10 +7,10 @@
       <b-form-checkbox
         :id="fieldId"
         switch
-        :checked="modelValue"
+        :model-value="modelValue"
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
-        @change="onBooleanChange"
+        @update:model-value="onBooleanChange"
       >
         {{ label }}
       </b-form-checkbox>
@@ -48,7 +48,6 @@
         v-bind="fieldProps"
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
-        @input="onInput"
         @update:modelValue="onInput"
       />
       <b-form-invalid-feedback v-if="!isComplexType" :id="feedbackId">
@@ -60,18 +59,18 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
+import {
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+} from 'bootstrap-vue-next/components';
 import Showdown from './Showdown.vue';
 import SecretRefSelect from './SecretRefSelect.vue';
 
-// Without its own compatConfig, @vue/compat renames modelValue to value on the async wrapper.
-const asyncField = (load) =>
-  Object.assign(defineAsyncComponent(load), {
-    compatConfig: { COMPONENT_V_MODEL: false },
-  });
-const JsonSchemaObjectField = asyncField(
+const JsonSchemaObjectField = defineAsyncComponent(
   () => import('./JsonSchemaObjectField.vue'),
 );
-const JsonSchemaArrayField = asyncField(
+const JsonSchemaArrayField = defineAsyncComponent(
   () => import('./JsonSchemaArrayField.vue'),
 );
 
@@ -81,8 +80,6 @@ export default {
     Showdown,
     SecretRefSelect,
   },
-  model: { prop: 'modelValue', event: 'update:modelValue' },
-  compatConfig: { COMPONENT_V_MODEL: false },
   props: {
     schema: {
       type: Object,
@@ -166,12 +163,12 @@ export default {
         return 'secret-ref-select';
       }
       if (this.schema.enum) {
-        return 'b-form-select';
+        return BFormSelect;
       }
       if (this.schema['x-ui-hint']?.inputType === 'textarea') {
-        return 'b-form-textarea';
+        return BFormTextarea;
       }
-      return 'b-form-input';
+      return BFormInput;
     },
     fieldProps() {
       const baseProps = {
@@ -210,7 +207,7 @@ export default {
       if (this.schema.enum) {
         return {
           ...baseProps,
-          value: this.modelValue,
+          modelValue: this.modelValue,
           options: this.enumOptions,
           required: !!this.schema.isRequired,
         };
@@ -218,7 +215,7 @@ export default {
 
       return {
         ...baseProps,
-        value: this.modelValue,
+        modelValue: this.modelValue,
         type: this.getInputType(),
         required: !!this.schema.isRequired,
         placeholder: this.placeholder,
@@ -228,8 +225,10 @@ export default {
         maxlength: this.schema.maxLength,
         pattern: this.schema.pattern,
         readonly: this.schema.readOnly,
-        trim:
-          this.schema.type === 'string' && this.schema.format !== 'password',
+        modelModifiers: {
+          trim:
+            this.schema.type === 'string' && this.schema.format !== 'password',
+        },
       };
     },
     enumOptions() {

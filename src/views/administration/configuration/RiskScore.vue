@@ -70,7 +70,6 @@
       </b-card-body>
       <b-card-footer>
         <b-button
-          size="md"
           class="px-4"
           variant="outline-primary"
           @click="saveCustomRiskScoreSettings"

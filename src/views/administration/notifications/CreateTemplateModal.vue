@@ -2,8 +2,6 @@
   <b-modal
     v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_template')"
   >
@@ -15,10 +13,9 @@
     >
       <b-form-input
         id="input-1"
-        v-model="name"
+        v-model.trim="name"
         class="required"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -49,11 +46,10 @@
     >
       <b-form-textarea
         id="input-3"
-        v-model="description"
+        v-model.trim="description"
         class="required"
         rows="4"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -64,10 +60,9 @@
     >
       <b-form-input
         id="input-4"
-        v-model="mimeType"
+        v-model.trim="mimeType"
         class="required"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -83,11 +78,11 @@
         :line-wrapping="false"
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createTemplate()">{{
+      <b-button variant="primary" @click="createTemplate()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -103,7 +98,6 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: {
     CodeMirrorEditor,
   },

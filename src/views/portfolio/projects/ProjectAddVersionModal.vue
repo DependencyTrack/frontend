@@ -3,8 +3,6 @@
     v-model="visible"
     @shown="focusVersionInput"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isCloning"
     :no-close-on-esc="isCloning"
@@ -24,12 +22,11 @@
             <b-form-input
               id="input-1"
               ref="versionInput"
-              v-model="version"
+              v-model.trim="version"
               class="required"
-              trim
               required
               :state="versionInvalidFeedback ? false : null"
-              @input="versionInvalidFeedback = null"
+              @update:model-value="versionInvalidFeedback = null"
             />
           </b-form-group>
         </b-col>
@@ -104,18 +101,13 @@
       </b-form-checkbox>
     </b-form>
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isCloning"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isCloning" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
         type="submit"
         form="addVersionForm"
-        size="md"
         variant="primary"
         :disabled="isSubmitButtonDisabled || isCloning"
       >
@@ -133,7 +125,6 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'ProjectAddVersionModal',
   mixins: [modalMixin],
-  compatConfig: { COMPONENT_V_MODEL: false },
   components: { BInputGroupFormSwitch },
   props: {
     uuid: String,
@@ -263,7 +254,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.custom-control {
+.form-check {
   padding-bottom: 0.3rem;
 }
 </style>
