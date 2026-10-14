@@ -1,6 +1,7 @@
 {
   "name": "@dependencytrack/frontend",
   "version": "5.2.0",
+  "private": true,
   "description": "Single Page Application for OWASP Dependency-Track",
   "author": "Steve Springett",
   "homepage": "https://dependencytrack.org/",
@@ -12,9 +13,8 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "serve": "npm run update-embedded-version && vite",
-    "update-embedded-version": "node update-embedded-version.js",
-    "build": "npm run update-embedded-version && vite build",
+    "serve": "vite",
+    "build": "vite build",
     "preview": "vite preview",
     "build-image": "npm run build && docker build -f docker/Dockerfile.alpine -t ghcr.io/dependencytrack/frontend:local .",
     "eslint": "eslint . --report-unused-disable-directives",

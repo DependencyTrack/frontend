@@ -13,7 +13,7 @@ export default [
   prettierRecommended,
   {
     languageOptions: {
-      globals: globals.browser,
+      globals: { ...globals.browser, __VERSION__: 'readonly' },
     },
     rules: {
       'vue/no-restricted-syntax': [

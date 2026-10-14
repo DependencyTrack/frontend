@@ -1,14 +1,23 @@
+import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next/resolvers';
 import sbom from 'rollup-plugin-sbom';
+import pkg from './package.json' with { type: 'json' };
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VUE_APP_');
   return {
     base: './',
+    define: {
+      __VERSION__: JSON.stringify({
+        version: pkg.version,
+        uuid: randomUUID(),
+        timestamp: new Date().toISOString(),
+      }),
+    },
     plugins: [
       vue(),
       Components({ resolvers: [BootstrapVueNextResolver()], dts: false }),
