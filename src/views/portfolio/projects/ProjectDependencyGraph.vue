@@ -95,6 +95,7 @@ export default {
     project: Object,
     uuid: String,
   },
+  emits: ['total'],
   mounted() {
     this.computeData();
   },

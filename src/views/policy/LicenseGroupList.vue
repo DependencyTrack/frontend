@@ -41,6 +41,7 @@ export default {
   components: {
     CreateLicenseGroupModal,
   },
+  emits: ['total'],
   mounted() {
     EventBus.on('policyManagement:licenseGroups:rowUpdate', (index, row) => {
       this.$refs.table.updateRow({ index: index, row: row });

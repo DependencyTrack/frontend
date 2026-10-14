@@ -71,6 +71,7 @@ import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'createPolicyModal',
   mixins: [permissionsMixin, modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',

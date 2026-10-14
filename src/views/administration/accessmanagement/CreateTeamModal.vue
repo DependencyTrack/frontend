@@ -39,6 +39,7 @@ export default {
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       name: null,

@@ -64,6 +64,7 @@ export default {
     customMode: { type: Boolean, default: false },
     html: { type: String, default: '' },
   },
+  emits: ['dismiss'],
   data() {
     return {
       visible: true,

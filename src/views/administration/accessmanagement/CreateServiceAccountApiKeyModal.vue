@@ -79,6 +79,7 @@ export default {
   props: {
     name: { type: String, required: true },
   },
+  emits: ['created'],
   data() {
     return {
       comment: '',

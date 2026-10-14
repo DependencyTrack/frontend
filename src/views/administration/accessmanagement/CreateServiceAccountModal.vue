@@ -54,6 +54,7 @@ const NAME_PATTERN = /^(?![sS][vV][cC]:)[a-zA-Z0-9][a-zA-Z0-9+=,.:@_-]*$/;
 
 export default {
   mixins: [modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',

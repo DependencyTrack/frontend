@@ -139,6 +139,7 @@ export default {
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       license: {},

@@ -165,6 +165,7 @@ export default {
     uuid: String,
     project: Object,
   },
+  emits: ['total'],
   data() {
     const initialVisibleColumns = Object.keys(COLUMN_DEFAULT_VISIBILITY).filter(
       (f) => initialColumnVisible(f),

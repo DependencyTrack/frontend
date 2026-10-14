@@ -35,6 +35,7 @@ export default {
   components: {
     BValidatedInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       name: null,

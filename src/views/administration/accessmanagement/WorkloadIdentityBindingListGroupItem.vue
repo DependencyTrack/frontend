@@ -34,6 +34,7 @@ export default {
   props: {
     binding: { type: Object, required: true },
   },
+  emits: ['removeClicked'],
   computed: {
     createdTimestamp() {
       return common.formatTimestamp(this.binding.created_at, true);

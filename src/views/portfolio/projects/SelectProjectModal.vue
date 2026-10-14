@@ -35,6 +35,7 @@ export default {
     // Current projects should be a list of UUIDs since names can be duplicate
     username: { type: String, default: null },
   },
+  emits: ['selection'],
   methods: {
     apiUrl: function () {
       let endpoint;

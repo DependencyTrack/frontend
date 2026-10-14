@@ -73,6 +73,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['propertyCreated'],
   data() {
     return {
       groupName: null,

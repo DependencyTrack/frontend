@@ -33,6 +33,7 @@ import common from '../../shared/common';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
+  emits: ['selection'],
   data() {
     return {
       columns: [

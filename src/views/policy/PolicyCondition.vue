@@ -236,6 +236,7 @@ export default {
     policy: Object,
     condition: Object,
   },
+  emits: ['conditionRemoved'],
   components: {
     ActionableListGroupItem,
     BInputGroupFormSelect,

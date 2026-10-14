@@ -28,6 +28,7 @@ import modalMixin from '@/mixins/modalMixin';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
+  emits: ['selection'],
   data() {
     return {
       columns: [

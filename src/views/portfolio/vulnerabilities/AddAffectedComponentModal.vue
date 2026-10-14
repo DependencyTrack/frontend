@@ -95,6 +95,7 @@ export default {
     BInputGroupFormInput,
     BInputGroupFormSelect,
   },
+  emits: ['affectedComponentAdded'],
   data() {
     return {
       okButton: this.$t('message.add'),

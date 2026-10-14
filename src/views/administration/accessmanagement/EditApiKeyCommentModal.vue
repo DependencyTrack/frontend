@@ -41,6 +41,7 @@ export default {
     keyId: String,
     apiKey: Object,
   },
+  emits: ['commentUpdated'],
   data() {
     return {
       comment: null,

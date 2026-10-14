@@ -22,6 +22,7 @@ export default {
   props: {
     uuid: String,
   },
+  emits: ['total'],
   mixins: [bootstrapTableMixin, permissionsMixin],
   components: {},
   data() {

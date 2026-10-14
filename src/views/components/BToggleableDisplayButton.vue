@@ -13,6 +13,7 @@ export default {
     variant: String,
     label: String,
   },
+  emits: ['toggle'],
   computed: {
     iconClass: function () {
       if (this.toggle === true) {

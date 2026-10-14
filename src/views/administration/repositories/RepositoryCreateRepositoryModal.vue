@@ -79,6 +79,7 @@ export default {
   props: {
     type: String,
   },
+  emits: ['refreshTable'],
   components: {
     BInputGroupFormSelect,
     BValidatedInputGroupFormInput,

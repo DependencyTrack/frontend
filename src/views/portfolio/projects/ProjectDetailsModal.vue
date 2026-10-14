@@ -603,6 +603,7 @@ export default {
     projectInput: Object,
     uuid: String,
   },
+  emits: ['showProperties', 'projectUpdated'],
   data() {
     return {
       project: { ...FORM_FIELD_DEFAULTS },
