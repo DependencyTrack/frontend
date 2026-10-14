@@ -55,6 +55,10 @@ export async function login(
   await expect(page).not.toHaveURL(/\/login/);
 }
 
+export async function openUserMenu(page) {
+  await page.locator('.fa-user-circle-o').click();
+}
+
 export async function search(page, text, within = page) {
   const box = within.getByRole('searchbox', { name: 'Search' });
   const loading = within

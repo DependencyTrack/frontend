@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import axios from 'axios';
 import api from '../shared/api.json';
-import globals from '../shared/globals';
+import state from '../shared/state';
 import { toastr } from '../plugins/toastr';
 import i18n from '../i18n';
 import EventBus from '../shared/eventbus';
@@ -1268,7 +1268,7 @@ router.beforeEach((to, _from, next) => {
               headers: { Authorization: `Bearer ${token}` },
             })
             .then((result) => {
-              globals.$currentUser = result.data;
+              state.currentUser = result.data;
               // allowed to proceed
               next();
             })

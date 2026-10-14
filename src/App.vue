@@ -25,7 +25,7 @@ import { getUrlVar } from './shared/utils';
 import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import globals from './shared/globals';
+import state from './shared/state';
 import Banner from './views/components/Banner.vue';
 import {
   BANNER_DISMISSED_KEY,
@@ -62,18 +62,15 @@ export default {
     };
 
     const loadSystemCapabilities = () => {
-      globals.$systemCapabilities = undefined;
-      EventBus.emit('systemCapabilitiesUpdated', undefined);
+      state.systemCapabilities = undefined;
       this.axios
         .get(`${this.$api.BASE_URL}/${this.$api.URL_SYSTEM_CAPABILITIES}`)
         .then((result) => {
-          globals.$systemCapabilities = result.data.capabilities;
-          EventBus.emit('systemCapabilitiesUpdated', result.data.capabilities);
+          state.systemCapabilities = result.data.capabilities;
         })
         .catch((error) => {
           console.error('Failed to load system capabilities', error);
-          globals.$systemCapabilities = undefined;
-          EventBus.emit('systemCapabilitiesUpdated', undefined);
+          state.systemCapabilities = undefined;
         });
     };
 
@@ -84,8 +81,7 @@ export default {
       } else {
         sessionStorage.removeItem('token');
         clearPermissions();
-        globals.$systemCapabilities = undefined;
-        EventBus.emit('systemCapabilitiesUpdated', undefined);
+        state.systemCapabilities = undefined;
       }
       setAuthHeader(token);
       if (token) {

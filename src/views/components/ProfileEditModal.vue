@@ -44,13 +44,12 @@
 
 <script>
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
-import globalVarsMixin from '@/mixins/globalVarsMixin';
-import EventBus from '@/shared/eventbus';
+import state from '@/shared/state';
 import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProfileEditModal',
-  mixins: [globalVarsMixin, modalMixin],
+  mixins: [modalMixin],
   components: {
     BInputGroupFormInput,
   },
@@ -64,20 +63,23 @@ export default {
   },
   methods: {
     getSelf: function () {
-      this.username = this.currentUser.username;
-      this.fullname = this.currentUser.fullname;
-      this.email = this.currentUser.email;
+      this.username = state.currentUser.username;
+      this.fullname = state.currentUser.fullname;
+      this.email = state.currentUser.email;
     },
     updateUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
       this.axios
         .post(url, {
           username: this.username,
           fullname: this.fullname,
           email: this.email,
         })
-        .then(() => {
-          EventBus.emit('profileUpdated');
+        .then(() =>
+          this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`),
+        )
+        .then((response) => {
+          state.currentUser = response.data;
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.profile_updated'));
         })

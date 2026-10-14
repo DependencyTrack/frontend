@@ -115,13 +115,14 @@
 
 <script>
 import common from '../../shared/common';
-import globalVarsMixin from '../../mixins/globalVarsMixin';
+import state from '../../shared/state';
 import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'AboutModal',
-  mixins: [globalVarsMixin, modalMixin],
+  mixins: [modalMixin],
   computed: {
+    dtrack: () => state.dtrack,
     serverTimestamp: function () {
       return common.formatTimestamp(this.dtrack.timestamp, true);
     },
