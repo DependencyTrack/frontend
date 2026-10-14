@@ -159,10 +159,13 @@
               />
             </b-form-group>
             <div style="margin-bottom: 1rem">
-              <label>{{ $t('message.parent') }}</label>
+              <label for="project-parent-input">{{
+                $t('message.parent')
+              }}</label>
               <multiselect
                 v-model="selectedParent"
-                id="multiselect"
+                v-multiselect-label
+                id="project-parent-input"
                 :custom-label="createProjectLabel"
                 :placeholder="this.$t('message.search_parent')"
                 open-direction="bottom"
