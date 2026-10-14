@@ -87,10 +87,6 @@ const routes = [
     path: 'services/:service',
     landmark: header(() => 'e2e-service'),
     title: () => 'e2e-service ▸ 1.0.0',
-    // ServiceDetailsModal binds service.provider.name, and the seeded service has no provider.
-    allow: [
-      /TypeError: Cannot read properties of undefined \(reading 'name'\)/,
-    ],
   },
   { path: 'vulnerabilities', landmark: button('Create Vulnerability') },
   {

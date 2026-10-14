@@ -9,10 +9,14 @@ test('switch the language with the locale picker', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Projects' })).toBeVisible();
   expect(germanMessages).toEqual([]);
   await page.locator('.fa-user-circle-o').click();
-  await page
+  const picker = page
     .getByRole('combobox')
-    .filter({ has: page.getByRole('option', { name: /DE$/ }) })
-    .selectOption('de');
+    .filter({ has: page.getByRole('option', { name: /DE$/ }) });
+  await expect(picker.getByRole('option', { name: /UK-UA$/ })).toHaveAttribute(
+    'title',
+    'Ukrainian',
+  );
+  await picker.selectOption('de');
   await expect(page.getByRole('link', { name: 'Projekte' })).toBeVisible();
   expect(germanMessages).toHaveLength(1);
 });

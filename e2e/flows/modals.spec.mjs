@@ -40,8 +40,6 @@ const modals = [
     () => `services/${seed().serviceUuid}`,
     button('View Details'),
     'Service Details',
-    // ServiceDetailsModal binds service.provider.name, and the seeded service has no provider.
-    [/TypeError: Cannot read properties of undefined \(reading 'name'\)/],
   ],
   ['vulnerabilities', button('Create Vulnerability'), 'Create Vulnerability'],
   ['licenses', button('Add License'), 'Add License'],

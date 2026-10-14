@@ -12,7 +12,7 @@ test('create a project with tags and a parent', async ({ page, api }) => {
   const modal = page.getByRole('dialog', { name: 'Create Project' });
   await modal.getByLabel('Project Name').fill(name);
   await modal.getByLabel('Version', { exact: true }).fill('1.0.0');
-  await modal.getByText('Type to search parent').click();
+  await modal.getByText('Parent', { exact: true }).click();
   await page.keyboard.type(parent.name);
   await modal.getByRole('option', { name: new RegExp(parent.name) }).click();
   await modal.getByPlaceholder('Add Tag').fill(tag);

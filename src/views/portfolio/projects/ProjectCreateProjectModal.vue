@@ -109,8 +109,12 @@
           />
         </b-form-group>
         <div v-if="requiresTeam" style="margin-bottom: 1rem">
-          <label class="required">{{ $t('message.team') }}</label>
+          <label class="required" for="project-team-input">{{
+            $t('message.team')
+          }}</label>
           <multiselect
+            v-multiselect-label
+            id="project-team-input"
             v-model="selectedTeams"
             :options="availableTeams"
             :multiple="true"
@@ -133,10 +137,11 @@
           </div>
         </div>
         <div style="margin-bottom: 1rem">
-          <label>{{ $t('message.parent') }}</label>
+          <label for="project-parent-input">{{ $t('message.parent') }}</label>
           <multiselect
             v-model="selectedParent"
-            id="multiselect"
+            v-multiselect-label
+            id="project-parent-input"
             :custom-label="createProjectLabel"
             :placeholder="this.$t('message.search_parent')"
             open-direction="bottom"

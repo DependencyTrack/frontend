@@ -138,6 +138,9 @@ export default {
       this.title = this.$t('message.edit_affected_component');
     });
   },
+  beforeUnmount() {
+    EventBus.off('object-event');
+  },
   methods: {
     composeObject: function () {
       if (this.affectedComponent.versionType === 'RANGE') {
@@ -203,9 +206,6 @@ export default {
     cancelEdit(cancel) {
       this.resetValues();
       cancel();
-    },
-    beforeDestroy() {
-      EventBus.off('object-event');
     },
   },
 };

@@ -103,7 +103,7 @@
             id="service-provider-name-input"
             input-group-size="mb-3"
             type="text"
-            v-model="service.provider.name"
+            v-model="providerName"
             required="false"
             :label="$t('message.provider_name')"
             :tooltip="this.$t('message.service_provider_name_desc')"
@@ -117,7 +117,7 @@
               id="providerUrlsTable"
               ref="providerUrlsTable"
               :columns="providerUrlsTableColumns"
-              :data="service.provider.urls"
+              :data="service.provider?.urls"
               :options="providerUrlsTableOptions"
             >
             </bootstrap-table>
@@ -131,7 +131,7 @@
               id="contactsTable"
               ref="contactsTable"
               :columns="contactsTableColumns"
-              :data="service.provider.contacts"
+              :data="service.provider?.contacts"
               :options="contactsTableOptions"
             >
             </bootstrap-table>
@@ -411,6 +411,16 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    providerName: {
+      get() {
+        return this.service.provider?.name;
+      },
+      set(name) {
+        (this.service.provider ??= {}).name = name;
+      },
+    },
   },
   methods: {
     updateService: function () {

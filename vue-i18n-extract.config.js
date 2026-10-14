@@ -15,6 +15,7 @@ module.exports = {
     'language.pt',
     'language.pt-BR',
     'language.ru',
+    'language.uk-UA',
     'language.zh',
     'language.zh-TW',
     'validation.confirmed',
