@@ -52,15 +52,13 @@ jobs:
       - name: Set up NodeJs
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # tag=v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Run Npm Build
-        env:
-          CI: true
         run: |-
           npm ci
-          npm run build --if-present
+          npm run build
           mv dist/cyclonedx/bom.* .
           rmdir dist/cyclonedx
 

@@ -25,5 +25,5 @@ module.exports = {
   ],
   missingTranslationString: null,
   languageFiles: 'src/i18n/locales/*.json',
-  vueFiles: 'src/**/!(vendors)/*.{vue,js}',
+  vueFiles: 'src/**/*.{vue,js}',
 };

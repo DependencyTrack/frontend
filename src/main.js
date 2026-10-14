@@ -13,7 +13,6 @@ import toastr from './plugins/toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
 import globals from './shared/globals';
-import version from './version.json';
 import { getContextPath } from './shared/utils';
 
 globals.$api = api;
@@ -83,7 +82,7 @@ function createVueApp() {
       globals.$dtrack = result.data;
     });
 
-  globals.$version = version;
+  globals.$version = __VERSION__;
 
   const app = createApp(App);
   app.config.globalProperties = Object.assign(

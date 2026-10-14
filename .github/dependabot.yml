@@ -33,7 +33,7 @@ updates:
         patterns:
           - "github/codeql-action/*"
   #
-  # 5.0.x maintenance branch
+  # 5.2.x maintenance branch
   #
   - package-ecosystem: npm
     target-branch: 5.2.x
