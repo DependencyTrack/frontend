@@ -1,5 +1,9 @@
 <template>
-  <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
+  <div
+    class="animated fadeIn"
+    v-if="ready"
+    v-permission="PERMISSIONS.VIEW_PORTFOLIO"
+  >
     <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
       <b-card-body class="p-3 clearfix">
         <b-row>
@@ -238,6 +242,7 @@ export default {
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
+      ready: false,
     };
   },
   methods: {
@@ -282,44 +287,112 @@ export default {
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'overview'];
     },
+    // A matching project is opened in place of this page. A 404 stays here
+    // with no message. A 403 stays here; the response interceptor shows
+    // "You are not authorized to access this page".
+    followMatchedProject: function (uuid) {
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${uuid}/matched-project`;
+      return this.axios
+        .get(url, {
+          validateStatus: (status) =>
+            status === 404 || (status >= 200 && status < 300),
+        })
+        .then((response) => {
+          if (this.uuid !== uuid) {
+            return false;
+          }
+          if (
+            response.status === 200 &&
+            response.data &&
+            typeof response.data.path === 'string' &&
+            response.data.path.startsWith('/projects/')
+          ) {
+            return this.$router.replace(response.data.path).then(
+              () => true,
+              () => false,
+            );
+          }
+          return false;
+        })
+        .catch(() => false);
+    },
+    loadComponent: function (uuid) {
+      let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${uuid}`;
+      this.axios.get(componentUrl).then((response) => {
+        if (this.uuid !== uuid) {
+          return;
+        }
+        this.component = response.data;
+        EventBus.$emit(
+          'addCrumb',
+          this.componentLabel,
+          'Project',
+          this.component.project.uuid,
+          this.projectLabel,
+        );
+        this.$title = this.componentLabel;
+      });
+
+      let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/current`;
+      this.axios.get(metricsUrl).then((response) => {
+        if (this.uuid !== uuid) {
+          return;
+        }
+        this.currentCritical = common.valueWithDefault(
+          response.data.critical,
+          0,
+        );
+        this.currentHigh = common.valueWithDefault(response.data.high, 0);
+        this.currentMedium = common.valueWithDefault(response.data.medium, 0);
+        this.currentLow = common.valueWithDefault(response.data.low, 0);
+        this.currentUnassigned = common.valueWithDefault(
+          response.data.unassigned,
+          0,
+        );
+        this.currentRiskScore = common.valueWithDefault(
+          response.data.inheritedRiskScore,
+          0,
+        );
+      });
+    },
+    openComponent: function () {
+      let uuid = this.uuid;
+      this.followMatchedProject(uuid).then((redirected) => {
+        if (redirected || this.uuid !== uuid) {
+          return;
+        }
+        this.ready = true;
+        this.loadComponent(uuid);
+        this.$nextTick(() => {
+          if (this.uuid !== uuid) {
+            return;
+          }
+          let tab = this.getTabFromRoute();
+          if (tab) {
+            tab.active = true;
+          }
+        });
+      });
+    },
   },
   beforeMount() {
     this.uuid = this.$route.params.uuid;
   },
   mounted() {
-    let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
-    this.axios.get(componentUrl).then((response) => {
-      this.component = response.data;
-      EventBus.$emit(
-        'addCrumb',
-        this.componentLabel,
-        'Project',
-        this.component.project.uuid,
-        this.projectLabel,
-      );
-      this.$title = this.componentLabel;
-    });
-
-    let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
-    this.axios.get(metricsUrl).then((response) => {
-      this.currentCritical = common.valueWithDefault(response.data.critical, 0);
-      this.currentHigh = common.valueWithDefault(response.data.high, 0);
-      this.currentMedium = common.valueWithDefault(response.data.medium, 0);
-      this.currentLow = common.valueWithDefault(response.data.low, 0);
-      this.currentUnassigned = common.valueWithDefault(
-        response.data.unassigned,
-        0,
-      );
-      this.currentRiskScore = common.valueWithDefault(
-        response.data.inheritedRiskScore,
-        0,
-      );
-    });
-
-    this.getTabFromRoute().active = true;
+    this.openComponent();
   },
   watch: {
-    $route() {
+    $route(to, from) {
+      if (to.name !== 'Component') {
+        return;
+      }
+      if (to.params.uuid !== from.params.uuid) {
+        this.uuid = to.params.uuid;
+        this.component = {};
+        this.ready = false;
+        this.openComponent();
+        return;
+      }
       this.getTabFromRoute().activate();
     },
   },
