@@ -32,6 +32,7 @@
       />
     </b-form-group>
     <b-form-group
+      v-if="isVersionSelectable"
       id="fieldset-export-version"
       :label="this.$t('message.cyclonedx_version')"
       label-for="input-export-version"
@@ -99,10 +100,16 @@ export default {
       ];
       const options = [];
       if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
-        options.push({
-          value: 'inventory',
-          text: this.$t('message.inventory'),
-        });
+        options.push(
+          {
+            value: 'inventory',
+            text: this.$t('message.inventory'),
+          },
+          {
+            value: 'original',
+            text: this.$t('message.original_unmodified'),
+          },
+        );
       }
       if (this.isPermitted(vulnPermissions)) {
         options.push(
@@ -126,7 +133,10 @@ export default {
       return null;
     },
     isFormatSelectable() {
-      return this.type !== 'vex';
+      return this.type !== 'vex' && this.type !== 'original';
+    },
+    isVersionSelectable() {
+      return this.type !== 'original';
     },
     effectiveFormat() {
       return this.isFormatSelectable ? this.format : 'JSON';
@@ -158,6 +168,7 @@ export default {
       this.isDownloading = false;
     },
     download: function () {
+      const isOriginal = this.type === 'original';
       const isVex = this.type === 'vex';
       const resource = isVex ? this.$api.URL_VEX : this.$api.URL_BOM;
       const params = { download: 'true', version: this.version };
@@ -166,13 +177,20 @@ export default {
         params.variant = this.type;
       }
       this.isDownloading = true;
-      common
-        .downloadAttachment(
-          this.axios,
-          `${this.$api.BASE_URL}/${resource}/cyclonedx/project/${this.uuid}`,
-          params,
-          `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
-        )
+      const downloadRequest = isOriginal
+        ? common.downloadAttachment(
+            this.axios,
+            `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/bom/original`,
+            undefined,
+            'bom',
+          )
+        : common.downloadAttachment(
+            this.axios,
+            `${this.$api.BASE_URL}/${resource}/cyclonedx/project/${this.uuid}`,
+            params,
+            `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
+          );
+      downloadRequest
         .then(() => {
           this.visible = false;
         })
