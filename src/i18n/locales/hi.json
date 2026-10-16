@@ -820,6 +820,7 @@
     "occurrences_none_hint": "या तो कोई घटना नहीं की गई है, या बीओएम उत्पन्न करने वाले उपकरण को घटना डेटा प्रदान नहीं करता है।",
     "occurrences_of_component": "घटक {name} की घटनाएँ",
     "oidc_availability_check_failed": "OpenID कनेक्ट की उपलब्धता निर्धारित करने में विफल",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "OpenID Connect पहचान प्रदाता पर रीडायरेक्ट करते समय एक त्रुटि हुई",
     "only_direct_tooltip": "केवल प्रत्यक्ष निर्भरताएँ दिखाएँ, सकर्मक निर्भरताएँ छिपाएँ",
     "only_latest_project_versions": null,

@@ -10,12 +10,117 @@ import { test, expect } from '../test.mjs';
 test.use({
   launchOptions: { args: ['--host-resolver-rules=MAP hydra 127.0.0.1'] },
 });
+// Hydra's in-memory store fails concurrent authorization flows with a serialization error.
+test.describe.configure({ mode: 'default' });
 
-test('log in through OIDC', async ({ page, api }) => {
-  const username = uniqueName('e2e-oidc');
-  await api.send('PUT', '/v1/user/oidc', { username });
-  await api.send('POST', `/v1/permission/VIEW_PORTFOLIO/user/${username}`);
+const REJECTION =
+  'redirect_uri <https://dt.example/cb> is not registered & more';
 
+for (const flow of ['code', 'implicit']) {
+  test(`log in through OIDC (${flow} flow)`, async ({ page, api }) => {
+    const username = uniqueName('e2e-oidc');
+    await api.send('PUT', '/v1/user/oidc', { username });
+    await api.send('POST', `/v1/permission/VIEW_PORTFOLIO/user/${username}`);
+    await routeThroughHydra(page, flow, username);
+
+    await page.goto('login');
+    await page.getByRole('button', { name: 'OpenID Logo' }).click();
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(
+      page.getByRole('heading', { name: 'Portfolio Vulnerabilities' }),
+    ).toBeVisible();
+
+    // The callback must not stay in history, or Back replays it and reports a failed login.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/login$/);
+  });
+
+  test(`show the IdP's error verbatim (${flow} flow)`, async ({ page }) => {
+    await routeThroughHydra(page, flow, uniqueName('e2e-oidc'), {
+      rejectLogin: {
+        error: 'access_denied',
+        error_description: `${REJECTION} <img src=x onerror='window.injected=true'>`,
+      },
+    });
+
+    await page.goto('login');
+    await page.getByRole('button', { name: 'OpenID Logo' }).click();
+    await expect(page).toHaveURL(/\/login\?error=oidc$/);
+    await expect(
+      page.getByText(
+        `OpenID Connect login failed (access_denied: ${REJECTION} <img src=x onerror='window.injected=true'>)`,
+        { exact: true },
+      ),
+    ).toBeVisible();
+    expect(await page.evaluate(() => window.injected)).toBeUndefined();
+
+    await page.reload();
+    await expect(
+      page.getByText('OpenID Connect login failed', { exact: true }),
+    ).toBeVisible();
+
+    await page.goBack();
+    await expect(page).toHaveURL(/\/login$/);
+  });
+
+  test(`reject OIDC callback with tampered state (${flow} flow)`, async ({
+    page,
+  }) => {
+    // An IdP error, so the test also fails if the error is read before the state is checked.
+    await routeThroughHydra(page, flow, uniqueName('e2e-oidc'), {
+      rejectLogin: { error: 'access_denied', error_description: REJECTION },
+      rewriteCallback: (url) => tamper(url, 'state'),
+    });
+
+    await page.goto('login');
+    await page.getByRole('button', { name: 'OpenID Logo' }).click();
+    await expect(page).toHaveURL(/\/login\?error=oidc$/);
+    await expect(
+      page.getByText('OpenID Connect login failed', { exact: true }),
+    ).toBeVisible();
+  });
+}
+
+test('reject OIDC callback with mismatched nonce (implicit flow)', async ({
+  page,
+}) => {
+  await routeThroughHydra(page, 'implicit', uniqueName('e2e-oidc'), {
+    rewriteRequest: (url) => tamper(url, 'nonce'),
+  });
+
+  await page.goto('login');
+  await page.getByRole('button', { name: 'OpenID Logo' }).click();
+  await expect(page).toHaveURL(/\/login\?error=oidc$/);
+  await expect(
+    page.getByText('OpenID Connect login failed', { exact: true }),
+  ).toBeVisible();
+});
+
+test('ignore OIDC error details in the URL', async ({ page }) => {
+  await page.goto(
+    'login?error=oidc&oidc_error=account_locked&error_description=Call+support',
+  );
+  await expect(
+    page.getByText('OpenID Connect login failed', { exact: true }),
+  ).toBeVisible();
+});
+
+function tamper(url, param) {
+  return new URL(
+    url.href.replace(new RegExp(`([?#&]${param}=)[^&]+`), '$1tampered'),
+  );
+}
+
+async function routeThroughHydra(
+  page,
+  flow,
+  username,
+  {
+    rewriteRequest = (url) => url,
+    rewriteCallback = (url) => url,
+    rejectLogin,
+  } = {},
+) {
   await page.route('**/static/config.json', (route) =>
     route.fulfill({
       json: {
@@ -23,7 +128,7 @@ test('log in through OIDC', async ({ page, api }) => {
         OIDC_ISSUER: 'http://hydra:4444',
         OIDC_CLIENT_ID,
         OIDC_SCOPE: 'openid profile email',
-        OIDC_FLOW: 'code',
+        OIDC_FLOW: flow,
       },
     }),
   );
@@ -31,16 +136,27 @@ test('log in through OIDC', async ({ page, api }) => {
   await page.route(
     (url) => url.href.startsWith('http://hydra:4444/oauth2/auth'),
     async (route) => {
-      let url = new URL(route.request().url());
+      let url = rewriteRequest(new URL(route.request().url()));
       while (url.origin !== APP_URL) {
         if (url.hostname === 'login.e2e.invalid') {
           url = new URL(
             url.pathname === '/login'
-              ? await accept('login', url.searchParams.get('login_challenge'), {
-                  subject: username,
-                })
-              : await accept(
+              ? rejectLogin
+                ? await answer(
+                    'login',
+                    'reject',
+                    url.searchParams.get('login_challenge'),
+                    rejectLogin,
+                  )
+                : await answer(
+                    'login',
+                    'accept',
+                    url.searchParams.get('login_challenge'),
+                    { subject: username },
+                  )
+              : await answer(
                   'consent',
+                  'accept',
                   url.searchParams.get('consent_challenge'),
                   {
                     grant_scope: ['openid', 'profile', 'email'],
@@ -59,21 +175,17 @@ test('log in through OIDC', async ({ page, api }) => {
           url = new URL(res.headers().location, url);
         }
       }
-      await route.fulfill({ status: 302, headers: { location: url.href } });
+      await route.fulfill({
+        status: 302,
+        headers: { location: rewriteCallback(url).href },
+      });
     },
   );
+}
 
-  await page.goto('login');
-  await page.getByRole('button', { name: 'OpenID Logo' }).click();
-  await expect(page).toHaveURL(/\/dashboard$/);
-  await expect(
-    page.getByRole('heading', { name: 'Portfolio Vulnerabilities' }),
-  ).toBeVisible();
-});
-
-async function accept(flow, challenge, body) {
+async function answer(flow, action, challenge, body) {
   const res = await fetch(
-    `${HYDRA_ADMIN_URL}/oauth2/auth/requests/${flow}/accept?${flow}_challenge=${challenge}`,
+    `${HYDRA_ADMIN_URL}/oauth2/auth/requests/${flow}/${action}?${flow}_challenge=${challenge}`,
     {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -82,7 +194,7 @@ async function accept(flow, challenge, body) {
   );
   if (!res.ok) {
     throw new Error(
-      `Accepting the ${flow} challenge failed with ${res.status}: ${await res.text()}`,
+      `Answering the ${flow} challenge with ${action} failed with ${res.status}: ${await res.text()}`,
     );
   }
   return (await res.json()).redirect_to;

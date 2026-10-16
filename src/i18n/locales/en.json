@@ -821,6 +821,7 @@
     "occurrences_none_hint": "Either no occurrences identified, or the tool that generated the BOM does not provide occurrence data.",
     "occurrences_of_component": "Occurrences of component {name}",
     "oidc_availability_check_failed": "Failed to determine availability of OpenID Connect",
+    "oidc_login_failed": "OpenID Connect login failed",
     "oidc_redirect_failed": "An error occurred while redirecting to the OpenID Connect identity provider",
     "only_direct_tooltip": "Only show direct dependencies, hiding transitive dependencies",
     "only_latest_project_versions": "Only latest project versions",

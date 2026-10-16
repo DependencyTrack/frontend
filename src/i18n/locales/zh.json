@@ -820,6 +820,7 @@
     "occurrences_none_hint": "尚未确定的出现，或者生成BOM的工具不会提供出现数据。",
     "occurrences_of_component": "组件{name}的出现",
     "oidc_availability_check_failed": "无法确定 OpenID Connect 是否可用",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "重定向至 OpenID Connect 身份提供商时发生错误",
     "only_direct_tooltip": "仅显示直接依赖，隐藏间接依赖",
     "only_latest_project_versions": null,

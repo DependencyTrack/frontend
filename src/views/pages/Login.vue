@@ -256,6 +256,19 @@ export default {
     },
   },
   mounted() {
+    if (this.$route.query.error === 'oidc') {
+      this.showInformationalModal = true;
+      this.loginError = this.$t('message.oidc_login_failed');
+
+      // Show the error the OIDC IdP reported to help users debug failures.
+      // NB: Written by oidc-callback.html. NOT using URL params as those
+      // can be crafted to inject arbitrary text.
+      const details = sessionStorage.getItem('oidc.error');
+      sessionStorage.removeItem('oidc.error');
+      if (details) {
+        this.loginError += ` (${details})`;
+      }
+    }
     this.checkOidcAvailability()
       .then(async (oidcAvailable) => {
         if (!oidcAvailable) {
@@ -263,19 +276,13 @@ export default {
           return;
         }
 
-        const { default: Oidc } = await import('oidc-client');
-        this.oidcUserManager = new Oidc.UserManager({
-          userStore: new Oidc.WebStorageStateStore(),
-          authority: this.$oidc.ISSUER,
-          client_id: this.$oidc.CLIENT_ID,
-          redirect_uri:
-            getContextPath() !== ''
-              ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
-              : `${window.location.origin}/static/oidc-callback.html`,
-          response_type:
-            this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
+        const { createOidcClient } = await import('../../shared/oidcClient');
+        this.oidcUserManager = createOidcClient({
+          issuer: this.$oidc.ISSUER,
+          clientId: this.$oidc.CLIENT_ID,
           scope: this.$oidc.SCOPE,
-          loadUserInfo: false,
+          flow: this.$oidc.FLOW,
+          redirectUri: `${window.location.origin}${getContextPath()}/static/oidc-callback.html`,
         });
         this.oidcAvailable = true;
 

@@ -135,8 +135,8 @@ async function registerOidcClient() {
     body: JSON.stringify({
       client_id: OIDC_CLIENT_ID,
       token_endpoint_auth_method: 'none',
-      grant_types: ['authorization_code'],
-      response_types: ['code'],
+      grant_types: ['authorization_code', 'implicit'],
+      response_types: ['code', 'id_token token'],
       scope: 'openid profile email',
       redirect_uris: [`${APP_URL}/static/oidc-callback.html`],
     }),

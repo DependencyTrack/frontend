@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Либо не выявлено вхождения, либо инструмент, который генерировал BOM, не предоставляет данные происшествия.",
     "occurrences_of_component": "Входы компонента {name}",
     "oidc_availability_check_failed": "Не удалось определить доступность OpenID Connect",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Произошла ошибка при перенаправлении к поставщику идентификации OpenID Connect",
     "only_direct_tooltip": "Показывать только прямые зависимости, скрывая транзитивные зависимости",
     "only_latest_project_versions": null,

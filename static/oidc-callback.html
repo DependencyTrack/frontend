@@ -7,7 +7,7 @@
 <body>
     <script type="module">
         import axios from "axios";
-        import Oidc from "oidc-client";
+        import { createOidcClient } from "../src/shared/oidcClient.js";
 
         const acceptableRootContextPaths = [
             '/dashboard', '/projects', '/components', '/services', '/vulnerabilities', '/licenses', '/policy', '/admin',
@@ -38,10 +38,12 @@
             .then((response) => {
                 let config = response.data;
 
-                return new Oidc.UserManager({
-                    response_mode: config.OIDC_FLOW === "implicit" ? "fragment" : "query",
-                    userStore: new Oidc.WebStorageStateStore(),
-                    loadUserInfo: false
+                return createOidcClient({
+                    issuer: config.OIDC_ISSUER,
+                    clientId: config.OIDC_CLIENT_ID,
+                    scope: config.OIDC_SCOPE,
+                    flow: config.OIDC_FLOW,
+                    redirectUri: window.location.origin + window.location.pathname
                 });
             })
             .then((oidcUserManager) => {
@@ -49,10 +51,14 @@
             })
             .then((user) => {
                 const redirectTo = user.state;
-                window.location.href = redirectTo && isUrlSaveForRedirect(redirectTo) ? redirectTo : "../";
+                window.location.replace(redirectTo && isUrlSaveForRedirect(redirectTo) ? redirectTo : "../");
             })
             .catch((err) => {
                 console.log(err);
+                if (err.error) {
+                    sessionStorage.setItem("oidc.error", [err.error, err.error_description].filter(Boolean).join(": "));
+                }
+                window.location.replace("../login?error=oidc");
             });
     </script>
 </body>
