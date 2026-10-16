@@ -94,7 +94,7 @@
               :placeholder="$t('message.version_distance_epoch')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.epoch"
             ></b-form-input>
             <b-form-input
@@ -102,7 +102,7 @@
               :placeholder="$t('message.version_distance_major')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.major"
             ></b-form-input>
             <b-form-input
@@ -110,7 +110,7 @@
               :placeholder="$t('message.version_distance_minor')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.minor"
             ></b-form-input>
             <b-form-input
@@ -118,7 +118,7 @@
               :placeholder="$t('message.version_distance_patch')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.patch"
             ></b-form-input>
             <b-tooltip target="input-value-distance-epoch"
