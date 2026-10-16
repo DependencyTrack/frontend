@@ -393,7 +393,7 @@ test('login', async ({ page }) => {
   page.on('request', (req) => scripts.push(req.url()));
   await page.goto('login');
   await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
-  expect(scripts.filter((url) => url.includes('oidc-client'))).toEqual([]);
+  expect(scripts.filter((url) => url.includes('oidcClient'))).toEqual([]);
 });
 
 test('change-password', async ({ page }) => {

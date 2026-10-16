@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Nessuna occorrenza identificata o lo strumento che ha generato il BOM non fornisce dati di occorrenza.",
     "occurrences_of_component": "Occorrenze del componente {name}",
     "oidc_availability_check_failed": "Impossibile determinare la disponibilità di OpenID Connect",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Si è verificato un errore durante il reindirizzamento al provider di identità OpenID Connect",
     "only_direct_tooltip": "Mostra solo le dipendenze dirette, nascondendo le dipendenze transitive",
     "only_latest_project_versions": null,

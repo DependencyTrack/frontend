@@ -820,6 +820,7 @@
     "occurrences_none_hint": "未識別任何事件，或產生 BOM 的工具不提供事件資料。",
     "occurrences_of_component": "組件 {name} 的出現次數",
     "oidc_availability_check_failed": "無法確定 OpenID Connect 是否可用",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "重定向至 OpenID Connect 身分提供者時發生錯誤",
     "only_direct_tooltip": "僅顯示直接依賴關係，隱藏傳遞依賴關係",
     "only_latest_project_versions": null,

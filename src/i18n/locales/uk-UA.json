@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Або не виявлено жодних випадків, або інструмент, який генерував BOM, не надає даних про виникнення.",
     "occurrences_of_component": "Випадки компонента {name}",
     "oidc_availability_check_failed": "Не вдалося визначити доступність OpenID Connect",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Сталася помилка під час перенаправлення до постачальника ідентифікації OpenID Connect",
     "only_direct_tooltip": "Показувати лише прямі залежності, приховуючи транзитивні",
     "only_latest_project_versions": null,

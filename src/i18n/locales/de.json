@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Entweder wurden keine Vorkommen identifiziert, oder das Tool, das die BOM generiert hat, liefert keine Vorkommensdaten.",
     "occurrences_of_component": "Vorkommen der Komponente {name}",
     "oidc_availability_check_failed": "Verfügbarkeit von OpenID Connect konnte nicht ermittelt werden",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Beim Umleiten zum OpenID Connect-Identitätsanbieter ist ein Fehler aufgetreten",
     "only_direct_tooltip": "Nur direkte Abhängigkeiten anzeigen, transitive Abhängigkeiten ausblenden",
     "only_latest_project_versions": null,

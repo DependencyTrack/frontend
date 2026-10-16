@@ -821,6 +821,7 @@
     "occurrences_none_hint": "식별된 발생 위치가 없거나, BOM을 생성한 도구가 발생 위치 데이터를 제공하지 않습니다.",
     "occurrences_of_component": "컴포넌트 {name}의 발생 위치",
     "oidc_availability_check_failed": "OpenID Connect 가용성 확인에 실패했습니다",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "OpenID Connect 공급자로 리디렉션하는 중 오류가 발생했습니다",
     "only_direct_tooltip": "전이 의존성을 숨기고 직접 의존성만 표시",
     "only_latest_project_versions": "최신 프로젝트 버전만",

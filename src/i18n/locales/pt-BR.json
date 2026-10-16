@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Nenhuma ocorrência identificada ou a ferramenta que gerou a BOM não fornece dados de ocorrência.",
     "occurrences_of_component": "Ocorrências do componente {name}",
     "oidc_availability_check_failed": "Falha ao determinar a disponibilidade do OpenID Connect",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Ocorreu um erro ao redirecionar para o provedor de identidade OpenID Connect",
     "only_direct_tooltip": "Mostrar apenas dependências diretas, ocultando dependências transitivas",
     "only_latest_project_versions": null,

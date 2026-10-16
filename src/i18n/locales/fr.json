@@ -820,6 +820,7 @@
     "occurrences_none_hint": "Soit aucune occurrence identifiée, soit l'outil qui a généré la nomenclature ne fournit pas de données d'occurrence.",
     "occurrences_of_component": "Occurrences de composant {name}",
     "oidc_availability_check_failed": "Échec de la détermination de la disponibilité d'OpenID Connect",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "Une erreur s'est produite lors de la redirection vers le fournisseur d'identité OpenID Connect",
     "only_direct_tooltip": "Afficher uniquement les dépendances directes, en masquant les dépendances transitives",
     "only_latest_project_versions": null,

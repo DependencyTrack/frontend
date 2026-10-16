@@ -820,6 +820,7 @@
     "occurrences_none_hint": "発生が特定されていないか、BOMを生成したツールは発生データを提供しません。",
     "occurrences_of_component": "コンポーネントの発生{name}",
     "oidc_availability_check_failed": "OpenID Connect の可用性を判断できませんでした",
+    "oidc_login_failed": null,
     "oidc_redirect_failed": "OpenID Connect ID プロバイダーへのリダイレクト中にエラーが発生しました",
     "only_direct_tooltip": "直接的な依存関係のみを表示し、推移的な依存関係を非表示にする",
     "only_latest_project_versions": null,
