@@ -101,9 +101,7 @@ const OidcGroups = () =>
 const ServiceAccounts = () =>
   import('@/views/administration/accessmanagement/ServiceAccounts/index.vue');
 const WorkloadIdentityProviders = () =>
-  import(
-    '@/views/administration/accessmanagement/WorkloadIdentityProviders/index.vue'
-  );
+  import('@/views/administration/accessmanagement/WorkloadIdentityProviders/index.vue');
 const Teams = () =>
   import('@/views/administration/accessmanagement/Teams/index.vue');
 const Permissions = () =>
