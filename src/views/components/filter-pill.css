@@ -14,7 +14,7 @@
 .filter-pill-wrapper.filter-pill-active:has(.show) {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: #fff;
+  color: var(--bs-gray-900);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover .filter-pill-segment-value,
@@ -41,7 +41,7 @@
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
   background: var(--bs-primary) !important;
-  color: #fff !important;
+  color: var(--bs-gray-900) !important;
 }
 
 /* The form owns all padding, and clipping keeps the footer flush with the
@@ -104,7 +104,7 @@
 }
 
 .filter-pill-segment-value {
-  color: var(--bs-info);
+  color: var(--bs-body-color);
 }
 
 /* --- External clear button (sibling of b-dropdown) --- */
@@ -167,5 +167,5 @@
 .boolean-filter-pill:hover {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: #fff;
+  color: var(--bs-gray-900);
 }

@@ -1,8 +1,3 @@
-code,
-pre {
-  font-family: "Courier 10 Pitch", Courier, monospace;
-}
-
 // Inline code
 code {
   padding: 2px 4px;
@@ -21,8 +16,8 @@ pre {
   word-break: break-all;
   word-wrap: break-word;
   background-color: $grey-750;
-  border: 1px solid $grey-900;
-  border-radius: 0.25rem;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
 
   code {
     font-size: inherit;

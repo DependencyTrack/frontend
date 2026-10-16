@@ -36,7 +36,7 @@
     </div>
     <div class="progress-group">
       <div class="progress-group-header">
-        <i class="icon-layers fa-fw progress-group-icon"></i>
+        <i class="fa-solid fa-layer-group fa-fw progress-group-icon"></i>
         <span class="title">{{ $t('message.operational_risk') }}</span>
         <span class="ms-auto fw-bold"
           >{{ operationalCount }}

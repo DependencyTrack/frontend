@@ -20,7 +20,7 @@
                     input-group-size="mb-3"
                     required
                     mode="passive"
-                    icon="icon-user"
+                    icon="fa-solid fa-user"
                     type="text"
                     autocomplete="username email"
                     v-model="input.username"
@@ -34,7 +34,7 @@
                     input-group-size="mb-3"
                     required
                     mode="passive"
-                    icon="icon-lock"
+                    icon="fa-solid fa-lock"
                     type="password"
                     autcomplete="currentpassword"
                     v-model="input.password"

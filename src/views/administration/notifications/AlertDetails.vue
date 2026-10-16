@@ -56,8 +56,7 @@
         </b-button>
         <span
           v-if="filterExpression"
-          class="ms-2 text-muted font-sm"
-          style="font-family: monospace"
+          class="ms-2 text-muted font-sm font-monospace"
           :title="filterExpression"
           >{{
             filterExpression.length > 32

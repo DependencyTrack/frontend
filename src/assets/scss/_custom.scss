@@ -51,30 +51,38 @@ html {
 }
 .severity-critical-bg, .text-bg-CRITICAL {
   background: $severity-critical none;
+  color: color-contrast($severity-critical);
 }
 .severity-high-bg, .text-bg-HIGH {
   background: $severity-high none;
+  color: color-contrast($severity-high);
 }
 .severity-medium-bg, .text-bg-MEDIUM {
   background: $severity-medium none;
+  color: color-contrast($severity-medium);
 }
 .severity-low-bg, .text-bg-LOW {
   background: $severity-low none;
+  color: color-contrast($severity-low);
 }
 .severity-info-bg, .text-bg-INFO {
   background: $severity-info none;
+  color: color-contrast($severity-info);
 }
 .severity-warn-bg {
   background: $severity-medium none;
+  color: color-contrast($severity-medium);
 }
 .severity-fail-bg {
   background: $severity-critical none;
+  color: color-contrast($severity-critical);
 }
 .text-bg-violation-type {
   background: $widget-3;
 }
 .severity-unassigned-bg, .text-bg-UNASSIGNED {
   background: $severity-unassigned none;
+  color: color-contrast($severity-unassigned);
 }
 .severity-bug-icon {
   width:40px;
@@ -272,9 +280,9 @@ input.required, select.required, textarea.required {
 }
 .nav-tabs .nav-link {
   white-space: nowrap;
-  border-top-color: $grey-900;
-  border-left-color: $grey-900;
-  border-right-color: $grey-900;
+  border-top-color: $border-color;
+  border-left-color: $border-color;
+  border-right-color: $border-color;
   border-bottom-color: transparent;
 }
 .nav-tabs .nav-link:hover {
@@ -322,6 +330,11 @@ input.required, select.required, textarea.required {
   background-color: $grey-800;
 }
 
+// $secondary is too dark for text on the dark surfaces.
+.btn-outline-secondary {
+  --bs-btn-color: #{$body-secondary-color};
+}
+
 .btn-spaced-group .btn {
   margin-right: 0.5rem;
 }
@@ -334,7 +347,7 @@ input.required, select.required, textarea.required {
 
 .formattedLicenseContent {
   font-size: 1.25em;
-  font-family: monospace;
+  font-family: var(--bs-font-monospace);
   white-space: pre-wrap;
 }
 
@@ -359,11 +372,16 @@ h6 {
   float: none;
   width: 100%;
 }
-.fixed-table-toolbar .filter-bar {
+.fixed-table-toolbar .bs-bars .filter-bar {
+  margin-bottom: 0;
+}
+.bootstrap-table .fixed-table-toolbar .filter-bar > .search,
+.bootstrap-table .fixed-table-toolbar .filter-bar > .columns {
+  margin-top: 0;
   margin-bottom: 0;
 }
 .fixed-table-toolbar .filter-bar > .columns .btn {
-  padding: .15rem .35rem;
+  padding: .25rem .35rem;
 }
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading {
   background: $grey-750  !important;
@@ -592,25 +610,138 @@ td a.detail-icon {
   padding-top: 0.3rem;
 }
 
-@include media-breakpoint-up(lg) {
-  .header-fixed {
-    .app-header {
-      top: var(--banner-offset, 0);
-    }
+// Font Awesome 7 makes icons fixed-width; the layout relies on Font Awesome 4's natural widths, `fa-fw` opts in.
+:root {
+  --fa-width: auto;
+}
 
-    .app-body {
-      margin-top: calc(#{$navbar-height} + var(--banner-offset, 0px));
-    }
+// Desktop has no app header; the sidebar holds brand and profile instead.
+:root {
+  --app-header-height: #{$navbar-height};
+}
+
+@include media-breakpoint-up(lg) {
+  :root {
+    --app-header-height: 0px;
   }
 
-  .sidebar-fixed {
-    .sidebar {
-      top: calc(#{$navbar-height} + var(--banner-offset, 0px));
-      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+  .app-body {
+    margin-top: var(--banner-offset, 0px);
+  }
+
+  .sidebar-fixed .sidebar {
+    top: var(--banner-offset, 0px);
+    height: calc(100vh - var(--banner-offset, 0px));
+  }
+}
+
+.sidebar-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  // Same height as the breadcrumb, so their bottom borders line up.
+  height: calc(#{$breadcrumb-padding-y * 2 + $font-size-base * $line-height-base} + 1px);
+  padding: 0 1rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.sidebar-brand-minimized {
+  display: none;
+}
+
+.sidebar .sidebar-profile {
+  min-height: 0;
+  border-top: 1px solid $border-color;
+
+  // BootstrapVueNext wraps the toggle in an inline .btn-group.
+  .btn-group {
+    display: flex;
+  }
+
+  .nav-link {
+    width: 100%;
+    overflow: hidden;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 0;
+  }
+
+  .nav-link.show {
+    color: $sidebar-color;
+    background: $sidebar-nav-link-active-bg;
+
+    .nav-icon {
+      color: $primary;
+    }
+  }
+}
+
+.sidebar-footer {
+  display: flex;
+  flex: 0 0 $sidebar-minimizer-height;
+  background-color: rgba(0, 0, 0, .2);
+
+  .sidebar-minimizer {
+    background-color: transparent;
+  }
+}
+
+.sidebar-about {
+  flex: 1;
+  min-width: 0;
+  padding: 0 1rem;
+  overflow: hidden;
+  font-size: 85%;
+  line-height: 1.3;
+  color: $body-secondary-color;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+
+  &:hover {
+    color: $sidebar-color;
+  }
+}
+
+.sidebar-profile-menu {
+  min-width: 14rem;
+  box-shadow: $box-shadow-lg;
+}
+
+@include media-breakpoint-up(lg) {
+  .sidebar-minimized {
+    .sidebar-brand {
+      justify-content: center;
+      padding: 0;
     }
 
-    .app-header + .app-body .sidebar {
-      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+    .sidebar-brand-full,
+    .sidebar-about {
+      display: none;
+    }
+
+    // Same hover flyout as the nav items, but not while the menu is open: it is anchored to the toggle.
+    .sidebar-profile {
+      .nav-item {
+        width: $sidebar-minimized-width;
+        overflow: hidden;
+
+        &:hover:not(:has(.show)) {
+          width: $sidebar-width + $sidebar-minimized-width;
+        }
+      }
+
+      .nav-link {
+        padding-right: 0;
+        text-overflow: clip;
+      }
+    }
+
+    .sidebar-brand-minimized {
+      display: inline;
     }
   }
 }

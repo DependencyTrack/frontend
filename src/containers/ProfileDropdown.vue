@@ -1,7 +1,14 @@
 <template>
-  <b-nav-item-dropdown placement="bottom-end" no-caret>
+  <b-nav-item-dropdown
+    placement="right-end"
+    strategy="fixed"
+    :offset="8"
+    menu-class="sidebar-profile-menu"
+    no-caret
+  >
     <template #button-content>
-      <i class="fa fa-user-circle-o" style="font-size: 1.6em"></i>
+      <i class="nav-icon fa fa-user-circle-o"></i>
+      <span class="sidebar-profile-name">{{ user }}</span>
     </template>
     <b-dropdown-header tag="div" class="text-center">
       {{ $t('message.connected_as') }}
@@ -20,6 +27,10 @@
       <LocalePicker />
     </b-dropdown-form>
     <b-dropdown-divider />
+    <b-dropdown-item @click="$emit('about')"
+      ><i class="fa-solid fa-circle-info text-primary" />
+      {{ $t('message.about') }}</b-dropdown-item
+    >
     <b-dropdown-item @click="logout"
       ><i class="fa fa-sign-out text-primary" />
       {{ $t('message.logout') }}</b-dropdown-item
@@ -33,11 +44,11 @@ import state from '../shared/state';
 import LocalePicker from '@/views/components/LocalePicker.vue';
 
 export default {
-  name: 'DefaultHeaderProfileDropdown',
+  name: 'ProfileDropdown',
   components: {
     LocalePicker,
   },
-  emits: ['editProfile'],
+  emits: ['editProfile', 'about'],
   data: () => {
     return {
       itemsCount: 42,

@@ -31,7 +31,7 @@ $secondary:  $grey-600 !default;
 
 $white:      #fff;
 
-$blue:       #20a8d8 !default;
+$blue:       #60a5fa !default;
 $red:        #f86c6b !default;
 $orange:     #fd8c00 !default;
 $yellow:     #ffc107 !default;
@@ -42,11 +42,10 @@ $info:       $light-blue !default;
 $dark:       $gray-800 !default;
 
 $color-contrast-dark: $gray-900 !default;
-$min-contrast-ratio:  2 !default;
 
 $body-bg:       $grey-800 !default;
 $body-color:    $grey-200 !default;
-$body-secondary-color: $gray-600 !default;
+$body-secondary-color: $gray-500 !default;
 $body-secondary-bg:    $grey-800 !default;
 $body-tertiary-bg:     $grey-750 !default;
 
@@ -60,10 +59,6 @@ $link-decoration:       none !default;
 $link-hover-decoration: underline !default;
 
 $grid-gutter-width: 30px !default;
-
-$border-radius:     .25rem !default;
-$border-radius-sm:  .2rem !default;
-$border-radius-lg:  .3rem !default;
 
 $severity-critical: $red;
 $severity-high: $orange;
@@ -83,7 +78,7 @@ $notification-note: #777777;
 //
 // Define common padding and border radius sizes and more.
 
-$border-color:                      $grey-900 !default;
+$border-color:                      rgba($white, .08) !default;
 $component-active-color:            $grey-750 !default;
 
 // Dropdowns
@@ -179,7 +174,7 @@ $pagination-disabled-border-color:  $border-color !default;
 $breadcrumb-padding-y:     .75rem !default;
 $breadcrumb-padding-x:     1rem !default;
 $breadcrumb-margin-bottom: 1.5rem !default;
-$breadcrumb-bg:            $grey-700 !default;
+$breadcrumb-bg:            transparent !default;
 $breadcrumb-divider-color: $grey-100 !default;
 $breadcrumb-active-color:  $grey-100 !default;
 
@@ -189,18 +184,13 @@ $card-spacer-x:            1.25rem !default;
 $card-cap-padding-y:       .75rem !default;
 $card-bg:                  $grey-700 !default;
 $card-border-color:        $border-color !default;
-$card-cap-bg:              $grey-750 !default;
+$card-cap-bg:              transparent !default;
 
 // Sidebar
 $sidebar-color:                       $grey-100 !default;
 $sidebar-bg:                          $grey-700 !default;
 
 $sidebar-nav-link-active-bg:          $grey-750 !default;
-
-// Footer
-
-$footer-bg:                           $grey-700 !default;
-$footer-color:                        $body-color !default;
 
 // Progress bars
 
@@ -252,10 +242,10 @@ $popover-bg:           $grey-900 !default;
 $popover-border-color: rgba($white, .2) !default;
 $popover-header-bg:    lighten($popover-bg, 3%) !default;
 
-$widget-1: #21A8D9;
+$widget-1: $blue;
 $widget-2: #A66BF8;
 $widget-3: #6D6BF8;
-$widget-4: #F86D6B;
+$widget-4: $red;
 
 $recessed: $grey-850;
 

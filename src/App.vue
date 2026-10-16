@@ -268,10 +268,8 @@ export default {
 </script>
 
 <style lang="scss">
-$fa-font-path: 'font-awesome/fonts/';
-@import 'font-awesome/scss/font-awesome.scss';
-$simple-line-font-path: 'simple-line-icons/fonts/';
-@import 'simple-line-icons/scss/simple-line-icons.scss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import '@fortawesome/fontawesome-free/css/v4-shims.min.css';
 @import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 @import 'assets/scss/style';
 </style>

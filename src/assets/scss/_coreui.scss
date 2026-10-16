@@ -4,7 +4,6 @@
 $sidebar-width: 200px;
 $sidebar-minimized-width: 50px;
 $sidebar-minimizer-height: 50px;
-$footer-height: 50px;
 $layout-transition-speed: .25s;
 
 $sidebar-nav-link-icon-color: $gray-600;
@@ -163,11 +162,11 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     }
 
     &:hover {
-      color: #fff;
+      color: color-contrast($primary);
       background: $primary;
 
       .nav-icon {
-        color: #fff;
+        color: color-contrast($primary);
       }
     }
   }
@@ -213,7 +212,6 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
     .sidebar-nav {
       width: $sidebar-minimized-width - 1px;
-      padding-bottom: $sidebar-minimizer-height;
       overflow: visible;
     }
 
@@ -226,10 +224,6 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     }
 
     .sidebar-minimizer {
-      position: fixed;
-      bottom: 0;
-      width: $sidebar-minimized-width;
-      height: $sidebar-minimizer-height;
       background-color: darken($sidebar-bg, 5%);
 
       &::before {
@@ -238,7 +232,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
       }
     }
 
-    .nav-item {
+    .sidebar-nav .nav-item {
       width: $sidebar-minimized-width;
       overflow: hidden;
 
@@ -250,7 +244,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
           background: $primary;
 
           .nav-icon {
-            color: #fff;
+            color: color-contrast($primary);
           }
         }
       }
@@ -269,26 +263,13 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
         width: $sidebar-minimized-width;
         font-size: 18px;
       }
+    }
 
-      &:hover {
-        width: $sidebar-width + $sidebar-minimized-width;
-        background: $primary;
-      }
+    .sidebar-nav .nav-link:hover {
+      width: $sidebar-width + $sidebar-minimized-width;
+      background: $primary;
     }
   }
-}
-
-// Footer
-
-.app-footer {
-  display: flex;
-  flex: 0 0 $footer-height;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 0 $spacer;
-  color: $footer-color;
-  background: $footer-bg;
-  border-top: 1px solid $border-color;
 }
 
 // Breadcrumb
@@ -333,7 +314,6 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 }
 
 .app-header,
-.app-footer,
 .sidebar,
 .main {
   transition: margin-left $layout-transition-speed, margin-right $layout-transition-speed, width $layout-transition-speed, flex $layout-transition-speed;
@@ -344,26 +324,12 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 }
 
 @include media-breakpoint-up(lg) {
-  .header-fixed {
-    .app-header {
-      position: fixed;
-      z-index: $zindex-sticky;
-      width: 100%;
-    }
-    .app-body {
-      margin-top: $navbar-height;
-    }
-  }
-
   .sidebar-fixed {
     .sidebar {
       position: fixed;
       z-index: $zindex-sticky - 1;
       width: $sidebar-width;
       height: 100vh;
-    }
-    .app-header + .app-body .sidebar {
-      height: calc(100vh - #{$navbar-height});
     }
   }
 
@@ -384,8 +350,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
 @include media-breakpoint-up(sm) {
   .sidebar-show.sidebar-fixed {
-    .main,
-    .app-footer {
+    .main {
       margin-left: $sidebar-width;
     }
   }
@@ -398,13 +363,11 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
   .sidebar-show.sidebar-fixed,
   .sidebar-lg-show.sidebar-fixed {
-    .main,
-    .app-footer {
+    .main {
       margin-left: $sidebar-width;
     }
     &.sidebar-minimized {
-      .main,
-      .app-footer {
+      .main {
         margin-left: $sidebar-minimized-width;
       }
     }
@@ -479,7 +442,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 }
 
 .nav-tabs .nav-link {
-  color: $gray-600;
+  color: $body-secondary-color;
 
   &:hover {
     cursor: pointer;

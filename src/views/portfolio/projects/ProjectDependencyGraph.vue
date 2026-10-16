@@ -548,7 +548,7 @@ export default {
 </script>
 
 <style lang="scss">
-$dependency-graph-line: rgba(32, 168, 216, 0.35);
+$dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
 
 // CoreUI's hidden makes .app-body a scroll container, so pinned rows couldn't stick to the page.
 .app-body:has(.tab-pane.active .dependency-graph) {
@@ -581,8 +581,11 @@ $dependency-graph-line: rgba(32, 168, 216, 0.35);
 }
 .dependency-graph-row.pinned {
   position: sticky;
-  // Below the fixed app header.
-  top: calc(55px + var(--depth) * 2.375rem);
+  // Below the app header (mobile only) and the banner.
+  top: calc(
+    var(--app-header-height) + var(--banner-offset, 0px) + var(--depth) *
+      2.375rem
+  );
   z-index: calc(100 - var(--depth));
   background: #131d26;
   // Also covers the indent, so tree lines don't show through left of the row.
@@ -631,10 +634,10 @@ $dependency-graph-line: rgba(32, 168, 216, 0.35);
   color: #73818f;
 }
 .dependency-graph-toggle:hover {
-  color: #20a8d8;
+  color: var(--bs-primary);
 }
 .dependency-graph-toggle:focus-visible {
-  outline: 2px solid #20a8d8;
+  outline: 2px solid var(--bs-primary);
 }
 .dependency-graph-node {
   display: inline-block;
@@ -649,12 +652,12 @@ $dependency-graph-line: rgba(32, 168, 216, 0.35);
   background: #151f29;
 }
 a.dependency-graph-node:hover {
-  border-color: #20a8d8;
+  border-color: var(--bs-primary);
   text-decoration: none;
 }
 .dependency-graph-node.searched {
-  border-color: #4dbd74;
-  color: #4dbd74;
+  border-color: var(--bs-success);
+  color: var(--bs-success);
   font-weight: bold;
 }
 </style>
