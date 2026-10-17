@@ -40,7 +40,7 @@ test('pick a parent in a short window', async ({ page }) => {
 
   const modal = page.getByRole('dialog', { name: 'Create Project' });
   await modal.getByText('Parent', { exact: true }).click();
-  await page.keyboard.type(parent.name);
+  await modal.getByRole('textbox', { name: 'Parent' }).fill(parent.name);
   const option = modal.getByRole('option', { name: new RegExp(parent.name) });
   await expect(option).toBeInViewport({ ratio: 1 });
   await option.click();
