@@ -205,6 +205,6 @@ td {
   color: var(--bs-primary);
 }
 .fa-square-o {
-  color: var(--bs-secondary);
+  color: var(--dt-border-control);
 }
 </style>

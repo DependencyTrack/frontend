@@ -1,8 +1,14 @@
 <template>
   <span v-if="vulnerabilities === 0" class="progress">
-    <b-progress class="table-progress" :max="'0'" show-value>
+    <b-progress
+      class="table-progress"
+      :max="'0'"
+      show-value
+      :aria-label="$t('message.severity')"
+      :aria-valuetext="valueText"
+    >
       <b-progress-bar
-        class="table-progress text-dark"
+        class="table-progress progress-bar-zero"
         value="0"
       ></b-progress-bar>
     </b-progress>
@@ -11,18 +17,24 @@
     <b-tooltip placement="left" noninteractive>
       <template #target>
         <span class="table-progress">
-          <b-progress class="table-progress" :max="vulnerabilities" show-value>
+          <b-progress
+            class="table-progress"
+            :max="vulnerabilities"
+            show-value
+            :aria-label="$t('message.severity')"
+            :aria-valuetext="valueText"
+          >
             <b-progress-bar
               :value="critical"
               class="severity-critical-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="high"
-              class="severity-high-bg text-dark"
+              class="severity-high-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="medium"
-              class="severity-medium-bg text-dark"
+              class="severity-medium-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="low"
@@ -59,6 +71,13 @@ export default {
     medium: Number,
     low: Number,
     unassigned: Number,
+  },
+  computed: {
+    valueText() {
+      return ['critical', 'high', 'medium', 'low', 'unassigned']
+        .map((name) => `${this.$t(`severity.${name}`)}: ${this[name]}`)
+        .join(', ');
+    },
   },
 };
 </script>

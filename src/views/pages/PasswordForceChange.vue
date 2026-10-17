@@ -16,7 +16,7 @@
                     :label="$t('message.username')"
                     input-group-size="mb-3"
                     required
-                    icon="icon-user"
+                    icon="fa-solid fa-user"
                     type="text"
                     autocomplete="username email"
                     v-model="input.username"
@@ -26,7 +26,7 @@
                     :label="$t('message.password_current')"
                     input-group-size="mb-3"
                     required
-                    icon="icon-lock"
+                    icon="fa-solid fa-lock"
                     type="password"
                     autocomplete="current-password"
                     v-model="input.password"
@@ -36,7 +36,7 @@
                     :label="$t('message.password_new')"
                     input-group-size="mb-3"
                     required
-                    icon="icon-lock"
+                    icon="fa-solid fa-lock"
                     type="password"
                     autocomplete="off"
                     v-model="input.newPassword"
@@ -47,7 +47,7 @@
                     input-group-size="mb-3"
                     required
                     :custom-validity="passwordMismatch"
-                    icon="icon-lock"
+                    icon="fa-solid fa-lock"
                     type="password"
                     autocomplete="off"
                     v-model="input.confirmPassword"
@@ -65,15 +65,19 @@
                 </b-form>
               </b-card-body>
             </b-card>
-            <b-card
-              no-body
-              class="text-white py-5 d-none d-lg-flex"
-              style="width: 44%"
-            >
+            <b-card no-body class="py-5 d-none d-lg-flex" style="width: 44%">
               <b-card-body class="text-center">
                 <div>
                   <img
+                    class="logo-dark-theme"
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
+                    alt="Dependency-Track Logo"
+                    width="100%"
+                  />
+                  <img
+                    class="logo-light-theme"
+                    src="@/assets/img/brand/dt-logo-vertical-dark-text.svg"
+                    alt="Dependency-Track Logo"
                     width="100%"
                   />
                 </div>

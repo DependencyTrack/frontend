@@ -9,7 +9,7 @@
     <div v-if="key">
       <p class="text-center">{{ $t('admin.new_api_key') }}</p>
       <pre
-        class="b-input-group-form-input text-white plaintext"
+        class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
         >{{ key }}</pre>
     </div>

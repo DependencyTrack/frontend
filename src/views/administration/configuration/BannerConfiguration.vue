@@ -197,7 +197,7 @@ export default {
   -moz-appearance: none;
   width: 50px;
   height: 50px;
-  border: 3px solid #ddd;
+  border: 3px solid var(--dt-border-control);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -206,13 +206,13 @@ export default {
 
 .swatch-radio:hover {
   transform: scale(1.1);
-  border-color: #999;
+  border-color: var(--dt-text-muted);
 }
 
 .swatch-radio:checked {
-  border-color: #321fdb;
+  border-color: var(--dt-accent);
   border-width: 4px;
-  box-shadow: 0 0 0 2px rgba(50, 31, 219, 0.2);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dt-accent) 20%, transparent);
 }
 
 .swatch-radio:checked::after {
@@ -225,11 +225,6 @@ export default {
   font-size: 24px;
   font-weight: bold;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-}
-
-.swatch-radio:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(50, 31, 219, 0.3);
 }
 
 .swatch-radio:disabled {

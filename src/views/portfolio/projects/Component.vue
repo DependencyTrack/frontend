@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-cube text-bg-primary p-3 font-2xl me-3 float-start"
+              class="fa fa-cube page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">
               {{ componentLabel }}&nbsp;
@@ -26,76 +26,13 @@
           </b-col>
           <b-col>
             <div class="d-none d-md-flex float-end">
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.critical')"
-                >{{ currentCritical }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.high')"
-                >{{ currentHigh }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.medium')"
-                >{{ currentMedium }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.low')"
-                >{{ currentLow }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityUnassigned"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.unassigned')"
-                >{{ currentUnassigned }}</vue-easy-pie-chart
-              >
+              <severity-circles
+                :critical="currentCritical"
+                :high="currentHigh"
+                :medium="currentMedium"
+                :low="currentLow"
+                :unassigned="currentUnassigned"
+              />
             </div>
           </b-col>
         </b-row>
@@ -174,11 +111,11 @@
 <script>
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
+import SeverityCircles from '../../components/SeverityCircles.vue';
 import ComponentDashboard from './ComponentDashboard.vue';
 import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
-import { getStyle, setPageTitle } from '../../../shared/utils';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
@@ -192,7 +129,7 @@ export default {
     ComponentPropertiesModal,
     ComponentDashboard,
     ComponentVulnerabilities,
-    VueEasyPieChart,
+    SeverityCircles,
     ComponentDetailsModal,
     ExternalReferencesDropdown,
   },
@@ -228,13 +165,6 @@ export default {
       showComponentDetailsModal: false,
       showComponentPropertiesModal: false,
       showComponentCreatePropertyModal: false,
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
       uuid: null,
       component: {},
       currentCritical: 0,
@@ -250,9 +180,6 @@ export default {
   methods: {
     cloneDeep: function (component) {
       return cloneDeep(component);
-    },
-    getStyle: function (style) {
-      return getStyle(style);
     },
     syncComponentFields: function (component) {
       this.component = component;

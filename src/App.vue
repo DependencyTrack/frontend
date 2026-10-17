@@ -245,6 +245,11 @@ export default {
         const to = url.pathname;
         if (window.location.pathname !== to && event.preventDefault) {
           event.preventDefault();
+          // The link's view unmounts without a mouseleave event, so Bootstrap would never hide its tooltip.
+          $(target)
+            .find('[data-bs-toggle="tooltip"]')
+            .addBack('[data-bs-toggle="tooltip"]')
+            .tooltip?.('dispose');
           this.$router.push(to + url.search).catch((e) => {
             this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
             console.error(e);
@@ -268,10 +273,8 @@ export default {
 </script>
 
 <style lang="scss">
-$fa-font-path: 'font-awesome/fonts/';
-@import 'font-awesome/scss/font-awesome.scss';
-$simple-line-font-path: 'simple-line-icons/fonts/';
-@import 'simple-line-icons/scss/simple-line-icons.scss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import '@fortawesome/fontawesome-free/css/v4-shims.min.css';
 @import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 @import 'assets/scss/style';
 </style>

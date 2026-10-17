@@ -1,7 +1,14 @@
 <template>
-  <b-nav-item-dropdown placement="bottom-end" no-caret>
+  <b-nav-item-dropdown
+    placement="right-end"
+    strategy="fixed"
+    :offset="8"
+    menu-class="sidebar-profile-menu"
+    no-caret
+  >
     <template #button-content>
-      <i class="fa fa-user-circle-o" style="font-size: 1.6em"></i>
+      <i class="nav-icon fa fa-user-circle-o"></i>
+      <span class="sidebar-profile-name">{{ user }}</span>
     </template>
     <b-dropdown-header tag="div" class="text-center">
       {{ $t('message.connected_as') }}
@@ -16,10 +23,19 @@
       {{ $t('message.change_password') }}</b-dropdown-item
     >
     <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
-    <b-dropdown-form id="locale-picker-form" class="ps-2 pe-2" @click.stop>
+    <b-dropdown-form
+      id="profile-preferences-form"
+      class="ps-2 pe-2"
+      @click.stop
+    >
       <LocalePicker />
+      <ThemePicker class="mt-2" />
     </b-dropdown-form>
     <b-dropdown-divider />
+    <b-dropdown-item @click="$emit('about')"
+      ><i class="fa-solid fa-circle-info text-primary" />
+      {{ $t('message.about') }}</b-dropdown-item
+    >
     <b-dropdown-item @click="logout"
       ><i class="fa fa-sign-out text-primary" />
       {{ $t('message.logout') }}</b-dropdown-item
@@ -31,13 +47,15 @@
 import EventBus from '../shared/eventbus';
 import state from '../shared/state';
 import LocalePicker from '@/views/components/LocalePicker.vue';
+import ThemePicker from '@/views/components/ThemePicker.vue';
 
 export default {
-  name: 'DefaultHeaderProfileDropdown',
+  name: 'ProfileDropdown',
   components: {
     LocalePicker,
+    ThemePicker,
   },
-  emits: ['editProfile'],
+  emits: ['editProfile', 'about'],
   data: () => {
     return {
       itemsCount: 42,
@@ -79,7 +97,7 @@ export default {
 
 <style>
 /* Remove default padding inherited from b-dropdown-form. */
-#locale-picker-form {
+#profile-preferences-form {
   padding: 0;
 }
 </style>

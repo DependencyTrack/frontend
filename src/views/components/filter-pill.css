@@ -14,7 +14,7 @@
 .filter-pill-wrapper.filter-pill-active:has(.show) {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: #fff;
+  color: var(--bs-gray-900);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover .filter-pill-segment-value,
@@ -41,7 +41,7 @@
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
   background: var(--bs-primary) !important;
-  color: #fff !important;
+  color: var(--bs-gray-900) !important;
 }
 
 /* The form owns all padding, and clipping keeps the footer flush with the
@@ -67,7 +67,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid rgb(255 255 255 / 10%);
+  border-top: 1px solid var(--dt-border);
 }
 
 .filter-pill-footer-clear {
@@ -89,7 +89,7 @@
 }
 
 .filter-pill-segment + .filter-pill-segment {
-  border-left: 1px solid rgb(255 255 255 / 20%);
+  border-left: 1px solid color-mix(in srgb, currentcolor 40%, transparent);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover
@@ -100,11 +100,11 @@
   .filter-pill-segment
   + .filter-pill-segment,
 .filter-pill-wrapper.filter-pill-active:has(.show) .filter-pill-clear {
-  border-left-color: rgb(255 255 255 / 25%);
+  border-left-color: color-mix(in srgb, currentcolor 40%, transparent);
 }
 
 .filter-pill-segment-value {
-  color: var(--bs-info);
+  color: var(--bs-body-color);
 }
 
 /* --- External clear button (sibling of b-dropdown) --- */
@@ -114,18 +114,17 @@
   align-items: center;
   padding: 0 0.5rem;
   border: none;
-  border-left: 1px solid rgb(255 255 255 / 20%);
+  border-left: 1px solid color-mix(in srgb, currentcolor 40%, transparent);
   border-radius: 0 20px 20px 0;
   background: transparent;
-  color: inherit;
+  color: var(--dt-text-muted);
   cursor: pointer;
-  opacity: 0.6;
   font-size: 0.85rem;
 }
 
 .filter-pill-clear:hover,
 .filter-pill-clear:focus {
-  background: rgb(0 0 0 / 12%);
+  background: var(--dt-hover);
   opacity: 1;
 }
 
@@ -167,5 +166,5 @@
 .boolean-filter-pill:hover {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: #fff;
+  color: var(--bs-gray-900);
 }

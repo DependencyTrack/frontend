@@ -40,14 +40,14 @@ export default {
 };
 </script>
 
-<style>
-.tab-content {
+<style scoped>
+:deep(.tab-content) {
   border: 0;
 }
-.tab-content .tab-pane {
+:deep(.tab-content .tab-pane) {
   padding: 0;
 }
-.card-header {
+:deep(.card-header) {
   font-weight: 700;
 }
 @media only screen and (min-device-width: 600px) {

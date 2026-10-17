@@ -168,7 +168,6 @@
                 id="project-parent-input"
                 :custom-label="createProjectLabel"
                 :placeholder="this.$t('message.search_parent')"
-                open-direction="bottom"
                 :options="availableParents"
                 :multiple="false"
                 :searchable="true"

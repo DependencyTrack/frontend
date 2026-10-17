@@ -406,7 +406,7 @@ export default {
                 row.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}" style="float:right; padding-top: 4px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"><i class="fa fa-sitemap" aria-hidden="true"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },

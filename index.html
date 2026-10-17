@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Dependency-Track</title>
     <base href=/ >
+    <script type="text/javascript">
+      (function () {
+        // Runs before the app loads, so the first paint already uses the right theme.
+        var theme = localStorage.getItem('Theme');
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        }
+        document.documentElement.setAttribute('data-bs-theme', theme);
+      })();
+    </script>
   </head>
   <body class="sidebar-minimized">
     <noscript>

@@ -32,6 +32,7 @@ EventHandler.on(
 );
 
 $.fn.bootstrapTable.defaults.iconsPrefix = 'fa';
+$.fn.bootstrapTable.defaults.buttonsClass = 'outline-secondary';
 
 $.fn.bootstrapTable.defaults.onLoadError = function (_status, jqXHR) {
   handleTableLoadError(jqXHR && jqXHR.responseJSON);

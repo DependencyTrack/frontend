@@ -17,7 +17,6 @@
       :max-height="250"
       track-by="name"
       label="name"
-      open-direction="bottom"
       select-label=""
       deselect-label=""
       @search-change="onSearchChange"
@@ -77,6 +76,7 @@ export default {
       availableSecrets: [],
       isLoading: false,
       debounceTimer: null,
+      secretQuery: '',
       selectedSecret: null,
       secretNotFound: false,
     };
@@ -119,7 +119,10 @@ export default {
       }, 300);
     },
     async fetchSecrets(searchText) {
+      this.secretQuery = searchText;
       this.isLoading = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => searchText === this.secretQuery;
       try {
         const baseUrl = `${this.$api.BASE_URL}/api/v2/secrets`;
         const params = { limit: '6' };
@@ -128,6 +131,7 @@ export default {
         }
         const url = common.setQueryParams(baseUrl, params);
         const response = await this.axios.get(url);
+        if (!isLatest()) return;
         const secrets = response.data.items || [];
         this.availableSecrets = secrets;
         if (
@@ -140,9 +144,9 @@ export default {
         }
       } catch (err) {
         console.error('Failed to fetch secrets:', err);
-        this.availableSecrets = [];
+        if (isLatest()) this.availableSecrets = [];
       } finally {
-        this.isLoading = false;
+        if (isLatest()) this.isLoading = false;
       }
     },
     async verifySecretExists(secretName) {

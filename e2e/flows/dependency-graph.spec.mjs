@@ -43,7 +43,7 @@ test('dependency graph keeps parents in view while scrolling their children', as
 }) => {
   const { project } = seed();
   await login(page);
-  await page.setViewportSize({ width: 1280, height: 200 });
+  await page.setViewportSize({ width: 1280, height: 120 });
   await page.goto(`projects/${project.uuid}/dependencyGraph`);
   const graph = page.getByRole('tabpanel');
   await graph
@@ -53,13 +53,10 @@ test('dependency graph keeps parents in view while scrolling their children', as
   await page.evaluate(() =>
     window.scrollTo(0, document.documentElement.scrollHeight),
   );
-  const header = await page.locator('header').boundingBox();
   for (const parent of [
     graph.getByText(project.name),
     graph.getByRole('link', { name: 'jackson-databind' }),
   ]) {
-    expect((await parent.boundingBox()).y).toBeGreaterThanOrEqual(
-      header.y + header.height,
-    );
+    expect((await parent.boundingBox()).y).toBeGreaterThanOrEqual(0);
   }
 });

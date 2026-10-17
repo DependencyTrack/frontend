@@ -175,14 +175,14 @@ export default {
 }
 
 .action-icon .fa-edit {
-  color: var(--bs-secondary);
+  color: var(--dt-text-muted);
 }
 
 .action-icon .fa-repeat {
-  color: var(--bs-secondary);
+  color: var(--dt-text-muted);
 }
 
 .action-icon .fa-trash-o {
-  color: var(--bs-danger);
+  color: var(--dt-severity-critical-text);
 }
 </style>

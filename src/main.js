@@ -8,6 +8,8 @@ import axios from 'axios';
 import permission from '@/directives/VuePermission';
 import scrollableTabs from '@/directives/ScrollableTabs';
 import multiselectLabel from '@/directives/MultiselectLabel';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/plus-jakarta-sans';
 import '@/views/components/filter-pill-content.css';
 import toastr from './plugins/toastr';
 import api from './shared/api.json';
@@ -15,6 +17,7 @@ import oidc from './shared/oidc.json';
 import globals from './shared/globals';
 import state from './shared/state';
 import { getContextPath } from './shared/utils';
+import { followSystemTheme } from './shared/theme';
 
 globals.$api = api;
 globals.$oidc = oidc;
@@ -72,6 +75,7 @@ axios
  * https://github.com/DependencyTrack/frontend/issues/34
  */
 function createVueApp() {
+  followSystemTheme();
   axios
     .get(`${globals.$api.BASE_URL}/${globals.$api.URL_ABOUT}`)
     .then((result) => {

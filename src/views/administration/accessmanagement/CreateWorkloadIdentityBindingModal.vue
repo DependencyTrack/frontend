@@ -31,7 +31,6 @@
           :max-height="250"
           track-by="name"
           label="name"
-          open-direction="bottom"
           select-label=""
           deselect-label=""
           @search-change="onProviderSearchChange"

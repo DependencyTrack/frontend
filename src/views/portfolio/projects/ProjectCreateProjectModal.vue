@@ -144,7 +144,6 @@
             id="project-parent-input"
             :custom-label="createProjectLabel"
             :placeholder="this.$t('message.search_parent')"
-            open-direction="bottom"
             :options="availableParents"
             :multiple="false"
             :searchable="true"
@@ -313,6 +312,7 @@ export default {
       defaultTeams: [],
       selectedTeams: [],
       isLoadingTeams: false,
+      teamQuery: '',
       project: { ...FORM_FIELD_DEFAULTS, classifier: DEFAULT_CLASSIFIER },
       showIdentity: false,
       isCreating: false,
@@ -381,21 +381,25 @@ export default {
       }
     },
     asyncFindTeams(query) {
+      this.teamQuery = query;
       if (!query) {
         this.availableTeams = this.defaultTeams;
+        this.isLoadingTeams = false;
         return;
       }
       this.isLoadingTeams = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => query === this.teamQuery;
       this.axios
         .get(this.teamSearchUrl(query))
         .then((response) => {
-          this.availableTeams = response.data || [];
+          if (isLatest()) this.availableTeams = response.data || [];
         })
         .catch(() => {
-          this.availableTeams = this.defaultTeams;
+          if (isLatest()) this.availableTeams = this.defaultTeams;
         })
         .finally(() => {
-          this.isLoadingTeams = false;
+          if (isLatest()) this.isLoadingTeams = false;
         });
     },
     onCollectionToggle(value) {

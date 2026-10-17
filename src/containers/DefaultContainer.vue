@@ -3,6 +3,26 @@
     <DefaultHeader />
     <div class="app-body">
       <div ref="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+          <img
+            class="sidebar-brand-full logo-dark-theme"
+            src="@/assets/img/brand/dt-logo-white-text.svg"
+            height="32"
+            alt="Dependency-Track Logo"
+          />
+          <img
+            class="sidebar-brand-full logo-light-theme"
+            src="@/assets/img/brand/dt-logo-dark-text.svg"
+            height="32"
+            alt="Dependency-Track Logo"
+          />
+          <img
+            class="sidebar-brand-minimized"
+            src="@/assets/img/brand/dt-logo-symbol.svg"
+            height="26"
+            alt="Dependency-Track Logo"
+          />
+        </div>
         <nav class="sidebar-nav">
           <ul class="nav">
             <template v-for="item in permissibleNav">
@@ -26,12 +46,30 @@
             </template>
           </ul>
         </nav>
-        <button
-          class="sidebar-minimizer"
-          type="button"
-          @click="handleMinimizedUpdate"
-        ></button>
+        <ul class="nav sidebar-profile">
+          <ProfileDropdown
+            @editProfile="showProfileEditModal = true"
+            @about="showAboutModal = true"
+          />
+        </ul>
+        <div class="sidebar-footer">
+          <button
+            class="sidebar-about"
+            type="button"
+            @click="showAboutModal = true"
+          >
+            {{ dtrack.application }}
+            <span class="d-block">v{{ dtrack.version }}</span>
+          </button>
+          <button
+            class="sidebar-minimizer"
+            type="button"
+            @click="handleMinimizedUpdate"
+          ></button>
+        </div>
       </div>
+      <profile-edit-modal v-model="showProfileEditModal" />
+      <about-modal v-model="showAboutModal" />
       <main class="main">
         <ol class="breadcrumb">
           <template v-for="(crumb, index) in list">
@@ -54,32 +92,38 @@
         </div>
       </main>
     </div>
-    <DefaultFooter />
   </div>
 </template>
 
 <script>
 import DefaultHeader from './DefaultHeader.vue';
-import DefaultFooter from './DefaultFooter.vue';
+import ProfileDropdown from './ProfileDropdown.vue';
+import AboutModal from '../views/components/AboutModal.vue';
+import ProfileEditModal from '../views/components/ProfileEditModal.vue';
 import EventBus from '../shared/eventbus';
+import state from '../shared/state';
 import * as permissions from '../shared/permissions';
 import * as featureFlags from '@/shared/featureFlags';
 
 export default {
   name: 'DefaultContainer',
   components: {
-    DefaultFooter,
+    AboutModal,
     DefaultHeader,
+    ProfileDropdown,
+    ProfileEditModal,
   },
   data() {
     return {
+      showProfileEditModal: false,
+      showAboutModal: false,
       isSidebarMinimized: true,
       breadcrumbs: [],
       nav: [
         {
           name: this.$t('message.dashboard'),
           url: '/dashboard',
-          icon: 'icon-speedometer',
+          icon: 'fa-solid fa-gauge-high',
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
@@ -251,11 +295,7 @@ export default {
       localStorage && localStorage.getItem('isSidebarMinimized') !== null
         ? localStorage.getItem('isSidebarMinimized') === 'true'
         : false;
-    document.body.classList.add(
-      'header-fixed',
-      'sidebar-fixed',
-      'sidebar-lg-show',
-    );
+    document.body.classList.add('sidebar-fixed', 'sidebar-lg-show');
     document.body.classList.toggle(
       'sidebar-minimized',
       this.isSidebarMinimized,
@@ -266,6 +306,7 @@ export default {
     document.removeEventListener('click', this.onDocumentClick);
   },
   computed: {
+    dtrack: () => state.dtrack,
     name() {
       return this.$route.name;
     },

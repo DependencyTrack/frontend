@@ -52,7 +52,7 @@ export default {
   color: var(--bs-primary);
 }
 .action-icon .fa-trash-o {
-  color: var(--bs-danger);
+  color: var(--dt-severity-critical-text);
 }
 .list-group-item:last-child {
   margin-bottom: -1px;

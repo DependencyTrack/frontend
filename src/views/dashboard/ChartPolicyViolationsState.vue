@@ -5,22 +5,19 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
+      metrics: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            display: false,
-          },
           tooltip: {
             intersect: true,
             mode: 'index',
@@ -75,11 +72,15 @@ export default {
       },
     };
   },
-  methods: {
-    render: function (metrics) {
-      const failStyle = getStyle('--notification-fail');
-      const warnStyle = getStyle('--notification-warn');
-      const infoStyle = getStyle('--notification-info');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const failStyle = themeColor('--notification-fail');
+      const warnStyle = themeColor('--notification-warn');
+      const infoStyle = themeColor('--notification-info');
 
       let labels = [];
       let failData = [];
@@ -100,32 +101,37 @@ export default {
         }
       }
 
-      this.chartData = {
+      return {
         labels: labels,
         datasets: [
           {
             label: this.$t('policy_violation.fails'),
             backgroundColor: 'transparent',
             borderColor: failStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: failData,
           },
           {
             label: this.$t('policy_violation.warns'),
             backgroundColor: 'transparent',
             borderColor: warnStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: warnData,
           },
           {
             label: this.$t('policy_violation.infos'),
             backgroundColor: 'transparent',
             borderColor: infoStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: infoData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

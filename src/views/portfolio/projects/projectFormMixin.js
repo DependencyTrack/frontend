@@ -52,6 +52,7 @@ export default {
       isLoading: false,
       defaultParents: [],
       availableParents: [],
+      parentQuery: '',
       selectedParent: null,
     };
   },
@@ -153,33 +154,41 @@ export default {
         : project.name;
     },
     fetchDefaultParents() {
+      this.parentQuery = '';
       this.axios
         .get(this.parentSearchUrl(''))
         .then((response) => {
           this.defaultParents = response.data || [];
-          this.availableParents = this.defaultParents;
         })
         .catch(() => {
           this.defaultParents = [];
-          this.availableParents = [];
+        })
+        .finally(() => {
+          if (!this.parentQuery) {
+            this.availableParents = this.defaultParents;
+          }
         });
     },
     asyncFind(query) {
+      this.parentQuery = query;
       if (!query) {
         this.availableParents = this.defaultParents;
+        this.isLoading = false;
         return;
       }
       this.isLoading = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => query === this.parentQuery;
       this.axios
         .get(this.parentSearchUrl(query))
         .then((response) => {
-          this.availableParents = response.data || [];
+          if (isLatest()) this.availableParents = response.data || [];
         })
         .catch(() => {
-          this.availableParents = this.defaultParents;
+          if (isLatest()) this.availableParents = this.defaultParents;
         })
         .finally(() => {
-          this.isLoading = false;
+          if (isLatest()) this.isLoading = false;
         });
     },
     searchTags(input) {
