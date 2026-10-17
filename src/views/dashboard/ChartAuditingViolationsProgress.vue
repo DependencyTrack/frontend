@@ -5,16 +5,17 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle, hexToRgba } from '@/shared/utils';
+import { hexToRgba } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
+      metrics: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
@@ -75,10 +76,14 @@ export default {
       },
     };
   },
-  methods: {
-    render: function (metrics) {
-      const totalStyle = getStyle('--severity-unassigned');
-      const auditedStyle = getStyle('--severity-low');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const totalStyle = themeColor('--severity-unassigned');
+      const auditedStyle = themeColor('--severity-low');
 
       let labels = [];
       let totalData = [];
@@ -96,14 +101,14 @@ export default {
         }
       }
 
-      this.chartData = {
+      return {
         labels: labels,
         datasets: [
           {
             label: this.$t('message.policy_violations'),
             backgroundColor: 'transparent',
             borderColor: totalStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: totalData,
           },
           {
@@ -111,11 +116,16 @@ export default {
             backgroundColor: hexToRgba(auditedStyle, 10),
             fill: true,
             borderColor: auditedStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: auditedData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

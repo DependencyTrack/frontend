@@ -72,6 +72,6 @@ export default {
 }
 
 .action-icon .fa-trash-o {
-  color: var(--bs-danger);
+  color: var(--dt-severity-critical-text);
 }
 </style>

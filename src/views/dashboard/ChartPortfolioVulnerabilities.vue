@@ -5,16 +5,16 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
+      metrics: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
@@ -75,13 +75,17 @@ export default {
       },
     };
   },
-  methods: {
-    render: function (metrics) {
-      const criticalStyle = getStyle('--severity-critical');
-      const highStyle = getStyle('--severity-high');
-      const mediumStyle = getStyle('--severity-medium');
-      const lowStyle = getStyle('--severity-low');
-      const unassignedStyle = getStyle('--severity-unassigned');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const criticalStyle = themeColor('--severity-critical');
+      const highStyle = themeColor('--severity-high');
+      const mediumStyle = themeColor('--severity-medium');
+      const lowStyle = themeColor('--severity-low');
+      const unassignedStyle = themeColor('--severity-unassigned');
 
       let labels = [];
       let criticalData = [];
@@ -108,46 +112,51 @@ export default {
         }
       }
 
-      this.chartData = {
+      return {
         labels: labels,
         datasets: [
           {
             label: this.$t('severity.critical'),
             backgroundColor: 'transparent',
             borderColor: criticalStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: criticalData,
           },
           {
             label: this.$t('severity.high'),
             backgroundColor: 'transparent',
             borderColor: highStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: highData,
           },
           {
             label: this.$t('severity.medium'),
             backgroundColor: 'transparent',
             borderColor: mediumStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: mediumData,
           },
           {
             label: this.$t('severity.low'),
             backgroundColor: 'transparent',
             borderColor: lowStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: lowData,
           },
           {
             label: this.$t('severity.unassigned'),
             backgroundColor: 'transparent',
             borderColor: unassignedStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: unassignedData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

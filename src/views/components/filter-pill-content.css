@@ -74,7 +74,7 @@
 }
 
 .filter-pill-list .form-check:hover {
-  background: rgb(255 255 255 / 7%);
+  background: var(--dt-hover);
 }
 
 /* Inline group caption, replaces a full-width b-form-group label */

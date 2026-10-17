@@ -245,6 +245,11 @@ export default {
         const to = url.pathname;
         if (window.location.pathname !== to && event.preventDefault) {
           event.preventDefault();
+          // The link's view unmounts without a mouseleave event, so Bootstrap would never hide its tooltip.
+          $(target)
+            .find('[data-bs-toggle="tooltip"]')
+            .addBack('[data-bs-toggle="tooltip"]')
+            .tooltip?.('dispose');
           this.$router.push(to + url.search).catch((e) => {
             this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
             console.error(e);

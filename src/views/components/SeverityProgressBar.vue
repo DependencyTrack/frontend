@@ -2,7 +2,7 @@
   <span v-if="vulnerabilities === 0" class="progress">
     <b-progress class="table-progress" :max="'0'" show-value>
       <b-progress-bar
-        class="table-progress text-dark"
+        class="table-progress progress-bar-zero"
         value="0"
       ></b-progress-bar>
     </b-progress>
@@ -18,11 +18,11 @@
             ></b-progress-bar>
             <b-progress-bar
               :value="high"
-              class="severity-high-bg text-dark"
+              class="severity-high-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="medium"
-              class="severity-medium-bg text-dark"
+              class="severity-medium-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="low"

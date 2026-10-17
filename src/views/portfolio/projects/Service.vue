@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-exchange text-bg-primary p-3 font-2xl me-3 float-start"
+              class="fa fa-exchange page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">{{ serviceLabel }}</div>
           </b-col>
@@ -124,7 +124,8 @@ import { cloneDeep } from 'lodash-es';
 import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
-import { getStyle, setPageTitle } from '../../../shared/utils';
+import { setPageTitle } from '../../../shared/utils';
+import { themeColor } from '@/shared/theme';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal.vue';
 
@@ -136,6 +137,24 @@ export default {
     ServiceDetailsModal,
   },
   computed: {
+    severityCritical() {
+      return themeColor('--severity-critical');
+    },
+    severityHigh() {
+      return themeColor('--severity-high');
+    },
+    severityMedium() {
+      return themeColor('--severity-medium');
+    },
+    severityLow() {
+      return themeColor('--severity-low');
+    },
+    severityUnassigned() {
+      return themeColor('--severity-unassigned');
+    },
+    trackColor() {
+      return themeColor('--dt-surface-recessed');
+    },
     projectLabel() {
       if (Object.hasOwn(this.service, 'project')) {
         if (this.service.project.name && this.service.project.version) {
@@ -159,13 +178,6 @@ export default {
   data() {
     return {
       showServiceDetailsModal: false,
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
       uuid: null,
       service: {},
       currentCritical: 0,
@@ -181,9 +193,6 @@ export default {
   methods: {
     cloneDeep: function (service) {
       return cloneDeep(service);
-    },
-    getStyle: function (style) {
-      return getStyle(style);
     },
     syncServiceFields: function (service) {
       this.service = service;

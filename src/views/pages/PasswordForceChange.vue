@@ -65,15 +65,17 @@
                 </b-form>
               </b-card-body>
             </b-card>
-            <b-card
-              no-body
-              class="text-white py-5 d-none d-lg-flex"
-              style="width: 44%"
-            >
+            <b-card no-body class="py-5 d-none d-lg-flex" style="width: 44%">
               <b-card-body class="text-center">
                 <div>
                   <img
+                    class="logo-dark-theme"
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
+                    width="100%"
+                  />
+                  <img
+                    class="logo-light-theme"
+                    src="@/assets/img/brand/dt-logo-vertical-dark-text.svg"
                     width="100%"
                   />
                 </div>

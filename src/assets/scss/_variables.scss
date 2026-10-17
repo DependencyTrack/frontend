@@ -1,20 +1,77 @@
 // stylelint-disable
-$grey-base:  #020304 !default;
-/* $grey-base:  #181b1e !default; */
-/* $grey-base:  #06080A !default; */
-/* $grey-base:  #050607 !default; */
-$grey-100:   lighten($grey-base, 85%);
-$grey-200:   lighten($grey-base, 80%);
-$grey-300:   lighten($grey-base, 70%);
-$grey-400:   lighten($grey-base, 60%);
-$grey-500:   lighten($grey-base, 50%);
-$grey-600:   lighten($grey-base, 40%);
-$grey-650:   lighten($grey-base, 25%);
-$grey-700:   lighten($grey-base, 15%);
-$grey-750:   lighten($grey-base, 12.5%);
-$grey-800:   lighten($grey-base, 10%);
-$grey-850:   lighten($grey-base, 7.5%);
-$grey-900:   lighten($grey-base, 5%);
+// Bootstrap runs its base colors through Sass functions, so those take literals from this map, not var(--dt-*).
+$dt-themes: (
+  dark: (
+    surface-recessed: #0a0911,
+    surface-body: #0f0d16,
+    surface-card: #17151e,
+    surface-raised: #1c1a24,
+    surface-input: #25232d,
+    surface-nav: #1c1a24,
+    text: #d4d4d8,
+    text-strong: #e4e4e7,
+    text-heading: #f4f4f5,
+    text-muted: #9b9ba5,
+    icon-subtle: #7c7c86,
+    line: #52525b,
+    border: rgba(#fff, .08),
+    border-control: #6b6b76,
+    accent: #6c8cff,
+    on-accent: #101114,
+    hover: rgba(#6c8cff, .12),
+    selected: rgba(#6c8cff, .16),
+    focus: #3df0d0,
+    brand: #ff00cf,
+    inverse-bg: #f4f4f5,
+    inverse-fg: #101114,
+    secondary: #52525b,
+    severity-critical-text: #f2555a,
+    severity-high-text: #ff9a1f,
+    severity-medium-text: #ffd43b,
+    severity-low-text: #86e0a5,
+    severity-info-text: #6c8cff,
+    severity-unassigned-text: #8a8a94,
+  ),
+  light: (
+    surface-recessed: #e9e2d4,
+    surface-body: #f1ece1,
+    surface-card: #f8f3e9,
+    surface-raised: #faf6ec,
+    surface-input: #fcf8ef,
+    surface-nav: #f1ece1,
+    text: #2a2621,
+    text-strong: #1f1b17,
+    text-heading: #14110d,
+    text-muted: #5d574d,
+    icon-subtle: #766f63,
+    line: #d8d2c4,
+    border: rgba(#2a2621, .12),
+    border-control: #80796c,
+    accent: #3451d1,
+    on-accent: #fff,
+    hover: rgba(#2a2621, .07),
+    selected: rgba(#2a2621, .1),
+    focus: #0f766e,
+    brand: #c2009c,
+    inverse-bg: #1f1b17,
+    inverse-fg: #fff,
+    secondary: #5d574d,
+    severity-critical-text: #b82632,
+    severity-high-text: #9a4f00,
+    severity-medium-text: #7d5c00,
+    severity-low-text: #1b6e3d,
+    severity-info-text: #3451d1,
+    severity-unassigned-text: #62626d,
+  ),
+);
+
+@function dt-dark($token) {
+  @return map-get(map-get($dt-themes, dark), $token);
+}
+
+@function dt-light($token) {
+  @return map-get(map-get($dt-themes, light), $token);
+}
 
 // CoreUI's grays, which Bootstrap uses wherever we don't override it
 $gray-100:   #f0f3f5 !default;
@@ -27,33 +84,45 @@ $gray-700:   #5c6873 !default;
 $gray-800:   #2f353a !default;
 $gray-900:   #23282c !default;
 
-$secondary:  $grey-600 !default;
-
 $white:      #fff;
 
-$blue:       #60a5fa !default;
-$red:        #f86c6b !default;
-$orange:     #fd8c00 !default;
-$yellow:     #ffc107 !default;
-$green:      #4dbd74 !default;
+$blue:       dt-dark(accent) !default;
+$red:        #f2555a !default;
+$orange:     #ff9a1f !default;
+$yellow:     #ffd43b !default;
+$green:      #86e0a5 !default;
 $light-blue: #6DD9FF !default;
 
+$secondary:  dt-dark(line) !default;
 $info:       $light-blue !default;
 $dark:       $gray-800 !default;
 
-$color-contrast-dark: $gray-900 !default;
+$color-contrast-dark: #101114 !default;
 
-$body-bg:       $grey-800 !default;
-$body-color:    $grey-200 !default;
-$body-secondary-color: $gray-500 !default;
-$body-secondary-bg:    $grey-800 !default;
-$body-tertiary-bg:     $grey-750 !default;
+$enable-dark-mode:      true !default;
+$color-mode-type:       data !default;
+
+$body-bg:                    dt-light(surface-body) !default;
+$body-bg-dark:               dt-dark(surface-body) !default;
+$body-color:                 dt-light(text) !default;
+$body-color-dark:            dt-dark(text) !default;
+$body-emphasis-color:        dt-light(text-heading) !default;
+$body-emphasis-color-dark:   dt-dark(text-heading) !default;
+$body-secondary-color:       dt-light(text-muted) !default;
+$body-secondary-color-dark:  dt-dark(text-muted) !default;
+$body-secondary-bg:          dt-light(surface-card) !default;
+$body-secondary-bg-dark:     dt-dark(surface-card) !default;
+$body-tertiary-bg:           dt-light(surface-recessed) !default;
+$body-tertiary-bg-dark:      dt-dark(surface-recessed) !default;
+$border-color:               dt-light(border) !default;
+$border-color-dark:          dt-dark(border) !default;
+$link-color:                 dt-light(accent) !default;
+$link-color-dark:            dt-dark(accent) !default;
 
 $font-size-base: .875rem !default;
 
 $enable-rfs:            false !default;
 $enable-smooth-scroll:  false !default;
-$enable-dark-mode:      false !default;
 
 $link-decoration:       none !default;
 $link-hover-decoration: underline !default;
@@ -65,36 +134,36 @@ $severity-high: $orange;
 $severity-medium: $yellow;
 $severity-low: $green;
 $severity-info: $blue;
-$severity-unassigned: #777777;
-$severity-label-bg: $grey-900 !default;
+$severity-unassigned: #8a8a94;
+$dt-severity-variants: (danger: critical, warning: medium, success: low);
+$severity-label-bg: var(--dt-surface-recessed) !default;
 
 $notification-fail: $red;
 $notification-warn: $yellow;
 $notification-info: $blue;
 $notification-pass: $green;
-$notification-note: #777777;
+$notification-note: #8a8a94;
 
 // Components
 //
 // Define common padding and border radius sizes and more.
 
-$border-color:                      rgba($white, .08) !default;
-$component-active-color:            $grey-750 !default;
+$component-active-color:            $white !default;
 
 // Dropdowns
 
 $dropdown-padding-y:                0 !default;
-$dropdown-bg:                       $grey-700 !default;
-$dropdown-border-color:             $border-color !default;
-$dropdown-divider-bg:               $grey-750 !default;
+$dropdown-bg:                       var(--dt-surface-raised) !default;
+$dropdown-border-color:             var(--dt-border) !default;
+$dropdown-divider-bg:               var(--dt-border) !default;
 
-$dropdown-link-color:               $grey-200 !default;
-$dropdown-link-hover-color:         $grey-200 !default;
-$dropdown-link-hover-bg:            $grey-800 !default;
+$dropdown-link-color:               var(--dt-text) !default;
+$dropdown-link-hover-color:         var(--dt-text-strong) !default;
+$dropdown-link-hover-bg:            var(--dt-hover) !default;
 
-$dropdown-link-disabled-color:      $grey-600 !default;
+$dropdown-link-disabled-color:      var(--dt-icon-subtle) !default;
 
-$dropdown-header-color:             $grey-200 !default;
+$dropdown-header-color:             var(--dt-text) !default;
 
 $dropdown-item-padding-y:           10px !default;
 $dropdown-item-padding-x:           20px !default;
@@ -102,43 +171,62 @@ $dropdown-header-padding-y:         8px !default;
 
 // Forms
 
-$input-bg:                              $grey-650 !default;
-$input-disabled-bg:                     $grey-700 !default;
+$input-bg:                              var(--dt-surface-input) !default;
+$input-disabled-bg:                     var(--dt-surface-recessed) !default;
 
-$input-color:                           $grey-200 !default;
-$input-border-color:                    $border-color !default;
+$input-color:                           var(--dt-text) !default;
+$input-border-color:                    var(--dt-border-control) !default;
 
 $input-focus-bg:                        $input-bg !default;
 $input-focus-color:                     $input-color !default;
 
-$input-placeholder-color:               $grey-400 !default;
-$input-plaintext-color:                 $body-color !default;
+$input-placeholder-color:               var(--dt-text-muted) !default;
+$input-focus-border-color:              var(--dt-accent) !default;
+$input-plaintext-color:                 var(--bs-body-color) !default;
 
 $input-group-addon-color:               $input-color !default;
-$input-group-addon-bg:                  $grey-750 !default;
+$input-group-addon-bg:                  var(--dt-surface-recessed) !default;
 $input-group-addon-border-color:        $input-border-color !default;
 
-$form-check-input-bg:                   $grey-300 !default;
-$form-range-track-bg:                   $gray-300 !default;
+$form-check-input-bg:                   var(--dt-surface-input) !default;
+$form-check-input-border:               1px solid var(--dt-border-control) !default;
+$form-switch-color:                     dt-light(border-control) !default;
+$form-switch-color-dark:                dt-dark(border-control) !default;
+$form-switch-focus-color:               $form-switch-color !default;
+$form-select-indicator-color:           dt-light(text) !default;
+$form-select-indicator-color-dark:      dt-dark(text) !default;
+
+$form-valid-color:                      dt-light(severity-low-text) !default;
+$form-valid-color-dark:                 dt-dark(severity-low-text) !default;
+$form-valid-border-color:               dt-light(severity-low-text) !default;
+$form-valid-border-color-dark:          dt-dark(severity-low-text) !default;
+$form-invalid-color:                    dt-light(severity-critical-text) !default;
+$form-invalid-color-dark:               dt-dark(severity-critical-text) !default;
+$form-invalid-border-color:             dt-light(severity-critical-text) !default;
+$form-invalid-border-color-dark:        dt-dark(severity-critical-text) !default;
+// Inline SVGs can't resolve var(), so one literal has to clear 3:1 on both themes' inputs.
+$form-feedback-icon-valid-color:        #2e8b57 !default;
+$form-feedback-icon-invalid-color:      #d0454a !default;
+$form-range-track-bg:                   var(--dt-line) !default;
 
 $form-select-disabled-color: $input-color !default;
 
   // Modals
 
-$modal-content-bg:                  $grey-700 !default;
-$modal-content-border-color:        $border-color !default;
+$modal-content-bg:                  var(--dt-surface-raised) !default;
+$modal-content-border-color:        var(--dt-border) !default;
 
-$modal-header-border-color:         $border-color !default;
+$modal-header-border-color:         var(--dt-border) !default;
 
 // Navs
 
-$nav-link-disabled-color:           $grey-600 !default;
+$nav-link-disabled-color:           var(--dt-icon-subtle) !default;
 
-$nav-tabs-border-color:             $border-color !default;
-$nav-tabs-link-hover-border-color:  $border-color $border-color $border-color !default;
-$nav-tabs-link-active-color:        $white !default;
-$nav-tabs-link-active-bg:           $grey-700 !default;
-$nav-tabs-link-active-border-color: $border-color $border-color $grey-700 !default;
+$nav-tabs-border-color:             var(--dt-border) !default;
+$nav-tabs-link-hover-border-color:  var(--dt-border) var(--dt-border) var(--dt-border) !default;
+$nav-tabs-link-active-color:        var(--dt-text-heading) !default;
+$nav-tabs-link-active-bg:           var(--bs-body-bg) !default;
+$nav-tabs-link-active-border-color: var(--dt-border) var(--dt-border) var(--bs-body-bg) !default;
 
 // Alerts
 
@@ -152,66 +240,67 @@ $badge-padding-x:                   .4em !default;
 
 // Navbar
 $navbar-height:            55px !default;
-$navbar-bg:                $grey-700 !default;
-$navbar-color:             $grey-300 !default;
-$navbar-hover-color:       $grey-200 !default;
-$navbar-active-color:      $grey-200 !default;
+$navbar-bg:                var(--dt-surface-raised) !default;
+$navbar-color:             var(--dt-text-muted) !default;
+$navbar-hover-color:       var(--dt-text-strong) !default;
+$navbar-active-color:      var(--dt-text-strong) !default;
 
 // Pagination
 
 $pagination-padding-y:              .5rem !default;
-$pagination-bg:                     $grey-750 !default;
-$pagination-border-color:           $border-color !default;
+$pagination-bg:                     var(--dt-surface-card) !default;
+$pagination-border-color:           var(--dt-border) !default;
 
-$pagination-hover-bg:               $grey-800 !default;
-$pagination-hover-border-color:     $border-color !default;
+$pagination-hover-bg:               var(--dt-hover) !default;
+$pagination-hover-border-color:     var(--dt-border) !default;
 
-$pagination-disabled-color:         $grey-600 !default;
-$pagination-disabled-bg:            $grey-900 !default;
-$pagination-disabled-border-color:  $border-color !default;
+$pagination-disabled-color:         var(--dt-icon-subtle) !default;
+$pagination-disabled-bg:            var(--dt-surface-recessed) !default;
+$pagination-disabled-border-color:  var(--dt-border) !default;
 
 // Breadcrumb
 $breadcrumb-padding-y:     .75rem !default;
 $breadcrumb-padding-x:     1rem !default;
 $breadcrumb-margin-bottom: 1.5rem !default;
 $breadcrumb-bg:            transparent !default;
-$breadcrumb-divider-color: $grey-100 !default;
-$breadcrumb-active-color:  $grey-100 !default;
+$breadcrumb-divider-color: var(--dt-text-muted) !default;
+$breadcrumb-active-color:  var(--dt-text-strong) !default;
 
 // Cards
 $card-spacer-y:            1.25rem !default;
 $card-spacer-x:            1.25rem !default;
 $card-cap-padding-y:       .75rem !default;
-$card-bg:                  $grey-700 !default;
-$card-border-color:        $border-color !default;
+$card-bg:                  var(--dt-surface-card) !default;
+$card-border-color:        var(--dt-border) !default;
 $card-cap-bg:              transparent !default;
 
 // Sidebar
-$sidebar-color:                       $grey-100 !default;
-$sidebar-bg:                          $grey-700 !default;
+$sidebar-color:                       var(--dt-text-strong) !default;
+$sidebar-bg:                          var(--dt-surface-nav) !default;
 
-$sidebar-nav-link-active-bg:          $grey-750 !default;
+$sidebar-nav-link-active-bg:          var(--dt-selected) !default;
+$sidebar-nav-link-hover-bg:           var(--dt-hover) !default;
 
 // Progress bars
 
-$progress-bg:                       $grey-650 !default;
+$progress-bg:                       var(--dt-line) !default;
 
 
 // List group
 
 $list-group-item-padding-y:         .75rem !default;
 $list-group-item-padding-x:         1.25rem !default;
-$list-group-bg:                     $grey-750 !default;
-$list-group-border-color:           $border-color !default;
-$list-group-hover-bg:               $grey-800 !default;
+$list-group-bg:                     var(--dt-surface-card) !default;
+$list-group-border-color:           var(--dt-border) !default;
+$list-group-hover-bg:               var(--dt-hover) !default;
 
-$list-group-disabled-color:         $grey-600 !default;
+$list-group-disabled-color:         var(--dt-icon-subtle) !default;
 
-$list-group-action-color:           $grey-200 !default;
+$list-group-action-color:           var(--dt-text) !default;
 $list-group-action-hover-color:     $list-group-action-color !default;
 
-$list-group-action-active-color:    $body-color !default;
-$list-group-action-active-bg:       $grey-200 !default;
+$list-group-action-active-color:    var(--bs-body-color) !default;
+$list-group-action-active-bg:       var(--dt-selected) !default;
 
 // Switches
 
@@ -222,55 +311,37 @@ $table-cell-padding-y:        .75rem !default;
 $table-cell-padding-x:        .75rem !default;
 $table-cell-padding-y-sm:     .3rem !default;
 $table-cell-padding-x-sm:     .3rem !default;
-$table-color:                 $body-color !default;
+$table-color:                 var(--bs-body-color) !default;
 $table-bg:                    transparent !default;
-$table-border-color:          $border-color !default;
+$table-border-color:          var(--dt-border) !default;
 
 // Toasts
 $toast-header-color:            inherit !default;
 $toast-header-background-color: transparent !default;
 
-// Close buttons
-$btn-close-filter: invert(1) grayscale(100%) brightness(200%) !default;
-
 // Tooltips
-$tooltip-color:        $white !default;
-$tooltip-bg:           #000 !default;
+$tooltip-color:        var(--dt-inverse-fg) !default;
+$tooltip-bg:           var(--dt-inverse-bg) !default;
 
 // Popovers
-$popover-bg:           $grey-900 !default;
-$popover-border-color: rgba($white, .2) !default;
-$popover-header-bg:    lighten($popover-bg, 3%) !default;
-
-$widget-1: $blue;
-$widget-2: #A66BF8;
-$widget-3: #6D6BF8;
-$widget-4: $red;
-
-$recessed: $grey-850;
+$popover-bg:           var(--dt-surface-raised) !default;
+$popover-border-color: var(--dt-border-control) !default;
+$popover-header-bg:    var(--dt-surface-card) !default;
 
 :root {
-  --severity-critical: #{$severity-critical};
-  --severity-high: #{$severity-high};
-  --severity-medium: #{$severity-medium};
-  --severity-low: #{$severity-low};
-  --severity-info: #{$severity-info};
-  --severity-unassigned: #{$severity-unassigned};
+  // Charts draw these as lines and arcs, so they take the per-theme text colors that clear 3:1.
+  --severity-critical: var(--dt-severity-critical-text);
+  --severity-high: var(--dt-severity-high-text);
+  --severity-medium: var(--dt-severity-medium-text);
+  --severity-low: var(--dt-severity-low-text);
+  --severity-info: var(--dt-severity-info-text);
+  --severity-unassigned: var(--dt-severity-unassigned-text);
 
-  --notification-fail: #{$notification-fail};
-  --notification-warn: #{$notification-warn};
-  --notification-info: #{$notification-info};
-  --notification-pass: #{$notification-pass};
-  --notification-note: #{$notification-note};
-
-  --component-active-color: #{$component-active-color};
-
-  --widget-1: #{$widget-1};
-  --widget-2: #{$widget-2};
-  --widget-3: #{$widget-3};
-  --widget-4: #{$widget-4};
-
-  --recessed: #{$recessed};
+  --notification-fail: var(--severity-critical);
+  --notification-warn: var(--severity-medium);
+  --notification-info: var(--severity-info);
+  --notification-pass: var(--severity-low);
+  --notification-note: var(--severity-unassigned);
 }
 
 // Modal override

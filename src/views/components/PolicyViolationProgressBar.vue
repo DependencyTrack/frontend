@@ -2,7 +2,7 @@
   <span v-if="metrics.policyViolationsTotal === 0" class="progress">
     <b-progress class="table-progress" :max="'0'" show-value>
       <b-progress-bar
-        class="table-progress text-dark"
+        class="table-progress progress-bar-zero"
         value="0"
       ></b-progress-bar>
     </b-progress>
@@ -18,11 +18,11 @@
           >
             <b-progress-bar
               :value="metrics.policyViolationsInfo"
-              class="severity-info-bg text-dark"
+              class="severity-info-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="metrics.policyViolationsWarn"
-              class="severity-warn-bg text-dark"
+              class="severity-warn-bg"
             ></b-progress-bar>
             <b-progress-bar
               :value="metrics.policyViolationsFail"

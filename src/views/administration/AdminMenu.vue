@@ -531,8 +531,8 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
-  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--dt-text-muted);
+  background-color: var(--dt-surface-recessed);
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
   cursor: default;

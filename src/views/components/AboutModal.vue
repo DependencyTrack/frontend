@@ -2,10 +2,28 @@
   <b-modal v-model="visible" size="lg" no-stacking :title="$t('message.about')">
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          class="logo-dark-theme"
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          width="200"
+        />
+        <img
+          class="logo-light-theme"
+          src="@/assets/img/brand/dt-logo-dark-text.svg"
+          width="200"
+        />
       </b-col>
       <b-col align="right">
-        <img src="@/assets/img/brand/owasp-logo-white.svg" width="120" />
+        <img
+          class="logo-dark-theme"
+          src="@/assets/img/brand/owasp-logo-white.svg"
+          width="120"
+        />
+        <img
+          class="logo-light-theme"
+          src="@/assets/img/brand/owasp-logo-dark.svg"
+          width="120"
+        />
       </b-col>
     </b-row>
     <hr />

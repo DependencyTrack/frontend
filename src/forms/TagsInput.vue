@@ -11,7 +11,7 @@
       <button
         v-if="!readonly"
         type="button"
-        class="btn-close btn-close-white ms-1"
+        class="btn-close ms-1"
         :aria-label="`${$t('message.remove')} ${tag}`"
         @click="remove(tag)"
       ></button>

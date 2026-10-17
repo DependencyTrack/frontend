@@ -5,22 +5,26 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import { Line } from 'vue-chartjs';
-import { getStyle, hexToRgba } from '@/shared/utils';
+import { hexToRgba } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 import common from '../../shared/common';
 
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
-      options: null,
+      metrics: null,
     };
   },
-  methods: {
-    render: function (metrics) {
-      const widgetColor = getStyle('--widget-3');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const widgetColor = themeColor('--dt-accent');
       let chartLabels = [];
       let chartData = [];
       for (let i = 0; i < metrics.length; i++) {
@@ -34,16 +38,22 @@ export default {
           backgroundColor: hexToRgba(widgetColor, 10),
           fill: true,
           borderColor: widgetColor,
-          pointHoverBackgroundColor: '#fff',
+          pointHoverBackgroundColor: themeColor('--dt-surface-card'),
           data: chartData,
         },
       ];
 
-      this.chartData = {
+      return {
         labels: chartLabels,
         datasets: datasets,
       };
-      this.options = {
+    },
+    options() {
+      if (!this.chartData) {
+        return null;
+      }
+      const { datasets } = this.chartData;
+      return {
         maintainAspectRatio: false,
         plugins: {
           legend: {
@@ -100,6 +110,11 @@ export default {
           },
         },
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

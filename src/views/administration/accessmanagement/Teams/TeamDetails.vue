@@ -176,7 +176,7 @@
     >
       <p class="text-center">{{ shownApiKey.message }}</p>
       <pre
-        class="b-input-group-form-input text-white plaintext"
+        class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
         >{{ shownApiKey.key }}</pre>
     </b-modal>

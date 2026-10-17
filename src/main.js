@@ -15,6 +15,7 @@ import oidc from './shared/oidc.json';
 import globals from './shared/globals';
 import state from './shared/state';
 import { getContextPath } from './shared/utils';
+import { followSystemTheme } from './shared/theme';
 
 globals.$api = api;
 globals.$oidc = oidc;
@@ -72,6 +73,7 @@ axios
  * https://github.com/DependencyTrack/frontend/issues/34
  */
 function createVueApp() {
+  followSystemTheme();
   axios
     .get(`${globals.$api.BASE_URL}/${globals.$api.URL_ABOUT}`)
     .then((result) => {

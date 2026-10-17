@@ -2,8 +2,7 @@
 code {
   padding: 2px 4px;
   font-size: 1.1em;
-  color: #e83e8c;
-  background-color: $grey-750;
+  background-color: var(--dt-surface-recessed);
 }
 
 // Blocks of code
@@ -12,11 +11,11 @@ pre {
   padding: 1em;
   font-size: 1.1em;
   line-height: 1;
-  color: $light-blue;
+  color: var(--dt-text);
   word-break: break-all;
   word-wrap: break-word;
-  background-color: $grey-750;
-  border: 1px solid $border-color;
+  background-color: var(--dt-surface-recessed);
+  border: 1px solid var(--dt-border);
   border-radius: $border-radius;
 
   code {

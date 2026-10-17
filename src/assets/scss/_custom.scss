@@ -1,46 +1,43 @@
 // Here you can add other styles
 
-html {
-  filter: contrast(110%);
-}
 .modal-header {
-  background-color: $grey-800;
+  background-color: var(--dt-surface-card);
 }
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
 }
 .severity-critical, .status-failed {
-  color: $severity-critical;
+  color: var(--dt-severity-critical-text);
   .progress-bar {
     background-color: $severity-critical;
   }
 }
 .severity-high {
-  color:$severity-high;
+  color: var(--dt-severity-high-text);
   .progress-bar {
     background-color: $severity-high;
   }
 }
 .severity-medium, .status-warning {
-  color: $severity-medium;
+  color: var(--dt-severity-medium-text);
   .progress-bar {
     background-color: $severity-medium;
   }
 }
 .severity-low, .status-passed {
-  color: $severity-low;
+  color: var(--dt-severity-low-text);
   .progress-bar {
     background-color: $severity-low;
   }
 }
 .severity-info, .status-info {
-  color: $severity-info;
+  color: var(--dt-severity-info-text);
   .progress-bar {
     background-color: $severity-info;
   }
 }
 .severity-unassigned {
-  color: $severity-unassigned;
+  color: var(--dt-severity-unassigned-text);
   .progress-bar {
     background-color: $severity-unassigned;
   }
@@ -78,7 +75,8 @@ html {
   color: color-contrast($severity-critical);
 }
 .text-bg-violation-type {
-  background: $widget-3;
+  background: var(--dt-accent);
+  color: var(--dt-on-accent);
 }
 .severity-unassigned-bg, .text-bg-UNASSIGNED {
   background: $severity-unassigned none;
@@ -87,100 +85,99 @@ html {
 .severity-bug-icon {
   width:40px;
   height:40px;
-  color:#ffffff;
+  color: var(--dt-on-severity);
 }
 .severity-bug-label {
   height:40px;
-  color:#ffffff;
+  color: var(--dt-text-heading);
   background-color: $severity-label-bg;
 }
 .label-analyzer {
-  border: 1px solid #5C9CCB;
+  border: 1px solid var(--dt-border-control);
 }
 .label-analyzer-internal {
-  color: $white;
+  color: var(--dt-text-strong);
 }
 .label-source {
-  color: #222222;
+  color: var(--dt-text-strong);
   padding: .2em .6em .3em;
   font-weight: normal;
   font-size: 75%;
 }
 .label-source-nvd {
-  background-color: #AECEE5;
+  background-color: color-mix(in srgb, #5C9CCB 18%, transparent);
   border: 1px solid #5C9CCB;
 }
 .label-source-npm {
-  background-color: #B4AFE4;
+  background-color: color-mix(in srgb, #6E63CC 18%, transparent);
   border: 1px solid #6E63CC;
 }
 .label-source-ossindex {
-  background-color: #AFE4BF;
+  background-color: color-mix(in srgb, #73D08F 18%, transparent);
   border: 1px solid #73D08F;
 }
 .label-source-snyk {
-  background-color: #afd2e4;
+  background-color: color-mix(in srgb, #73c1d0 18%, transparent);
   border: 1px solid #73c1d0;
 }
 .label-source-vulndb {
-  background-color: #FFC78B;
+  background-color: color-mix(in srgb, #FE9536 18%, transparent);
   border: 1px solid #FE9536;
 }
 .label-source-cx {
-  background-color: #4dbeef;
+  background-color: color-mix(in srgb, #4036fe 18%, transparent);
   border: 1px solid #4036fe;
 }
 .label-source-victims {
-  background-color: #E4AFAF;
+  background-color: color-mix(in srgb, #CC6666 18%, transparent);
   border: 1px solid #CC6666;
 }
 .label-source-github {
-  background-color: #D4BBF7;
+  background-color: color-mix(in srgb, #A66AF7 18%, transparent);
   border: 1px solid #A66AF7;
 }
 .label-source-osv {
-  background-color: #f7bbdc;
+  background-color: color-mix(in srgb, #cc668a 18%, transparent);
   border: 1px solid #cc668a;
 }
 .label-source-internal {
-  background-color: #EBE5A8;
+  background-color: color-mix(in srgb, #DCD167 18%, transparent);
   border: 1px solid #DCD167;
 }
 .label-source-unknown {
-  background-color: $severity-unassigned;
-  border: 1px solid $grey-900;
-  color: #FFFFFF;
+  background-color: color-mix(in srgb, #{$severity-unassigned} 18%, transparent);
+  border: 1px solid $severity-unassigned;
 }
 .label-notification {
-  color: #222222;
+  color: var(--dt-text-strong);
   padding: .2em .6em .3em;
   font-weight: normal;
   font-size: 75%;
 }
 .label-notification-fail {
-  background-color: lighten($notification-fail, 15% );
+  background-color: color-mix(in srgb, #{$notification-fail} 18%, transparent);
   border: 1px solid $notification-fail;
 }
 .label-notification-warn {
-  background-color: lighten($notification-warn, 15% );
+  background-color: color-mix(in srgb, #{$notification-warn} 18%, transparent);
   border: 1px solid $notification-warn;
 }
 .label-notification-info {
-  background-color: lighten($notification-info, 15% );
+  background-color: color-mix(in srgb, #{$notification-info} 18%, transparent);
   border: 1px solid $notification-info;
 }
 .table {
-  background-color: $grey-750;
+  background-color: var(--dt-surface-card);
 }
 .table td.tight, .table th.tight {
   width: 1%;
 }
 label.required:after {
-  color: #d62728;
+  color: var(--dt-severity-critical-text);
   content:" *";
 }
 input.required, select.required, textarea.required {
-  border-color: #ffd700;
+  border-color: var(--dt-severity-medium-text);
 }
 
 /* usage: use outer div/span with class truncate-ellipsis and inner span with content to truncate */
@@ -196,10 +193,10 @@ input.required, select.required, textarea.required {
   text-overflow: ellipsis;
 }
 .body-bg-color {
-  background-color: $body-bg;
+  background-color: var(--bs-body-bg);
 }
 .tab-content {
-  background: $body-bg;
+  background: var(--bs-body-bg);
 }
 .nav-tabs {
   flex-wrap: nowrap;
@@ -271,25 +268,25 @@ input.required, select.required, textarea.required {
 .nav-tabs-scroll-btn-left {
   left: 0;
   padding-right: 1.5rem;
-  background: linear-gradient(to right, $body-bg 50%, transparent);
+  background: linear-gradient(to right, var(--bs-body-bg) 50%, transparent);
 }
 .nav-tabs-scroll-btn-right {
   right: 0;
   padding-left: 1.5rem;
-  background: linear-gradient(to left, $body-bg 50%, transparent);
+  background: linear-gradient(to left, var(--bs-body-bg) 50%, transparent);
 }
 .nav-tabs .nav-link {
   white-space: nowrap;
-  border-top-color: $border-color;
-  border-left-color: $border-color;
-  border-right-color: $border-color;
+  border-top-color: var(--dt-border);
+  border-left-color: var(--dt-border);
+  border-right-color: var(--dt-border);
   border-bottom-color: transparent;
 }
 .nav-tabs .nav-link:hover {
-  background-color: $grey-750;
+  background-color: var(--dt-hover);
 }
 .card-footer-action:hover {
-  background: $grey-800;
+  background: var(--dt-hover);
 }
 .callout-severity-critical {
   border-left-color: $severity-critical;
@@ -312,27 +309,13 @@ input.required, select.required, textarea.required {
 .toast-body {
   white-space: pre-line;
 }
-// Bootstrap's subtle colors suit a light page. These are its dark mode's.
-:root {
-  @each $color, $value in $theme-colors {
-    --#{$prefix}#{$color}-text-emphasis: #{tint-color($value, 40%)};
-    --#{$prefix}#{$color}-bg-subtle: #{shade-color($value, 80%)};
-    --#{$prefix}#{$color}-border-subtle: #{shade-color($value, 40%)};
-  }
-}
-
 .expanded-row {
   margin-top:-12px;
   margin-bottom:-12px;
   margin-right: -13px;
   padding-top:20px;
   padding-bottom: 20px;
-  background-color: $grey-800;
-}
-
-// $secondary is too dark for text on the dark surfaces.
-.btn-outline-secondary {
-  --bs-btn-color: #{$body-secondary-color};
+  background-color: var(--dt-surface-recessed);
 }
 
 .btn-spaced-group .btn {
@@ -340,8 +323,8 @@ input.required, select.required, textarea.required {
 }
 
 .btn-outline-primary.disabled.active, .btn-outline-primary:disabled.active {
-  background-color: darken($blue, 20);
-  color: $white;
+  background-color: var(--dt-accent);
+  color: var(--dt-on-accent);
   opacity: 1.0;
 }
 
@@ -384,18 +367,15 @@ h6 {
   padding: .25rem .35rem;
 }
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading {
-  background: $grey-750  !important;
+  background: var(--dt-surface-card) !important;
 }
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-dot,
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-wrap::after,
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-wrap::before {
-  background: $grey-750  !important;;
+  background: var(--dt-surface-card) !important;
 }
 .bg-widget {
-  background-color: $grey-750;
-}
-button:focus {
-  outline: 0;
+  background-color: var(--dt-surface-card);
 }
 // Bootstrap 4's .form-group spacing: the group's margin replaces its last child's.
 .b-form-group {
@@ -426,60 +406,60 @@ button:focus {
   padding-left: .6em;
 }
 .text-bg-tab-total {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
   margin-left: 0.6em !important;
-  color: #21D983 !important;
+  color: var(--dt-severity-low-text) !important;
 }
 .text-bg-tab-fail {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-fail !important;
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-critical-text) !important;
 }
 .text-bg-tab-warn {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-warn !important;
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-medium-text) !important;
 }
 .text-bg-tab-info {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-info !important;
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-info-text) !important;
 }
 .text-bg-tag {
-  color: $primary;
+  color: var(--dt-accent);
   background-color: transparent;
-  border: 1px solid $primary;
+  border: 1px solid var(--dt-accent);
 }
 .text-bg-tag:hover {
-  color: $light-blue;
+  color: var(--dt-text-heading);
   background-color: transparent;
-  border: 1px solid $primary;
+  border: 1px solid var(--dt-accent);
 }
 .tags-input {
   row-gap: 0.25rem;
 }
 .tags-input:focus-within {
-  border-color: $input-focus-border-color;
-  box-shadow: $input-focus-box-shadow;
+  outline: 2px solid var(--dt-focus);
+  outline-offset: 2px;
 }
 .tags-input input {
   outline: 0;
 }
 .badge-team {
-    color: $primary;
+    color: var(--dt-accent);
     background-color: transparent;
-    border: 1px solid $primary;
+    border: 1px solid var(--dt-accent);
   }
   .badge-team:hover {
-    color: $light-blue;
+    color: var(--dt-text-heading);
     background-color: transparent;
-    border: 1px solid $primary;
+    border: 1px solid var(--dt-accent);
   }
 td a.detail-icon {
   font-size: 150%;
   line-height: 1.0;
-  color: $grey-600;
+  color: var(--dt-icon-subtle);
 }
 .treegrid-indent {
   width: 10px;
@@ -508,23 +488,23 @@ td a.detail-icon {
 // Adjusts vue-multiselect style to dependency track
 
 .multiselect__spinner {
-  background: $grey-650;
+  background: var(--dt-surface-input);
   z-index: 52;
 }
 
 .multiselect__spinner:before,
 .multiselect__spinner:after {
-  border-color: $primary transparent transparent;
+  border-color: var(--dt-accent) transparent transparent;
 }
 
 .multiselect--active {
-  color: #bfcfdf;
+  color: var(--dt-text);
 }
 
 .multiselect__input,
 .multiselect__single {
-  background: $grey-650;
-  color: #bfcfdf;
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 400;
   padding-left: 0;
@@ -532,34 +512,34 @@ td a.detail-icon {
 }
 
 .multiselect__input::placeholder {
-  color: #bfcfdf;
+  color: var(--dt-text-muted);
 }
 
 .multiselect__input:hover,
 .multiselect__single:hover {
-  border-color: $grey-650;
+  border-color: var(--dt-surface-input);
 }
 
 .multiselect__input:focus,
 .multiselect__single:focus {
-  border-color: $grey-650;
+  border-color: var(--dt-surface-input);
 }
 
 .multiselect__select,
 .multiselect__select:before {
-  border-color: #2f353a transparent;
+  border-color: var(--dt-text-muted) transparent;
   z-index: 51;
 }
 
 .multiselect__placeholder {
-  color: $grey-400;
+  color: var(--dt-text-muted);
   font-size: 0.875rem;
   font-weight: 400;
 }
 
 .multiselect__content-wrapper {
-  border: 1px solid $border-color;
-  background: $grey-650;
+  border: 1px solid var(--dt-border);
+  background: var(--dt-surface-input);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -576,23 +556,23 @@ td a.detail-icon {
 }
 
 .multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: var(--dt-hover);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 400;
 }
 
 .multiselect__option--selected {
-  background: $grey-650;
-  color: #bfcfdf;
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 700;
 }
 
 .multiselect__tags {
-  border: 1px solid $border-color;
-  background: $grey-650;
-  color: #bfcfdf;
+  border: 1px solid var(--dt-border-control);
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   height: $input-height;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
@@ -600,8 +580,8 @@ td a.detail-icon {
 }
 
 .multiselect__option--selected.multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: var(--dt-hover);
+  color: var(--dt-text);
   font-weight: 700;
 }
 
@@ -610,12 +590,13 @@ td a.detail-icon {
   padding-top: 0.3rem;
 }
 
-// Font Awesome 7 makes icons fixed-width; the layout relies on Font Awesome 4's natural widths, `fa-fw` opts in.
+// Font Awesome 7 makes every icon fixed-width. The layout expects Font Awesome 4's natural widths, and `fa-fw`
+// still opts in.
 :root {
   --fa-width: auto;
 }
 
-// Desktop has no app header; the sidebar holds brand and profile instead.
+// Desktop has no app header. The sidebar holds the brand and the profile menu instead.
 :root {
   --app-header-height: #{$navbar-height};
 }
@@ -642,7 +623,7 @@ td a.detail-icon {
   // Same height as the breadcrumb, so their bottom borders line up.
   height: calc(#{$breadcrumb-padding-y * 2 + $font-size-base * $line-height-base} + 1px);
   padding: 0 1rem;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid var(--dt-border);
 }
 
 .sidebar-brand-minimized {
@@ -651,7 +632,7 @@ td a.detail-icon {
 
 .sidebar .sidebar-profile {
   min-height: 0;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid var(--dt-border);
 
   // BootstrapVueNext wraps the toggle in an inline .btn-group.
   .btn-group {
@@ -672,7 +653,7 @@ td a.detail-icon {
     background: $sidebar-nav-link-active-bg;
 
     .nav-icon {
-      color: $primary;
+      color: var(--dt-accent);
     }
   }
 }
@@ -680,7 +661,7 @@ td a.detail-icon {
 .sidebar-footer {
   display: flex;
   flex: 0 0 $sidebar-minimizer-height;
-  background-color: rgba(0, 0, 0, .2);
+  background-color: var(--dt-surface-recessed);
 
   .sidebar-minimizer {
     background-color: transparent;
@@ -694,7 +675,7 @@ td a.detail-icon {
   overflow: hidden;
   font-size: 85%;
   line-height: 1.3;
-  color: $body-secondary-color;
+  color: var(--dt-text-muted);
   text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -723,7 +704,7 @@ td a.detail-icon {
       display: none;
     }
 
-    // Same hover flyout as the nav items, but not while the menu is open: it is anchored to the toggle.
+    // Same hover flyout as the nav items. The open menu is anchored to the toggle, so the flyout waits until it closes.
     .sidebar-profile {
       .nav-item {
         width: $sidebar-minimized-width;
@@ -731,6 +712,15 @@ td a.detail-icon {
 
         &:hover:not(:has(.show)) {
           width: $sidebar-width + $sidebar-minimized-width;
+
+          .nav-link,
+          .nav-icon {
+            color: var(--dt-on-accent);
+          }
+
+          .nav-link {
+            background: var(--dt-accent);
+          }
         }
       }
 
@@ -759,4 +749,9 @@ td a.detail-icon {
     top: calc(#{$navbar-height} + var(--banner-offset, 0px));
     height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
   }
+}
+
+// BootstrapVueNext renders tooltips inline, where a narrow positioned parent would squeeze them to a word per line.
+.tooltip {
+  width: max-content;
 }

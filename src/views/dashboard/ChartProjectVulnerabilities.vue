@@ -5,16 +5,17 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle, hexToRgba } from '@/shared/utils';
+import { hexToRgba } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
+      metrics: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
@@ -75,11 +76,15 @@ export default {
       },
     };
   },
-  methods: {
-    render: function (metrics) {
-      const totalStyle = getStyle('--notification-note');
-      const affectedStyle = getStyle('--notification-warn');
-      const nonAffectedStyle = getStyle('--notification-pass');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const totalStyle = themeColor('--notification-note');
+      const affectedStyle = themeColor('--notification-warn');
+      const nonAffectedStyle = themeColor('--notification-pass');
 
       let labels = [];
       let totalData = [];
@@ -104,14 +109,14 @@ export default {
         }
       }
 
-      this.chartData = {
+      return {
         labels: labels,
         datasets: [
           {
             label: this.$t('message.total'),
             backgroundColor: 'transparent',
             borderColor: totalStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: totalData,
           },
           {
@@ -119,7 +124,7 @@ export default {
             backgroundColor: hexToRgba(nonAffectedStyle, 10),
             fill: true,
             borderColor: nonAffectedStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: nonAffectedData,
           },
           {
@@ -127,11 +132,16 @@ export default {
             backgroundColor: hexToRgba(affectedStyle, 10),
             fill: true,
             borderColor: affectedStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: affectedData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

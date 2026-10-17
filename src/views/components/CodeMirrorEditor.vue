@@ -2,7 +2,7 @@
   <div
     ref="editor"
     :style="{
-      border: '1px solid #52525e',
+      border: '1px solid var(--dt-border-control)',
       borderRadius: '0.25rem',
       maxWidth: maxWidth,
       height: initialHeight,
@@ -20,6 +20,26 @@ import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { setDiagnostics } from '@codemirror/lint';
 import { autocompletion } from '@codemirror/autocomplete';
+import { resolvedTheme } from '@/shared/theme';
+
+const lightTheme = EditorView.theme({
+  '&': {
+    color: 'var(--dt-text)',
+    backgroundColor: 'var(--dt-surface-input)',
+  },
+  '.cm-gutters': {
+    color: 'var(--dt-text-muted)',
+    backgroundColor: 'var(--dt-surface-recessed)',
+    borderRight: '1px solid var(--dt-border)',
+  },
+  '.cm-activeLine, .cm-activeLineGutter': {
+    backgroundColor: 'var(--dt-hover)',
+  },
+});
+
+function editorTheme(theme) {
+  return theme === 'dark' ? oneDark : lightTheme;
+}
 
 export default {
   name: 'CodeMirrorEditor',
@@ -52,10 +72,14 @@ export default {
     },
   },
   emits: ['update:modelValue', 'save'],
+  computed: {
+    theme: () => resolvedTheme.value,
+  },
   data() {
     return {
       view: null,
       readOnlyCompartment: new Compartment(),
+      themeCompartment: new Compartment(),
     };
   },
   mounted() {
@@ -68,7 +92,7 @@ export default {
         autocompletion({
           override: this.completionSource ? [this.completionSource] : [],
         }),
-        oneDark,
+        this.themeCompartment.of(editorTheme(this.theme)),
         ...(this.lineWrapping ? [EditorView.lineWrapping] : []),
         this.readOnlyCompartment.of(EditorState.readOnly.of(this.readOnly)),
         EditorView.updateListener.of((update) => {
@@ -184,6 +208,13 @@ export default {
     },
     markers(newMarkers) {
       this.applyMarkers(newMarkers);
+    },
+    theme(newTheme) {
+      if (this.view) {
+        this.view.dispatch({
+          effects: this.themeCompartment.reconfigure(editorTheme(newTheme)),
+        });
+      }
     },
   },
 };

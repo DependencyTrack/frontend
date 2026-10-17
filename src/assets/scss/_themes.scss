@@ -1,0 +1,169 @@
+// Bootstrap compiles $primary into components, so each theme re-points them at its accent.
+@each $theme, $tokens in $dt-themes {
+  [data-bs-theme="#{$theme}"] {
+    @each $token, $value in $tokens {
+      --dt-#{$token}: #{$value};
+    }
+
+    --bs-primary: #{map-get($tokens, accent)};
+    --bs-primary-rgb: #{to-rgb(map-get($tokens, accent))};
+    --bs-secondary: #{map-get($tokens, secondary)};
+    --bs-secondary-rgb: #{to-rgb(map-get($tokens, secondary))};
+    --bs-focus-ring-color: #{map-get($tokens, focus)};
+    --dt-on-severity: #{$color-contrast-dark};
+  }
+}
+
+[data-bs-theme="dark"] .logo-light-theme,
+[data-bs-theme="light"] .logo-dark-theme {
+  display: none !important;
+}
+
+// Bootstrap's info color is a neon cyan, so info badges are neutral chips instead.
+.text-bg-info {
+  color: var(--dt-text-strong) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  border: 1px solid var(--dt-border-control);
+}
+
+.page-header-icon {
+  color: var(--dt-accent);
+  background-color: var(--dt-surface-recessed);
+}
+
+.btn-primary {
+  --bs-btn-color: var(--dt-on-accent);
+  --bs-btn-bg: var(--dt-accent);
+  --bs-btn-border-color: var(--dt-accent);
+  --bs-btn-hover-color: var(--dt-on-accent);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--dt-accent) 88%, var(--dt-on-accent));
+  --bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+  --bs-btn-active-color: var(--dt-on-accent);
+  --bs-btn-active-bg: color-mix(in srgb, var(--dt-accent) 80%, var(--dt-on-accent));
+  --bs-btn-active-border-color: var(--bs-btn-active-bg);
+  --bs-btn-disabled-color: var(--dt-on-accent);
+  --bs-btn-disabled-bg: var(--dt-accent);
+  --bs-btn-disabled-border-color: var(--dt-accent);
+}
+
+.btn-secondary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--dt-secondary);
+  --bs-btn-border-color: var(--dt-secondary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: color-mix(in srgb, var(--dt-secondary) 85%, #000);
+  --bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: color-mix(in srgb, var(--dt-secondary) 75%, #000);
+  --bs-btn-active-border-color: var(--bs-btn-active-bg);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--dt-secondary);
+  --bs-btn-disabled-border-color: var(--dt-secondary);
+}
+
+// $secondary is too dark for text on the dark surfaces, and info is a neon cyan.
+.btn-outline-secondary,
+.btn-outline-info {
+  --bs-btn-color: var(--dt-text-muted);
+  --bs-btn-border-color: var(--dt-secondary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--dt-secondary);
+  --bs-btn-hover-border-color: var(--dt-secondary);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--dt-secondary);
+  --bs-btn-active-border-color: var(--dt-secondary);
+  --bs-btn-disabled-color: var(--dt-text-muted);
+  --bs-btn-disabled-border-color: var(--dt-secondary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--dt-accent);
+  --bs-btn-border-color: var(--dt-accent);
+  --bs-btn-hover-color: var(--dt-on-accent);
+  --bs-btn-hover-bg: var(--dt-accent);
+  --bs-btn-hover-border-color: var(--dt-accent);
+  --bs-btn-active-color: var(--dt-on-accent);
+  --bs-btn-active-bg: var(--dt-accent);
+  --bs-btn-active-border-color: var(--dt-accent);
+  --bs-btn-disabled-color: var(--dt-accent);
+  --bs-btn-disabled-border-color: var(--dt-accent);
+}
+
+// Bootstrap uses the fill colors as text, and they are too light to read on the light theme.
+@each $name, $severity in $dt-severity-variants {
+  .text-#{$name} {
+    color: var(--dt-severity-#{$severity}-text) !important;
+  }
+
+  .btn-outline-#{$name} {
+    --bs-btn-color: var(--dt-severity-#{$severity}-text);
+    --bs-btn-border-color: var(--dt-severity-#{$severity}-text);
+    --bs-btn-disabled-color: var(--dt-severity-#{$severity}-text);
+    --bs-btn-disabled-border-color: var(--dt-severity-#{$severity}-text);
+  }
+}
+
+// Matches the sidebar's selected style rather than Bootstrap's solid fill.
+.list-group {
+  --bs-list-group-active-color: var(--dt-text-heading);
+  --bs-list-group-active-bg: var(--dt-selected);
+  --bs-list-group-active-border-color: var(--dt-border);
+}
+
+.list-group-item.active {
+  box-shadow: inset 3px 0 0 var(--dt-accent);
+}
+
+.page-item.active .page-link {
+  box-shadow: inset 0 -3px 0 var(--dt-accent);
+}
+
+.pagination {
+  --bs-pagination-color: var(--dt-accent);
+  --bs-pagination-hover-color: var(--dt-accent);
+  --bs-pagination-focus-color: var(--dt-accent);
+  --bs-pagination-active-color: var(--dt-text-heading);
+  --bs-pagination-active-bg: var(--dt-selected);
+  --bs-pagination-active-border-color: var(--bs-pagination-border-color);
+  --bs-pagination-focus-box-shadow: none;
+}
+
+.dropdown-menu {
+  --bs-dropdown-link-active-color: var(--dt-on-accent);
+  --bs-dropdown-link-active-bg: var(--dt-accent);
+}
+
+.nav-pills {
+  --bs-nav-pills-link-active-color: var(--dt-on-accent);
+  --bs-nav-pills-link-active-bg: var(--dt-accent);
+}
+
+.progress,
+.progress-stacked {
+  --bs-progress-bar-color: var(--dt-on-accent);
+  --bs-progress-bar-bg: var(--dt-accent);
+}
+
+.progress-bar-zero {
+  color: var(--dt-text-heading);
+  background-color: var(--dt-line);
+}
+
+.form-check-input:checked {
+  background-color: var(--dt-accent);
+  border-color: var(--dt-accent);
+}
+
+// Bootstrap's focus glow is a 25% tint of the accent, about 1.5:1 against the surfaces.
+:focus-visible,
+.btn:focus-visible,
+.btn-close:focus-visible,
+.nav-link:focus-visible,
+.page-link:focus-visible,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  outline: 2px solid var(--dt-focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}

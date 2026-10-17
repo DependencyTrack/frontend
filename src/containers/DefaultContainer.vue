@@ -5,8 +5,14 @@
       <div ref="sidebar" class="sidebar">
         <div class="sidebar-brand">
           <img
-            class="sidebar-brand-full"
+            class="sidebar-brand-full logo-dark-theme"
             src="@/assets/img/brand/dt-logo-white-text.svg"
+            height="32"
+            alt="Dependency-Track Logo"
+          />
+          <img
+            class="sidebar-brand-full logo-light-theme"
+            src="@/assets/img/brand/dt-logo-dark-text.svg"
             height="32"
             alt="Dependency-Track Logo"
           />

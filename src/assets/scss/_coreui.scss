@@ -6,7 +6,7 @@ $sidebar-minimized-width: 50px;
 $sidebar-minimizer-height: 50px;
 $layout-transition-speed: .25s;
 
-$sidebar-nav-link-icon-color: $gray-600;
+$sidebar-nav-link-icon-color: var(--dt-icon-subtle);
 $sidebar-indicator: "data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='COLOR' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E";
 $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='COLOR' stroke-width='2.25' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E";
 
@@ -24,7 +24,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   padding: 0;
   margin: 0;
   background-color: $navbar-bg;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid var(--dt-border);
 
   .navbar-toggler {
     min-width: 50px;
@@ -36,13 +36,16 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     }
 
     &:hover .navbar-toggler-icon {
-      background-image: coreui-icon($navbar-toggler-icon, $navbar-hover-color);
+      background-color: $navbar-hover-color;
     }
   }
 
+  // A mask lets the icon take its color from the theme.
   .navbar-toggler-icon {
     height: 23px;
-    background-image: coreui-icon($navbar-toggler-icon, $navbar-color);
+    background-color: $navbar-color;
+    background-image: none;
+    mask: coreui-icon($navbar-toggler-icon, #000) center / 100% 100% no-repeat;
   }
 
   .navbar-nav {
@@ -101,7 +104,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   padding: 0;
   color: $sidebar-color;
   background: $sidebar-bg;
-  border-right: 1px solid $border-color;
+  border-right: 1px solid var(--dt-border);
 
   .sidebar-nav {
     position: relative;
@@ -125,7 +128,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     padding: .75rem 1rem;
     font-size: 80%;
     font-weight: 700;
-    color: $gray-200;
+    color: var(--dt-text-muted);
     text-transform: uppercase;
   }
 
@@ -138,7 +141,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   .nav-link {
     display: block;
     padding: .75rem 1rem;
-    color: #fff;
+    color: var(--dt-text-strong);
     text-decoration: none;
     background: transparent;
     border: 0;
@@ -153,20 +156,21 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     }
 
     &.active {
-      color: #fff;
+      color: var(--dt-text-heading);
       background: $sidebar-nav-link-active-bg;
+      box-shadow: inset 3px 0 0 var(--dt-accent);
 
       .nav-icon {
-        color: $primary;
+        color: var(--dt-accent);
       }
     }
 
     &:hover {
-      color: color-contrast($primary);
-      background: $primary;
+      color: var(--dt-text-heading);
+      background: $sidebar-nav-link-hover-bg;
 
       .nav-icon {
-        color: color-contrast($primary);
+        color: var(--dt-accent);
       }
     }
   }
@@ -175,7 +179,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     position: relative;
     flex: 0 0 $sidebar-minimizer-height;
     cursor: pointer;
-    background-color: rgba(0, 0, 0, .2);
+    background-color: var(--dt-surface-recessed);
     border: 0;
 
     &::before {
@@ -185,22 +189,21 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
       width: $sidebar-minimizer-height;
       height: $sidebar-minimizer-height;
       content: "";
-      background-image: coreui-icon($sidebar-indicator, $gray-600);
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: $sidebar-minimizer-height * .25;
+      background-color: var(--dt-icon-subtle);
+      mask: coreui-icon($sidebar-indicator, #000) center / ($sidebar-minimizer-height * .25) no-repeat;
       transition: .3s;
     }
 
-    &:focus {
-      outline: 0;
+    &:focus-visible {
+      outline: 2px solid var(--dt-focus);
+      outline-offset: -2px;
     }
 
     &:hover {
-      background-color: rgba(0, 0, 0, .3);
+      background-color: $sidebar-nav-link-hover-bg;
 
       &::before {
-        background-image: coreui-icon($sidebar-indicator, #fff);
+        background-color: var(--dt-text-heading);
       }
     }
   }
@@ -224,7 +227,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     }
 
     .sidebar-minimizer {
-      background-color: darken($sidebar-bg, 5%);
+      background-color: var(--dt-surface-recessed);
 
       &::before {
         width: 100%;
@@ -241,10 +244,11 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
         overflow: visible;
 
         > .nav-link {
-          background: $primary;
+          color: var(--dt-on-accent);
+          background: var(--dt-accent);
 
           .nav-icon {
-            color: color-contrast($primary);
+            color: var(--dt-on-accent);
           }
         }
       }
@@ -267,7 +271,8 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
     .sidebar-nav .nav-link:hover {
       width: $sidebar-width + $sidebar-minimized-width;
-      background: $primary;
+      color: var(--dt-on-accent);
+      background: var(--dt-accent);
     }
   }
 }
@@ -276,7 +281,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
 .breadcrumb {
   position: relative;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid var(--dt-border);
   transition: left $layout-transition-speed, right $layout-transition-speed, width $layout-transition-speed;
 }
 
@@ -411,7 +416,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     border: 0;
 
     .navbar-toggler {
-      color: #fff;
+      color: var(--dt-text-strong);
     }
   }
 
@@ -442,7 +447,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 }
 
 .nav-tabs .nav-link {
-  color: $body-secondary-color;
+  color: var(--dt-text-muted);
 
   &:hover {
     cursor: pointer;
@@ -451,7 +456,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
 .tab-content {
   margin-top: -1px;
-  border: 1px solid $border-color;
+  border: 1px solid var(--dt-border);
 
   .tab-pane {
     padding: $spacer;
@@ -485,7 +490,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   position: relative;
   padding: 0 $spacer;
   margin: $spacer 0;
-  border-left: 4px solid $border-color;
+  border-left: 4px solid var(--dt-border);
   border-radius: $border-radius;
 
   h4 {
@@ -504,10 +509,17 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
 @each $color, $value in $theme-colors {
   .callout-#{$color} {
-    border-left-color: $value;
+    $severity: map-get($dt-severity-variants, $color);
+    $callout-color: var(--dt-text-heading);
+    $callout-border: var(--dt-border-control);
+    @if $severity {
+      $callout-color: var(--dt-severity-#{$severity}-text);
+      $callout-border: $callout-color;
+    }
+    border-left-color: $callout-border;
 
     h4 {
-      color: $value;
+      color: $callout-color;
     }
   }
 }

@@ -561,7 +561,7 @@ $dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
 .dependency-graph-controls {
   padding-bottom: 0.75rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #2b3a48;
+  border-bottom: 1px solid var(--dt-border);
 }
 .dependency-graph ul {
   list-style: none;
@@ -581,15 +581,15 @@ $dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
 }
 .dependency-graph-row.pinned {
   position: sticky;
-  // Below the app header (mobile only) and the banner.
+  // Sits below the banner, and below the app header on mobile.
   top: calc(
     var(--app-header-height) + var(--banner-offset, 0px) + var(--depth) *
       2.375rem
   );
   z-index: calc(100 - var(--depth));
-  background: #131d26;
+  background: var(--bs-body-bg);
   // Also covers the indent, so tree lines don't show through left of the row.
-  box-shadow: calc(-2.75rem - var(--depth) * 1.25rem) 0 0 #131d26;
+  box-shadow: calc(-2.75rem - var(--depth) * 1.25rem) 0 0 var(--bs-body-bg);
 }
 // Fades out the row scrolling under a pinned one instead of cutting it off.
 .dependency-graph-row.pinned::after {
@@ -599,7 +599,7 @@ $dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
   left: calc(-2.75rem - var(--depth) * 1.25rem);
   right: 0;
   height: 12px;
-  background: linear-gradient(#131d26, rgba(19, 29, 38, 0));
+  background: linear-gradient(var(--bs-body-bg), transparent);
   pointer-events: none;
 }
 .dependency-graph ul ul > li::before {
@@ -631,7 +631,7 @@ $dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
   padding: 0;
   border: 0;
   background: none;
-  color: #73818f;
+  color: var(--dt-icon-subtle);
 }
 .dependency-graph-toggle:hover {
   color: var(--bs-primary);
@@ -647,17 +647,18 @@ $dependency-graph-line: rgba(var(--bs-primary-rgb), 0.35);
   text-overflow: ellipsis;
   padding: 0 0.75rem;
   line-height: 1.75rem;
-  border: 1px solid #2b3a48;
+  border: 1px solid var(--dt-line);
   border-radius: 1rem;
-  background: #151f29;
+  background: var(--dt-surface-card);
 }
 a.dependency-graph-node:hover {
   border-color: var(--bs-primary);
   text-decoration: none;
 }
 .dependency-graph-node.searched {
-  border-color: var(--bs-success);
-  color: var(--bs-success);
+  border-color: var(--dt-accent);
+  background: var(--dt-selected);
+  color: var(--dt-text-heading);
   font-weight: bold;
 }
 </style>

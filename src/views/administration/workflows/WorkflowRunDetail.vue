@@ -3,7 +3,7 @@
     <b-card :no-body="true" class="mb-3">
       <b-card-body v-if="run" class="p-3 clearfix">
         <i
-          class="fa fa-random text-bg-primary p-3 font-2xl me-3 float-start"
+          class="fa fa-random page-header-icon p-3 font-2xl me-3 float-start"
         ></i>
         <div class="h5 mb-0 mt-1">
           {{ run.workflow_name }}
@@ -320,17 +320,12 @@ const POLL_INTERVAL_MS = 5000;
 const EVENT_LIMIT = 10;
 const POLL_LIMIT = 50;
 
+// Theme tokens that clear 3:1 on both themes and don't read as severity.
 const BADGE_COLORS = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
+  'var(--dt-accent)',
+  'var(--dt-focus)',
+  'var(--dt-brand)',
+  'var(--dt-text-muted)',
 ];
 
 const EVENT_TYPES = [
@@ -626,7 +621,7 @@ export default {
 
 <style scoped>
 .event-item {
-  border-left: 3px solid #e0e0e0;
+  border-left: 3px solid var(--dt-line);
   padding-left: 0.75rem;
 }
 
@@ -634,7 +629,7 @@ export default {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #9e9e9e;
+  color: var(--dt-text-muted);
   margin-bottom: 0;
 }
 

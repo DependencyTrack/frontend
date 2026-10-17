@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-sitemap text-bg-primary p-3 font-2xl me-3 float-start"
+              class="fa fa-sitemap page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">
               <b-row>
@@ -548,7 +548,8 @@ import ProjectDependencyGraph from './ProjectDependencyGraph.vue';
 import ProjectServices from './ProjectServices.vue';
 import ProjectDashboard from './ProjectDashboard.vue';
 import EventBus from '../../../shared/eventbus';
-import { getStyle, setPageTitle } from '../../../shared/utils';
+import { setPageTitle } from '../../../shared/utils';
+import { themeColor } from '@/shared/theme';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ProjectDetailsModal from './ProjectDetailsModal.vue';
 import ProjectPropertiesModal from './ProjectPropertiesModal.vue';
@@ -584,6 +585,24 @@ export default {
     ExternalReferencesDropdown,
   },
   computed: {
+    severityCritical() {
+      return themeColor('--severity-critical');
+    },
+    severityHigh() {
+      return themeColor('--severity-high');
+    },
+    severityMedium() {
+      return themeColor('--severity-medium');
+    },
+    severityLow() {
+      return themeColor('--severity-low');
+    },
+    severityUnassigned() {
+      return themeColor('--severity-unassigned');
+    },
+    trackColor() {
+      return themeColor('--dt-surface-recessed');
+    },
     projectLabel() {
       if (this.project.name && this.project.version) {
         return this.project.name + ' ▸ ' + this.project.version;
@@ -639,13 +658,6 @@ export default {
       showProjectUploadBomModal: false,
       showProjectUploadVexModal: false,
       showProjectExportModal: false,
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
       uuid: null,
       project: {},
       currentCritical: 0,
@@ -672,9 +684,6 @@ export default {
   methods: {
     cloneDeep: function (component) {
       return cloneDeep(component);
-    },
-    getStyle: function (style) {
-      return getStyle(style);
     },
     syncProjectFields: function (project) {
       this.project = project;

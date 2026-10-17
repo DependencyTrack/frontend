@@ -23,8 +23,13 @@
       {{ $t('message.change_password') }}</b-dropdown-item
     >
     <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
-    <b-dropdown-form id="locale-picker-form" class="ps-2 pe-2" @click.stop>
+    <b-dropdown-form
+      id="profile-preferences-form"
+      class="ps-2 pe-2"
+      @click.stop
+    >
       <LocalePicker />
+      <ThemePicker class="mt-2" />
     </b-dropdown-form>
     <b-dropdown-divider />
     <b-dropdown-item @click="$emit('about')"
@@ -42,11 +47,13 @@
 import EventBus from '../shared/eventbus';
 import state from '../shared/state';
 import LocalePicker from '@/views/components/LocalePicker.vue';
+import ThemePicker from '@/views/components/ThemePicker.vue';
 
 export default {
   name: 'ProfileDropdown',
   components: {
     LocalePicker,
+    ThemePicker,
   },
   emits: ['editProfile', 'about'],
   data: () => {
@@ -90,7 +97,7 @@ export default {
 
 <style>
 /* Remove default padding inherited from b-dropdown-form. */
-#locale-picker-form {
+#profile-preferences-form {
   padding: 0;
 }
 </style>

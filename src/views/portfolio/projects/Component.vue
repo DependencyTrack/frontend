@@ -5,7 +5,7 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-cube text-bg-primary p-3 font-2xl me-3 float-start"
+              class="fa fa-cube page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">
               {{ componentLabel }}&nbsp;
@@ -178,7 +178,8 @@ import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
 import ComponentDashboard from './ComponentDashboard.vue';
 import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
-import { getStyle, setPageTitle } from '../../../shared/utils';
+import { setPageTitle } from '../../../shared/utils';
+import { themeColor } from '@/shared/theme';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
@@ -197,6 +198,24 @@ export default {
     ExternalReferencesDropdown,
   },
   computed: {
+    severityCritical() {
+      return themeColor('--severity-critical');
+    },
+    severityHigh() {
+      return themeColor('--severity-high');
+    },
+    severityMedium() {
+      return themeColor('--severity-medium');
+    },
+    severityLow() {
+      return themeColor('--severity-low');
+    },
+    severityUnassigned() {
+      return themeColor('--severity-unassigned');
+    },
+    trackColor() {
+      return themeColor('--dt-surface-recessed');
+    },
     projectLabel() {
       if (Object.hasOwn(this.component, 'project')) {
         if (this.component.project.name && this.component.project.version) {
@@ -228,13 +247,6 @@ export default {
       showComponentDetailsModal: false,
       showComponentPropertiesModal: false,
       showComponentCreatePropertyModal: false,
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
       uuid: null,
       component: {},
       currentCritical: 0,
@@ -250,9 +262,6 @@ export default {
   methods: {
     cloneDeep: function (component) {
       return cloneDeep(component);
-    },
-    getStyle: function (style) {
-      return getStyle(style);
     },
     syncComponentFields: function (component) {
       this.component = component;

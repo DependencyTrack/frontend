@@ -98,7 +98,7 @@
   padding: $pagination-padding-y 0.75rem;
   font-weight: $font-weight-normal;
   line-height: $line-height-sm;
-  color: $body-color;
+  color: var(--bs-body-color);
   cursor: default;
   user-select: none;
 }
@@ -106,7 +106,7 @@
 .pagination-meta-text {
   font-size: $font-size-base;
   font-weight: $font-weight-normal;
-  color: $body-color;
+  color: var(--bs-body-color);
 }
 
 .pagination-meta-divider {

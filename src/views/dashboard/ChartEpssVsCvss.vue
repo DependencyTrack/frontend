@@ -5,7 +5,9 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
+import { hexToRgba } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 import common from '../../shared/common';
 import i18n from '../../i18n';
 import { Scatter } from 'vue-chartjs';
@@ -14,7 +16,7 @@ export default {
   components: { ScatterChart: Scatter },
   data() {
     return {
-      chartData: null,
+      findings: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
@@ -42,13 +44,6 @@ export default {
             title: {
               display: true,
               text: 'CVSS',
-              color: '#73818F',
-            },
-            grid: {
-              color: '#1C2937',
-            },
-            ticks: {
-              color: '#21A8D8',
             },
           },
           y: {
@@ -57,21 +52,18 @@ export default {
             title: {
               display: true,
               text: 'EPSS',
-              color: '#73818F',
-            },
-            grid: {
-              color: '#1C2937',
-            },
-            ticks: {
-              color: '#21A8D8',
             },
           },
         },
       },
     };
   },
-  methods: {
-    render: function (findings) {
+  computed: {
+    chartData() {
+      const findings = this.findings;
+      if (!findings) {
+        return null;
+      }
       let cveData = [];
       if (findings && findings.length > 0) {
         for (let i = 0; i < findings.length; i++) {
@@ -96,16 +88,21 @@ export default {
         }
       }
 
-      this.chartData = {
+      return {
         datasets: [
           {
-            borderColor: 'rgba(166, 107, 248, 0.5)',
+            borderColor: hexToRgba(themeColor('--dt-accent'), 50),
             borderWidth: 8,
-            backgroundColor: '#A66BF8',
+            backgroundColor: themeColor('--dt-accent'),
             data: cveData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (findings) {
+      this.findings = findings;
     },
   },
 };

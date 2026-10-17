@@ -5,15 +5,15 @@
 </template>
 
 <script>
-import 'chart.js/auto';
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle } from '@/shared/utils';
+import { themeColor } from '@/shared/theme';
 export default {
   components: { LineChart: Line },
   data() {
     return {
-      chartData: null,
+      metrics: null,
       options: {
         maintainAspectRatio: false,
         plugins: {
@@ -74,11 +74,15 @@ export default {
       },
     };
   },
-  methods: {
-    render: function (metrics) {
-      const securityStyle = getStyle('--notification-fail');
-      const operationalStyle = getStyle('--notification-warn');
-      const licenseStyle = getStyle('--notification-info');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const securityStyle = themeColor('--notification-fail');
+      const operationalStyle = themeColor('--notification-warn');
+      const licenseStyle = themeColor('--notification-info');
       let labels = [];
       let securityData = [];
       let operationalData = [];
@@ -95,32 +99,37 @@ export default {
           licenseData.push(metrics[i].policyViolationsLicenseTotal);
         }
       }
-      this.chartData = {
+      return {
         labels: labels,
         datasets: [
           {
             label: this.$t('policy_violation.security'),
             backgroundColor: 'transparent',
             borderColor: securityStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: securityData,
           },
           {
             label: this.$t('policy_violation.operational'),
             backgroundColor: 'transparent',
             borderColor: operationalStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: operationalData,
           },
           {
             label: this.$t('policy_violation.license'),
             backgroundColor: 'transparent',
             borderColor: licenseStyle,
-            pointHoverBackgroundColor: '#fff',
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
             data: licenseData,
           },
         ],
       };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };
