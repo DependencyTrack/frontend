@@ -379,6 +379,7 @@ export default {
           },
           align: 'center',
           sortable: true,
+          visible: false,
         },
         {
           title: this.$t('message.classifier'),
@@ -401,6 +402,7 @@ export default {
           title: this.$t('message.bom_format'),
           field: 'lastBomImportFormat',
           sortable: true,
+          visible: false,
         },
         {
           title: this.$t('message.risk_score'),

@@ -46,46 +46,37 @@
 .table-progress {
   width: 100% !important;
 }
-.severity-critical-bg, .text-bg-CRITICAL {
-  background: $severity-critical none;
-  color: color-contrast($severity-critical);
+.severity-critical-bg, .text-bg-CRITICAL, .severity-fail-bg {
+  background: var(--severity-critical) none;
+  color: var(--dt-on-severity-critical);
 }
 .severity-high-bg, .text-bg-HIGH {
-  background: $severity-high none;
-  color: color-contrast($severity-high);
+  background: var(--severity-high) none;
+  color: var(--dt-on-severity-high);
 }
-.severity-medium-bg, .text-bg-MEDIUM {
-  background: $severity-medium none;
-  color: color-contrast($severity-medium);
+.severity-medium-bg, .text-bg-MEDIUM, .severity-warn-bg {
+  background: var(--severity-medium) none;
+  color: var(--dt-on-severity-medium);
 }
 .severity-low-bg, .text-bg-LOW {
-  background: $severity-low none;
-  color: color-contrast($severity-low);
+  background: var(--severity-low) none;
+  color: var(--dt-on-severity-low);
 }
 .severity-info-bg, .text-bg-INFO {
-  background: $severity-info none;
-  color: color-contrast($severity-info);
+  background: var(--severity-info) none;
+  color: var(--dt-on-severity-info);
 }
-.severity-warn-bg {
-  background: $severity-medium none;
-  color: color-contrast($severity-medium);
-}
-.severity-fail-bg {
-  background: $severity-critical none;
-  color: color-contrast($severity-critical);
+.severity-unassigned-bg, .text-bg-UNASSIGNED {
+  background: var(--severity-unassigned) none;
+  color: var(--dt-on-severity-unassigned);
 }
 .text-bg-violation-type {
   background: var(--dt-accent);
   color: var(--dt-on-accent);
 }
-.severity-unassigned-bg, .text-bg-UNASSIGNED {
-  background: $severity-unassigned none;
-  color: color-contrast($severity-unassigned);
-}
 .severity-bug-icon {
   width:40px;
   height:40px;
-  color: var(--dt-on-severity);
 }
 .severity-bug-label {
   height:40px;
@@ -145,8 +136,8 @@
   border: 1px solid #DCD167;
 }
 .label-source-unknown {
-  background-color: color-mix(in srgb, #{$severity-unassigned} 18%, transparent);
-  border: 1px solid $severity-unassigned;
+  background-color: color-mix(in srgb, var(--severity-unassigned) 18%, transparent);
+  border: 1px solid var(--severity-unassigned);
 }
 .label-notification {
   color: var(--dt-text-strong);
@@ -155,16 +146,16 @@
   font-size: 75%;
 }
 .label-notification-fail {
-  background-color: color-mix(in srgb, #{$notification-fail} 18%, transparent);
-  border: 1px solid $notification-fail;
+  background-color: color-mix(in srgb, var(--notification-fail) 18%, transparent);
+  border: 1px solid var(--notification-fail);
 }
 .label-notification-warn {
-  background-color: color-mix(in srgb, #{$notification-warn} 18%, transparent);
-  border: 1px solid $notification-warn;
+  background-color: color-mix(in srgb, var(--notification-warn) 18%, transparent);
+  border: 1px solid var(--notification-warn);
 }
 .label-notification-info {
-  background-color: color-mix(in srgb, #{$notification-info} 18%, transparent);
-  border: 1px solid $notification-info;
+  background-color: color-mix(in srgb, var(--notification-info) 18%, transparent);
+  border: 1px solid var(--notification-info);
 }
 .table {
   background-color: var(--dt-surface-card);
@@ -175,9 +166,6 @@
 label.required:after {
   color: var(--dt-severity-critical-text);
   content:" *";
-}
-input.required, select.required, textarea.required {
-  border-color: var(--dt-severity-medium-text);
 }
 
 /* usage: use outer div/span with class truncate-ellipsis and inner span with content to truncate */

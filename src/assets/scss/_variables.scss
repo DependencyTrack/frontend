@@ -33,29 +33,29 @@ $dt-themes: (
     severity-unassigned-text: #8a8a94,
   ),
   light: (
-    surface-recessed: #e9e2d4,
-    surface-body: #f1ece1,
-    surface-card: #f8f3e9,
-    surface-raised: #faf6ec,
-    surface-input: #fcf8ef,
-    surface-nav: #f1ece1,
-    text: #2a2621,
-    text-strong: #1f1b17,
-    text-heading: #14110d,
-    text-muted: #5d574d,
-    icon-subtle: #766f63,
-    line: #d8d2c4,
-    border: rgba(#2a2621, .12),
-    border-control: #80796c,
+    surface-recessed: #e3e7ed,
+    surface-body: #eceff3,
+    surface-card: #ffffff,
+    surface-raised: #ffffff,
+    surface-input: #ffffff,
+    surface-nav: #eceff3,
+    text: #1c2230,
+    text-strong: #141a26,
+    text-heading: #0b101a,
+    text-muted: #535e6e,
+    icon-subtle: #6b7587,
+    line: #cdd4de,
+    border: rgba(#1c2230, .12),
+    border-control: #7d8797,
     accent: #3451d1,
     on-accent: #fff,
-    hover: rgba(#2a2621, .07),
-    selected: rgba(#2a2621, .1),
+    hover: rgba(#1c2230, .06),
+    selected: rgba(#1c2230, .09),
     focus: #0f766e,
     brand: #c2009c,
-    inverse-bg: #1f1b17,
+    inverse-bg: #141a26,
     inverse-fg: #fff,
-    secondary: #5d574d,
+    secondary: #535e6e,
     severity-critical-text: #b82632,
     severity-high-text: #9a4f00,
     severity-medium-text: #7d5c00,
@@ -137,20 +137,8 @@ $link-hover-decoration: underline !default;
 
 $grid-gutter-width: 30px !default;
 
-$severity-critical: $red;
-$severity-high: $orange;
-$severity-medium: $yellow;
-$severity-low: $green;
-$severity-info: $blue;
-$severity-unassigned: #8a8a94;
 $dt-severity-variants: (danger: critical, warning: medium, success: low);
 $severity-label-bg: var(--dt-surface-recessed) !default;
-
-$notification-fail: $red;
-$notification-warn: $yellow;
-$notification-info: $blue;
-$notification-pass: $green;
-$notification-note: #8a8a94;
 
 // Components
 //

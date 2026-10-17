@@ -10,7 +10,10 @@
     --bs-secondary: #{map-get($tokens, secondary)};
     --bs-secondary-rgb: #{to-rgb(map-get($tokens, secondary))};
     --bs-focus-ring-color: #{map-get($tokens, focus)};
-    --dt-on-severity: #{$color-contrast-dark};
+    @each $severity in critical, high, medium, low, info, unassigned {
+      $fill: map-get($tokens, severity-#{$severity}-fill) or map-get($tokens, severity-#{$severity}-text);
+      --dt-on-severity-#{$severity}: #{color-contrast($fill)};
+    }
   }
 }
 

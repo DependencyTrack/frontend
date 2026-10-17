@@ -115,7 +115,7 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
 
   return `
      <div style="height:24px;margin:-4px;">
-        <div class="${severityClass} text-center float-start" style="width:24px; height:24px; color:var(--dt-on-severity)">
+        <div class="${severityClass} text-center float-start" style="width:24px; height:24px;">
             <i class="fa fa-bug" style="font-size:12px; padding:6px" aria-hidden="true"></i>
          </div>
          <div class="text-center float-start" style="height:24px;">
