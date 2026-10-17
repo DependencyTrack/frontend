@@ -40,6 +40,8 @@ const TaskScheduler = () =>
 const Telemetry = () =>
   import('@/views/administration/configuration/Telemetry');
 const Search = () => import('@/views/administration/configuration/Search');
+const Customization = () =>
+  import('@/views/administration/configuration/Customization');
 const Experimental = () =>
   import('@/views/administration/configuration/Experimental');
 
@@ -379,6 +381,17 @@ function configRoutes() {
             {
               path: 'configuration/bomFormats',
               component: BomFormats,
+              meta: {
+                title: i18n.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permission: 'SYSTEM_CONFIGURATION',
+              },
+            },
+            {
+              path: 'configuration/customization',
+              component: Customization,
               meta: {
                 title: i18n.t('message.administration'),
                 i18n: 'message.administration',
