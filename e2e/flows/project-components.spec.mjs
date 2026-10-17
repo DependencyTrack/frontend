@@ -18,19 +18,23 @@ test('show the occurrences of a component', async ({ page }) => {
   await expect(modal).toContainText('lib/jackson-core-2.13.2.jar');
 });
 
-test('show the vulnerabilities of a component in a tooltip', async ({
+test('show the vulnerabilities of a component by severity', async ({
   page,
 }) => {
   const { project } = seed();
   await login(page);
   await page.goto(`projects/${project.uuid}/components`);
-  await page
+  const bar = page
     .getByRole('row')
     .filter({ hasText: 'jackson-databind' })
-    .getByRole('progressbar')
+    .getByRole('progressbar', { name: 'Severity' })
     .filter({ visible: true })
-    .first()
-    .hover();
+    .first();
+  await expect(bar).toHaveAttribute(
+    'aria-valuetext',
+    /^Critical: \d+, High: \d+, Medium: \d+, Low: \d+, Unassigned: \d+$/,
+  );
+  await bar.hover();
   await expect(
     page.getByRole('tooltip').filter({ hasText: 'Severity' }),
   ).toBeVisible();

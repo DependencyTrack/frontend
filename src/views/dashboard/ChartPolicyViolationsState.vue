@@ -18,9 +18,6 @@ export default {
       options: {
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            display: false,
-          },
           tooltip: {
             intersect: true,
             mode: 'index',

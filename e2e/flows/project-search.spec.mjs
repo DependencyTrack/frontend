@@ -20,16 +20,22 @@ test('show the metrics of a project in tooltips', async ({ page }) => {
   await login(page);
   await page.goto('projects');
   await search(page, project.name);
-  const bars = page
-    .getByRole('row')
-    .filter({ hasText: project.name })
-    .getByRole('progressbar')
+  const row = page.getByRole('row').filter({ hasText: project.name });
+  const violations = row
+    .getByRole('progressbar', { name: 'Policy Violations' })
     .filter({ visible: true });
-  await bars.first().hover();
+  const vulnerabilities = row
+    .getByRole('progressbar', { name: 'Severity' })
+    .filter({ visible: true });
+  await expect(violations).toHaveAttribute(
+    'aria-valuetext',
+    /^Informational Violations: \d+, Violation Warnings: \d+, Violation Failures: \d+$/,
+  );
+  await violations.hover();
   await expect(
     page.getByRole('tooltip').filter({ hasText: 'Violation State' }),
   ).toBeVisible();
-  await bars.last().hover();
+  await vulnerabilities.hover();
   await expect(
     page.getByRole('tooltip').filter({ hasText: 'Severity' }),
   ).toBeVisible();

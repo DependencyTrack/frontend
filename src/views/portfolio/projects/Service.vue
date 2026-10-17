@@ -11,76 +11,13 @@
           </b-col>
           <b-col>
             <div class="d-none d-md-flex float-end">
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.critical')"
-                >{{ currentCritical }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.high')"
-                >{{ currentHigh }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.medium')"
-                >{{ currentMedium }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.low')"
-                >{{ currentLow }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityUnassigned"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover="$t('severity.unassigned')"
-                >{{ currentUnassigned }}</vue-easy-pie-chart
-              >
+              <severity-circles
+                :critical="currentCritical"
+                :high="currentHigh"
+                :medium="currentMedium"
+                :low="currentLow"
+                :unassigned="currentUnassigned"
+              />
             </div>
           </b-col>
         </b-row>
@@ -121,11 +58,10 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
-import VueEasyPieChart from '../../components/VueEasyPieChart.vue';
+import SeverityCircles from '../../components/SeverityCircles.vue';
 import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
 import { setPageTitle } from '../../../shared/utils';
-import { themeColor } from '@/shared/theme';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import ServiceDetailsModal from './ServiceDetailsModal.vue';
 
@@ -133,28 +69,10 @@ export default {
   mixins: [permissionsMixin],
   components: {
     ServiceDashboard,
-    VueEasyPieChart,
+    SeverityCircles,
     ServiceDetailsModal,
   },
   computed: {
-    severityCritical() {
-      return themeColor('--severity-critical');
-    },
-    severityHigh() {
-      return themeColor('--severity-high');
-    },
-    severityMedium() {
-      return themeColor('--severity-medium');
-    },
-    severityLow() {
-      return themeColor('--severity-low');
-    },
-    severityUnassigned() {
-      return themeColor('--severity-unassigned');
-    },
-    trackColor() {
-      return themeColor('--dt-surface-recessed');
-    },
     projectLabel() {
       if (Object.hasOwn(this.service, 'project')) {
         if (this.service.project.name && this.service.project.version) {

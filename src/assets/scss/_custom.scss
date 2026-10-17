@@ -755,3 +755,9 @@ td a.detail-icon {
 .tooltip {
   width: max-content;
 }
+
+// Link color alone is under 3:1 against body text, so links in running text need an underline.
+p a:not([class]),
+.markdown a {
+  text-decoration: underline;
+}

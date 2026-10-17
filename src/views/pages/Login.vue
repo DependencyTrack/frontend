@@ -78,11 +78,13 @@
                   <img
                     class="logo-dark-theme"
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
+                    alt="Dependency-Track Logo"
                     width="100%"
                   />
                   <img
                     class="logo-light-theme"
                     src="@/assets/img/brand/dt-logo-vertical-dark-text.svg"
+                    alt="Dependency-Track Logo"
                     width="100%"
                   />
                 </div>

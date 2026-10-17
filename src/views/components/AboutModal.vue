@@ -5,11 +5,13 @@
         <img
           class="logo-dark-theme"
           src="@/assets/img/brand/dt-logo-white-text.svg"
+          alt="Dependency-Track Logo"
           width="200"
         />
         <img
           class="logo-light-theme"
           src="@/assets/img/brand/dt-logo-dark-text.svg"
+          alt="Dependency-Track Logo"
           width="200"
         />
       </b-col>
@@ -17,11 +19,13 @@
         <img
           class="logo-dark-theme"
           src="@/assets/img/brand/owasp-logo-white.svg"
+          alt="OWASP Logo"
           width="120"
         />
         <img
           class="logo-light-theme"
           src="@/assets/img/brand/owasp-logo-dark.svg"
+          alt="OWASP Logo"
           width="120"
         />
       </b-col>

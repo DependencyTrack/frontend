@@ -1,6 +1,12 @@
 <template>
   <span v-if="metrics.policyViolationsTotal === 0" class="progress">
-    <b-progress class="table-progress" :max="'0'" show-value>
+    <b-progress
+      class="table-progress"
+      :max="'0'"
+      show-value
+      :aria-label="$t('message.policy_violations')"
+      :aria-valuetext="valueText"
+    >
       <b-progress-bar
         class="table-progress progress-bar-zero"
         value="0"
@@ -15,6 +21,8 @@
             class="table-progress"
             :max="metrics.policyViolationsTotal"
             show-value
+            :aria-label="$t('message.policy_violations')"
+            :aria-valuetext="valueText"
           >
             <b-progress-bar
               :value="metrics.policyViolationsInfo"
@@ -60,6 +68,20 @@
 export default {
   props: {
     metrics: Object,
+  },
+  computed: {
+    valueText() {
+      const {
+        policyViolationsInfo,
+        policyViolationsWarn,
+        policyViolationsFail,
+      } = this.metrics;
+      return [
+        `${this.$t('policy_violation.infos')}: ${policyViolationsInfo}`,
+        `${this.$t('policy_violation.warns')}: ${policyViolationsWarn}`,
+        `${this.$t('policy_violation.fails')}: ${policyViolationsFail}`,
+      ].join(', ');
+    },
   },
 };
 </script>
