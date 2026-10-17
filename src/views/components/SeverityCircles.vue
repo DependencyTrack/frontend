@@ -2,6 +2,7 @@
   <figure
     v-for="severity in severities"
     :key="severity.name"
+    v-b-tooltip.hover="severity.tooltip"
     class="text-center mb-0 me-3"
   >
     <vue-easy-pie-chart
@@ -37,13 +38,19 @@ export default {
   },
   computed: {
     severities() {
-      return ['critical', 'high', 'medium', 'low', 'unassigned'].map(
-        (name) => ({
-          name,
-          count: this[name],
-          color: themeColor(`--severity-${name}`),
-        }),
-      );
+      const tooltips = {
+        critical: this.$t('vulnerability.critical'),
+        high: this.$t('vulnerability.high'),
+        medium: this.$t('vulnerability.medium'),
+        low: this.$t('vulnerability.low'),
+        unassigned: this.$t('vulnerability.unassigned'),
+      };
+      return Object.entries(tooltips).map(([name, tooltip]) => ({
+        name,
+        count: this[name],
+        color: themeColor(`--severity-${name}`),
+        tooltip,
+      }));
     },
     trackColor() {
       return themeColor('--dt-surface-recessed');

@@ -30,6 +30,25 @@ test('create a project with tags and a parent', async ({ page, api }) => {
   expect(created.parent?.uuid).toBe(parent.uuid);
 });
 
+test('pick a parent in a short window', async ({ page }) => {
+  const parent = seed().project;
+  // Leaves about 10px below the picker for its list.
+  await page.setViewportSize({ width: 1280, height: 510 });
+  await login(page);
+  await page.goto('projects');
+  await page.getByRole('button', { name: 'Create Project' }).click();
+
+  const modal = page.getByRole('dialog', { name: 'Create Project' });
+  await modal.getByText('Parent', { exact: true }).click();
+  await page.keyboard.type(parent.name);
+  const option = modal.getByRole('option', { name: new RegExp(parent.name) });
+  await expect(option).toBeInViewport({ ratio: 1 });
+  await option.click();
+  await expect(
+    modal.getByRole('combobox').filter({ hasText: parent.name }),
+  ).toBeVisible();
+});
+
 test('create a collection project of the children with a tag', async ({
   page,
   api,

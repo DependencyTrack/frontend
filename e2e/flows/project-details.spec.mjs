@@ -74,7 +74,7 @@ test('close the delete confirmation when leaving the project', async ({
   await expect(confirm).toBeHidden();
 });
 
-test('label each severity count in the project header', async ({
+test('label each severity count in the project header and explain it', async ({
   page,
   api,
 }) => {
@@ -84,8 +84,13 @@ test('label each severity count in the project header', async ({
   await login(page);
   await page.goto(`projects/${uuid}`);
   for (const severity of ['Critical', 'High', 'Medium', 'Low', 'Unassigned']) {
-    await expect(page.getByRole('figure', { name: severity })).toHaveText(
-      `0${severity}`,
-    );
+    const figure = page.getByRole('figure', { name: severity });
+    await expect(figure).toHaveText(`0${severity}`);
+    await figure.hover();
+    await expect(
+      page.getByRole('tooltip', {
+        name: new RegExp(`^${severity} .*\\(excluding aliases\\)$`),
+      }),
+    ).toBeVisible();
   }
 });
