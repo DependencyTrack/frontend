@@ -9,37 +9,37 @@
 .severity-critical, .status-failed {
   color: var(--dt-severity-critical-text);
   .progress-bar {
-    background-color: $severity-critical;
+    background-color: var(--severity-critical);
   }
 }
 .severity-high {
   color: var(--dt-severity-high-text);
   .progress-bar {
-    background-color: $severity-high;
+    background-color: var(--severity-high);
   }
 }
 .severity-medium, .status-warning {
   color: var(--dt-severity-medium-text);
   .progress-bar {
-    background-color: $severity-medium;
+    background-color: var(--severity-medium);
   }
 }
 .severity-low, .status-passed {
   color: var(--dt-severity-low-text);
   .progress-bar {
-    background-color: $severity-low;
+    background-color: var(--severity-low);
   }
 }
 .severity-info, .status-info {
   color: var(--dt-severity-info-text);
   .progress-bar {
-    background-color: $severity-info;
+    background-color: var(--severity-info);
   }
 }
 .severity-unassigned {
   color: var(--dt-severity-unassigned-text);
   .progress-bar {
-    background-color: $severity-unassigned;
+    background-color: var(--severity-unassigned);
   }
 }
 // Fixes the width for the bootstrap progress bar in tables
@@ -289,22 +289,22 @@ input.required, select.required, textarea.required {
   background: var(--dt-hover);
 }
 .callout-severity-critical {
-  border-left-color: $severity-critical;
+  border-left-color: var(--severity-critical);
 }
 .callout-severity-high {
-  border-left-color: $severity-high;
+  border-left-color: var(--severity-high);
 }
 .callout-severity-medium {
-  border-left-color: $severity-medium;
+  border-left-color: var(--severity-medium);
 }
 .callout-severity-low {
-  border-left-color: $severity-low;
+  border-left-color: var(--severity-low);
 }
 .callout-severity-info {
-  border-left-color: $severity-info;
+  border-left-color: var(--severity-info);
 }
 .callout-severity-unassigned {
-  border-left-color: $severity-unassigned;
+  border-left-color: var(--severity-unassigned);
 }
 .toast-body {
   white-space: pre-line;

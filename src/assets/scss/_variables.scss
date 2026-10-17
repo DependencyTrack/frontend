@@ -62,6 +62,11 @@ $dt-themes: (
     severity-low-text: #1b6e3d,
     severity-info-text: #3451d1,
     severity-unassigned-text: #62626d,
+    severity-critical-fill: #7a1018,
+    severity-high-fill: #9a4a0a,
+    severity-medium-fill: #9a7a10,
+    severity-low-fill: #1f8f6c,
+    severity-unassigned-fill: #4a4a58,
   ),
 );
 
@@ -332,13 +337,13 @@ $popover-border-color: var(--dt-border-control) !default;
 $popover-header-bg:    var(--dt-surface-card) !default;
 
 :root {
-  // Charts draw these as lines and arcs, so they take the per-theme text colors that clear 3:1.
-  --severity-critical: var(--dt-severity-critical-text);
-  --severity-high: var(--dt-severity-high-text);
-  --severity-medium: var(--dt-severity-medium-text);
-  --severity-low: var(--dt-severity-low-text);
+  // Charts draw these as lines and arcs. Light's text colors look alike to color-blind users, so light adds fills.
+  --severity-critical: var(--dt-severity-critical-fill, var(--dt-severity-critical-text));
+  --severity-high: var(--dt-severity-high-fill, var(--dt-severity-high-text));
+  --severity-medium: var(--dt-severity-medium-fill, var(--dt-severity-medium-text));
+  --severity-low: var(--dt-severity-low-fill, var(--dt-severity-low-text));
   --severity-info: var(--dt-severity-info-text);
-  --severity-unassigned: var(--dt-severity-unassigned-text);
+  --severity-unassigned: var(--dt-severity-unassigned-fill, var(--dt-severity-unassigned-text));
 
   --notification-fail: var(--severity-critical);
   --notification-warn: var(--severity-medium);
