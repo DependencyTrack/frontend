@@ -1224,6 +1224,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX subido",
     "view_details": "Ver detalles",
+    "violation_message": null,
     "violation_state": "Estado de infracción",
     "violation_state_help": null,
     "violation_type": null,

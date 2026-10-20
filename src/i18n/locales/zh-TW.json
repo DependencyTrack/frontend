@@ -1224,6 +1224,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX 已上傳",
     "view_details": "檢視詳細資訊",
+    "violation_message": null,
     "violation_state": "違規狀態",
     "violation_state_help": "違反此政策時分配的嚴重程度",
     "violation_type": "違規類型",

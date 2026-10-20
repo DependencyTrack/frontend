@@ -596,20 +596,7 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch((error) => {
-            if (
-              this.subject === 'EXPRESSION' &&
-              error.response &&
-              error.response.data &&
-              error.response.data.celErrors
-            ) {
-              this.editorMarkers = celErrorsToMarkers(
-                error.response.data.celErrors,
-              );
-            } else {
-              this.$toastr.w(this.$t('condition.unsuccessful_action'));
-            }
-          });
+          .catch(this.onSaveError);
       } else {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
         this.axios
@@ -633,9 +620,14 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch(() => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          });
+          .catch(this.onSaveError);
+      }
+    },
+    onSaveError: function (error) {
+      if (this.subject === 'EXPRESSION' && error.response?.data?.celErrors) {
+        this.editorMarkers = celErrorsToMarkers(error.response.data.celErrors);
+      } else {
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
     removeCondition: function () {

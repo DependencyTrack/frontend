@@ -1224,6 +1224,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX 已上传",
     "view_details": "查看详情",
+    "violation_message": null,
     "violation_state": "违规状态",
     "violation_state_help": null,
     "violation_type": null,

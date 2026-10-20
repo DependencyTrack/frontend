@@ -137,6 +137,16 @@ $common.formatViolationStateLabel = function formatViolationStateLabel(
   return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
 };
 
+/**
+ * Formats a policy violation message as a single truncated line, with the full message as tooltip.
+ */
+$common.formatViolationMessage = function formatViolationMessage(message) {
+  if (!message) {
+    return '';
+  }
+  return `<div class="truncate-ellipsis"><span title="${xssFilters.inDoubleQuotedAttr(message)}">${xssFilters.inHTMLData(message)}</span></div>`;
+};
+
 $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
   if (cweId && cweName) {
     return (
@@ -740,6 +750,7 @@ export default {
   titleCase: $common.titleCase,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
+  formatViolationMessage: $common.formatViolationMessage,
   formatCweLabel: $common.formatCweLabel,
   formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,

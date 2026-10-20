@@ -82,10 +82,12 @@ export default async function globalSetup() {
     operator: 'ANY',
     violationState: 'WARN',
   });
+  const violationMessage = 'jackson-databind is not allowed';
   await api.send('PUT', `/v1/policy/${violationPolicy.uuid}/condition`, {
-    subject: 'PACKAGE_URL',
+    subject: 'EXPRESSION',
     operator: 'MATCHES',
-    value: purl,
+    violationType: 'OPERATIONAL',
+    value: `component.purl == "${purl}" ? "${violationMessage}" : ""`,
   });
   await api.send(
     'POST',
@@ -120,6 +122,7 @@ export default async function globalSetup() {
     serviceUuid: services[0].uuid,
     vulnId,
     vulnUuid: vuln.uuid,
+    violationMessage,
     vulnPolicyUuid: policy.uuid,
     workflowRunId: runs.items[0].id,
   };

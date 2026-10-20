@@ -1224,6 +1224,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX загружен",
     "view_details": "Посмотреть детали",
+    "violation_message": null,
     "violation_state": "Состояние нарушения",
     "violation_state_help": null,
     "violation_type": null,
