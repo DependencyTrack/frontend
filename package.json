@@ -54,7 +54,7 @@
     "oidc-client-ts": "3.5.0",
     "showdown": "2.1.0",
     "showdown-htmlescape": "0.1.9",
-    "vue": "3.5.43",
+    "vue": "3.5.44",
     "vue-chartjs": "5.3.4",
     "vue-i18n": "11.4.14",
     "vue-multiselect": "3.5.0",
