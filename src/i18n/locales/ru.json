@@ -153,6 +153,8 @@
     "filter_expression_var_subject": null,
     "filter_expression_var_timestamp": null,
     "filter_expression_var_title": null,
+    "filter_menu": null,
+    "filter_menu_placeholder": null,
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
     "general": "Общее",

@@ -153,6 +153,8 @@
     "filter_expression_var_subject": "Notification subject (structure varies by event type)",
     "filter_expression_var_timestamp": "Time of the notification",
     "filter_expression_var_title": "Notification title",
+    "filter_menu": "Filter menu",
+    "filter_menu_placeholder": "Type to filter",
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
     "general": "General",
