@@ -4,26 +4,25 @@
       <b-form-group
         :label="this.$t('admin.preferences')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
       >
-        <c-switch
+        <b-form-checkbox
           id="submission-enabled"
-          color="primary"
           v-model="isSubmissionEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ this.$t('admin.enable_telemetry_submission') }}
+          switch
+          >{{ this.$t('admin.enable_telemetry_submission') }}</b-form-checkbox
+        >
       </b-form-group>
       <b-form-group
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-2"
+        label-class="fw-bold pt-0 mb-2"
         :label="this.$t('admin.telemetry_last_submission')"
         :description="lastSubmissionDataDescription"
         label-for="last-submission-data"
       >
         <b-form-textarea
           id="last-submission-data"
-          :value="lastSubmissionDataString"
+          :model-value="lastSubmissionDataString"
           rows="3"
           max-rows="6"
           readonly
@@ -31,20 +30,14 @@
       </b-form-group>
     </b-card-body>
     <b-card-footer>
-      <b-button
-        size="md"
-        class="px-4"
-        variant="outline-primary"
-        @click="saveChanges"
-        >{{ $t('message.update') }}</b-button
-      >
+      <b-button class="px-4" variant="outline-primary" @click="saveChanges">{{
+        $t('message.update')
+      }}</b-button>
     </b-card-footer>
   </b-card>
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 
@@ -72,10 +65,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
-    BValidatedInputGroupFormInput,
   },
   data() {
     return {

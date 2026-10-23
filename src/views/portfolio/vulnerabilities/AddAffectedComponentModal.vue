@@ -1,11 +1,5 @@
 <template>
-  <b-modal
-    id="addAffectedComponentModal"
-    @hide="resetValues()"
-    size="lg"
-    hide-header-close
-    :title="title"
-  >
+  <b-modal v-model="visible" @hide="resetValues()" size="lg" :title="title">
     <b-row>
       <b-col md="3">
         <b-input-group-form-select
@@ -77,11 +71,11 @@
       </b-col>
     </b-row>
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="composeObject()">{{
+      <b-button variant="primary" @click="composeObject()">{{
         okButton
       }}</b-button>
     </template>
@@ -90,17 +84,18 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import { Switch as cSwitch } from '@coreui/vue';
+import EventBus from '../../../shared/eventbus';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    cSwitch,
   },
+  emits: ['affectedComponentAdded'],
   data() {
     return {
       okButton: this.$t('message.add'),
@@ -138,11 +133,14 @@ export default {
     };
   },
   created() {
-    this.$root.$on('object-event', (data) => {
+    EventBus.on('object-event', (data) => {
       this.affectedComponent = data;
       this.okButton = this.$t('message.edit');
       this.title = this.$t('message.edit_affected_component');
     });
+  },
+  beforeUnmount() {
+    EventBus.off('object-event');
   },
   methods: {
     composeObject: function () {
@@ -186,7 +184,7 @@ export default {
         this.affectedComponent.versionEndExcluding = null;
       }
       this.$emit('affectedComponentAdded', this.affectedComponent);
-      this.$root.$emit('bv::hide::modal', 'addAffectedComponentModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.affectedComponent = {
@@ -209,9 +207,6 @@ export default {
     cancelEdit(cancel) {
       this.resetValues();
       cancel();
-    },
-    beforeDestroy() {
-      this.$root.$off('object-event');
     },
   },
 };

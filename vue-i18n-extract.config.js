@@ -15,6 +15,7 @@ module.exports = {
     'language.pt',
     'language.pt-BR',
     'language.ru',
+    'language.uk-UA',
     'language.zh',
     'language.zh-TW',
     'validation.confirmed',
@@ -24,5 +25,5 @@ module.exports = {
   ],
   missingTranslationString: null,
   languageFiles: 'src/i18n/locales/*.json',
-  vueFiles: 'src/**/!(vendors)/*.{vue,js}',
+  vueFiles: 'src/**/*.{vue,js}',
 };

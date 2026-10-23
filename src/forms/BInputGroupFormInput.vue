@@ -6,14 +6,14 @@
     :label-class="labelClasses"
   >
     <b-input-group :class="inputGroupSize">
-      <b-input-group-prepend v-if="icon"
+      <template v-if="icon" #prepend
         ><b-input-group-text><i :class="icon"></i></b-input-group-text
-      ></b-input-group-prepend>
+      ></template>
       <b-form-input
         :id="`${id}-input`"
         :type="type"
         :class="inputClasses"
-        v-model="innerValue"
+        v-model.trim="innerValue"
         :placeholder="label"
         :state="feedbackState()"
         :autocomplete="autocomplete"
@@ -21,14 +21,12 @@
         :required="isRequired"
         :readonly="readonly"
         :disabled="isDisabled"
-        v-on="inputListeners"
         v-on:blur="hadFocus = true"
-        trim
       />
-      <b-input-group-append v-if="tooltip"
-        ><b-input-group-text v-b-tooltip.hover :title="tooltip"
-          ><i class="cui-info font-lg"></i></b-input-group-text
-      ></b-input-group-append>
+      <template v-if="tooltip" #append
+        ><b-input-group-text v-b-tooltip.hover="tooltip"
+          ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
+      ></template>
     </b-input-group>
     <b-form-invalid-feedback
       v-if="this.feedback === 'true'"
@@ -46,7 +44,7 @@ export default {
   props: {
     id: String,
     label: String,
-    value: String,
+    modelValue: String,
     inputGroupSize: String,
     icon: String,
     type: String,
@@ -58,12 +56,13 @@ export default {
     lazy: String,
     required: String,
     readonly: Boolean,
-    disabled: String,
+    disabled: [String, Boolean],
     state: {
       default: undefined,
       type: Boolean,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       isFocused: false,
@@ -80,22 +79,14 @@ export default {
   computed: {
     innerValue: {
       get: function () {
-        if (this.value && this.value.length > 0) {
+        if (this.modelValue && this.modelValue.length > 0) {
           //
         }
-        return this.value;
+        return this.modelValue;
       },
       set: function (newValue) {
-        return newValue;
+        this.$emit('update:modelValue', newValue);
       },
-    },
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        input: function (event) {
-          vm.$emit('input', event);
-        },
-      });
     },
     inputClasses: function () {
       return this.isRequired ? 'required' : null;
@@ -113,7 +104,7 @@ export default {
         return this.state;
       }
       if (common.toBoolean(this.lazy) && common.toBoolean(this.required)) {
-        if (this.value && this.value.length > 0) {
+        if (this.modelValue && this.modelValue.length > 0) {
           return true;
         } else if (this.hadFocus) {
           return false;
@@ -121,7 +112,7 @@ export default {
           return undefined;
         }
       }
-      if (this.value && this.value.length > 0) {
+      if (this.modelValue && this.modelValue.length > 0) {
         return true;
       } else {
         return undefined;

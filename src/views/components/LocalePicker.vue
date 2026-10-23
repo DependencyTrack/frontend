@@ -1,20 +1,22 @@
 <template>
   <b-input-group>
-    <b-input-group-prepend :title="this.$t('message.language')" is-text>
-      <span class="fa fa-language text-primary"></span>
-    </b-input-group-prepend>
+    <template #prepend>
+      <b-input-group-text :title="$t('message.language')">
+        <span class="fa fa-language text-primary"></span>
+      </b-input-group-text>
+    </template>
     <b-form-select
       class="bg-widget"
       v-model="selectedItem"
-      @change="onLocaleSelected"
+      @update:model-value="onLocaleSelected"
     >
       <b-form-select-option
-        v-for="locale in $i18n.availableLocales"
+        v-for="locale in availableLocales"
         :key="`locale-${locale}`"
         :value="locale"
         :title="$t(`language.${locale}`)"
       >
-        <span class="mr-2">{{ localeToFlag(locale) }}</span>
+        <span class="me-2">{{ localeToFlag(locale) }}</span>
         {{ locale.toUpperCase() }}
       </b-form-select-option>
     </b-form-select>
@@ -22,10 +24,13 @@
 </template>
 
 <script>
+import { availableLocales } from '@/i18n';
+
 export default {
   data() {
     return {
       selectedItem: null,
+      availableLocales,
     };
   },
   beforeMount() {

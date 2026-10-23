@@ -14,9 +14,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTeamModal')
-              "
+              v-on:actionClicked="showSelectTeamModal = true"
             />
           </div>
         </b-form-group>
@@ -32,7 +30,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="openPermissionModal"
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -46,8 +44,7 @@
           type="text"
           v-model="fullname"
           lazy="true"
-          v-debounce:750ms="updateUser"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateUser"
         />
         <b-input-group-form-input
           id="input-managed-user-email"
@@ -57,36 +54,27 @@
           type="text"
           v-model="email"
           lazy="true"
-          v-debounce:750ms="updateUser"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateUser"
         />
-        <c-switch
+        <b-form-checkbox
           id="forcePasswordChange"
-          color="primary"
           v-model="forcePasswordChange"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.change_password_next_login') }}
-        <br />
-        <c-switch
+          switch
+          >{{ $t('admin.change_password_next_login') }}</b-form-checkbox
+        >
+        <b-form-checkbox
           id="nonExpiryPassword"
-          color="primary"
           v-model="nonExpiryPassword"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.password_never_expires') }}
-        <br />
-        <c-switch
-          id="suspended"
-          color="primary"
-          v-model="suspended"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.suspended') }}
+          switch
+          >{{ $t('admin.password_never_expires') }}</b-form-checkbox
+        >
+        <b-form-checkbox id="suspended" v-model="suspended" switch>{{
+          $t('admin.suspended')
+        }}</b-form-checkbox>
         <div style="text-align: right">
           <b-button
             variant="outline-primary"
-            @click="$root.$emit('bv::show::modal', 'changePasswordModal')"
+            @click="showChangePasswordModal = true"
             >{{ $t('admin.change_password') }}</b-button
           >
           <b-button variant="outline-danger" @click="deleteUser">{{
@@ -96,32 +84,35 @@
       </b-col>
     </b-row>
     <select-team-modal
+      v-model="showSelectTeamModal"
       :currentTeams="teams"
       v-on:selection="updateTeamSelection"
     />
     <select-permission-modal
+      v-model="showSelectPermissionModal"
       :currentPermissions="permissions"
       v-on:selection="updatePermissionSelection"
     />
 
-    <change-password-modal :managed-user="this.row" />
+    <change-password-modal
+      v-model="showChangePasswordModal"
+      :managed-user="this.row"
+    />
   </div>
 </template>
 
 <script>
+import { debounce } from 'lodash-es';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ChangePasswordModal from '../ChangePasswordModal.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
-import i18n from '../../../../i18n';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },
@@ -129,7 +120,6 @@ export default {
   },
   mixins: [permissionsMixin, userManagementMixin],
   components: {
-    cSwitch,
     ActionableListGroupItem,
     SelectTeamModal,
     SelectPermissionModal,
@@ -138,6 +128,9 @@ export default {
   },
   data() {
     return {
+      showSelectTeamModal: false,
+      showSelectPermissionModal: false,
+      showChangePasswordModal: false,
       username: this.row.username,
       teams: this.row.teams,
       permissions: this.row.permissions,
@@ -147,10 +140,6 @@ export default {
       nonExpiryPassword: this.row.nonExpiryPassword,
       suspended: this.row.suspended,
       counter: 0,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   watch: {
@@ -164,10 +153,10 @@ export default {
       this.updateUser();
     },
   },
+  created() {
+    this.debouncedUpdateUser = debounce(this.updateUser, 750);
+  },
   methods: {
-    openPermissionModal() {
-      this.$root.$emit('bv::show::modal', 'selectPermissionModal');
-    },
     updateUser: function () {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
       this.axios
@@ -182,7 +171,7 @@ export default {
           suspended: this.suspended,
         })
         .then((response) => {
-          EventBus.$emit(this.rowEvents.update, this.index, response.data);
+          EventBus.emit(this.rowEvents.update, this.index, response.data);
           this.$toastr.s(this.$t('message.updated'));
         })
         .catch(() => {

@@ -15,11 +15,11 @@
         <json-schema-form-field
           :schema="itemSchema"
           :property-name="`${propertyName}[${index}]`"
-          :value="item"
+          :modelValue="item"
           :validation-error="validationErrors[index]"
           :validation-errors="nestedErrorMap[index] || {}"
           :is-array-item="true"
-          @input="onItemChange(index, $event)"
+          @update:modelValue="onItemChange(index, $event)"
         />
       </div>
       <b-button
@@ -48,18 +48,10 @@
       class="form-text text-muted d-block mt-1"
     >
       <span v-if="schema.minItems">
-        {{
-          $tc('admin.json_schema_form.min_items', schema.minItems, {
-            n: schema.minItems,
-          })
-        }}
+        {{ $t('admin.json_schema_form.min_items', schema.minItems) }}
       </span>
       <span v-if="schema.maxItems">
-        {{
-          $tc('admin.json_schema_form.max_items', schema.maxItems, {
-            n: schema.maxItems,
-          })
-        }}
+        {{ $t('admin.json_schema_form.max_items', schema.maxItems) }}
       </span>
     </small>
 
@@ -98,7 +90,7 @@ export default {
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
@@ -111,15 +103,16 @@ export default {
       default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
-    const arr = this.value || [];
+    const arr = this.modelValue || [];
     return {
       itemKeys: arr.map(() => nextId()),
     };
   },
   computed: {
     currentValue() {
-      return this.value || [];
+      return this.modelValue || [];
     },
     localizedDescription() {
       return (
@@ -150,7 +143,7 @@ export default {
     // Re-seed item keys if the parent replaces the array reference or its
     // length changes in a way the local bookkeeping didn't cause
     // (e.g. reload after save, reset).
-    value(newValue) {
+    modelValue(newValue) {
       const arr = newValue || [];
       if (arr.length !== this.itemKeys.length) {
         this.itemKeys = arr.map(() => nextId());
@@ -164,17 +157,17 @@ export default {
       });
       const newArray = [...this.currentValue, defaultValue];
       this.itemKeys = [...this.itemKeys, nextId()];
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     removeItem(index) {
       const newArray = this.currentValue.filter((_, i) => i !== index);
       this.itemKeys = this.itemKeys.filter((_, i) => i !== index);
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     onItemChange(index, newValue) {
       const newArray = this.currentValue.slice();
       newArray[index] = newValue;
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     removeItemAriaLabel(item, index) {
       if (

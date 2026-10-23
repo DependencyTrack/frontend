@@ -6,18 +6,19 @@
     <b-card no-body :header="headers.customRiskScore">
       <b-card-body>
         <p>{{ $t('admin.risk_score_weighting_description') }}</p>
-        <c-switch
+        <b-form-checkbox
           id="weight.history.enabled"
-          color="primary"
           v-model="customRiskScore.enabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_risk_score_history_check') }}
+          switch
+          >{{ $t('admin.enable_risk_score_history_check') }}</b-form-checkbox
+        >
         <b-validated-input-group-form-input
           id="custom-risk-score-critical"
           :label="$t('admin.risk_score_weight_critical')"
           input-group-size="mb-3"
-          rules="required|min_value:1|max_value:10"
+          required
+          min="1"
+          max="10"
           type="number"
           v-model="customRiskScore.critical"
           :tooltip="customRiskScore.criticalTooltip"
@@ -26,7 +27,9 @@
           id="custom-risk-score-high"
           :label="$t('admin.risk_score_weight_high')"
           input-group-size="mb-3"
-          rules="required|min_value:1|max_value:10"
+          required
+          min="1"
+          max="10"
           type="number"
           v-model="customRiskScore.high"
           :tooltip="customRiskScore.highTooltip"
@@ -35,7 +38,9 @@
           id="custom-risk-score-medium"
           :label="$t('admin.risk_score_weight_medium')"
           input-group-size="mb-3"
-          rules="required|min_value:1|max_value:10"
+          required
+          min="1"
+          max="10"
           type="number"
           v-model="customRiskScore.medium"
           :tooltip="customRiskScore.mediumTooltip"
@@ -44,7 +49,9 @@
           id="custom-risk-score-low"
           :label="$t('admin.risk_score_weight_low')"
           input-group-size="mb-3"
-          rules="required|min_value:1|max_value:10"
+          required
+          min="1"
+          max="10"
           type="number"
           v-model="customRiskScore.low"
           :tooltip="customRiskScore.lowTooltip"
@@ -53,7 +60,9 @@
           id="custom-risk-score-unassigned"
           :label="$t('admin.risk_score_weight_unassigned')"
           input-group-size="mb-3"
-          rules="required|min_value:1|max_value:10"
+          required
+          min="1"
+          max="10"
           type="number"
           v-model="customRiskScore.unassigned"
           :tooltip="customRiskScore.unassignedTooltip"
@@ -61,7 +70,6 @@
       </b-card-body>
       <b-card-footer>
         <b-button
-          size="md"
           class="px-4"
           variant="outline-primary"
           @click="saveCustomRiskScoreSettings"
@@ -73,8 +81,7 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 export default {
@@ -83,7 +90,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
   },
   data() {

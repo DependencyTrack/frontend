@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="selectTeamModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('admin.select_team')"
   >
@@ -13,12 +12,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="selectionHasChanged"
         @click="handleSelection"
@@ -32,6 +30,7 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
@@ -40,14 +39,11 @@ export default {
       default: () => [],
     },
   },
-  mixins: [permissionsMixin],
+  emits: ['selection'],
+  mixins: [permissionsMixin, modalMixin],
   data() {
     return {
       currentSelection: this.currentTeams.slice(),
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -124,8 +120,7 @@ export default {
   },
   methods: {
     handleSelection: function () {
-      // this.$root.$emit('bv::hide::modal', this.$children[0].id);
-      this.$bvModal.hide('selectTeamModal');
+      this.visible = false;
       this.$emit('selection', this.currentSelection);
     },
     addSelection(row) {

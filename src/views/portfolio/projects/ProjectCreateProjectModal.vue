@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="projectCreateProjectModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_project')"
   >
@@ -100,23 +98,23 @@
           :label="$t('message.project_add_collection_tag')"
           label-for="input-collectionTags"
         >
-          <vue-tags-input
+          <tags-input
             id="input-collectionTags"
-            v-model="collectionTagTyping"
-            :tags="collectionTags"
-            :add-on-key="addOnKeys"
+            v-model="collectionTags"
             :placeholder="$t('message.project_add_collection_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="
-              (newCollectionTags) => (this.collectionTags = newCollectionTags)
-            "
-            class="mw-100 bg-transparent text-lowercase"
+            :suggestions="tagsAutoCompleteItems"
+            @search="searchTags"
+            class="mw-100 text-lowercase"
             :max-tags="1"
           />
         </b-form-group>
         <div v-if="requiresTeam" style="margin-bottom: 1rem">
-          <label class="required">{{ $t('message.team') }}</label>
+          <label class="required" for="project-team-input">{{
+            $t('message.team')
+          }}</label>
           <multiselect
+            v-multiselect-label
+            id="project-team-input"
             v-model="selectedTeams"
             :options="availableTeams"
             :multiple="true"
@@ -139,13 +137,13 @@
           </div>
         </div>
         <div style="margin-bottom: 1rem">
-          <label>{{ $t('message.parent') }}</label>
+          <label for="project-parent-input">{{ $t('message.parent') }}</label>
           <multiselect
             v-model="selectedParent"
-            id="multiselect"
+            v-multiselect-label
+            id="project-parent-input"
             :custom-label="createProjectLabel"
             :placeholder="this.$t('message.search_parent')"
-            open-direction="bottom"
             :options="availableParents"
             :multiple="false"
             :searchable="true"
@@ -176,15 +174,13 @@
           :label="this.$t('message.tags')"
           label-for="input-4"
         >
-          <vue-tags-input
+          <tags-input
             id="input-4"
-            v-model="tag"
-            :tags="tags"
-            :add-on-key="addOnKeys"
+            v-model="tags"
             :placeholder="$t('message.add_tag')"
-            :autocomplete-items="tagsAutoCompleteItems"
-            @tags-changed="(newTags) => (this.tags = newTags)"
-            class="mw-100 bg-transparent text-lowercase"
+            :suggestions="tagsAutoCompleteItems"
+            @search="searchTags"
+            class="mw-100 text-lowercase"
           />
         </b-form-group>
         <hr class="my-3" />
@@ -195,13 +191,13 @@
           aria-controls="identity-collapse"
           class="btn btn-link d-flex align-items-center mb-2 p-0 text-decoration-none text-reset w-100"
         >
-          <i class="fa fa-cube mr-2"></i>
+          <i class="fa fa-cube me-2"></i>
           <strong>{{ $t('message.identity') }}</strong>
-          <small v-if="!showIdentity" class="text-muted ml-2">{{
+          <small v-if="!showIdentity" class="text-muted ms-2">{{
             identityHint
           }}</small>
           <i
-            class="fa ml-auto"
+            class="fa ms-auto"
             :class="showIdentity ? 'fa-chevron-up' : 'fa-chevron-down'"
           ></i>
         </button>
@@ -258,21 +254,16 @@
       </b-card>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isCreating" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isCreating"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="primary"
         :disabled="isCreating"
         @click="createProject()"
       >
-        <b-spinner v-if="isCreating" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isCreating" small class="me-1"></b-spinner>
         {{ $t('message.create') }}
       </b-button>
     </template>
@@ -280,13 +271,14 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import VueTagsInput from '@johmun/vue-tags-input';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import TagsInput from '../../../forms/TagsInput.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import Multiselect from 'vue-multiselect';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
 import availableCollectionLogicsMixin from '@/mixins/availableCollectionLogicsMixin';
 import projectFormMixin, {
@@ -294,6 +286,7 @@ import projectFormMixin, {
   DEFAULT_CLASSIFIER,
   FORM_FIELD_DEFAULTS,
 } from './projectFormMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectCreateProjectModal',
@@ -302,12 +295,13 @@ export default {
     availableClassifiersMixin,
     availableCollectionLogicsMixin,
     projectFormMixin,
+    modalMixin,
   ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    VueTagsInput,
+    TagsInput,
     Multiselect,
   },
   data() {
@@ -318,22 +312,23 @@ export default {
       defaultTeams: [],
       selectedTeams: [],
       isLoadingTeams: false,
+      teamQuery: '',
       project: { ...FORM_FIELD_DEFAULTS, classifier: DEFAULT_CLASSIFIER },
       showIdentity: false,
       isCreating: false,
     };
   },
   beforeMount() {
-    this.$root.$on('initializeProjectCreateProjectModal', async () => {
+    EventBus.on('initializeProjectCreateProjectModal', async () => {
       this.resetValues();
       await this.getACLEnabled();
       await this.getAvailableTeams();
       this.fetchDefaultParents();
-      this.$root.$emit('bv::show::modal', 'projectCreateProjectModal');
+      this.visible = true;
     });
   },
-  beforeDestroy() {
-    this.$root.$off('initializeProjectCreateProjectModal');
+  beforeUnmount() {
+    EventBus.off('initializeProjectCreateProjectModal');
   },
   computed: {
     teamsState() {
@@ -379,28 +374,32 @@ export default {
         } else {
           this.isDisabled = false;
         }
-      } catch (_error) {
+      } catch {
         this.defaultTeams = [];
         this.availableTeams = [];
         this.isDisabled = false;
       }
     },
     asyncFindTeams(query) {
+      this.teamQuery = query;
       if (!query) {
         this.availableTeams = this.defaultTeams;
+        this.isLoadingTeams = false;
         return;
       }
       this.isLoadingTeams = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => query === this.teamQuery;
       this.axios
         .get(this.teamSearchUrl(query))
         .then((response) => {
-          this.availableTeams = response.data || [];
+          if (isLatest()) this.availableTeams = response.data || [];
         })
         .catch(() => {
-          this.availableTeams = this.defaultTeams;
+          if (isLatest()) this.availableTeams = this.defaultTeams;
         })
         .finally(() => {
-          this.isLoadingTeams = false;
+          if (isLatest()) this.isLoadingTeams = false;
         });
     },
     onCollectionToggle(value) {
@@ -409,7 +408,6 @@ export default {
       } else {
         this.project.classifier = DEFAULT_CLASSIFIER;
         this.project.collectionLogic = null;
-        this.collectionTagTyping = '';
         this.collectionTags = [];
       }
     },
@@ -428,11 +426,11 @@ export default {
       const parent = this.selectedParent
         ? { uuid: this.selectedParent.uuid }
         : null;
-      const tagsNode = this.tags.map((tag) => ({ name: tag.text }));
+      const tagsNode = this.tags.map((name) => ({ name }));
       const collectionTag =
         this.project.collectionLogic === COLLECTION_LOGIC_AGGREGATE_TAG &&
         this.collectionTags.length > 0
-          ? { name: this.collectionTags[0].text }
+          ? { name: this.collectionTags[0] }
           : null;
       this.axios
         .put(url, {
@@ -456,7 +454,7 @@ export default {
         .then((response) => {
           this.isCreating = false;
           this.$toastr.s(this.$t('message.project_created'));
-          this.$root.$emit('bv::hide::modal', 'projectCreateProjectModal');
+          this.visible = false;
           this.$router.push({ path: '/projects/' + response.data.uuid });
         })
         .catch((error) => {
@@ -506,7 +504,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

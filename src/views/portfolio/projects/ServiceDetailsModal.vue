@@ -1,13 +1,12 @@
 <template>
   <b-modal
-    id="serviceDetailsModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.service_details')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
@@ -104,7 +103,7 @@
             id="service-provider-name-input"
             input-group-size="mb-3"
             type="text"
-            v-model="service.provider.name"
+            v-model="providerName"
             required="false"
             :label="$t('message.provider_name')"
             :tooltip="this.$t('message.service_provider_name_desc')"
@@ -118,7 +117,7 @@
               id="providerUrlsTable"
               ref="providerUrlsTable"
               :columns="providerUrlsTableColumns"
-              :data="service.provider.urls"
+              :data="service.provider?.urls"
               :options="providerUrlsTableOptions"
             >
             </bootstrap-table>
@@ -132,7 +131,7 @@
               id="contactsTable"
               ref="contactsTable"
               :columns="contactsTableColumns"
-              :data="service.provider.contacts"
+              :data="service.provider?.contacts"
               :options="contactsTableOptions"
             >
             </bootstrap-table>
@@ -183,9 +182,8 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         @click="deleteService()"
         v-permission:or="[
@@ -194,11 +192,10 @@
         ]"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="updateService()"
         v-permission:or="[
@@ -212,22 +209,22 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ServiceDetailsModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
-    BInputGroupFormSelect,
   },
   props: {
     service: Object,
   },
+  emits: ['serviceUpdated'],
   data() {
     return {
       contactsTableColumns: [
@@ -235,7 +232,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -243,7 +240,7 @@ export default {
           title: this.$t('message.email'),
           field: 'email',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -251,7 +248,7 @@ export default {
           title: this.$t('message.phone'),
           field: 'phone',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -278,7 +275,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -306,7 +303,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -334,7 +331,7 @@ export default {
           title: this.$t('message.classification'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -342,7 +339,7 @@ export default {
           title: this.$t('message.direction'),
           field: 'direction',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -370,7 +367,7 @@ export default {
           title: this.$t('message.url'),
           field: 'url',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             let url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
@@ -383,7 +380,7 @@ export default {
           title: this.$t('message.type'),
           field: 'type',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -391,7 +388,7 @@ export default {
           title: this.$t('message.comment'),
           field: 'comment',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -416,9 +413,19 @@ export default {
       },
     };
   },
+  computed: {
+    providerName: {
+      get() {
+        return this.service.provider?.name;
+      },
+      set(name) {
+        (this.service.provider ??= {}).name = name;
+      },
+    },
+  },
   methods: {
     updateService: function () {
-      this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}`;
       console.log(this.service);
       this.axios
@@ -427,23 +434,23 @@ export default {
           this.$emit('serviceUpdated', response.data);
           this.$toastr.s(this.$t('message.service_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
     deleteService: function () {
-      this.$root.$emit('bv::hide::modal', 'serviceDetailsModal');
+      this.visible = false;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.service_deleted'));
           this.$router.replace({
             path: '/projects/' + this.service.project.uuid,
           });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -452,12 +459,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

@@ -1,9 +1,8 @@
 <template>
   <b-modal
-    id="createManagedUserModal"
+    v-model="visible"
     size="lg"
     @hide="resetValues()"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_managed_user')"
   >
@@ -72,29 +71,25 @@
           :label="$t('admin.password_confirm')"
           :feedback-text="$t('admin.required_confirmPassword')"
         />
-        <c-switch
+        <b-form-checkbox
           id="forcePasswordChange"
-          color="primary"
           v-model="forcePasswordChange"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.change_password_next_login') }}
-        <br />
-        <c-switch
+          switch
+          >{{ $t('admin.change_password_next_login') }}</b-form-checkbox
+        >
+        <b-form-checkbox
           id="nonExpiryPassword"
-          color="primary"
           v-model="nonExpiryPassword"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.password_never_expires') }}
+          switch
+          >{{ $t('admin.password_never_expires') }}</b-form-checkbox
+        >
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="!createReady"
         @click="createUser()"
@@ -106,15 +101,15 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
-    cSwitch,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       username: null,
@@ -124,10 +119,6 @@ export default {
       confirmPassword: null,
       forcePasswordChange: false,
       nonExpiryPassword: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   computed: {
@@ -166,14 +157,14 @@ export default {
           nonExpiryPassword: this.nonExpiryPassword,
           suspended: false,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.user_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'createManagedUserModal');
+      this.visible = false;
       this.resetValues();
     },
     resetValues: function () {

@@ -5,38 +5,29 @@
     :field-label="fieldLabel"
     icon="fa-hashtag"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedHash || !tmpHashType"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>{{ value.hashType }} = "{{ value.hash }}"</template>
+    <template #value
+      >{{ modelValue.hashType }} = "{{ modelValue.hash }}"</template
+    >
 
-    <b-input-group class="mb-2">
-      <b-input-group-prepend>
-        <b-form-select
-          v-model="tmpHashType"
-          :options="hashTypeOptions"
-          size="sm"
-        ></b-form-select>
-      </b-input-group-prepend>
-      <b-form-input
-        ref="valueInput"
-        v-model="tmpHash"
-        :placeholder="$t('message.value')"
-        size="sm"
-        @keyup.enter="applyFilter"
-      ></b-form-input>
-    </b-input-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpHash || !tmpHashType"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
+    <b-form-select
+      v-model="tmpHashType"
+      :options="hashTypeOptions"
+      :aria-label="$t('message.hash_type')"
+      class="mb-2"
+      size="sm"
+    ></b-form-select>
+    <b-form-input
+      v-model="tmpHash"
+      :placeholder="$t('message.value')"
+      :aria-label="$t('message.value')"
+      size="sm"
+    ></b-form-input>
   </filter-pill-dropdown>
 </template>
 
@@ -59,11 +50,12 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpHashType: null,
@@ -71,7 +63,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.hashType && val.hash) {
@@ -86,7 +78,12 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.hashType && this.value.hash;
+      return (
+        this.modelValue && this.modelValue.hashType && this.modelValue.hash
+      );
+    },
+    trimmedHash() {
+      return this.tmpHash ? this.tmpHash.trim() : '';
     },
     hashTypeOptions() {
       return [
@@ -100,34 +97,26 @@ export default {
     },
   },
   methods: {
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.valueInput) {
-          this.$refs.valueInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpHashType = this.value.hashType;
-        this.tmpHash = this.value.hash;
+        this.tmpHashType = this.modelValue.hashType;
+        this.tmpHash = this.modelValue.hash;
       } else {
         this.tmpHashType = null;
         this.tmpHash = '';
       }
     },
     applyFilter() {
-      const trimmed = this.tmpHash ? this.tmpHash.trim() : '';
-      if (!trimmed || !this.tmpHashType) {
+      if (!this.trimmedHash || !this.tmpHashType) {
         return;
       }
 
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         hashType: this.tmpHashType,
-        hash: trimmed,
+        hash: this.trimmedHash,
       });
       this.$refs.pill.hide();
     },
@@ -135,7 +124,7 @@ export default {
       this.tmpHashType = null;
       this.tmpHash = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

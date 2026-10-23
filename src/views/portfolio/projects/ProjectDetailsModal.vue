@@ -1,20 +1,15 @@
 <template>
   <b-modal
-    id="projectDetailsModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.project_details')"
     @show="onShow"
     @hide="resetValues()"
   >
     <b-form ref="form" novalidate @submit.stop.prevent="updateProject()">
-      <b-tabs
-        v-model="activeTabIndex"
-        class="body-bg-color"
-        style="border: 0; padding: 0"
-      >
-        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+      <b-tabs v-model:index="activeTabIndex" class="body-bg-color">
+        <b-tab class="body-bg-color border-0 p-0">
           <template v-slot:title
             ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
           >
@@ -147,18 +142,13 @@
               :label="$t('message.project_add_collection_tag')"
               label-for="input-collectionTags"
             >
-              <vue-tags-input
+              <tags-input
                 id="input-collectionTags"
-                v-model="collectionTagTyping"
-                :tags="collectionTags"
-                :add-on-key="addOnKeys"
+                v-model="collectionTags"
                 :placeholder="$t('message.project_add_collection_tag')"
-                :autocomplete-items="tagsAutoCompleteItems"
-                @tags-changed="
-                  (newCollectionTags) =>
-                    (this.collectionTags = newCollectionTags)
-                "
-                class="mw-100 bg-transparent text-lowercase"
+                :suggestions="tagsAutoCompleteItems"
+                @search="searchTags"
+                class="mw-100 text-lowercase"
                 :max-tags="1"
                 :readonly="
                   this.isNotPermitted([
@@ -169,13 +159,15 @@
               />
             </b-form-group>
             <div style="margin-bottom: 1rem">
-              <label>{{ $t('message.parent') }}</label>
+              <label for="project-parent-input">{{
+                $t('message.parent')
+              }}</label>
               <multiselect
                 v-model="selectedParent"
-                id="multiselect"
+                v-multiselect-label
+                id="project-parent-input"
                 :custom-label="createProjectLabel"
                 :placeholder="this.$t('message.search_parent')"
-                open-direction="bottom"
                 :options="availableParents"
                 :multiple="false"
                 :searchable="true"
@@ -212,15 +204,13 @@
               :label="this.$t('message.tags')"
               label-for="input-4"
             >
-              <vue-tags-input
+              <tags-input
                 id="input-4"
-                v-model="tag"
-                :tags="tags"
-                :add-on-key="addOnKeys"
+                v-model="tags"
                 :placeholder="$t('message.add_tag')"
-                :autocomplete-items="tagsAutoCompleteItems"
-                @tags-changed="(newTags) => (this.tags = newTags)"
-                class="mw-100 bg-transparent text-lowercase"
+                :suggestions="tagsAutoCompleteItems"
+                @search="searchTags"
+                class="mw-100 text-lowercase"
                 :readonly="
                   this.isNotPermitted([
                     PERMISSIONS.PORTFOLIO_MANAGEMENT,
@@ -260,7 +250,7 @@
             />
           </b-card>
         </b-tab>
-        <b-tab class="body-bg-color" style="border: 0; padding: 0">
+        <b-tab class="body-bg-color border-0 p-0">
           <template v-slot:title
             ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
           >
@@ -339,11 +329,7 @@
             />
           </b-card>
         </b-tab>
-        <b-tab
-          class="body-bg-color"
-          style="border: 0; padding: 0"
-          v-if="project.manufacturer"
-        >
+        <b-tab class="body-bg-color border-0 p-0" v-if="project.manufacturer">
           <template v-slot:title
             ><i class="fa fa-industry"></i>
             {{ $t('message.manufacturer') }}</template
@@ -390,11 +376,7 @@
             </b-form-group>
           </b-card>
         </b-tab>
-        <b-tab
-          class="body-bg-color"
-          style="border: 0; padding: 0"
-          v-if="project.supplier"
-        >
+        <b-tab class="body-bg-color border-0 p-0" v-if="project.supplier">
           <template v-slot:title
             ><i class="fa fa-building-o"></i>
             {{ $t('message.supplier') }}</template
@@ -457,7 +439,7 @@
           </b-card>
         </b-tab>
         <b-tab
-          style="border: 0; padding: 0"
+          class="border-0 p-0"
           v-if="
             project.metadata &&
             (project.metadata.authors || project.metadata.supplier)
@@ -539,9 +521,8 @@
       </b-tabs>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         :disabled="isUpdating"
         @click="deleteProject()"
@@ -552,25 +533,19 @@
         >{{ $t('message.delete') }}</b-button
       >
       <b-button
-        size="md"
         variant="outline-primary"
         :disabled="isUpdating"
-        v-b-modal.projectPropertiesModal
+        @click="$emit('showProperties')"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
           PERMISSIONS.PORTFOLIO_MANAGEMENT_READ,
         ]"
         >{{ $t('message.properties') }}</b-button
       >
+      <b-button variant="secondary" :disabled="isUpdating" @click="cancel()">{{
+        $t('message.close')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isUpdating"
-        @click="cancel()"
-        >{{ $t('message.close') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="primary"
         :disabled="isUpdating"
         @click="updateProject()"
@@ -579,7 +554,7 @@
           PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
         ]"
       >
-        <b-spinner v-if="isUpdating" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isUpdating" small class="me-1"></b-spinner>
         {{ $t('message.update') }}
       </b-button>
     </template>
@@ -588,11 +563,12 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import VueTagsInput from '@johmun/vue-tags-input';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import TagsInput from '../../../forms/TagsInput.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import EventBus from '../../../shared/eventbus';
 import Multiselect from 'vue-multiselect';
 import xssFilters from 'xss-filters';
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
@@ -602,6 +578,7 @@ import projectFormMixin, {
   COLLECTION_LOGIC_AGGREGATE_TAG,
   FORM_FIELD_DEFAULTS,
 } from './projectFormMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 const IDENTITY_TAB_INDEX = 1;
 
@@ -612,18 +589,20 @@ export default {
     availableClassifiersMixin,
     availableCollectionLogicsMixin,
     projectFormMixin,
+    modalMixin,
   ],
   components: {
     BInputGroupFormSwitch,
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    VueTagsInput,
+    TagsInput,
     Multiselect,
   },
   props: {
     projectInput: Object,
     uuid: String,
   },
+  emits: ['showProperties', 'projectUpdated'],
   data() {
     return {
       project: { ...FORM_FIELD_DEFAULTS },
@@ -755,7 +734,7 @@ export default {
     };
   },
   beforeMount() {
-    this.$root.$on('initializeProjectDetailsModal', async () => {
+    EventBus.on('initializeProjectDetailsModal', async () => {
       this.project = {
         ...FORM_FIELD_DEFAULTS,
         ...cloneDeep(this.projectInput),
@@ -772,11 +751,11 @@ export default {
         this.selectedParent = this.parent;
       }
       this.fetchDefaultParents();
-      this.$root.$emit('bv::show::modal', 'projectDetailsModal');
+      this.visible = true;
     });
   },
-  beforeDestroy() {
-    this.$root.$off('initializeProjectDetailsModal');
+  beforeUnmount() {
+    EventBus.off('initializeProjectDetailsModal');
   },
   methods: {
     onShow() {
@@ -788,9 +767,9 @@ export default {
       if (this.isCollection) this.project.classifier = null;
     },
     initializeTags() {
-      this.tags = (this.project.tags || []).map((tag) => ({ text: tag.name }));
+      this.tags = (this.project.tags || []).map((tag) => tag.name);
       this.collectionTags = this.project.collectionTag
-        ? [{ text: this.project.collectionTag.name }]
+        ? [this.project.collectionTag.name]
         : [];
     },
     onCollectionToggle(value) {
@@ -800,7 +779,6 @@ export default {
       } else {
         this.project.classifier = this.previousClassifier || null;
         this.project.collectionLogic = null;
-        this.collectionTagTyping = '';
         this.collectionTags = [];
       }
     },
@@ -816,11 +794,11 @@ export default {
       const parent = this.selectedParent
         ? { uuid: this.selectedParent.uuid }
         : null;
-      const tagsNode = this.tags.map((tag) => ({ name: tag.text }));
+      const tagsNode = this.tags.map((name) => ({ name }));
       const collectionTag =
         this.project.collectionLogic === COLLECTION_LOGIC_AGGREGATE_TAG &&
         this.collectionTags.length > 0
-          ? { name: this.collectionTags[0].text }
+          ? { name: this.collectionTags[0] }
           : null;
       this.axios
         .post(url, {
@@ -849,7 +827,7 @@ export default {
           this.$emit('projectUpdated', response.data);
           this.$toastr.s(this.$t('message.project_updated'));
           this.parent = this.selectedParent;
-          this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
+          this.visible = false;
         })
         .catch((error) => {
           this.isUpdating = false;
@@ -859,8 +837,8 @@ export default {
         });
     },
     deleteProject: async function () {
-      this.$root.$emit('bv::hide::modal', 'projectDetailsModal');
-      let confirmed = await this.$bvModal.msgBoxConfirm(
+      this.visible = false;
+      let confirmed = await this.$confirm(
         this.$t('message.project_delete_message'),
         {
           title: this.$t('message.project_delete_title'),
@@ -921,17 +899,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>
-
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

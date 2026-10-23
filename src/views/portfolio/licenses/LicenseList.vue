@@ -3,9 +3,8 @@
     <portfolio-widget-row :fetch="true" />
     <div id="licensesToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
         variant="outline-primary"
-        v-b-modal.licenseAddLicenseModal
+        @click="showLicenseAddLicenseModal = true"
         v-permission:or="[
           PERMISSIONS.SYSTEM_CONFIGURATION,
           PERMISSIONS.SYSTEM_CONFIGURATION_CREATE,
@@ -22,17 +21,20 @@
       @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
-    <license-add-license-modal v-on:refreshTable="refreshTable" />
+    <license-add-license-modal
+      v-model="showLicenseAddLicenseModal"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
 <script>
 import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow.vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
-import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
+import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal.vue';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
@@ -58,12 +60,13 @@ export default {
   },
   data() {
     return {
+      showLicenseAddLicenseModal: false,
       columns: [
         {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -71,7 +74,7 @@ export default {
           title: this.$t('message.spdx_license_id'),
           field: 'licenseId',
           sortable: true,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );
@@ -84,7 +87,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -94,7 +97,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -104,7 +107,7 @@ export default {
           sortable: false,
           align: 'center',
           class: 'tight',
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -115,7 +118,7 @@ export default {
           align: 'center',
           class: 'tight',
           visible: false,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -154,7 +157,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}`,
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('LicenseListPageSize', size.toString());
           }

@@ -4,91 +4,28 @@
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="findingsToolbar" class="bs-table-custom-toolbar">
-      <b-button
-        id="apply-vex-button"
-        size="md"
-        variant="outline-primary"
-        v-b-modal.projectUploadVexModal
-        v-permission:or="[
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-        ]"
-      >
-        <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
-      </b-button>
-      <b-tooltip target="apply-vex-button" triggers="hover focus">{{
-        $t('message.apply_vex_tooltip')
-      }}</b-tooltip>
-
-      <b-button
-        id="export-vex-button"
-        size="md"
-        variant="outline-primary"
-        @click="downloadVex()"
-        v-permission:or="[
-          PERMISSIONS.VIEW_VULNERABILITY,
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-        ]"
-      >
-        <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
-      </b-button>
-      <b-tooltip target="export-vex-button" triggers="hover focus">{{
-        $t('message.export_vex_tooltip')
-      }}</b-tooltip>
-
-      <b-button
-        id="export-vdr-button"
-        size="md"
-        variant="outline-primary"
-        @click="downloadVdr()"
-        v-permission:or="[
-          PERMISSIONS.VIEW_VULNERABILITY,
-          PERMISSIONS.VULNERABILITY_ANALYSIS,
-          PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
-        ]"
-      >
-        <span class="fa fa-download"></span> {{ $t('message.export_vdr') }}
-      </b-button>
-      <b-tooltip target="export-vdr-button" triggers="hover focus">{{
-        $t('message.export_vdr_tooltip')
-      }}</b-tooltip>
-
-      <b-button
-        id="reanalyze-button"
-        size="md"
-        variant="outline-primary"
-        @click="reAnalyze()"
-        v-permission:or="[PERMISSIONS.VULNERABILITY_ANALYSIS]"
-      >
-        <span class="fa fa-refresh"></span>
-        {{ $t('message.project_reanalyze') }}
-      </b-button>
-      <b-tooltip target="reanalyze-button" triggers="hover focus">{{
-        $t('message.project_reanalyze_tooltip')
-      }}</b-tooltip>
-
-      <!-- Future use when CSAF support is added
-      <b-dropdown variant="outline-primary" v-permission:or="[PERMISSIONS.VIEW_VULNERABILITY, PERMISSIONS.VULNERABILITY_ANALYSIS]">
-        <template #button-content>
-          <span class="fa fa-download"></span> {{ $t('message.export_vex') }}
-        </template>
-        <b-dropdown-item @click="downloadVex('cyclonedx')" href="#">CycloneDX</b-dropdown-item>
-        <b-dropdown-item @click="downloadVex('csaf')" href="#">CSAF</b-dropdown-item>
-      </b-dropdown>
-      -->
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedFindings"
-        color="primary"
+    <filter-bar
+      toolbar-id="findingsToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressedFindings')"
+        :field-label="$t('message.show_suppressed_findings')"
+        field-name="showSuppressedFindings"
+        icon="fa-eye"
         v-model="showSuppressedFindings"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_findings')
-      }}</span>
-    </div>
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showKevOnly')"
+        :field-label="$t('message.kev')"
+        field-name="showKevOnly"
+        icon="fa-crosshairs"
+        v-model="showKevOnly"
+      />
+    </filter-bar>
 
     <bootstrap-table
       ref="table"
@@ -98,47 +35,37 @@
       @on-load-success="tableLoaded"
     >
     </bootstrap-table>
-
-    <project-upload-vex-modal :uuid="this.uuid" />
   </div>
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
 
 import common from '@/shared/common';
-import i18n from '@/i18n';
 import {
   applyTotalCountHeaders,
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
-import permissionsMixin from '@/mixins/permissionsMixin';
-import FindingAudit from './FindingAudit';
-import ProjectUploadVexModal from './ProjectUploadVexModal';
-import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
+import filterPillsMixin from '@/mixins/filterPillsMixin';
+import FindingAudit from './FindingAudit.vue';
+import FilterBar from '@/views/components/FilterBar.vue';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
+import KevCell from '@/views/components/KevCell.vue';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  emits: ['total'],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
-    cSwitch,
-    ProjectUploadVexModal,
-    KevAssertionsModal,
+    FilterBar,
+    BooleanFilterPill,
   },
   beforeCreate() {
-    this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectFindingsShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
-          'true'
-        : false;
-
     if (this.$route.params.vulnerability) {
       if (this.$route.params.affectedComponent) {
         // search for the last portion of the finding's matrix ID
@@ -151,19 +78,25 @@ export default {
       } // the route doesn't allow a component to be specified without a vulnerability
     }
   },
+  created() {
+    this.options.url = this.apiUrl();
+  },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
+          'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowKevOnly') === 'true',
+      booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
@@ -174,7 +107,7 @@ export default {
                 row.component.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -183,7 +116,7 @@ export default {
           title: this.$t('message.version'),
           field: 'component.version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (row.component.latestVersion) {
               if (
                 compareVersions(
@@ -192,8 +125,8 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
@@ -205,14 +138,14 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               } else {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               }
@@ -225,7 +158,7 @@ export default {
           title: this.$t('message.group'),
           field: 'component.group',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -233,7 +166,7 @@ export default {
           title: this.$t('message.vulnerability'),
           field: 'vulnerability.vulnId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
@@ -250,7 +183,7 @@ export default {
           title: this.$t('message.aliases'),
           field: 'vulnerability.aliases',
           visible: false,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (typeof value !== 'undefined') {
               let label = '';
               const aliases = common.resolveVulnAliases(
@@ -281,7 +214,7 @@ export default {
           field: 'vulnerability.cwes',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               let label = '';
               for (let i = 0; i < value.length; i++) {
@@ -300,7 +233,7 @@ export default {
           field: 'vulnerability.severity',
           sortName: 'vulnerability.severity',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (typeof value !== 'undefined') {
               return common.formatSeverityLabel(value);
             }
@@ -311,30 +244,13 @@ export default {
           field: 'vulnerability.isKev',
           sortable: false,
           class: 'tight',
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value !== true) {
               return '';
             }
-            return this.vueFormatter({
-              i18n,
-              components: { KevAssertionsModal },
-              template: `
-                <div class="text-center">
-                  <b-link
-                    v-b-modal="\`kevAssertionsModal-${index}\`"
-                    :title="$t('message.kev_show_assertions')"
-                    class="text-danger"
-                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
-                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
-                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  source: row.vulnerability.source,
-                  vulnId: row.vulnerability.vulnId,
-                };
-              },
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
             });
           },
         },
@@ -342,12 +258,11 @@ export default {
           title: this.$t('message.analyzer'),
           field: 'attribution.analyzerIdentity',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return common.formatAnalyzerLabel(
               row.attribution.analyzerIdentity,
               row.vulnerability.source,
               row.vulnerability.vulnId,
-              row.attribution.alternateIdentifier,
               row.attribution.referenceUrl,
             );
           },
@@ -356,7 +271,7 @@ export default {
           title: this.$t('message.attributed_on'),
           field: 'attribution.attributedOn',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.formatTimestamp(value));
           },
         },
@@ -371,7 +286,7 @@ export default {
           field: 'analysis.isSuppressed',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -385,7 +300,7 @@ export default {
       data: [],
       options: {
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         search: true,
@@ -421,25 +336,17 @@ export default {
         detailView: true,
         detailViewIcon: true,
         detailViewByClick: false,
-        detailFormatter: (index, row) => {
+        detailFormatter: (_index, row) => {
           return (
             row &&
-            this.vueFormatter({
-              i18n,
-              propsData: {
-                finding: row,
-                projectUuid: this.uuid,
-              },
-              ...FindingAudit,
-            })
+            this.cell(FindingAudit, { finding: row, projectUuid: this.uuid })
           );
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
-        onPageChange: (number, size) => {
+        onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectFindingsPageSize', size.toString());
           }
@@ -463,81 +370,11 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
-      if (this.showSuppressedFindings === undefined) {
-        url += '?suppressed=false';
-      } else {
-        url += '?suppressed=' + this.showSuppressedFindings;
-      }
-      url += '&totalCount=BOUNDED';
-      return url;
-    },
-    downloadVex: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_VEX}/cyclonedx/project/${this.uuid}`;
-      this.axios
-        .request({
-          responseType: 'blob',
-          url: url,
-          method: 'get',
-          params: {
-            download: 'true',
-          },
-        })
-        .then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          let filename = 'vex.json';
-          let disposition = response.headers['content-disposition'];
-          if (disposition && disposition.indexOf('attachment') !== -1) {
-            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            let matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) {
-              filename = matches[1].replace(/['"]/g, '');
-            }
-          }
-          link.setAttribute('download', filename);
-          document.body.appendChild(link);
-          link.click();
-        });
-    },
-    downloadVdr: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_BOM}/cyclonedx/project/${this.uuid}`;
-      this.axios
-        .request({
-          responseType: 'blob',
-          url: url,
-          method: 'get',
-          params: {
-            format: 'json',
-            variant: 'vdr',
-            download: 'true',
-          },
-        })
-        .then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          let filename = 'bom.json';
-          let disposition = response.headers['content-disposition'];
-          if (disposition && disposition.indexOf('attachment') !== -1) {
-            let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            let matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) {
-              filename = matches[1].replace(/['"]/g, '');
-            }
-          }
-          link.setAttribute('download', filename);
-          document.body.appendChild(link);
-          link.click();
-        });
-    },
-    reAnalyze: function (data) {
-      let analyzeUrl = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
-      this.axios.post(analyzeUrl).then((response) => {
-        this.$toastr.s(this.$t('message.project_reanalyze_requested'));
-        //ignore token from response, don't wait for completion
-        this.refreshTable();
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
+      return common.setQueryParams(url, {
+        suppressed: this.showSuppressedFindings === true,
+        isKev: this.showKevOnly === true ? true : null,
+        totalCount: 'BOUNDED',
       });
     },
     refreshTable: function () {
@@ -565,21 +402,39 @@ export default {
         this.$refs.table.expandRow(0);
       }
     },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
+      }
+    },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showKevOnly',
+          label: this.$t('message.kev'),
+          icon: 'fa-crosshairs',
+        },
+        {
+          name: 'showSuppressedFindings',
+          label: this.$t('message.show_suppressed_findings'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectFindingsShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedFindings(value) {
+      this.persistFilter('ProjectFindingsShowSuppressedFindings', value);
+    },
+    showKevOnly(value) {
+      this.persistFilter('ProjectFindingsShowKevOnly', value);
     },
   },
 };

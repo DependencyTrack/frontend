@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="selectOidcGroupModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('admin.select_oidc_group')"
   >
@@ -13,12 +12,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="$emit('selection', $refs.table.getSelections())"
         >{{ $t('message.select') }}</b-button
@@ -31,15 +29,13 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  emits: ['selection'],
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -50,7 +46,7 @@ export default {
           title: this.$t('admin.oidc_group_name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },

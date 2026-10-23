@@ -1,30 +1,31 @@
 <template>
-  <div class="app-shell">
-    <Banner
-      v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
-      :key="bannerInstanceKey"
-      class="app-banner"
-      :dismissable="bannerConfig.makeBannerDismissable"
-      :color-scheme="bannerConfig.colorScheme"
-      :message="bannerConfig.message"
-      :custom-mode="!!bannerConfig.customMode"
-      :html="bannerConfig.customMode ? bannerConfig.html : ''"
-    />
-    <main class="app-content">
-      <router-view />
-    </main>
-  </div>
+  <b-app>
+    <div class="app-shell">
+      <Banner
+        v-if="!isLoginPage && bannerConfig && bannerConfig.activateBanner"
+        :key="bannerInstanceKey"
+        class="app-banner"
+        :dismissable="bannerConfig.makeBannerDismissable"
+        :color-scheme="bannerConfig.colorScheme"
+        :message="bannerConfig.message"
+        :custom-mode="!!bannerConfig.customMode"
+        :html="bannerConfig.customMode ? bannerConfig.html : ''"
+      />
+      <main class="app-content">
+        <router-view />
+      </main>
+    </div>
+  </b-app>
 </template>
 
 <script>
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import Vue from 'vue';
 import $ from 'jquery';
 import { getUrlVar } from './shared/utils';
 import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
-import VueRouter from 'vue-router';
+import state from './shared/state';
 import Banner from './views/components/Banner.vue';
 import {
   BANNER_DISMISSED_KEY,
@@ -61,32 +62,26 @@ export default {
     };
 
     const loadSystemCapabilities = () => {
-      Vue.prototype.$systemCapabilities = undefined;
-      EventBus.$emit('systemCapabilitiesUpdated', undefined);
+      state.systemCapabilities = undefined;
       this.axios
-        .get(
-          `${Vue.prototype.$api.BASE_URL}/${Vue.prototype.$api.URL_SYSTEM_CAPABILITIES}`,
-        )
+        .get(`${this.$api.BASE_URL}/${this.$api.URL_SYSTEM_CAPABILITIES}`)
         .then((result) => {
-          Vue.prototype.$systemCapabilities = result.data.capabilities;
-          EventBus.$emit('systemCapabilitiesUpdated', result.data.capabilities);
+          state.systemCapabilities = result.data.capabilities;
         })
         .catch((error) => {
           console.error('Failed to load system capabilities', error);
-          Vue.prototype.$systemCapabilities = undefined;
-          EventBus.$emit('systemCapabilitiesUpdated', undefined);
+          state.systemCapabilities = undefined;
         });
     };
 
-    EventBus.$on('authenticated', (token) => {
+    EventBus.on('authenticated', (token) => {
       sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       if (token) {
         sessionStorage.setItem('token', token);
       } else {
         sessionStorage.removeItem('token');
         clearPermissions();
-        Vue.prototype.$systemCapabilities = undefined;
-        EventBus.$emit('systemCapabilitiesUpdated', undefined);
+        state.systemCapabilities = undefined;
       }
       setAuthHeader(token);
       if (token) {
@@ -98,7 +93,7 @@ export default {
       this.bannerInstanceKey++;
     });
 
-    EventBus.$on('banner-updated', async () => {
+    EventBus.on('banner-updated', async () => {
       sessionStorage.removeItem(BANNER_DISMISSED_KEY);
       await this.fetchBannerConfig();
       this.bannerInstanceKey++;
@@ -127,7 +122,7 @@ export default {
 
     // debug logging of ajax requests/responses
     if (getUrlVar('debug')) {
-      $(document).ajaxComplete((event, xhr) => {
+      $(document).ajaxComplete((_event, xhr) => {
         console.debug(
           'jQuery-Status:',
           xhr.status,
@@ -178,7 +173,7 @@ export default {
           contentType.includes('application/json') &&
           Array.isArray(error.response.data) &&
           error.response.data.length > 0 &&
-          error.response.data[0].hasOwnProperty('invalidValue')
+          Object.hasOwn(error.response.data[0], 'invalidValue')
         ) {
           let validationError = error.response.data
             .map((failure) => `${failure.path}: ${failure.message}`)
@@ -250,13 +245,14 @@ export default {
         const to = url.pathname;
         if (window.location.pathname !== to && event.preventDefault) {
           event.preventDefault();
+          // The link's view unmounts without a mouseleave event, so Bootstrap would never hide its tooltip.
+          $(target)
+            .find('[data-bs-toggle="tooltip"]')
+            .addBack('[data-bs-toggle="tooltip"]')
+            .tooltip?.('dispose');
           this.$router.push(to + url.search).catch((e) => {
-            const { isNavigationFailure, NavigationFailureType } = VueRouter;
-            // inform about navigation errors but ignore redirect errors that may be caused by the navigation guard when redirecting to the login page
-            if (!isNavigationFailure(e, NavigationFailureType.redirected)) {
-              this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
-              console.error(e);
-            }
+            this.$toastr.e(this.$t('404.message'), this.$t('404.heading'));
+            console.error(e);
           });
         }
       }
@@ -277,11 +273,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@coreui/icons/css/free.min.css';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome.scss';
-$simple-line-font-path: '~simple-line-icons/fonts/';
-@import '~simple-line-icons/scss/simple-line-icons.scss';
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import '@fortawesome/fontawesome-free/css/v4-shims.min.css';
+@import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 @import 'assets/scss/style';
 </style>

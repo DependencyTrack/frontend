@@ -1,11 +1,11 @@
 <template>
-  <div v-html="outputHTML"></div>
+  <div class="markdown" v-html="outputHTML"></div>
 </template>
 
 <script>
 import DOMPurify from 'dompurify';
 import showdown from 'showdown';
-import * as showdownHtmlEscape from 'showdown-htmlescape';
+import showdownHtmlEscape from 'showdown-htmlescape';
 
 export default {
   name: 'Showdown',

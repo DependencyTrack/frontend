@@ -2,28 +2,36 @@
   <div>
     <chart-epss-vs-cvss
       ref="chartEpssVsCvss"
-      chartId="chartEpssVsCvss"
       class="chart-wrapper"
       style="height: 400px; margin-top: 40px"
-      :height="400"
     />
 
     <!--
     For some reason, this has to be here. If the bootstrap-table is the only element in the template and the
     dropdown for version is changes, the table will not update. For whatever reason, adding the toolbar fixes it.
     -->
-    <div id="epssToolbar" class="bs-table-custom-toolbar">
-      <c-switch
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showSuppressedFindings"
-        color="primary"
+    <filter-bar
+      toolbar-id="epssToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <boolean-filter-pill
+        v-if="isFilterVisible('showSuppressedFindings')"
+        :field-label="$t('message.show_suppressed_findings')"
+        field-name="showSuppressedFindings"
+        icon="fa-eye"
         v-model="showSuppressedFindings"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_suppressed_findings')
-      }}</span>
-    </div>
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showKevOnly')"
+        :field-label="$t('message.kev')"
+        field-name="showKevOnly"
+        icon="fa-crosshairs"
+        v-model="showKevOnly"
+      />
+    </filter-bar>
 
     <bootstrap-table
       ref="table"
@@ -42,44 +50,45 @@ import {
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
-import { Switch as cSwitch } from '@coreui/vue';
 import $ from 'jquery';
-import BootstrapToggle from 'vue-bootstrap-toggle';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
-import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
+import FilterBar from '../../components/FilterBar.vue';
+import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
+import KevCell from '../../components/KevCell.vue';
+import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss.vue';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin],
+  emits: ['total'],
+  mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
-    cSwitch,
-    BootstrapToggle,
+    FilterBar,
+    BooleanFilterPill,
     ChartEpssVsCvss,
   },
-  beforeCreate() {
-    this.showSuppressedFindings =
-      localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') !== null
-        ? localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true'
-        : false;
+  created() {
+    this.options.url = this.apiUrl();
   },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowKevOnly') === 'true',
+      booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../components/' + row.component.uuid,
             );
@@ -90,7 +99,7 @@ export default {
                 row.component.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -99,7 +108,7 @@ export default {
           title: this.$t('message.version'),
           field: 'component.version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             if (row.component.latestVersion) {
               if (
                 compareVersions(
@@ -108,8 +117,8 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
@@ -121,14 +130,14 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
                   '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               } else {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
+                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
                   xssFilters.inHTMLData(row.component.version)
                 );
               }
@@ -141,7 +150,7 @@ export default {
           title: this.$t('message.group'),
           field: 'component.group',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -149,7 +158,7 @@ export default {
           title: this.$t('message.vulnerability'),
           field: 'vulnerability.vulnId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../../../vulnerabilities/' +
                 row.vulnerability.source +
@@ -163,11 +172,26 @@ export default {
           },
         },
         {
+          title: this.$t('message.kev'),
+          field: 'vulnerability.isKev',
+          sortable: false,
+          class: 'tight',
+          formatter: (value, row) => {
+            if (value !== true) {
+              return '';
+            }
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
+            });
+          },
+        },
+        {
           title: this.$t('message.cvss_v2'),
           field: 'vulnerability.cvssV2BaseScore',
           sortable: true,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -179,7 +203,7 @@ export default {
           title: this.$t('message.cvss_v3'),
           field: 'vulnerability.cvssV3BaseScore',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -191,7 +215,7 @@ export default {
           title: this.$t('message.cvss_v4'),
           field: 'vulnerability.cvssV4Score',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             if (Number.isFinite(value)) {
               return value.toFixed(1);
             } else {
@@ -214,7 +238,7 @@ export default {
           field: 'analysis.isSuppressed',
           sortable: true,
           class: 'tight',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
         },
@@ -248,9 +272,11 @@ export default {
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
-        onPostBody: this.initializeTooltips,
-        onPageChange: (number, size) => {
+        onPostBody: () => {
+          this.mountCells();
+          this.initializeTooltips();
+        },
+        onPageChange: (_, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectEpssPageSize', size.toString());
           }
@@ -274,18 +300,23 @@ export default {
   },
   methods: {
     apiUrl: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
-      if (this.showSuppressedFindings === undefined) {
-        url += '?epssFrom=0&suppressed=false';
-      } else {
-        url += '?epssFrom=0&suppressed=' + this.showSuppressedFindings;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
+      return common.setQueryParams(url, {
+        epssFrom: 0,
+        suppressed: this.showSuppressedFindings === true,
+        isKev: this.showKevOnly === true ? true : null,
+        totalCount: 'BOUNDED',
+      });
+    },
+    persistFilter: function (key, value) {
+      if (localStorage) {
+        localStorage.setItem(key, value.toString());
       }
-      url += '&totalCount=BOUNDED';
-      return url;
     },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
+        pageNumber: 1,
         silent: true,
       });
     },
@@ -300,20 +331,33 @@ export default {
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
   },
+  computed: {
+    allFilterDefs() {
+      return [
+        {
+          name: 'showKevOnly',
+          label: this.$t('message.kev'),
+          icon: 'fa-crosshairs',
+        },
+        {
+          name: 'showSuppressedFindings',
+          label: this.$t('message.show_suppressed_findings'),
+          icon: 'fa-eye',
+        },
+      ];
+    },
+  },
   watch: {
-    showSuppressedFindings() {
-      if (localStorage) {
-        localStorage.setItem(
-          'ProjectEpssShowSuppressedFindings',
-          this.showSuppressedFindings.toString(),
-        );
-      }
-      this.refreshTable();
+    showSuppressedFindings(value) {
+      this.persistFilter('ProjectEpssShowSuppressedFindings', value);
+    },
+    showKevOnly(value) {
+      this.persistFilter('ProjectEpssShowKevOnly', value);
     },
   },
 };

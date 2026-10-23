@@ -2,16 +2,15 @@
 @import "variables";
 
 // Import styles
-@import "~@coreui/coreui/scss/coreui";
+@import "bootstrap/scss/bootstrap";
 
-@import '~vue-easy-pie-chart/dist/vue-easy-pie-chart.css';
+@import "themes";
+
+@import "coreui";
 
 @import "code";
 
 // If you want to add something do it here
 @import "custom";
 
-// ie fixes
-@import "ie-fix";
-
-@import "~vue-multiselect/dist/vue-multiselect.min.css";
+@import "vue-multiselect/dist/vue-multiselect.min.css";

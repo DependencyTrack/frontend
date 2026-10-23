@@ -1,14 +1,12 @@
 <template>
   <b-modal
-    id="licenseAddLicenseModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.add_license')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
@@ -50,33 +48,21 @@
               rows="3"
             />
           </b-form-group>
-          <c-switch
-            id="input-5"
+          <b-form-checkbox
             class="mx-1"
-            color="primary"
             v-model="license.isOsiApproved"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.osi_approved') }} <br />
-          <c-switch
-            id="input-5"
+            switch
+            >{{ $t('message.osi_approved') }}</b-form-checkbox
+          >
+          <b-form-checkbox class="mx-1" v-model="license.isFsfLibre" switch>{{
+            $t('message.fsf_libre')
+          }}</b-form-checkbox>
+          <b-form-checkbox
             class="mx-1"
-            color="primary"
-            v-model="license.isFsfLibre"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.fsf_libre') }} <br />
-          <c-switch
-            id="input-5"
-            class="mx-1"
-            color="primary"
             v-model="license.isDeprecatedLicenseId"
-            label
-            v-bind="labelIcon"
-          ></c-switch>
-          {{ $t('message.deprecated') }}
+            switch
+            >{{ $t('message.deprecated') }}</b-form-checkbox
+          >
         </b-card>
       </b-tab>
       <b-tab>
@@ -132,11 +118,11 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="addLicense()">{{
+      <b-button variant="primary" @click="addLicense()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -144,22 +130,19 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
-import { Switch as cSwitch } from '@coreui/vue';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'LicenseAddLicenseModal',
+  mixins: [modalMixin],
   components: {
     BInputGroupFormInput,
-    cSwitch,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       license: {},
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {
@@ -178,15 +161,15 @@ export default {
           isDeprecatedLicenseId: this.license.isDeprecatedLicenseId,
           seeAlso: this.license.seeAlso,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.project_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         })
         .finally(() => {
-          this.$root.$emit('bv::hide::modal', 'licenseAddLicenseModal');
+          this.visible = false;
         });
     },
     resetValues: function () {
@@ -197,12 +180,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

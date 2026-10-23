@@ -5,107 +5,38 @@
         <b-row>
           <b-col>
             <i
-              class="fa fa-exchange bg-primary p-3 font-2xl mr-3 float-left"
+              class="fa fa-exchange page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">{{ serviceLabel }}</div>
           </b-col>
           <b-col>
-            <b-row class="d-none d-md-flex float-right">
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.critical')"
-                >{{ currentCritical }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.high')"
-                >{{ currentHigh }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.medium')"
-                >{{ currentMedium }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.low')"
-                >{{ currentLow }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityUnassigned"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.unassigned')"
-                >{{ currentUnassigned }}</vue-easy-pie-chart
-              >
-            </b-row>
+            <div class="d-none d-md-flex float-end">
+              <severity-circles
+                :critical="currentCritical"
+                :high="currentHigh"
+                :medium="currentMedium"
+                :low="currentLow"
+                :unassigned="currentUnassigned"
+              />
+            </div>
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="service-info-footer" slot="footer">
-        <b-link
-          class="font-weight-bold font-xs btn-block text-muted"
-          v-b-modal.serviceDetailsModal
-          >{{ $t('message.view_details') }}
-          <i class="fa fa-angle-right float-right font-lg"></i
-        ></b-link>
-      </div>
+      <template v-slot:footer>
+        <div id="service-info-footer">
+          <b-link
+            class="fw-bold font-xs d-block w-100 text-muted"
+            role="button"
+            @click="showServiceDetailsModal = true"
+            >{{ $t('message.view_details') }}
+            <i class="fa fa-angle-right float-end font-lg"></i
+          ></b-link>
+        </div>
+      </template>
     </b-card>
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
       >
         <template v-slot:title
@@ -118,6 +49,7 @@
       </b-tab>
     </b-tabs>
     <service-details-modal
+      v-model="showServiceDetailsModal"
       :service="cloneDeep(service)"
       v-on:serviceUpdated="syncServiceFields"
     />
@@ -125,29 +57,24 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
-import ServiceDashboard from './ServiceDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
+import SeverityCircles from '../../components/SeverityCircles.vue';
+import ServiceDashboard from './ServiceDashboard.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import ServiceDetailsModal from './ServiceDetailsModal';
+import ServiceDetailsModal from './ServiceDetailsModal.vue';
 
 export default {
   mixins: [permissionsMixin],
   components: {
-    SeverityBarChart,
     ServiceDashboard,
-    PortfolioWidgetRow,
-    VueEasyPieChart,
+    SeverityCircles,
     ServiceDetailsModal,
   },
   computed: {
     projectLabel() {
-      if (this.service.hasOwnProperty('project')) {
+      if (Object.hasOwn(this.service, 'project')) {
         if (this.service.project.name && this.service.project.version) {
           return (
             this.service.project.name + ' ▸ ' + this.service.project.version
@@ -156,6 +83,7 @@ export default {
           return this.service.project.name;
         }
       }
+      return null;
     },
     serviceLabel() {
       if (this.service.name && this.service.version) {
@@ -167,13 +95,7 @@ export default {
   },
   data() {
     return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
+      showServiceDetailsModal: false,
       uuid: null,
       service: {},
       currentCritical: 0,
@@ -190,13 +112,10 @@ export default {
     cloneDeep: function (service) {
       return cloneDeep(service);
     },
-    getStyle: function (style) {
-      return getStyle(style);
-    },
     syncServiceFields: function (service) {
       this.service = service;
-      EventBus.$emit('addCrumb', this.serviceLabel);
-      this.$title = this.serviceLabel;
+      EventBus.emit('addCrumb', this.serviceLabel);
+      setPageTitle(this.serviceLabel);
     },
   },
   beforeMount() {
@@ -206,14 +125,14 @@ export default {
     let serviceUrl = `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/${this.uuid}`;
     this.axios.get(serviceUrl).then((response) => {
       this.service = response.data;
-      EventBus.$emit(
+      EventBus.emit(
         'addCrumb',
         this.serviceLabel,
         'Project',
         this.service.project.uuid,
         this.projectLabel,
       );
-      this.$title = this.serviceLabel;
+      setPageTitle(this.serviceLabel);
     });
     /* TODO: Add when server supports service metrics
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/service/${this.uuid}/current`;
@@ -227,8 +146,8 @@ export default {
     });
  */
   },
-  destroyed() {
-    EventBus.$emit('crumble');
+  unmounted() {
+    EventBus.emit('crumble');
   },
 };
 </script>

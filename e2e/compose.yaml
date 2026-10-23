@@ -1,0 +1,75 @@
+name: dtrack-frontend-e2e
+
+services:
+  apiserver:
+    image: 'ghcr.io/dependencytrack/apiserver:${APISERVER_VERSION:-5-snapshot}'
+    depends_on:
+      hydra:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    environment:
+      JAVA_OPTIONS: '-XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:MaxRAMPercentage=80.0 -XX:+ExitOnOutOfMemoryError'
+      DT_BCRYPT_ROUNDS: '4'
+      DT_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/dtrack'
+      DT_DATASOURCE_USERNAME: 'dtrack'
+      DT_DATASOURCE_PASSWORD: 'dtrack'
+      DT_TELEMETRY_SUBMISSION_DEFAULT_ENABLED: 'false'
+      DT_TASK_SCHEDULER_ENABLED: 'false'
+      DT_OIDC_ENABLED: 'true'
+      DT_OIDC_ISSUER: 'http://hydra:4444'
+      DT_OIDC_CLIENT_ID: 'dtrack-e2e'
+      DT_OIDC_USERNAME_CLAIM: 'preferred_username'
+      DT_OIDC_USER_PROVISIONING: 'true'
+    ports:
+      - '127.0.0.1:18080:8080'
+      - '127.0.0.1:19000:9000'
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 512M
+
+  hydra:
+    image: oryd/hydra:v26.2.0
+    command: ['serve', 'all', '--dev', '--sqa-opt-out']
+    environment:
+      DSN: 'memory'
+      SECRETS_SYSTEM: 'e2e-secret-e2e-secret-e2e-secret'
+      URLS_SELF_ISSUER: 'http://hydra:4444'
+      # Tests handle login and consent with page.route, so these hosts never resolve.
+      URLS_LOGIN: 'http://login.e2e.invalid/login'
+      URLS_CONSENT: 'http://login.e2e.invalid/consent'
+      SERVE_PUBLIC_CORS_ENABLED: 'true'
+      SERVE_PUBLIC_CORS_ALLOWED_ORIGINS: 'http://127.0.0.1:18081'
+      OAUTH2_PKCE_ENFORCED_FOR_PUBLIC_CLIENTS: 'true'
+    ports:
+      - '127.0.0.1:4444:4444'
+      - '127.0.0.1:4445:4445'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: 'dtrack'
+      POSTGRES_USER: 'dtrack'
+      POSTGRES_PASSWORD: 'dtrack'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - type: tmpfs
+        target: /var/lib/postgresql
+        tmpfs:
+          size: 1G
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1536M

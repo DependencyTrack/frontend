@@ -2,79 +2,133 @@
   <div class="app">
     <DefaultHeader />
     <div class="app-body">
-      <AppSidebar ref="sidebar" fixed>
-        <SidebarHeader />
-        <SidebarForm />
-        <SidebarNav :navItems="permissibleNav"></SidebarNav>
-        <SidebarFooter />
-        <SidebarMinimizer />
-      </AppSidebar>
+      <div ref="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+          <img
+            class="sidebar-brand-full logo-dark-theme"
+            src="@/assets/img/brand/dt-logo-white-text.svg"
+            height="32"
+            alt="Dependency-Track Logo"
+          />
+          <img
+            class="sidebar-brand-full logo-light-theme"
+            src="@/assets/img/brand/dt-logo-dark-text.svg"
+            height="32"
+            alt="Dependency-Track Logo"
+          />
+          <img
+            class="sidebar-brand-minimized"
+            src="@/assets/img/brand/dt-logo-symbol.svg"
+            height="26"
+            alt="Dependency-Track Logo"
+          />
+        </div>
+        <nav class="sidebar-nav">
+          <ul class="nav">
+            <template v-for="item in permissibleNav">
+              <li v-if="item.title" :key="item.name" class="nav-title">
+                {{ item.name }}
+              </li>
+              <li
+                v-else
+                :key="item.url"
+                class="nav-item"
+                @click="hideMobileSidebar"
+              >
+                <router-link
+                  :to="item.url"
+                  class="nav-link"
+                  v-bind="item.attributes"
+                >
+                  <i class="nav-icon" :class="item.icon"></i> {{ item.name }}
+                </router-link>
+              </li>
+            </template>
+          </ul>
+        </nav>
+        <ul class="nav sidebar-profile">
+          <ProfileDropdown
+            @editProfile="showProfileEditModal = true"
+            @about="showAboutModal = true"
+          />
+        </ul>
+        <div class="sidebar-footer">
+          <button
+            class="sidebar-about"
+            type="button"
+            @click="showAboutModal = true"
+          >
+            {{ dtrack.application }}
+            <span class="d-block">v{{ dtrack.version }}</span>
+          </button>
+          <button
+            class="sidebar-minimizer"
+            type="button"
+            @click="handleMinimizedUpdate"
+          ></button>
+        </div>
+      </div>
+      <profile-edit-modal v-model="showProfileEditModal" />
+      <about-modal v-model="showAboutModal" />
       <main class="main">
-        <Breadcrumb :list="list" />
+        <ol class="breadcrumb">
+          <template v-for="(crumb, index) in list">
+            <li
+              v-if="crumb.name || crumb.meta.label"
+              :key="index"
+              class="breadcrumb-item"
+            >
+              <span v-if="index === list.length - 1" class="active">{{
+                (crumb.meta && crumb.meta.label) || crumb.name
+              }}</span>
+              <router-link v-else :to="crumb">{{
+                (crumb.meta && crumb.meta.label) || crumb.name
+              }}</router-link>
+            </li>
+          </template>
+        </ol>
         <div class="container-fluid">
           <router-view></router-view>
         </div>
       </main>
     </div>
-    <DefaultFooter />
-    <profile-edit-modal />
   </div>
 </template>
 
 <script>
-import {
-  Sidebar as AppSidebar,
-  SidebarFooter,
-  SidebarForm,
-  SidebarHeader,
-  SidebarMinimizer,
-  SidebarNav,
-  Aside as AppAside,
-  Breadcrumb,
-} from '@coreui/vue';
-import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
-import DefaultHeader from './DefaultHeader';
-import DefaultFooter from './DefaultFooter';
+import DefaultHeader from './DefaultHeader.vue';
+import ProfileDropdown from './ProfileDropdown.vue';
+import AboutModal from '../views/components/AboutModal.vue';
+import ProfileEditModal from '../views/components/ProfileEditModal.vue';
 import EventBus from '../shared/eventbus';
-import ProfileEditModal from '../views/components/ProfileEditModal';
+import state from '../shared/state';
 import * as permissions from '../shared/permissions';
 import * as featureFlags from '@/shared/featureFlags';
 
 export default {
   name: 'DefaultContainer',
   components: {
-    ProfileEditModal,
-    AppSidebar,
-    AppAside,
-    Breadcrumb,
-    DefaultHeaderProfileDropdown,
-    SidebarForm,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarNav,
-    SidebarMinimizer,
-    DefaultFooter,
+    AboutModal,
     DefaultHeader,
+    ProfileDropdown,
+    ProfileEditModal,
   },
   data() {
     return {
+      showProfileEditModal: false,
+      showAboutModal: false,
       isSidebarMinimized: true,
       breadcrumbs: [],
       nav: [
         {
           name: this.$t('message.dashboard'),
           url: '/dashboard',
-          icon: 'icon-speedometer',
+          icon: 'fa-solid fa-gauge-high',
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
           title: true,
           name: this.$t('message.portfolio'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permission: permissions.VIEW_PORTFOLIO,
         },
         {
@@ -110,11 +164,6 @@ export default {
         {
           title: true,
           name: this.$t('message.global_audit'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permissions: [
             permissions.VIEW_VULNERABILITY,
             permissions.VIEW_POLICY_VIOLATION,
@@ -141,11 +190,6 @@ export default {
         {
           title: true,
           name: this.$t('message.administration'),
-          class: '',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
           permission: [
             permissions.SYSTEM_CONFIGURATION,
             permissions.SYSTEM_CONFIGURATION_CREATE,
@@ -184,8 +228,20 @@ export default {
   methods: {
     handleMinimizedUpdate() {
       this.isSidebarMinimized = !this.isSidebarMinimized;
+      document.body.classList.toggle(
+        'sidebar-minimized',
+        this.isSidebarMinimized,
+      );
       if (localStorage) {
         localStorage.setItem('isSidebarMinimized', this.isSidebarMinimized);
+      }
+    },
+    hideMobileSidebar() {
+      document.body.classList.remove('sidebar-show');
+    },
+    onDocumentClick(event) {
+      if (!this.$refs.sidebar.contains(event.target)) {
+        this.hideMobileSidebar();
       }
     },
     generateBreadcrumbs: function generateBreadcrumbs(
@@ -239,22 +295,18 @@ export default {
       localStorage && localStorage.getItem('isSidebarMinimized') !== null
         ? localStorage.getItem('isSidebarMinimized') === 'true'
         : false;
-    const sidebar = document.body;
-    if (sidebar) {
-      if (this.isSidebarMinimized) {
-        sidebar.classList.add('sidebar-minimized');
-      } else {
-        sidebar.classList.remove('sidebar-minimized');
-      }
-    }
-    this.$nextTick(() => {
-      const sidebarMinimizer = this.$el.querySelector('.sidebar-minimizer');
-      if (sidebarMinimizer) {
-        sidebarMinimizer.addEventListener('click', this.handleMinimizedUpdate);
-      }
-    });
+    document.body.classList.add('sidebar-fixed', 'sidebar-lg-show');
+    document.body.classList.toggle(
+      'sidebar-minimized',
+      this.isSidebarMinimized,
+    );
+    document.addEventListener('click', this.onDocumentClick);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.onDocumentClick);
   },
   computed: {
+    dtrack: () => state.dtrack,
     name() {
       return this.$route.name;
     },
@@ -284,17 +336,23 @@ export default {
               permissions.hasPermission(permission),
             ))
         ) {
-          array.push(item);
+          // Router 4 marks a link active only on its own route, Router 3 also on the paths below it.
+          const path = this.$route.path;
+          const active =
+            item.url && (path === item.url || path.startsWith(`${item.url}/`));
+          array.push(
+            active ? { ...item, attributes: { class: 'open active' } } : item,
+          );
         }
       }
       return array;
     },
   },
   created() {
-    EventBus.$on('crumble', () => {
+    EventBus.on('crumble', () => {
       this.breadcrumbs = [];
     });
-    EventBus.$on(
+    EventBus.on(
       'addCrumb',
       (crumb, subSectionName, subSectionUuid, subsectionLabel) => {
         if (crumb) {

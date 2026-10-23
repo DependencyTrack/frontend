@@ -3,9 +3,8 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          size="md"
           variant="outline-primary"
-          v-b-modal.createManagedUserModal
+          @click="showCreateManagedUserModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
@@ -18,7 +17,10 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-managed-user-modal v-on:refreshTable="refreshTable" />
+    <create-managed-user-modal
+      v-model="showCreateManagedUserModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -40,20 +42,21 @@ export default {
     CreateManagedUserModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       this.$refs.table.updateRow({ index, row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+  beforeUnmount() {
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     return {
+      showCreateManagedUserModal: false,
       rowEvents: {
         update: 'admin:managedusers:rowUpdate',
         delete: 'admin:managedusers:rowDeleted',
@@ -114,13 +117,13 @@ export default {
         detailViewIcon: false,
         detailViewByClick: true,
         detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            render: () => (
-              <UserDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+          return this.cell(UserDetails, {
+            row,
+            index,
+            rowEvents: this.rowEvents,
           });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');

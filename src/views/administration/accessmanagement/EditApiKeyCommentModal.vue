@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    :id="`editApiKeyCommentModal-${keyId}`"
+    v-model="visible"
     @show="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.edit_api_key_comment')"
   >
@@ -18,11 +16,11 @@
       :label="$t('admin.api_key_comment')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="updateComment()">{{
+      <b-button variant="primary" @click="updateComment()">{{
         $t('message.update')
       }}</b-button>
     </template>
@@ -31,10 +29,11 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
   },
@@ -42,6 +41,7 @@ export default {
     keyId: String,
     apiKey: Object,
   },
+  emits: ['commentUpdated'],
   data() {
     return {
       comment: null,
@@ -60,12 +60,9 @@ export default {
           },
         )
         .then((response) => {
-          this.apiKey.comment = response.data.comment;
+          this.$emit('commentUpdated', response.data.comment);
           this.$toastr.s(this.$t('admin.api_key_comment_updated'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            `editApiKeyCommentModal-${this.keyId}`,
-          );
+          this.visible = false;
         });
     },
     resetValues: function () {

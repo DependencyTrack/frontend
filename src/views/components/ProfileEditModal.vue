@@ -1,10 +1,8 @@
 <template>
   <b-modal
-    id="profileEditModal"
-    size="md"
+    v-model="visible"
     @show="getSelf"
     @hidden="resetValues"
-    hide-header-close
     no-stacking
     :title="$t('message.profile_update')"
   >
@@ -33,11 +31,11 @@
       :feedback-text="$t('admin.required_email')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="updateUser()">{{
+      <b-button variant="primary" @click="updateUser()">{{
         $t('message.update')
       }}</b-button>
     </template>
@@ -45,16 +43,17 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import globalVarsMixin from '@/mixins/globalVarsMixin';
-import EventBus from '@/shared/eventbus';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
+import state from '@/shared/state';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProfileEditModal',
-  mixins: [globalVarsMixin],
+  mixins: [modalMixin],
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data: () => {
     return {
       username: null,
@@ -64,27 +63,30 @@ export default {
   },
   methods: {
     getSelf: function () {
-      this.username = this.currentUser.username;
-      this.fullname = this.currentUser.fullname;
-      this.email = this.currentUser.email;
+      this.username = state.currentUser.username;
+      this.fullname = state.currentUser.fullname;
+      this.email = state.currentUser.email;
     },
     updateUser: function () {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_MANAGED}`;
+      let url = `${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`;
       this.axios
         .post(url, {
           username: this.username,
           fullname: this.fullname,
           email: this.email,
         })
+        .then(() =>
+          this.axios.get(`${this.$api.BASE_URL}/${this.$api.URL_USER_SELF}`),
+        )
         .then((response) => {
-          EventBus.$emit('profileUpdated');
+          state.currentUser = response.data;
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.profile_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'profileEditModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.username = null;

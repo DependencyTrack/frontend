@@ -8,10 +8,8 @@
         </b-card-body>
         <widget-portfolio-vulnerabilities
           ref="widgetPortfolioVulnerabilities"
-          chartId="card-chart-01"
           class="chart-wrapper px-3"
           style="height: 70px"
-          :height="70"
         />
       </b-card>
     </b-col>
@@ -23,10 +21,8 @@
         </b-card-body>
         <widget-projects-at-risk
           ref="widgetPortfolioVulnerableProjects"
-          chartId="card-chart-02"
           class="chart-wrapper px-3"
           style="height: 70px"
-          :height="70"
         />
       </b-card>
     </b-col>
@@ -38,10 +34,8 @@
         </b-card-body>
         <widget-vulnerable-components
           ref="widgetPortfolioVulnerableComponents"
-          chartId="card-chart-03"
           class="chart-wrapper px-3"
           style="height: 70px"
-          :height="70"
         />
       </b-card>
     </b-col>
@@ -53,10 +47,8 @@
         </b-card-body>
         <widget-inherited-risk-score
           ref="widgetPortfolioInheritedRisk"
-          chartId="card-chart-04"
           class="chart-wrapper px-3"
           style="height: 70px"
-          :height="70"
         />
       </b-card>
     </b-col>
@@ -64,10 +56,10 @@
 </template>
 
 <script>
-import WidgetPortfolioVulnerabilities from './WidgetPortfolioVulnerabilities';
-import WidgetProjectsAtRisk from './WidgetProjectsAtRisk';
-import WidgetVulnerableComponents from './WidgetVulnerableComponents';
-import WidgetInheritedRiskScore from './WidgetInheritedRiskScore';
+import WidgetPortfolioVulnerabilities from './WidgetPortfolioVulnerabilities.vue';
+import WidgetProjectsAtRisk from './WidgetProjectsAtRisk.vue';
+import WidgetVulnerableComponents from './WidgetVulnerableComponents.vue';
+import WidgetInheritedRiskScore from './WidgetInheritedRiskScore.vue';
 
 export default {
   components: {

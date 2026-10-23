@@ -1,32 +1,42 @@
-import Vue from 'vue';
+import { h, render } from 'vue';
+
+let nextCellId = 0;
 
 export default {
-  data() {
-    return {
-      vueFormatters: [],
-    };
+  created() {
+    this.pendingCells = new Map();
+    this.mountedCells = [];
+  },
+  beforeUnmount() {
+    this.mountedCells.forEach(({ container }) => render(null, container));
   },
   methods: {
-    vueFormatter(obj) {
-      const key = `_vue_formatter_${this.vueFormatters.length}`;
-      this.vueFormatters.push({
-        el: `.${key}`,
-        name: key,
-        ...obj,
-      });
-      return `<div class="${key}"/>`;
+    // Returns a placeholder for a formatter, which mountCells() replaces with the component.
+    cell(component, props) {
+      const id = nextCellId++;
+      this.pendingCells.set(id, { component, props });
+      return `<div data-cell-id="${id}"></div>`;
     },
-    vueFormatterInit() {
-      if (!this.vueFormatters.length) {
-        return;
-      }
-      for (let i = this.vueFormatters.length - 1; i >= 0; i--) {
-        const formatter = this.vueFormatters[i];
-        if (document.getElementsByClassName(formatter.name)) {
-          new Vue(formatter);
-          this.vueFormatters.splice(i, 1);
+    mountCells() {
+      this.mountedCells = this.mountedCells.filter(({ vnode, container }) => {
+        if (vnode.el.isConnected) {
+          return true;
         }
-      }
+        render(null, container);
+        return false;
+      });
+      this.pendingCells.forEach(({ component, props }, id) => {
+        const el = document.querySelector(`[data-cell-id="${id}"]`);
+        if (el) {
+          const vnode = h(component, props);
+          vnode.appContext = this.$.appContext;
+          const container = document.createElement('div');
+          render(vnode, container);
+          el.replaceWith(...container.childNodes);
+          this.mountedCells.push({ vnode, container });
+        }
+      });
+      this.pendingCells.clear();
     },
   },
 };

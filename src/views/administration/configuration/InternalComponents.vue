@@ -47,8 +47,7 @@
 </template>
 
 <script>
-import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
 export default {
@@ -57,7 +56,6 @@ export default {
     header: String,
   },
   components: {
-    ValidationObserver,
     BValidatedInputGroupFormInput,
   },
   data() {
@@ -99,10 +97,10 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/internal/identify`;
       this.axios
         .get(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('admin.internal_identification_queued'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.s(this.$t('admin.internal_identification_error'));
         });
     },

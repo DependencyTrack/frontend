@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="projectPropertiesModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.project_properties')"
   >
@@ -13,18 +12,17 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
         v-permission:or="[
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_DELETE',
         ]"
-        size="md"
         variant="outline-danger"
         @click="deleteProperty"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
@@ -32,9 +30,8 @@
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_CREATE',
         ]"
-        size="md"
         variant="primary"
-        v-b-modal.projectCreatePropertyModal
+        @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
       >
     </template>
@@ -44,12 +41,15 @@
 <script>
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectPropertiesModal',
+  mixins: [modalMixin],
   props: {
     uuid: String,
   },
+  emits: ['createProperty'],
   data() {
     return {
       columns: [
@@ -61,7 +61,7 @@ export default {
           title: this.$t('message.group'),
           field: 'groupName',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -69,7 +69,7 @@ export default {
           title: this.$t('message.name'),
           field: 'propertyName',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -78,7 +78,7 @@ export default {
           field: 'propertyValue',
           sortable: false,
           editable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -86,7 +86,7 @@ export default {
           title: this.$t('message.type'),
           field: 'propertyType',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -95,7 +95,7 @@ export default {
           field: 'description',
           sortable: false,
           visible: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -136,11 +136,11 @@ export default {
               propertyName: selections[i].propertyName,
             },
           })
-          .then((response) => {
+          .then(() => {
             this.$refs.table.refresh({ silent: true });
             this.$toastr.s(this.$t('message.property_deleted'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       }
@@ -149,7 +149,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

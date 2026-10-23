@@ -5,28 +5,22 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    auto-apply
     @hide="onDropdownHide"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>= {{ displayValue }}</template>
 
-    <b-form-group class="mb-2">
-      <b-form-select
+    <div class="filter-pill-list">
+      <b-form-radio-group
         :id="`enum-filter-pill-value-${fieldName}`"
         v-model="tmpValue"
-        :options="selectOptions"
-        size="sm"
-      ></b-form-select>
-    </b-form-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpValue"
-        >{{ $t('message.apply') }}
-      </b-button>
+        :options="radioOptions"
+        :aria-label="fieldLabel"
+        stacked
+        @update:model-value="applyFilter"
+      ></b-form-radio-group>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -60,18 +54,19 @@ export default {
         return true;
       },
     },
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: null,
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val || null;
@@ -80,32 +75,23 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value !== null && this.value !== '';
+      return this.modelValue !== null && this.modelValue !== '';
     },
     displayValue() {
-      if (!this.value) return '';
+      if (!this.modelValue) return '';
       const option = this.options.find(
-        (opt) => (typeof opt === 'object' ? opt.value : opt) === this.value,
+        (opt) =>
+          (typeof opt === 'object' ? opt.value : opt) === this.modelValue,
       );
       if (option && typeof option === 'object') {
         return option.text;
       }
-      return this.value;
+      return this.modelValue;
     },
-    selectOptions() {
-      return [
-        {
-          value: null,
-          text: `-- ${this.$t('message.select')} --`,
-          disabled: true,
-        },
-        ...this.options.map((opt) => {
-          if (typeof opt === 'object') {
-            return opt;
-          }
-          return { value: opt, text: opt };
-        }),
-      ];
+    radioOptions() {
+      return this.options.map((opt) =>
+        typeof opt === 'object' ? opt : { value: opt, text: opt },
+      );
     },
   },
   methods: {
@@ -114,23 +100,23 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpValue = this.value;
+        this.tmpValue = this.modelValue;
       } else {
         this.tmpValue = null;
       }
     },
-    applyFilter() {
-      if (!this.tmpValue) {
+    applyFilter(selected) {
+      if (!selected) {
         return;
       }
 
-      this.$emit('input', this.tmpValue);
+      this.$emit('update:modelValue', selected);
       this.$refs.pill.hide();
     },
     clearFilter() {
       this.tmpValue = null;
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

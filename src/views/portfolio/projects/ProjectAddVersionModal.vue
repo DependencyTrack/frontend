@@ -1,10 +1,8 @@
 <template>
   <b-modal
-    id="projectAddVersionModal"
+    v-model="visible"
     @shown="focusVersionInput"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isCloning"
     :no-close-on-esc="isCloning"
@@ -24,12 +22,11 @@
             <b-form-input
               id="input-1"
               ref="versionInput"
-              v-model="version"
+              v-model.trim="version"
               class="required"
-              trim
               required
               :state="versionInvalidFeedback ? false : null"
-              @input="versionInvalidFeedback = null"
+              @update:model-value="versionInvalidFeedback = null"
             />
           </b-form-group>
         </b-col>
@@ -104,22 +101,17 @@
       </b-form-checkbox>
     </b-form>
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isCloning"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isCloning" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
         type="submit"
         form="addVersionForm"
-        size="md"
         variant="primary"
         :disabled="isSubmitButtonDisabled || isCloning"
       >
-        <b-spinner v-if="isCloning" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isCloning" small class="me-1"></b-spinner>
         {{ $t('message.create') }}
       </b-button>
     </template>
@@ -128,9 +120,11 @@
 
 <script>
 import BInputGroupFormSwitch from '@/forms/BInputGroupFormSwitch.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectAddVersionModal',
+  mixins: [modalMixin],
   components: { BInputGroupFormSwitch },
   props: {
     uuid: String,
@@ -219,7 +213,7 @@ export default {
           includes: includes,
         })
         .then((response) => {
-          this.$root.$emit('bv::hide::modal', 'projectAddVersionModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.project_created'));
           this.$router.push({
             name: 'Project',
@@ -260,8 +254,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-.custom-control {
+.form-check {
   padding-bottom: 0.3rem;
 }
 </style>

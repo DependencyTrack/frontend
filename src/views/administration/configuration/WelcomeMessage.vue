@@ -7,16 +7,15 @@
           <b-form-group
             :label="$t('admin.welcome_message')"
             label-size="lg"
-            label-class="font-weight-bold pt-0 mb-2"
+            label-class="fw-bold pt-0 mb-2"
           >
             <div id="customToolbar">
-              <c-switch
+              <b-form-checkbox
                 id="isWelcomeMessage"
-                color="primary"
                 v-model="isWelcomeMessage"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.welcome_message_enable') }}
+                switch
+                >{{ $t('admin.welcome_message_enable') }}</b-form-checkbox
+              >
             </div>
             <textarea
               ref="editor"
@@ -42,10 +41,12 @@
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
-          <b-card v-if="isWelcomeMessage" class="bg-grey-900">
-            <div slot="header">
-              <h4>{{ $t('admin.preview') }}</h4>
-            </div>
+          <b-card v-if="isWelcomeMessage">
+            <template v-slot:header>
+              <div>
+                <h4>{{ $t('admin.preview') }}</h4>
+              </div>
+            </template>
             <p><span v-html="sanitizedWelcomeMessage" /></p>
           </b-card>
         </b-col>
@@ -55,7 +56,6 @@
 </template>
 <script>
 import axios from 'axios';
-import { Switch as cSwitch } from '@coreui/vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 import DOMPurify from 'dompurify';
@@ -64,9 +64,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {

@@ -1,19 +1,86 @@
+<template>
+  <div>
+    <line-chart v-if="chartData" :data="chartData" :options="options" />
+  </div>
+</template>
+
 <script>
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { themeColor } from '@/shared/theme';
 
 export default {
-  extends: Line,
-  props: {
-    height: Number,
+  components: { LineChart: Line },
+  data() {
+    return {
+      metrics: null,
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            intersect: true,
+            mode: 'index',
+            position: 'nearest',
+            callbacks: {
+              labelColor: function (context) {
+                return {
+                  borderColor: context.dataset.borderColor,
+                  backgroundColor: context.dataset.borderColor,
+                };
+              },
+              title: function (tooltipItems) {
+                const { chart, dataIndex } = tooltipItems[0];
+                return common.formatTimestamp(
+                  chart.data.labels[dataIndex],
+                  true,
+                );
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              drawOnChartArea: false,
+            },
+            ticks: {
+              callback: function (value) {
+                return common.formatTimestamp(this.getLabelForValue(value));
+              },
+            },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              maxTicksLimit: 2,
+            },
+          },
+        },
+        elements: {
+          line: {
+            tension: 0.1,
+            borderWidth: 2,
+          },
+          point: {
+            radius: 0,
+            hitRadius: 20,
+            hoverRadius: 4,
+            hoverBorderWidth: 3,
+          },
+        },
+      },
+    };
   },
-  methods: {
-    render: function (metrics) {
-      const failStyle = getStyle('--notification-fail');
-      const warnStyle = getStyle('--notification-warn');
-      const infoStyle = getStyle('--notification-info');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const failStyle = themeColor('--notification-fail');
+      const warnStyle = themeColor('--notification-warn');
+      const infoStyle = themeColor('--notification-info');
 
       let labels = [];
       let failData = [];
@@ -34,98 +101,37 @@ export default {
         }
       }
 
-      this.renderChart(
-        {
-          labels: labels,
-          datasets: [
-            {
-              label: this.$t('policy_violation.fails'),
-              backgroundColor: 'transparent',
-              borderColor: failStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: failData,
-            },
-            {
-              label: this.$t('policy_violation.warns'),
-              backgroundColor: 'transparent',
-              borderColor: warnStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: warnData,
-            },
-            {
-              label: this.$t('policy_violation.infos'),
-              backgroundColor: 'transparent',
-              borderColor: infoStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: infoData,
-            },
-          ],
-        },
-        {
-          tooltips: {
-            enabled: false,
-            custom: CustomTooltips,
-            intersect: true,
-            mode: 'index',
-            position: 'nearest',
-            callbacks: {
-              labelColor: function (tooltipItem, chart) {
-                return {
-                  backgroundColor:
-                    chart.data.datasets[tooltipItem.datasetIndex].borderColor,
-                };
-              },
-              title: function (tooltipItems, data) {
-                return common.formatTimestamp(
-                  data.labels[tooltipItems[0].index],
-                  true,
-                );
-              },
-            },
+      return {
+        labels: labels,
+        datasets: [
+          {
+            label: this.$t('policy_violation.fails'),
+            backgroundColor: 'transparent',
+            borderColor: failStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: failData,
           },
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
+          {
+            label: this.$t('policy_violation.warns'),
+            backgroundColor: 'transparent',
+            borderColor: warnStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: warnData,
           },
-          scales: {
-            xAxes: [
-              {
-                gridLines: {
-                  drawOnChartArea: false,
-                },
-                ticks: {
-                  callback: function (value) {
-                    return common.formatTimestamp(value);
-                  },
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                  maxTicksLimit: 1,
-                },
-                gridLines: {
-                  display: true,
-                },
-              },
-            ],
+          {
+            label: this.$t('policy_violation.infos'),
+            backgroundColor: 'transparent',
+            borderColor: infoStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: infoData,
           },
-          elements: {
-            line: {
-              tension: 0.1,
-              borderWidth: 2,
-            },
-            point: {
-              radius: 0,
-              hitRadius: 20,
-              hoverRadius: 4,
-              hoverBorderWidth: 3,
-            },
-          },
-        },
-      );
+        ],
+      };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

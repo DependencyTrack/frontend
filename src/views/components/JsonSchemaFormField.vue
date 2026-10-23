@@ -7,10 +7,10 @@
       <b-form-checkbox
         :id="fieldId"
         switch
-        :checked="value"
+        :model-value="modelValue"
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
-        @change="onBooleanChange"
+        @update:model-value="onBooleanChange"
       >
         {{ label }}
       </b-form-checkbox>
@@ -33,9 +33,8 @@
         {{ label }}
         <i
           v-if="isSecretRef"
-          v-b-tooltip.hover
-          class="fa fa-key text-warning ml-1"
-          :title="$t('admin.secret_reference_field_tooltip')"
+          v-b-tooltip.hover="$t('admin.secret_reference_field_tooltip')"
+          class="fa fa-key text-warning ms-1"
         ></i>
       </template>
       <template
@@ -49,7 +48,7 @@
         v-bind="fieldProps"
         :aria-invalid="ariaInvalid"
         :aria-describedby="ariaDescribedBy"
-        @input="onInput"
+        @update:modelValue="onInput"
       />
       <b-form-invalid-feedback v-if="!isComplexType" :id="feedbackId">
         {{ validationError }}
@@ -59,13 +58,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+import {
+  BFormInput,
+  BFormSelect,
+  BFormTextarea,
+} from 'bootstrap-vue-next/components';
 import Showdown from './Showdown.vue';
 import SecretRefSelect from './SecretRefSelect.vue';
 
-const JsonSchemaObjectField = () => import('./JsonSchemaObjectField.vue');
-const JsonSchemaArrayField = () => import('./JsonSchemaArrayField.vue');
-const JsonSchemaTabbedArrayField = () =>
-  import('./JsonSchemaTabbedArrayField.vue');
+const JsonSchemaObjectField = defineAsyncComponent(
+  () => import('./JsonSchemaObjectField.vue'),
+);
+const JsonSchemaArrayField = defineAsyncComponent(
+  () => import('./JsonSchemaArrayField.vue'),
+);
+const JsonSchemaTabbedArrayField = defineAsyncComponent(
+  () => import('./JsonSchemaTabbedArrayField.vue'),
+);
 
 export default {
   name: 'JsonSchemaFormField',
@@ -82,7 +92,7 @@ export default {
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       type: [String, Number, Boolean, Array, Object],
       default: null,
     },
@@ -99,6 +109,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:modelValue'],
   computed: {
     fieldId() {
       return `field-${this.propertyName}`;
@@ -158,12 +169,12 @@ export default {
         return 'secret-ref-select';
       }
       if (this.schema.enum) {
-        return 'b-form-select';
+        return BFormSelect;
       }
       if (this.schema['x-ui-hint']?.inputType === 'textarea') {
-        return 'b-form-textarea';
+        return BFormTextarea;
       }
-      return 'b-form-input';
+      return BFormInput;
     },
     fieldProps() {
       const baseProps = {
@@ -174,7 +185,7 @@ export default {
       if (this.schema.type === 'object') {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
           schema: this.schema,
           propertyName: this.propertyName,
           validationErrors: this.validationErrors,
@@ -187,7 +198,7 @@ export default {
           : {};
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
           schema: this.schema,
           propertyName: this.propertyName,
           validationErrors: this.validationErrors,
@@ -199,14 +210,14 @@ export default {
       if (this.isSecretRef) {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
         };
       }
 
       if (this.schema.enum) {
         return {
           ...baseProps,
-          value: this.value,
+          modelValue: this.modelValue,
           options: this.enumOptions,
           required: !!this.schema.isRequired,
         };
@@ -214,7 +225,7 @@ export default {
 
       return {
         ...baseProps,
-        value: this.value,
+        modelValue: this.modelValue,
         type: this.getInputType(),
         required: !!this.schema.isRequired,
         placeholder: this.placeholder,
@@ -224,8 +235,10 @@ export default {
         maxlength: this.schema.maxLength,
         pattern: this.schema.pattern,
         readonly: this.schema.readOnly,
-        trim:
-          this.schema.type === 'string' && this.schema.format !== 'password',
+        modelModifiers: {
+          trim:
+            this.schema.type === 'string' && this.schema.format !== 'password',
+        },
       };
     },
     isTabbedArray() {
@@ -286,10 +299,10 @@ export default {
       } else if (this.schema.type === 'string' && !this.isArrayItem) {
         processedValue = newValue === '' ? null : newValue;
       }
-      this.$emit('input', processedValue);
+      this.$emit('update:modelValue', processedValue);
     },
     onBooleanChange(newValue) {
-      this.$emit('input', !!newValue);
+      this.$emit('update:modelValue', !!newValue);
     },
   },
 };

@@ -5,34 +5,26 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    :apply-disabled="tmpValue.length === 0"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>= {{ displayValue }}</template>
 
-    <div class="mb-2 d-flex justify-content-between">
-      <b-link size="sm" @click="selectAll">{{
-        $t('message.select_all')
-      }}</b-link>
-      <b-link size="sm" @click="deselectAll">{{
-        $t('message.clear_all')
-      }}</b-link>
+    <div class="filter-pill-actions mb-2">
+      <b-link @click="selectAll">{{ $t('message.select_all') }}</b-link>
+      <span class="filter-pill-actions-separator" aria-hidden="true">·</span>
+      <b-link @click="deselectAll">{{ $t('message.clear_all') }}</b-link>
     </div>
-    <b-form-checkbox-group
-      v-model="tmpValue"
-      :options="options"
-      stacked
-      class="mb-2"
-    ></b-form-checkbox-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="tmpValue.length === 0"
-        >{{ $t('message.apply') }}
-      </b-button>
+    <div class="filter-pill-list">
+      <b-form-checkbox-group
+        v-model="tmpValue"
+        :options="options"
+        :aria-label="fieldLabel"
+        stacked
+      ></b-form-checkbox-group>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -60,18 +52,19 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: [],
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val && val.length > 0 ? [...val] : [];
@@ -80,11 +73,11 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.length > 0;
+      return this.modelValue && this.modelValue.length > 0;
     },
     displayValue() {
-      if (!this.value || this.value.length === 0) return '';
-      return this.value
+      if (!this.modelValue || this.modelValue.length === 0) return '';
+      return this.modelValue
         .map((v) => {
           const option = this.options.find(
             (opt) => (typeof opt === 'object' ? opt.value : opt) === v,
@@ -108,7 +101,7 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpValue = [...this.value];
+        this.tmpValue = [...this.modelValue];
       } else {
         this.tmpValue = [];
       }
@@ -117,13 +110,13 @@ export default {
       if (this.tmpValue.length === 0) {
         return;
       }
-      this.$emit('input', [...this.tmpValue]);
+      this.$emit('update:modelValue', [...this.tmpValue]);
       this.$refs.pill.hide();
     },
     clearFilter() {
       this.tmpValue = [];
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

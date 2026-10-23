@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="selectLicenseModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.select_license')"
   >
@@ -13,12 +12,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="$emit('selection', $refs.table.getSelections())"
         >{{ $t('message.select') }}</b-button
@@ -30,16 +28,14 @@
 <script>
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 import common from '../../shared/common';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  emits: ['selection'],
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -50,7 +46,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -58,7 +54,7 @@ export default {
           title: this.$t('message.spdx_license_id'),
           field: 'licenseId',
           sortable: true,
-          formatter: function (value, row, index) {
+          formatter: function (value) {
             let url = xssFilters.uriInUnQuotedAttr(
               '../licenses/' + encodeURIComponent(value),
             );

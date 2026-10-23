@@ -6,7 +6,6 @@
       :columns="columns"
       :data="data"
       :options="options"
-      @on-load-success="this.vueFormatterInit"
     >
     </bootstrap-table>
   </div>
@@ -14,18 +13,18 @@
 
 <script>
 import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow.vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import * as permissions from '../../../shared/permissions';
 import routerMixin from '../../../mixins/routerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import ModalLinkCell from '@/views/components/ModalLinkCell.vue';
 import TaggedCollectionProjectListModal from '@/views/portfolio/tags/TaggedCollectionProjectListModal.vue';
 import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotificationRuleListModal.vue';
 import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListModal.vue';
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import TaggedVulnerabilityListModal from '@/views/portfolio/tags/TaggedVulnerabilityListModal.vue';
-import i18n from '@/i18n';
 import MurmurHash2 from 'imurmurhash';
 
 export default {
@@ -59,6 +58,14 @@ export default {
       permissions.TAG_MANAGEMENT,
       permissions.TAG_MANAGEMENT_DELETE,
     ]);
+    const countCell = (modal) => (value, row) =>
+      value === 0
+        ? value
+        : this.cell(ModalLinkCell, {
+            text: value,
+            modal,
+            modalProps: { tag: row.name },
+          });
     return {
       errorsByTagName: {},
       columns: [
@@ -79,154 +86,31 @@ export default {
           title: this.$t('message.projects'),
           field: 'projectCount',
           sortable: true,
-          formatter: (value, row, index) => {
-            if (value === 0) {
-              return value;
-            }
-
-            return this.vueFormatter({
-              i18n,
-              components: {
-                TaggedProjectListModal,
-              },
-              mixins: [permissionsMixin],
-              template: `
-                  <div>
-                    <b-link v-b-modal="\`taggedProjectListModal-${index}\`">{{ value }}</b-link>
-                    <tagged-project-list-modal :tag="tagName" :index="index"/>
-                  </div>`,
-              data() {
-                return {
-                  index: index,
-                  tagName: row.name,
-                  error: row.error,
-                  value: value,
-                };
-              },
-            });
-          },
+          formatter: countCell(TaggedProjectListModal),
         },
         {
           title: this.$t('message.collection_projects'),
           field: 'collectionProjectCount',
           sortable: true,
-          formatter: (value, row, index) => {
-            if (value === 0) {
-              return value;
-            }
-
-            return this.vueFormatter({
-              i18n,
-              components: {
-                TaggedCollectionProjectListModal,
-              },
-              mixins: [permissionsMixin],
-              template: `
-                <div>
-                  <b-link v-b-modal="\`taggedCollectionProjectListModal-${index}\`">{{ value }}</b-link>
-                  <tagged-collection-project-list-modal :tag="tagName" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  tagName: row.name,
-                  error: row.error,
-                  value: value,
-                };
-              },
-            });
-          },
+          formatter: countCell(TaggedCollectionProjectListModal),
         },
         {
           title: this.$t('message.policies'),
           field: 'policyCount',
           sortable: true,
-          formatter: (value, row, index) => {
-            if (value === 0) {
-              return value;
-            }
-
-            return this.vueFormatter({
-              i18n,
-              components: {
-                TaggedPoliciesListModal,
-              },
-              mixins: [permissionsMixin],
-              template: `
-                  <div>
-                    <b-link v-b-modal="\`taggedPoliciesListModal-${index}\`">{{ value }}</b-link>
-                    <tagged-policies-list-modal :tag="tagName" :index="index"/>
-                  </div>`,
-              data() {
-                return {
-                  index: index,
-                  tagName: row.name,
-                  value: value,
-                };
-              },
-            });
-          },
+          formatter: countCell(TaggedPoliciesListModal),
         },
         {
           title: this.$t('message.vulnerabilities'),
           field: 'vulnerabilityCount',
           sortable: true,
-          formatter: (value, row, index) => {
-            if (value === 0) {
-              return value;
-            }
-
-            return this.vueFormatter({
-              i18n,
-              components: {
-                TaggedVulnerabilityListModal,
-              },
-              mixins: [permissionsMixin],
-              template: `
-                  <div>
-                    <b-link v-b-modal="\`taggedVulnerabilityListModal-${index}\`">{{ value }}</b-link>
-                    <span v-if="error" class="fa fa-apple"></span>
-                    <tagged-vulnerability-list-modal :tag="tagName" :index="index"/>
-                  </div>`,
-              data() {
-                return {
-                  index: index,
-                  tagName: row.name,
-                  error: row.error,
-                  value: value,
-                };
-              },
-            });
-          },
+          formatter: countCell(TaggedVulnerabilityListModal),
         },
         {
           title: this.$t('admin.alerts'),
           field: 'notificationRuleCount',
           sortable: true,
-          formatter: (value, row, index) => {
-            if (value === 0) {
-              return value;
-            }
-            return this.vueFormatter({
-              i18n,
-              components: {
-                TaggedNotificationRuleListModal,
-              },
-              mixins: [permissionsMixin],
-              template: `
-                <div>
-                  <b-link v-b-modal="\`taggedNotificationRuleListModal-${index}\`">{{ value }}</b-link>
-                  <tagged-notification-rule-list-modal :tag="tagName" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  tagName: row.name,
-                  value: value,
-                };
-              },
-            });
-          },
+          formatter: countCell(TaggedNotificationRuleListModal),
         },
       ],
       data: [],
@@ -295,6 +179,7 @@ export default {
           return res;
         },
         url: `${this.$api.BASE_URL}/${this.$api.URL_TAG}`,
+        onPostBody: this.mountCells,
       },
     };
   },

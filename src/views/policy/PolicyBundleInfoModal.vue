@@ -1,12 +1,11 @@
 <template>
   <b-modal
-    id="policyBundleInfoModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     :title="$t('message.policy_bundle_info')"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
@@ -37,7 +36,7 @@
             id="bundle-created"
             input-group-size="mb-3"
             type="text"
-            :value="bundleCreated"
+            :modelValue="bundleCreated"
             lazy="true"
             feedback="false"
             autofocus="false"
@@ -46,7 +45,7 @@
           />
           <b-input-group-form-input
             id="bundle-last-sync"
-            :value="bundleLastSynced"
+            :modelValue="bundleLastSynced"
             feedback="false"
             :label="$t('message.policy_bundle_sync_timestamp')"
             disabled="true"
@@ -54,8 +53,8 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
     </template>
@@ -63,10 +62,12 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import common from '../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 export default {
   name: 'PolicyBundleInfoModal',
+  mixins: [modalMixin],
   components: {
     BInputGroupFormInput,
   },
@@ -92,12 +93,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

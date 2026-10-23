@@ -1,17 +1,33 @@
 <template>
-  <b-modal
-    id="aboutModal"
-    size="lg"
-    hide-header-close
-    no-stacking
-    :title="$t('message.about')"
-  >
+  <b-modal v-model="visible" size="lg" no-stacking :title="$t('message.about')">
     <b-row>
       <b-col>
-        <img src="@/assets/img/brand/dt-logo-white-text.svg" width="200" />
+        <img
+          class="logo-dark-theme"
+          src="@/assets/img/brand/dt-logo-white-text.svg"
+          alt="Dependency-Track Logo"
+          width="200"
+        />
+        <img
+          class="logo-light-theme"
+          src="@/assets/img/brand/dt-logo-dark-text.svg"
+          alt="Dependency-Track Logo"
+          width="200"
+        />
       </b-col>
       <b-col align="right">
-        <img src="@/assets/img/brand/owasp-logo-white.svg" width="120" />
+        <img
+          class="logo-dark-theme"
+          src="@/assets/img/brand/owasp-logo-white.svg"
+          alt="OWASP Logo"
+          width="120"
+        />
+        <img
+          class="logo-light-theme"
+          src="@/assets/img/brand/owasp-logo-dark.svg"
+          alt="OWASP Logo"
+          width="120"
+        />
       </b-col>
     </b-row>
     <hr />
@@ -43,7 +59,7 @@
           </li>
           <li>
             <i class="fa-li fa fa-book" aria-hidden="true"></i
-            ><a href="https://docs.dependencytrack.org/">Documentation</a>
+            ><a href="https://dependencytrack.github.io/docs/">Documentation</a>
           </li>
           <li>
             <i class="fa-li fa fa-github" aria-hidden="true"></i
@@ -108,11 +124,11 @@
         </ul>
       </b-col>
     </b-row>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <div class="mx-auto">
         Copyright &copy; OWASP Foundation. All Rights Reserved.
       </div>
-      <b-button size="md" variant="outline-primary" @click="cancel()">{{
+      <b-button variant="outline-primary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
     </template>
@@ -121,12 +137,14 @@
 
 <script>
 import common from '../../shared/common';
-import globalVarsMixin from '../../mixins/globalVarsMixin';
+import state from '../../shared/state';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'AboutModal',
-  mixins: [globalVarsMixin],
+  mixins: [modalMixin],
   computed: {
+    dtrack: () => state.dtrack,
     serverTimestamp: function () {
       return common.formatTimestamp(this.dtrack.timestamp, true);
     },

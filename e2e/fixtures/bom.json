@@ -1,0 +1,69 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "jackson-databind",
+      "group": "com.fasterxml.jackson.core",
+      "licenses": [{ "license": { "id": "Apache-2.0" } }],
+      "name": "jackson-databind",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.13.2.2",
+      "type": "library",
+      "version": "2.13.2.2"
+    },
+    {
+      "bom-ref": "jackson-core",
+      "evidence": {
+        "occurrences": [{ "location": "lib/jackson-core-2.13.2.jar" }]
+      },
+      "group": "com.fasterxml.jackson.core",
+      "hashes": [
+        {
+          "alg": "SHA-1",
+          "content": "0a6a0e0620d51833feffc67bccb51937b2345763"
+        }
+      ],
+      "licenses": [{ "license": { "id": "Apache-2.0" } }],
+      "name": "jackson-core",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.13.2",
+      "type": "library",
+      "version": "2.13.2"
+    },
+    {
+      "bom-ref": "jackson-annotations",
+      "group": "com.fasterxml.jackson.core",
+      "licenses": [{ "license": { "id": "Apache-2.0" } }],
+      "name": "jackson-annotations",
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.13.2",
+      "type": "library",
+      "version": "2.13.2"
+    }
+  ],
+  "dependencies": [
+    { "dependsOn": ["jackson-databind"], "ref": "app" },
+    {
+      "dependsOn": ["jackson-core", "jackson-annotations"],
+      "ref": "jackson-databind"
+    },
+    { "dependsOn": [], "ref": "jackson-core" },
+    { "dependsOn": [], "ref": "jackson-annotations" }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "app",
+      "name": "e2e-app",
+      "type": "application",
+      "version": "1.0.0"
+    }
+  },
+  "services": [
+    {
+      "authenticated": true,
+      "bom-ref": "e2e-service",
+      "endpoints": ["https://example.com/api"],
+      "name": "e2e-service",
+      "version": "1.0.0"
+    }
+  ],
+  "specVersion": "1.6",
+  "version": 1
+}

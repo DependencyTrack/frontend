@@ -1,8 +1,6 @@
 <template>
   <b-modal
-    id="createSecretModal"
-    size="md"
-    hide-header-close
+    v-model="visible"
     no-stacking
     :title="$t('admin.create_secret')"
     @ok="onOk"
@@ -38,9 +36,8 @@
       >
         <b-form-textarea
           id="value-input"
-          v-model="value"
+          v-model.trim="value"
           :placeholder="$t('admin.create_secret_value_placeholder')"
-          trim
           required
         />
       </b-form-group>
@@ -65,9 +62,11 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',
@@ -98,7 +97,7 @@ export default {
             this.$t('message.record_created_message'),
             this.$t('message.record_created_title'),
           );
-          this.$root.$emit('bv::hide::modal', 'createSecretModal');
+          this.visible = false;
           this.resetValues();
         })
         .catch((err) => {

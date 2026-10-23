@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="componentPropertiesModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.component_properties')"
   >
@@ -15,9 +14,8 @@
       @on-uncheck="onRowSelectionChange"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         @click="deleteProperty"
         v-permission:or="[
@@ -27,17 +25,16 @@
         :disabled="!hasRowsSelected"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
           PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
         ]"
-        v-b-modal.componentCreatePropertyModal
+        @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
       >
     </template>
@@ -48,13 +45,15 @@
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ComponentPropertiesModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   props: {
     uuid: String,
   },
+  emits: ['createProperty'],
   data() {
     return {
       columns: [
@@ -149,7 +148,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

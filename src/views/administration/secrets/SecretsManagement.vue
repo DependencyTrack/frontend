@@ -3,10 +3,9 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          size="md"
           variant="outline-primary"
           v-if="canCreate"
-          v-b-modal.createSecretModal
+          @click="showCreateSecretModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
         </b-button>
@@ -20,8 +19,12 @@
       >
       </token-paginated-table>
     </b-card-body>
-    <create-secret-modal v-on:refreshTable="refreshTable" />
+    <create-secret-modal
+      v-model="showCreateSecretModal"
+      v-on:refreshTable="refreshTable"
+    />
     <update-secret-modal
+      v-model="showUpdateSecretModal"
       v-on:refreshTable="refreshTable"
       :secret="selectedRow"
     />
@@ -33,19 +36,14 @@ import common from '../../../shared/common';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import permissionsMixin from '@/mixins/permissionsMixin';
 import routerMixin from '@/mixins/routerMixin';
-import systemCapabilitiesMixin from '@/mixins/systemCapabilitiesMixin';
+import state from '@/shared/state';
 import xssFilters from 'xss-filters';
 import CreateSecretModal from '@/views/administration/secrets/CreateSecretModal.vue';
 import UpdateSecretModal from '@/views/administration/secrets/UpdateSecretModal.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 export default {
-  mixins: [
-    bootstrapTableMixin,
-    permissionsMixin,
-    routerMixin,
-    systemCapabilitiesMixin,
-  ],
+  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   props: {
     header: String,
   },
@@ -56,6 +54,8 @@ export default {
   },
   data() {
     return {
+      showCreateSecretModal: false,
+      showUpdateSecretModal: false,
       selectedRow: null,
       searchText: null,
       columns: [
@@ -142,7 +142,7 @@ export default {
   },
   computed: {
     isReadOnly() {
-      return this.systemCapabilities?.secret_management?.read_only !== false;
+      return state.systemCapabilities?.secret_management?.read_only !== false;
     },
     canCreate() {
       return (
@@ -176,28 +176,24 @@ export default {
   methods: {
     onEditClicked(row) {
       this.selectedRow = row;
-      this.$nextTick(() => {
-        this.$bvModal.show('updateSecretModal');
-      });
+      this.showUpdateSecretModal = true;
     },
     onDeleteClicked(row) {
-      this.$bvModal
-        .msgBoxConfirm(
-          this.$t('admin.confirm_secret_deletion_message', { name: row.name }),
-          {
-            title: this.$t('admin.confirm_secret_deletion'),
-            size: 'md',
-            okVariant: 'danger',
-            okTitle: this.$t('message.delete'),
-            cancelTitle: this.$t('message.cancel'),
-            centered: true,
-          },
-        )
-        .then((confirmed) => {
-          if (confirmed) {
-            this.deleteSecret(row.name);
-          }
-        });
+      this.$confirm(
+        this.$t('admin.confirm_secret_deletion_message', { name: row.name }),
+        {
+          title: this.$t('admin.confirm_secret_deletion'),
+          size: 'md',
+          okVariant: 'danger',
+          okTitle: this.$t('message.delete'),
+          cancelTitle: this.$t('message.cancel'),
+          centered: true,
+        },
+      ).then((confirmed) => {
+        if (confirmed) {
+          this.deleteSecret(row.name);
+        }
+      });
     },
     deleteSecret(name) {
       this.axios

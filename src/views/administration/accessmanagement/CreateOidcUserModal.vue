@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="createOidcUserModal"
-    size="md"
+    v-model="visible"
     @hide="resetValues()"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_oidc_user')"
   >
@@ -20,12 +18,11 @@
       :feedback-text="$t('admin.required_username')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="!(username?.length > 0)"
         @click="createUser()"
@@ -37,13 +34,15 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       username: null,
@@ -56,14 +55,14 @@ export default {
         .put(url, {
           username: this.username,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.user_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'createOidcUserModal');
+      this.visible = false;
       this.resetValues();
     },
     resetValues: function () {

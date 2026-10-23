@@ -8,17 +8,12 @@
       content-cols="auto"
     >
       <b-input-group :class="inputGroupSize">
-        <c-switch
+        <b-form-checkbox
           :id="`${id}-input`"
-          color="primary"
           v-model="innerValue"
-          label
-          v-bind="labelIcon"
-          :readonly="readonly"
           :disabled="disabled"
-          v-b-tooltip.hover
-          :title="tooltip"
-          v-on="inputListeners"
+          v-b-tooltip.hover="tooltip"
+          switch
         />
       </b-input-group>
     </b-form-group>
@@ -27,66 +22,52 @@
 
 <script>
 import common from '../shared/common';
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
-  components: {
-    cSwitch,
-  },
   props: {
     id: String,
     label: String, // fallback label if labelOn or labelOff not set
     labelOn: String, // if set will be used for "on" state
     labelOff: String, // if set will be used for "off" state
-    value: Boolean,
+    modelValue: Boolean,
     inputGroupSize: String,
-    readonly: Boolean,
     disabled: Boolean,
     showPlaceholderLabel: Boolean, // can be used to show an empty label on top, useful to put on same row as other inputs
     tooltip: String,
   },
+  emits: ['update:modelValue', 'change'],
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
-      currentLabel: (this.value ? this.labelOn : this.labelOff) || this.label,
+      currentLabel:
+        (this.modelValue ? this.labelOn : this.labelOff) || this.label,
     };
   },
   computed: {
     innerValue: {
       get: function () {
-        return common.toBoolean(this.value);
+        return common.toBoolean(this.modelValue);
       },
       set: function (newValue) {
         this.currentLabel =
           (newValue ? this.labelOn : this.labelOff) || this.label;
-        return common.toBoolean(newValue);
+        this.$emit('update:modelValue', newValue);
+        this.$emit('change', newValue);
       },
-    },
-    inputListeners: function () {
-      const vm = this;
-      return Object.assign({}, this.$listeners, {
-        change: function (event) {
-          vm.$emit('input', event); // model doesn't update otherwise?
-          vm.$emit('change', event);
-        },
-      });
     },
   },
   methods: {},
 };
 </script>
 <style scoped>
-.switch {
-  margin-right: 0;
-  margin-top: 0.25rem;
+.form-switch {
+  margin-top: calc(0.375rem + 1px);
 }
-.form-group {
+/* The gutter of Bootstrap 4's .form-row. */
+.b-form-group > :deep(.row) {
   flex-direction: row-reverse;
+  --bs-gutter-x: 10px;
 }
-.form-group >>> label.col-form-label {
+.b-form-group :deep(label.col-form-label) {
   padding-left: 0 !important;
 }
 </style>

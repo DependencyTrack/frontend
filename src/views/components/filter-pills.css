@@ -1,11 +1,8 @@
 .filter-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid rgb(255 255 255 / 10%);
-  border-radius: 6px;
-  background: rgb(255 255 255 / 5%);
   margin-bottom: 0.75rem;
   flex-grow: 1;
 }
@@ -13,6 +10,7 @@
 
 .filter-pills {
   display: flex;
+  flex-grow: 1;
   flex-wrap: wrap;
   gap: 0.5rem 0.75rem;
   align-items: center;
@@ -24,9 +22,17 @@
   font-size: 0.85rem;
 }
 
-.btn-more-filters >>> button {
+.btn-more-filters :deep(.dropdown-toggle) {
   border-radius: 20px;
   border-style: dashed !important;
   font-size: 0.85rem;
 }
 
+
+.filter-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}

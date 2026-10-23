@@ -11,17 +11,17 @@
 
 ## Core Technologies
 
-| Technology                                      | Purpose           |
-| :---------------------------------------------- | :---------------- |
-| [Vue 2](https://v2.vuejs.org/)                  | UI framework      |
-| [Vue CLI](https://cli.vuejs.org/)               | Build tooling     |
-| [BootstrapVue](https://bootstrap-vue.org/)      | Component library |
-| [CoreUI](https://coreui.io/vue/)                | Admin template    |
-| [Vue Router](https://v3.router.vuejs.org/)      | Routing           |
-| [vue-i18n](https://kazupon.github.io/vue-i18n/) | Localization      |
-| [Axios](https://axios-http.com/)                | HTTP client       |
-| [ESLint](https://eslint.org/)                   | Linting           |
-| [Prettier](https://prettier.io/)                | Formatting        |
+| Technology                                                                   | Purpose           |
+| :--------------------------------------------------------------------------- | :---------------- |
+| [Vue 3](https://vuejs.org/)                                                  | UI framework      |
+| [Vite](https://vite.dev/)                                                    | Build tooling     |
+| [BootstrapVueNext](https://bootstrap-vue-next.github.io/bootstrap-vue-next/) | Component library |
+| [Vue Router](https://router.vuejs.org/)                                      | Routing           |
+| [vue-i18n](https://vue-i18n.intlify.dev/)                                    | Localization      |
+| [Axios](https://axios-http.com/)                                             | HTTP client       |
+| [ESLint](https://eslint.org/)                                                | Linting           |
+| [Prettier](https://prettier.io/)                                             | Formatting        |
+| [Playwright](https://playwright.dev/)                                        | End-to-end tests  |
 
 ## Install
 
@@ -60,6 +60,43 @@ Produces `ghcr.io/dependencytrack/frontend:local`.
 npm run eslint-fix
 npm run prettier-fix
 ```
+
+## End-to-End Tests
+
+Tests in [`e2e`](e2e) run against a production build and an API server started from [`e2e/compose.yaml`](e2e/compose.yaml).
+
+```shell
+docker compose -f e2e/compose.yaml up -d
+npx playwright install chromium
+npm run e2e
+```
+
+The stack can be reused across runs. Run `docker compose -f e2e/compose.yaml down` after changing `compose.yaml`, or when Postgres runs out of space.
+`npm run e2e` builds and serves the app, or tests whatever already listens on port 18081.
+
+CI uses the API server image for the target branch: `5-snapshot` for `main`, the image of the same name for `feature-*` branches,
+and the latest release for release branches, e.g. `5.2.0` for `5.2.x`. Set `APISERVER_VERSION` to do the same locally.
+A change that needs a new API server feature only passes once that feature is merged and `5-snapshot` is published.
+
+Debugging:
+
+```shell
+npm run e2e -- --ui
+npx playwright show-trace e2e/test-results/<test>/trace.zip
+```
+
+CI uploads the HTML report as the `playwright-report` artifact.
+
+Writing tests:
+
+- Find elements by role, label or text, not by CSS classes or component structure.
+- Keep interaction with specific widgets, such as date pickers and switches, in helpers in [`e2e/test.mjs`](e2e/test.mjs).
+  Specs must not change when a UI library is replaced.
+- Add new routes to [`e2e/routes.spec.mjs`](e2e/routes.spec.mjs), with seeded data as the landmark where the route shows it.
+- Add data that many tests share to the `seed` in [`e2e/global-setup.mjs`](e2e/global-setup.mjs). Create other data through the `api` fixture.
+- Name test data with `uniqueName()`.
+- Tests fail on console errors, uncaught exceptions and responses with status 400 or above. Allow expected ones with `problems.allow()` and a comment.
+- Restore global settings that a test changes.
 
 ## Localization
 

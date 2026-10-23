@@ -6,20 +6,22 @@
       v-for="section in menu"
       v-bind:key="section.id"
     >
-      <div
-        slot="header"
-        v-if="isPermitted(section.permission)"
-        v-b-toggle="section.id"
-        style="cursor: pointer"
-      >
-        <i class="fa fa-align-justify"></i
-        ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
-      </div>
+      <template v-if="isPermitted(section.permission)" v-slot:header>
+        <button
+          type="button"
+          class="btn btn-link d-block w-100 border-0 p-0 text-reset text-decoration-none text-start"
+          :aria-expanded="openSection === section.id ? 'true' : 'false'"
+          :aria-controls="section.id"
+          @click="toggleSection(section.id)"
+        >
+          <i class="fa fa-align-justify"></i
+          ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
+        </button>
+      </template>
       <b-collapse
-        ref="accordion"
         v-if="isPermitted(section.permission)"
         :id="section.id"
-        accordion="admin-accordion"
+        :model-value="openSection === section.id"
         role="tabpanel"
       >
         <div class="list-group" id="list-tab" role="tablist">
@@ -38,16 +40,15 @@
               class="list-group-item list-group-item-action"
               :class="{
                 'admin-menu-item-readonly': item.configurable === false,
+                'open active': item === currentItem,
               }"
-              data-toggle="list"
               role="tab"
               :to="'/admin/' + item.route"
-              @click="emitEvent(item)"
             >
               {{ item.name }}
               <i
                 v-if="item.configurable === false"
-                class="fa fa-info-circle float-right"
+                class="fa fa-info-circle float-end"
                 :title="$t('admin.extension_no_config')"
                 aria-hidden="true"
               ></i>
@@ -82,12 +83,27 @@ import {
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    EventBus,
+  components: {},
+  computed: {
+    // Router 4 marks a link active only on its own route, not on the pages below it.
+    currentItem() {
+      const path = this.$route.path;
+      return this.menu
+        .flatMap((section) => section.children)
+        .find(
+          (item) =>
+            !item.header &&
+            (path === `/admin/${item.route}` ||
+              path.startsWith(`/admin/${item.route}/`)),
+        );
+    },
   },
   methods: {
+    toggleSection(id) {
+      this.openSection = this.openSection === id ? null : id;
+    },
     emitEvent: function (plugin) {
-      EventBus.$emit('admin:plugin', plugin);
+      EventBus.emit('admin:plugin', plugin);
     },
     getMenuFromRoute: function () {
       let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
@@ -154,16 +170,24 @@ export default {
     );
   },
   mounted() {
-    this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+    this.openSection = this.getMenuFromRoute();
   },
   watch: {
+    currentItem: {
+      immediate: true,
+      handler(item) {
+        if (item) {
+          this.emitEvent(item);
+        }
+      },
+    },
     $route() {
-      this.$refs.accordion.forEach((menu) => (menu.show = false));
-      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+      this.openSection = this.getMenuFromRoute();
     },
   },
   data() {
     return {
+      openSection: null,
       menu: [
         {
           name: this.$t('admin.configuration'),
@@ -432,6 +456,16 @@ export default {
               route: 'accessManagement/oidcGroups',
             },
             {
+              component: 'ServiceAccounts',
+              name: this.$t('admin.service_accounts'),
+              route: 'accessManagement/serviceAccounts',
+            },
+            {
+              component: 'WorkloadIdentityProviders',
+              name: this.$t('admin.workload_identity_providers'),
+              route: 'accessManagement/workloadIdentityProviders',
+            },
+            {
               component: 'Teams',
               name: this.$t('admin.teams'),
               route: 'accessManagement/teams',
@@ -497,8 +531,8 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
-  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--dt-text-muted);
+  background-color: var(--dt-surface-recessed);
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
   cursor: default;

@@ -1,12 +1,6 @@
 <template>
-  <b-modal
-    :id="`kevAssertionsModal-${index}`"
-    size="lg"
-    hide-header-close
-    no-stacking
-    @show="fetchAssertions"
-  >
-    <template v-slot:modal-title>
+  <b-modal v-model="visible" size="lg" no-stacking @show="fetchAssertions">
+    <template v-slot:title>
       {{ $t('message.kev_assertions') }}: {{ vulnId }}
     </template>
     <p>{{ $t('message.kev_explanation') }}</p>
@@ -20,7 +14,7 @@
       no-body
     >
       <b-card-header class="d-flex align-items-center">
-        <i class="fa fa-fire text-danger mr-2" aria-hidden="true"></i>
+        <i class="fa fa-fire text-danger me-2" aria-hidden="true"></i>
         <strong>{{
           assertion.asserter_display_name ||
           (assertion.asserter || '').toUpperCase()
@@ -28,7 +22,7 @@
         <b-badge
           v-if="assertion.known_ransomware === true"
           variant="danger"
-          class="ml-2"
+          class="ms-2"
         >
           {{ $t('message.known_ransomware') }}
         </b-badge>
@@ -60,8 +54,8 @@
         </dl>
       </b-card-body>
     </b-card>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">
         {{ $t('message.close') }}
       </b-button>
     </template>
@@ -70,13 +64,14 @@
 
 <script>
 import common from '@/shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'KevAssertionsModal',
+  mixins: [modalMixin],
   props: {
     source: String,
     vulnId: String,
-    index: [Number, String],
   },
   data() {
     return {
@@ -100,12 +95,12 @@ export default {
 
 <style scoped>
 .kev-assertion-card {
-  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
-  border-left: 4px solid var(--danger);
-  background-color: color-mix(in srgb, var(--danger) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bs-danger) 40%, transparent);
+  border-left: 4px solid var(--bs-danger);
+  background-color: color-mix(in srgb, var(--bs-danger) 6%, transparent);
 }
-.kev-assertion-card ::v-deep .card-header {
-  background-color: color-mix(in srgb, var(--danger) 12%, transparent);
-  border-bottom-color: color-mix(in srgb, var(--danger) 30%, transparent);
+.kev-assertion-card :deep(.card-header) {
+  background-color: color-mix(in srgb, var(--bs-danger) 12%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--bs-danger) 30%, transparent);
 }
 </style>

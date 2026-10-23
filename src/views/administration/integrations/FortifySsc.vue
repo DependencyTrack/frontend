@@ -1,20 +1,17 @@
 <template>
   <b-card no-body :header="header">
     <b-card-body>
-      <b-form-group :label="$t('admin.integration_fortify_ssc_enable')">
-        <c-switch
-          id="enabled"
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />
+      <b-form-group
+        :label="$t('admin.integration_fortify_ssc_enable')"
+        label-for="enabled"
+      >
+        <b-form-checkbox id="enabled" v-model="enabled" switch />
       </b-form-group>
       <b-validated-input-group-form-input
         id="fortify-ssc-url"
         :label="$t('admin.url')"
         input-group-size="mb-3"
-        rules="required"
+        required
         type="url"
         v-model="url"
         lazy="true"
@@ -22,7 +19,7 @@
       <label for="fortify-ssc-token"
         >{{ $t('admin.token') }}
         <i
-          class="fa fa-key text-warning ml-1"
+          class="fa fa-key text-warning ms-1"
           :title="$t('admin.secret_reference_field')"
         ></i
       ></label>
@@ -37,8 +34,7 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -49,7 +45,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
   },
@@ -58,10 +53,6 @@ export default {
       enabled: false,
       url: '',
       token: '',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {

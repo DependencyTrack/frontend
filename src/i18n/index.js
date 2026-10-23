@@ -1,9 +1,7 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import axios from 'axios';
 import api from '../shared/api.json';
-
-Vue.use(VueI18n);
+import en from './locales/en.json';
 
 async function getDefaultLanguage() {
   try {
@@ -16,28 +14,26 @@ async function getDefaultLanguage() {
   }
 }
 
-function loadLocaleMessages() {
-  const locales = require.context(
-    './locales',
-    true,
-    /[A-Za-z0-9-_,\s]+\.json$/i,
-  );
-  const messages = {};
-  locales.keys().forEach((key) => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
+function localeMessageLoaders() {
+  const locales = import.meta.glob(['./locales/*.json', '!./locales/en.json'], {
+    import: 'default',
+  });
+  const loaders = { en: async () => en };
+  Object.keys(locales).forEach((key) => {
+    const matched = key.match(/([A-Za-z0-9-_]+)\.json$/i);
     if (matched && matched.length > 1) {
       const locale = matched[1];
-      messages[locale] = locales(key);
+      loaders[locale] = locales[key];
     }
   });
-  return messages;
+  return loaders;
 }
 
-const localeMessages = loadLocaleMessages();
+const localeLoaders = localeMessageLoaders();
+export const availableLocales = Object.keys(localeLoaders).sort();
 
 function matchLocale(requestedLocale) {
-  console.log(localeMessages);
-  let exactMatch = Object.keys(localeMessages).find(
+  let exactMatch = availableLocales.find(
     (locale) => requestedLocale === locale,
   );
   if (exactMatch) {
@@ -54,7 +50,7 @@ function matchLocale(requestedLocale) {
   }
 
   let baseLocale = localeParts[0];
-  let baseLocaleMatch = Object.keys(localeMessages).find(
+  let baseLocaleMatch = availableLocales.find(
     (locale) => baseLocale === locale,
   );
   if (baseLocaleMatch) {
@@ -68,20 +64,26 @@ function matchLocale(requestedLocale) {
   return 'en';
 }
 
-const i18n = new VueI18n({
+const i18n = createI18n({
+  legacy: false,
+  globalInjection: true,
   locale: 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages: localeMessages,
+  fallbackLocale: 'en',
+  messages: { en },
 });
 
-getDefaultLanguage().then((defaultLanguage) => {
+getDefaultLanguage().then(async (defaultLanguage) => {
   const matchedLocale = matchLocale(
     (localStorage && localStorage.getItem('Locale')) ||
       defaultLanguage ||
       navigator.language ||
       navigator.userLanguage,
   );
-  i18n.locale = matchedLocale;
+  i18n.global.setLocaleMessage(
+    matchedLocale,
+    await localeLoaders[matchedLocale](),
+  );
+  i18n.global.locale.value = matchedLocale;
 });
 
 export default i18n;

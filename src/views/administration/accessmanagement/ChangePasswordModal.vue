@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="changePasswordModal"
-    size="md"
+    v-model="visible"
     @hide="resetValues()"
-    hide-header-close
     no-stacking
     :title="$t('admin.change_password')"
   >
@@ -33,11 +31,11 @@
       :feedback-text="$t('admin.required_confirmPassword')"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="updatePassword()">{{
+      <b-button variant="primary" @click="updatePassword()">{{
         $t('message.update')
       }}</b-button>
     </template>
@@ -46,10 +44,11 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
   },
@@ -88,13 +87,13 @@ export default {
             nonExpiryPassword: this.managedUser.nonExpiryPassword,
             suspended: this.managedUser.suspended,
           })
-          .then((response) => {
+          .then(() => {
             this.$toastr.s(this.$t('admin.password_updated'));
           })
-          .catch((error) => {
+          .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
-        this.$root.$emit('bv::hide::modal', 'changePasswordModal');
+        this.visible = false;
         this.resetValues();
       }
     },

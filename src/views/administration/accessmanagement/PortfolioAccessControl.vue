@@ -2,13 +2,9 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <c-switch
-          id="isAclEnabled"
-          color="primary"
-          v-model="isAclEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_acl') }}
+        <b-form-checkbox id="isAclEnabled" v-model="isAclEnabled" switch>{{
+          $t('admin.enable_acl')
+        }}</b-form-checkbox>
       </div>
       <bootstrap-table
         ref="table"
@@ -24,38 +20,24 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
-import i18n from '../../../i18n';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
-import EventBus from '../../../shared/eventbus';
-import ActionableListGroupItem from '../../components/ActionableListGroupItem';
-import SelectProjectModal from './SelectProjectModal';
-import permissionsMixin from '../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
 import configPropertyMixin from '../mixins/configPropertyMixin';
-import router from '@/router';
+import PortfolioAccessControlDetails from './PortfolioAccessControlDetails.vue';
 
 export default {
   props: {
     header: String,
   },
   mixins: [bootstrapTableMixin, configPropertyMixin],
-  components: {
-    cSwitch,
-  },
   data() {
     return {
       isAclEnabled: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('admin.team_name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -77,129 +59,10 @@ export default {
         detailView: true,
         detailViewIcon: false,
         detailViewByClick: true,
-        detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            i18n,
-            template: `
-                <b-row class="expanded-row">
-                  <b-col sm="6">
-                    <b-form-group :label="this.$t('admin.project_access')">
-                      <div class="list-group">
-                        <span v-for="project in projects">
-                          <actionable-list-group-item :value="projectLabel(project.name, project.version)" :href=projectUri(project.uuid) :delete-icon="true" v-on:actionClicked="removeProjectMapping(project.uuid)"/>
-                        </span>
-                        <actionable-list-group-item :add-icon="true" v-on:actionClicked="$root.$emit('bv::show::modal', 'selectProjectModal')"/>
-                      </div>
-                    </b-form-group>
-                  </b-col>
-                  <b-col sm="6">
-                  </b-col>
-                  <select-project-modal v-on:selection="updateProjectSelection" :teamUuid="team.uuid" />
-                </b-row>
-              `,
-            mixins: [permissionsMixin],
-            components: {
-              cSwitch,
-              ActionableListGroupItem,
-              SelectProjectModal,
-              BInputGroupFormInput,
-            },
-            data() {
-              return {
-                team: row,
-                name: row.name,
-                projects: row.mappedLdapGroups,
-                labelIcon: {
-                  dataOn: '\u2713',
-                  dataOff: '\u2715',
-                },
-              };
-            },
-            methods: {
-              projectLabel: function (name, version) {
-                if (version) {
-                  return name + ' ' + version;
-                } else {
-                  return name;
-                }
-              },
-              projectUri: function (uuid) {
-                const href = router.resolve({
-                  name: 'Project',
-                  params: { uuid: uuid },
-                }).href;
-                const sanitizedHref = xssFilters.uriInUnQuotedAttr(href);
-                return sanitizedHref;
-              },
-              updateProjectSelection: function (selections) {
-                this.$root.$emit('bv::hide::modal', 'selectProjectModal');
-                for (let i = 0; i < selections.length; i++) {
-                  let selection = selections[i];
-                  let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}`;
-                  this.axios
-                    .put(url, {
-                      team: this.team.uuid,
-                      project: selection.uuid,
-                    })
-                    .then((response) => {
-                      if (
-                        this.projects === undefined ||
-                        this.projects === null
-                      ) {
-                        this.projects = [];
-                      }
-                      this.projects.push({
-                        name: selection.name,
-                        version: selection.version,
-                        uuid: selection.uuid,
-                      });
-                      this.projects.sort();
-                      this.$toastr.s(this.$t('message.updated'));
-                    })
-                    .catch((error) => {
-                      if (error.response.status === 304) {
-                        //this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                      } else {
-                        this.$toastr.w(
-                          this.$t('condition.unsuccessful_action'),
-                        );
-                      }
-                    });
-                }
-              },
-              removeProjectMapping: function (projectUuid) {
-                let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_MAPPING}/team/${this.team.uuid}/project/${projectUuid}`;
-                this.axios
-                  .delete(url)
-                  .then((response) => {
-                    let k = [];
-                    for (let i = 0; i < this.projects.length; i++) {
-                      if (this.projects[i].uuid !== projectUuid) {
-                        k.push(this.projects[i]);
-                      }
-                    }
-                    this.projects = k;
-                    this.$toastr.s(this.$t('message.updated'));
-                  })
-                  .catch((error) => {
-                    this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                  });
-              },
-            },
-            mounted() {
-              let url = `${this.$api.BASE_URL}/${this.$api.URL_ACL_TEAM}/${this.team.uuid}`;
-              this.axios
-                .get(url)
-                .then((response) => {
-                  this.projects = response.data;
-                })
-                .catch((error) => {
-                  this.$toastr.w(this.$t('condition.unsuccessful_action'));
-                });
-            },
-          });
+        detailFormatter: (_index, row) => {
+          return this.cell(PortfolioAccessControlDetails, { row });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');
@@ -234,10 +97,10 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/aggregate`;
       this.axios
         .post(url, props)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('admin.configuration_saved'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

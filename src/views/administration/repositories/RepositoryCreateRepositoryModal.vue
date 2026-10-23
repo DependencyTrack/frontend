@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="repositoryCreateRepositoryModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('admin.create_repository')"
   >
@@ -12,14 +10,14 @@
         id="identifier"
         :label="$t('admin.identifier')"
         input-group-size="mb-3"
-        rules="required"
+        required
         v-model="identifier"
       />
       <b-validated-input-group-form-input
         id="url"
         :label="$t('admin.url')"
         input-group-size="mb-3"
-        rules="required"
+        required
         type="url"
         v-model="url"
       />
@@ -31,30 +29,21 @@
         :label="$t('admin.repository_type')"
       />
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="enabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enabled') }}
+        <b-form-checkbox v-model="enabled" switch>{{
+          $t('admin.enabled')
+        }}</b-form-checkbox>
       </div>
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="internal"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.internal') }}
+        <b-form-checkbox v-model="internal" switch>{{
+          $t('admin.internal')
+        }}</b-form-checkbox>
       </div>
       <div class="mb-3">
-        <c-switch
-          color="primary"
-          v-model="repository_authentication"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.repository_authentication') }}
+        <b-form-checkbox v-model="repository_authentication" switch>{{
+          $t('admin.repository_authentication')
+        }}</b-form-checkbox>
       </div>
-      <div v-if="repository_authentication" class="ml-4">
+      <div v-if="repository_authentication" class="ms-4">
         <b-validated-input-group-form-input
           id="username"
           :label="$t('admin.username')"
@@ -67,34 +56,31 @@
         </div>
       </div>
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button
-        size="md"
-        variant="primary"
-        type="submit"
-        form="createRepositoryForm"
-        >{{ $t('message.create') }}</b-button
-      >
+      <b-button variant="primary" type="submit" form="createRepositoryForm">{{
+        $t('message.create')
+      }}</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import SecretRefSelect from '../../components/SecretRefSelect.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'RepositoryCreateRepositoryModal',
+  mixins: [modalMixin],
   props: {
     type: String,
   },
+  emits: ['refreshTable'],
   components: {
-    cSwitch,
     BInputGroupFormSelect,
     BValidatedInputGroupFormInput,
     SecretRefSelect,
@@ -114,10 +100,6 @@ export default {
       username: null,
       password: null,
       enabled: true,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       repositoryTypes: [
         { value: 'COMPOSER', text: 'PHP (Composer)' },
         { value: 'CPAN', text: 'Perl (CPAN)' },
@@ -146,20 +128,14 @@ export default {
           password: this.password || null,
           enabled: this.enabled,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.repository_created'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            'repositoryCreateRepositoryModal',
-          );
+          this.visible = false;
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          this.$root.$emit(
-            'bv::hide::modal',
-            'repositoryCreateRepositoryModal',
-          );
+          this.visible = false;
         });
       this.resetValues();
     },

@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="createLicenseGroupModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_license_group')"
   >
@@ -11,15 +9,15 @@
       id="identifier"
       :label="this.$t('message.name')"
       input-group-size="mb-3"
-      rules="required"
+      required
       v-model="name"
     />
 
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createLicenseGroup()">{{
+      <b-button variant="primary" @click="createLicenseGroup()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -28,14 +26,16 @@
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import modalMixin from '@/mixins/modalMixin';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 
 export default {
   name: 'createLicenseGroupModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BValidatedInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
       name: null,
@@ -48,12 +48,12 @@ export default {
         .put(url, {
           name: this.name,
         })
-        .then((response) => {
+        .then(() => {
           this.$emit('refreshTable');
-          this.$root.$emit('bv::hide::modal', 'createLicenseGroupModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.license_group_created'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
       this.resetValues();

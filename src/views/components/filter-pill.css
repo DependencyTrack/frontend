@@ -5,16 +5,16 @@
 .filter-pill-wrapper.filter-pill-active {
   display: inline-flex;
   align-items: stretch;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--bs-primary);
   border-radius: 20px;
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover,
 .filter-pill-wrapper.filter-pill-active:has(.show) {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: var(--bs-gray-900);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover .filter-pill-segment-value,
@@ -22,13 +22,13 @@
   color: inherit;
 }
 
-.filter-pill-wrapper >>> .btn-outline-primary {
+.filter-pill-wrapper :deep(.btn-outline-primary) {
   border-radius: 20px;
   font-size: 0.85rem;
 }
 
 /* Strip button chrome when wrapper owns the pill border */
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary {
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary) {
   padding: 0;
   border: none !important;
   background: transparent !important;
@@ -37,15 +37,41 @@
 }
 
 /* Restore visual feedback for dropdown-open / focus / active states */
-.filter-pill-wrapper.filter-pill-active >>> .show > .btn-outline-primary,
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary:focus,
-.filter-pill-wrapper.filter-pill-active >>> .btn-outline-primary:active {
-  background: var(--primary) !important;
-  color: #fff !important;
+.filter-pill-wrapper.filter-pill-active :deep(.show > .btn-outline-primary),
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
+.filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
+  background: var(--bs-primary) !important;
+  color: var(--bs-gray-900) !important;
+}
+
+/* The form owns all padding, and clipping keeps the footer flush with the
+   menu's rounded bottom corners. */
+.filter-pill-wrapper :deep(.dropdown-menu) {
+  padding: 0;
+  overflow: hidden;
 }
 
 .filter-pill-form {
-  min-width: 280px;
+  padding: 0;
+  min-width: 300px;
+  max-width: 480px;
+}
+
+.filter-pill-body {
+  padding: 0.75rem;
+}
+
+.filter-pill-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--dt-border);
+}
+
+.filter-pill-footer-clear {
+  font-size: 0.85rem;
 }
 
 /* --- Segmented pill layout --- */
@@ -63,7 +89,7 @@
 }
 
 .filter-pill-segment + .filter-pill-segment {
-  border-left: 1px solid rgb(255 255 255 / 20%);
+  border-left: 1px solid color-mix(in srgb, currentcolor 40%, transparent);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover
@@ -74,11 +100,11 @@
   .filter-pill-segment
   + .filter-pill-segment,
 .filter-pill-wrapper.filter-pill-active:has(.show) .filter-pill-clear {
-  border-left-color: rgb(255 255 255 / 25%);
+  border-left-color: color-mix(in srgb, currentcolor 40%, transparent);
 }
 
 .filter-pill-segment-value {
-  color: var(--primary-lighter);
+  color: var(--bs-body-color);
 }
 
 /* --- External clear button (sibling of b-dropdown) --- */
@@ -88,18 +114,17 @@
   align-items: center;
   padding: 0 0.5rem;
   border: none;
-  border-left: 1px solid rgb(255 255 255 / 20%);
+  border-left: 1px solid color-mix(in srgb, currentcolor 40%, transparent);
   border-radius: 0 20px 20px 0;
   background: transparent;
-  color: inherit;
+  color: var(--dt-text-muted);
   cursor: pointer;
-  opacity: 0.6;
   font-size: 0.85rem;
 }
 
 .filter-pill-clear:hover,
 .filter-pill-clear:focus {
-  background: rgb(0 0 0 / 12%);
+  background: var(--dt-hover);
   opacity: 1;
 }
 
@@ -132,14 +157,14 @@
   align-items: stretch;
   font-size: 0.85rem;
   padding: 0;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--bs-primary);
   border-radius: 20px;
-  color: var(--primary);
+  color: var(--bs-primary);
   white-space: nowrap;
 }
 
 .boolean-filter-pill:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: var(--bs-gray-900);
 }

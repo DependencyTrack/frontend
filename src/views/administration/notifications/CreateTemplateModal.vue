@@ -1,8 +1,7 @@
 <template>
   <b-modal
-    id="createTemplateModal"
-    size="md"
-    hide-header-close
+    v-model="visible"
+    @hide="resetValues()"
     no-stacking
     :title="$t('admin.create_template')"
   >
@@ -14,10 +13,9 @@
     >
       <b-form-input
         id="input-1"
-        v-model="name"
+        v-model.trim="name"
         class="required"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -48,11 +46,10 @@
     >
       <b-form-textarea
         id="input-3"
-        v-model="description"
+        v-model.trim="description"
         class="required"
         rows="4"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -63,10 +60,9 @@
     >
       <b-form-input
         id="input-4"
-        v-model="mimeType"
+        v-model.trim="mimeType"
         class="required"
         required
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -82,11 +78,11 @@
         :line-wrapping="false"
       />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createTemplate()">{{
+      <b-button variant="primary" @click="createTemplate()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -96,27 +92,24 @@
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import EventBus from '../../../shared/eventbus';
-import CodeMirrorEditor from '../../components/CodeMirrorEditor';
+import CodeMirrorEditor from '../../components/CodeMirrorEditor.vue';
 import { jinja } from '@codemirror/lang-jinja';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     CodeMirrorEditor,
   },
+  emits: ['refreshTable'],
   mounted() {
     this.fetchAvailableExtensions();
-    EventBus.$on('admin:templates:cloneTemplate', (template) => {
+    EventBus.on('admin:templates:cloneTemplate', (template) => {
       this.name = `${template.name} - clone`;
       this.extensionName = template.extensionName;
       this.description = template.description;
       this.mimeType = template.templateMimeType;
       this.template = template.template;
-    });
-    this.$root.$on('bv::modal::hide', (_, modalId) => {
-      if (modalId === 'createTemplateModal') {
-        this.resetValues();
-      }
     });
   },
   data() {
@@ -165,7 +158,7 @@ export default {
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
-      this.$root.$emit('bv::hide::modal', 'createTemplateModal');
+      this.visible = false;
     },
     resetValues: function () {
       this.name = null;

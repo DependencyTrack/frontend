@@ -2,7 +2,7 @@
   <b-card no-body>
     <template #header>
       {{ header }}
-      <b-badge v-if="hasUnsavedChanges" variant="info" class="ml-2">
+      <b-badge v-if="hasUnsavedChanges" variant="info" class="ms-2">
         {{ $t('message.unsaved_changes_badge') }}
       </b-badge>
     </template>
@@ -10,7 +10,7 @@
       <b-form-group
         :label="$t('admin.metrics')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
         <b-form-group :label="$t('admin.retention')">
           <b-form-text class="mb-2">
@@ -26,7 +26,7 @@
               class="flex-grow-1"
             />
             <span
-              class="ml-2 font-weight-bold"
+              class="ms-2 fw-bold"
               style="min-width: 6em; text-align: right; white-space: nowrap"
               >{{ metricsRetentionDays }} {{ $t('admin.days') }}</span
             >
@@ -36,18 +36,12 @@
       <b-form-group
         :label="$t('message.projects')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
         <b-form-group>
-          <label class="d-flex align-items-center mb-0">
-            <c-switch
-              color="primary"
-              v-model="enableProjectRetention"
-              label
-              v-bind="switchLabelIcon"
-            />
-            <span class="ml-1">{{ $t('admin.project_retention_enable') }}</span>
-          </label>
+          <b-form-checkbox v-model="enableProjectRetention" switch>{{
+            $t('admin.project_retention_enable')
+          }}</b-form-checkbox>
           <b-form-text>
             {{ $t('admin.project_retention_enable_help') }}
           </b-form-text>
@@ -77,7 +71,7 @@
                 class="flex-grow-1"
               />
               <span
-                class="ml-2 font-weight-bold"
+                class="ms-2 fw-bold"
                 style="min-width: 6em; text-align: right; white-space: nowrap"
                 >{{ projectRetentionDays }} {{ $t('admin.days') }}</span
               >
@@ -97,7 +91,7 @@
                 class="flex-grow-1"
               />
               <span
-                class="ml-2 font-weight-bold"
+                class="ms-2 fw-bold"
                 style="min-width: 6em; text-align: right; white-space: nowrap"
                 >{{ projectRetentionVersions }}</span
               >
@@ -108,17 +102,11 @@
       <b-form-group
         :label="$t('admin.tags')"
         label-size="lg"
-        label-class="font-weight-bold pt-0 mb-0"
+        label-class="fw-bold pt-0 mb-0"
       >
-        <label class="d-flex align-items-center mb-0">
-          <c-switch
-            color="primary"
-            v-model="tagsDeleteUnused"
-            label
-            v-bind="switchLabelIcon"
-          />
-          <span class="ml-1">{{ $t('admin.tags_delete_unused') }}</span>
-        </label>
+        <b-form-checkbox v-model="tagsDeleteUnused" switch>{{
+          $t('admin.tags_delete_unused')
+        }}</b-form-checkbox>
         <b-form-text>
           {{ $t('admin.tags_delete_unused_help') }}
         </b-form-text>
@@ -134,7 +122,7 @@
       >
       <b-button
         variant="outline-danger"
-        class="ml-2"
+        class="ms-2"
         :disabled="!hasUnsavedChanges"
         @click="resetChanges"
       >
@@ -146,7 +134,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
 
@@ -154,9 +141,6 @@ export default {
   mixins: [configPropertyMixin],
   props: {
     header: String,
-  },
-  components: {
-    cSwitch,
   },
   data() {
     return {
@@ -167,10 +151,6 @@ export default {
       projectRetentionVersions: 5,
       tagsDeleteUnused: null,
       initialSnapshot: '',
-      switchLabelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   computed: {
@@ -248,7 +228,7 @@ export default {
         retentionThresholdReduced;
 
       if (needsConfirmation) {
-        const confirmed = await this.$bvModal.msgBoxConfirm(
+        const confirmed = await this.$confirm(
           this.$t('admin.maintenance_destructive_confirm_message'),
           {
             title: this.$t('admin.maintenance_destructive_confirm_title'),

@@ -1,8 +1,5 @@
 {
   "jsonRecursiveSort": true,
   "plugins": ["prettier-plugin-sort-json"],
-  "semi": true,
-  "singleQuote": true,
-  "tabWidth": 2,
-  "trailingComma": "all"
+  "singleQuote": true
 }

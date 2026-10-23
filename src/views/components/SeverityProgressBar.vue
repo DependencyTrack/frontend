@@ -1,39 +1,52 @@
 <template>
   <span v-if="vulnerabilities === 0" class="progress">
-    <b-progress class="table-progress" :max="'0'" show-value>
+    <b-progress
+      class="table-progress"
+      :max="'0'"
+      show-value
+      :aria-label="$t('message.severity')"
+      :aria-valuetext="valueText"
+    >
       <b-progress-bar
-        class="table-progress text-dark"
+        class="table-progress progress-bar-zero"
         value="0"
       ></b-progress-bar>
     </b-progress>
   </span>
   <span v-else class="progress">
-    <span :id="'progressbar' + hoverId" class="table-progress">
-      <b-progress class="table-progress" :max="vulnerabilities" show-value>
-        <b-progress-bar
-          :value="critical"
-          class="severity-critical-bg"
-        ></b-progress-bar>
-        <b-progress-bar
-          :value="high"
-          class="severity-high-bg text-dark"
-        ></b-progress-bar>
-        <b-progress-bar
-          :value="medium"
-          class="severity-medium-bg text-dark"
-        ></b-progress-bar>
-        <b-progress-bar :value="low" class="severity-low-bg"></b-progress-bar>
-        <b-progress-bar
-          :value="unassigned"
-          class="severity-unassigned-bg"
-        ></b-progress-bar>
-      </b-progress>
-    </span>
-    <b-tooltip
-      :target="'progressbar' + hoverId"
-      placement="left"
-      noninteractive
-    >
+    <b-tooltip placement="left" noninteractive>
+      <template #target>
+        <span class="table-progress">
+          <b-progress
+            class="table-progress"
+            :max="vulnerabilities"
+            show-value
+            :aria-label="$t('message.severity')"
+            :aria-valuetext="valueText"
+          >
+            <b-progress-bar
+              :value="critical"
+              class="severity-critical-bg"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="high"
+              class="severity-high-bg"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="medium"
+              class="severity-medium-bg"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="low"
+              class="severity-low-bg"
+            ></b-progress-bar>
+            <b-progress-bar
+              :value="unassigned"
+              class="severity-unassigned-bg"
+            ></b-progress-bar>
+          </b-progress>
+        </span>
+      </template>
       <div style="text-align: left">
         <h5>{{ $t('message.severity') }}</h5>
         <p>
@@ -58,13 +71,13 @@ export default {
     medium: Number,
     low: Number,
     unassigned: Number,
-    $t: Function,
   },
-  data() {
-    return {
-      // Workaround for vue references to the progress-bars. Using the ref targets doesn't seem to work.
-      hoverId: Math.random().toString(36),
-    };
+  computed: {
+    valueText() {
+      return ['critical', 'high', 'medium', 'low', 'unassigned']
+        .map((name) => `${this.$t(`severity.${name}`)}: ${this[name]}`)
+        .join(', ');
+    },
   },
 };
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div>
     <multiselect
+      v-multiselect-label
       :id="id"
       v-model="selectedSecret"
       :placeholder="$t('admin.select_secret_placeholder')"
@@ -16,21 +17,20 @@
       :max-height="250"
       track-by="name"
       label="name"
-      open-direction="bottom"
       select-label=""
       deselect-label=""
       @search-change="onSearchChange"
-      @input="onInput"
+      @update:modelValue="onInput"
     >
-      <template slot="singleLabel" slot-scope="{ option }">
+      <template v-slot:singleLabel="{ option }">
         <span>{{ option.name }}</span>
         <i
           v-if="secretNotFound"
-          class="fa fa-exclamation-triangle text-danger ml-1"
+          class="fa fa-exclamation-triangle text-danger ms-1"
           :title="$t('admin.secret_not_found')"
         ></i>
       </template>
-      <template slot="option" slot-scope="{ option }">
+      <template v-slot:option="{ option }">
         <div class="secret-option">
           <strong>{{ option.name }}</strong>
           <small v-if="option.description" class="text-muted d-block">
@@ -38,10 +38,10 @@
           </small>
         </div>
       </template>
-      <template slot="noResult">
+      <template v-slot:noResult>
         {{ $t('admin.no_secrets_found') }}
       </template>
-      <template slot="noOptions">
+      <template v-slot:noOptions>
         {{ $t('admin.type_to_search_secrets') }}
       </template>
     </multiselect>
@@ -65,22 +65,24 @@ export default {
       type: String,
       default: 'secret-ref-select',
     },
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       availableSecrets: [],
       isLoading: false,
       debounceTimer: null,
+      secretQuery: '',
       selectedSecret: null,
       secretNotFound: false,
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       async handler(newValue) {
         if (
@@ -102,7 +104,7 @@ export default {
   mounted() {
     this.fetchSecrets('');
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
@@ -117,7 +119,10 @@ export default {
       }, 300);
     },
     async fetchSecrets(searchText) {
+      this.secretQuery = searchText;
       this.isLoading = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => searchText === this.secretQuery;
       try {
         const baseUrl = `${this.$api.BASE_URL}/api/v2/secrets`;
         const params = { limit: '6' };
@@ -126,6 +131,7 @@ export default {
         }
         const url = common.setQueryParams(baseUrl, params);
         const response = await this.axios.get(url);
+        if (!isLatest()) return;
         const secrets = response.data.items || [];
         this.availableSecrets = secrets;
         if (
@@ -138,9 +144,9 @@ export default {
         }
       } catch (err) {
         console.error('Failed to fetch secrets:', err);
-        this.availableSecrets = [];
+        if (isLatest()) this.availableSecrets = [];
       } finally {
-        this.isLoading = false;
+        if (isLatest()) this.isLoading = false;
       }
     },
     async verifySecretExists(secretName) {
@@ -162,7 +168,7 @@ export default {
       if (selected) {
         this.secretNotFound = false;
       }
-      this.$emit('input', value);
+      this.$emit('update:modelValue', value);
     },
   },
 };

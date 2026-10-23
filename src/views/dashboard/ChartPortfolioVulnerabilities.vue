@@ -1,21 +1,88 @@
+<template>
+  <div>
+    <line-chart v-if="chartData" :data="chartData" :options="options" />
+  </div>
+</template>
+
 <script>
+import '@/shared/chartTheme';
 import common from '../../shared/common';
 import { Line } from 'vue-chartjs';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { themeColor } from '@/shared/theme';
 
 export default {
-  extends: Line,
-  props: {
-    height: Number,
+  components: { LineChart: Line },
+  data() {
+    return {
+      metrics: null,
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            intersect: true,
+            mode: 'index',
+            position: 'nearest',
+            callbacks: {
+              labelColor: function (context) {
+                return {
+                  borderColor: context.dataset.borderColor,
+                  backgroundColor: context.dataset.borderColor,
+                };
+              },
+              title: function (tooltipItems) {
+                const { chart, dataIndex } = tooltipItems[0];
+                return common.formatTimestamp(
+                  chart.data.labels[dataIndex],
+                  true,
+                );
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              drawOnChartArea: false,
+            },
+            ticks: {
+              callback: function (value) {
+                return common.formatTimestamp(this.getLabelForValue(value));
+              },
+            },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              maxTicksLimit: 2,
+            },
+          },
+        },
+        elements: {
+          line: {
+            tension: 0.1,
+            borderWidth: 2,
+          },
+          point: {
+            radius: 0,
+            hitRadius: 20,
+            hoverRadius: 4,
+            hoverBorderWidth: 3,
+          },
+        },
+      },
+    };
   },
-  methods: {
-    render: function (metrics) {
-      const criticalStyle = getStyle('--severity-critical');
-      const highStyle = getStyle('--severity-high');
-      const mediumStyle = getStyle('--severity-medium');
-      const lowStyle = getStyle('--severity-low');
-      const unassignedStyle = getStyle('--severity-unassigned');
+  computed: {
+    chartData() {
+      const metrics = this.metrics;
+      if (!metrics) {
+        return null;
+      }
+      const criticalStyle = themeColor('--severity-critical');
+      const highStyle = themeColor('--severity-high');
+      const mediumStyle = themeColor('--severity-medium');
+      const lowStyle = themeColor('--severity-low');
+      const unassignedStyle = themeColor('--severity-unassigned');
 
       let labels = [];
       let criticalData = [];
@@ -42,112 +109,51 @@ export default {
         }
       }
 
-      this.renderChart(
-        {
-          labels: labels,
-          datasets: [
-            {
-              label: this.$t('severity.critical'),
-              backgroundColor: 'transparent',
-              borderColor: criticalStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: criticalData,
-            },
-            {
-              label: this.$t('severity.high'),
-              backgroundColor: 'transparent',
-              borderColor: highStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: highData,
-            },
-            {
-              label: this.$t('severity.medium'),
-              backgroundColor: 'transparent',
-              borderColor: mediumStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: mediumData,
-            },
-            {
-              label: this.$t('severity.low'),
-              backgroundColor: 'transparent',
-              borderColor: lowStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: lowData,
-            },
-            {
-              label: this.$t('severity.unassigned'),
-              backgroundColor: 'transparent',
-              borderColor: unassignedStyle,
-              pointHoverBackgroundColor: '#fff',
-              data: unassignedData,
-            },
-          ],
-        },
-        {
-          tooltips: {
-            enabled: false,
-            custom: CustomTooltips,
-            intersect: true,
-            mode: 'index',
-            position: 'nearest',
-            callbacks: {
-              labelColor: function (tooltipItem, chart) {
-                return {
-                  backgroundColor:
-                    chart.data.datasets[tooltipItem.datasetIndex].borderColor,
-                };
-              },
-              title: function (tooltipItems, data) {
-                return common.formatTimestamp(
-                  data.labels[tooltipItems[0].index],
-                  true,
-                );
-              },
-            },
+      return {
+        labels: labels,
+        datasets: [
+          {
+            label: this.$t('severity.critical'),
+            backgroundColor: 'transparent',
+            borderColor: criticalStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: criticalData,
           },
-          maintainAspectRatio: false,
-          legend: {
-            display: false,
+          {
+            label: this.$t('severity.high'),
+            backgroundColor: 'transparent',
+            borderColor: highStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: highData,
           },
-          scales: {
-            xAxes: [
-              {
-                gridLines: {
-                  drawOnChartArea: false,
-                },
-                ticks: {
-                  callback: function (value) {
-                    return common.formatTimestamp(value);
-                  },
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                  maxTicksLimit: 1,
-                },
-                gridLines: {
-                  display: true,
-                },
-              },
-            ],
+          {
+            label: this.$t('severity.medium'),
+            backgroundColor: 'transparent',
+            borderColor: mediumStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: mediumData,
           },
-          elements: {
-            line: {
-              tension: 0.1,
-              borderWidth: 2,
-            },
-            point: {
-              radius: 0,
-              hitRadius: 20,
-              hoverRadius: 4,
-              hoverBorderWidth: 3,
-            },
+          {
+            label: this.$t('severity.low'),
+            backgroundColor: 'transparent',
+            borderColor: lowStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: lowData,
           },
-        },
-      );
+          {
+            label: this.$t('severity.unassigned'),
+            backgroundColor: 'transparent',
+            borderColor: unassignedStyle,
+            pointHoverBackgroundColor: themeColor('--dt-surface-card'),
+            data: unassignedData,
+          },
+        ],
+      };
+    },
+  },
+  methods: {
+    render: function (metrics) {
+      this.metrics = metrics;
     },
   },
 };

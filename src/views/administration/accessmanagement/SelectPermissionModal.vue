@@ -1,10 +1,5 @@
 <template>
-  <b-modal
-    id="selectPermissionModal"
-    size="lg"
-    hide-header-close
-    :title="$t('admin.select_permission')"
-  >
+  <b-modal v-model="visible" size="lg" :title="$t('admin.select_permission')">
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -12,12 +7,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         :disabled="selectionHasChanged"
         @click="handleSelection"
@@ -30,15 +24,17 @@
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [],
+  mixins: [modalMixin],
   props: {
     currentPermissions: {
       type: Array,
       default: () => [],
     },
   },
+  emits: ['selection'],
   data() {
     return {
       currentSelection: [],
@@ -121,7 +117,7 @@ export default {
   },
   methods: {
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', this.$children[0].id);
+      this.visible = false;
       this.$emit('selection', this.currentSelection);
     },
     updateCurrentSelection() {

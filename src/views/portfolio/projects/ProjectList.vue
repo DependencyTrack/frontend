@@ -2,7 +2,6 @@
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
         variant="outline-primary"
         @click="initializeProjectCreateProjectModal"
         v-permission:or="[
@@ -12,28 +11,28 @@
       >
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
-        color="primary"
         v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
-      <c-switch
-        @click.native="saveViewState"
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_inactive_projects')
+        }}</span></b-form-checkbox
+      >
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showFlatView"
-        color="primary"
         v-model="showFlatView"
-        label
-        v-bind="labelIcon"
-        :disabled="isSearching"
-        v-b-tooltip.hover
-        :title="$t('message.switch_view')"
-      /><span class="text-muted">{{ $t('message.show_flat_view') }}</span>
+        :disabled="isSearching || hasRouteFilter"
+        v-b-tooltip.hover="$t('message.switch_view')"
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_flat_view')
+        }}</span></b-form-checkbox
+      >
     </div>
     <bootstrap-table
       ref="table"
@@ -45,27 +44,32 @@
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
-    <project-create-project-modal />
+    <project-create-project-modal v-model="showProjectCreateProjectModal" />
   </div>
 </template>
 
 <script>
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import { Switch as cSwitch } from '@coreui/vue';
 import MurmurHash2 from 'imurmurhash';
-import Vue from 'vue';
 import xssFilters from 'xss-filters';
+import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
-import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
-import ProjectCreateProjectModal from './ProjectCreateProjectModal';
+import EventBus from '../../../shared/eventbus';
+import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar.vue';
+import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
+import ProjectCreateProjectModal from './ProjectCreateProjectModal.vue';
+
+// Filtered results are mostly child projects, which the tree view (onlyRoot=true) hides.
+const hasRouteFilter = ({ tag, team, classifier }) =>
+  !!(tag || team || classifier);
+const storedFlatView = () =>
+  !!localStorage && localStorage.getItem('ProjectListShowFlatView') === 'true';
 
 export default {
-  mixins: [permissionsMixin, routerMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
-    cSwitch,
     ProjectCreateProjectModal,
   },
   props: {
@@ -73,20 +77,17 @@ export default {
     // this must be set to the corresponding project.
     uuid: String,
   },
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('ProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
-        : false;
-    this.showFlatView =
-      localStorage && localStorage.getItem('ProjectListShowFlatView') !== null
-        ? localStorage.getItem('ProjectListShowFlatView') === 'true'
-        : false;
+  created() {
+    this.options.url = this.apiUrl();
+  },
+  computed: {
+    hasRouteFilter() {
+      return hasRouteFilter(this.$route.query);
+    },
   },
   methods: {
     initializeProjectCreateProjectModal: function () {
-      this.$root.$emit('initializeProjectCreateProjectModal');
+      EventBus.emit('initializeProjectCreateProjectModal');
     },
     apiUrl: function (parentUuid) {
       if (this.uuid && !parentUuid) {
@@ -152,6 +153,7 @@ export default {
       });
     },
     onPostBody: function () {
+      this.mountCells();
       if (!this.showFlatView && !this.isSearching) {
         let columns = this.$refs.table.getOptions().columns;
 
@@ -237,13 +239,14 @@ export default {
         .get(`${url}&pageNumber=1&pageSize=1`)
         .then((response) => Number(response.headers['x-total-count']) > 0);
     },
-    saveViewState: function () {
-      this.savedViewState = this.showFlatView;
-    },
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.refreshTable();
+    },
+    hasRouteFilter(filtered) {
+      // Leaving a filter restores the stored preference.
+      this.showFlatView = filtered || this.isSearching || storedFlatView();
     },
     showInactiveProjects() {
       if (localStorage) {
@@ -257,7 +260,8 @@ export default {
       this.refreshTable();
     },
     showFlatView() {
-      if (localStorage) {
+      // A forced flat view is not the user's preference.
+      if (localStorage && !this.hasRouteFilter && !this.isSearching) {
         localStorage.setItem(
           'ProjectListShowFlatView',
           this.showFlatView.toString(),
@@ -272,14 +276,15 @@ export default {
   },
   data() {
     return {
-      showInactiveProjects: this.showInactiveProjects,
-      showFlatView: this.showFlatView,
+      showProjectCreateProjectModal: false,
+      showInactiveProjects:
+        localStorage &&
+        localStorage.getItem('ProjectListShowInactiveProjects') !== null
+          ? localStorage.getItem('ProjectListShowInactiveProjects') === 'true'
+          : false,
+      // Like searching, a filter forces the flat view.
+      showFlatView: hasRouteFilter(this.$route.query) || storedFlatView(),
       isSearching: false,
-      savedViewState: null,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('message.project_name'),
@@ -287,12 +292,12 @@ export default {
           sortable: true,
           routerFunc: () => this.$router,
           $t: (key, values) => this.$t(key, values),
-          formatter(value, row, index) {
+          formatter(value, row) {
             let url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
                 name: 'Project',
                 params: { uuid: row.uuid },
-              }).route.fullPath,
+              }).fullPath,
             );
             let collectionIcon = '';
             if (row.collectionLogic) {
@@ -308,7 +313,7 @@ export default {
           sortable: false,
           visible: false,
           routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          formatter(_value, row) {
             const router = this.routerFunc();
             let tag_string = '';
             if (row.tags) {
@@ -324,7 +329,7 @@ export default {
                   ?.map((tag) => common.formatProjectTagLabel(router, tag))
                   .join(' ');
                 tag_string += `</span>`;
-                tag_string += `<a href="#" title="show all tags" class="badge badge-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`;
+                tag_string += `<a href="#" title="show all tags" class="badge text-bg-tag" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`;
               }
             }
             return tag_string;
@@ -336,7 +341,7 @@ export default {
           sortable: false,
           visible: false,
           routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
-          formatter(value, row, index) {
+          formatter(_value, row) {
             const router = this.routerFunc();
             let team_string = '';
             if (row.teams) {
@@ -362,18 +367,19 @@ export default {
           title: this.$t('message.version'),
           field: 'version',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
         {
           title: this.$t('message.latest'),
           field: 'isLatest',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
           sortable: true,
+          visible: false,
         },
         {
           title: this.$t('message.classifier'),
@@ -386,7 +392,7 @@ export default {
           title: this.$t('message.last_bom_import'),
           field: 'lastBomImport',
           sortable: true,
-          formatter(timestamp, row, index) {
+          formatter(timestamp) {
             return typeof timestamp === 'number'
               ? common.formatTimestamp(timestamp, true)
               : '-';
@@ -396,6 +402,7 @@ export default {
           title: this.$t('message.bom_format'),
           field: 'lastBomImportFormat',
           sortable: true,
+          visible: false,
         },
         {
           title: this.$t('message.risk_score'),
@@ -405,7 +412,7 @@ export default {
         {
           title: this.$t('message.active'),
           field: 'active',
-          formatter(value, row, index) {
+          formatter(value) {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
@@ -425,15 +432,7 @@ export default {
             if (typeof metrics === 'undefined') {
               return '-'; // No vulnerability info available
             }
-            let ComponentClass = Vue.extend(PolicyViolationProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                metrics,
-                $t: this.$t.bind(this),
-              },
-            });
-            progressBar.$mount();
-            return progressBar.$el.outerHTML;
+            return this.cell(PolicyViolationProgressBar, { metrics });
           }.bind(this),
         },
         {
@@ -446,21 +445,14 @@ export default {
               return '-'; // No vulnerability info available
             }
 
-            // Programmatically instantiate SeverityProgressBar Vue component
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            return progressBar.$el.outerHTML;
           }.bind(this),
         },
       ],
@@ -501,7 +493,6 @@ export default {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },
-        url: this.apiUrl(),
         // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
         onClickRow: (row, $element) => {
           if (!this.showFlatView && !this.isSearching) {
@@ -541,15 +532,8 @@ export default {
         },
         onSearch: (text) => {
           this.isSearching = text.length !== 0;
-          if (this.isSearching) {
-            this.showFlatView = true;
-          } else {
-            if (this.savedViewState !== null) {
-              this.showFlatView = !this.savedViewState;
-            } else {
-              this.showFlatView = false;
-            }
-          }
+          this.showFlatView =
+            this.isSearching || this.hasRouteFilter || storedFlatView();
           this.setSearchTextQuery(text);
         },
         onPageChange: (number, size) => {

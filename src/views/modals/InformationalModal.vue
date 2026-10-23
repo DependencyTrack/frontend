@@ -1,10 +1,10 @@
 <template>
-  <b-modal id="modal-informational" hide-header-close>
-    <template v-slot:modal-title>Information</template>
+  <b-modal v-model="visible">
+    <template v-slot:title>Information</template>
     <div class="row">
       <div class="col-sm-12 col-md-12">
         <div
-          class="pull-left"
+          class="float-start"
           style="width: 70px; min-width: 70px; max-width: 70px"
         >
           <i class="fa fa-info-circle fa-4x" aria-hidden="true"></i>
@@ -14,10 +14,8 @@
         </div>
       </div>
     </div>
-    <template v-slot:modal-footer>
-      <b-button
-        class="btn btn-primary"
-        @click="$bvModal.hide('modal-informational')"
+    <template v-slot:footer>
+      <b-button class="btn btn-primary" @click="visible = false"
         >Close</b-button
       >
     </template>
@@ -25,8 +23,11 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
   name: 'InformationalModal',
+  mixins: [modalMixin],
   props: {
     message: String,
   },

@@ -1,13 +1,9 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
         ref="overview"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
         @click="routeTo()"
       >
@@ -107,15 +103,13 @@
 </template>
 
 <script>
-import common from '../../../shared/common';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 import EventBus from '../../../shared/eventbus';
+import { getStyle, setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 
 export default {
   mixins: [permissionsMixin],
   components: {},
-  title: '',
   computed: {
     licenseLabel() {
       if (this.license.name) {
@@ -139,11 +133,11 @@ export default {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.custom_license_deleted'));
           this.$router.replace({ name: 'Licenses' });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -179,18 +173,19 @@ export default {
     let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
     this.axios.get(url).then((response) => {
       this.license = response.data;
-      EventBus.$emit('addCrumb', this.licenseLabel);
-      this.$title = `${this.$t('message.license')} ${this.licenseLabel}`;
+      EventBus.emit('addCrumb', this.licenseLabel);
+      setPageTitle(`${this.$t('message.license')} ${this.licenseLabel}`);
     });
-    this.getTabFromRoute().active = true;
+    // <b-tabs> registers its tabs after this hook.
+    this.$nextTick(() => this.getTabFromRoute().activate());
   },
   watch: {
     $route() {
       this.getTabFromRoute().activate();
     },
   },
-  destroyed() {
-    EventBus.$emit('crumble');
+  unmounted() {
+    EventBus.emit('crumble');
   },
 };
 </script>
@@ -207,9 +202,9 @@ td {
   white-space: nowrap;
 }
 .fa-check-square-o {
-  color: var(--primary);
+  color: var(--bs-primary);
 }
 .fa-square-o {
-  color: var(--secondary);
+  color: var(--dt-border-control);
 }
 </style>

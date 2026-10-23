@@ -1,0 +1,103 @@
+<template>
+  <b-nav-item-dropdown
+    placement="right-end"
+    strategy="fixed"
+    :offset="8"
+    menu-class="sidebar-profile-menu"
+    no-caret
+  >
+    <template #button-content>
+      <i class="nav-icon fa fa-user-circle-o"></i>
+      <span class="sidebar-profile-name">{{ user }}</span>
+    </template>
+    <b-dropdown-header tag="div" class="text-center">
+      {{ $t('message.connected_as') }}
+      <strong>{{ user }}</strong>
+    </b-dropdown-header>
+    <b-dropdown-item v-if="canUpdateProfile()" @click="$emit('editProfile')"
+      ><i class="fa fa-user text-primary" />
+      {{ $t('message.profile_update') }}</b-dropdown-item
+    >
+    <b-dropdown-item v-if="canChangePassword()" to="/change-password"
+      ><i class="fa fa-key text-primary" />
+      {{ $t('message.change_password') }}</b-dropdown-item
+    >
+    <b-dropdown-divider v-if="canUpdateProfile() || canChangePassword()" />
+    <b-dropdown-form
+      id="profile-preferences-form"
+      class="ps-2 pe-2"
+      @click.stop
+    >
+      <LocalePicker />
+      <ThemePicker class="mt-2" />
+    </b-dropdown-form>
+    <b-dropdown-divider />
+    <b-dropdown-item @click="$emit('about')"
+      ><i class="fa-solid fa-circle-info text-primary" />
+      {{ $t('message.about') }}</b-dropdown-item
+    >
+    <b-dropdown-item @click="logout"
+      ><i class="fa fa-sign-out text-primary" />
+      {{ $t('message.logout') }}</b-dropdown-item
+    >
+  </b-nav-item-dropdown>
+</template>
+
+<script>
+import EventBus from '../shared/eventbus';
+import state from '../shared/state';
+import LocalePicker from '@/views/components/LocalePicker.vue';
+import ThemePicker from '@/views/components/ThemePicker.vue';
+
+export default {
+  name: 'ProfileDropdown',
+  components: {
+    LocalePicker,
+    ThemePicker,
+  },
+  emits: ['editProfile', 'about'],
+  data: () => {
+    return {
+      itemsCount: 42,
+    };
+  },
+  computed: {
+    currentUser: () => state.currentUser,
+    user() {
+      return this.currentUser.fullname || this.currentUser.username;
+    },
+    isManagedUser() {
+      return (
+        this.currentUser &&
+        Object.prototype.hasOwnProperty.call(this.currentUser, 'suspended')
+      );
+    },
+  },
+  methods: {
+    logout: function () {
+      const url = this.$api.BASE_URL + '/' + this.$api.URL_USER_LOGOUT;
+      this.axios.post(url).finally(() => {
+        // Instructs all tabs (via localStorage event) that the session is being invalidated
+        localStorage.setItem('sessionInvalidate', Date.now().toLocaleString());
+        localStorage.removeItem('sessionInvalidate');
+        // Clear token and permissions.
+        EventBus.emit('authenticated', null);
+        this.$router.replace({ name: 'Login' });
+      });
+    },
+    canChangePassword: function () {
+      return this.isManagedUser;
+    },
+    canUpdateProfile: function () {
+      return this.isManagedUser;
+    },
+  },
+};
+</script>
+
+<style>
+/* Remove default padding inherited from b-dropdown-form. */
+#profile-preferences-form {
+  padding: 0;
+}
+</style>

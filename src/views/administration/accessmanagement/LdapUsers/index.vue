@@ -3,9 +3,8 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          size="md"
           variant="outline-primary"
-          v-b-modal.createLdapUserModal
+          @click="showCreateLdapUserModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
@@ -19,14 +18,17 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-ldap-user-modal v-on:refreshTable="refreshTable" />
+    <create-ldap-user-modal
+      v-model="showCreateLdapUserModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../../shared/common';
-import CreateLdapUserModal from '../CreateLdapUserModal';
+import CreateLdapUserModal from '../CreateLdapUserModal.vue';
 import bootstrapTableMixin from '../../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../../shared/eventbus';
 import UserDetails from './UserDetails.vue';
@@ -41,20 +43,21 @@ export default {
     CreateLdapUserModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       this.$refs.table.updateRow({ index, row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+  beforeUnmount() {
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     return {
+      showCreateLdapUserModal: false,
       rowEvents: {
         update: 'admin:ldapusers:rowUpdate',
         delete: 'admin:ldapusers:rowDeleted',
@@ -107,13 +110,13 @@ export default {
         detailViewIcon: false,
         detailViewByClick: true,
         detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            render: () => (
-              <UserDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+          return this.cell(UserDetails, {
+            row,
+            index,
+            rowEvents: this.rowEvents,
           });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');

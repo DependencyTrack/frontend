@@ -64,6 +64,7 @@ export default {
     customMode: { type: Boolean, default: false },
     html: { type: String, default: '' },
   },
+  emits: ['dismiss'],
   data() {
     return {
       visible: true,
@@ -112,7 +113,7 @@ export default {
     });
     window.addEventListener('resize', this.updateOffset);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.updateOffset);
     this.clearOffset();
   },

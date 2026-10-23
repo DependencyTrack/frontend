@@ -2,6 +2,7 @@ import jQuery from 'jquery';
 
 export default {
   data: () => ({
+    booleanFilters: [],
     pendingFilters: {},
   }),
   computed: {
@@ -23,7 +24,8 @@ export default {
       this.$watch(dataKey, (val) => {
         if (!isBoolean) {
           const hasValue = Array.isArray(val) ? val.length > 0 : !!val;
-          if (hasValue) this.$set(this.pendingFilters, name, false);
+          if (hasValue)
+            this.pendingFilters = { ...this.pendingFilters, [name]: false };
         }
         if (!this._clearing && typeof this.refreshTable === 'function') {
           this.refreshTable();
@@ -32,11 +34,11 @@ export default {
     });
   },
   mounted() {
-    // Move bootstrap-table's built-in toolbar controls (refresh, column toggle)
-    // into the filter bar so they appear in one cohesive row.
+    // Move bootstrap-table's built-in toolbar controls (search, refresh, column
+    // toggle) into the filter bar so they appear in one row.
     //
-    // This depends on bootstrap-table rendering a `.columns` div as a direct
-    // child of `.fixed-table-toolbar` during its mounted() hook.
+    // This depends on bootstrap-table rendering `.search` / `.columns` divs as
+    // direct children of `.fixed-table-toolbar` during its mounted() hook.
     //
     // We also listen for bootstrap-table's post-body event to re-run the move,
     // since initToolbar() can recreate the `.columns` div (e.g. on option changes).
@@ -50,7 +52,7 @@ export default {
       }
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     const table = this._queryEl('table');
     if (table) {
       jQuery(table).off('post-body.bs.table.filterPillsMixin');
@@ -71,21 +73,25 @@ export default {
       if (!filterBar) return;
       const toolbar = filterBar.closest('.fixed-table-toolbar');
       if (!toolbar) return;
+      const search = toolbar.querySelector(':scope > .search');
       const columns = toolbar.querySelector(':scope > .columns');
-      if (!columns) return;
-      columns.style.setProperty('float', 'none', 'important');
-      columns.style.marginLeft = 'auto';
-      columns.style.flexShrink = '0';
-      columns.style.alignSelf = 'flex-start';
-      columns.style.borderLeft = '1px solid rgb(255 255 255 / 10%)';
-      columns.style.paddingLeft = '0.5rem';
-      columns.querySelectorAll('.btn').forEach((btn) => {
-        if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
-          const title = btn.getAttribute('title') || btn.getAttribute('name');
-          if (title) btn.setAttribute('aria-label', title);
-        }
+      if (!search && !columns) return;
+      [search, columns].filter(Boolean).forEach((el, index) => {
+        el.style.setProperty('float', 'none', 'important');
+        el.style.marginLeft = index === 0 ? 'auto' : '0.5rem';
+        el.style.flexShrink = '0';
+        el.style.alignSelf = 'flex-start';
+        el.querySelectorAll('.form-control').forEach((input) => {
+          input.classList.add('form-control-sm');
+        });
+        el.querySelectorAll('.btn').forEach((btn) => {
+          if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
+            const title = btn.getAttribute('title') || btn.getAttribute('name');
+            if (title) btn.setAttribute('aria-label', title);
+          }
+        });
+        filterBar.appendChild(el);
       });
-      filterBar.appendChild(columns);
     },
     hasFilterValue(name) {
       if (this.booleanFilters && this.booleanFilters.includes(name)) {
@@ -102,7 +108,7 @@ export default {
         this[name] = true;
         return;
       }
-      this.$set(this.pendingFilters, name, true);
+      this.pendingFilters = { ...this.pendingFilters, [name]: true };
       this.$nextTick(() => {
         this.$nextTick(() => {
           const ref = this.$refs['filter_' + name];
@@ -113,7 +119,26 @@ export default {
       });
     },
     onFilterDismiss(name) {
-      this.$set(this.pendingFilters, name, false);
+      this.pendingFilters = { ...this.pendingFilters, [name]: false };
+    },
+    clearAllFilters() {
+      this._clearing = true;
+      try {
+        this.allFilterDefs.forEach((def) => {
+          if (this.booleanFilters && this.booleanFilters.includes(def.name)) {
+            this[def.name] = false;
+          } else {
+            const key = def.name + 'Filter';
+            this[key] = Array.isArray(this[key]) ? [] : null;
+          }
+        });
+        this.clearPendingFilters();
+      } finally {
+        this._clearing = false;
+      }
+      if (typeof this.refreshTable === 'function') {
+        this.refreshTable();
+      }
     },
     clearPendingFilters() {
       Object.keys(this.pendingFilters).forEach((k) => {

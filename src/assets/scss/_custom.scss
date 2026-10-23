@@ -1,190 +1,174 @@
 // Here you can add other styles
 
-html {
-  filter: contrast(110%);
-}
 .modal-header {
-  background-color: $grey-800;
+  background-color: var(--dt-surface-card);
 }
 .modal-header, .modal-footer {
   padding: .5rem .7rem;
 }
 .severity-critical, .status-failed {
-  color: $severity-critical;
+  color: var(--dt-severity-critical-text);
   .progress-bar {
-    background-color: $severity-critical;
+    background-color: var(--severity-critical);
   }
 }
 .severity-high {
-  color:$severity-high;
+  color: var(--dt-severity-high-text);
   .progress-bar {
-    background-color: $severity-high;
+    background-color: var(--severity-high);
   }
 }
 .severity-medium, .status-warning {
-  color: $severity-medium;
+  color: var(--dt-severity-medium-text);
   .progress-bar {
-    background-color: $severity-medium;
+    background-color: var(--severity-medium);
   }
 }
 .severity-low, .status-passed {
-  color: $severity-low;
+  color: var(--dt-severity-low-text);
   .progress-bar {
-    background-color: $severity-low;
+    background-color: var(--severity-low);
   }
 }
 .severity-info, .status-info {
-  color: $severity-info;
+  color: var(--dt-severity-info-text);
   .progress-bar {
-    background-color: $severity-info;
+    background-color: var(--severity-info);
   }
 }
 .severity-unassigned {
-  color: $severity-unassigned;
+  color: var(--dt-severity-unassigned-text);
   .progress-bar {
-    background-color: $severity-unassigned;
+    background-color: var(--severity-unassigned);
   }
 }
 // Fixes the width for the bootstrap progress bar in tables
 .table-progress {
   width: 100% !important;
 }
-.severity-critical-bg, .bg-severity-critical, .bg-CRITICAL {
-  background: $severity-critical none;
+.severity-critical-bg, .text-bg-CRITICAL, .severity-fail-bg {
+  background: var(--severity-critical) none;
+  color: var(--dt-on-severity-critical);
 }
-.severity-high-bg, .bg-severity.high, .bg-HIGH {
-  background: $severity-high none;
+.severity-high-bg, .text-bg-HIGH {
+  background: var(--severity-high) none;
+  color: var(--dt-on-severity-high);
 }
-.severity-medium-bg, .bg-severity-medium, .bg-MEDIUM {
-  background: $severity-medium none;
+.severity-medium-bg, .text-bg-MEDIUM, .severity-warn-bg {
+  background: var(--severity-medium) none;
+  color: var(--dt-on-severity-medium);
 }
-.severity-low-bg, .bg-severity-low, .bg-LOW {
-  background: $severity-low none;
+.severity-low-bg, .text-bg-LOW {
+  background: var(--severity-low) none;
+  color: var(--dt-on-severity-low);
 }
-.severity-info-bg, .bg-severity-info, .bg-INFO {
-  background: $severity-info none;
+.severity-info-bg, .text-bg-INFO {
+  background: var(--severity-info) none;
+  color: var(--dt-on-severity-info);
 }
-.severity-warn-bg {
-  background: $severity-medium none;
+.severity-unassigned-bg, .text-bg-UNASSIGNED {
+  background: var(--severity-unassigned) none;
+  color: var(--dt-on-severity-unassigned);
 }
-.severity-fail-bg {
-  background: $severity-critical none;
-}
-.bg-violation-type {
-  background: $widget-3;
-}
-.severity-unassigned-bg, .bg-severity-unassigned, .bg-UNASSIGNED {
-  background: $severity-unassigned none;
+.text-bg-violation-type {
+  background: var(--dt-accent);
+  color: var(--dt-on-accent);
 }
 .severity-bug-icon {
   width:40px;
   height:40px;
-  color:#ffffff;
 }
 .severity-bug-label {
   height:40px;
-  color:#ffffff;
+  color: var(--dt-text-heading);
   background-color: $severity-label-bg;
 }
-.pointer:hover {
-  cursor: pointer;
-}
 .label-analyzer {
-  border: 1px solid #5C9CCB;
+  border: 1px solid var(--dt-border-control);
 }
 .label-analyzer-internal {
-  color: $white;
+  color: var(--dt-text-strong);
 }
 .label-source {
-  color: #222222;
+  color: var(--dt-text-strong);
   padding: .2em .6em .3em;
   font-weight: normal;
   font-size: 75%;
 }
 .label-source-nvd {
-  background-color: #AECEE5;
+  background-color: color-mix(in srgb, #5C9CCB 18%, transparent);
   border: 1px solid #5C9CCB;
 }
 .label-source-npm {
-  background-color: #B4AFE4;
+  background-color: color-mix(in srgb, #6E63CC 18%, transparent);
   border: 1px solid #6E63CC;
 }
 .label-source-ossindex {
-  background-color: #AFE4BF;
+  background-color: color-mix(in srgb, #73D08F 18%, transparent);
   border: 1px solid #73D08F;
 }
 .label-source-snyk {
-  background-color: #afd2e4;
+  background-color: color-mix(in srgb, #73c1d0 18%, transparent);
   border: 1px solid #73c1d0;
 }
 .label-source-vulndb {
-  background-color: #FFC78B;
+  background-color: color-mix(in srgb, #FE9536 18%, transparent);
   border: 1px solid #FE9536;
 }
 .label-source-cx {
-  background-color: #4dbeef;
+  background-color: color-mix(in srgb, #4036fe 18%, transparent);
   border: 1px solid #4036fe;
 }
 .label-source-victims {
-  background-color: #E4AFAF;
+  background-color: color-mix(in srgb, #CC6666 18%, transparent);
   border: 1px solid #CC6666;
 }
 .label-source-github {
-  background-color: #D4BBF7;
+  background-color: color-mix(in srgb, #A66AF7 18%, transparent);
   border: 1px solid #A66AF7;
 }
 .label-source-osv {
-  background-color: #f7bbdc;
+  background-color: color-mix(in srgb, #cc668a 18%, transparent);
   border: 1px solid #cc668a;
 }
 .label-source-internal {
-  background-color: #EBE5A8;
+  background-color: color-mix(in srgb, #DCD167 18%, transparent);
   border: 1px solid #DCD167;
 }
 .label-source-unknown {
-  background-color: $severity-unassigned;
-  border: 1px solid $grey-900;
-  color: #FFFFFF;
+  background-color: color-mix(in srgb, var(--severity-unassigned) 18%, transparent);
+  border: 1px solid var(--severity-unassigned);
 }
 .label-notification {
-  color: #222222;
+  color: var(--dt-text-strong);
   padding: .2em .6em .3em;
   font-weight: normal;
   font-size: 75%;
 }
 .label-notification-fail {
-  background-color: lighten($notification-fail, 15% );
-  border: 1px solid $notification-fail;
+  background-color: color-mix(in srgb, var(--notification-fail) 18%, transparent);
+  border: 1px solid var(--notification-fail);
 }
 .label-notification-warn {
-  background-color: lighten($notification-warn, 15% );
-  border: 1px solid $notification-warn;
+  background-color: color-mix(in srgb, var(--notification-warn) 18%, transparent);
+  border: 1px solid var(--notification-warn);
 }
 .label-notification-info {
-  background-color: lighten($notification-info, 15% );
-  border: 1px solid $notification-info;
+  background-color: color-mix(in srgb, var(--notification-info) 18%, transparent);
+  border: 1px solid var(--notification-info);
 }
 .table {
-  background-color: $grey-750;
+  background-color: var(--dt-surface-card);
 }
 .table td.tight, .table th.tight {
   width: 1%;
 }
-.table td.expand, .table th.expand {
-  width: 10%;
-}
-.table td.expand-20, .table th.expand-20 {
-  width: 20%;
-}
 label.required:after {
-  color: #d62728;
+  color: var(--dt-severity-critical-text);
   content:" *";
 }
-input.required, select.required, textarea.required {
-  border-color: #ffd700;
-}
 
-/* usage: use outer div/span with class truncate-ellipsis or truncate-ellipsis-inline and inner span with content to truncate */
+/* usage: use outer div/span with class truncate-ellipsis and inner span with content to truncate */
 .truncate-ellipsis {
   display: table;
   table-layout: fixed;
@@ -196,124 +180,152 @@ input.required, select.required, textarea.required {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.truncate-ellipsis-inline {
-  display: inline-table;
-  table-layout: fixed;
-  width: 100%;
-  white-space: nowrap;
-}
-.truncate-ellipsis-inline > * {
-  display: table-cell;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .body-bg-color {
-  background-color: $body-bg;
+  background-color: var(--bs-body-bg);
 }
 .tab-content {
-  background: $body-bg;
+  background: var(--bs-body-bg);
+}
+.nav-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  --nav-tabs-fade: 2rem;
+}
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (animation-timeline: scroll(self inline)) {
+  @keyframes nav-tabs-scroll-fade {
+    from {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 0,
+        #000 calc(100% - var(--nav-tabs-fade)),
+        transparent 100%
+      );
+    }
+    50% {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--nav-tabs-fade),
+        #000 calc(100% - var(--nav-tabs-fade)),
+        transparent 100%
+      );
+    }
+    to {
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--nav-tabs-fade),
+        #000 100%,
+        transparent 100%
+      );
+    }
+  }
+  .nav-tabs {
+    animation-name: nav-tabs-scroll-fade;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(self inline);
+  }
+}
+.nav-tabs-scroller {
+  position: relative;
+}
+.nav-tabs-scroll-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  padding: 0 0.5rem;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.nav-tabs-scroll-btn.is-visible {
+  display: flex;
+}
+.nav-tabs-scroll-btn-left {
+  left: 0;
+  padding-right: 1.5rem;
+  background: linear-gradient(to right, var(--bs-body-bg) 50%, transparent);
+}
+.nav-tabs-scroll-btn-right {
+  right: 0;
+  padding-left: 1.5rem;
+  background: linear-gradient(to left, var(--bs-body-bg) 50%, transparent);
 }
 .nav-tabs .nav-link {
-  border-top-color: $grey-900;
-  border-left-color: $grey-900;
-  border-right-color: $grey-900;
+  white-space: nowrap;
+  border-top-color: var(--dt-border);
+  border-left-color: var(--dt-border);
+  border-right-color: var(--dt-border);
   border-bottom-color: transparent;
 }
 .nav-tabs .nav-link:hover {
-  background-color: $grey-750;
-}
-.nav-tabs .nav-link.active {
-  background: $grey-700;
-  border-bottom-color: $grey-700;
-  color: $white;
-}
-.nav-tabs .nav-link.active:focus {
-  background: $grey-700;
-  border-bottom-color: $grey-700;
+  background-color: var(--dt-hover);
 }
 .card-footer-action:hover {
-  background: $grey-800;
+  background: var(--dt-hover);
 }
 .callout-severity-critical {
-  border-left-color: $severity-critical;
+  border-left-color: var(--severity-critical);
 }
 .callout-severity-high {
-  border-left-color: $severity-high;
+  border-left-color: var(--severity-high);
 }
 .callout-severity-medium {
-  border-left-color: $severity-medium;
+  border-left-color: var(--severity-medium);
 }
 .callout-severity-low {
-  border-left-color: $severity-low;
+  border-left-color: var(--severity-low);
 }
 .callout-severity-info {
-  border-left-color: $severity-info;
+  border-left-color: var(--severity-info);
 }
 .callout-severity-unassigned {
-  border-left-color: $severity-unassigned;
+  border-left-color: var(--severity-unassigned);
 }
-.toast-container>div {
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
+.toast-body {
+  white-space: pre-line;
 }
-
 .expanded-row {
   margin-top:-12px;
   margin-bottom:-12px;
   margin-right: -13px;
   padding-top:20px;
   padding-bottom: 20px;
-  background-color: $grey-800;
+  background-color: var(--dt-surface-recessed);
 }
 
 .btn-spaced-group .btn {
   margin-right: 0.5rem;
 }
 
-.btn-outline-primary.focus {
-  box-shadow: 0 0 0 0;
-}
-
 .btn-outline-primary.disabled.active, .btn-outline-primary:disabled.active {
-  background-color: darken($blue, 20);
-  color: $white;
+  background-color: var(--dt-accent);
+  color: var(--dt-on-accent);
   opacity: 1.0;
 }
 
 .formattedLicenseContent {
   font-size: 1.25em;
-  font-family: monospace;
+  font-family: var(--bs-font-monospace);
   white-space: pre-wrap;
 }
 
-/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
-.toggle-off {
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
-}
-.toggle.off {
-  border-color: rgba(0, 0, 0, .25);
-}
-.toggle-handle {
-  background-color: $toggle-handle-bg;
-  border: thin rgba(0, 0, 0, .25) solid;
-}
 h6 {
   font-size: 1.0em;
   font-weight: 600;
   text-transform: uppercase;
-}
-.switch {
-  vertical-align: middle;
-  margin-top: .5rem;
-  margin-bottom: .5rem;
-  margin-right: 1rem;
-}
-.switch-slider {
-  background-color: $switch-bg;
-}
-.switch-slider:before {
-  background-color: $grey-200;
 }
 .card-footer > :not(:last-child) {
   margin-right: .25rem;
@@ -331,77 +343,111 @@ h6 {
   float: none;
   width: 100%;
 }
-.fixed-table-toolbar .filter-bar {
+.fixed-table-toolbar .bs-bars .filter-bar {
+  margin-bottom: 0;
+}
+.bootstrap-table .fixed-table-toolbar .filter-bar > .search,
+.bootstrap-table .fixed-table-toolbar .filter-bar > .columns {
+  margin-top: 0;
   margin-bottom: 0;
 }
 .fixed-table-toolbar .filter-bar > .columns .btn {
-  padding: .15rem .35rem;
+  padding: .25rem .35rem;
 }
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading {
-  background: $grey-750  !important;
+  background: var(--dt-surface-card) !important;
 }
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-dot,
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-wrap::after,
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading.table-dark .animation-wrap::before {
-  background: $grey-750  !important;;
-}
-.was-validated .form-control:invalid, .form-control.is-invalid {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background: var(--dt-surface-card) !important;
 }
 .bg-widget {
-  background-color: $grey-750;
+  background-color: var(--dt-surface-card);
 }
-button:focus {
+// Bootstrap 4's .form-group spacing: the group's margin replaces its last child's.
+.b-form-group {
+  margin-bottom: 1rem;
+
+  > :last-child,
+  > :has(+ .invalid-feedback:last-child) {
+    margin-bottom: 0 !important;
+  }
+}
+// BFormText renders an inline <small>.
+.form-text {
+  display: block;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+.form-control[readonly] {
+  background-color: $input-disabled-bg;
+}
+// BootstrapVueNext's file input takes the page background.
+.b-form-file-control {
+  background-color: $input-bg;
+}
+.badge.rounded-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+}
+.text-bg-tab-total {
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  margin-left: 0.6em !important;
+  color: var(--dt-severity-low-text) !important;
+}
+.text-bg-tab-fail {
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-critical-text) !important;
+}
+.text-bg-tab-warn {
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-medium-text) !important;
+}
+.text-bg-tab-info {
+  border: 1px solid var(--dt-border-control) !important;
+  background-color: var(--dt-surface-recessed) !important;
+  color: var(--dt-severity-info-text) !important;
+}
+.text-bg-tag {
+  color: var(--dt-accent);
+  background-color: transparent;
+  border: 1px solid var(--dt-accent);
+}
+.text-bg-tag:hover {
+  color: var(--dt-text-heading);
+  background-color: transparent;
+  border: 1px solid var(--dt-accent);
+}
+.tags-input {
+  row-gap: 0.25rem;
+}
+.tags-input:focus-within {
+  outline: 2px solid var(--dt-focus);
+  outline-offset: 2px;
+}
+.tags-input input {
   outline: 0;
 }
-.badge-tab-total {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  margin-left: 0.6em !important;
-  color: #21D983 !important;
-}
-.badge-tab-fail {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-fail !important;
-}
-.badge-tab-warn {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-warn !important;
-}
-.badge-tab-info {
-  border: 1px solid #60768c !important;
-  background-color: $grey-900 !important;
-  color: $notification-info !important;
-}
-.badge-tag {
-  color: $primary;
-  background-color: transparent;
-  border: 1px solid $primary;
-}
-.badge-tag:hover {
-  color: $light-blue;
-  background-color: transparent;
-  border: 1px solid $primary;
-}
 .badge-team {
-    color: $primary;
+    color: var(--dt-accent);
     background-color: transparent;
-    border: 1px solid $primary;
+    border: 1px solid var(--dt-accent);
   }
   .badge-team:hover {
-    color: $light-blue;
+    color: var(--dt-text-heading);
     background-color: transparent;
-    border: 1px solid $primary;
+    border: 1px solid var(--dt-accent);
   }
 td a.detail-icon {
   font-size: 150%;
   line-height: 1.0;
-  color: $grey-600;
-}
-.b-calendar-grid-body .text-dark {
-  color: #ffffff !important;
+  color: var(--dt-icon-subtle);
 }
 .treegrid-indent {
   width: 10px;
@@ -430,23 +476,23 @@ td a.detail-icon {
 // Adjusts vue-multiselect style to dependency track
 
 .multiselect__spinner {
-  background: $grey-650;
+  background: var(--dt-surface-input);
   z-index: 52;
 }
 
 .multiselect__spinner:before,
 .multiselect__spinner:after {
-  border-color: $primary transparent transparent;
+  border-color: var(--dt-accent) transparent transparent;
 }
 
 .multiselect--active {
-  color: #bfcfdf;
+  color: var(--dt-text);
 }
 
 .multiselect__input,
 .multiselect__single {
-  background: $grey-650;
-  color: #bfcfdf;
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 400;
   padding-left: 0;
@@ -454,34 +500,34 @@ td a.detail-icon {
 }
 
 .multiselect__input::placeholder {
-  color: #bfcfdf;
+  color: var(--dt-text-muted);
 }
 
 .multiselect__input:hover,
 .multiselect__single:hover {
-  border-color: $grey-650;
+  border-color: var(--dt-surface-input);
 }
 
 .multiselect__input:focus,
 .multiselect__single:focus {
-  border-color: $grey-650;
+  border-color: var(--dt-surface-input);
 }
 
 .multiselect__select,
 .multiselect__select:before {
-  border-color: #2f353a transparent;
+  border-color: var(--dt-text-muted) transparent;
   z-index: 51;
 }
 
 .multiselect__placeholder {
-  color: $grey-400;
+  color: var(--dt-text-muted);
   font-size: 0.875rem;
   font-weight: 400;
 }
 
 .multiselect__content-wrapper {
-  border: 1px solid $border-color;
-  background: $grey-650;
+  border: 1px solid var(--dt-border);
+  background: var(--dt-surface-input);
   font-size: 0.875rem;
   font-weight: 400;
 }
@@ -498,23 +544,23 @@ td a.detail-icon {
 }
 
 .multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: var(--dt-hover);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 400;
 }
 
 .multiselect__option--selected {
-  background: $grey-650;
-  color: #bfcfdf;
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   font-size: 0.875rem;
   font-weight: 700;
 }
 
 .multiselect__tags {
-  border: 1px solid $border-color;
-  background: $grey-650;
-  color: #bfcfdf;
+  border: 1px solid var(--dt-border-control);
+  background: var(--dt-surface-input);
+  color: var(--dt-text);
   height: $input-height;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
@@ -522,15 +568,9 @@ td a.detail-icon {
 }
 
 .multiselect__option--selected.multiselect__option--highlight {
-  background: #52525e;
-  color: #bfcfdf;
+  background: var(--dt-hover);
+  color: var(--dt-text);
   font-weight: 700;
-}
-
-// keep elements together on the same line, e.g switch and label
-.keep-together {
-  display: inline;
-  white-space: nowrap;
 }
 
 .icon-cellend {
@@ -538,30 +578,153 @@ td a.detail-icon {
   padding-top: 0.3rem;
 }
 
-@include media-breakpoint-up($breakpoint-mobile-up) {
-  .header-fixed {
-    .app-header {
-      top: var(--banner-offset, 0);
-    }
+// Font Awesome 7 makes every icon fixed-width. The layout expects Font Awesome 4's natural widths, and `fa-fw`
+// still opts in.
+:root {
+  --fa-width: auto;
+}
 
-    .app-body {
-      margin-top: calc(#{$navbar-height} + var(--banner-offset, 0px));
-    }
+// Desktop has no app header. The sidebar holds the brand and the profile menu instead.
+:root {
+  --app-header-height: #{$navbar-height};
+}
+
+@include media-breakpoint-up(lg) {
+  :root {
+    --app-header-height: 0px;
   }
 
-  .sidebar-fixed {
-    .sidebar {
-      top: calc(#{$navbar-height} + var(--banner-offset, 0px));
-      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
-    }
+  .app-body {
+    margin-top: var(--banner-offset, 0px);
+  }
 
-    .app-header + .app-body .sidebar {
-      height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
+  .sidebar-fixed .sidebar {
+    top: var(--banner-offset, 0px);
+    height: calc(100vh - var(--banner-offset, 0px));
+  }
+}
+
+.sidebar-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  // Same height as the breadcrumb, so their bottom borders line up.
+  height: calc(#{$breadcrumb-padding-y * 2 + $font-size-base * $line-height-base} + 1px);
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--dt-border);
+}
+
+.sidebar-brand-minimized {
+  display: none;
+}
+
+.sidebar .sidebar-profile {
+  min-height: 0;
+  border-top: 1px solid var(--dt-border);
+
+  // BootstrapVueNext wraps the toggle in an inline .btn-group.
+  .btn-group {
+    display: flex;
+  }
+
+  .nav-link {
+    width: 100%;
+    overflow: hidden;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 0;
+  }
+
+  .nav-link.show {
+    color: $sidebar-color;
+    background: $sidebar-nav-link-active-bg;
+
+    .nav-icon {
+      color: var(--dt-accent);
     }
   }
 }
 
-@include media-breakpoint-down($breakpoint-mobile-down) {
+.sidebar-footer {
+  display: flex;
+  flex: 0 0 $sidebar-minimizer-height;
+  background-color: var(--dt-surface-recessed);
+
+  .sidebar-minimizer {
+    background-color: transparent;
+  }
+}
+
+.sidebar-about {
+  flex: 1;
+  min-width: 0;
+  padding: 0 1rem;
+  overflow: hidden;
+  font-size: 85%;
+  line-height: 1.3;
+  color: var(--dt-text-muted);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+
+  &:hover {
+    color: $sidebar-color;
+  }
+}
+
+.sidebar-profile-menu {
+  min-width: 14rem;
+  box-shadow: $box-shadow-lg;
+}
+
+@include media-breakpoint-up(lg) {
+  .sidebar-minimized {
+    .sidebar-brand {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .sidebar-brand-full,
+    .sidebar-about {
+      display: none;
+    }
+
+    // Same hover flyout as the nav items. The open menu is anchored to the toggle, so the flyout waits until it closes.
+    .sidebar-profile {
+      .nav-item {
+        width: $sidebar-minimized-width;
+        overflow: hidden;
+
+        &:hover:not(:has(.show)) {
+          width: $sidebar-width + $sidebar-minimized-width;
+
+          .nav-link,
+          .nav-icon {
+            color: var(--dt-on-accent);
+          }
+
+          .nav-link {
+            background: var(--dt-accent);
+          }
+        }
+      }
+
+      .nav-link {
+        padding-right: 0;
+        text-overflow: clip;
+      }
+    }
+
+    .sidebar-brand-minimized {
+      display: inline;
+    }
+  }
+}
+
+@include media-breakpoint-down(lg) {
   .app-header {
     top: var(--banner-offset, 0);
   }
@@ -574,4 +737,15 @@ td a.detail-icon {
     top: calc(#{$navbar-height} + var(--banner-offset, 0px));
     height: calc(100vh - #{$navbar-height} - var(--banner-offset, 0px));
   }
+}
+
+// BootstrapVueNext renders tooltips inline, where a narrow positioned parent would squeeze them to a word per line.
+.tooltip {
+  width: max-content;
+}
+
+// Link color alone is under 3:1 against body text, so links in running text need an underline.
+p a:not([class]),
+.markdown a {
+  text-decoration: underline;
 }

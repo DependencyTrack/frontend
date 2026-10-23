@@ -1,10 +1,8 @@
 <template>
   <b-modal
-    id="selectProjectModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
-    v-permission="'VIEW_PORTFOLIO'"
     :title="$t('message.select_project')"
   >
     <bootstrap-table
@@ -14,11 +12,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="handleSelection">{{
+      <b-button variant="primary" @click="handleSelection">{{
         $t('message.select')
       }}</b-button>
     </template>
@@ -29,16 +27,18 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   props: {
     // Current projects should be a list of UUIDs since names can be duplicate
     username: { type: String, default: null },
   },
+  emits: ['selection'],
   methods: {
     apiUrl: function () {
-      let endpoint = '';
+      let endpoint;
       if (this.username) {
         endpoint = `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
         return endpoint;
@@ -60,7 +60,7 @@ export default {
       });
     },
     handleSelection: function () {
-      this.$root.$emit('bv::hide::modal', this.$children[0].id);
+      this.visible = false;
       this.$emit('selection', this.$refs.table.getSelections());
     },
   },
@@ -72,10 +72,6 @@ export default {
   data() {
     return {
       showInactiveProjects: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',

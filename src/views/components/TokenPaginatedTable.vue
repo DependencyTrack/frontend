@@ -28,7 +28,7 @@
           aria-hidden="true"
         ></span>
         <label
-          class="pagination-meta-text mb-0 mr-2"
+          class="pagination-meta-text mb-0 me-2"
           for="pagination-page-size-select"
         >
           {{ $t('message.rows_per_page') }}
@@ -90,13 +90,15 @@
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/style';
+@import 'bootstrap/scss/functions';
+@import '@/assets/scss/variables';
+@import 'bootstrap/scss/variables';
 
 .page-indicator {
   padding: $pagination-padding-y 0.75rem;
   font-weight: $font-weight-normal;
-  line-height: $pagination-line-height;
-  color: $body-color;
+  line-height: $line-height-sm;
+  color: var(--bs-body-color);
   cursor: default;
   user-select: none;
 }
@@ -104,7 +106,7 @@
 .pagination-meta-text {
   font-size: $font-size-base;
   font-weight: $font-weight-normal;
-  color: $body-color;
+  color: var(--bs-body-color);
 }
 
 .pagination-meta-divider {
@@ -123,8 +125,8 @@
   position: relative;
   display: block;
   padding: $pagination-padding-y 1.25rem;
-  margin-left: -$pagination-border-width;
-  line-height: $pagination-line-height;
+  margin-left: -$border-width;
+  line-height: $line-height-sm;
   color: $pagination-color;
   text-decoration: if($link-decoration == none, null, none);
   background-color: $pagination-bg;
@@ -189,6 +191,7 @@ export default {
       default: 300,
     },
   },
+  emits: ['total', 'visible-columns'],
   data() {
     const userOptions = this.options || {};
     const userOnColumnSwitch = userOptions.onColumnSwitch;
@@ -388,7 +391,7 @@ export default {
     this.loadPage(this.baseUrl);
     this.emitVisibleColumns();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }

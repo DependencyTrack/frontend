@@ -5,42 +5,33 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedKey"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>{{ value.key }}={{ value.value }}</template>
+    <template #value>{{ modelValue.key }}={{ modelValue.value }}</template>
 
-    <b-input-group size="sm" class="mb-2">
+    <b-input-group size="sm">
       <b-form-input
         :id="`label-filter-pill-key-${fieldName}`"
-        ref="keyInput"
         v-model="tmpKey"
         :placeholder="$t('message.key')"
+        :aria-label="$t('message.key')"
         :maxlength="maxLength"
         size="sm"
-        @keyup.enter="applyFilter"
       ></b-form-input>
-      <b-input-group-append is-text>=</b-input-group-append>
+      <b-input-group-text>=</b-input-group-text>
       <b-form-input
         :id="`label-filter-pill-value-${fieldName}`"
         v-model="tmpValue"
         :placeholder="$t('message.value')"
+        :aria-label="$t('message.value')"
         :maxlength="maxLength"
         size="sm"
-        @keyup.enter="applyFilter"
       ></b-form-input>
     </b-input-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpKey || !tmpKey.trim()"
-        >{{ $t('message.apply') }}
-      </b-button>
-    </div>
   </filter-pill-dropdown>
 </template>
 
@@ -67,11 +58,12 @@ export default {
       type: Number,
       default: 255,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpKey: '',
@@ -79,7 +71,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.key) {
@@ -94,36 +86,31 @@ export default {
   },
   computed: {
     hasFilter() {
-      return !!(this.value && this.value.key);
+      return !!(this.modelValue && this.modelValue.key);
+    },
+    trimmedKey() {
+      return this.tmpKey ? this.tmpKey.trim() : '';
     },
   },
   methods: {
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.keyInput) {
-          this.$refs.keyInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpKey = this.value.key;
-        this.tmpValue = this.value.value || '';
+        this.tmpKey = this.modelValue.key;
+        this.tmpValue = this.modelValue.value || '';
       } else {
         this.tmpKey = '';
         this.tmpValue = '';
       }
     },
     applyFilter() {
-      const trimmedKey = this.tmpKey ? this.tmpKey.trim() : '';
-      if (!trimmedKey) {
+      if (!this.trimmedKey) {
         return;
       }
-      this.$emit('input', {
-        key: trimmedKey,
+      this.$emit('update:modelValue', {
+        key: this.trimmedKey,
         value: this.tmpValue ? this.tmpValue.trim() : '',
       });
       this.$refs.pill.hide();
@@ -132,7 +119,7 @@ export default {
       this.tmpKey = '';
       this.tmpValue = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

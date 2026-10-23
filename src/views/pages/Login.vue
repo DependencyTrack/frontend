@@ -3,7 +3,7 @@
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
-          <b-card v-if="isWelcomeMessage" no-body class="bg-grey-900 p-4 m-0">
+          <b-card v-if="isWelcomeMessage" no-body class="p-4 m-0">
             <div>
               <p><span v-html="welcomeMessage" /></p>
             </div>
@@ -11,81 +11,80 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
-                  <b-form @submit.prevent.stop="passes(login)">
-                    <h1>{{ $t('message.login') }}</h1>
-                    <p class="text-muted">{{ $t('message.login_desc') }}</p>
-                    <b-validated-input-group-form-input
-                      id="username"
-                      :label="$t('message.username')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-user"
-                      type="text"
-                      autocomplete="username email"
-                      v-model="input.username"
-                      autofocus="true"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-validated-input-group-form-input
-                      name="password"
-                      :label="$t('message.password')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      mode="passive"
-                      icon="icon-lock"
-                      type="password"
-                      autcomplete="currentpassword"
-                      v-model="input.password"
-                      lazy="true"
-                      v-show="showLoginForm"
-                    />
-                    <b-row style="margin-bottom: 1rem">
-                      <b-col cols="6" v-show="showLoginForm">
-                        <b-button
-                          variant="primary"
-                          type="submit"
-                          class="px-4"
-                          >{{ $t('message.login') }}</b-button
-                        >
-                      </b-col>
-                      <b-col cols="6" v-show="oidcAvailable">
-                        <b-button
-                          :style="{ float: showLoginForm ? 'right' : 'none' }"
-                          v-on:click="oidcLogin()"
-                        >
-                          <span v-if="oidcCheckLoginButtonTextSetted()">{{
-                            oidcLoginButtonText()
-                          }}</span>
-                          <img
-                            alt="OpenID Logo"
-                            src="@/assets/img/openid-logo.svg"
-                            width="60px"
-                            v-else
-                          />
-                        </b-button>
-                      </b-col>
-                    </b-row>
-                    <b-link
-                      v-show="oidcAvailable && !showLoginForm"
-                      v-on:click="showLoginForm = true"
-                      >{{ $t('message.login_more_options') }}</b-link
-                    >
-                  </b-form>
-                </validation-observer>
+                <b-form @submit.prevent.stop="login">
+                  <h1>{{ $t('message.login') }}</h1>
+                  <p class="text-muted">{{ $t('message.login_desc') }}</p>
+                  <b-validated-input-group-form-input
+                    id="username"
+                    :label="$t('message.username')"
+                    input-group-size="mb-3"
+                    required
+                    mode="passive"
+                    icon="fa-solid fa-user"
+                    type="text"
+                    autocomplete="username email"
+                    v-model="input.username"
+                    autofocus="true"
+                    lazy="true"
+                    v-show="showLoginForm"
+                  />
+                  <b-validated-input-group-form-input
+                    name="password"
+                    :label="$t('message.password')"
+                    input-group-size="mb-3"
+                    required
+                    mode="passive"
+                    icon="fa-solid fa-lock"
+                    type="password"
+                    autcomplete="currentpassword"
+                    v-model="input.password"
+                    lazy="true"
+                    v-show="showLoginForm"
+                  />
+                  <b-row style="margin-bottom: 1rem">
+                    <b-col cols="6" v-show="showLoginForm">
+                      <b-button variant="primary" type="submit" class="px-4">{{
+                        $t('message.login')
+                      }}</b-button>
+                    </b-col>
+                    <b-col cols="6" v-show="oidcAvailable">
+                      <b-button
+                        :style="{ float: showLoginForm ? 'right' : 'none' }"
+                        v-on:click="oidcLogin()"
+                      >
+                        <span v-if="oidcCheckLoginButtonTextSetted()">{{
+                          oidcLoginButtonText()
+                        }}</span>
+                        <img
+                          alt="OpenID Logo"
+                          src="@/assets/img/openid-logo.svg"
+                          width="60px"
+                          v-else
+                        />
+                      </b-button>
+                    </b-col>
+                  </b-row>
+                  <b-link
+                    v-show="oidcAvailable && !showLoginForm"
+                    v-on:click="showLoginForm = true"
+                    >{{ $t('message.login_more_options') }}</b-link
+                  >
+                </b-form>
               </b-card-body>
             </b-card>
-            <b-card
-              no-body
-              class="text-white bg-grey-900 py-5 d-md-down-none"
-              style="width: 44%"
-            >
+            <b-card no-body class="py-5 d-none d-lg-flex" style="width: 44%">
               <b-card-body class="text-center">
                 <div>
                   <img
+                    class="logo-dark-theme"
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
+                    alt="Dependency-Track Logo"
+                    width="100%"
+                  />
+                  <img
+                    class="logo-light-theme"
+                    src="@/assets/img/brand/dt-logo-vertical-dark-text.svg"
+                    alt="Dependency-Track Logo"
                     width="100%"
                   />
                 </div>
@@ -95,21 +94,20 @@
         </b-col>
       </b-row>
     </div>
-    <informational-modal v-bind:message="loginError" />
+    <informational-modal
+      v-model="showInformationalModal"
+      v-bind:message="loginError"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Oidc from 'oidc-client';
 // bootstrap-table still relies on jQuery for ajax calls, even though there's a supported Vue wrapper for it.
-import $ from 'jquery';
-import { ValidationObserver } from 'vee-validate';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
-import InformationalModal from '../modals/InformationalModal';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
+import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
-const qs = require('querystring');
 import common from '../../shared/common';
 import * as permissions from '../../shared/permissions';
 import DOMPurify from 'dompurify';
@@ -119,10 +117,10 @@ export default {
   components: {
     InformationalModal,
     BValidatedInputGroupFormInput,
-    ValidationObserver,
   },
   data() {
     return {
+      showInformationalModal: false,
       isWelcomeMessage: true,
       welcomeMessage: '',
       loginError: '',
@@ -131,19 +129,7 @@ export default {
         password: '',
       },
       oidcAvailable: false,
-      oidcUserManager: new Oidc.UserManager({
-        userStore: new Oidc.WebStorageStateStore(),
-        authority: this.$oidc.ISSUER,
-        client_id: this.$oidc.CLIENT_ID,
-        redirect_uri:
-          getContextPath() !== ''
-            ? `${window.location.origin}${getContextPath()}/static/oidc-callback.html`
-            : `${window.location.origin}/static/oidc-callback.html`,
-        response_type:
-          this.$oidc.FLOW === 'implicit' ? 'token id_token' : 'code',
-        scope: this.$oidc.SCOPE,
-        loadUserInfo: false,
-      }),
+      oidcUserManager: null,
       showLoginForm: false,
     };
   },
@@ -180,7 +166,7 @@ export default {
       // redirect to url from query param but only if it is save for redirection
       const redirectTo = getRedirectUrl(this.$router);
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, new URLSearchParams(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             return this.fetchAndCheckPermissions(result.data, redirectTo);
@@ -195,10 +181,10 @@ export default {
               });
               return;
             }
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_unauthorized');
           } else if (err.response.status === 403) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_forbidden');
           }
         });
@@ -216,26 +202,22 @@ export default {
           }
           if (result.data.includes(permissions.VIEW_PORTFOLIO)) {
             permissions.storePermissions(result.data);
-            EventBus.$emit('authenticated', token);
+            EventBus.emit('authenticated', token);
             redirectTo
               ? this.$router.replace(redirectTo)
               : this.$router.replace({ name: 'Dashboard' });
           } else {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.loginError = this.$t('message.login_permission_required');
           }
         })
         .catch(() => {
-          this.$bvModal.show('modal-informational');
+          this.showInformationalModal = true;
           this.loginError = this.$t('condition.unsuccessful_action');
         });
     },
     isOidcAvailableInFrontend() {
-      return (
-        this.oidcUserManager.settings.authority &&
-        this.oidcUserManager.settings.client_id &&
-        this.oidcUserManager.settings.scope
-      );
+      return this.$oidc.ISSUER && this.$oidc.CLIENT_ID && this.$oidc.SCOPE;
     },
     checkOidcAvailability() {
       if (!this.isOidcAvailableInFrontend()) {
@@ -278,14 +260,35 @@ export default {
     },
   },
   mounted() {
-    this.checkOidcAvailability()
-      .then((oidcAvailable) => {
-        this.oidcAvailable = oidcAvailable;
-        this.showLoginForm = !oidcAvailable;
+    if (this.$route.query.error === 'oidc') {
+      this.showInformationalModal = true;
+      this.loginError = this.$t('message.oidc_login_failed');
 
+      // Show the error the OIDC IdP reported to help users debug failures.
+      // NB: Written by oidc-callback.html. NOT using URL params as those
+      // can be crafted to inject arbitrary text.
+      const details = sessionStorage.getItem('oidc.error');
+      sessionStorage.removeItem('oidc.error');
+      if (details) {
+        this.loginError += ` (${details})`;
+      }
+    }
+    this.checkOidcAvailability()
+      .then(async (oidcAvailable) => {
         if (!oidcAvailable) {
+          this.showLoginForm = true;
           return;
         }
+
+        const { createOidcClient } = await import('../../shared/oidcClient');
+        this.oidcUserManager = createOidcClient({
+          issuer: this.$oidc.ISSUER,
+          clientId: this.$oidc.CLIENT_ID,
+          scope: this.$oidc.SCOPE,
+          flow: this.$oidc.FLOW,
+          redirectUri: `${window.location.origin}${getContextPath()}/static/oidc-callback.html`,
+        });
+        this.oidcAvailable = true;
 
         this.oidcUserManager.getUser().then((oidcUser) => {
           // oidcUser will only be set when coming from oidc-callback.html
@@ -306,7 +309,7 @@ export default {
           };
 
           this.axios
-            .post(url, qs.stringify(requestBody), config)
+            .post(url, new URLSearchParams(requestBody), config)
             .then((result) => {
               if (result.status === 200) {
                 const redirectTo = getRedirectUrl(this.$router);
@@ -315,10 +318,10 @@ export default {
             })
             .catch((err) => {
               if (err.response.status === 401) {
-                this.$bvModal.show('modal-informational');
+                this.showInformationalModal = true;
                 this.loginError = this.$t('message.login_unauthorized');
               } else if (err.response.status === 403) {
-                this.$bvModal.show('modal-informational');
+                this.showInformationalModal = true;
                 this.loginError = this.$t('message.login_forbidden');
               }
             })
@@ -327,7 +330,7 @@ export default {
             });
         });
       })
-      .catch((err) => {
+      .catch(() => {
         // automatic fallback to login form when oidc availability check failed
         this.showLoginForm = true;
         this.$toastr.e(this.$t('message.oidc_availability_check_failed'));

@@ -1,8 +1,6 @@
 <template>
   <b-modal
-    id="updateSecretModal"
-    size="md"
-    hide-header-close
+    v-model="visible"
     no-stacking
     :title="$t('admin.update_secret', { name: name })"
     @ok="onOk"
@@ -18,9 +16,8 @@
       >
         <b-form-textarea
           id="value-input"
-          v-model="value"
+          v-model.trim="value"
           :placeholder="$t('admin.update_secret_value_placeholder')"
-          trim
         />
       </b-form-group>
 
@@ -44,15 +41,17 @@
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   props: {
     secret: {
       type: Object,
       default: null,
     },
   },
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',
@@ -110,7 +109,7 @@ export default {
             );
           }
 
-          this.$root.$emit('bv::hide::modal', 'updateSecretModal');
+          this.visible = false;
           this.resetValues();
         })
         .catch((err) => {

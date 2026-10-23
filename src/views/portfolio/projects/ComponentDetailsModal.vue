@@ -1,14 +1,13 @@
 <template>
   <b-modal
-    id="componentDetailsModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('message.component_details')"
     @show="initializeSelectedLicense"
   >
-    <b-tabs class="body-bg-color" style="border: 0; padding: 0">
-      <b-tab class="body-bg-color" style="border: 0; padding: 0" active>
+    <b-tabs class="body-bg-color">
+      <b-tab class="body-bg-color border-0 p-0" active>
         <template v-slot:title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
@@ -69,8 +68,7 @@
           {{ $t('message.component_classification') }}
           <b-badge
             :variant="component.isInternal ? 'tab-total' : 'tab-info'"
-            v-b-tooltip.hover
-            :title="$t('message.component_classification_desc')"
+            v-b-tooltip.hover="$t('message.component_classification_desc')"
             >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
           >
           <p></p>
@@ -370,11 +368,7 @@
           />
         </b-card>
       </b-tab>
-      <b-tab
-        class="body-bg-color"
-        style="border: 0; padding: 0"
-        v-if="component.supplier"
-      >
+      <b-tab class="body-bg-color border-0 p-0" v-if="component.supplier">
         <template v-slot:title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.supplier') }}</template
@@ -460,9 +454,8 @@
         </b-card>
       </b-tab>
     </b-tabs>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="outline-danger"
         @click="deleteComponent()"
         v-permission:or="[
@@ -472,17 +465,15 @@
         >{{ $t('message.delete') }}</b-button
       >
       <b-button
-        size="md"
         variant="outline-primary"
-        v-b-modal.componentPropertiesModal
+        @click="$emit('showProperties')"
         v-permission="PERMISSIONS.VIEW_PORTFOLIO"
         >{{ $t('message.properties') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="updateComponent()"
         v-permission:or="[
@@ -496,25 +487,25 @@
 </template>
 
 <script>
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect';
-import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../../forms/BInputGroupFormSelect.vue';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import xssFilters from 'xss-filters';
 import common from '@/shared/common';
 import availableClassifiersMixin from '@/mixins/availableClassifiersMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ComponentDetailsModal',
-  mixins: [permissionsMixin, availableClassifiersMixin],
+  mixins: [permissionsMixin, availableClassifiersMixin, modalMixin],
   components: {
     BInputGroupFormInput,
     BInputGroupFormSelect,
-    ComponentPropertiesModal,
   },
   props: {
     component: Object,
   },
+  emits: ['showProperties', 'componentUpdated'],
   data() {
     return {
       selectableLicenses: [],
@@ -523,7 +514,7 @@ export default {
         {
           title: this.$t('message.urls'),
           sortable: false,
-          formatter(value, row, index) {
+          formatter(_value, row) {
             return xssFilters.inHTMLData(common.valueWithDefault(row, ''));
           },
         },
@@ -552,7 +543,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -560,7 +551,7 @@ export default {
           title: this.$t('message.email'),
           field: 'email',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -568,7 +559,7 @@ export default {
           title: this.$t('message.phone'),
           field: 'phone',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -596,7 +587,7 @@ export default {
           title: this.$t('message.url'),
           field: 'url',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             let url = xssFilters.uriInUnQuotedAttr(
               common.valueWithDefault(value, ''),
             );
@@ -609,7 +600,7 @@ export default {
           title: this.$t('message.type'),
           field: 'type',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -617,7 +608,7 @@ export default {
           title: this.$t('message.comment'),
           field: 'comment',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -650,7 +641,7 @@ export default {
   },
   methods: {
     updateComponent: function () {
-      this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
+      this.visible = false;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}`;
       this.axios
         .post(url, {
@@ -682,24 +673,24 @@ export default {
           this.$emit('componentUpdated', response.data);
           this.$toastr.s(this.$t('message.component_updated'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
     deleteComponent: function () {
-      this.$root.$emit('bv::hide::modal', 'componentDetailsModal');
+      this.visible = false;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` +
         this.component.uuid;
       this.axios
         .delete(url)
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('message.component_deleted'));
           this.$router.replace({
             path: '/projects/' + this.component.project.uuid,
           });
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -719,7 +710,7 @@ export default {
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
@@ -740,12 +731,6 @@ export default {
 </script>
 
 <style scoped>
-.tab-content .tab-pane {
-  padding: 0 !important;
-}
-.tab-content {
-  border: 0 !important;
-}
 .card {
   border: 0;
   padding: 0;

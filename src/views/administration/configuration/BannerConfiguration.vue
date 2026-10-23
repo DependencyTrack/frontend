@@ -7,26 +7,23 @@
           <b-form-group
             label="Banner"
             label-size="lg"
-            label-class="font-weight-bold pt-0 mb-2"
+            label-class="fw-bold pt-0 mb-2"
           >
             <div>
-              <c-switch
+              <b-form-checkbox
                 id="activateBanner"
-                color="primary"
                 v-model="activateBanner"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.banner_activate') }}
+                switch
+                >{{ $t('admin.banner_activate') }}</b-form-checkbox
+              >
             </div>
-            <div>
-              <c-switch
+            <div :title="$t('admin.banner_dismissable_help')">
+              <b-form-checkbox
                 id="makeBannerDismissable"
-                color="primary"
                 v-model="makeBannerDismissable"
-                label
-                v-bind="labelIcon"
-                :title="$t('admin.banner_dismissable_help')"
-              />{{ $t('admin.banner_dismissable') }}
+                switch
+                >{{ $t('admin.banner_dismissable') }}</b-form-checkbox
+              >
             </div>
             <label for="message">{{ $t('admin.banner_message') }}:</label>
             <textarea
@@ -57,13 +54,9 @@
             </div>
             <label class="mt-3">{{ $t('admin.banner_custom_mode') }}:</label>
             <div>
-              <c-switch
-                id="customMode"
-                color="primary"
-                v-model="customMode"
-                label
-                v-bind="labelIcon"
-              />{{ $t('admin.banner_enable_custom') }}
+              <b-form-checkbox id="customMode" v-model="customMode" switch>{{
+                $t('admin.banner_enable_custom')
+              }}</b-form-checkbox>
             </div>
             <div v-if="customMode" class="mt-2">
               <label for="HTMLConfig"
@@ -100,7 +93,6 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import { html } from '@codemirror/lang-html';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import configPropertyMixin from '../mixins/configPropertyMixin';
@@ -119,7 +111,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     CodeMirrorEditor,
   },
   data() {
@@ -182,7 +173,7 @@ export default {
         },
       ]);
       if (success) {
-        EventBus.$emit('banner-updated');
+        EventBus.emit('banner-updated');
       }
     },
   },
@@ -190,7 +181,7 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .card-body {
+:deep(.card-body) {
   min-width: 0;
 }
 
@@ -206,7 +197,7 @@ export default {
   -moz-appearance: none;
   width: 50px;
   height: 50px;
-  border: 3px solid #ddd;
+  border: 3px solid var(--dt-border-control);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -215,13 +206,13 @@ export default {
 
 .swatch-radio:hover {
   transform: scale(1.1);
-  border-color: #999;
+  border-color: var(--dt-text-muted);
 }
 
 .swatch-radio:checked {
-  border-color: #321fdb;
+  border-color: var(--dt-accent);
   border-width: 4px;
-  box-shadow: 0 0 0 2px rgba(50, 31, 219, 0.2);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dt-accent) 20%, transparent);
 }
 
 .swatch-radio:checked::after {
@@ -234,11 +225,6 @@ export default {
   font-size: 24px;
   font-weight: bold;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-}
-
-.swatch-radio:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(50, 31, 219, 0.3);
 }
 
 .swatch-radio:disabled {

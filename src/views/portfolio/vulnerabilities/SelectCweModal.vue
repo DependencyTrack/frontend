@@ -1,10 +1,5 @@
 <template>
-  <b-modal
-    id="selectCweModal"
-    size="md"
-    hide-header-close
-    :title="$t('message.select_cwe')"
-  >
+  <b-modal v-model="visible" :title="$t('message.select_cwe')">
     <bootstrap-table
       ref="table"
       :columns="columns"
@@ -12,12 +7,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="$emit('selection', $refs.table.getSelections())"
         >{{ $t('message.select') }}</b-button
@@ -30,15 +24,13 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  emits: ['selection'],
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -49,7 +41,7 @@ export default {
           title: this.$t('message.cwe_id'),
           field: 'cweId',
           sortable: true,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
@@ -57,7 +49,7 @@ export default {
           title: this.$t('message.name'),
           field: 'name',
           sortable: false,
-          formatter(value, row, index) {
+          formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },

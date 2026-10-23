@@ -1,6 +1,6 @@
 <template>
   <b-button
-    :pressed.sync="toggle"
+    v-model:pressed="toggle"
     :variant="variant"
     v-on:click="$emit('toggle')"
     ><i :class="iconClass"></i> {{ label }}</b-button
@@ -13,6 +13,7 @@ export default {
     variant: String,
     label: String,
   },
+  emits: ['toggle'],
   computed: {
     iconClass: function () {
       if (this.toggle === true) {

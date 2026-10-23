@@ -1,31 +1,21 @@
 <template>
-  <AppHeader fixed>
-    <SidebarToggler class="d-lg-none" display="md" mobile />
-    <img
-      class="d-lg-inline d-md-none d-sm-none bv-d-xs-down-none"
-      style="margin-left: 10px"
-      src="@/assets/img/brand/dt-logo-symbol.svg"
-      width="30"
-      height="30"
-      alt="Dependency-Track Logo"
-    />
-    <SidebarToggler class="d-md-down-none" display="lg" :defaultOpen="true" />
-    <b-navbar-nav class="ml-auto">
-      <DefaultHeaderProfileDropdown />
-    </b-navbar-nav>
-  </AppHeader>
+  <header class="app-header navbar d-lg-none">
+    <button
+      class="navbar-toggler"
+      type="button"
+      @click.stop="toggleSidebar('sidebar-show')"
+    >
+      <span class="navbar-toggler-icon" />
+    </button>
+  </header>
 </template>
 <script>
-import { Header as AppHeader, SidebarToggler, AsideToggler } from '@coreui/vue';
-import DefaultHeaderProfileDropdown from './DefaultHeaderProfileDropdown';
-
 export default {
   name: 'DefaultHeader',
-  components: {
-    AsideToggler,
-    AppHeader,
-    DefaultHeaderProfileDropdown,
-    SidebarToggler,
+  methods: {
+    toggleSidebar(cssClass) {
+      document.body.classList.toggle(cssClass);
+    },
   },
 };
 </script>

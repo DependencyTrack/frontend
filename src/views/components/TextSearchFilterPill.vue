@@ -5,39 +5,34 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
-    @show="onDropdownShow"
+    :apply-disabled="!trimmedValue || tmpFields.length === 0"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>~ "{{ value.value }}"</template>
+    <template #value
+      ><span :title="$t('message.operator_contains')"
+        >~ "{{ modelValue.value }}"</span
+      ></template
+    >
 
-    <b-form-group class="mb-2">
-      <b-form-input
-        :id="`text-search-filter-pill-value-${fieldName}`"
-        ref="valueInput"
-        v-model="tmpValue"
-        :placeholder="$t('message.search') + '...'"
-        size="sm"
-        @keyup.enter="applyFilter"
-      ></b-form-input>
-    </b-form-group>
-    <b-form-group :label="$t('message.search_in')" label-size="sm" class="mb-2">
+    <b-form-input
+      :id="`text-search-filter-pill-value-${fieldName}`"
+      v-model="tmpValue"
+      :placeholder="$t('message.search') + '...'"
+      :aria-label="fieldLabel"
+      class="mb-2"
+      size="sm"
+    ></b-form-input>
+    <div class="filter-pill-caption">{{ $t('message.search_in') }}</div>
+    <div class="filter-pill-list">
       <b-form-checkbox-group
         v-model="tmpFields"
         :options="fields"
+        :aria-label="$t('message.search_in')"
         stacked
-        size="sm"
       ></b-form-checkbox-group>
-    </b-form-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
-        size="sm"
-        @click="applyFilter"
-        :disabled="!tmpValue || tmpFields.length === 0"
-        >{{ $t('message.apply') }}
-      </b-button>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -65,11 +60,12 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpFields: this.allFieldValues(),
@@ -77,7 +73,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.fields && val.value) {
@@ -93,42 +89,37 @@ export default {
   computed: {
     hasFilter() {
       return (
-        this.value &&
-        this.value.fields &&
-        this.value.fields.length > 0 &&
-        this.value.value
+        this.modelValue &&
+        this.modelValue.fields &&
+        this.modelValue.fields.length > 0 &&
+        this.modelValue.value
       );
+    },
+    trimmedValue() {
+      return this.tmpValue ? this.tmpValue.trim() : '';
     },
   },
   methods: {
     allFieldValues() {
       return this.fields.map((f) => (typeof f === 'object' ? f.value : f));
     },
-    onDropdownShow() {
-      this.$nextTick(() => {
-        if (this.$refs.valueInput) {
-          this.$refs.valueInput.focus();
-        }
-      });
-    },
     open() {
       this.$refs.pill.open();
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpFields = [...this.value.fields];
-        this.tmpValue = this.value.value;
+        this.tmpFields = [...this.modelValue.fields];
+        this.tmpValue = this.modelValue.value;
       } else {
         this.tmpFields = this.allFieldValues();
         this.tmpValue = '';
       }
     },
     applyFilter() {
-      const trimmed = this.tmpValue ? this.tmpValue.trim() : '';
-      if (!trimmed || this.tmpFields.length === 0) return;
-      this.$emit('input', {
+      if (!this.trimmedValue || this.tmpFields.length === 0) return;
+      this.$emit('update:modelValue', {
         fields: [...this.tmpFields],
-        value: trimmed,
+        value: this.trimmedValue,
       });
       this.$refs.pill.hide();
     },
@@ -136,7 +127,7 @@ export default {
       this.tmpFields = this.allFieldValues();
       this.tmpValue = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

@@ -5,8 +5,7 @@ import {
   TIMEOUT_PROBLEM_TYPE,
 } from '@/shared/problemDetails';
 import flexVerCompare from 'flexver/dist/module';
-import Vue from 'vue';
-import xssFilters from 'xss-filters';
+import { toastr } from '@/plugins/toastr';
 
 export function handleTableLoadError(problem, { fallback = true } = {}) {
   if (
@@ -31,19 +30,19 @@ export function handleTableLoadError(problem, { fallback = true } = {}) {
         localStorage.removeItem(prefix + 'SortOrder');
       }
     }
-    Vue.prototype.$toastr.w(
-      i18n.t('message.table_sort_preference_reset', {
-        field: xssFilters.inHTMLData(staleField),
+    toastr.w(
+      i18n.global.t('message.table_sort_preference_reset', {
+        field: staleField,
       }),
     );
     return true;
   }
   if (problem && problem.type === TIMEOUT_PROBLEM_TYPE) {
-    Vue.prototype.$toastr.w(i18n.t('message.table_load_timeout'));
+    toastr.w(i18n.global.t('message.table_load_timeout'));
     return true;
   }
   if (fallback) {
-    Vue.prototype.$toastr.e(i18n.t('message.table_load_error'));
+    toastr.e(i18n.global.t('message.table_load_error'));
   }
   return false;
 }
@@ -116,9 +115,9 @@ export function getUrlVar(name) {
  * @returns {string} redirect to url if it save for redirection
  */
 export function getRedirectUrl(router) {
-  return router.currentRoute.query.redirect &&
-    isUrlSaveForRedirect(router.currentRoute.query.redirect)
-    ? router.currentRoute.query.redirect
+  return router.currentRoute.value.query.redirect &&
+    isUrlSaveForRedirect(router.currentRoute.value.query.redirect)
+    ? router.currentRoute.value.query.redirect
     : undefined;
 }
 
@@ -158,9 +157,26 @@ export function isUrlSaveForRedirect(redirectUrl) {
         .map((r) => contextRoot + r)
         .some((p) => redirectUrl.startsWith(p))
     );
-  } catch (invalidUrl) {
+  } catch {
     return false;
   }
+}
+
+export function setPageTitle(title) {
+  if (title) {
+    document.title = `Dependency-Track - ${title}`;
+  }
+}
+
+export function getStyle(property) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(property)
+    .trim();
+}
+
+export function hexToRgba(hex, opacity) {
+  const [r, g, b] = hex.match(/[0-9a-f]{2}/gi).map((x) => parseInt(x, 16));
+  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
 }
 
 /**
@@ -245,4 +261,33 @@ function compareEpochVersions(v1parts, v2parts) {
   } else {
     return epochCompare;
   }
+}
+
+export async function fetchAllPages(axios, url) {
+  const items = [];
+  let pageUrl = url;
+  for (let page = 0; pageUrl && page < 10000; page++) {
+    const response = await axios.get(pageUrl);
+    items.push(...response.data.items);
+    const nextPageToken = response.data.next_page_token;
+    pageUrl = nextPageToken
+      ? common.setQueryParams(url, { page_token: nextPageToken })
+      : null;
+  }
+  return items;
+}
+
+export function celErrorsToMarkers(errors) {
+  if (!Array.isArray(errors)) {
+    return [];
+  }
+  return errors
+    .filter((err) => err.line)
+    .map((err) => ({
+      startLineNumber: err.line,
+      endLineNumber: err.line,
+      startColumn: err.column || 1,
+      endColumn: (err.column || 1) + 3,
+      message: err.message,
+    }));
 }

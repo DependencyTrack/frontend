@@ -43,7 +43,7 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
   }
   return `<a href="${
     router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
-  }" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(
+  }" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(
     tag.name,
   )}</a>`;
 };
@@ -57,7 +57,7 @@ $common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
   }
   return `<a href="${
     router.resolve({ name: 'Projects', query: { team: team.name } }).href
-  }" class="badge badge-team text-lowercase mr-1">${xssFilters.inHTMLData(
+  }" class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
     team.name,
   )}</a>`;
 };
@@ -72,7 +72,7 @@ $common.formatVulnerabilityTagLabel = function formatVulnerabilityTagLabel(
   if (!tag) {
     return '';
   }
-  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`;
+  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(tag.name)}</a>`;
 };
 
 /**
@@ -115,10 +115,10 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
 
   return `
      <div style="height:24px;margin:-4px;">
-        <div class="${severityClass} text-center pull-left" style="width:24px; height:24px; color:#ffffff">
+        <div class="${severityClass} text-center float-start" style="width:24px; height:24px;">
             <i class="fa fa-bug" style="font-size:12px; padding:6px" aria-hidden="true"></i>
          </div>
-         <div class="text-center pull-left" style="height:24px;">
+         <div class="text-center float-start" style="height:24px;">
              <div style="font-size:12px; padding:4px"><span class="severity-value">${severityLabel}</span></div>
          </div>
      </div>`;
@@ -154,7 +154,7 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
 $common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
   if (cweId && cweName) {
     return (
-      "<span data-toggle='tooltip' data-placement='bottom' title='" +
+      "<span data-bs-toggle='tooltip' data-bs-placement='bottom' title='" +
       cweName +
       "'>CWE-" +
       cweId +
@@ -172,7 +172,6 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
   analyzer,
   vulnSource,
   vulnId,
-  alternateIdentifier,
   referenceUrl,
 ) {
   if (!analyzer) {
@@ -194,7 +193,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
   }
 
   const escapedLabel = xssFilters.inHTMLData($common.titleCase(analyzer));
-  let analyzerLabel = '';
+  let analyzerLabel;
   if (analyzerUrl) {
     const sanitizedUrl = xssFilters.uriInDoubleQuotedAttr(analyzerUrl);
     analyzerLabel = `<a href="${sanitizedUrl}" target="_blank">${escapedLabel} <i class="fa fa-external-link"></i></a>`;
@@ -571,7 +570,7 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
  */
 $common.sleep = function sleep(milliseconds) {
   const date = Date.now();
-  let currentDate = null;
+  let currentDate;
   do {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
@@ -609,6 +608,40 @@ $common.trimToNull = function (value) {
     return null;
   }
   return value;
+};
+
+$common.saveBlob = function (blob, filename) {
+  const objectUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  // Revoking synchronously can cancel the download in some browsers.
+  setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
+};
+
+/*
+ * GETs an attachment and saves it under the filename from the server's
+ * Content-Disposition header, or fallbackFilename if the header has none.
+ */
+$common.downloadAttachment = function (axios, url, params, fallbackFilename) {
+  return axios
+    .request({ responseType: 'blob', url: url, method: 'get', params: params })
+    .then((response) => {
+      let filename = fallbackFilename;
+      const disposition = response.headers['content-disposition'];
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+        const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
+          disposition,
+        );
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '');
+        }
+      }
+      $common.saveBlob(new Blob([response.data]), filename);
+    });
 };
 
 $common.setQueryParams = function (url, params) {
@@ -726,6 +759,8 @@ export default {
   sleep: $common.sleep,
   toBoolean: $common.toBoolean,
   trimToNull: $common.trimToNull,
+  saveBlob: $common.saveBlob,
+  downloadAttachment: $common.downloadAttachment,
   setQueryParams: $common.setQueryParams,
   sameQueryParams: $common.sameQueryParams,
   OWASP_RR_LIKELIHOOD_TO_IMPACT_SEVERITY_MATRIX:

@@ -4,13 +4,14 @@
       <b-card-body class="p-3 clearfix">
         <b-row>
           <b-col>
-            <i class="fa fa-cube bg-primary p-3 font-2xl mr-3 float-left"></i>
+            <i
+              class="fa fa-cube page-header-icon p-3 font-2xl me-3 float-start"
+            ></i>
             <div class="h5 mb-0 mt-2">
               {{ componentLabel }}&nbsp;
               <b-badge
                 :variant="component.isInternal ? 'tab-total' : 'tab-info'"
-                v-b-tooltip.hover
-                :title="$t('message.component_classification_desc')"
+                v-b-tooltip.hover="$t('message.component_classification_desc')"
                 >{{ component.isInternal ? 'INTERNAL' : 'EXTERNAL' }}</b-badge
               >
               <b-badge></b-badge>
@@ -20,119 +21,49 @@
               style="cursor: pointer"
               aria-hidden="true"
               @click="this.redirectToDependencyGraph"
-              v-b-tooltip.hover.bottom
-              :title="$t('message.show_in_dependency_graph')"
+              v-b-tooltip.hover.bottom="$t('message.show_in_dependency_graph')"
             ></i>
           </b-col>
           <b-col>
-            <b-row class="d-none d-md-flex float-right">
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.critical')"
-                >{{ currentCritical }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.high')"
-                >{{ currentHigh }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.medium')"
-                >{{ currentMedium }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.low')"
-                >{{ currentLow }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityUnassigned"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('severity.unassigned')"
-                >{{ currentUnassigned }}</vue-easy-pie-chart
-              >
-            </b-row>
+            <div class="d-none d-md-flex float-end">
+              <severity-circles
+                :critical="currentCritical"
+                :high="currentHigh"
+                :medium="currentMedium"
+                :low="currentLow"
+                :unassigned="currentUnassigned"
+              />
+            </div>
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="component-info-footer" slot="footer">
-        <b-row>
-          <b-col>
-            <b-link
-              class="font-weight-bold font-xs btn-block text-muted"
-              v-b-modal.componentDetailsModal
-              >{{ $t('message.view_details') }}
-              <i class="fa fa-angle-right float-right font-lg"></i
-            ></b-link>
-          </b-col>
-          <b-col v-if="component.externalReferences" md="auto">
-            <b-row class="d-none d-md-flex float-right">
-              <ExternalReferencesDropdown
-                :externalReferences="component.externalReferences"
-              />
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div id="component-info-footer">
+          <b-row>
+            <b-col>
+              <b-link
+                class="fw-bold font-xs d-block w-100 text-muted"
+                role="button"
+                @click="showComponentDetailsModal = true"
+                >{{ $t('message.view_details') }}
+                <i class="fa fa-angle-right float-end font-lg"></i
+              ></b-link>
+            </b-col>
+            <b-col v-if="component.externalReferences" md="auto">
+              <div class="d-none d-md-flex float-end">
+                <ExternalReferencesDropdown
+                  :externalReferences="component.externalReferences"
+                />
+              </div>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
+    <b-tabs class="body-bg-color">
       <b-tab
         ref="overview"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
         @click="routeTo()"
       >
@@ -159,26 +90,34 @@
       </b-tab>
     </b-tabs>
     <component-details-modal
+      v-model="showComponentDetailsModal"
       :component="cloneDeep(component)"
       v-on:componentUpdated="syncComponentFields"
+      v-on:showProperties="showComponentPropertiesModal = true"
     />
-    <component-properties-modal :uuid="this.uuid" />
-    <component-create-property-modal :uuid="this.uuid" />
+    <component-properties-modal
+      v-model="showComponentPropertiesModal"
+      :uuid="this.uuid"
+      v-on:createProperty="showComponentCreatePropertyModal = true"
+    />
+    <component-create-property-modal
+      v-model="showComponentCreatePropertyModal"
+      :uuid="this.uuid"
+      v-on:propertyCreated="showComponentPropertiesModal = true"
+    />
   </div>
 </template>
 
 <script>
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
-import ComponentDashboard from './ComponentDashboard';
-import ComponentVulnerabilities from './ComponentVulnerabilities';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
+import SeverityCircles from '../../components/SeverityCircles.vue';
+import ComponentDashboard from './ComponentDashboard.vue';
+import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import ComponentDetailsModal from './ComponentDetailsModal';
+import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
@@ -188,18 +127,15 @@ export default {
   components: {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
-    SeverityBarChart,
     ComponentDashboard,
     ComponentVulnerabilities,
-    PortfolioWidgetRow,
-    VueEasyPieChart,
+    SeverityCircles,
     ComponentDetailsModal,
     ExternalReferencesDropdown,
   },
-  title: '',
   computed: {
     projectLabel() {
-      if (this.component.hasOwnProperty('project')) {
+      if (Object.hasOwn(this.component, 'project')) {
         if (this.component.project.name && this.component.project.version) {
           return (
             this.component.project.name + ' ▸ ' + this.component.project.version
@@ -208,6 +144,7 @@ export default {
           return this.component.project.name;
         }
       }
+      return null;
     },
     componentLabel() {
       let label = this.component.name;
@@ -225,13 +162,9 @@ export default {
   },
   data() {
     return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
+      showComponentDetailsModal: false,
+      showComponentPropertiesModal: false,
+      showComponentCreatePropertyModal: false,
       uuid: null,
       component: {},
       currentCritical: 0,
@@ -248,12 +181,9 @@ export default {
     cloneDeep: function (component) {
       return cloneDeep(component);
     },
-    getStyle: function (style) {
-      return getStyle(style);
-    },
     syncComponentFields: function (component) {
       this.component = component;
-      EventBus.$emit('addCrumb', this.componentLabel);
+      EventBus.emit('addCrumb', this.componentLabel);
     },
     redirectToDependencyGraph: function () {
       this.$router.push({
@@ -294,14 +224,14 @@ export default {
     let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
     this.axios.get(componentUrl).then((response) => {
       this.component = response.data;
-      EventBus.$emit(
+      EventBus.emit(
         'addCrumb',
         this.componentLabel,
         'Project',
         this.component.project.uuid,
         this.projectLabel,
       );
-      this.$title = this.componentLabel;
+      setPageTitle(this.componentLabel);
     });
 
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
@@ -320,15 +250,16 @@ export default {
       );
     });
 
-    this.getTabFromRoute().active = true;
+    // <b-tabs> registers its tabs after this hook.
+    this.$nextTick(() => this.getTabFromRoute().activate());
   },
   watch: {
     $route() {
       this.getTabFromRoute().activate();
     },
   },
-  destroyed() {
-    EventBus.$emit('crumble');
+  unmounted() {
+    EventBus.emit('crumble');
   },
 };
 </script>

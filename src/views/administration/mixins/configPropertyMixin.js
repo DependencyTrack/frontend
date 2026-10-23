@@ -1,15 +1,9 @@
-import Vue from 'vue';
-import axios from 'axios';
 import common from '../../../shared/common';
 
 export default {
   data() {
     return {
       configUrl: `${this.$api.BASE_URL}/${this.$api.URL_CONFIG_PROPERTY}/`,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
     };
   },
   methods: {
@@ -33,7 +27,7 @@ export default {
             return true;
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
           return false;
         });
@@ -69,10 +63,10 @@ export default {
           propertyName: propertyName,
           propertyValue: propertyValue,
         })
-        .then((response) => {
+        .then(() => {
           this.$toastr.s(this.$t('admin.configuration_saved'));
         })
-        .catch((error) => {
+        .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

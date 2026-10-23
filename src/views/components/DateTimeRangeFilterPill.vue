@@ -5,64 +5,66 @@
     :field-label="fieldLabel"
     :icon="icon"
     :has-filter="hasFilter"
+    :apply-disabled="!tmpSince && !tmpBefore"
     @hide="onDropdownHide"
+    @apply="applyFilter"
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
     <template #value>{{ displayValue }}</template>
 
-    <b-form-group :label="$t('message.since')" label-size="sm" class="mb-2">
-      <b-input-group>
-        <b-form-input
-          :id="`datetime-range-filter-pill-from-${fieldName}`"
-          v-model="tmpSince"
-          :type="dateOnly ? 'date' : 'datetime-local'"
-          size="sm"
-        ></b-form-input>
-        <b-input-group-append>
-          <b-button
-            size="sm"
-            variant="outline-secondary"
-            :disabled="!tmpSince"
-            @click="tmpSince = ''"
-            :title="$t('message.clear')"
-            :aria-label="$t('message.clear') + ' ' + $t('message.since')"
-          >
-            <span class="fa fa-times-circle" aria-hidden="true"></span>
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
-    </b-form-group>
-    <b-form-group :label="$t('message.before')" label-size="sm" class="mb-2">
-      <b-input-group>
-        <b-form-input
-          :id="`datetime-range-filter-pill-to-${fieldName}`"
-          v-model="tmpBefore"
-          :type="dateOnly ? 'date' : 'datetime-local'"
-          size="sm"
-        ></b-form-input>
-        <b-input-group-append>
-          <b-button
-            size="sm"
-            variant="outline-secondary"
-            :disabled="!tmpBefore"
-            @click="tmpBefore = ''"
-            :title="$t('message.clear')"
-            :aria-label="$t('message.clear') + ' ' + $t('message.before')"
-          >
-            <span class="fa fa-times-circle" aria-hidden="true"></span>
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
-    </b-form-group>
-    <div class="d-flex justify-content-end">
-      <b-button
-        variant="primary"
+    <div class="filter-pill-range filter-pill-range-captions">
+      <!--
+        NB: Both clear buttons unmount themselves, so without `.stop` the click
+        reaches b-dropdown's document-level click-out listener with a detached target,
+        failing its `contains(menu, target)` check and closing the dropdown.
+      -->
+      <span class="filter-pill-range-caption">
+        <span aria-hidden="true">{{ $t('message.since') }}</span>
+        <button
+          v-if="tmpSince"
+          type="button"
+          class="filter-pill-range-clear"
+          :title="$t('message.clear')"
+          :aria-label="$t('message.clear') + ' ' + $t('message.since')"
+          @click.stop="clearBound('tmpSince', 'sinceInput')"
+        >
+          <span class="fa fa-times-circle" aria-hidden="true"></span>
+        </button>
+      </span>
+      <span class="filter-pill-range-separator" aria-hidden="true">–</span>
+      <span class="filter-pill-range-caption">
+        <span aria-hidden="true">{{ $t('message.before') }}</span>
+        <button
+          v-if="tmpBefore"
+          type="button"
+          class="filter-pill-range-clear"
+          :title="$t('message.clear')"
+          :aria-label="$t('message.clear') + ' ' + $t('message.before')"
+          @click.stop="clearBound('tmpBefore', 'beforeInput')"
+        >
+          <span class="fa fa-times-circle" aria-hidden="true"></span>
+        </button>
+      </span>
+    </div>
+    <div class="filter-pill-range">
+      <b-form-input
+        :id="`datetime-range-filter-pill-from-${fieldName}`"
+        v-model="tmpSince"
+        :type="dateOnly ? 'date' : 'datetime-local'"
+        ref="sinceInput"
+        :aria-label="$t('message.since')"
         size="sm"
-        @click="applyFilter"
-        :disabled="!tmpSince && !tmpBefore"
-        >{{ $t('message.apply') }}
-      </b-button>
+      ></b-form-input>
+      <span class="filter-pill-range-separator" aria-hidden="true">–</span>
+      <b-form-input
+        :id="`datetime-range-filter-pill-to-${fieldName}`"
+        v-model="tmpBefore"
+        :type="dateOnly ? 'date' : 'datetime-local'"
+        ref="beforeInput"
+        :aria-label="$t('message.before')"
+        size="sm"
+      ></b-form-input>
     </div>
   </filter-pill-dropdown>
 </template>
@@ -94,11 +96,12 @@ export default {
       type: Boolean,
       default: false,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpSince: '',
@@ -106,7 +109,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler() {
         this.syncFromValue();
@@ -115,16 +118,18 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && (this.value.since || this.value.before);
+      return (
+        this.modelValue && (this.modelValue.since || this.modelValue.before)
+      );
     },
     displayValue() {
-      if (!this.value) return '';
+      if (!this.modelValue) return '';
 
-      const since = this.value.since
-        ? this.formatDisplayValue(this.value.since, false)
+      const since = this.modelValue.since
+        ? this.formatDisplayValue(this.modelValue.since, false)
         : '';
-      const before = this.value.before
-        ? this.formatDisplayValue(this.value.before, true)
+      const before = this.modelValue.before
+        ? this.formatDisplayValue(this.modelValue.before, true)
         : '';
 
       if (since && before) {
@@ -142,7 +147,7 @@ export default {
   // when converting between the user-visible date and the stored value.
   methods: {
     syncFromValue() {
-      const val = this.value;
+      const val = this.modelValue;
       this.tmpSince =
         val && val.since ? this.toInputValue(val.since, false) : '';
       this.tmpBefore =
@@ -211,6 +216,15 @@ export default {
     open() {
       this.$refs.pill.open();
     },
+    clearBound(model, inputRef) {
+      this[model] = '';
+      this.$nextTick(() => {
+        const input = this.$refs[inputRef];
+        if (input) {
+          input.focus();
+        }
+      });
+    },
     onDropdownHide() {
       if (this.hasFilter) {
         this.syncFromValue();
@@ -224,7 +238,7 @@ export default {
         return;
       }
 
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         since: this.toEmitValue(this.tmpSince, false),
         before: this.toEmitValue(this.tmpBefore, true),
       });
@@ -234,7 +248,7 @@ export default {
       this.tmpSince = '';
       this.tmpBefore = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

@@ -1,8 +1,6 @@
 <template>
   <b-modal
-    id="createPolicyModal"
-    size="md"
-    hide-header-close
+    v-model="visible"
     no-stacking
     :title="$t('message.create_policy')"
     :ok-title="$t('message.create')"
@@ -24,13 +22,12 @@
       >
         <b-form-input
           id="name-input"
-          v-model="name"
+          v-model.trim="name"
           type="text"
           maxlength="255"
-          trim
           autofocus
           aria-required="true"
-          @input="nameInvalidFeedback = null"
+          @update:model-value="nameInvalidFeedback = null"
         />
       </b-form-group>
 
@@ -69,10 +66,12 @@
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'createPolicyModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',
@@ -121,7 +120,7 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('message.policy_created'));
-          this.$root.$emit('bv::hide::modal', 'createPolicyModal');
+          this.visible = false;
         })
         .finally(() => {
           this.submitting = false;

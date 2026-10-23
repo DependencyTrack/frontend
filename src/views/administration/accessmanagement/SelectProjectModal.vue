@@ -1,22 +1,20 @@
 <template>
   <b-modal
-    id="selectProjectModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
     :title="$t('admin.select_project')"
   >
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
-        color="primary"
         v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_inactive_projects')
+        }}</span></b-form-checkbox
+      >
     </div>
     <bootstrap-table
       ref="table"
@@ -25,12 +23,11 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
       <b-button
-        size="md"
         variant="primary"
         @click="$emit('selection', $refs.table.getSelections())"
         >{{ $t('message.select') }}</b-button
@@ -43,24 +40,18 @@
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
-import { Switch as cSwitch } from '@coreui/vue';
 import router from '@/router';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
-  components: {
-    cSwitch,
-  },
+  mixins: [permissionsMixin, modalMixin],
   props: {
     teamUuid: String,
   },
+  emits: ['selection'],
   data() {
     return {
       showInactiveProjects: false,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',
@@ -76,7 +67,7 @@ export default {
             const href = router.resolve({
               name: 'Project',
               params: { uuid: row.uuid },
-            }).route.fullPath;
+            }).fullPath;
             return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
           },
         },

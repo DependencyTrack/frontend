@@ -1,13 +1,8 @@
 <template>
   <b-modal
-    :id="`taggedNotificationRuleListModal-${index}`"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
-    v-permission:or="[
-      PERMISSIONS.SYSTEM_CONFIGURATION,
-      PERMISSIONS.SYSTEM_CONFIGURATION_READ,
-    ]"
     :title="$t('message.alerts_tagged_with', { tag: this.tag })"
   >
     <bootstrap-table
@@ -17,8 +12,8 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
       }}</b-button>
     </template>
@@ -30,13 +25,13 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import * as permissions from '../../../shared/permissions';
 import common from '../../../shared/common';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
     tag: String,
-    index: Number,
   },
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/notificationRule`;
@@ -76,10 +71,6 @@ export default {
       permissions.SYSTEM_CONFIGURATION_UPDATE,
     ]);
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           field: 'state',

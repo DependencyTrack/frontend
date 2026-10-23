@@ -1,11 +1,11 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
-    <b-card :no-body="true" footer-class="px-3 py-2 card-footer-action">
+    <b-card :no-body="true" footer-class="px-3 py-2">
       <b-card-body class="p-3 clearfix">
         <b-row>
           <b-col>
             <i
-              class="fa fa-sitemap bg-primary p-3 font-2xl mr-3 float-left"
+              class="fa fa-sitemap page-header-icon p-3 font-2xl me-3 float-start"
             ></i>
             <div class="h5 mb-0 mt-2">
               <b-row>
@@ -23,30 +23,29 @@
                     <li class="dropdown">
                       <a
                         href="#"
-                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown"
                         role="button"
                         aria-haspopup="true"
                         aria-expanded="false"
-                        v-b-tooltip.hover
-                        :title="$t('message.switch_version')"
-                        class="version-dropdown-toggle badge badge-pill border"
+                        v-b-tooltip.hover="$t('message.switch_version')"
+                        class="version-dropdown-toggle badge rounded-pill border"
                         ><i class="fa fa-caret-down" aria-hidden="true"></i
                         ><span
-                          class="ml-1"
+                          class="ms-1"
                           :class="{
-                            'text-muted font-italic': !project.version,
+                            'text-muted fst-italic': !project.version,
                           }"
                           >{{
                             project.version || $t('message.no_version')
                           }}</span
                         ><i
                           v-if="project.isLatest"
-                          class="fa fa-star text-warning ml-1"
+                          class="fa fa-star text-warning ms-1"
                           aria-hidden="true"
                         ></i
                         ><span
                           v-if="versionCount > 1"
-                          class="version-count border-left"
+                          class="version-count border-start"
                           >{{ versionCount }}</span
                         ></a
                       >
@@ -57,15 +56,10 @@
                             PERMISSIONS.PORTFOLIO_MANAGEMENT,
                             PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
                           ]"
-                          @click.prevent="
-                            $root.$emit(
-                              'bv::show::modal',
-                              'projectAddVersionModal',
-                            )
-                          "
+                          @click.prevent="showProjectAddVersionModal = true"
                         >
                           <i
-                            class="fa fa-plus mr-1 add-version-icon"
+                            class="fa fa-plus me-1 add-version-icon"
                             aria-hidden="true"
                           ></i
                           >{{ $t('message.add_version') }}
@@ -89,15 +83,14 @@
                             <span v-if="projectVersion.version">{{
                               projectVersion.version
                             }}</span>
-                            <span v-else class="text-muted font-italic">{{
+                            <span v-else class="text-muted fst-italic">{{
                               $t('message.no_version')
                             }}</span>
                             <i
                               v-if="projectVersion.isLatest"
-                              class="fa fa-star text-warning ml-1"
+                              class="fa fa-star text-warning ms-1"
                               aria-hidden="true"
-                              v-b-tooltip.hover
-                              :title="$t('message.latest_version')"
+                              v-b-tooltip.hover="$t('message.latest_version')"
                             ></i>
                           </b-dropdown-item>
                         </span>
@@ -118,15 +111,14 @@
                               <span v-if="projectVersion.version">{{
                                 projectVersion.version
                               }}</span>
-                              <span v-else class="text-muted font-italic">{{
+                              <span v-else class="text-muted fst-italic">{{
                                 $t('message.no_version')
                               }}</span>
                               <i
                                 v-if="projectVersion.isLatest"
-                                class="fa fa-star text-warning ml-1"
+                                class="fa fa-star text-warning ms-1"
                                 aria-hidden="true"
-                                v-b-tooltip.hover
-                                :title="$t('message.latest_version')"
+                                v-b-tooltip.hover="$t('message.latest_version')"
                               ></i>
                             </b-dropdown-item>
                           </span>
@@ -142,12 +134,16 @@
                     }"
                   ></i>
                 </b-col>
-                <b-badge v-if="!this.project.active" :variant="'tab-warn'">
+                <b-badge
+                  v-if="!this.project.active"
+                  :variant="'tab-warn'"
+                  class="w-auto"
+                >
                   {{ $t('message.inactive').toUpperCase() }}
                 </b-badge>
                 <b-col class="d-none d-md-flex">
                   <span
-                    class="text-muted font-xs font-italic align-text-top text-truncate"
+                    class="text-muted font-xs fst-italic align-text-top text-truncate"
                     style="max-width: 100ch"
                     v-b-tooltip.hover="{ title: project.description }"
                     >{{ project.description }}</span
@@ -155,128 +151,161 @@
                 </b-col>
               </b-row>
             </div>
+            <!--
+            These repeat the title's b-row/b-col nesting so all three lines
+            share a left edge. A bare block starts 15px further left, because
+            it wraps the floated icon directly instead of clearing it.
+            -->
             <div class="text-muted font-xs">
-              <span class="text-lowercase font-weight-bold">
-                <span v-for="tag in project.tags">
-                  <b-badge
-                    :to="{ name: 'Projects', query: { tag: tag.name } }"
-                    variant="tag"
-                    >{{ tag.name }}</b-badge
+              <b-row>
+                <b-col class="text-lowercase fw-bold" md="auto">
+                  <span v-for="tag in project.tags" :key="tag.name">
+                    <b-badge
+                      :to="{ name: 'Projects', query: { tag: tag.name } }"
+                      variant="tag"
+                      >{{ tag.name }}</b-badge
+                    >
+                  </span>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-if="!isCollectionProject" class="font-xs mt-1">
+              <b-row>
+                <b-col md="auto">
+                  <span class="text-muted me-1"
+                    >{{ $t('message.last_bom_import') }}:</span
                   >
-                </span>
-              </span>
+                  <span
+                    v-b-tooltip.hover="{
+                      title: absoluteTime(project.lastBomImport),
+                    }"
+                    >{{ relativeTime(project.lastBomImport) }}</span
+                  >
+                  <span class="text-muted mx-2">&middot;</span>
+                  <span class="text-muted me-1"
+                    >{{ $t('message.last_analysis') }}:</span
+                  >
+                  <span
+                    v-b-tooltip.hover="{
+                      title: absoluteTime(project.lastVulnerabilityAnalysis),
+                    }"
+                    >{{ relativeTime(project.lastVulnerabilityAnalysis) }}</span
+                  >
+                  <span
+                    v-if="isAnalysisRequested"
+                    class="text-muted fst-italic ms-2"
+                    >&middot; {{ $t('message.analysis_requested') }}</span
+                  >
+                </b-col>
+              </b-row>
             </div>
           </b-col>
           <b-col md="auto">
-            <b-row class="d-none d-md-flex float-right">
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityCritical"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.critical')"
-                >{{ currentCritical }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityHigh"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.high')"
-                >{{ currentHigh }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityMedium"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.medium')"
-                >{{ currentMedium }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityLow"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.low')"
-                >{{ currentLow }}</vue-easy-pie-chart
-              >
-              <vue-easy-pie-chart
-                style="margin-right: 1rem"
-                :bar-color="severityUnassigned"
-                font-size="14px"
-                :track-color="trackColor"
-                scale-color=""
-                line-cap="round"
-                :line-width="3"
-                :percent="100"
-                :size="50"
-                :animate="true"
-                v-b-tooltip.hover
-                :title="$t('vulnerability.unassigned')"
-                >{{ currentUnassigned }}</vue-easy-pie-chart
-              >
-            </b-row>
+            <div class="d-none d-md-flex float-end">
+              <severity-circles
+                :critical="currentCritical"
+                :high="currentHigh"
+                :medium="currentMedium"
+                :low="currentLow"
+                :unassigned="currentUnassigned"
+              />
+            </div>
           </b-col>
         </b-row>
       </b-card-body>
-      <div id="project-info-footer" slot="footer">
-        <b-row>
-          <b-col>
-            <b-link
-              class="font-weight-bold font-xs btn-block text-muted"
-              @click="initializeProjectDetailsModal"
-              >{{ $t('message.view_details') }}
-              <i class="fa fa-angle-right font-lg"></i
-            ></b-link>
-          </b-col>
-          <b-col v-if="project.externalReferences" md="auto">
-            <b-row class="d-none d-md-flex float-right">
+      <template v-slot:footer>
+        <div id="project-info-footer">
+          <b-row align-v="center">
+            <b-col>
+              <b-link
+                class="fw-bold font-xs text-muted"
+                @click="initializeProjectDetailsModal"
+                >{{ $t('message.view_details') }}
+                <i class="fa fa-angle-right font-lg"></i
+              ></b-link>
+            </b-col>
+            <b-col md="auto" class="btn-spaced-group text-end">
+              <b-button
+                id="upload-bom-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                @click="showProjectUploadBomModal = true"
+                v-permission="PERMISSIONS.BOM_UPLOAD"
+              >
+                <span class="fa fa-upload"></span>
+                {{ $t('message.upload_bom') }}
+              </b-button>
+              <b-tooltip target="upload-bom-button">{{
+                $t('message.upload_bom_tooltip')
+              }}</b-tooltip>
+
+              <b-button
+                id="apply-vex-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                @click="showProjectUploadVexModal = true"
+                v-permission:or="[
+                  PERMISSIONS.VULNERABILITY_ANALYSIS,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+                ]"
+              >
+                <span class="fa fa-upload"></span> {{ $t('message.apply_vex') }}
+              </b-button>
+              <b-tooltip target="apply-vex-button">{{
+                $t('message.apply_vex_tooltip')
+              }}</b-tooltip>
+
+              <b-button
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                @click="showProjectExportModal = true"
+                v-permission:or="[
+                  PERMISSIONS.VIEW_PORTFOLIO,
+                  PERMISSIONS.VIEW_VULNERABILITY,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS,
+                  PERMISSIONS.VULNERABILITY_ANALYSIS_READ,
+                ]"
+              >
+                <span class="fa fa-download"></span> {{ $t('message.export') }}
+              </b-button>
+
+              <b-button
+                id="reanalyze-button"
+                v-if="!isCollectionProject"
+                variant="outline-primary"
+                @click="reAnalyze()"
+                :disabled="isAnalysisRequested"
+                v-permission="PERMISSIONS.VULNERABILITY_ANALYSIS"
+              >
+                <span class="fa fa-refresh"></span>
+                {{ $t('message.project_reanalyze') }}
+              </b-button>
+              <b-tooltip
+                v-if="!isAnalysisRequested"
+                target="reanalyze-button"
+                >{{ $t('message.project_reanalyze_tooltip') }}</b-tooltip
+              >
+
               <ExternalReferencesDropdown
+                v-if="project.externalReferences"
+                class="d-none d-md-inline-block"
+                size="md"
                 :externalReferences="project.externalReferences"
               />
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-tabs
+      v-scrollable-tabs
+      nav-wrapper-class="nav-tabs-scroller"
       class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
     >
       <b-tab
         ref="overview"
         @click="routeTo()"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
+        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
         active
       >
         <template v-slot:title
@@ -286,7 +315,6 @@
         <project-dashboard
           :key="this.uuid"
           :uuid="this.uuid"
-          :project="this.project"
           style="border-left: 0; border-right: 0; border-top: 0"
         />
       </b-tab>
@@ -352,14 +380,12 @@
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
           <b-badge
             variant="tab-total"
-            v-b-tooltip.hover
-            :title="$t('message.total_findings_excluding_aliases')"
+            v-b-tooltip.hover="$t('message.total_findings_excluding_aliases')"
             >{{ totalFindings }}</b-badge
           >
           <b-badge
             variant="tab-info"
-            v-b-tooltip.hover
-            :title="$t('message.total_findings_including_aliases')"
+            v-b-tooltip.hover="$t('message.total_findings_including_aliases')"
             >{{ totalFindingsIncludingAliases }}</b-badge
           >
         </template>
@@ -389,26 +415,22 @@
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
           <b-badge
             variant="tab-total"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.total')"
+            v-b-tooltip.hover="$t('policy_violation.total')"
             >{{ totalViolations }}</b-badge
           >
           <b-badge
             variant="tab-info"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.infos')"
+            v-b-tooltip.hover="$t('policy_violation.infos')"
             >{{ infoViolations }}</b-badge
           >
           <b-badge
             variant="tab-warn"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.warns')"
+            v-b-tooltip.hover="$t('policy_violation.warns')"
             >{{ warnViolations }}</b-badge
           >
           <b-badge
             variant="tab-fail"
-            v-b-tooltip.hover
-            :title="$t('policy_violation.fails')"
+            v-b-tooltip.hover="$t('policy_violation.fails')"
             >{{ failViolations }}</b-badge
           >
         </template>
@@ -420,37 +442,61 @@
       </b-tab>
     </b-tabs>
     <project-details-modal
+      v-model="showProjectDetailsModal"
       :project-input="project"
       :uuid="this.uuid"
       v-on:projectUpdated="syncProjectFields"
+      v-on:showProperties="showProjectPropertiesModal = true"
     />
-    <project-properties-modal :key="this.uuid" :uuid="this.uuid" />
-    <project-create-property-modal :uuid="this.uuid" />
-    <project-add-version-modal :uuid="this.uuid" />
+    <project-properties-modal
+      v-model="showProjectPropertiesModal"
+      :key="this.uuid"
+      :uuid="this.uuid"
+      v-on:createProperty="showProjectCreatePropertyModal = true"
+    />
+    <project-create-property-modal
+      v-model="showProjectCreatePropertyModal"
+      :uuid="this.uuid"
+      v-on:propertyCreated="showProjectPropertiesModal = true"
+    />
+    <project-add-version-modal
+      v-model="showProjectAddVersionModal"
+      :uuid="this.uuid"
+    />
+    <project-upload-bom-modal
+      v-model="showProjectUploadBomModal"
+      :uuid="this.uuid"
+    />
+    <project-upload-vex-modal
+      v-model="showProjectUploadVexModal"
+      :uuid="this.uuid"
+    />
+    <project-export-modal v-model="showProjectExportModal" :uuid="this.uuid" />
   </div>
 </template>
 
 <script>
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-import VueEasyPieChart from 'vue-easy-pie-chart';
-import ProjectComponents from './ProjectComponents';
-import ProjectList from './ProjectList';
-import ProjectDependencyGraph from './ProjectDependencyGraph';
-import ProjectServices from './ProjectServices';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
-import ProjectDashboard from './ProjectDashboard';
-import SeverityBarChart from '../../dashboard/SeverityBarChart';
+import SeverityCircles from '../../components/SeverityCircles.vue';
+import ProjectComponents from './ProjectComponents.vue';
+import ProjectList from './ProjectList.vue';
+import ProjectDependencyGraph from './ProjectDependencyGraph.vue';
+import ProjectServices from './ProjectServices.vue';
+import ProjectDashboard from './ProjectDashboard.vue';
 import EventBus from '../../../shared/eventbus';
+import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import ProjectDetailsModal from './ProjectDetailsModal';
-import ProjectPropertiesModal from './ProjectPropertiesModal';
-import ProjectCreatePropertyModal from './ProjectCreatePropertyModal';
-import ProjectAddVersionModal from './ProjectAddVersionModal';
-import ProjectFindings from './ProjectFindings';
-import ProjectPolicyViolations from './ProjectPolicyViolations';
-import ProjectEpss from './ProjectEpss';
+import ProjectDetailsModal from './ProjectDetailsModal.vue';
+import ProjectPropertiesModal from './ProjectPropertiesModal.vue';
+import ProjectCreatePropertyModal from './ProjectCreatePropertyModal.vue';
+import ProjectAddVersionModal from './ProjectAddVersionModal.vue';
+import ProjectUploadBomModal from './ProjectUploadBomModal.vue';
+import ProjectUploadVexModal from './ProjectUploadVexModal.vue';
+import ProjectExportModal from './ProjectExportModal.vue';
+import ProjectFindings from './ProjectFindings.vue';
+import ProjectPolicyViolations from './ProjectPolicyViolations.vue';
+import ProjectEpss from './ProjectEpss.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 
 export default {
@@ -459,6 +505,9 @@ export default {
     ProjectPolicyViolations,
     ProjectFindings,
     ProjectAddVersionModal,
+    ProjectUploadBomModal,
+    ProjectUploadVexModal,
+    ProjectExportModal,
     ProjectCreatePropertyModal,
     ProjectPropertiesModal,
     ProjectDetailsModal,
@@ -466,14 +515,11 @@ export default {
     ProjectList,
     ProjectDependencyGraph,
     ProjectServices,
-    SeverityBarChart,
     ProjectDashboard,
-    PortfolioWidgetRow,
-    VueEasyPieChart,
+    SeverityCircles,
     ProjectEpss,
     ExternalReferencesDropdown,
   },
-  title: '',
   computed: {
     projectLabel() {
       if (this.project.name && this.project.version) {
@@ -523,13 +569,13 @@ export default {
   },
   data() {
     return {
-      severityCritical: this.getStyle('--severity-critical'),
-      severityHigh: this.getStyle('--severity-high'),
-      severityMedium: this.getStyle('--severity-medium'),
-      severityLow: this.getStyle('--severity-low'),
-      severityUnassigned: this.getStyle('--severity-unassigned'),
-      severityInfo: this.getStyle('--severity-info'),
-      trackColor: this.getStyle('--component-active-color'),
+      showProjectDetailsModal: false,
+      showProjectPropertiesModal: false,
+      showProjectCreatePropertyModal: false,
+      showProjectAddVersionModal: false,
+      showProjectUploadBomModal: false,
+      showProjectUploadVexModal: false,
+      showProjectExportModal: false,
       uuid: null,
       project: {},
       currentCritical: 0,
@@ -545,6 +591,8 @@ export default {
       totalFindingsIncludingAliases: 0,
       totalEpss: 0,
       totalViolations: 0,
+      isAnalysisRequested: false,
+      nowTick: Date.now(),
       infoViolations: 0,
       warnViolations: 0,
       failViolations: 0,
@@ -555,13 +603,10 @@ export default {
     cloneDeep: function (component) {
       return cloneDeep(component);
     },
-    getStyle: function (style) {
-      return getStyle(style);
-    },
     syncProjectFields: function (project) {
       this.project = project;
-      EventBus.$emit('addCrumb', this.projectLabel);
-      this.$title = this.projectLabel;
+      EventBus.emit('addCrumb', this.projectLabel);
+      setPageTitle(this.projectLabel);
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
@@ -617,12 +662,30 @@ export default {
             this.project.metrics.policyViolationsFail,
             0,
           );
-          EventBus.$emit('addCrumb', this.projectLabel);
-          this.$title = this.projectLabel;
+          EventBus.emit('addCrumb', this.projectLabel);
+          setPageTitle(this.projectLabel);
         });
     },
     initializeProjectDetailsModal: function () {
-      this.$root.$emit('initializeProjectDetailsModal');
+      EventBus.emit('initializeProjectDetailsModal');
+    },
+    reAnalyze: function () {
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}/analyze`;
+      this.axios
+        .post(url, null, {
+          // 409 means an analysis is already running, which gets its own
+          // message rather than the generic error toast.
+          validateStatus: (status) =>
+            status === 409 || (status >= 200 && status < 300),
+        })
+        .then((response) => {
+          if (response.status === 409) {
+            this.$toastr.i(this.$t('message.project_reanalyze_in_progress'));
+            return;
+          }
+          this.isAnalysisRequested = true;
+          this.$toastr.s(this.$t('message.project_reanalyze_requested'));
+        });
     },
     routeTo(path) {
       if (path) {
@@ -647,6 +710,17 @@ export default {
       let refName = tab && tab[1] ? tab[1].toLowerCase() : 'overview';
       return this.$refs[refName] || this.$refs['overview'];
     },
+    relativeTime: function (timestamp) {
+      return timestamp
+        ? common.formatRelative(
+            this.nowTick - new Date(timestamp).getTime(),
+            this.$t.bind(this),
+          )
+        : 'n/a';
+    },
+    absoluteTime: function (timestamp) {
+      return timestamp ? common.formatTimestamp(timestamp, true) : '';
+    },
     getCollectionLogicText: function (project) {
       return common.getCollectionLogicText(this, project);
     },
@@ -657,9 +731,9 @@ export default {
       .then(() => {
         this.$nextTick(() => {
           if (this.$route.params.componentUuids) {
-            this.$refs.dependencygraph.active = true;
+            this.$refs.dependencygraph.activate();
           } else {
-            this.getTabFromRoute().active = true;
+            this.getTabFromRoute().activate();
           }
         });
       })
@@ -667,7 +741,7 @@ export default {
         console.error(e);
         this.$toastr.e(this.$t('condition.forbidden'));
         this.$router.replace({ path: '/projects/' + this.uuid });
-        this.$refs.overview.active = true;
+        this.$refs.overview.activate();
       });
   },
   watch: {
@@ -685,8 +759,8 @@ export default {
       this.getTabFromRoute().activate();
     },
   },
-  destroyed() {
-    EventBus.$emit('crumble');
+  unmounted() {
+    EventBus.emit('crumble');
   },
 };
 </script>
