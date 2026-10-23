@@ -178,7 +178,8 @@
       <pre
         class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
-        >{{ shownApiKey.key }}</pre>
+        >{{ shownApiKey.key }}</pre
+      >
     </b-modal>
   </div>
 </template>

@@ -244,7 +244,7 @@ export default {
     isTabbedArray() {
       return (
         this.schema.type === 'array' &&
-          this.schema['x-ui-hint']?.layout === 'tabs'
+        this.schema['x-ui-hint']?.layout === 'tabs'
       );
     },
     isTabbedObjectArray() {
