@@ -28,9 +28,9 @@
       <json-schema-object-field
         :schema="itemSchema"
         :property-name="`${propertyName}[${activeIndex}]`"
-        :value="activeItem"
+        :modelValue="activeItem"
         :validation-errors="activeItemValidationErrors"
-        @input="onItemChange"
+        @update:model-value="onItemChange"
       />
     </div>
 
@@ -104,7 +104,7 @@ const nextId = () => {
 
 export default {
   name: 'JsonSchemaTabbedArrayField',
-  emits: ['input'],
+  emits: ['update:modelValue'],
   components: {
     JsonSchemaObjectField,
     Showdown,
@@ -118,7 +118,7 @@ export default {
       type: String,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
@@ -136,7 +136,7 @@ export default {
     },
   },
   data() {
-    const arr = this.value || [];
+    const arr = this.modelValue || [];
     return {
       activeIndex: 0,
       itemKeys: arr.map(() => nextId()),
@@ -144,7 +144,7 @@ export default {
   },
   computed: {
     currentValue() {
-      return this.value || [];
+      return this.modelValue || [];
     },
     itemSchema() {
       return this.schema.items || { type: 'object', properties: {} };
@@ -197,7 +197,7 @@ export default {
     },
   },
   watch: {
-    value(newValue) {
+    modelValue(newValue) {
       const arr = newValue || [];
       if (arr.length !== this.itemKeys.length) {
         this.itemKeys = arr.map(() => nextId());
@@ -267,7 +267,7 @@ export default {
       const newArray = [...this.currentValue, this.defaultItem()];
       this.itemKeys = [...this.itemKeys, nextId()];
       this.activeIndex = newArray.length - 1;
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     removeItem(index) {
       if (!this.canRemoveItems) {
@@ -283,12 +283,12 @@ export default {
           Math.max(0, newArray.length - 1),
         );
       }
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     onItemChange(item) {
       const newArray = [...this.currentValue];
       newArray[this.activeIndex] = item;
-      this.$emit('input', newArray);
+      this.$emit('update:modelValue', newArray);
     },
     removeItemAriaLabel(item, index) {
       const label = item?.[this.labelProperty];
