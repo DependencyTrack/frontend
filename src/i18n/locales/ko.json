@@ -153,6 +153,8 @@
     "filter_expression_var_subject": "알림 주제 (이벤트 유형에 따라 구조가 다름)",
     "filter_expression_var_timestamp": "알림 발생 시각",
     "filter_expression_var_title": "알림 제목",
+    "filter_menu": null,
+    "filter_menu_placeholder": null,
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
     "general": "일반",

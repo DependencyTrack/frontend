@@ -153,6 +153,8 @@
     "filter_expression_var_subject": "通知主題（結構因事件類型而異）",
     "filter_expression_var_timestamp": "通知時間",
     "filter_expression_var_title": "通知標題",
+    "filter_menu": null,
+    "filter_menu_placeholder": null,
     "fortify_ssc": "Fortify SSC",
     "gem": "Gem",
     "general": "一般",
