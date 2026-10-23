@@ -1226,6 +1226,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX अपलोड किया गया",
     "view_details": "विवरण देखें",
+    "violation_message": null,
     "violation_state": "उल्लंघन राज्य",
     "violation_state_help": null,
     "violation_type": null,

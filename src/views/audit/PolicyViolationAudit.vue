@@ -281,6 +281,13 @@ export default {
           },
         },
         {
+          title: this.$t('message.violation_message'),
+          field: 'text',
+          sortable: false,
+          visible: false,
+          formatter: common.formatViolationMessage,
+        },
+        {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,

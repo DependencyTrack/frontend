@@ -106,6 +106,11 @@ export async function filter(within, text) {
   await searched.evaluate(({ done }) => done);
 }
 
+export async function expressionErrors(editor) {
+  await editor.press('ControlOrMeta+Shift+KeyM');
+  return editor.page().getByRole('listbox', { name: 'Diagnostics' });
+}
+
 export async function pickDate(page, label, date) {
   await page.getByLabel(label, { exact: true }).fill(formatDate(date));
 }

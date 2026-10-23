@@ -1227,6 +1227,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX가 업로드되었습니다",
     "view_details": "세부 정보 보기",
+    "violation_message": null,
     "violation_state": "위반 상태",
     "violation_state_help": "이 정책을 위반할 때 부여되는 심각도",
     "violation_type": "위반 유형",

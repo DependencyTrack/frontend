@@ -1,5 +1,12 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, filter } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  filter,
+  expressionErrors,
+} from '../test.mjs';
 
 test('create a license group', async ({ page }) => {
   const name = uniqueName('e2e-license-group');
@@ -93,6 +100,40 @@ test('limit a policy to a project in its row details', async ({
   await page.getByRole('cell', { name: policy }).click();
   await page.getByRole('button', { name: 'Limit To' }).click();
   await expect(page.getByText(project)).toBeVisible();
+});
+
+test('show why an expression condition cannot be added', async ({
+  page,
+  api,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/policy\/.*\/condition 400$/);
+  const policy = uniqueName('e2e-policy');
+  await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  // The add button is an icon without an accessible name.
+  await page.locator('.expanded-row .fa-plus-square').first().click();
+  await page.getByLabel('Subject').selectOption({ label: 'Expression' });
+  await page
+    .getByLabel('Violation Type')
+    .selectOption({ label: 'Operational' });
+  const editor = page
+    .getByRole('group', { name: 'Conditions' })
+    .getByRole('textbox');
+  await editor.fill('component.name.size()');
+  await page.getByRole('button', { name: 'Update' }).click();
+
+  await expect(await expressionErrors(editor)).toContainText(
+    'Expression must return bool or string, but returns int',
+  );
 });
 
 test('show the conditions of a policy in its row details', async ({

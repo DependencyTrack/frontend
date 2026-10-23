@@ -110,6 +110,20 @@
       </div>
 
       <b-form-group
+        v-if="violation.text"
+        id="violationMessage"
+        :label="$t('message.violation_message')"
+        label-for="violationMessage-input"
+      >
+        <b-form-textarea
+          id="violationMessage-input"
+          :model-value="violation.text"
+          rows="3"
+          class="form-control disabled"
+          readonly
+        />
+      </b-form-group>
+      <b-form-group
         id="failedCondition"
         :label="$t('message.condition')"
         label-for="failedCondition-input"

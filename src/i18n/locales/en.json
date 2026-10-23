@@ -1227,6 +1227,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEX uploaded",
     "view_details": "View Details",
+    "violation_message": "Message",
     "violation_state": "Violation State",
     "violation_state_help": "Severity assigned when this policy is violated",
     "violation_type": "Violation Type",

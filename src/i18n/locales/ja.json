@@ -1226,6 +1226,7 @@
     "vex": "VEX",
     "vex_uploaded": "VEXをアップロードしました",
     "view_details": "詳細を見る",
+    "violation_message": null,
     "violation_state": "違反状態",
     "violation_state_help": null,
     "violation_type": null,

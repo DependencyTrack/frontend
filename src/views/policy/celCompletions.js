@@ -224,26 +224,33 @@ const CEL_GLOBALS = [
   { label: 'in', type: 'keyword', detail: 'membership test' },
 ];
 
-const SPDX_GLOBALS = [
+const POLICY_GLOBALS = [
+  binaryFunc('cel.bind', ['var', 'init', 'expr'], 'dyn'),
   binaryFunc('spdx_expr_allows', ['expression', 'ids'], 'bool'),
   binaryFunc('spdx_expr_requires_any', ['expression', 'ids'], 'bool'),
 ];
 
-// Scans text for macro bindings like `vulns.exists(v,` and returns a map of
-// identifier name -> element type (e.g. { v: 'Vulnerability' }).
+// Scans text for macro bindings like `vulns.exists(v,` or `cel.bind(v, vuln,`
+// and returns a map of identifier name -> type (e.g. { v: 'Vulnerability' }).
 // Relies on left-to-right regex matching so outer bindings are resolved
 // before inner ones (e.g. `v` is known when resolving `v.aliases.exists(a,`).
 function findMacroBindings(text, topLevel) {
   const bindings = {};
   const re =
-    /(\w+(?:\.\w+)*)\.(exists_one|exists|all|filter|map)\(\s*(\w+)\s*,/g;
+    /cel\.bind\(\s*(?<bindVar>\w+)\s*,\s*(?<bindPath>\w+(?:\.\w+)*)\s*,|(?<listPath>\w+(?:\.\w+)*)\.(?:exists_one|exists|all|filter|map)\(\s*(?<elemVar>\w+)\s*,/g;
   let m;
   while ((m = re.exec(text)) !== null) {
-    const listPath = m[1];
-    const varName = m[3];
+    const { bindVar, bindPath, listPath, elemVar } = m.groups;
+    if (bindVar) {
+      const rawType = resolveFieldType(bindPath, bindings, topLevel);
+      if (rawType) {
+        bindings[bindVar] = rawType;
+      }
+      continue;
+    }
     const rawType = resolveFieldType(listPath, bindings, topLevel);
     if (rawType && rawType.startsWith('repeated ')) {
-      bindings[varName] = rawType.replace(/^repeated\s+/, '');
+      bindings[elemVar] = rawType.replace(/^repeated\s+/, '');
     }
   }
   return bindings;
@@ -294,7 +301,7 @@ function methodsForType(rawType) {
 
 export function createCelCompletionSource(
   topLevelOverrides,
-  globals = SPDX_GLOBALS,
+  globals = POLICY_GLOBALS,
 ) {
   const mergedTopLevel = Object.fromEntries(
     Object.entries({ ...TOP_LEVEL, ...topLevelOverrides }).filter(
@@ -311,6 +318,14 @@ export function createCelCompletionSource(
     if (dotMatch) {
       const path = dotMatch[1];
       const partial = dotMatch[2];
+      const namespaced = globals.filter((g) => g.label.startsWith(`${path}.`));
+      if (namespaced.length > 0) {
+        return {
+          from: context.pos - dotMatch[0].length,
+          options: namespaced,
+          validFor: /^[\w.]*$/,
+        };
+      }
       const rawType = resolveFieldType(path, macroBindings, mergedTopLevel);
       if (!rawType) {
         return null;
