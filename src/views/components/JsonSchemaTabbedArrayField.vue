@@ -16,7 +16,7 @@
       >
         <i
           v-if="hasItemValidationError(index)"
-          class="fa fa-exclamation-circle text-danger mr-1"
+          class="fa fa-exclamation-circle text-danger me-1"
           :title="$t('validation.schema.validation_failed')"
           aria-hidden="true"
         ></i>
@@ -56,7 +56,7 @@
         :aria-label="removeItemAriaLabel(activeItem, activeIndex)"
         @click="removeItem(activeIndex)"
       >
-        <i class="fa fa-trash mr-1" aria-hidden="true"></i>
+        <i class="fa fa-trash me-1" aria-hidden="true"></i>
         {{ removeItemAriaLabel(activeItem, activeIndex) }}
       </b-button>
     </div>
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import JsonSchemaFormField from './JsonSchemaFormField.vue';
 import JsonSchemaObjectField from './JsonSchemaObjectField.vue';
 import Showdown from './Showdown.vue';
 import {
@@ -105,8 +104,8 @@ const nextId = () => {
 
 export default {
   name: 'JsonSchemaTabbedArrayField',
+  emits: ['input'],
   components: {
-    JsonSchemaFormField,
     JsonSchemaObjectField,
     Showdown,
   },
