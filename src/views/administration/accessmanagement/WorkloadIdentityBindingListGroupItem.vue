@@ -14,8 +14,7 @@
     <pre
       v-if="binding.condition"
       class="binding-condition font-monospace small my-2"
-      >{{ binding.condition }}</pre
-    >
+      >{{ binding.condition }}</pre>
     <small class="binding-details text-muted mt-2">
       <span>{{ $t('message.provider') }}:</span>
       <span>{{ binding.provider_name }}</span>

@@ -11,8 +11,7 @@
       <pre
         class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
-        >{{ key }}</pre
-      >
+        >{{ key }}</pre>
     </div>
     <b-form v-else @submit.stop.prevent="createApiKey">
       <b-form-group
