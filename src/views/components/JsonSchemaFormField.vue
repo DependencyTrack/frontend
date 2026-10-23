@@ -98,10 +98,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    tabbed: {
-      type: Boolean,
-      default: false,
-    },
   },
   computed: {
     fieldId() {
@@ -235,7 +231,7 @@ export default {
     isTabbedArray() {
       return (
         this.schema.type === 'array' &&
-        (this.tabbed || this.schema['x-ui-hint']?.layout === 'tabs')
+          this.schema['x-ui-hint']?.layout === 'tabs'
       );
     },
     isTabbedObjectArray() {

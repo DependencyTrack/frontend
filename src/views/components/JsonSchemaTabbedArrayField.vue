@@ -89,6 +89,7 @@
 
 <script>
 import JsonSchemaFormField from './JsonSchemaFormField.vue';
+import JsonSchemaObjectField from './JsonSchemaObjectField.vue';
 import Showdown from './Showdown.vue';
 import {
   enrichSchema,
@@ -106,6 +107,7 @@ export default {
   name: 'JsonSchemaTabbedArrayField',
   components: {
     JsonSchemaFormField,
+    JsonSchemaObjectField,
     Showdown,
   },
   props: {
@@ -194,9 +196,6 @@ export default {
     activeItemValidationErrors() {
       return this.nestedErrorMap[this.activeIndex] || {};
     },
-    activeNestedErrorMap() {
-      return buildNestedValidationErrorMap(this.activeItemValidationErrors);
-    },
   },
   watch: {
     value(newValue) {
@@ -258,7 +257,7 @@ export default {
       let label = 'new-source';
       while (labels.has(label)) {
         suffix += 1;
-        label = `new-source-'${suffix}`;
+        label = `new-source-${suffix}`;
       }
       return label;
     },

@@ -30,7 +30,6 @@
               :value="formData[propName]"
               :validation-error="getValidationError(propName)"
               :validation-errors="nestedErrorMap[propName] || {}"
-              :tabbed="tabbedArrayProperties.includes(propName)"
               @input="onFieldChange(propName, $event)"
             />
           </div>
@@ -136,6 +135,7 @@ import {
   enrichSchema,
   getDefaultValue,
   buildNestedValidationErrorMap,
+  registerCustomKeywords,
 } from '@/shared/jsonSchemaForm';
 
 const CHECK_STATUS_ORDER = { FAILED: 0, SKIPPED: 1, PASSED: 2 };
@@ -182,14 +182,6 @@ export default {
       type: String,
       required: false,
       default: undefined,
-    },
-    tabbedArrayProperties: {
-      type: Array,
-      default: () => [],
-    },
-    extraValidators: {
-      type: Array,
-      default: () => [],
     },
   },
   data() {
@@ -287,6 +279,7 @@ export default {
       validateFormats: true,
     });
     addFormats(this.ajv);
+    registerCustomKeywords(this.ajv);
     await this.fetchSchemaAndConfig();
   },
   beforeDestroy() {
@@ -393,11 +386,6 @@ export default {
           }
         });
       }
-
-      this.extraValidators.forEach((validator) => {
-        Object.assign(nextErrors, validator(this.normalizedFormData) || {});
-      });
-
       this.validationErrors = nextErrors;
       return Object.keys(nextErrors).length === 0;
     },
@@ -464,6 +452,8 @@ export default {
             values: params.allowedValues?.join(', '),
           });
         case 'uniqueItems':
+          return this.$t('validation.schema.unique_items');
+        case 'x-unique-item-properties':
           return this.$t('validation.schema.unique_items');
         default:
           return message || this.$t('validation.schema.invalid');
