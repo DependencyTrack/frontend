@@ -9,6 +9,7 @@ import router from './router';
 import i18n from './i18n';
 import './validation';
 import './plugins/table.js';
+import customizationPlugin from './plugins/customization.js';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import vueDebounce from 'vue-debounce';
@@ -30,6 +31,7 @@ Vue.use(VueToastr, {
   defaultCloseOnHover: false,
 });
 Vue.use(vueDebounce, { defaultTime: '750ms' });
+Vue.use(customizationPlugin);
 Vue.use(VuePageTitle, { prefix: 'Dependency-Track -', router });
 
 Vue.prototype.$api = api;
