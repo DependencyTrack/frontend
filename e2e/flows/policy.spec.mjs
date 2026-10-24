@@ -7,6 +7,7 @@ import {
   filter,
   expressionErrors,
   pickOption,
+  selectRow,
 } from '../test.mjs';
 
 test('create a license group', async ({ page }) => {
@@ -39,7 +40,7 @@ test('add a license to a license group in its row details', async ({
   await page.locator('.expanded-row .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select License' });
   await filter(modal, '0BSD');
-  await modal.getByRole('row', { name: /0BSD/ }).getByRole('checkbox').check();
+  await selectRow(modal, 'BSD Zero Clause License');
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(modal).toBeHidden();
   await expect(
@@ -89,7 +90,7 @@ test('limit a policy to a project in its row details', async ({
   await page.locator('#projectLimitsList .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select Project' });
   await search(page, project, modal);
-  await modal.getByRole('row', { name: project }).getByRole('checkbox').check();
+  await selectRow(modal, project);
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(
     page.getByText('Updated', { exact: true }).filter({ visible: true }),
@@ -231,4 +232,33 @@ test('delete a license group after confirming', async ({ page, api }) => {
     .getByRole('button', { name: 'Delete' })
     .click();
   await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});
+
+test('limit a policy to a tag by clicking its row', async ({ page, api }) => {
+  const policy = uniqueName('e2e-policy');
+  const tag = uniqueName('e2e-tag');
+  await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+  await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-tagged'),
+    tags: [{ name: tag }],
+  });
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  await page.getByRole('button', { name: 'Limit To' }).click();
+  // The add button is an icon without an accessible name.
+  await page.locator('#tagLimitsList .fa-plus-square').click();
+  const modal = page.getByRole('dialog', { name: 'Select Tag' });
+  await search(page, tag, modal);
+  await selectRow(modal, tag);
+  await modal.getByRole('button', { name: 'Select' }).click();
+  await expect(
+    page.getByText('Updated', { exact: true }).filter({ visible: true }),
+  ).toBeVisible();
 });

@@ -1,5 +1,5 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import { test, expect, login, search, selectRow } from '../test.mjs';
 
 test('create a notification alert and limit it to a tag', async ({ page }) => {
   const name = uniqueName('e2e-alert');
@@ -55,7 +55,7 @@ test('send an alert to a team in its row details', async ({ page, api }) => {
   await page.locator('#teamDestinationList .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select Team' });
   await search(page, team, modal);
-  await modal.getByRole('row', { name: team }).getByRole('checkbox').check();
+  await selectRow(modal, team);
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(page.locator('#teamDestinationList')).toContainText(team);
 
