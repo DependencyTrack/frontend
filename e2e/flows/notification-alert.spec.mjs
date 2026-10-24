@@ -64,3 +64,25 @@ test('send an alert to a team in its row details', async ({ page, api }) => {
   await page.getByRole('cell', { name, exact: true }).click();
   await expect(page.locator('#teamDestinationList')).toContainText(team);
 });
+
+test('delete an alert after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  const publishers = await api.get('/v1/notification/publisher');
+  const publisher = publishers.find((p) => p.name === 'Console');
+  await api.send('PUT', '/v1/notification/rule', {
+    name,
+    scope: 'PORTFOLIO',
+    notificationLevel: 'INFORMATIONAL',
+    publisher: { uuid: publisher.uuid },
+  });
+  await login(page);
+  await page.goto('admin/notifications/alerts');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page.getByRole('button', { name: 'Delete Alert', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete Alert' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});

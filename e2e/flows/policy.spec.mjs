@@ -194,3 +194,41 @@ test('search the license of a license condition', async ({ page, api }) => {
     { subject: 'LICENSE', value: apache.uuid },
   ]);
 });
+
+test('delete a policy after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  await api.send('PUT', '/v1/policy', {
+    name,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, name);
+  await page.getByRole('cell', { name }).click();
+  await page
+    .getByRole('button', { name: 'Delete Policy', exact: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Delete Policy' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByRole('cell', { name })).toBeHidden();
+});
+
+test('delete a license group after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  await api.send('PUT', '/v1/licenseGroup', { name });
+  await login(page);
+  await page.goto('policy/licenseGroups');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Delete License Group', exact: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Delete License Group' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});

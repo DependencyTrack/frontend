@@ -55,3 +55,39 @@ test('grant a team access to a project in its row details', async ({
   await page.getByRole('cell', { name: team, exact: true }).click();
   await expect(page.getByRole('link', { name: project })).toBeVisible();
 });
+
+test('delete a managed user after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  await api.send('PUT', '/v1/user/managed', {
+    username: name,
+    fullname: 'E2E User',
+    email: `${name}@example.com`,
+    newPassword: 'initial-password',
+    confirmPassword: 'initial-password',
+  });
+  await login(page);
+  await page.goto('admin/accessManagement/managedUsers');
+  await filter(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page.getByRole('button', { name: 'Delete User', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete User' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});
+
+test('delete an OIDC group after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-delete');
+  await api.send('PUT', '/v1/oidc/group', { name });
+  await login(page);
+  await page.goto('admin/accessManagement/oidcGroups');
+  await filter(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page.getByRole('button', { name: 'Delete Group', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete Group' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});

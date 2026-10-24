@@ -247,17 +247,13 @@ export default {
       }
     },
     async deleteServiceAccount() {
-      const confirmed = await this.$confirm(
-        this.$t('admin.delete_service_account_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.delete_service_account'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.delete_service_account_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(this.serviceAccountUrl);
         EventBus.emit(this.rowEvents.delete, this.index);
@@ -267,17 +263,13 @@ export default {
       }
     },
     async removeApiKey(apiKey) {
-      const confirmed = await this.$confirm(
-        this.$t('admin.remove_api_key_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_api_key'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_api_key_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(
           `${this.serviceAccountUrl}/api-keys/${encodeURIComponent(apiKey.publicId)}`,
@@ -291,17 +283,13 @@ export default {
       }
     },
     async removeWorkloadIdentityBinding(binding) {
-      const confirmed = await this.$confirm(
-        this.$t('admin.remove_workload_identity_binding_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_workload_identity_binding'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_workload_identity_binding_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(
           `${this.serviceAccountUrl}/workload-identity-bindings/${encodeURIComponent(binding.uuid)}`,

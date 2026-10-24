@@ -160,7 +160,13 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteNotificationPublisher: function () {
+    deleteNotificationPublisher: async function () {
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('admin.delete_template'),
+        }))
+      )
+        return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}/${this.template.uuid}`;
       this.axios
         .delete(url)

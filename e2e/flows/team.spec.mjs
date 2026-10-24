@@ -58,3 +58,23 @@ test('show a new team API key and remove it after confirming', async ({
   await remove.getByRole('button', { name: 'Delete' }).click();
   await expect(publicId).toHaveCount(0);
 });
+
+test('delete a team only after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-team');
+  await api.send('PUT', '/v1/team', { name });
+
+  await login(page);
+  await page.goto('admin/accessManagement/teams');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  const confirm = page.getByRole('dialog', { name: 'Delete Team' });
+  await page.getByRole('button', { name: 'Delete Team' }).click();
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await expect(confirm).toBeHidden();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Delete Team' }).click();
+  await confirm.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Team deleted')).toBeVisible();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});

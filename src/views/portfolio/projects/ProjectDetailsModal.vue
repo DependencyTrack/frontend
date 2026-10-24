@@ -838,12 +838,10 @@ export default {
     },
     deleteProject: async function () {
       this.visible = false;
-      let confirmed = await this.$confirm(
-        this.$t('message.project_delete_message'),
-        {
-          title: this.$t('message.project_delete_title'),
-        },
-      );
+      let confirmed = await this.$confirmDelete({
+        title: this.$t('message.project_delete_title'),
+        message: this.$t('message.project_delete_message'),
+      });
       if (confirmed) {
         let url =
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;

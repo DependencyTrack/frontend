@@ -488,11 +488,17 @@ export default {
     onTotal(total) {
       this.$emit('total', total != null ? total : '?');
     },
-    removeDependencies() {
+    async removeDependencies() {
       const bt = this.innerBootstrapTable();
       if (!bt) return;
       const selections = bt.getSelections();
       if (selections.length === 0) return;
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('message.remove_component'),
+        }))
+      )
+        return;
       for (let i = 0; i < selections.length; i++) {
         const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
         this.axios

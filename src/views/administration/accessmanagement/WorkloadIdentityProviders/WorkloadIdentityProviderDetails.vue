@@ -268,17 +268,13 @@ export default {
       }
     },
     async deleteProvider() {
-      const confirmed = await this.$confirm(
-        this.$t('admin.delete_workload_identity_provider_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.delete_workload_identity_provider'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.delete_workload_identity_provider_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(this.providerUrl);
         EventBus.emit(this.rowEvents.delete, this.index);
