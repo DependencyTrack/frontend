@@ -12,6 +12,9 @@
         class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
         >{{ key }}</pre>
+      <div class="text-center">
+        <copy-to-clipboard-button :value="key" />
+      </div>
     </div>
     <b-form v-else @submit.stop.prevent="createApiKey">
       <b-form-group
@@ -72,9 +75,11 @@
 
 <script>
 import modalMixin from '@/mixins/modalMixin';
+import CopyToClipboardButton from '@/views/components/CopyToClipboardButton.vue';
 
 export default {
   mixins: [modalMixin],
+  components: { CopyToClipboardButton },
   props: {
     name: { type: String, required: true },
   },

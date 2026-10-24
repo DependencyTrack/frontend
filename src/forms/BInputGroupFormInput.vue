@@ -23,10 +23,14 @@
         :disabled="isDisabled"
         v-on:blur="hadFocus = true"
       />
-      <template v-if="tooltip" #append
-        ><b-input-group-text v-b-tooltip.hover="tooltip"
+      <template v-if="tooltip || (copyable && modelValue)" #append
+        ><b-input-group-text v-if="tooltip" v-b-tooltip.hover="tooltip"
           ><i class="fa fa-info-circle font-lg"></i></b-input-group-text
-      ></template>
+        ><copy-to-clipboard-button
+          v-if="copyable && modelValue"
+          :value="modelValue"
+          :label="label"
+      /></template>
     </b-input-group>
     <b-form-invalid-feedback
       v-if="this.feedback === 'true'"
@@ -39,8 +43,10 @@
 
 <script>
 import common from '../shared/common';
+import CopyToClipboardButton from '../views/components/CopyToClipboardButton.vue';
 
 export default {
+  components: { CopyToClipboardButton },
   props: {
     id: String,
     label: String,
@@ -56,6 +62,7 @@ export default {
     lazy: String,
     required: String,
     readonly: Boolean,
+    copyable: Boolean,
     disabled: [String, Boolean],
     state: {
       default: undefined,

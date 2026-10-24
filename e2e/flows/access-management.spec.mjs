@@ -91,3 +91,26 @@ test('delete an OIDC group after confirming', async ({ page, api }) => {
     .click();
   await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
 });
+
+test('copy a new service account API key', async ({ page, context, api }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const name = uniqueName('e2e-service-account');
+  await api.send('POST', '/v2/service-accounts', { name });
+
+  await login(page);
+  await page.goto('admin/accessManagement/serviceAccounts');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page
+    .getByRole('group', { name: 'API Keys' })
+    .locator('.fa-plus-square')
+    .click();
+  const modal = page.getByRole('dialog', { name: 'New API Key' });
+  await modal.getByRole('button', { name: 'Create' }).click();
+  await modal.getByRole('button', { name: 'Copy' }).click();
+  await expect(page.getByText('Copied to clipboard')).toBeVisible();
+  const key = await modal.locator('pre').textContent();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    key.trim(),
+  );
+});

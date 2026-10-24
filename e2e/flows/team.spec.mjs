@@ -78,3 +78,25 @@ test('delete a team only after confirming', async ({ page, api }) => {
   await expect(page.getByText('Team deleted')).toBeVisible();
   await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
 });
+
+test('copy a new team API key', async ({ page, context, api }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const name = uniqueName('e2e-team');
+  await api.send('PUT', '/v1/team', { name });
+
+  await login(page);
+  await page.goto('admin/accessManagement/teams');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page
+    .getByRole('group', { name: 'API Keys' })
+    .locator('.fa-plus-square')
+    .click();
+  const created = page.getByRole('dialog', { name: 'New API Key' });
+  await created.getByRole('button', { name: 'Copy' }).click();
+  await expect(page.getByText('Copied to clipboard')).toBeVisible();
+  const key = await created.locator('pre').textContent();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    key.trim(),
+  );
+});

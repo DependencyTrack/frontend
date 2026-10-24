@@ -179,6 +179,7 @@
         class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
         >{{ shownApiKey.key }}</pre>
+      <copy-to-clipboard-button :value="shownApiKey.key" />
     </b-modal>
   </div>
 </template>
@@ -187,6 +188,7 @@
 import EventBus from '../../../../shared/eventbus';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
+import CopyToClipboardButton from '../../../components/CopyToClipboardButton.vue';
 import SelectLdapGroupModal from '../SelectLdapGroupModal.vue';
 import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
@@ -199,6 +201,7 @@ export default {
   components: {
     ActionableListGroupItem,
     ApiKeyListGroupItem,
+    CopyToClipboardButton,
     SelectLdapGroupModal,
     SelectOidcGroupModal,
     SelectPermissionModal,
