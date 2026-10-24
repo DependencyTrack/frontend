@@ -105,6 +105,19 @@ test('ignore OIDC error details in the URL', async ({ page }) => {
   ).toBeVisible();
 });
 
+test('focus the username only after choosing more login options', async ({
+  page,
+}) => {
+  await routeThroughHydra(page, 'code', uniqueName('e2e-oidc'));
+  await page.goto('login');
+  const more = page.getByRole('link', { name: 'More options' });
+  await expect(more).toBeVisible();
+  await expect(page.getByPlaceholder('Username')).toBeHidden();
+
+  await more.click();
+  await expect(page.getByPlaceholder('Username')).toBeFocused();
+});
+
 function tamper(url, param) {
   return new URL(
     url.href.replace(new RegExp(`([?#&]${param}=)[^&]+`), '$1tampered'),
