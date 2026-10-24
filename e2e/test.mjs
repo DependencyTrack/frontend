@@ -139,3 +139,46 @@ export async function selectRow(within, name, text = name) {
   await row.getByText(text).first().click();
   await expect(row.getByRole('checkbox')).toBeChecked();
 }
+
+// Opens a create dialog whose first request fails with 409,
+// then expects the input to survive and Enter to retry exactly once
+// while the retry is pending.
+export async function expectCreateToSurviveFailure(
+  page,
+  { url, open, dialog, first, fill, created },
+) {
+  await page.route(url, (route) =>
+    route.request().method() === 'PUT'
+      ? route.fulfill({ status: 409 })
+      : route.fallback(),
+  );
+  await open();
+  const modal = page.getByRole('dialog', { name: dialog });
+  const input = modal.getByRole('textbox', { name: first });
+  await expect(input).toBeFocused();
+  await fill(modal);
+  const value = await input.inputValue();
+  const failed = page.waitForResponse((res) => res.status() === 409);
+  await modal.getByRole('button', { name: 'Create' }).click();
+  await failed;
+  await expect(input).toHaveValue(value);
+
+  await page.unroute(url);
+  let release;
+  const pending = new Promise((resolve) => (release = resolve));
+  let creates = 0;
+  await page.route(url, async (route) => {
+    if (route.request().method() !== 'PUT') return route.fallback();
+    creates++;
+    await pending;
+    await route.fallback();
+  });
+  await input.press('Enter');
+  await expect(modal.getByRole('button', { name: 'Create' })).toBeDisabled();
+  await input.press('Enter');
+  release();
+  await expect(page.getByText(created)).toBeVisible();
+  await expect(modal).toBeHidden();
+  expect(creates).toBe(1);
+  await page.unroute(url);
+}

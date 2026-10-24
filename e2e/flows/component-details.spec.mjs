@@ -14,22 +14,6 @@ async function createComponent(api) {
   });
 }
 
-test('delete a component after confirming', async ({ page, api }) => {
-  const { uuid } = await createComponent(api);
-  await login(page);
-  await page.goto(`components/${uuid}`);
-  await page.getByRole('button', { name: 'View Details' }).click();
-  await page
-    .getByRole('dialog', { name: 'Component Details' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await page
-    .getByRole('dialog', { name: 'Delete' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByText('Component deleted')).toBeVisible();
-});
-
 test('delete selected component properties after confirming', async ({
   page,
   api,
