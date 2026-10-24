@@ -158,6 +158,21 @@
                 "
               />
             </b-form-group>
+            <b-form-group
+              v-if="accessTeams.length"
+              id="project-teams-form-group"
+              :label="$t('message.team')"
+            >
+              <div class="form-control h-auto">
+                <span
+                  v-for="team in accessTeams"
+                  :key="team.uuid || team.name"
+                  class="badge badge-team text-lowercase mr-1"
+                >
+                  {{ team.name }}
+                </span>
+              </div>
+            </b-form-group>
             <div style="margin-bottom: 1rem">
               <label for="project-parent-input">{{
                 $t('message.parent')
@@ -890,6 +905,11 @@ export default {
     },
   },
   computed: {
+    accessTeams() {
+      return [...(this.project.accessTeams || [])].sort((a, b) =>
+        (a.name || '').localeCompare(b.name || ''),
+      );
+    },
     inactiveSinceTimestamp: function () {
       return this.project.inactiveSince
         ? this.$t('message.inactive_since') +
