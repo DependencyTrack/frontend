@@ -22,9 +22,8 @@
                     mode="passive"
                     icon="fa-solid fa-user"
                     type="text"
-                    autocomplete="username email"
+                    autocomplete="username"
                     v-model="input.username"
-                    autofocus="true"
                     lazy="true"
                     v-show="showLoginForm"
                   />
@@ -36,7 +35,7 @@
                     mode="passive"
                     icon="fa-solid fa-lock"
                     type="password"
-                    autcomplete="currentpassword"
+                    autocomplete="current-password"
                     v-model="input.password"
                     lazy="true"
                     v-show="showLoginForm"
@@ -150,6 +149,13 @@ export default {
           });
         }
       });
+  },
+  watch: {
+    showLoginForm(shown) {
+      if (shown) {
+        this.$nextTick(() => document.getElementById('username-input').focus());
+      }
+    },
   },
   methods: {
     login() {
