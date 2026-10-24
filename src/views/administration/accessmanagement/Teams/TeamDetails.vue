@@ -284,6 +284,8 @@ export default {
       }
     },
     deleteTeam: async function () {
+      if (!(await this.$confirmDelete({ title: this.$t('admin.delete_team') })))
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
       const requestBody = { data: { uuid: this.team.uuid } };
       try {
@@ -342,17 +344,13 @@ export default {
       }
     },
     removeApiKey: async function (apiKey) {
-      const confirmed = await this.$confirm(
-        this.$t('admin.remove_api_key_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_api_key'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_api_key_confirm'),
+        }))
+      )
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
       try {
         await this.axios.delete(endpoint);

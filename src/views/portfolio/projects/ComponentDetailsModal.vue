@@ -677,8 +677,9 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteComponent: function () {
+    deleteComponent: async function () {
       this.visible = false;
+      if (!(await this.$confirmDelete())) return;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` +
         this.component.uuid;

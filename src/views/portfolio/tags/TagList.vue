@@ -122,7 +122,7 @@ export default {
             attributes: {
               title: this.$t('message.delete_selected'),
             },
-            event: () => {
+            event: async () => {
               let selected = this.$refs.table.getSelections();
               if (
                 !selected ||
@@ -131,6 +131,12 @@ export default {
                 this.$toastr.w(this.$t('message.empty_selection'));
                 return;
               }
+              if (
+                !(await this.$confirmDelete({
+                  title: this.$t('message.delete_selected'),
+                }))
+              )
+                return;
               this.deleteTags(selected.map((row) => row.name))
                 .then(() => {
                   this.$toastr.s(this.$t('message.selection_deleted'));

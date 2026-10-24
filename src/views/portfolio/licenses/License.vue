@@ -129,7 +129,8 @@ export default {
     getStyle: function (style) {
       return getStyle(style);
     },
-    removeCustomLicense: function () {
+    removeCustomLicense: async function () {
+      if (!(await this.$confirmDelete())) return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE}/${this.licenseId}`;
       this.axios
         .delete(url)

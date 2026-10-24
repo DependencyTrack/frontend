@@ -87,7 +87,7 @@ test('delete a project from its details', async ({ page, api }) => {
     .click();
   await page
     .getByRole('dialog', { name: 'Confirm Project Deletion' })
-    .getByRole('button', { name: 'OK' })
+    .getByRole('button', { name: 'Delete' })
     .click();
   await expect(page.getByText('Project deleted')).toBeVisible();
   await expect(page).toHaveURL(/\/projects$/);
@@ -136,4 +136,38 @@ test('label each severity count in the project header and explain it', async ({
       }),
     ).toBeVisible();
   }
+});
+
+test('delete selected project properties after confirming', async ({
+  page,
+  api,
+}) => {
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-properties'),
+  });
+  const propertyName = uniqueName('property');
+  await api.send('PUT', `/v1/project/${uuid}/property`, {
+    groupName: 'e2e',
+    propertyName,
+    propertyValue: 'value',
+    propertyType: 'STRING',
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  await page
+    .getByRole('dialog', { name: 'Project Details' })
+    .getByRole('button', { name: 'Properties' })
+    .click();
+  const properties = page.getByRole('dialog', { name: 'Project Properties' });
+  await properties
+    .getByRole('row', { name: propertyName })
+    .getByRole('checkbox')
+    .check();
+  await properties.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByText('Property deleted')).toBeVisible();
 });

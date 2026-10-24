@@ -85,7 +85,8 @@ export default {
     };
   },
   methods: {
-    deleteRepository: function () {
+    deleteRepository: async function () {
+      if (!(await this.$confirmDelete())) return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_REPOSITORY}/${this.uuid}`;
       this.axios
         .delete(url)

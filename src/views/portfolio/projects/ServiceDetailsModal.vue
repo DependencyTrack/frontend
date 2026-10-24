@@ -438,8 +438,9 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteService: function () {
+    deleteService: async function () {
       this.visible = false;
+      if (!(await this.$confirmDelete())) return;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios

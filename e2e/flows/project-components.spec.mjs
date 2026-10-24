@@ -1,4 +1,4 @@
-import { seed } from '../api.mjs';
+import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login } from '../test.mjs';
 
 test('show the occurrences of a component', async ({ page }) => {
@@ -87,4 +87,26 @@ test('link a component to the dependency graph', async ({ page }) => {
       .getByRole('link')
       .filter({ has: page.locator('.fa-sitemap') }),
   ).toHaveAttribute('href', /\/dependencyGraph\//);
+});
+
+test('remove selected components after confirming', async ({ page, api }) => {
+  const project = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-components'),
+  });
+  const name = uniqueName('e2e-component');
+  await api.send('PUT', `/v1/component/project/${project.uuid}`, {
+    name,
+    version: '1.0.0',
+    classifier: 'LIBRARY',
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}/components`);
+  await page.getByRole('row', { name }).getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Remove', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Remove Component' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByText('Component deleted')).toBeVisible();
+  await expect(page.getByRole('row', { name })).toBeHidden();
 });
