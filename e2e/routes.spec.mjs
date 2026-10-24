@@ -320,7 +320,7 @@ test.describe('authenticated', () => {
       route.allow?.forEach((pattern) => problems.allow(pattern));
       await page.goto(resolve(route.path));
       await expect(page).toHaveTitle(
-        `Dependency-Track - ${route.title(seed())}`,
+        `${route.title(seed())} - Dependency-Track`,
       );
     });
   }
@@ -416,10 +416,19 @@ test.describe('authenticated', () => {
     const header = page.locator('.tab-content .card-header').first();
     await page.goto('admin/configuration/bomFormats');
     await expect(header).toHaveText('BOM Formats');
+    await expect(page).toHaveTitle(
+      'BOM Formats - Configuration - Dependency-Track',
+    );
     await page.getByRole('tab', { name: 'Welcome Message' }).click();
     await expect(header).toHaveText('Welcome Message');
+    await expect(page).toHaveTitle(
+      'Welcome Message - Configuration - Dependency-Track',
+    );
     await page.goBack();
     await expect(header).toHaveText('BOM Formats');
+    await expect(page).toHaveTitle(
+      'BOM Formats - Configuration - Dependency-Track',
+    );
   });
 });
 

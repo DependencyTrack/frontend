@@ -83,6 +83,7 @@
 import common from '../../shared/common';
 import permissionsMixin from '../../mixins/permissionsMixin';
 import EventBus from '../../shared/eventbus';
+import { setPageTitle } from '../../shared/utils';
 import {
   ACCESS_MANAGEMENT,
   ACCESS_MANAGEMENT_CREATE,
@@ -220,6 +221,8 @@ export default {
       handler(item) {
         if (item) {
           this.emitEvent(item);
+          const section = this.menu.find((s) => s.children.includes(item));
+          setPageTitle(`${item.name} - ${section.name}`);
         }
       },
     },
