@@ -132,3 +132,10 @@ export async function pickOption(within, label, option) {
   await search.fill(option);
   await within.getByRole('option', { name: option, exact: true }).click();
 }
+
+// Selects a row by clicking its text rather than its checkbox. Pass text when name is a link.
+export async function selectRow(within, name, text = name) {
+  const row = within.getByRole('row', { name });
+  await row.getByText(text).first().click();
+  await expect(row.getByRole('checkbox')).toBeChecked();
+}

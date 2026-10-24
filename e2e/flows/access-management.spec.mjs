@@ -1,5 +1,5 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, filter } from '../test.mjs';
+import { test, expect, login, search, filter, selectRow } from '../test.mjs';
 
 // The add buttons in row details are icons without an accessible name.
 const addButton = '.expanded-row .fa-plus-square';
@@ -20,7 +20,7 @@ test('map a team to an OIDC group in its row details', async ({
   await page.locator(addButton).click();
   const modal = page.getByRole('dialog', { name: 'Select Team' });
   await search(page, team, modal);
-  await modal.getByRole('row', { name: team }).getByRole('checkbox').check();
+  await selectRow(modal, team);
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(page.getByText('Updated', { exact: true })).toBeVisible();
 
@@ -37,7 +37,7 @@ test('grant a team access to a project in its row details', async ({
   const team = uniqueName('e2e-team');
   const project = uniqueName('e2e-project');
   await api.send('PUT', '/v1/team', { name: team });
-  await api.send('PUT', '/v1/project', { name: project });
+  await api.send('PUT', '/v1/project', { name: project, version: '1.0.0' });
 
   await login(page);
   await page.goto('admin/accessManagement/portfolioAccessControl');
@@ -46,7 +46,7 @@ test('grant a team access to a project in its row details', async ({
   await page.locator(addButton).click();
   const modal = page.getByRole('dialog', { name: 'Select Project' });
   await search(page, project, modal);
-  await modal.getByRole('row', { name: project }).getByRole('checkbox').check();
+  await selectRow(modal, project, '1.0.0');
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(page.getByText('Updated', { exact: true })).toBeVisible();
 
