@@ -496,7 +496,7 @@ td a.detail-icon {
   font-size: 0.875rem;
   font-weight: 400;
   padding-left: 0;
-  margin-top: 0.15rem;
+  line-height: 1.5;
 }
 
 .multiselect__input::placeholder {
@@ -513,6 +513,16 @@ td a.detail-icon {
   border-color: var(--dt-surface-input);
 }
 
+.multiselect,
+.multiselect__tags {
+  font-size: 0.875rem;
+  min-height: $input-height;
+}
+
+.multiselect__select {
+  height: calc(#{$input-height} - 2px);
+}
+
 .multiselect__select,
 .multiselect__select:before {
   border-color: var(--dt-text-muted) transparent;
@@ -523,6 +533,9 @@ td a.detail-icon {
   color: var(--dt-text-muted);
   font-size: 0.875rem;
   font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0;
+  padding-top: 0;
 }
 
 .multiselect__content-wrapper {

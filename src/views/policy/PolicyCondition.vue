@@ -25,8 +25,29 @@
         />
       </b-col>
       <b-col md="4" lg="5">
+        <b-form-group
+          v-if="subject === 'LICENSE' || subject === 'LICENSE_GROUP'"
+          :label="$t('message.value')"
+          label-for="input-value"
+          label-class="required"
+        >
+          <multiselect
+            v-multiselect-label
+            id="input-value"
+            v-model="selectedValue"
+            :options="possibleValues"
+            label="text"
+            track-by="value"
+            :searchable="true"
+            :allow-empty="false"
+            :max-height="250"
+            select-label=""
+            deselect-label=""
+          />
+        </b-form-group>
+
         <b-input-group-form-select
-          v-if="
+          v-else-if="
             subject !== 'COORDINATES' &&
             subject !== 'VERSION_DISTANCE' &&
             isSubjectSelectable
@@ -226,6 +247,7 @@
 import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
 import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect.vue';
 import common from '../../shared/common';
+import Multiselect from 'vue-multiselect';
 import ActionableListGroupItem from '../components/ActionableListGroupItem.vue';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import { celCompletionSource } from './celCompletions';
@@ -242,6 +264,7 @@ export default {
     BInputGroupFormSelect,
     BInputGroupFormInput,
     CodeMirrorEditor,
+    Multiselect,
   },
   created() {
     if (this.condition) {
@@ -348,6 +371,14 @@ export default {
     };
   },
   computed: {
+    selectedValue: {
+      get() {
+        return this.possibleValues.find((o) => o.value === this.value) || null;
+      },
+      set(option) {
+        this.value = option ? option.value : null;
+      },
+    },
     isSubjectSelectable: function () {
       switch (this.subject) {
         case 'AGE':
