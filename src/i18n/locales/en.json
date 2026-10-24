@@ -690,6 +690,7 @@
     "filename": "Filename",
     "filter_range_order_invalid": "\"From\" must not be greater than \"To\"",
     "filter_value_out_of_range": "Value is out of range",
+    "filter_versions": "Filter versions",
     "filters": "Filters",
     "findings": "Findings",
     "findings_audited": "Findings Audited",

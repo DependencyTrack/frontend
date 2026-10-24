@@ -20,7 +20,10 @@
                       padding-inline-start: 0;
                     "
                   >
-                    <li class="dropdown">
+                    <li
+                      class="dropdown"
+                      v-on="{ 'shown.bs.dropdown': focusVersionFilter }"
+                    >
                       <a
                         href="#"
                         data-bs-toggle="dropdown"
@@ -70,6 +73,16 @@
                             PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
                           ]"
                         />
+                        <li class="px-2 pb-2">
+                          <b-form-input
+                            ref="versionFilter"
+                            v-model="versionQuery"
+                            type="search"
+                            size="sm"
+                            :placeholder="$t('message.filter_versions')"
+                            :aria-label="$t('message.filter_versions')"
+                          />
+                        </li>
                         <span
                           v-for="projectVersion in activeProjectVersions"
                           :key="projectVersion.uuid"
@@ -77,7 +90,10 @@
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
-                              params: { uuid: projectVersion.uuid },
+                              params: {
+                                uuid: projectVersion.uuid,
+                                tab: $route.params.tab,
+                              },
                             }"
                           >
                             <span v-if="projectVersion.version">{{
@@ -105,7 +121,10 @@
                             <b-dropdown-item
                               :to="{
                                 name: 'Project',
-                                params: { uuid: projectVersion.uuid },
+                                params: {
+                                  uuid: projectVersion.uuid,
+                                  tab: $route.params.tab,
+                                },
                               }"
                             >
                               <span v-if="projectVersion.version">{{
@@ -528,11 +547,17 @@ export default {
         return this.project.name;
       }
     },
+    matchingProjectVersions() {
+      const query = this.versionQuery.trim().toLowerCase();
+      return (this.project.versions || []).filter((version) =>
+        (version.version || '').toLowerCase().includes(query),
+      );
+    },
     activeProjectVersions() {
-      return (this.project.versions || []).filter((version) => version.active);
+      return this.matchingProjectVersions.filter((version) => version.active);
     },
     inactiveProjectVersions() {
-      return (this.project.versions || []).filter((version) => !version.active);
+      return this.matchingProjectVersions.filter((version) => !version.active);
     },
     versionCount() {
       return this.project.versions && this.project.versions.length > 0
@@ -573,6 +598,7 @@ export default {
       showProjectPropertiesModal: false,
       showProjectCreatePropertyModal: false,
       showProjectAddVersionModal: false,
+      versionQuery: '',
       showProjectUploadBomModal: false,
       showProjectUploadVexModal: false,
       showProjectExportModal: false,
@@ -701,6 +727,9 @@ export default {
         this.$router.push({ path: '/projects/' + this.uuid });
       }
     },
+    focusVersionFilter() {
+      this.$refs.versionFilter?.focus();
+    },
     getTabFromRoute: function () {
       let pattern = new RegExp(
         '/projects\\/' + this.uuid + '\\/([^\\/?#]*)',
@@ -748,6 +777,7 @@ export default {
     $route(to, from) {
       this.uuid = this.$route.params.uuid;
       if (to.params.uuid !== from.params.uuid) {
+        this.versionQuery = '';
         this.initialize();
       } else if (
         this.$route.params.componentUuids &&

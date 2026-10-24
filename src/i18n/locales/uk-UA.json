@@ -689,6 +689,7 @@
     "filename": "Ім'я файлу",
     "filter_range_order_invalid": null,
     "filter_value_out_of_range": null,
+    "filter_versions": null,
     "filters": "Фільтри",
     "findings": "Результати",
     "findings_audited": "Результати перевірено",

@@ -689,6 +689,7 @@
     "filename": "Nome do arquivo",
     "filter_range_order_invalid": null,
     "filter_value_out_of_range": null,
+    "filter_versions": null,
     "filters": "Filtros",
     "findings": "Descobertas",
     "findings_audited": "Resultados auditados",
