@@ -22,6 +22,37 @@
   display: none !important;
 }
 
+[data-bs-theme="light"] {
+  .sidebar .nav-link.active,
+  .list-group-item.active {
+    box-shadow: inset 3px 0 0 var(--dt-brand);
+  }
+
+  .page-item.active .page-link {
+    box-shadow: inset 0 -3px 0 var(--dt-brand);
+  }
+
+  .sidebar .nav-link.active .nav-icon,
+  .sidebar .nav-link:hover .nav-icon {
+    color: var(--dt-brand);
+  }
+
+  .card {
+    --bs-card-border-color: var(--dt-line);
+    box-shadow: 0 1px 2px rgba(dt-light(text), .08);
+  }
+
+  // Dark text on light looks thinner than light text on dark at the same weight.
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: 600;
+  }
+
+  .table > thead {
+    --bs-table-bg: var(--dt-surface-recessed);
+  }
+}
+
 // Bootstrap's info color is a neon cyan, so info badges are neutral chips instead.
 .text-bg-info {
   color: var(--dt-text-strong) !important;

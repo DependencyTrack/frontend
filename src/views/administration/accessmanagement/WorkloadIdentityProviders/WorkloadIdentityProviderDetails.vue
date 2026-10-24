@@ -118,7 +118,7 @@
         </p>
         <div style="text-align: right">
           <b-button
-            variant="outline-primary"
+            variant="primary"
             :disabled="!hasChanges || !isValid || submitting"
             @click="updateProvider"
             ><b-spinner v-if="submitting" small class="me-1" />{{

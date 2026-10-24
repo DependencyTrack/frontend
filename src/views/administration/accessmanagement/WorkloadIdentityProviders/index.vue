@@ -6,7 +6,7 @@
       </p>
       <div id="customToolbar">
         <b-button
-          variant="outline-primary"
+          variant="primary"
           @click="showCreateWorkloadIdentityProviderModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}

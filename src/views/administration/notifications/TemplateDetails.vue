@@ -102,7 +102,7 @@
           >
           <b-button
             v-if="!template.defaultPublisher"
-            variant="outline-primary"
+            variant="primary"
             @click="updateNotificationPublisher"
             >{{ $t('message.update') }}</b-button
           >
