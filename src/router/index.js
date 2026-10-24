@@ -1273,7 +1273,9 @@ router.beforeEach((to, _from, next) => {
         const isAllowed = to.meta.permissions.some((permission) =>
           hasPermission(permission),
         );
-        if (isAllowed) {
+        if (isAllowed && state.currentUser.username) {
+          next();
+        } else if (isAllowed) {
           // let backend verify the token
           axios
             .get(`${api.BASE_URL}/${api.URL_USER_SELF}`, {
