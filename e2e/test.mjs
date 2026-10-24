@@ -125,3 +125,10 @@ function formatDate(date) {
   const pad = (n) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
+
+export async function pickOption(within, label, option) {
+  const search = within.getByRole('textbox', { name: label });
+  await within.getByRole('combobox').filter({ has: search }).click();
+  await search.fill(option);
+  await within.getByRole('option', { name: option, exact: true }).click();
+}

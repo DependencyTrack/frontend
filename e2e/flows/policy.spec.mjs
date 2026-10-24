@@ -6,6 +6,7 @@ import {
   search,
   filter,
   expressionErrors,
+  pickOption,
 } from '../test.mjs';
 
 test('create a license group', async ({ page }) => {
@@ -160,4 +161,36 @@ test('show the conditions of a policy in its row details', async ({
   await expect(page.getByLabel('Value')).toHaveValue(
     'pkg:maven/com.example/e2e',
   );
+});
+
+test('search the license of a license condition', async ({ page, api }) => {
+  const policy = uniqueName('e2e-policy');
+  const { uuid } = await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+  const licenses = await api.get('/v1/license/concise');
+  const apache = licenses.find((l) => l.licenseId === 'Apache-2.0');
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  // The add button is an icon without an accessible name.
+  await page.locator('.expanded-row .fa-plus-square').first().click();
+  await page.getByLabel('Subject').selectOption({ label: 'License' });
+  await page
+    .getByRole('combobox', { name: 'Operator *', exact: true })
+    .selectOption({ label: 'is' });
+  await pickOption(page, 'Value', apache.name);
+  await page.getByRole('button', { name: 'Update' }).click();
+  await expect(
+    page.getByText('Updated', { exact: true }).filter({ visible: true }),
+  ).toBeVisible();
+
+  const { policyConditions } = await api.get(`/v1/policy/${uuid}`);
+  expect(policyConditions).toMatchObject([
+    { subject: 'LICENSE', value: apache.uuid },
+  ]);
 });
