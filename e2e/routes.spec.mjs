@@ -396,6 +396,14 @@ test.describe('authenticated', () => {
     await expect(general).toBeVisible();
   });
 
+  test('open the first match of the admin menu filter', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    const filter = page.getByRole('searchbox', { name: 'Filter menu' });
+    await filter.fill('queue');
+    await filter.press('Enter');
+    await expect(page).toHaveURL(/\/admin\/workflows\/taskQueues$/);
+  });
+
   test('filter the admin menu by section', async ({ page }) => {
     await page.goto('admin/configuration/general');
     await page

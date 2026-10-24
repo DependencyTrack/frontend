@@ -7,6 +7,7 @@
         autofocus
         :placeholder="$t('admin.filter_menu_placeholder')"
         :aria-label="$t('admin.filter_menu')"
+        @keydown.enter="openFirstMatch"
       />
       <b-button
         v-if="query"
@@ -132,6 +133,14 @@ export default {
     },
   },
   methods: {
+    openFirstMatch() {
+      if (!this.query.trim()) return;
+      const first = this.visibleMenu
+        .filter((section) => this.isPermitted(section.permission))
+        .flatMap((section) => section.children)
+        .find((item) => !item.header);
+      if (first) this.$router.push('/admin/' + first.route);
+    },
     toggleSection(id) {
       this.openSection = this.openSection === id ? null : id;
     },
