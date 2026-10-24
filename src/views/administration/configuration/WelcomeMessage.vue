@@ -30,7 +30,7 @@
       <b-card-footer>
         <b-button
           :disabled="!this.welcomeMessage && this.isWelcomeMessage"
-          variant="outline-primary"
+          variant="primary"
           class="px-4"
           @click="saveChanges"
         >

@@ -2,10 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button
-          variant="outline-primary"
-          @click="showCreateAlertModal = true"
-        >
+        <b-button variant="primary" @click="showCreateAlertModal = true">
           <span class="fa fa-plus"></span> {{ $t('admin.create_alert') }}
         </b-button>
       </div>

@@ -3,7 +3,7 @@
     <b-card-body>
       <div id="repositoryToolbar" class="bs-table-custom-toolbar">
         <b-button
-          variant="outline-primary"
+          variant="primary"
           @click="showRepositoryCreateRepositoryModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('admin.create_repository') }}

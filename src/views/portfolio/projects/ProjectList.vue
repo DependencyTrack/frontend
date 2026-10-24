@@ -2,7 +2,7 @@
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
-        variant="outline-primary"
+        variant="primary"
         @click="initializeProjectCreateProjectModal"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,

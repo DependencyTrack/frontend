@@ -91,7 +91,7 @@
         </p>
         <div style="text-align: right">
           <b-button
-            variant="outline-primary"
+            variant="primary"
             :disabled="!hasChanges"
             @click="updateServiceAccount"
             >{{ $t('message.update') }}</b-button

@@ -69,7 +69,7 @@
       </b-form-group>
     </b-card-body>
     <b-card-footer>
-      <b-button variant="outline-primary" class="px-4" @click="saveChanges">{{
+      <b-button variant="primary" class="px-4" @click="saveChanges">{{
         $t('message.update')
       }}</b-button>
     </b-card-footer>

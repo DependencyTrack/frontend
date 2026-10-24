@@ -2,10 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button
-          variant="outline-primary"
-          @click="showCreateTemplateModal = true"
-        >
+        <b-button variant="primary" @click="showCreateTemplateModal = true">
           <span class="fa fa-plus"></span> {{ $t('admin.create_template') }}
         </b-button>
       </div>

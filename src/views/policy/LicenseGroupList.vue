@@ -2,7 +2,7 @@
   <div class="animated fadeIn">
     <div id="licenseGroupsToolbar" class="bs-table-custom-toolbar">
       <b-button
-        variant="outline-primary"
+        variant="primary"
         @click="showCreateLicenseGroupModal = true"
         v-permission:or="[
           PERMISSIONS.POLICY_MANAGEMENT,

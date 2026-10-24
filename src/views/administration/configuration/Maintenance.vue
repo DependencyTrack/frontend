@@ -114,7 +114,7 @@
     </b-card-body>
     <b-card-footer>
       <b-button
-        variant="outline-primary"
+        variant="primary"
         class="px-4"
         :disabled="!hasUnsavedChanges || !isValid"
         @click="saveChanges"

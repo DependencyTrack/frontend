@@ -71,7 +71,7 @@
       <b-card-footer>
         <b-button
           class="px-4"
-          variant="outline-primary"
+          variant="primary"
           @click="saveCustomRiskScoreSettings"
           >{{ $t('message.update') }}</b-button
         >

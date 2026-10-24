@@ -247,7 +247,7 @@
               <b-button
                 id="upload-bom-button"
                 v-if="!isCollectionProject"
-                variant="outline-primary"
+                variant="primary"
                 @click="showProjectUploadBomModal = true"
                 v-permission="PERMISSIONS.BOM_UPLOAD"
               >
