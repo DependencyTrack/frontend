@@ -54,3 +54,19 @@ test('keep the flat view after clearing a search', async ({ page }) => {
   await expect(flatView).toBeEnabled();
   await expect(flatView).toBeChecked();
 });
+
+test('restore the scroll position of the project list when going back', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 500 });
+  await login(page);
+  await page.goto('projects');
+  const link = page.getByRole('row').last().getByRole('link').first();
+  await link.scrollIntoViewIfNeeded();
+  const scrolled = await page.evaluate(() => window.scrollY);
+  expect(scrolled).toBeGreaterThan(0);
+  await link.click();
+  await expect(page).toHaveURL(/\/projects\/[^/]+$/);
+  await page.goBack();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrolled);
+});
