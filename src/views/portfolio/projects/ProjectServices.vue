@@ -37,7 +37,6 @@ export default {
   props: {
     uuid: String,
   },
-  emits: ['total'],
   data() {
     return {
       columns: [
@@ -175,17 +174,12 @@ export default {
     initializeTooltips: function () {
       $('[data-bs-toggle="tooltip"]').tooltip();
     },
-    tableLoaded: function (data) {
+    tableLoaded: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectServices',
         this.$refs.table.columns,
       );
-      if (data && Object.prototype.hasOwnProperty.call(data, 'total')) {
-        this.$emit('total', data.total);
-      } else {
-        this.$emit('total', '?');
-      }
     },
     refreshTable: function () {
       this.$refs.table.refresh({

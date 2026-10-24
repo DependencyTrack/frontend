@@ -88,3 +88,26 @@ test('link a component to the dependency graph', async ({ page }) => {
       .filter({ has: page.locator('.fa-sitemap') }),
   ).toHaveAttribute('href', /\/dependencyGraph\//);
 });
+
+test('load licenses only when adding a component', async ({ page }) => {
+  const { project } = seed();
+  const licenses = [];
+  page.on('request', (req) => {
+    if (req.url().includes('/api/v1/license/concise')) licenses.push(req);
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}/components`);
+  await expect(
+    page.getByRole('button', { name: 'Add', exact: true }),
+  ).toBeVisible();
+  expect(licenses).toEqual([]);
+
+  const loaded = page.waitForRequest((req) =>
+    req.url().includes('/api/v1/license/concise'),
+  );
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await loaded;
+  await expect(
+    page.getByRole('dialog', { name: 'Component Details' }),
+  ).toBeVisible();
+});

@@ -46,7 +46,6 @@ export default {
   props: {
     uuid: String,
   },
-  emits: ['total'],
   mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
     FilterBar,
@@ -244,13 +243,12 @@ export default {
         localStorage.setItem(key, value.toString());
       }
     },
-    tableLoaded: function (data) {
+    tableLoaded: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectPolicyViolations',
         this.$refs.table.columns,
       );
-      this.$emit('total', data.total);
     },
     initializeTooltips: function () {
       $('[data-bs-toggle="tooltip"]').tooltip({

@@ -1195,8 +1195,6 @@
     "to": "끝",
     "total": "전체",
     "total_findings": "전체 발견 항목",
-    "total_findings_excluding_aliases": "전체 발견 항목 (별칭 제외)",
-    "total_findings_including_aliases": "전체 발견 항목 (별칭 포함)",
     "total_rows": "전체 행",
     "total_rows_at_least_tooltip": "최소 이만큼",
     "total_rows_counting_skipped_tooltip": null,
@@ -1281,7 +1279,6 @@
     "license": "라이선스 위반",
     "operational": "운영 위반",
     "security": "보안 위반",
-    "total": "전체 위반",
     "warns": "위반 경고"
   },
   "severity": {

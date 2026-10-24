@@ -59,7 +59,6 @@ export default {
   props: {
     uuid: String,
   },
-  emits: ['total'],
   mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
     FilterBar,
@@ -384,15 +383,12 @@ export default {
         silent: true,
       });
     },
-    tableLoaded: function (data) {
+    tableLoaded: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectFindings',
         this.$refs.table.columns,
       );
-      // the unfiltered length
-      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
-      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       if (
         this.$route.params.vulnerability &&
         this.$refs.table.getData().length === 1

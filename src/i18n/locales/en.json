@@ -1195,8 +1195,6 @@
     "to": "To",
     "total": "Total",
     "total_findings": "Total Findings",
-    "total_findings_excluding_aliases": "Total Findings (excluding aliases)",
-    "total_findings_including_aliases": "Total Findings (including aliases)",
     "total_rows": "total rows",
     "total_rows_at_least_tooltip": "At least this many",
     "total_rows_counting_skipped_tooltip": "This view skips counting for speed. The total rises as you load more pages.",
@@ -1281,7 +1279,6 @@
     "license": "License Violations",
     "operational": "Operational Violations",
     "security": "Security Violations",
-    "total": "Total Violations",
     "warns": "Violation Warnings"
   },
   "severity": {

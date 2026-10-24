@@ -1194,8 +1194,6 @@
     "to": "到",
     "total": "全部",
     "total_findings": "發現總數",
-    "total_findings_excluding_aliases": "發現總數（不包括別名）",
-    "total_findings_including_aliases": "發現總數（包括別名）",
     "total_rows": "總行數",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "授權違規",
     "operational": "作業違規",
     "security": "安全違規",
-    "total": "違規總數",
     "warns": "違規警告"
   },
   "severity": {

@@ -3,6 +3,7 @@
     v-model="visible"
     no-stacking
     :title="$t('message.component_details')"
+    @show="retrieveLicenses"
   >
     <b-tabs class="body-bg-color">
       <b-tab class="body-bg-color border-0 p-0" active>
@@ -279,7 +280,6 @@ export default {
   },
   beforeMount() {
     this.resetValues();
-    this.retrieveLicenses();
   },
   methods: {
     createComponent: function () {
@@ -342,12 +342,13 @@ export default {
       };
     },
     retrieveLicenses: function () {
+      if (this.selectableLicenses.length > 0) return;
+      // Allow for license to be un-selected.
+      this.selectableLicenses.push({ value: '', text: '' });
       let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_CONCISE}`;
       this.axios
         .get(url)
         .then((response) => {
-          // Allow for license to be un-selected.
-          this.selectableLicenses.push({ value: '', text: '' });
           for (let i = 0; i < response.data.length; i++) {
             let license = response.data[i];
             this.selectableLicenses.push({
@@ -357,6 +358,7 @@ export default {
           }
         })
         .catch(() => {
+          this.selectableLicenses = [];
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },

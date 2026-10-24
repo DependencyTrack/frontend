@@ -1194,8 +1194,6 @@
     "to": "К",
     "total": "Всего",
     "total_findings": "Всего результатов",
-    "total_findings_excluding_aliases": "Всего результатов (без учёта псевдонимов)",
-    "total_findings_including_aliases": "Всего результатов (с учётом псевдонимов)",
     "total_rows": "всего строк",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "Нарушения лицензий",
     "operational": "Операционные нарушения",
     "security": "Нарушения безопасности",
-    "total": "Всего нарушений",
     "warns": "Предупреждения о нарушениях"
   },
   "severity": {

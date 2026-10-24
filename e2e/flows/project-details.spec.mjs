@@ -1,4 +1,4 @@
-import { uniqueName } from '../api.mjs';
+import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
 test('edit a project in the details modal', async ({ page, api }) => {
@@ -170,4 +170,28 @@ test('delete selected project properties after confirming', async ({
     .getByRole('button', { name: 'Delete' })
     .click();
   await expect(page.getByText('Property deleted')).toBeVisible();
+});
+
+test('load the findings of a project only when opening their tab', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const findings = [];
+  page.on('request', (req) => {
+    if (req.url().includes('/api/v1/finding/project/')) findings.push(req);
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}`);
+  await expect(
+    page.getByRole('heading', { name: 'Project Vulnerabilities' }),
+  ).toBeVisible();
+  expect(findings).toEqual([]);
+
+  const loaded = page.waitForRequest((req) =>
+    req.url().includes('/api/v1/finding/project/'),
+  );
+  await page
+    .getByRole('tab', { name: 'Audit Vulnerabilities', exact: true })
+    .click();
+  await loaded;
 });

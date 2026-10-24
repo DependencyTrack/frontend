@@ -64,7 +64,6 @@ export default {
   props: {
     uuid: String,
   },
-  emits: ['total'],
   mixins: [bootstrapTableMixin, filterPillsMixin],
   components: {
     FilterBar,
@@ -326,8 +325,6 @@ export default {
         'ProjectEpss',
         this.$refs.table.columns,
       );
-      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
-      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {
