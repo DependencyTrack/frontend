@@ -236,6 +236,7 @@
             <p></p>
             <b-input-group-form-input
               id="project-uuid"
+              copyable
               input-group-size="mb-3"
               type="text"
               v-model="project.uuid"
@@ -275,6 +276,7 @@
             />
             <b-input-group-form-input
               id="project-purl-input"
+              copyable
               input-group-size="mb-3"
               type="text"
               v-model="project.purl"
@@ -293,6 +295,7 @@
             />
             <b-input-group-form-input
               id="project-cpe-input"
+              copyable
               input-group-size="mb-3"
               type="text"
               v-model="project.cpe"
@@ -311,6 +314,7 @@
             />
             <b-input-group-form-input
               id="project-swidTagId-input"
+              copyable
               input-group-size="mb-3"
               type="text"
               v-model="project.swidTagId"

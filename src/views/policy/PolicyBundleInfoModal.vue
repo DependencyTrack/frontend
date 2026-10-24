@@ -12,6 +12,7 @@
         <b-card>
           <b-input-group-form-input
             id="bundle-url"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="bundleInfo.url"
@@ -23,6 +24,7 @@
           />
           <b-input-group-form-input
             id="bundle-hash"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="bundleInfo.hash"

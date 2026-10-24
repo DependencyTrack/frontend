@@ -89,6 +89,7 @@
           />
           <b-input-group-form-input
             id="component-purl-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.purl"
@@ -104,6 +105,7 @@
           />
           <b-input-group-form-input
             id="component-cpe-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.cpe"
@@ -119,6 +121,7 @@
           />
           <b-input-group-form-input
             id="component-swidTagId-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.swidTagId"
@@ -134,6 +137,7 @@
           />
           <b-input-group-form-input
             id="component-uuid"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.uuid"
@@ -278,6 +282,7 @@
         <b-card>
           <b-input-group-form-input
             id="component-md5-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.md5"
@@ -293,6 +298,7 @@
           />
           <b-input-group-form-input
             id="component-sha1-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.sha1"
@@ -308,6 +314,7 @@
           />
           <b-input-group-form-input
             id="component-sha256-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.sha256"
@@ -323,6 +330,7 @@
           />
           <b-input-group-form-input
             id="component-sha512-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.sha512"
@@ -338,6 +346,7 @@
           />
           <b-input-group-form-input
             id="component-sha3256-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.sha3_256"
@@ -353,6 +362,7 @@
           />
           <b-input-group-form-input
             id="component-sha3512-input"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="component.sha3_512"

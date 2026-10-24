@@ -79,6 +79,7 @@
           </b-form-group>
           <b-input-group-form-input
             id="service-uuid"
+            copyable
             input-group-size="mb-3"
             type="text"
             v-model="service.uuid"
