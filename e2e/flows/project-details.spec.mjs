@@ -32,6 +32,49 @@ test('edit a project in the details modal', async ({ page, api }) => {
   await expect(modal.getByLabel('Is latest version')).toBeChecked();
 });
 
+test('keep the open tab when switching version', async ({ page, api }) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  const next = await api.send('PUT', '/v1/project', {
+    name,
+    version: '2.0.0',
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}/findings`);
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  await page.getByRole('menuitem', { name: '2.0.0' }).click();
+  await expect(page).toHaveURL(new RegExp(`/projects/${next.uuid}/findings$`));
+});
+
+test('filter the versions to switch to', async ({ page, api }) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  await api.send('PUT', '/v1/project', { name, version: '2.0.0' });
+  await api.send('PUT', '/v1/project', {
+    name,
+    version: '3.0.0',
+    active: false,
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  const filter = page.getByRole('searchbox', { name: 'Filter versions' });
+  await expect(filter).toBeFocused();
+  await filter.fill('3.');
+  await expect(page.getByRole('menuitem', { name: '3.0.0' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeHidden();
+
+  await page.getByRole('menuitem', { name: '3.0.0' }).click();
+  await page.getByRole('button', { name: '3.0.0' }).click();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
+});
+
 test('delete a project from its details', async ({ page, api }) => {
   const name = uniqueName('e2e-delete');
   const { uuid } = await api.send('PUT', '/v1/project', { name });
