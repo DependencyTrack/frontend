@@ -1194,8 +1194,6 @@
     "to": "До",
     "total": "Загальна кількість",
     "total_findings": "Загальна кількість виявлень",
-    "total_findings_excluding_aliases": "Загальна кількість виявлень (без псевдонімів)",
-    "total_findings_including_aliases": "Загальна кількість виявлень (включно з псевдонімами)",
     "total_rows": "усього рядків",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "Порушення ліцензії",
     "operational": "Порушення експлуатації",
     "security": "Порушення безпеки",
-    "total": "Сумарні порушення",
     "warns": "Попередження про порушення"
   },
   "severity": {

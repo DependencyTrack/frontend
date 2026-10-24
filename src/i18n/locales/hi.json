@@ -1194,8 +1194,6 @@
     "to": "को",
     "total": "कुल",
     "total_findings": "कुल निष्कर्ष",
-    "total_findings_excluding_aliases": "कुल निष्कर्ष (उपनाम को छोड़कर)",
-    "total_findings_including_aliases": "कुल निष्कर्ष (उपनाम सहित)",
     "total_rows": "कुल पंक्तियाँ",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "लाइसेंस उल्लंघन",
     "operational": "परिचालन उल्लंघन",
     "security": "सुरक्षा उल्लंघन",
-    "total": "कुल उल्लंघन",
     "warns": "उल्लंघन की चेतावनियाँ"
   },
   "severity": {

@@ -1194,8 +1194,6 @@
     "to": "Zu",
     "total": "Gesamt",
     "total_findings": "Gesamtergebnisse",
-    "total_findings_excluding_aliases": "Gesamtanzahl der Funde (ohne Aliase)",
-    "total_findings_including_aliases": "Gesamtanzahl der Funde (einschließlich Aliase)",
     "total_rows": "Zeilen gesamt",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "Verstöße gegen Lizenzrichtlinien",
     "operational": "Verstöße gegen Betriebsrichtlinien",
     "security": "Verstöße gegen Sicherheitsrichtlinien",
-    "total": "Gesamtzahl der Verstöße",
     "warns": "Verstöße mit Schweregrad Warnung"
   },
   "severity": {

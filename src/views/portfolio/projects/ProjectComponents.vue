@@ -76,7 +76,6 @@
       :columns="columns"
       :options="tableOptions"
       page-size-storage-key="ProjectComponentsPageSize"
-      @total="onTotal"
       @visible-columns="onVisibleColumns"
     />
     <project-add-component-modal
@@ -165,7 +164,6 @@ export default {
     uuid: String,
     project: Object,
   },
-  emits: ['total'],
   data() {
     const initialVisibleColumns = Object.keys(COLUMN_DEFAULT_VISIBILITY).filter(
       (f) => initialColumnVisible(f),
@@ -484,9 +482,6 @@ export default {
     },
     onVisibleColumns(fields) {
       this.visibleColumns = fields;
-    },
-    onTotal(total) {
-      this.$emit('total', total != null ? total : '?');
     },
     async removeDependencies() {
       const bt = this.innerBootstrapTable();

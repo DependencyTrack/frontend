@@ -318,6 +318,7 @@
     </b-card>
     <b-tabs
       v-scrollable-tabs
+      lazy
       nav-wrapper-class="nav-tabs-scroller"
       class="body-bg-color"
     >
@@ -343,21 +344,18 @@
         v-if="isShowComponents"
       >
         <template v-slot:title
-          ><i class="fa fa-cubes"></i> {{ $t('message.components') }}
-          <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template
+          ><i class="fa fa-cubes"></i> {{ $t('message.components') }}</template
         >
         <project-components
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalComponents = $event"
         />
       </b-tab>
       <b-tab
         ref="collectionprojects"
         @click="routeTo('collectionprojects')"
         v-if="isShowCollectionProjects"
-        lazy
       >
         <template v-slot:title
           ><i class="fa fa-sitemap"></i>
@@ -367,14 +365,9 @@
       </b-tab>
       <b-tab ref="services" @click="routeTo('services')" v-if="isShowServices">
         <template v-slot:title
-          ><i class="fa fa-exchange"></i> {{ $t('message.services') }}
-          <b-badge variant="tab-total">{{ totalServices }}</b-badge></template
+          ><i class="fa fa-exchange"></i> {{ $t('message.services') }}</template
         >
-        <project-services
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalServices = $event"
-        />
+        <project-services :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="dependencygraph"
@@ -382,48 +375,27 @@
         v-if="isShowDependencyGraph"
       >
         <template v-slot:title
-          ><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }}
-          <b-badge variant="tab-total">{{
-            totalDependencyGraphs
-          }}</b-badge></template
+          ><i class="fa fa-sitemap"></i>
+          {{ $t('message.dependency_graph') }}</template
         >
         <project-dependency-graph
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalDependencyGraphs = $event"
         />
       </b-tab>
       <b-tab ref="findings" v-if="isShowFindings" @click="routeTo('findings')">
         <template v-slot:title>
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
-          <b-badge
-            variant="tab-total"
-            v-b-tooltip.hover="$t('message.total_findings_excluding_aliases')"
-            >{{ totalFindings }}</b-badge
-          >
-          <b-badge
-            variant="tab-info"
-            v-b-tooltip.hover="$t('message.total_findings_including_aliases')"
-            >{{ totalFindingsIncludingAliases }}</b-badge
-          >
         </template>
-        <project-findings
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalFindingsIncludingAliases = $event"
-        />
+        <project-findings :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab ref="epss" v-if="isShowFindings" @click="routeTo('epss')">
         <template v-slot:title
-          ><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }}
-          <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template
+          ><i class="fa fa-tasks"></i>
+          {{ $t('message.exploit_predictions') }}</template
         >
-        <project-epss
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalEpss = $event"
-        />
+        <project-epss :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="policyviolations"
@@ -432,32 +404,8 @@
       >
         <template v-slot:title
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
-          <b-badge
-            variant="tab-total"
-            v-b-tooltip.hover="$t('policy_violation.total')"
-            >{{ totalViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-info"
-            v-b-tooltip.hover="$t('policy_violation.infos')"
-            >{{ infoViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-warn"
-            v-b-tooltip.hover="$t('policy_violation.warns')"
-            >{{ warnViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-fail"
-            v-b-tooltip.hover="$t('policy_violation.fails')"
-            >{{ failViolations }}</b-badge
-          >
         </template>
-        <project-policy-violations
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalViolations = $event"
-        />
+        <project-policy-violations :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
     <project-details-modal
@@ -610,18 +558,8 @@ export default {
       currentLow: 0,
       currentUnassigned: 0,
       currentRiskScore: 0,
-      totalComponents: 0,
-      totalServices: 0,
-      totalDependencyGraphs: 0,
-      totalFindings: 0,
-      totalFindingsIncludingAliases: 0,
-      totalEpss: 0,
-      totalViolations: 0,
       isAnalysisRequested: false,
       nowTick: Date.now(),
-      infoViolations: 0,
-      warnViolations: 0,
-      failViolations: 0,
       tabIndex: 0,
     };
   },
@@ -670,22 +608,6 @@ export default {
           );
           this.currentRiskScore = common.valueWithDefault(
             this.project.metrics.inheritedRiskScore,
-            0,
-          );
-          this.totalFindings = common.valueWithDefault(
-            this.project.metrics.findingsTotal,
-            0,
-          );
-          this.infoViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsInfo,
-            0,
-          );
-          this.warnViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsWarn,
-            0,
-          );
-          this.failViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsFail,
             0,
           );
           EventBus.emit('addCrumb', this.projectLabel);

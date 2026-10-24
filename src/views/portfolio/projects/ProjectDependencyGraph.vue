@@ -95,7 +95,6 @@ export default {
     project: Object,
     uuid: String,
   },
-  emits: ['total'],
   mounted() {
     this.computeData();
   },
@@ -215,13 +214,11 @@ export default {
 
       // project has no tree data
       if (!this.project || !this.project.directDependencies) {
-        this.$emit('total', 0);
         this.data = data;
         return;
       }
 
       // tree available, populate common info
-      this.$emit('total', 1);
       data.fetchedChildren = true;
 
       // full tree, not searching components

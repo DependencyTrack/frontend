@@ -1194,8 +1194,6 @@
     "to": "Do",
     "total": "Całkowity",
     "total_findings": "Łączne ustalenia",
-    "total_findings_excluding_aliases": "Łączna liczba wyników (z wyłączeniem aliasów)",
-    "total_findings_including_aliases": "Łączna liczba wyników (w tym aliasy)",
     "total_rows": "łączna liczba wierszy",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "Naruszenia licencji",
     "operational": "Naruszenia operacyjne",
     "security": "Naruszenia bezpieczeństwa",
-    "total": "Całkowite naruszenia",
     "warns": "Ostrzeżenia o naruszeniu"
   },
   "severity": {

@@ -1194,8 +1194,6 @@
     "to": "至",
     "total": "合计",
     "total_findings": "发现总数",
-    "total_findings_excluding_aliases": "发现总数（不含别名）",
-    "total_findings_including_aliases": "发现总数（含别名）",
     "total_rows": "总行数",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "许可证违规",
     "operational": "运营违规",
     "security": "安全违规",
-    "total": "违规总数",
     "warns": "违规警告"
   },
   "severity": {

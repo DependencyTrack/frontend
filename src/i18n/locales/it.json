@@ -1194,8 +1194,6 @@
     "to": "A",
     "total": "Totale",
     "total_findings": "Risultati totali",
-    "total_findings_excluding_aliases": "Risultati totali (alias esclusi)",
-    "total_findings_including_aliases": "Risultati totali (inclusi gli alias)",
     "total_rows": "righe totali",
     "total_rows_at_least_tooltip": null,
     "total_rows_counting_skipped_tooltip": null,
@@ -1280,7 +1278,6 @@
     "license": "Violazioni della licenza",
     "operational": "Violazioni operative",
     "security": "Violazioni della sicurezza",
-    "total": "Violazioni totali",
     "warns": "Avvisi di violazione"
   },
   "severity": {
