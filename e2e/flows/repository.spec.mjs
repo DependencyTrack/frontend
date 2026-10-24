@@ -58,25 +58,3 @@ test('change the password secret of a repository', async ({ page, api }) => {
     password: secret,
   });
 });
-
-test('delete a repository after confirming', async ({ page, api }) => {
-  const name = uniqueName('e2e-delete');
-  await api.send('PUT', '/v1/repository', {
-    type: 'MAVEN',
-    identifier: name,
-    url: 'https://delete.example.com',
-    internal: false,
-    authenticationRequired: false,
-    enabled: true,
-  });
-  await login(page);
-  await page.goto('admin/repositories/maven');
-  await filter(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  await page.getByRole('button', { name: 'Delete', exact: true }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
-});

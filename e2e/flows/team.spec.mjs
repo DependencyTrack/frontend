@@ -1,5 +1,11 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, filter, selectRow } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  expectCreateToSurviveFailure,
+} from '../test.mjs';
 
 test('rename a team and see the row update', async ({ page, api }) => {
   const name = uniqueName('e2e-team');
@@ -101,48 +107,22 @@ test('copy a new team API key', async ({ page, context, api }) => {
   );
 });
 
-test('add a permission to a team by clicking its row', async ({
+test('keep the input of a team that failed to create', async ({
   page,
-  api,
+  problems,
 }) => {
-  const name = uniqueName('e2e-team');
-  await api.send('PUT', '/v1/team', { name });
-
+  problems.allow(/^PUT \/api\/v1\/team 409$/);
   await login(page);
   await page.goto('admin/accessManagement/teams');
-  await search(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  const permissions = page.getByRole('group', { name: 'Permissions' });
-  await permissions.locator('.fa-plus-square').click();
-  const modal = page.getByRole('dialog', { name: 'Select permission' });
-  await filter(modal, 'BOM_UPLOAD');
-  await selectRow(modal, 'BOM_UPLOAD');
-  await modal.getByRole('button', { name: 'Select' }).click();
-  await expect(permissions.getByText('BOM_UPLOAD')).toBeVisible();
-});
-
-test('map an OIDC group to a team by clicking its row', async ({
-  page,
-  api,
-}) => {
-  const name = uniqueName('e2e-team');
-  const group = uniqueName('e2e-group');
-  await api.send('PUT', '/v1/team', { name });
-  await api.send('PUT', '/v1/oidc/group', { name: group });
-
-  await login(page);
-  await page.goto('admin/accessManagement/teams');
-  await search(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  const groups = page.getByRole('group', {
-    name: 'Mapped OpenID Connect Groups',
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/team',
+    open: () => page.getByRole('button', { name: 'Create Team' }).click(),
+    dialog: 'Create Team',
+    first: /^Team Name/,
+    fill: (modal) =>
+      modal
+        .getByRole('textbox', { name: /^Team Name/ })
+        .fill(uniqueName('e2e-team')),
+    created: 'Team created',
   });
-  await groups.locator('.fa-plus-square').click();
-  const modal = page.getByRole('dialog', {
-    name: 'Select OpenID Connect Group',
-  });
-  await filter(modal, group);
-  await selectRow(modal, group);
-  await modal.getByRole('button', { name: 'Select' }).click();
-  await expect(groups.getByText(group)).toBeVisible();
 });

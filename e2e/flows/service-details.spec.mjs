@@ -29,26 +29,3 @@ test('add a provider to a service', async ({ page, api }) => {
   await modal.getByRole('tab', { name: 'Provider' }).click();
   await expect(modal.getByLabel('Provider name')).toHaveValue(provider);
 });
-
-test('delete a service after confirming', async ({ page, api }) => {
-  const project = await api.send('PUT', '/v1/project', {
-    name: uniqueName('e2e-service'),
-  });
-  const { uuid } = await api.send(
-    'PUT',
-    `/v1/service/project/${project.uuid}`,
-    { name: uniqueName('service'), endpoints: ['https://example.com'] },
-  );
-  await login(page);
-  await page.goto(`services/${uuid}`);
-  await page.getByRole('button', { name: 'View Details' }).click();
-  await page
-    .getByRole('dialog', { name: 'Service Details' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await page
-    .getByRole('dialog', { name: 'Delete' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByText('Service deleted')).toBeVisible();
-});

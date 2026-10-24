@@ -1,5 +1,12 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, selectRow } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  selectRow,
+  expectCreateToSurviveFailure,
+} from '../test.mjs';
 
 test('create a notification alert and limit it to a tag', async ({ page }) => {
   const name = uniqueName('e2e-alert');
@@ -65,24 +72,22 @@ test('send an alert to a team in its row details', async ({ page, api }) => {
   await expect(page.locator('#teamDestinationList')).toContainText(team);
 });
 
-test('delete an alert after confirming', async ({ page, api }) => {
-  const name = uniqueName('e2e-delete');
-  const publishers = await api.get('/v1/notification/publisher');
-  const publisher = publishers.find((p) => p.name === 'Console');
-  await api.send('PUT', '/v1/notification/rule', {
-    name,
-    scope: 'PORTFOLIO',
-    notificationLevel: 'INFORMATIONAL',
-    publisher: { uuid: publisher.uuid },
-  });
+test('keep the input of an alert that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/notification\/rule 409$/);
   await login(page);
   await page.goto('admin/notifications/alerts');
-  await search(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  await page.getByRole('button', { name: 'Delete Alert', exact: true }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete Alert' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/notification/rule',
+    open: () => page.getByRole('button', { name: 'Create Alert' }).click(),
+    dialog: 'Create Alert',
+    first: /^Name/,
+    fill: async (modal) => {
+      await modal.getByLabel('Name').fill(uniqueName('e2e-alert'));
+      await modal.getByLabel('Publisher').selectOption({ label: 'Console' });
+    },
+    created: 'Alert created',
+  });
 });

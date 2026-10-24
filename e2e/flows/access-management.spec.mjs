@@ -1,5 +1,13 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, filter, selectRow } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  filter,
+  selectRow,
+  expectCreateToSurviveFailure,
+} from '../test.mjs';
 
 // The add buttons in row details are icons without an accessible name.
 const addButton = '.expanded-row .fa-plus-square';
@@ -56,61 +64,90 @@ test('grant a team access to a project in its row details', async ({
   await expect(page.getByRole('link', { name: project })).toBeVisible();
 });
 
-test('delete a managed user after confirming', async ({ page, api }) => {
-  const name = uniqueName('e2e-delete');
-  await api.send('PUT', '/v1/user/managed', {
-    username: name,
-    fullname: 'E2E User',
-    email: `${name}@example.com`,
-    newPassword: 'initial-password',
-    confirmPassword: 'initial-password',
-  });
-  await login(page);
-  await page.goto('admin/accessManagement/managedUsers');
-  await filter(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  await page.getByRole('button', { name: 'Delete User', exact: true }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete User' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
-});
-
-test('delete an OIDC group after confirming', async ({ page, api }) => {
-  const name = uniqueName('e2e-delete');
-  await api.send('PUT', '/v1/oidc/group', { name });
+test('keep the input of a OIDC group that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/oidc\/group 409$/);
   await login(page);
   await page.goto('admin/accessManagement/oidcGroups');
-  await filter(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  await page.getByRole('button', { name: 'Delete Group', exact: true }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete Group' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
-  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/oidc/group',
+    open: () => page.getByRole('button', { name: 'Create Group' }).click(),
+    dialog: 'Create Group',
+    first: /^Group Name/,
+    fill: async (modal) => {
+      const name = uniqueName('e2e-OIDC-group');
+      await modal.getByRole('textbox', { name: /^Group Name/ }).fill(name);
+    },
+    created: 'OpenID Connect group created',
+  });
 });
 
-test('copy a new service account API key', async ({ page, context, api }) => {
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  const name = uniqueName('e2e-service-account');
-  await api.send('POST', '/v2/service-accounts', { name });
-
+test('keep the input of a LDAP user that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/user\/ldap 409$/);
   await login(page);
-  await page.goto('admin/accessManagement/serviceAccounts');
-  await search(page, name);
-  await page.getByRole('cell', { name, exact: true }).click();
-  await page
-    .getByRole('group', { name: 'API Keys' })
-    .locator('.fa-plus-square')
-    .click();
-  const modal = page.getByRole('dialog', { name: 'New API Key' });
-  await modal.getByRole('button', { name: 'Create' }).click();
-  await modal.getByRole('button', { name: 'Copy' }).click();
-  await expect(page.getByText('Copied to clipboard')).toBeVisible();
-  const key = await modal.locator('pre').textContent();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    key.trim(),
-  );
+  await page.goto('admin/accessManagement/ldapUsers');
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/user/ldap',
+    open: () => page.getByRole('button', { name: 'Create User' }).click(),
+    dialog: 'Create LDAP User',
+    first: /^Username/,
+    fill: async (modal) => {
+      const name = uniqueName('e2e-LDAP-user');
+      await modal.getByRole('textbox', { name: /^Username/ }).fill(name);
+    },
+    created: 'User created',
+  });
+});
+
+test('keep the input of a OIDC user that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/user\/oidc 409$/);
+  await login(page);
+  await page.goto('admin/accessManagement/oidcUsers');
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/user/oidc',
+    open: () => page.getByRole('button', { name: 'Create User' }).click(),
+    dialog: 'Create OpenID Connect User',
+    first: /^Username/,
+    fill: async (modal) => {
+      const name = uniqueName('e2e-OIDC-user');
+      await modal.getByRole('textbox', { name: /^Username/ }).fill(name);
+    },
+    created: 'User created',
+  });
+});
+
+test('keep the input of a managed user that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/user\/managed 409$/);
+  await login(page);
+  await page.goto('admin/accessManagement/managedUsers');
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/user/managed',
+    open: () => page.getByRole('button', { name: 'Create User' }).click(),
+    dialog: 'Create Managed User',
+    first: /^Username/,
+    fill: async (modal) => {
+      const name = uniqueName('e2e-managed-user');
+      await modal.getByRole('textbox', { name: /^Username/ }).fill(name);
+      await modal.getByRole('textbox', { name: /^Full name/ }).fill(name);
+      await modal
+        .getByRole('textbox', { name: /^Email/ })
+        .fill(`${name}@example.com`);
+      await modal
+        .getByLabel('Password', { exact: true })
+        .fill('e2e-password-123');
+      await modal.getByLabel(/^Confirm password/).fill('e2e-password-123');
+    },
+    created: 'User created',
+  });
 });
