@@ -1242,7 +1242,21 @@ function configRoutes() {
 const router = createRouter({
   history: createWebHistory(getContextPath()),
   linkActiveClass: 'open active',
-  scrollBehavior: () => ({ top: 0 }),
+  scrollBehavior(_to, _from, savedPosition) {
+    if (!savedPosition) return { top: 0 };
+    // NB: Tables render their rows after loading, so the page may still be too short to scroll back.
+    const deadline = Date.now() + 2000;
+    return new Promise((resolve) => {
+      const restore = () => {
+        const fits =
+          document.documentElement.scrollHeight >=
+          savedPosition.top + window.innerHeight;
+        if (fits || Date.now() > deadline) resolve(savedPosition);
+        else requestAnimationFrame(restore);
+      };
+      restore();
+    });
+  },
   routes: configRoutes(),
 });
 
