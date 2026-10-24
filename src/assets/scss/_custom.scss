@@ -265,10 +265,13 @@ label.required:after {
 }
 .nav-tabs .nav-link {
   white-space: nowrap;
-  border-top-color: var(--dt-border);
-  border-left-color: var(--dt-border);
-  border-right-color: var(--dt-border);
-  border-bottom-color: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+}
+// The nav scrolls horizontally, which clips an outer focus ring.
+.nav-tabs .nav-link:focus-visible {
+  outline-offset: -2px;
 }
 .nav-tabs .nav-link:hover {
   background-color: var(--dt-hover);
