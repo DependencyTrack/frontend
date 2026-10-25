@@ -1,4 +1,4 @@
-import { seed } from '../api.mjs';
+import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
 test('search the project list and open a project', async ({ page }) => {
@@ -69,4 +69,32 @@ test('restore the scroll position of the project list when going back', async ({
   await expect(page).toHaveURL(/\/projects\/[^/]+$/);
   await page.goBack();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrolled);
+});
+
+test('expand and collapse a parent project in the project tree', async ({
+  page,
+  api,
+}) => {
+  const parent = await api.send('PUT', '/v1/project', {
+    name: `zzz-${uniqueName('e2e-parent')}`,
+  });
+  const child = uniqueName('e2e-child');
+  await api.send('PUT', '/v1/project', {
+    name: child,
+    parent: { uuid: parent.uuid },
+  });
+  // Newest first, so the parent lands on the first page.
+  await page.addInitScript(() => {
+    localStorage.setItem('ProjectListSortName', 'name');
+    localStorage.setItem('ProjectListSortOrder', 'desc');
+  });
+
+  await login(page);
+  await page.goto('projects');
+  const parentRow = page.getByRole('row').filter({ hasText: parent.name });
+  const childLink = page.getByRole('link', { name: child });
+  await parentRow.getByRole('cell').nth(1).click();
+  await expect(childLink).toBeVisible();
+  await parentRow.getByRole('cell').nth(1).click();
+  await expect(childLink).toBeHidden();
 });
