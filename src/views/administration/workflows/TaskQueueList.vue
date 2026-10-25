@@ -1,11 +1,7 @@
 <template>
   <div>
     <b-card no-body>
-      <b-tabs
-        v-model:index="tabIndex"
-        class="body-bg-color"
-        @update:index="onTabChange"
-      >
+      <b-tabs v-model:index="tabIndex" @update:index="onTabChange">
         <b-tab>
           <template v-slot:title>
             <i class="fa fa-random"></i>

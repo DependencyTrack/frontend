@@ -1,12 +1,7 @@
 <template>
   <div class="animated fadeIn" v-permission="PERMISSIONS.VIEW_PORTFOLIO">
-    <b-tabs class="body-bg-color">
-      <b-tab
-        ref="overview"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-        @click="routeTo()"
-      >
+    <b-tabs>
+      <b-tab ref="overview" active @click="routeTo()">
         <template v-slot:title>{{ $t('message.overview') }}</template>
         <table>
           <tr>

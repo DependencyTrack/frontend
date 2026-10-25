@@ -180,12 +180,6 @@ label.required:after {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.body-bg-color {
-  background-color: var(--bs-body-bg);
-}
-.tab-content {
-  background: var(--bs-body-bg);
-}
 .nav-tabs {
   flex-wrap: nowrap;
   overflow-x: auto;

@@ -316,27 +316,13 @@
         </div>
       </template>
     </b-card>
-    <b-tabs
-      v-scrollable-tabs
-      lazy
-      nav-wrapper-class="nav-tabs-scroller"
-      class="body-bg-color"
-    >
-      <b-tab
-        ref="overview"
-        @click="routeTo()"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-      >
+    <b-tabs v-scrollable-tabs lazy nav-wrapper-class="nav-tabs-scroller">
+      <b-tab ref="overview" @click="routeTo()" active>
         <template v-slot:title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
-        <project-dashboard
-          :key="this.uuid"
-          :uuid="this.uuid"
-          style="border-left: 0; border-right: 0; border-top: 0"
-        />
+        <project-dashboard :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="components"
@@ -718,9 +704,6 @@ export default {
 </script>
 
 <style scoped>
-.overview-chart {
-  padding: 0;
-}
 .badge {
   margin-right: 0.4rem;
 }
