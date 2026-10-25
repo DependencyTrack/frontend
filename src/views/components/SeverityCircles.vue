@@ -5,7 +5,7 @@
     v-b-tooltip.hover="severity.tooltip"
     class="text-center mb-0 me-3"
   >
-    <vue-easy-pie-chart
+    <progress-ring
       :bar-color="severity.color"
       font-size="14px"
       :track-color="trackColor"
@@ -14,8 +14,7 @@
       :line-width="3"
       :percent="100"
       :size="50"
-      :animate="true"
-      >{{ severity.count }}</vue-easy-pie-chart
+      >{{ severity.count }}</progress-ring
     >
     <figcaption class="font-xs text-muted">
       {{ $t(`severity.${severity.name}`) }}
@@ -24,11 +23,11 @@
 </template>
 
 <script>
-import VueEasyPieChart from './VueEasyPieChart.vue';
+import ProgressRing from './ProgressRing.vue';
 import { themeColor } from '@/shared/theme';
 
 export default {
-  components: { VueEasyPieChart },
+  components: { ProgressRing },
   props: {
     critical: Number,
     high: Number,

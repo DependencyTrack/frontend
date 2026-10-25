@@ -1,6 +1,6 @@
 <template>
   <div>
-    <showdown
+    <markdown
       v-if="localizedDescription"
       :markdown="localizedDescription"
       class="form-text text-muted small mb-2 d-block"
@@ -63,7 +63,7 @@
 
 <script>
 import JsonSchemaFormField from './JsonSchemaFormField.vue';
-import Showdown from './Showdown.vue';
+import Markdown from './Markdown.vue';
 import {
   getDefaultValue,
   buildNestedValidationErrorMap,
@@ -79,7 +79,7 @@ export default {
   name: 'JsonSchemaArrayField',
   components: {
     JsonSchemaFormField,
-    Showdown,
+    Markdown,
   },
   props: {
     schema: {

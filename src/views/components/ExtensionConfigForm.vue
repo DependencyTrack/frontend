@@ -12,7 +12,7 @@
           {{ loadError }}
         </b-alert>
 
-        <showdown
+        <markdown
           v-if="!loadError && schema && schema.description"
           :markdown="schema.description"
           class="extension-config-form__description"
@@ -131,7 +131,7 @@ import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import common from '../../shared/common';
 import JsonSchemaFormField from './JsonSchemaFormField.vue';
-import Showdown from './Showdown.vue';
+import Markdown from './Markdown.vue';
 import {
   enrichSchema,
   getDefaultValue,
@@ -143,7 +143,7 @@ const CHECK_STATUS_ORDER = { FAILED: 0, SKIPPED: 1, PASSED: 2 };
 export default {
   components: {
     JsonSchemaFormField,
-    Showdown,
+    Markdown,
   },
   props: {
     extensionPointName: {
