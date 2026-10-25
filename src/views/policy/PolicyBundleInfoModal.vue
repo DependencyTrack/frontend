@@ -4,55 +4,53 @@
     size="lg"
     :title="$t('message.policy_bundle_info')"
   >
-    <b-tabs class="body-bg-color">
-      <b-tab class="body-bg-color border-0 p-0" active>
+    <b-tabs>
+      <b-tab active>
         <template v-slot:title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
-        <b-card>
-          <b-input-group-form-input
-            id="bundle-url"
-            copyable
-            input-group-size="mb-3"
-            type="text"
-            v-model="bundleInfo.url"
-            lazy="true"
-            feedback="false"
-            autofocus="true"
-            :label="$t('message.policy_bundle_url')"
-            disabled="true"
-          />
-          <b-input-group-form-input
-            id="bundle-hash"
-            copyable
-            input-group-size="mb-3"
-            type="text"
-            v-model="bundleInfo.hash"
-            lazy="true"
-            feedback="false"
-            autofocus="false"
-            :label="$t('message.policy_bundle_hash')"
-            disabled="true"
-          />
-          <b-input-group-form-input
-            id="bundle-created"
-            input-group-size="mb-3"
-            type="text"
-            :modelValue="bundleCreated"
-            lazy="true"
-            feedback="false"
-            autofocus="false"
-            :label="$t('message.created')"
-            disabled="true"
-          />
-          <b-input-group-form-input
-            id="bundle-last-sync"
-            :modelValue="bundleLastSynced"
-            feedback="false"
-            :label="$t('message.policy_bundle_sync_timestamp')"
-            disabled="true"
-          />
-        </b-card>
+        <b-input-group-form-input
+          id="bundle-url"
+          copyable
+          input-group-size="mb-3"
+          type="text"
+          v-model="bundleInfo.url"
+          lazy="true"
+          feedback="false"
+          autofocus="true"
+          :label="$t('message.policy_bundle_url')"
+          disabled="true"
+        />
+        <b-input-group-form-input
+          id="bundle-hash"
+          copyable
+          input-group-size="mb-3"
+          type="text"
+          v-model="bundleInfo.hash"
+          lazy="true"
+          feedback="false"
+          autofocus="false"
+          :label="$t('message.policy_bundle_hash')"
+          disabled="true"
+        />
+        <b-input-group-form-input
+          id="bundle-created"
+          input-group-size="mb-3"
+          type="text"
+          :modelValue="bundleCreated"
+          lazy="true"
+          feedback="false"
+          autofocus="false"
+          :label="$t('message.created')"
+          disabled="true"
+        />
+        <b-input-group-form-input
+          id="bundle-last-sync"
+          :modelValue="bundleLastSynced"
+          feedback="false"
+          :label="$t('message.policy_bundle_sync_timestamp')"
+          disabled="true"
+        />
       </b-tab>
     </b-tabs>
     <template v-slot:footer="{ cancel }">

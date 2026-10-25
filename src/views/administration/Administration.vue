@@ -41,9 +41,6 @@ export default {
 </script>
 
 <style scoped>
-:deep(.tab-content) {
-  border: 0;
-}
 :deep(.tab-content .tab-pane) {
   padding: 0;
 }

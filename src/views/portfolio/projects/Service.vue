@@ -34,18 +34,13 @@
         </div>
       </template>
     </b-card>
-    <b-tabs class="body-bg-color">
-      <b-tab
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-      >
+    <b-tabs>
+      <b-tab active>
         <template v-slot:title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
-        <service-dashboard
-          style="border-left: 0; border-right: 0; border-top: 0"
-        />
+        <service-dashboard />
       </b-tab>
     </b-tabs>
     <service-details-modal
@@ -153,9 +148,6 @@ export default {
 </script>
 
 <style scoped>
-.overview-chart {
-  padding: 0;
-}
 .badge {
   margin-right: 0.4rem;
 }

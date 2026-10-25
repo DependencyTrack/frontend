@@ -60,20 +60,13 @@
         </div>
       </template>
     </b-card>
-    <b-tabs class="body-bg-color">
-      <b-tab
-        ref="overview"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-        @click="routeTo()"
-      >
+    <b-tabs>
+      <b-tab ref="overview" active @click="routeTo()">
         <template v-slot:title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
-        <component-dashboard
-          style="border-left: 0; border-right: 0; border-top: 0"
-        />
+        <component-dashboard />
       </b-tab>
       <b-tab ref="vulnerabilities" @click="routeTo('vulnerabilities')">
         <template v-slot:title
@@ -265,9 +258,6 @@ export default {
 </script>
 
 <style scoped>
-.overview-chart {
-  padding: 0;
-}
 .badge {
   margin-right: 0.4rem;
 }
