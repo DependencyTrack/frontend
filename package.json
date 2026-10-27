@@ -24,7 +24,7 @@
     "remove-unused-i18n": "vue-i18n-extract --remove"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "6.20.3",
+    "@codemirror/autocomplete": "6.20.4",
     "@codemirror/lang-html": "6.4.12",
     "@codemirror/lang-javascript": "6.2.5",
     "@codemirror/lang-jinja": "6.0.1",
