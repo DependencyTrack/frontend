@@ -159,6 +159,7 @@
 }
 .table {
   background-color: var(--dt-surface-card);
+  font-variant-numeric: tabular-nums;
 }
 .table td.tight, .table th.tight {
   width: 1%;
