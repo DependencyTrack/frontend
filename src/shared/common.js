@@ -528,6 +528,18 @@ $common.formatRelative = function formatRelative(diffMs, $t) {
 };
 
 /*
+ * Builds an audit pane title with one subtitle per component or project.
+ */
+$common.auditTitle = function auditTitle(title, ...subjects) {
+  return {
+    title,
+    subtitles: subjects.map((subject) =>
+      $common.concatenateComponentName(null, subject.name, subject.version),
+    ),
+  };
+};
+
+/*
  * Concatenates the group, name, and version of a component.
  */
 $common.concatenateComponentName = function concatenateComponentName(
@@ -765,6 +777,7 @@ export default {
   formatTimestamp: $common.formatTimestamp,
   formatRelative: $common.formatRelative,
   concatenateComponentName: $common.concatenateComponentName,
+  auditTitle: $common.auditTitle,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,
   sleep: $common.sleep,

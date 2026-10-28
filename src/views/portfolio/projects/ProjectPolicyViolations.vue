@@ -20,25 +20,41 @@
       />
     </filter-bar>
 
-    <bootstrap-table
-      ref="table"
-      :columns="columns"
-      :data="data"
-      :options="options"
-      @on-load-success="tableLoaded"
+    <div class="audit-table" @click="onTableClick" @keydown="onTableKeydown">
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+        @on-load-success="tableLoaded"
+        @on-pre-body="rememberAuditFocus"
+        @on-post-body="markAuditRow()"
+      >
+      </bootstrap-table>
+    </div>
+    <audit-drawer
+      ref="auditDrawer"
+      :title="auditTitle"
+      @change="markAuditRow(true)"
+      @closed="focusAuditRow"
+      @saved="onAuditSaved"
     >
-    </bootstrap-table>
+      <template #default="{ row }">
+        <policy-violation-details :key="row.uuid" :violation="row" />
+      </template>
+    </audit-drawer>
   </div>
 </template>
 
 <script>
 import common from '../../../shared/common';
-import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
+import auditDrawerMixin from '../../../mixins/auditDrawerMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import FilterBar from '../../components/FilterBar.vue';
 import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
 import xssFilters from 'xss-filters';
 import PolicyViolationDetails from './PolicyViolationDetails.vue';
+import AuditDrawer from '../../components/AuditDrawer.vue';
 import $ from 'jquery';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
@@ -46,8 +62,10 @@ export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, filterPillsMixin],
+  mixins: [auditDrawerMixin, filterPillsMixin],
   components: {
+    AuditDrawer,
+    PolicyViolationDetails,
     FilterBar,
     BooleanFilterPill,
   },
@@ -155,6 +173,8 @@ export default {
       ],
       data: [],
       options: {
+        uniqueId: 'uuid',
+        rowAttributes: this.auditRowAttributes,
         search: true,
         showColumns: true,
         showRefresh: true,
@@ -180,17 +200,8 @@ export default {
             ? localStorage.getItem('ProjectPolicyViolationsSortOrder')
             : undefined,
         icons: {
-          detailOpen: 'fa-fw fa-angle-right',
-          detailClose: 'fa-fw fa-angle-down',
           refresh: 'fa-refresh',
         },
-        detailView: true,
-        detailViewIcon: true,
-        detailViewByClick: false,
-        detailFormatter: (_index, row) => {
-          return this.cell(PolicyViolationDetails, { violation: row });
-        },
-        onExpandRow: this.mountCells,
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
@@ -222,6 +233,9 @@ export default {
     };
   },
   methods: {
+    auditTitle(row) {
+      return common.auditTitle(row.policyCondition.policy.name, row.component);
+    },
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`;
       if (this.showSuppressedViolations === undefined) {

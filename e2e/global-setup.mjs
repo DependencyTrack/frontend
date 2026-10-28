@@ -30,9 +30,20 @@ export default async function globalSetup() {
   const api = await Api.login();
   const purl = 'pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.13.2.2';
   const vulnId = uniqueName('E2E');
+  const vulnRecommendation =
+    'Upgrade to jackson-databind 2.13.4.2 or later. If upgrading is not possible, disable default typing.';
   const vuln = await api.send('PUT', '/v1/vulnerability', {
     vulnId,
+    title: 'Deserialization of untrusted data in jackson-databind',
+    description:
+      'jackson-databind allows a crafted JSON payload to instantiate arbitrary classes when default typing is enabled. ' +
+      'An attacker who controls the input can use gadget classes on the classpath to execute code remotely.\n\n' +
+      'Applications are affected only if they enable default typing, or use @JsonTypeInfo with a class-based type id, ' +
+      'and deserialize JSON from untrusted sources.',
+    recommendation: vulnRecommendation,
     cvssV3Vector: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H',
+    cvssV4Vector:
+      'CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N',
     cwes: [502],
     affectedComponents: [
       { identityType: 'PURL', identity: purl, versionType: 'EXACT' },
@@ -58,7 +69,7 @@ export default async function globalSetup() {
       INSERT INTO "VULNERABILITY_ALIAS" ("GROUP_ID", "SOURCE", "VULN_ID")
         SELECT g.id, a.source, a.vuln_id
           FROM (SELECT gen_random_uuid() AS id) AS g,
-               (VALUES ('INTERNAL', '${vulnId}'), ('NVD', 'CVE-${vulnId}')) AS a (source, vuln_id);
+               (VALUES ('INTERNAL', '${vulnId}'), ('NVD', 'CVE-${vulnId}'), ('GITHUB', 'GHSA-${vulnId}')) AS a (source, vuln_id);
       INSERT INTO "PACKAGE_METADATA" ("PURL", "RESOLVED_AT") VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core', now()) ON CONFLICT DO NOTHING;
       INSERT INTO "PACKAGE_ARTIFACT_METADATA" ("PURL", "PACKAGE_PURL", "HASH_SHA1", "RESOLVED_FROM")
         VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core@2.13.2', 'pkg:maven/com.fasterxml.jackson.core/jackson-core', '0a6a0e0620d51833feffc67bccb51937b2345763', 'central')
@@ -122,7 +133,9 @@ export default async function globalSetup() {
     serviceUuid: services[0].uuid,
     vulnId,
     vulnUuid: vuln.uuid,
+    vulnRecommendation,
     violationMessage,
+    violationPolicy: violationPolicy.name,
     vulnPolicyUuid: policy.uuid,
     workflowRunId: runs.items[0].id,
   };

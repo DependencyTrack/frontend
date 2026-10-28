@@ -84,6 +84,20 @@ export async function search(page, text, within = page) {
   await expect(loading).toHaveCount(0);
 }
 
+export async function auditSearch(page, text) {
+  await page.getByRole('button', { name: 'Add filter' }).click();
+  await page.getByRole('menuitem', { name: 'Search' }).click();
+  await page.getByRole('textbox', { name: 'Search' }).fill(text);
+  const searched = page.waitForResponse(
+    (res) =>
+      res.url().includes('/api/') &&
+      res.url().includes(encodeURIComponent(text)),
+  );
+  await page.getByRole('button', { name: 'Apply' }).click();
+  // A row clicked before the filtered reload re-renders the table loses whatever it opened.
+  await (await searched).finished();
+}
+
 // Client-side tables search the loaded rows without an API request, so search() would wait forever.
 export async function filter(within, text) {
   const box = within.getByRole('searchbox', { name: 'Search' });
@@ -181,4 +195,28 @@ export async function expectCreateToSurviveFailure(
   await expect(modal).toBeHidden();
   expect(creates).toBe(1);
   await page.unroute(url);
+}
+
+// Button-styled radios hide the input behind its label.
+export async function chooseRadio(within, name) {
+  await within.getByRole('radiogroup').getByText(name, { exact: true }).click();
+  await expect(within.getByRole('radio', { name, exact: true })).toBeChecked();
+}
+
+// locator.click() keeps waiting while an overlay intercepts the click.
+export async function clickBehindOverlay(locator) {
+  const box = await locator.boundingBox();
+  await locator
+    .page()
+    .mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+}
+
+// Awaiting it times out the test if no dialog appears.
+export function dismissNextDialog(page) {
+  return new Promise((resolve) =>
+    page.once('dialog', async (dialog) => {
+      await dialog.dismiss();
+      resolve();
+    }),
+  );
 }
