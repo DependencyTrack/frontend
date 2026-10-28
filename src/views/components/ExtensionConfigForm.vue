@@ -56,7 +56,7 @@
         >
           <b-spinner v-if="isSavingInProgress" small />
           <i v-else class="fa fa-save" />
-          {{ $t('admin.save') }}
+          {{ $t('message.save') }}
         </b-button>
         <b-button
           v-if="testable"

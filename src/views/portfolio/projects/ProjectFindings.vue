@@ -27,14 +27,29 @@
       />
     </filter-bar>
 
-    <bootstrap-table
-      ref="table"
-      :columns="columns"
-      :data="data"
-      :options="options"
-      @on-load-success="tableLoaded"
+    <div class="audit-table" @click="onTableClick" @keydown="onTableKeydown">
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+        @on-load-success="tableLoaded"
+        @on-pre-body="rememberAuditFocus"
+        @on-post-body="markAuditRow()"
+      >
+      </bootstrap-table>
+    </div>
+    <audit-drawer
+      ref="auditDrawer"
+      :title="auditTitle"
+      @change="markAuditRow(true)"
+      @closed="focusAuditRow"
+      @saved="onAuditSaved"
     >
-    </bootstrap-table>
+      <template #default="{ row }">
+        <finding-audit :key="row.matrix" :finding="row" :project-uuid="uuid" />
+      </template>
+    </audit-drawer>
   </div>
 </template>
 
@@ -48,9 +63,11 @@ import {
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
+import auditDrawerMixin from '@/mixins/auditDrawerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
 import FindingAudit from './FindingAudit.vue';
+import AuditDrawer from '@/views/components/AuditDrawer.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import KevCell from '@/views/components/KevCell.vue';
@@ -59,9 +76,11 @@ export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, filterPillsMixin],
+  mixins: [auditDrawerMixin, bootstrapTableMixin, filterPillsMixin],
   components: {
+    AuditDrawer,
     FilterBar,
+    FindingAudit,
     BooleanFilterPill,
   },
   beforeCreate() {
@@ -298,6 +317,8 @@ export default {
       ],
       data: [],
       options: {
+        uniqueId: 'matrix',
+        rowAttributes: this.auditRowAttributes,
         onPostBody: () => {
           this.mountCells();
           this.initializeTooltips();
@@ -328,20 +349,8 @@ export default {
             : undefined,
         searchText: this.initialSearchText,
         icons: {
-          detailOpen: 'fa-fw fa-angle-right',
-          detailClose: 'fa-fw fa-angle-down',
           refresh: 'fa-refresh',
         },
-        detailView: true,
-        detailViewIcon: true,
-        detailViewByClick: false,
-        detailFormatter: (_index, row) => {
-          return (
-            row &&
-            this.cell(FindingAudit, { finding: row, projectUuid: this.uuid })
-          );
-        },
-        onExpandRow: this.mountCells,
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
@@ -368,6 +377,9 @@ export default {
     };
   },
   methods: {
+    auditTitle(row) {
+      return common.auditTitle(row.vulnerability.vulnId, row.component);
+    },
     apiUrl: function () {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
       return common.setQueryParams(url, {
@@ -390,13 +402,15 @@ export default {
         this.$refs.table.columns,
       );
       if (
+        !this.deepLinkChecked &&
         this.$route.params.vulnerability &&
         this.$refs.table.getData().length === 1
       ) {
-        // If there's only one visible row due to a URL that selects a single finding, show it in full
-        // Don't expand if there are multiple findings, as it makes it harder to notice that there is more than one result
-        this.$refs.table.expandRow(0);
+        // Open a deep-linked finding only when it is the sole match,
+        // so further matches stay noticeable.
+        this.openAudit(0);
       }
+      this.deepLinkChecked = true;
     },
     persistFilter: function (key, value) {
       if (localStorage) {

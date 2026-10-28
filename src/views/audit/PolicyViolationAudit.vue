@@ -72,20 +72,36 @@
         v-model="showSuppressed"
       />
     </filter-bar>
-    <bootstrap-table
-      ref="table"
-      :columns="columns"
-      :data="data"
-      :options="options"
-      @on-load-success="onLoadSuccess"
+    <div class="audit-table" @click="onTableClick" @keydown="onTableKeydown">
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+        @on-load-success="onLoadSuccess"
+        @on-pre-body="rememberAuditFocus"
+        @on-post-body="markAuditRow()"
+      >
+      </bootstrap-table>
+    </div>
+    <audit-drawer
+      ref="auditDrawer"
+      :title="auditTitle"
+      @change="markAuditRow(true)"
+      @closed="focusAuditRow"
+      @saved="onAuditSaved"
     >
-    </bootstrap-table>
+      <template #default="{ row }">
+        <policy-violation-details :key="row.uuid" :violation="row" />
+      </template>
+    </audit-drawer>
   </div>
 </template>
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
+import auditDrawerMixin from '@/mixins/auditDrawerMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
@@ -94,10 +110,14 @@ import MultiSelectFilterPill from '@/views/components/MultiSelectFilterPill.vue'
 import TextSearchFilterPill from '@/views/components/TextSearchFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
+import AuditDrawer from '@/views/components/AuditDrawer.vue';
+import PolicyViolationDetails from '@/views/portfolio/projects/PolicyViolationDetails.vue';
 
 export default {
-  mixins: [permissionsMixin, filterPillsMixin],
+  mixins: [permissionsMixin, filterPillsMixin, auditDrawerMixin],
   components: {
+    AuditDrawer,
+    PolicyViolationDetails,
     FilterBar,
     MultiSelectFilterPill,
     TextSearchFilterPill,
@@ -151,6 +171,13 @@ export default {
     }
   },
   methods: {
+    auditTitle(row) {
+      return common.auditTitle(
+        row.policyCondition.policy.name,
+        row.component,
+        row.project,
+      );
+    },
     apiUrl() {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}`;
       const params = {
@@ -394,6 +421,8 @@ export default {
       ],
       data: [],
       options: {
+        uniqueId: 'uuid',
+        rowAttributes: this.auditRowAttributes,
         search: false,
         toolbar: '#policyViolationAuditToolbar',
         showColumns: true,
