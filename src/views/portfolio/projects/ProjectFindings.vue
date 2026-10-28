@@ -143,10 +143,11 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
                   xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span></span>'
                 );
               } else if (
                 compareVersions(
@@ -156,15 +157,17 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
                   xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span></span>'
                 );
               } else {
                 return (
-                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span></span>'
                 );
               }
             } else {

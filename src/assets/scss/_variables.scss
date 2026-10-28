@@ -124,9 +124,8 @@ $border-color-dark:          dt-dark(border) !default;
 $link-color:                 dt-light(accent) !default;
 $link-color-dark:            dt-dark(accent) !default;
 
-$font-family-sans-serif: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans",
+$font-family-sans-serif: "IBM Plex Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans",
   "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-$headings-font-family: "Plus Jakarta Sans Variable", $font-family-sans-serif !default;
 $font-size-base: .875rem !default;
 
 $enable-rfs:            false !default;
