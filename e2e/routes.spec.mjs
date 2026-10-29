@@ -275,6 +275,14 @@ const routes = [
     landmark: button('Create Group'),
   },
   {
+    path: 'admin/accessManagement/samlUsers',
+    landmark: column('Email'),
+  },
+  {
+    path: 'admin/accessManagement/samlGroups',
+    landmark: button('Create SAML Group'),
+  },
+  {
     path: 'admin/accessManagement/serviceAccounts',
     landmark: column('Suspended'),
   },

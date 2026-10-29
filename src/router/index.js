@@ -98,6 +98,10 @@ const OidcUsers = () =>
   import('@/views/administration/accessmanagement/OidcUsers/index.vue');
 const OidcGroups = () =>
   import('@/views/administration/accessmanagement/OidcGroups.vue');
+const SamlUsers = () =>
+  import('@/views/administration/accessmanagement/SamlUsers/index.vue');
+const SamlGroups = () =>
+  import('@/views/administration/accessmanagement/SamlGroups.vue');
 const ServiceAccounts = () =>
   import('@/views/administration/accessmanagement/ServiceAccounts/index.vue');
 const WorkloadIdentityProviders = () =>
@@ -1013,6 +1017,40 @@ function configRoutes() {
               },
             },
             {
+              path: 'accessManagement/samlUsers',
+              component: SamlUsers,
+              meta: {
+                title: i18n.global.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'ACCESS_MANAGEMENT',
+                  'ACCESS_MANAGEMENT_CREATE',
+                  'ACCESS_MANAGEMENT_READ',
+                  'ACCESS_MANAGEMENT_UPDATE',
+                  'ACCESS_MANAGEMENT_DELETE',
+                ],
+              },
+            },
+            {
+              path: 'accessManagement/samlGroups',
+              component: SamlGroups,
+              meta: {
+                title: i18n.global.t('message.administration'),
+                i18n: 'message.administration',
+                sectionPath: '/admin',
+                sectionName: 'Admin',
+                permissions: [
+                  'ACCESS_MANAGEMENT',
+                  'ACCESS_MANAGEMENT_CREATE',
+                  'ACCESS_MANAGEMENT_READ',
+                  'ACCESS_MANAGEMENT_UPDATE',
+                  'ACCESS_MANAGEMENT_DELETE',
+                ],
+              },
+            },
+            {
               path: 'accessManagement/serviceAccounts',
               component: ServiceAccounts,
               meta: {
@@ -1215,6 +1253,15 @@ function configRoutes() {
     {
       path: '/login',
       name: 'Login',
+      component: Login,
+      meta: {
+        title: i18n.global.t('message.login'),
+      },
+    },
+    {
+      // The API server redirects here after a SAML login, with a one-time code or an error.
+      path: '/login/saml',
+      name: 'SamlLogin',
       component: Login,
       meta: {
         title: i18n.global.t('message.login'),

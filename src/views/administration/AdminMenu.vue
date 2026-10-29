@@ -502,6 +502,16 @@ export default {
               route: 'accessManagement/oidcGroups',
             },
             {
+              component: 'SamlUsers',
+              name: this.$t('admin.saml_users'),
+              route: 'accessManagement/samlUsers',
+            },
+            {
+              component: 'SamlGroups',
+              name: this.$t('admin.saml_groups'),
+              route: 'accessManagement/samlGroups',
+            },
+            {
               component: 'ServiceAccounts',
               name: this.$t('admin.service_accounts'),
               route: 'accessManagement/serviceAccounts',
