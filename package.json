@@ -41,7 +41,7 @@
     "bootstrap": "5.3.8",
     "bootstrap-table": "1.27.3",
     "bootstrap-vue-next": "1.2.2",
-    "chart.js": "4.5.1",
+    "chart.js": "4.6.1",
     "codemirror": "6.0.2",
     "dompurify": "3.4.17",
     "flexver": "1.1.1",
