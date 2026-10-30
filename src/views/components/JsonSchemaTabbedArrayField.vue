@@ -1,6 +1,6 @@
 <template>
   <div>
-    <showdown
+    <markdown
       v-if="localizedDescription"
       :markdown="localizedDescription"
       class="form-text text-muted small mb-2 d-block"
@@ -89,7 +89,7 @@
 
 <script>
 import JsonSchemaObjectField from './JsonSchemaObjectField.vue';
-import Showdown from './Showdown.vue';
+import Markdown from './Markdown.vue';
 import {
   enrichSchema,
   getDefaultValue,
@@ -107,7 +107,7 @@ export default {
   emits: ['update:modelValue'],
   components: {
     JsonSchemaObjectField,
-    Showdown,
+    Markdown,
   },
   props: {
     schema: {
