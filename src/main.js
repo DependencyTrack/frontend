@@ -13,6 +13,7 @@ import '@/views/components/filter-pill-content.css';
 import toastr from './plugins/toastr';
 import api from './shared/api.json';
 import oidc from './shared/oidc.json';
+import saml from './shared/saml.json';
 import globals from './shared/globals';
 import state from './shared/state';
 import { getContextPath } from './shared/utils';
@@ -20,6 +21,7 @@ import { followSystemTheme } from './shared/theme';
 
 globals.$api = api;
 globals.$oidc = oidc;
+globals.$saml = saml;
 const contextPath = getContextPath();
 axios
   .get(contextPath + '/static/config.json')
@@ -45,6 +47,13 @@ axios
     } else {
       globals.$oidc.LOGIN_BUTTON_TEXT = '';
     }
+
+    // SAML
+    globals.$saml.ENABLED =
+      response.data.SAML_ENABLED === true ||
+      String(response.data.SAML_ENABLED).toLowerCase() === 'true';
+    globals.$saml.LOGIN_BUTTON_TEXT =
+      response.data.SAML_LOGIN_BUTTON_TEXT || '';
 
     // Feature flags
     globals.$featureFlags = response.data.FEATURE_FLAGS;
