@@ -1,316 +1,199 @@
 <template>
-  <b-row class="expanded-row">
-    <b-col sm="6">
-      <div
-        v-if="
-          finding.vulnerability.aliases &&
-          finding.vulnerability.aliases.length > 0
-        "
+  <audit-panel
+    :url="`${$api.BASE_URL}/${$api.URL_ANALYSIS}`"
+    :ids="{
+      project: projectUuid,
+      component: finding.component.uuid,
+      vulnerability: vulnerability.uuid,
+    }"
+    :fields="{
+      analysisState: 'NOT_SET',
+      analysisJustification: 'NOT_SET',
+      analysisResponse: 'NOT_SET',
+      analysisDetails: '',
+      isSuppressed: false,
+    }"
+    :can-analyze="canAnalyze"
+    :no-analysis-status="404"
+    :states="analysisChoices"
+    :state-description="$t('message.analysis_tooltip')"
+    @loaded="owaspVector = $event.owaspVector ?? null"
+    @state-change="onStateChange"
+  >
+    <p v-if="vulnerability.title" class="fw-semibold mb-1">
+      {{ vulnerability.title }}
+    </p>
+    <p v-if="vulnerability.subtitle" class="audit-meta mb-1">
+      {{ vulnerability.subtitle }}
+    </p>
+    <div
+      class="audit-facts audit-meta d-flex flex-wrap align-items-center mb-3"
+    >
+      <span
+        v-if="vulnerability.severity"
+        :class="`badge severity-${vulnerability.severity.toLowerCase()}-bg`"
+        >{{ $t(`severity.${vulnerability.severity.toLowerCase()}`) }}</span
       >
-        <label>Aliases</label>
-        <b-card class="fw-bold">
-          <b-card-text>
-            <span
-              v-for="alias in resolveVulnAliases(
-                finding.vulnerability.aliases,
-                finding.vulnerability.source,
-              )"
-              :key="alias.vulnId"
-            >
-              <b-link
-                style="margin-right: 1rem"
-                :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId"
-                >{{ alias.vulnId }}</b-link
-              >
-            </span>
-          </b-card-text>
-        </b-card>
-      </div>
-      <b-form-group
-        v-if="finding.vulnerability.title"
-        id="fieldset-1"
-        :label="this.$t('message.title')"
-        label-for="input-1"
+      <span v-if="primaryScore"
+        >{{ primaryScore.label }} {{ primaryScore.score }}</span
       >
-        <b-form-input
-          id="input-1"
-          :model-value="finding.vulnerability.title"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.subtitle"
-        id="fieldset-2"
-        :label="this.$t('message.subtitle')"
-        label-for="input-2"
-      >
-        <b-form-input
-          id="input-2"
-          :model-value="finding.vulnerability.subtitle"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.description"
-        id="fieldset-3"
-        :label="this.$t('message.description')"
-        label-for="input-3"
-      >
-        <b-form-textarea
-          id="input-3"
-          :model-value="finding.vulnerability.description"
-          rows="7"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.recommendation"
-        id="fieldset-4"
-        :label="this.$t('message.recommendation')"
-        label-for="input-4"
-      >
-        <b-form-textarea
-          id="input-4"
-          :model-value="finding.vulnerability.recommendation"
-          rows="7"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.cvssV2Vector"
-        id="fieldset-5"
-        :label="this.$t('message.cvss_v2_vector')"
-        label-for="input-5"
-      >
-        <b-form-input
-          id="input-5"
-          :model-value="finding.vulnerability.cvssV2Vector"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.cvssV3Vector"
-        id="fieldset-6"
-        :label="this.$t('message.cvss_v3_vector')"
-        label-for="input-6"
-      >
-        <b-form-input
-          id="input-6"
-          :model-value="finding.vulnerability.cvssV3Vector"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="finding.vulnerability.cvssV4Vector"
-        id="fieldset-cvssv4-vector"
-        :label="this.$t('message.cvss_v4_vector')"
-        label-for="input-cvssv4-vector"
-      >
-        <b-form-input
-          id="input-cvssv4-vector"
-          :model-value="finding.vulnerability.cvssV4Vector"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        v-if="owaspVector"
-        id="fieldset-owasp-vector"
-        :label="this.$t('message.owasp_rr_vector')"
-        label-for="input-owasp-vector"
-      >
-        <b-form-input
-          id="input-owasp-vector"
-          :model-value="owaspVector"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-    </b-col>
-    <b-col sm="6">
-      <b-form-group
-        id="fieldset-7"
-        :label="this.$t('message.audit_trail')"
-        label-for="auditTrailField"
-      >
-        <b-form-textarea
-          id="auditTrailField"
-          v-model.trim="auditTrail"
-          rows="7"
-          class="form-control disabled"
-          readonly
-        />
-      </b-form-group>
-      <b-form-group
-        id="fieldset-8"
-        v-if="
-          this.isPermitted([
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-          ])
-        "
-        :label="this.$t('message.comment')"
-        label-for="input-8"
-      >
-        <b-form-textarea
-          id="input-8"
-          v-model.trim="comment"
-          rows="4"
-          class="form-control"
-        />
-        <div class="float-end">
-          <b-button size="sm" variant="outline-primary" @click="addComment"
-            ><span class="fa fa-comment-o"></span>
-            {{ this.$t('message.add_comment') }}</b-button
-          >
-        </div>
-      </b-form-group>
-      <b-form-group
-        id="fieldset-9"
-        v-if="
-          this.isPermitted([
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-          ])
-        "
-        :label="this.$t('message.analysis')"
-        label-for="input-9"
-      >
-        <b-input-group id="input-9">
-          <b-form-select
-            v-model="analysisState"
-            :options="analysisChoices"
-            @update:model-value="makeAnalysis"
-            style="flex: 0 1 auto; width: auto; margin-right: 2rem"
-            v-b-tooltip.hover="this.$t('message.analysis_tooltip')"
+      <span v-if="epss">{{ $t('message.epss') }} {{ epss }}</span>
+      <kev-cell
+        v-if="vulnerability.isKev"
+        :source="vulnerability.source"
+        :vuln-id="vulnerability.vulnId"
+        :label="$t('message.kev')"
+      />
+    </div>
+    <dl v-if="aliases.length > 0" class="audit-details">
+      <dt>{{ $t('message.aliases') }}</dt>
+      <dd class="d-flex flex-wrap column-gap-3">
+        <b-link
+          v-for="alias in aliases"
+          :key="alias.vulnId"
+          :href="'/vulnerabilities/' + alias.source + '/' + alias.vulnId"
+          >{{ alias.vulnId }}</b-link
+        >
+      </dd>
+    </dl>
+    <details v-if="scores.length > 0" class="audit-details mb-3">
+      <summary>{{ $t('message.ratings') }}</summary>
+      <dl class="audit-ratings mt-2 mb-0">
+        <template v-for="score in scores" :key="score.label">
+          <dt>{{ score.label }}</dt>
+          <dd>{{ score.score }}</dd>
+          <dd class="text-truncate">
+            <code v-if="score.vector" :title="score.vector">{{
+              score.vector
+            }}</code>
+          </dd>
+          <dd>
+            <copy-to-clipboard-button
+              v-if="score.vector"
+              :value="score.vector"
+              :label="score.label"
+              size="sm"
+            />
+          </dd>
+        </template>
+      </dl>
+    </details>
+    <dl class="audit-details mb-0">
+      <template v-if="vulnerability.description">
+        <dt>{{ $t('message.description') }}</dt>
+        <dd>
+          <p
+            id="findingDescription"
+            class="audit-text mb-1"
+            :class="{ 'audit-clamp': longDescription && !expanded }"
+            v-text="vulnerability.description"
           />
-          <b-form-checkbox
-            v-model="isSuppressed"
-            :disabled="analysisState === null"
-            class="align-self-center"
-            switch
-            >{{ this.$t('message.suppressed') }}</b-form-checkbox
+          <b-button
+            v-if="longDescription"
+            variant="link"
+            class="p-0"
+            aria-controls="findingDescription"
+            :aria-expanded="String(expanded)"
+            @click="expanded = !expanded"
+            >{{
+              expanded ? $t('message.show_less') : $t('message.show_more')
+            }}</b-button
           >
-        </b-input-group>
-      </b-form-group>
-      <b-row
-        v-if="
-          this.isPermitted([
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-          ])
-        "
-      >
-        <b-col sm="6">
-          <b-form-group
-            id="fieldset-10"
-            :label="this.$t('message.justification')"
-            label-for="input-10"
-          >
-            <b-input-group id="input-10">
-              <b-form-select
-                v-model="analysisJustification"
-                :options="justificationChoices"
-                @update:model-value="makeAnalysis"
-                :disabled="
-                  analysisState === null || analysisState !== 'NOT_AFFECTED'
-                "
-                v-b-tooltip.hover="$t('message.justification_tooltip')"
-              />
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col sm="6">
-          <b-form-group
-            id="fieldset-11"
-            :label="this.$t('message.response')"
-            label-for="input-11"
-          >
-            <b-input-group id="input-11">
-              <b-form-select
-                v-model="analysisResponse"
-                :options="responseChoices"
-                :disabled="analysisState === null"
-                @update:model-value="makeAnalysis"
-                v-b-tooltip.hover="this.$t('message.response_tooltip')"
-              />
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-      </b-row>
+        </dd>
+      </template>
+      <template v-if="vulnerability.recommendation">
+        <dt>{{ $t('message.recommendation') }}</dt>
+        <dd class="audit-text" v-text="vulnerability.recommendation" />
+      </template>
+    </dl>
+    <template #fields="{ form }">
       <b-form-group
-        id="fieldset-12"
-        v-if="
-          this.isPermitted([
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-            this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-          ])
-        "
-        :label="this.$t('message.details')"
-        label-for="analysisDetailsField"
+        v-if="form.analysisState === 'NOT_AFFECTED'"
+        :label="$t('message.justification')"
+        :description="$t('message.justification_tooltip')"
+        label-for="findingJustification"
+      >
+        <b-form-select
+          id="findingJustification"
+          v-model="form.analysisJustification"
+          :options="justificationChoices"
+        />
+      </b-form-group>
+      <b-form-group
+        :label="$t('message.response')"
+        :description="$t('message.response_tooltip')"
+        label-for="findingResponse"
+      >
+        <b-form-select
+          id="findingResponse"
+          v-model="form.analysisResponse"
+          :options="responseChoices"
+        />
+      </b-form-group>
+      <b-form-group
+        :label="$t('message.details')"
+        :description="$t('message.analysis_details_tooltip')"
+        label-for="findingDetails"
       >
         <b-form-textarea
-          id="analysisDetailsField"
-          v-model="analysisDetails"
-          rows="7"
-          class="form-control"
-          :disabled="
-            analysisState === null ||
-            !this.isPermitted([
-              this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-              this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-            ])
-          "
-          v-b-tooltip.hover="this.$t('message.analysis_details_tooltip')"
+          id="findingDetails"
+          v-model="form.analysisDetails"
+          rows="4"
         />
-        <div class="float-end">
-          <b-button
-            v-if="
-              this.isPermitted([
-                this.PERMISSIONS.VULNERABILITY_ANALYSIS,
-                this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
-              ])
-            "
-            :disabled="analysisState === null"
-            size="sm"
-            variant="outline-primary"
-            @click="makeAnalysis"
-            ><span class="fa fa-comment-o"></span>
-            {{ this.$t('message.update_details') }}</b-button
-          >
-        </div>
       </b-form-group>
-    </b-col>
-  </b-row>
+    </template>
+  </audit-panel>
 </template>
 
 <script>
 import common from '@/shared/common';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import AuditPanel from '@/views/components/AuditPanel.vue';
+import CopyToClipboardButton from '@/views/components/CopyToClipboardButton.vue';
+import KevCell from '@/views/components/KevCell.vue';
 
 export default {
+  components: { AuditPanel, CopyToClipboardButton, KevCell },
+  mixins: [permissionsMixin],
   props: {
     finding: Object,
     projectUuid: String,
   },
   data() {
     return {
-      auditTrail: null,
-      comment: null,
-      isSuppressed: !!this.finding?.analysis?.isSuppressed,
+      owaspVector: null,
+      expanded: false,
       analysisChoices: [
-        { value: 'NOT_SET', text: this.$t('message.not_set') },
-        { value: 'EXPLOITABLE', text: this.$t('message.exploitable') },
-        { value: 'IN_TRIAGE', text: this.$t('message.in_triage') },
-        { value: 'RESOLVED', text: this.$t('message.resolved') },
-        { value: 'FALSE_POSITIVE', text: this.$t('message.false_positive') },
-        { value: 'NOT_AFFECTED', text: this.$t('message.not_affected') },
+        {
+          value: 'NOT_SET',
+          variant: 'secondary',
+          text: this.$t('message.not_set'),
+        },
+        {
+          value: 'IN_TRIAGE',
+          variant: 'info',
+          text: this.$t('message.in_triage'),
+        },
+        {
+          value: 'EXPLOITABLE',
+          variant: 'danger',
+          text: this.$t('message.exploitable'),
+        },
+        {
+          value: 'RESOLVED',
+          variant: 'success',
+          text: this.$t('message.resolved'),
+        },
+        {
+          value: 'FALSE_POSITIVE',
+          variant: 'success',
+          text: this.$t('message.false_positive'),
+        },
+        {
+          value: 'NOT_AFFECTED',
+          variant: 'success',
+          text: this.$t('message.not_affected'),
+        },
       ],
       justificationChoices: [
         { value: 'NOT_SET', text: this.$t('message.not_set') },
@@ -362,154 +245,77 @@ export default {
           text: this.$t('message.workaround_available'),
         },
       ],
-      analysisState: null,
-      analysisJustification: null,
-      analysisResponse: null,
-      analysisDetails: null,
-      owaspVector: null,
     };
   },
-  watch: {
-    isSuppressed: function (currentValue, oldValue) {
-      if (oldValue != null) {
-        this.callRestEndpoint(
-          this.analysisState,
-          this.analysisJustification,
-          this.analysisResponse,
-          null,
-          null,
-          currentValue,
-        );
-      }
+  computed: {
+    canAnalyze() {
+      return this.isPermitted([
+        this.PERMISSIONS.VULNERABILITY_ANALYSIS,
+        this.PERMISSIONS.VULNERABILITY_ANALYSIS_UPDATE,
+      ]);
     },
-  },
-  mixins: [permissionsMixin],
-  methods: {
-    resolveVulnAliases: function (aliases, vulnSource) {
+    vulnerability() {
+      return this.finding.vulnerability;
+    },
+    scores() {
+      const v = this.vulnerability;
+      const cvss = (score, vector, version) => ({
+        label: `CVSS v${vector?.match(/^CVSS:([\d.]+)/)?.[1] ?? version}`,
+        score: score?.toFixed(1),
+        vector,
+      });
+      return [
+        cvss(v.cvssV4Score, v.cvssV4Vector, '4.0'),
+        cvss(v.cvssV3BaseScore, v.cvssV3Vector, '3'),
+        cvss(v.cvssV2BaseScore, v.cvssV2Vector, '2.0'),
+        { label: this.$t('message.owasp_rr_vector'), vector: this.owaspVector },
+      ].filter((score) => score.score != null || score.vector);
+    },
+    primaryScore() {
+      return this.scores.find((score) => score.score != null);
+    },
+    epss() {
+      const { epssScore, epssPercentile } = this.vulnerability;
+      if (epssScore == null) {
+        return null;
+      }
+      const score = epssScore.toLocaleString(this.$i18n.locale, {
+        style: 'percent',
+        maximumFractionDigits: 2,
+      });
+      if (epssPercentile == null) {
+        return score;
+      }
+      // Ordinal suffixes are English-only, so a translation of epss_score_percentile still gets "90th".
+      const suffixes = { one: 'st', two: 'nd', few: 'rd', other: 'th' };
+      // 0.29 * 100 is 28.999...
+      const percentile = Math.floor(epssPercentile * 100 + 1e-9);
+      const ordinal = new Intl.PluralRules('en', { type: 'ordinal' }).select(
+        percentile,
+      );
+      return this.$t('message.epss_score_percentile', {
+        score,
+        percentile: percentile + suffixes[ordinal],
+      });
+    },
+    longDescription() {
+      return this.vulnerability.description?.length > 300;
+    },
+    aliases() {
       return common.resolveVulnAliases(
-        vulnSource ? vulnSource : this.source,
-        aliases,
+        this.vulnerability.source,
+        this.vulnerability.aliases || [],
       );
-    },
-    getAnalysis: function () {
-      let queryString =
-        '?project=' +
-        this.projectUuid +
-        '&component=' +
-        this.finding.component.uuid +
-        '&vulnerability=' +
-        this.finding.vulnerability.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}` + queryString;
-      this.axios
-        .get(url, {
-          validateStatus: (status) => status === 200 || status === 404,
-        })
-        .then((response) => {
-          this.updateAnalysisData(response.data);
-        });
-    },
-    updateAnalysisData: function (analysis) {
-      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisComments')) {
-        let trail = '';
-        for (let i = 0; i < analysis.analysisComments.length; i++) {
-          if (
-            Object.prototype.hasOwnProperty.call(
-              analysis.analysisComments[i],
-              'commenter',
-            )
-          ) {
-            trail += analysis.analysisComments[i].commenter + ' - ';
-          }
-          trail += common.formatTimestamp(
-            analysis.analysisComments[i].timestamp,
-            true,
-          );
-          trail += '\n';
-          trail += analysis.analysisComments[i].comment;
-          trail += '\n\n';
-        }
-        this.auditTrail = trail;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisState')) {
-        this.analysisState = analysis.analysisState;
-      }
-      if (
-        Object.prototype.hasOwnProperty.call(analysis, 'analysisJustification')
-      ) {
-        this.analysisJustification = analysis.analysisJustification;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisResponse')) {
-        this.analysisResponse = analysis.analysisResponse;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'analysisDetails')) {
-        this.analysisDetails = analysis.analysisDetails;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'isSuppressed')) {
-        this.isSuppressed = analysis.isSuppressed;
-      } else {
-        this.isSuppressed = false;
-      }
-      if (Object.prototype.hasOwnProperty.call(analysis, 'owaspVector')) {
-        this.owaspVector = analysis.owaspVector;
-      } else {
-        this.owaspVector = null;
-      }
-    },
-    makeAnalysis: function () {
-      this.callRestEndpoint(
-        this.analysisState,
-        this.analysisJustification,
-        this.analysisResponse,
-        this.analysisDetails,
-        null,
-        null,
-      );
-    },
-    addComment: function () {
-      if (this.comment != null) {
-        this.callRestEndpoint(
-          this.analysisState,
-          this.analysisJustification,
-          this.analysisResponse,
-          this.analysisDetails,
-          this.comment,
-          null,
-        );
-      }
-      this.comment = null;
-    },
-    callRestEndpoint: function (
-      analysisState,
-      analysisJustification,
-      analysisResponse,
-      analysisDetails,
-      comment,
-      isSuppressed,
-    ) {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_ANALYSIS}`;
-      this.axios
-        .put(url, {
-          project: this.projectUuid,
-          component: this.finding.component.uuid,
-          vulnerability: this.finding.vulnerability.uuid,
-          analysisState: analysisState,
-          analysisJustification: analysisJustification,
-          analysisResponse: analysisResponse,
-          analysisDetails: analysisDetails,
-          comment: comment,
-          isSuppressed: isSuppressed,
-        })
-        .then((response) => {
-          this.$toastr.s(this.$t('message.updated'));
-          this.updateAnalysisData(response.data);
-        })
-        .catch(() => {
-          this.$toastr.w(this.$t('condition.unsuccessful_action'));
-        });
     },
   },
-  beforeMount() {
-    this.finding && this.getAnalysis();
+  methods: {
+    onStateChange(form, state, loaded) {
+      if (state === loaded.analysisState) {
+        form.analysisJustification = loaded.analysisJustification;
+      } else if (state !== 'NOT_AFFECTED') {
+        form.analysisJustification = 'NOT_SET';
+      }
+    },
   },
 };
 </script>

@@ -60,7 +60,7 @@
     </b-card-body>
     <b-card-footer>
       <b-button
-        variant="outline-primary"
+        variant="primary"
         class="px-4"
         @click="saveChanges"
         :disabled="this.isDefaultLanguageEnabled && this.defaultLanguage === ''"

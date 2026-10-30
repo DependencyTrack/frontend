@@ -128,7 +128,13 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteLicenseGroup: function () {
+    deleteLicenseGroup: async function () {
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('message.delete_license_group'),
+        }))
+      )
+        return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_LICENSE_GROUP}/${this.licenseGroup.uuid}`;
       this.axios
         .delete(url)

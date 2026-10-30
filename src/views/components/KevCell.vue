@@ -12,7 +12,7 @@
         white-space: nowrap;
         text-decoration: none;
       "
-      ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link
+      ><i class="fa fa-crosshairs" /> {{ label ?? $t('message.yes') }}</b-link
     >
     <kev-assertions-modal
       v-model="showKevAssertionsModal"
@@ -30,6 +30,7 @@ export default {
   props: {
     source: String,
     vulnId: String,
+    label: String,
   },
   data() {
     return {

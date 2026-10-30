@@ -70,6 +70,10 @@ export default {
       type: Function,
       default: null,
     },
+    label: {
+      type: String,
+      default: null,
+    },
   },
   emits: ['update:modelValue', 'save'],
   computed: {
@@ -94,6 +98,9 @@ export default {
         }),
         this.themeCompartment.of(editorTheme(this.theme)),
         ...(this.lineWrapping ? [EditorView.lineWrapping] : []),
+        ...(this.label
+          ? [EditorView.contentAttributes.of({ 'aria-label': this.label })]
+          : []),
         this.readOnlyCompartment.of(EditorState.readOnly.of(this.readOnly)),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {

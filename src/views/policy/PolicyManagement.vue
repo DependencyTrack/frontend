@@ -1,12 +1,7 @@
 <template>
   <div class="animated fadeIn">
-    <b-tabs class="body-bg-color">
-      <b-tab
-        ref="policies"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-        @click="routeTo()"
-      >
+    <b-tabs>
+      <b-tab ref="policies" active @click="routeTo()">
         <template v-slot:title
           ><i class="fa fa-list-alt"></i> {{ $t('message.policies') }}
           <b-badge variant="tab-total">{{ totalPolicies }}</b-badge></template
@@ -23,11 +18,7 @@
         >
         <license-group-list v-on:total="totalLicenseGroups = $event" />
       </b-tab>
-      <b-tab
-        ref="vulnerability"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        @click="routeTo('vulnerability')"
-      >
+      <b-tab ref="vulnerability" @click="routeTo('vulnerability')">
         <template v-slot:title
           ><i class="fa fa-list-alt"></i>
           {{ $t('message.vulnerability_policies') }}

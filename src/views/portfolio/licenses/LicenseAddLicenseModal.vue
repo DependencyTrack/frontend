@@ -5,117 +5,110 @@
     no-stacking
     :title="$t('message.add_license')"
   >
-    <b-tabs class="body-bg-color">
-      <b-tab class="body-bg-color border-0 p-0" active>
+    <b-tabs>
+      <b-tab active>
         <template v-slot:title
           ><i class="fa fa-edit"></i> {{ $t('message.general') }}</template
         >
-        <b-card>
-          <b-input-group-form-input
-            id="license-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="license.name"
-            lazy="true"
-            required="true"
-            feedback="true"
-            autofocus="false"
-            :label="$t('message.license_name')"
-            :tooltip="this.$t('message.license_name_desc')"
-            :feedback-text="$t('message.required_license_name')"
+        <b-input-group-form-input
+          id="license-name-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="license.name"
+          lazy="true"
+          required="true"
+          feedback="true"
+          autofocus="false"
+          :label="$t('message.license_name')"
+          :tooltip="this.$t('message.license_name_desc')"
+          :feedback-text="$t('message.required_license_name')"
+        />
+        <b-input-group-form-input
+          id="license-id-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="license.licenseId"
+          lazy="true"
+          required="true"
+          feedback="true"
+          autofocus="false"
+          :label="$t('message.license_id')"
+          :tooltip="this.$t('message.license_id_desc')"
+          :feedback-text="$t('message.required_license_id')"
+        />
+        <b-form-group
+          id="license-text-form-group"
+          :label="this.$t('message.license_text')"
+          label-for="license-text-input"
+        >
+          <b-form-textarea
+            id="license-text-description"
+            v-model="license.licenseText"
+            rows="3"
           />
-          <b-input-group-form-input
-            id="license-id-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="license.licenseId"
-            lazy="true"
-            required="true"
-            feedback="true"
-            autofocus="false"
-            :label="$t('message.license_id')"
-            :tooltip="this.$t('message.license_id_desc')"
-            :feedback-text="$t('message.required_license_id')"
-          />
-          <b-form-group
-            id="license-text-form-group"
-            :label="this.$t('message.license_text')"
-            label-for="license-text-input"
-          >
-            <b-form-textarea
-              id="license-text-description"
-              v-model="license.licenseText"
-              rows="3"
-            />
-          </b-form-group>
-          <b-form-checkbox
-            class="mx-1"
-            v-model="license.isOsiApproved"
-            switch
-            >{{ $t('message.osi_approved') }}</b-form-checkbox
-          >
-          <b-form-checkbox class="mx-1" v-model="license.isFsfLibre" switch>{{
-            $t('message.fsf_libre')
-          }}</b-form-checkbox>
-          <b-form-checkbox
-            class="mx-1"
-            v-model="license.isDeprecatedLicenseId"
-            switch
-            >{{ $t('message.deprecated') }}</b-form-checkbox
-          >
-        </b-card>
+        </b-form-group>
+        <b-form-checkbox class="mx-1" v-model="license.isOsiApproved" switch>{{
+          $t('message.osi_approved')
+        }}</b-form-checkbox>
+        <b-form-checkbox class="mx-1" v-model="license.isFsfLibre" switch>{{
+          $t('message.fsf_libre')
+        }}</b-form-checkbox>
+        <b-form-checkbox
+          class="mx-1"
+          v-model="license.isDeprecatedLicenseId"
+          switch
+          >{{ $t('message.deprecated') }}</b-form-checkbox
+        >
       </b-tab>
       <b-tab>
         <template v-slot:title
           ><i class="fa fa-newspaper-o"></i>
           {{ $t('message.extended') }}</template
         >
-        <b-card>
-          <b-form-group
-            id="license-comments-form-group"
-            :label="this.$t('message.license_comments')"
-            label-for="license-comments-input"
-          >
-            <b-form-textarea
-              id="license-comments-description"
-              v-model="license.licenseComments"
-              rows="3"
-            />
-          </b-form-group>
-          <b-form-group
-            id="license-template-form-group"
-            :label="this.$t('message.template')"
-            label-for="license-template-input"
-          >
-            <b-form-textarea
-              id="license-template-description"
-              v-model="license.standardLicenseTemplate"
-              rows="3"
-            />
-          </b-form-group>
-          <b-form-group
-            id="license-source-header-form-group"
-            :label="this.$t('message.source_header')"
-            label-for="license-source-header-input"
-          >
-            <b-form-textarea
-              id="license-source-header-description"
-              v-model="license.standardLicenseHeader"
-              rows="3"
-            />
-          </b-form-group>
-          <b-form-group
-            id="license-see-also-form-group"
-            :label="this.$t('message.see_also')"
-            label-for="license-see-also-input"
-          >
-            <b-form-textarea
-              id="license-see-also-description"
-              v-model="license.seeAlso"
-              rows="3"
-            />
-          </b-form-group>
-        </b-card>
+        <b-form-group
+          id="license-comments-form-group"
+          :label="this.$t('message.license_comments')"
+          label-for="license-comments-input"
+        >
+          <b-form-textarea
+            id="license-comments-description"
+            v-model="license.licenseComments"
+            rows="3"
+          />
+        </b-form-group>
+        <b-form-group
+          id="license-template-form-group"
+          :label="this.$t('message.template')"
+          label-for="license-template-input"
+        >
+          <b-form-textarea
+            id="license-template-description"
+            v-model="license.standardLicenseTemplate"
+            rows="3"
+          />
+        </b-form-group>
+        <b-form-group
+          id="license-source-header-form-group"
+          :label="this.$t('message.source_header')"
+          label-for="license-source-header-input"
+        >
+          <b-form-textarea
+            id="license-source-header-description"
+            v-model="license.standardLicenseHeader"
+            rows="3"
+          />
+        </b-form-group>
+        <b-form-group
+          id="license-see-also-form-group"
+          :label="this.$t('message.see_also')"
+          label-for="license-see-also-input"
+        >
+          <b-form-textarea
+            id="license-see-also-description"
+            v-model="license.seeAlso"
+            rows="3"
+          />
+        </b-form-group>
       </b-tab>
     </b-tabs>
     <template v-slot:footer="{ cancel }">

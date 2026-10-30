@@ -1,5 +1,11 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  expectCreateToSurviveFailure,
+} from '../test.mjs';
 
 test('rename a team and see the row update', async ({ page, api }) => {
   const name = uniqueName('e2e-team');
@@ -57,4 +63,66 @@ test('show a new team API key and remove it after confirming', async ({
   await keys.locator('.fa-trash-o').click();
   await remove.getByRole('button', { name: 'Delete' }).click();
   await expect(publicId).toHaveCount(0);
+});
+
+test('delete a team only after confirming', async ({ page, api }) => {
+  const name = uniqueName('e2e-team');
+  await api.send('PUT', '/v1/team', { name });
+
+  await login(page);
+  await page.goto('admin/accessManagement/teams');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  const confirm = page.getByRole('dialog', { name: 'Delete Team' });
+  await page.getByRole('button', { name: 'Delete Team' }).click();
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await expect(confirm).toBeHidden();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Delete Team' }).click();
+  await confirm.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Team deleted')).toBeVisible();
+  await expect(page.getByRole('cell', { name, exact: true })).toBeHidden();
+});
+
+test('copy a new team API key', async ({ page, context, api }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const name = uniqueName('e2e-team');
+  await api.send('PUT', '/v1/team', { name });
+
+  await login(page);
+  await page.goto('admin/accessManagement/teams');
+  await search(page, name);
+  await page.getByRole('cell', { name, exact: true }).click();
+  await page
+    .getByRole('group', { name: 'API Keys' })
+    .locator('.fa-plus-square')
+    .click();
+  const created = page.getByRole('dialog', { name: 'New API Key' });
+  await created.getByRole('button', { name: 'Copy' }).click();
+  await expect(page.getByText('Copied to clipboard')).toBeVisible();
+  const key = await created.locator('pre').textContent();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    key.trim(),
+  );
+});
+
+test('keep the input of a team that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/team 409$/);
+  await login(page);
+  await page.goto('admin/accessManagement/teams');
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/team',
+    open: () => page.getByRole('button', { name: 'Create Team' }).click(),
+    dialog: 'Create Team',
+    first: /^Team Name/,
+    fill: (modal) =>
+      modal
+        .getByRole('textbox', { name: /^Team Name/ })
+        .fill(uniqueName('e2e-team')),
+    created: 'Team created',
+  });
 });

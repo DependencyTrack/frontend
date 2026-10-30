@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card style="border-left: 0; border-right: 0; border-top: 0">
+    <b-card>
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">

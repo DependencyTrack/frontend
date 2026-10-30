@@ -20,7 +20,10 @@
                       padding-inline-start: 0;
                     "
                   >
-                    <li class="dropdown">
+                    <li
+                      class="dropdown"
+                      v-on="{ 'shown.bs.dropdown': focusVersionFilter }"
+                    >
                       <a
                         href="#"
                         data-bs-toggle="dropdown"
@@ -70,6 +73,16 @@
                             PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
                           ]"
                         />
+                        <li class="px-2 pb-2">
+                          <b-form-input
+                            ref="versionFilter"
+                            v-model="versionQuery"
+                            type="search"
+                            size="sm"
+                            :placeholder="$t('message.filter_versions')"
+                            :aria-label="$t('message.filter_versions')"
+                          />
+                        </li>
                         <span
                           v-for="projectVersion in activeProjectVersions"
                           :key="projectVersion.uuid"
@@ -77,7 +90,10 @@
                           <b-dropdown-item
                             :to="{
                               name: 'Project',
-                              params: { uuid: projectVersion.uuid },
+                              params: {
+                                uuid: projectVersion.uuid,
+                                tab: $route.params.tab,
+                              },
                             }"
                           >
                             <span v-if="projectVersion.version">{{
@@ -105,7 +121,10 @@
                             <b-dropdown-item
                               :to="{
                                 name: 'Project',
-                                params: { uuid: projectVersion.uuid },
+                                params: {
+                                  uuid: projectVersion.uuid,
+                                  tab: $route.params.tab,
+                                },
                               }"
                             >
                               <span v-if="projectVersion.version">{{
@@ -228,7 +247,7 @@
               <b-button
                 id="upload-bom-button"
                 v-if="!isCollectionProject"
-                variant="outline-primary"
+                variant="primary"
                 @click="showProjectUploadBomModal = true"
                 v-permission="PERMISSIONS.BOM_UPLOAD"
               >
@@ -297,26 +316,13 @@
         </div>
       </template>
     </b-card>
-    <b-tabs
-      v-scrollable-tabs
-      nav-wrapper-class="nav-tabs-scroller"
-      class="body-bg-color"
-    >
-      <b-tab
-        ref="overview"
-        @click="routeTo()"
-        class="body-bg-color overview-chart border-start-0 border-end-0 border-top-0"
-        active
-      >
+    <b-tabs v-scrollable-tabs lazy nav-wrapper-class="nav-tabs-scroller">
+      <b-tab ref="overview" @click="routeTo()" active>
         <template v-slot:title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
-        <project-dashboard
-          :key="this.uuid"
-          :uuid="this.uuid"
-          style="border-left: 0; border-right: 0; border-top: 0"
-        />
+        <project-dashboard :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="components"
@@ -324,21 +330,18 @@
         v-if="isShowComponents"
       >
         <template v-slot:title
-          ><i class="fa fa-cubes"></i> {{ $t('message.components') }}
-          <b-badge variant="tab-total">{{ totalComponents }}</b-badge></template
+          ><i class="fa fa-cubes"></i> {{ $t('message.components') }}</template
         >
         <project-components
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalComponents = $event"
         />
       </b-tab>
       <b-tab
         ref="collectionprojects"
         @click="routeTo('collectionprojects')"
         v-if="isShowCollectionProjects"
-        lazy
       >
         <template v-slot:title
           ><i class="fa fa-sitemap"></i>
@@ -348,14 +351,9 @@
       </b-tab>
       <b-tab ref="services" @click="routeTo('services')" v-if="isShowServices">
         <template v-slot:title
-          ><i class="fa fa-exchange"></i> {{ $t('message.services') }}
-          <b-badge variant="tab-total">{{ totalServices }}</b-badge></template
+          ><i class="fa fa-exchange"></i> {{ $t('message.services') }}</template
         >
-        <project-services
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalServices = $event"
-        />
+        <project-services :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="dependencygraph"
@@ -363,48 +361,27 @@
         v-if="isShowDependencyGraph"
       >
         <template v-slot:title
-          ><i class="fa fa-sitemap"></i> {{ $t('message.dependency_graph') }}
-          <b-badge variant="tab-total">{{
-            totalDependencyGraphs
-          }}</b-badge></template
+          ><i class="fa fa-sitemap"></i>
+          {{ $t('message.dependency_graph') }}</template
         >
         <project-dependency-graph
           :key="this.uuid"
           :uuid="this.uuid"
           :project="this.project"
-          v-on:total="totalDependencyGraphs = $event"
         />
       </b-tab>
       <b-tab ref="findings" v-if="isShowFindings" @click="routeTo('findings')">
         <template v-slot:title>
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
-          <b-badge
-            variant="tab-total"
-            v-b-tooltip.hover="$t('message.total_findings_excluding_aliases')"
-            >{{ totalFindings }}</b-badge
-          >
-          <b-badge
-            variant="tab-info"
-            v-b-tooltip.hover="$t('message.total_findings_including_aliases')"
-            >{{ totalFindingsIncludingAliases }}</b-badge
-          >
         </template>
-        <project-findings
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalFindingsIncludingAliases = $event"
-        />
+        <project-findings :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab ref="epss" v-if="isShowFindings" @click="routeTo('epss')">
         <template v-slot:title
-          ><i class="fa fa-tasks"></i> {{ $t('message.exploit_predictions') }}
-          <b-badge variant="tab-total">{{ totalEpss }}</b-badge></template
+          ><i class="fa fa-tasks"></i>
+          {{ $t('message.exploit_predictions') }}</template
         >
-        <project-epss
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalEpss = $event"
-        />
+        <project-epss :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="policyviolations"
@@ -413,32 +390,8 @@
       >
         <template v-slot:title
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
-          <b-badge
-            variant="tab-total"
-            v-b-tooltip.hover="$t('policy_violation.total')"
-            >{{ totalViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-info"
-            v-b-tooltip.hover="$t('policy_violation.infos')"
-            >{{ infoViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-warn"
-            v-b-tooltip.hover="$t('policy_violation.warns')"
-            >{{ warnViolations }}</b-badge
-          >
-          <b-badge
-            variant="tab-fail"
-            v-b-tooltip.hover="$t('policy_violation.fails')"
-            >{{ failViolations }}</b-badge
-          >
         </template>
-        <project-policy-violations
-          :key="this.uuid"
-          :uuid="this.uuid"
-          v-on:total="totalViolations = $event"
-        />
+        <project-policy-violations :key="this.uuid" :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
     <project-details-modal
@@ -528,11 +481,17 @@ export default {
         return this.project.name;
       }
     },
+    matchingProjectVersions() {
+      const query = this.versionQuery.trim().toLowerCase();
+      return (this.project.versions || []).filter((version) =>
+        (version.version || '').toLowerCase().includes(query),
+      );
+    },
     activeProjectVersions() {
-      return (this.project.versions || []).filter((version) => version.active);
+      return this.matchingProjectVersions.filter((version) => version.active);
     },
     inactiveProjectVersions() {
-      return (this.project.versions || []).filter((version) => !version.active);
+      return this.matchingProjectVersions.filter((version) => !version.active);
     },
     versionCount() {
       return this.project.versions && this.project.versions.length > 0
@@ -573,6 +532,7 @@ export default {
       showProjectPropertiesModal: false,
       showProjectCreatePropertyModal: false,
       showProjectAddVersionModal: false,
+      versionQuery: '',
       showProjectUploadBomModal: false,
       showProjectUploadVexModal: false,
       showProjectExportModal: false,
@@ -584,18 +544,8 @@ export default {
       currentLow: 0,
       currentUnassigned: 0,
       currentRiskScore: 0,
-      totalComponents: 0,
-      totalServices: 0,
-      totalDependencyGraphs: 0,
-      totalFindings: 0,
-      totalFindingsIncludingAliases: 0,
-      totalEpss: 0,
-      totalViolations: 0,
       isAnalysisRequested: false,
       nowTick: Date.now(),
-      infoViolations: 0,
-      warnViolations: 0,
-      failViolations: 0,
       tabIndex: 0,
     };
   },
@@ -646,22 +596,6 @@ export default {
             this.project.metrics.inheritedRiskScore,
             0,
           );
-          this.totalFindings = common.valueWithDefault(
-            this.project.metrics.findingsTotal,
-            0,
-          );
-          this.infoViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsInfo,
-            0,
-          );
-          this.warnViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsWarn,
-            0,
-          );
-          this.failViolations = common.valueWithDefault(
-            this.project.metrics.policyViolationsFail,
-            0,
-          );
           EventBus.emit('addCrumb', this.projectLabel);
           setPageTitle(this.projectLabel);
         });
@@ -700,6 +634,9 @@ export default {
       ) {
         this.$router.push({ path: '/projects/' + this.uuid });
       }
+    },
+    focusVersionFilter() {
+      this.$refs.versionFilter?.focus();
     },
     getTabFromRoute: function () {
       let pattern = new RegExp(
@@ -748,6 +685,7 @@ export default {
     $route(to, from) {
       this.uuid = this.$route.params.uuid;
       if (to.params.uuid !== from.params.uuid) {
+        this.versionQuery = '';
         this.initialize();
       } else if (
         this.$route.params.componentUuids &&
@@ -766,9 +704,6 @@ export default {
 </script>
 
 <style scoped>
-.overview-chart {
-  padding: 0;
-}
 .badge {
   margin-right: 0.4rem;
 }

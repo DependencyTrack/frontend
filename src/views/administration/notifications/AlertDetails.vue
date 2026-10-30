@@ -683,7 +683,11 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteNotificationRule: function () {
+    deleteNotificationRule: async function () {
+      if (
+        !(await this.$confirmDelete({ title: this.$t('admin.delete_alert') }))
+      )
+        return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_RULE}`;
       this.axios
         .delete(url, {

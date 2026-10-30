@@ -2,7 +2,7 @@
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
       <b-button
-        variant="outline-primary"
+        variant="primary"
         @click="initializeProjectCreateProjectModal"
         v-permission:or="[
           PERMISSIONS.PORTFOLIO_MANAGEMENT,
@@ -40,7 +40,6 @@
       :data="data"
       :options="options"
       @on-load-success="onLoadSuccess"
-      @on-pre-body="onPreBody"
       @on-post-body="onPostBody"
     >
     </bootstrap-table>
@@ -50,7 +49,6 @@
 
 <script>
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
-import MurmurHash2 from 'imurmurhash';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
@@ -147,11 +145,6 @@ export default {
         this.$refs.table.columns,
       );
     },
-    onPreBody: function () {
-      this.$refs.table.getData().forEach((project) => {
-        project.id = MurmurHash2(project.uuid).result();
-      });
-    },
     onPostBody: function () {
       this.mountCells();
       if (!this.showFlatView && !this.isSearching) {
@@ -173,7 +166,7 @@ export default {
           const renderExpander = () => {
             this.$refs.table.$table
               .find('tbody')
-              .find('tr.treegrid-' + project.id.toString())
+              .find('tr.treegrid-' + project.uuid)
               .addClass('treegrid-collapsed')
               .treegrid('renderExpander');
           };
@@ -201,12 +194,12 @@ export default {
           if (row.expanded) {
             this.$refs.table.$table
               .find('tbody')
-              .find('tr.treegrid-' + row.id.toString())
+              .find('tr.treegrid-' + row.uuid)
               .treegrid('expand');
           } else if (row.expanded === false) {
             this.$refs.table.$table
               .find('tbody')
-              .find('tr.treegrid-' + row.id.toString())
+              .find('tr.treegrid-' + row.uuid)
               .treegrid('collapse');
           }
         });
@@ -217,7 +210,7 @@ export default {
       let url = this.apiUrl(parentProject.uuid);
       await this.axios.get(url).then((response) => {
         for (let project of response.data) {
-          project.pid = MurmurHash2(parentProject.uuid).result();
+          project.pid = parentProject.uuid;
         }
         this.$refs.table.append(response.data);
       });
@@ -458,7 +451,7 @@ export default {
       ],
       data: [],
       options: {
-        idField: 'id',
+        idField: 'uuid',
         parentIdField: 'pid',
         treeShowField: 'name',
         search: true,

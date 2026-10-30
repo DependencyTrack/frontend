@@ -126,8 +126,9 @@ export default {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
     },
-    deleteProperty: function () {
+    deleteProperty: async function () {
       let selections = this.$refs.table.getSelections();
+      if (!(await this.$confirmDelete())) return;
       for (let i = 0; i < selections.length; i++) {
         this.axios
           .delete(this.apiUrl(), {
@@ -137,14 +138,15 @@ export default {
             },
           })
           .then(() => {
-            this.$refs.table.refresh({ silent: true });
+            this.$refs.table?.refresh({ silent: true });
             this.$toastr.s(this.$t('message.property_deleted'));
           })
           .catch(() => {
             this.$toastr.w(this.$t('condition.unsuccessful_action'));
           });
       }
-      this.$refs.table.uncheckAll();
+      // The confirmation closes this modal, which unmounts the table.
+      this.$refs.table?.uncheckAll();
     },
   },
 };

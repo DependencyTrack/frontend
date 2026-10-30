@@ -76,7 +76,6 @@
       :columns="columns"
       :options="tableOptions"
       page-size-storage-key="ProjectComponentsPageSize"
-      @total="onTotal"
       @visible-columns="onVisibleColumns"
     />
     <project-add-component-modal
@@ -165,7 +164,6 @@ export default {
     uuid: String,
     project: Object,
   },
-  emits: ['total'],
   data() {
     const initialVisibleColumns = Object.keys(COLUMN_DEFAULT_VISIBILITY).filter(
       (f) => initialColumnVisible(f),
@@ -312,22 +310,25 @@ export default {
               const cmp = compareVersions(latest, row.version);
               if (cmp > 0) {
                 return (
-                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
                   xssFilters.inDoubleQuotedAttr(latest) +
-                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.version)
+                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span></span>'
                 );
               } else if (cmp < 0) {
                 return (
-                  '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
                   xssFilters.inDoubleQuotedAttr(latest) +
-                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.version)
+                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span></span>'
                 );
               }
               return (
-                '<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
-                xssFilters.inHTMLData(row.version)
+                '<span class="d-flex justify-content-between gap-1">' +
+                xssFilters.inHTMLData(row.version) +
+                '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span></span>'
               );
             }
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
@@ -446,7 +447,7 @@ export default {
                 },
               });
             }
-            return `<span style="float:right" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span> ${value}`;
+            return `<span class="d-flex justify-content-between gap-1">${value}<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span></span>`;
           },
         },
         {
@@ -485,14 +486,17 @@ export default {
     onVisibleColumns(fields) {
       this.visibleColumns = fields;
     },
-    onTotal(total) {
-      this.$emit('total', total != null ? total : '?');
-    },
-    removeDependencies() {
+    async removeDependencies() {
       const bt = this.innerBootstrapTable();
       if (!bt) return;
       const selections = bt.getSelections();
       if (selections.length === 0) return;
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('message.remove_component'),
+        }))
+      )
+        return;
       for (let i = 0; i < selections.length; i++) {
         const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
         this.axios

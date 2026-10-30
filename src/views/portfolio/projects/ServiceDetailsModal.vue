@@ -5,24 +5,69 @@
     no-stacking
     :title="$t('message.service_details')"
   >
-    <b-tabs class="body-bg-color">
-      <b-tab class="body-bg-color border-0 p-0" active>
+    <b-tabs>
+      <b-tab active>
         <template v-slot:title
           ><i class="fa fa-cube"></i> {{ $t('message.identity') }}</template
         >
-        <b-card>
-          <b-input-group-form-input
-            id="service-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="service.name"
-            lazy="true"
-            required="true"
-            feedback="true"
-            autofocus="false"
-            :label="$t('message.service_name')"
-            :tooltip="this.$t('message.service_name_desc')"
-            :feedback-text="$t('message.required_service_name')"
+        <b-input-group-form-input
+          id="service-name-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="service.name"
+          lazy="true"
+          required="true"
+          feedback="true"
+          autofocus="false"
+          :label="$t('message.service_name')"
+          :tooltip="this.$t('message.service_name_desc')"
+          :feedback-text="$t('message.required_service_name')"
+          :readonly="
+            this.isNotPermitted([
+              PERMISSIONS.PORTFOLIO_MANAGEMENT,
+              PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+            ])
+          "
+        />
+        <b-input-group-form-input
+          id="service-version-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="service.version"
+          required="false"
+          :label="$t('message.version')"
+          :tooltip="this.$t('message.service_version_desc')"
+          :readonly="
+            this.isNotPermitted([
+              PERMISSIONS.PORTFOLIO_MANAGEMENT,
+              PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+            ])
+          "
+        />
+        <b-input-group-form-input
+          id="service-group-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="service.group"
+          required="false"
+          :label="$t('message.component_namespace_group_vendor')"
+          :tooltip="this.$t('message.component_group_desc')"
+          :readonly="
+            this.isNotPermitted([
+              PERMISSIONS.PORTFOLIO_MANAGEMENT,
+              PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+            ])
+          "
+        />
+        <b-form-group
+          id="service-notes-form-group"
+          :label="this.$t('message.description')"
+          label-for="service-notes-input"
+        >
+          <b-form-textarea
+            id="service-notes-description"
+            v-model="service.description"
+            rows="3"
             :readonly="
               this.isNotPermitted([
                 PERMISSIONS.PORTFOLIO_MANAGEMENT,
@@ -30,156 +75,102 @@
               ])
             "
           />
-          <b-input-group-form-input
-            id="service-version-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="service.version"
-            required="false"
-            :label="$t('message.version')"
-            :tooltip="this.$t('message.service_version_desc')"
-            :readonly="
-              this.isNotPermitted([
-                PERMISSIONS.PORTFOLIO_MANAGEMENT,
-                PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
-              ])
-            "
-          />
-          <b-input-group-form-input
-            id="service-group-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="service.group"
-            required="false"
-            :label="$t('message.component_namespace_group_vendor')"
-            :tooltip="this.$t('message.component_group_desc')"
-            :readonly="
-              this.isNotPermitted([
-                PERMISSIONS.PORTFOLIO_MANAGEMENT,
-                PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
-              ])
-            "
-          />
-          <b-form-group
-            id="service-notes-form-group"
-            :label="this.$t('message.description')"
-            label-for="service-notes-input"
-          >
-            <b-form-textarea
-              id="service-notes-description"
-              v-model="service.description"
-              rows="3"
-              :readonly="
-                this.isNotPermitted([
-                  PERMISSIONS.PORTFOLIO_MANAGEMENT,
-                  PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
-                ])
-              "
-            />
-          </b-form-group>
-          <b-input-group-form-input
-            id="service-uuid"
-            input-group-size="mb-3"
-            type="text"
-            v-model="service.uuid"
-            lazy="false"
-            required="false"
-            feedback="false"
-            autofocus="false"
-            disabled="true"
-            :label="$t('message.object_identifier')"
-            :tooltip="this.$t('message.object_identifier_desc')"
-            :readonly="true"
-          />
-        </b-card>
+        </b-form-group>
+        <b-input-group-form-input
+          id="service-uuid"
+          copyable
+          input-group-size="mb-3"
+          type="text"
+          v-model="service.uuid"
+          lazy="false"
+          required="false"
+          feedback="false"
+          autofocus="false"
+          disabled="true"
+          :label="$t('message.object_identifier')"
+          :tooltip="this.$t('message.object_identifier_desc')"
+          :readonly="true"
+        />
       </b-tab>
       <b-tab>
         <template v-slot:title
           ><i class="fa fa-building-o"></i>
           {{ $t('message.provider') }}</template
         >
-        <b-card>
-          <b-input-group-form-input
-            id="service-provider-name-input"
-            input-group-size="mb-3"
-            type="text"
-            v-model="providerName"
-            required="false"
-            :label="$t('message.provider_name')"
-            :tooltip="this.$t('message.service_provider_name_desc')"
-          />
-          <b-form-group
-            id="providerUrlsTable-Fieldset"
-            :label="this.$t('message.urls')"
-            label-for="providerUrlsTable"
+        <b-input-group-form-input
+          id="service-provider-name-input"
+          input-group-size="mb-3"
+          type="text"
+          v-model="providerName"
+          required="false"
+          :label="$t('message.provider_name')"
+          :tooltip="this.$t('message.service_provider_name_desc')"
+        />
+        <b-form-group
+          id="providerUrlsTable-Fieldset"
+          :label="this.$t('message.urls')"
+          label-for="providerUrlsTable"
+        >
+          <bootstrap-table
+            id="providerUrlsTable"
+            ref="providerUrlsTable"
+            :columns="providerUrlsTableColumns"
+            :data="service.provider?.urls"
+            :options="providerUrlsTableOptions"
           >
-            <bootstrap-table
-              id="providerUrlsTable"
-              ref="providerUrlsTable"
-              :columns="providerUrlsTableColumns"
-              :data="service.provider?.urls"
-              :options="providerUrlsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-          <b-form-group
-            id="contactsTable-Fieldset"
-            :label="this.$t('message.contacts')"
-            label-for="contactsTable"
+          </bootstrap-table>
+        </b-form-group>
+        <b-form-group
+          id="contactsTable-Fieldset"
+          :label="this.$t('message.contacts')"
+          label-for="contactsTable"
+        >
+          <bootstrap-table
+            id="contactsTable"
+            ref="contactsTable"
+            :columns="contactsTableColumns"
+            :data="service.provider?.contacts"
+            :options="contactsTableOptions"
           >
-            <bootstrap-table
-              id="contactsTable"
-              ref="contactsTable"
-              :columns="contactsTableColumns"
-              :data="service.provider?.contacts"
-              :options="contactsTableOptions"
-            >
-            </bootstrap-table>
-          </b-form-group>
-        </b-card>
+          </bootstrap-table>
+        </b-form-group>
       </b-tab>
       <b-tab>
         <template v-slot:title
           ><i class="fa fa-globe"></i> {{ $t('message.endpoints') }}</template
         >
-        <b-card>
-          <bootstrap-table
-            ref="endpointTable"
-            :columns="endpointTableColumns"
-            :data="service.endpoints"
-            :options="endpointTableOptions"
-          >
-          </bootstrap-table>
-        </b-card>
+        <bootstrap-table
+          ref="endpointTable"
+          :columns="endpointTableColumns"
+          :data="service.endpoints"
+          :options="endpointTableOptions"
+        >
+        </bootstrap-table>
       </b-tab>
       <b-tab>
         <template v-slot:title
           ><i class="fa fa-server"></i> {{ $t('message.data') }}</template
         >
-        <b-card>
-          <bootstrap-table
-            ref="dataTable"
-            :columns="dataTableColumns"
-            :data="service.data"
-            :options="dataTableOptions"
-          >
-          </bootstrap-table>
-        </b-card>
+        <bootstrap-table
+          ref="dataTable"
+          :columns="dataTableColumns"
+          :data="service.data"
+          :options="dataTableOptions"
+        >
+        </bootstrap-table>
       </b-tab>
       <b-tab>
         <template v-slot:title
           ><i class="fa fa-external-link"></i>
           {{ $t('message.external_references') }}</template
         >
-        <b-card>
-          <bootstrap-table
-            ref="referencesTable"
-            :columns="referencesTableColumns"
-            :data="service.externalReferences"
-            :options="referencesTableOptions"
-          >
-          </bootstrap-table>
-        </b-card>
+        <bootstrap-table
+          ref="referencesTable"
+          :columns="referencesTableColumns"
+          :data="service.externalReferences"
+          :options="referencesTableOptions"
+        >
+        </bootstrap-table>
       </b-tab>
     </b-tabs>
     <template v-slot:footer="{ cancel }">
@@ -438,8 +429,9 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deleteService: function () {
+    deleteService: async function () {
       this.visible = false;
+      if (!(await this.$confirmDelete())) return;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios

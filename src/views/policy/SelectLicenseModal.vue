@@ -64,6 +64,7 @@ export default {
       ],
       data: [],
       options: {
+        clickToSelect: true,
         search: true,
         showColumns: true,
         showRefresh: true,

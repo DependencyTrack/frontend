@@ -15,7 +15,7 @@
         {{ label }}
       </b-form-checkbox>
       <template v-if="description" v-slot:description>
-        <showdown :markdown="description" />
+        <markdown :markdown="description" />
       </template>
       <b-form-invalid-feedback :id="feedbackId">
         {{ validationError }}
@@ -41,7 +41,7 @@
         v-if="!isArrayItem && !isComplexType && description"
         v-slot:description
       >
-        <showdown :markdown="description" />
+        <markdown :markdown="description" />
       </template>
       <component
         :is="fieldComponent"
@@ -64,7 +64,7 @@ import {
   BFormSelect,
   BFormTextarea,
 } from 'bootstrap-vue-next/components';
-import Showdown from './Showdown.vue';
+import Markdown from './Markdown.vue';
 import SecretRefSelect from './SecretRefSelect.vue';
 
 const JsonSchemaObjectField = defineAsyncComponent(
@@ -80,7 +80,7 @@ const JsonSchemaTabbedArrayField = defineAsyncComponent(
 export default {
   name: 'JsonSchemaFormField',
   components: {
-    Showdown,
+    Markdown,
     SecretRefSelect,
   },
   props: {

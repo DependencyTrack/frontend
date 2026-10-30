@@ -1,5 +1,12 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  selectRow,
+  expectCreateToSurviveFailure,
+} from '../test.mjs';
 
 test('create a notification alert and limit it to a tag', async ({ page }) => {
   const name = uniqueName('e2e-alert');
@@ -55,7 +62,7 @@ test('send an alert to a team in its row details', async ({ page, api }) => {
   await page.locator('#teamDestinationList .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select Team' });
   await search(page, team, modal);
-  await modal.getByRole('row', { name: team }).getByRole('checkbox').check();
+  await selectRow(modal, team);
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(page.locator('#teamDestinationList')).toContainText(team);
 
@@ -63,4 +70,24 @@ test('send an alert to a team in its row details', async ({ page, api }) => {
   await search(page, name);
   await page.getByRole('cell', { name, exact: true }).click();
   await expect(page.locator('#teamDestinationList')).toContainText(team);
+});
+
+test('keep the input of an alert that failed to create', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/notification\/rule 409$/);
+  await login(page);
+  await page.goto('admin/notifications/alerts');
+  await expectCreateToSurviveFailure(page, {
+    url: '**/api/v1/notification/rule',
+    open: () => page.getByRole('button', { name: 'Create Alert' }).click(),
+    dialog: 'Create Alert',
+    first: /^Name/,
+    fill: async (modal) => {
+      await modal.getByLabel('Name').fill(uniqueName('e2e-alert'));
+      await modal.getByLabel('Publisher').selectOption({ label: 'Console' });
+    },
+    created: 'Alert created',
+  });
 });

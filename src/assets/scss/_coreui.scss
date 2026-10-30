@@ -454,13 +454,8 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   }
 }
 
-.tab-content {
-  margin-top: -1px;
-  border: 1px solid var(--dt-border);
-
-  .tab-pane {
-    padding: $spacer;
-  }
+.tab-content .tab-pane {
+  padding: $spacer 0;
 }
 
 .dropdown-item {

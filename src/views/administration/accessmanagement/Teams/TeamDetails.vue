@@ -179,6 +179,7 @@
         class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
         >{{ shownApiKey.key }}</pre>
+      <copy-to-clipboard-button :value="shownApiKey.key" />
     </b-modal>
   </div>
 </template>
@@ -187,6 +188,7 @@
 import EventBus from '../../../../shared/eventbus';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
+import CopyToClipboardButton from '../../../components/CopyToClipboardButton.vue';
 import SelectLdapGroupModal from '../SelectLdapGroupModal.vue';
 import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
@@ -199,6 +201,7 @@ export default {
   components: {
     ActionableListGroupItem,
     ApiKeyListGroupItem,
+    CopyToClipboardButton,
     SelectLdapGroupModal,
     SelectOidcGroupModal,
     SelectPermissionModal,
@@ -284,6 +287,8 @@ export default {
       }
     },
     deleteTeam: async function () {
+      if (!(await this.$confirmDelete({ title: this.$t('admin.delete_team') })))
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
       const requestBody = { data: { uuid: this.team.uuid } };
       try {
@@ -342,17 +347,13 @@ export default {
       }
     },
     removeApiKey: async function (apiKey) {
-      const confirmed = await this.$confirm(
-        this.$t('admin.remove_api_key_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_api_key'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_api_key_confirm'),
+        }))
+      )
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
       try {
         await this.axios.delete(endpoint);

@@ -1,5 +1,14 @@
 import { uniqueName } from '../api.mjs';
-import { test, expect, login, search, filter } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  search,
+  filter,
+  expressionErrors,
+  pickOption,
+  selectRow,
+} from '../test.mjs';
 
 test('create a license group', async ({ page }) => {
   const name = uniqueName('e2e-license-group');
@@ -31,7 +40,7 @@ test('add a license to a license group in its row details', async ({
   await page.locator('.expanded-row .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select License' });
   await filter(modal, '0BSD');
-  await modal.getByRole('row', { name: /0BSD/ }).getByRole('checkbox').check();
+  await selectRow(modal, 'BSD Zero Clause License');
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(modal).toBeHidden();
   await expect(
@@ -81,7 +90,7 @@ test('limit a policy to a project in its row details', async ({
   await page.locator('#projectLimitsList .fa-plus-square').click();
   const modal = page.getByRole('dialog', { name: 'Select Project' });
   await search(page, project, modal);
-  await modal.getByRole('row', { name: project }).getByRole('checkbox').check();
+  await selectRow(modal, project);
   await modal.getByRole('button', { name: 'Select' }).click();
   await expect(
     page.getByText('Updated', { exact: true }).filter({ visible: true }),
@@ -93,6 +102,40 @@ test('limit a policy to a project in its row details', async ({
   await page.getByRole('cell', { name: policy }).click();
   await page.getByRole('button', { name: 'Limit To' }).click();
   await expect(page.getByText(project)).toBeVisible();
+});
+
+test('show why an expression condition cannot be added', async ({
+  page,
+  api,
+  problems,
+}) => {
+  problems.allow(/^PUT \/api\/v1\/policy\/.*\/condition 400$/);
+  const policy = uniqueName('e2e-policy');
+  await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  // The add button is an icon without an accessible name.
+  await page.locator('.expanded-row .fa-plus-square').first().click();
+  await page.getByLabel('Subject').selectOption({ label: 'Expression' });
+  await page
+    .getByLabel('Violation Type')
+    .selectOption({ label: 'Operational' });
+  const editor = page
+    .getByRole('group', { name: 'Conditions' })
+    .getByRole('textbox');
+  await editor.fill('component.name.size()');
+  await page.getByRole('button', { name: 'Update' }).click();
+
+  await expect(await expressionErrors(editor)).toContainText(
+    'Expression must return bool or string, but returns int',
+  );
 });
 
 test('show the conditions of a policy in its row details', async ({
@@ -119,4 +162,36 @@ test('show the conditions of a policy in its row details', async ({
   await expect(page.getByLabel('Value')).toHaveValue(
     'pkg:maven/com.example/e2e',
   );
+});
+
+test('search the license of a license condition', async ({ page, api }) => {
+  const policy = uniqueName('e2e-policy');
+  const { uuid } = await api.send('PUT', '/v1/policy', {
+    name: policy,
+    operator: 'ANY',
+    violationState: 'INFO',
+  });
+  const licenses = await api.get('/v1/license/concise');
+  const apache = licenses.find((l) => l.licenseId === 'Apache-2.0');
+
+  await login(page);
+  await page.goto('policy/policies');
+  await search(page, policy);
+  await page.getByRole('cell', { name: policy }).click();
+  // The add button is an icon without an accessible name.
+  await page.locator('.expanded-row .fa-plus-square').first().click();
+  await page.getByLabel('Subject').selectOption({ label: 'License' });
+  await page
+    .getByRole('combobox', { name: 'Operator *', exact: true })
+    .selectOption({ label: 'is' });
+  await pickOption(page, 'Value', apache.name);
+  await page.getByRole('button', { name: 'Update' }).click();
+  await expect(
+    page.getByText('Updated', { exact: true }).filter({ visible: true }),
+  ).toBeVisible();
+
+  const { policyConditions } = await api.get(`/v1/policy/${uuid}`);
+  expect(policyConditions).toMatchObject([
+    { subject: 'LICENSE', value: apache.uuid },
+  ]);
 });

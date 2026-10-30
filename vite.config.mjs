@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       Components({ resolvers: [BootstrapVueNextResolver()], dts: false }),
-      { ...sbom({ outFormats: ['json', 'xml'] }), apply: 'build' },
+      { ...sbom({ outFormats: ['json'] }), apply: 'build' },
     ],
     resolve: {
       alias: [

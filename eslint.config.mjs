@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 import playwright from 'eslint-plugin-playwright';
 import pluginVue from 'eslint-plugin-vue';
-import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import prettier from 'eslint-config-prettier/flat';
 import globals from 'globals';
 
 export default [
@@ -10,7 +10,7 @@ export default [
   },
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
-  prettierRecommended,
+  prettier,
   {
     languageOptions: {
       globals: { ...globals.browser, __VERSION__: 'readonly' },
@@ -54,6 +54,13 @@ export default [
     ...playwright.configs['flat/recommended'],
     languageOptions: {
       globals: globals.node,
+    },
+    rules: {
+      ...playwright.configs['flat/recommended'].rules,
+      'playwright/expect-expect': [
+        'warn',
+        { assertFunctionNames: ['expectCreateToSurviveFailure'] },
+      ],
     },
   },
 ];

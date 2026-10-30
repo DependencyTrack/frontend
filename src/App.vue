@@ -81,6 +81,7 @@ export default {
       } else {
         sessionStorage.removeItem('token');
         clearPermissions();
+        state.currentUser = {};
         state.systemCapabilities = undefined;
       }
       setAuthHeader(token);
@@ -142,7 +143,25 @@ export default {
       });
     }
 
+    const endExpiredSession = () => {
+      // Without a token, a 401 means wrong credentials,
+      // which the login form reports itself.
+      if (!getToken()) return false;
+      EventBus.emit('authenticated', null);
+      this.$router.replace({
+        name: 'Login',
+        query: { redirect: this.$route.fullPath },
+      });
+      return true;
+    };
+    $(document).ajaxError((_event, xhr) => {
+      if (xhr.status === 401) endExpiredSession();
+    });
+
     this.axios.interceptors.response.use(null, (error) => {
+      if (error.response?.status === 401 && endExpiredSession()) {
+        return Promise.reject(error);
+      }
       if (!error.response) {
         this.$toastr.e(
           this.$t('condition.unsuccessful_action'),

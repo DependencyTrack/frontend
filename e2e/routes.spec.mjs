@@ -320,7 +320,7 @@ test.describe('authenticated', () => {
       route.allow?.forEach((pattern) => problems.allow(pattern));
       await page.goto(resolve(route.path));
       await expect(page).toHaveTitle(
-        `Dependency-Track - ${route.title(seed())}`,
+        `${route.title(seed())} - Dependency-Track`,
       );
     });
   }
@@ -377,14 +377,58 @@ test.describe('authenticated', () => {
     );
   });
 
+  test('focus the admin menu filter', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    await expect(
+      page.getByRole('searchbox', { name: 'Filter menu' }),
+    ).toBeFocused();
+  });
+
+  test('filter the admin menu', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    const filter = page.getByRole('searchbox', { name: 'Filter menu' });
+    const general = page.getByRole('tab', { name: 'General', exact: true });
+    await filter.fill('queue');
+    await expect(page.getByRole('tab', { name: 'Task Queues' })).toBeVisible();
+    await expect(general).toBeHidden();
+    await page.getByRole('button', { name: 'Clear' }).click();
+    await expect(filter).toBeEmpty();
+    await expect(general).toBeVisible();
+  });
+
+  test('open the first match of the admin menu filter', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    const filter = page.getByRole('searchbox', { name: 'Filter menu' });
+    await filter.fill('queue');
+    await filter.press('Enter');
+    await expect(page).toHaveURL(/\/admin\/workflows\/taskQueues$/);
+  });
+
+  test('filter the admin menu by section', async ({ page }) => {
+    await page.goto('admin/configuration/general');
+    await page
+      .getByRole('searchbox', { name: 'Filter menu' })
+      .fill('workflows');
+    await expect(page.getByRole('tab', { name: 'Task Queues' })).toBeVisible();
+  });
+
   test('title the admin page after the open menu item', async ({ page }) => {
     const header = page.locator('.tab-content .card-header').first();
     await page.goto('admin/configuration/bomFormats');
     await expect(header).toHaveText('BOM Formats');
+    await expect(page).toHaveTitle(
+      'BOM Formats - Configuration - Dependency-Track',
+    );
     await page.getByRole('tab', { name: 'Welcome Message' }).click();
     await expect(header).toHaveText('Welcome Message');
+    await expect(page).toHaveTitle(
+      'Welcome Message - Configuration - Dependency-Track',
+    );
     await page.goBack();
     await expect(header).toHaveText('BOM Formats');
+    await expect(page).toHaveTitle(
+      'BOM Formats - Configuration - Dependency-Track',
+    );
   });
 });
 

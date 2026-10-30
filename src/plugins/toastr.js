@@ -42,6 +42,19 @@ export default {
         controller.destroy();
       }
     };
+    app.config.globalProperties.$confirmDelete = ({ title, message } = {}) => {
+      const t = app.config.globalProperties.$t;
+      return app.config.globalProperties.$confirm(
+        message ?? t('message.delete_confirm'),
+        {
+          title: title ?? t('message.delete'),
+          okVariant: 'danger',
+          okTitle: t('message.delete'),
+          cancelTitle: t('message.cancel'),
+          centered: true,
+        },
+      );
+    };
   },
 };
 

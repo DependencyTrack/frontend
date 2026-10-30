@@ -1,4 +1,4 @@
-import { uniqueName } from '../api.mjs';
+import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
 test('edit a project in the details modal', async ({ page, api }) => {
@@ -32,6 +32,49 @@ test('edit a project in the details modal', async ({ page, api }) => {
   await expect(modal.getByLabel('Is latest version')).toBeChecked();
 });
 
+test('keep the open tab when switching version', async ({ page, api }) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  const next = await api.send('PUT', '/v1/project', {
+    name,
+    version: '2.0.0',
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}/findings`);
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  await page.getByRole('menuitem', { name: '2.0.0' }).click();
+  await expect(page).toHaveURL(new RegExp(`/projects/${next.uuid}/findings$`));
+});
+
+test('filter the versions to switch to', async ({ page, api }) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  await api.send('PUT', '/v1/project', { name, version: '2.0.0' });
+  await api.send('PUT', '/v1/project', {
+    name,
+    version: '3.0.0',
+    active: false,
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  const filter = page.getByRole('searchbox', { name: 'Filter versions' });
+  await expect(filter).toBeFocused();
+  await filter.fill('3.');
+  await expect(page.getByRole('menuitem', { name: '3.0.0' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeHidden();
+
+  await page.getByRole('menuitem', { name: '3.0.0' }).click();
+  await page.getByRole('button', { name: '3.0.0' }).click();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
+});
+
 test('delete a project from its details', async ({ page, api }) => {
   const name = uniqueName('e2e-delete');
   const { uuid } = await api.send('PUT', '/v1/project', { name });
@@ -44,7 +87,7 @@ test('delete a project from its details', async ({ page, api }) => {
     .click();
   await page
     .getByRole('dialog', { name: 'Confirm Project Deletion' })
-    .getByRole('button', { name: 'OK' })
+    .getByRole('button', { name: 'Delete' })
     .click();
   await expect(page.getByText('Project deleted')).toBeVisible();
   await expect(page).toHaveURL(/\/projects$/);
@@ -93,4 +136,62 @@ test('label each severity count in the project header and explain it', async ({
       }),
     ).toBeVisible();
   }
+});
+
+test('delete selected project properties after confirming', async ({
+  page,
+  api,
+}) => {
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-properties'),
+  });
+  const propertyName = uniqueName('property');
+  await api.send('PUT', `/v1/project/${uuid}/property`, {
+    groupName: 'e2e',
+    propertyName,
+    propertyValue: 'value',
+    propertyType: 'STRING',
+  });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  await page
+    .getByRole('dialog', { name: 'Project Details' })
+    .getByRole('button', { name: 'Properties' })
+    .click();
+  const properties = page.getByRole('dialog', { name: 'Project Properties' });
+  await properties
+    .getByRole('row', { name: propertyName })
+    .getByRole('checkbox')
+    .check();
+  await properties.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await expect(page.getByText('Property deleted')).toBeVisible();
+});
+
+test('load the findings of a project only when opening their tab', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const findings = [];
+  page.on('request', (req) => {
+    if (req.url().includes('/api/v1/finding/project/')) findings.push(req);
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}`);
+  await expect(
+    page.getByRole('heading', { name: 'Project Vulnerabilities' }),
+  ).toBeVisible();
+  expect(findings).toEqual([]);
+
+  const loaded = page.waitForRequest((req) =>
+    req.url().includes('/api/v1/finding/project/'),
+  );
+  await page
+    .getByRole('tab', { name: 'Audit Vulnerabilities', exact: true })
+    .click();
+  await loaded;
 });

@@ -39,6 +39,8 @@ test('pick a parent in a short window', async ({ page }) => {
   await page.getByRole('button', { name: 'Create Project' }).click();
 
   const modal = page.getByRole('dialog', { name: 'Create Project' });
+  // The dialog takes focus once it has opened, which would close a picker opened before.
+  await expect(modal).toBeFocused();
   await modal.getByText('Parent', { exact: true }).click();
   await modal.getByRole('textbox', { name: 'Parent' }).fill(parent.name);
   const option = modal.getByRole('option', { name: new RegExp(parent.name) });

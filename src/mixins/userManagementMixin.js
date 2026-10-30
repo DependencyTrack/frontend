@@ -16,6 +16,8 @@ export default {
 
     // TODO: internal server error 500
     _deleteUser: async function (endpoint) {
+      if (!(await this.$confirmDelete({ title: this.$t('admin.delete_user') })))
+        return;
       this._userManagementMixin_checkReady();
       try {
         await this.axios.delete(endpoint, {

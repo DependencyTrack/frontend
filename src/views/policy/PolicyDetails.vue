@@ -278,7 +278,13 @@ export default {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
         });
     },
-    deletePolicy: function () {
+    deletePolicy: async function () {
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('message.delete_policy'),
+        }))
+      )
+        return;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}`;
       this.axios
         .delete(url)

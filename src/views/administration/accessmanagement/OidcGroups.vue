@@ -2,10 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button
-          variant="outline-primary"
-          @click="showCreateOidcGroupModal = true"
-        >
+        <b-button variant="primary" @click="showCreateOidcGroupModal = true">
           <span class="fa fa-plus"></span>
           {{ $t('admin.create_oidc_group') }}
         </b-button>

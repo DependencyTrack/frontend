@@ -81,7 +81,7 @@
             activateBanner &&
             (customMode ? !HTMLConfig.trim() : !message.trim())
           "
-          variant="outline-primary"
+          variant="primary"
           class="px-4"
           @click="saveChanges"
         >

@@ -3,7 +3,7 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          variant="outline-primary"
+          variant="primary"
           @click="showCreateServiceAccountModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}

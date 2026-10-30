@@ -1,4 +1,4 @@
-import { seed } from '../api.mjs';
+import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
 test('search the project list and open a project', async ({ page }) => {
@@ -53,4 +53,48 @@ test('keep the flat view after clearing a search', async ({ page }) => {
   await page.getByRole('searchbox', { name: 'Search' }).press('Enter');
   await expect(flatView).toBeEnabled();
   await expect(flatView).toBeChecked();
+});
+
+test('restore the scroll position of the project list when going back', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 500 });
+  await login(page);
+  await page.goto('projects');
+  const link = page.getByRole('row').last().getByRole('link').first();
+  await link.scrollIntoViewIfNeeded();
+  const scrolled = await page.evaluate(() => window.scrollY);
+  expect(scrolled).toBeGreaterThan(0);
+  await link.click();
+  await expect(page).toHaveURL(/\/projects\/[^/]+$/);
+  await page.goBack();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrolled);
+});
+
+test('expand and collapse a parent project in the project tree', async ({
+  page,
+  api,
+}) => {
+  const parent = await api.send('PUT', '/v1/project', {
+    name: `zzz-${uniqueName('e2e-parent')}`,
+  });
+  const child = uniqueName('e2e-child');
+  await api.send('PUT', '/v1/project', {
+    name: child,
+    parent: { uuid: parent.uuid },
+  });
+  // Newest first, so the parent lands on the first page.
+  await page.addInitScript(() => {
+    localStorage.setItem('ProjectListSortName', 'name');
+    localStorage.setItem('ProjectListSortOrder', 'desc');
+  });
+
+  await login(page);
+  await page.goto('projects');
+  const parentRow = page.getByRole('row').filter({ hasText: parent.name });
+  const childLink = page.getByRole('link', { name: child });
+  await parentRow.getByRole('cell').nth(1).click();
+  await expect(childLink).toBeVisible();
+  await parentRow.getByRole('cell').nth(1).click();
+  await expect(childLink).toBeHidden();
 });

@@ -1,91 +1,94 @@
 <template>
   <b-modal
     v-model="visible"
-    @hide="resetValues()"
+    @hidden="resetValues()"
     no-stacking
+    focus="input-1"
     :title="$t('admin.create_template')"
+    :ok-title="$t('message.create')"
+    :cancel-title="$t('message.close')"
+    :ok-disabled="submitting"
+    :no-close-on-esc="submitting"
+    :no-close-on-backdrop="submitting"
+    @ok.prevent="createTemplate()"
   >
-    <b-form-group
-      id="fieldset-1"
-      :label="this.$t('message.name')"
-      label-for="input-1"
-      label-class="required"
-    >
-      <b-form-input
-        id="input-1"
-        v-model.trim="name"
-        class="required"
-        required
-      />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-2"
-      :label="this.$t('admin.extension_name')"
-      label-for="input-2"
-      label-class="required"
-    >
-      <b-form-select
-        id="input-2"
-        v-model="extensionName"
-        :options="availableExtensions"
-        class="required"
-        required
+    <b-form @submit.prevent="createTemplate()">
+      <b-form-group
+        id="fieldset-1"
+        :label="this.$t('message.name')"
+        label-for="input-1"
+        label-class="required"
       >
-        <template #first>
-          <b-form-select-option :value="null" disabled>
-            {{ $t('admin.select_extension') }}
-          </b-form-select-option>
-        </template>
-      </b-form-select>
-    </b-form-group>
-    <b-form-group
-      id="fieldset-3"
-      :label="this.$t('message.description')"
-      label-for="input-3"
-      label-class="required"
-    >
-      <b-form-textarea
-        id="input-3"
-        v-model.trim="description"
-        class="required"
-        rows="4"
-        required
-      />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-4"
-      :label="this.$t('admin.mime_type')"
-      label-for="input-4"
-      label-class="required"
-    >
-      <b-form-input
-        id="input-4"
-        v-model.trim="mimeType"
-        class="required"
-        required
-      />
-    </b-form-group>
-    <b-form-group
-      id="fieldset-5"
-      :label="this.$t('admin.template')"
-      label-for="input-5"
-      label-class="required"
-    >
-      <code-mirror-editor
-        id="input-5"
-        v-model="template"
-        :language="jinjaLanguage"
-        :line-wrapping="false"
-      />
-    </b-form-group>
-    <template v-slot:footer="{ cancel }">
-      <b-button variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button variant="primary" @click="createTemplate()">{{
-        $t('message.create')
-      }}</b-button>
-    </template>
+        <b-form-input
+          id="input-1"
+          v-model.trim="name"
+          class="required"
+          required
+        />
+      </b-form-group>
+      <b-form-group
+        id="fieldset-2"
+        :label="this.$t('admin.extension_name')"
+        label-for="input-2"
+        label-class="required"
+      >
+        <b-form-select
+          id="input-2"
+          v-model="extensionName"
+          :options="availableExtensions"
+          class="required"
+          required
+        >
+          <template #first>
+            <b-form-select-option :value="null" disabled>
+              {{ $t('admin.select_extension') }}
+            </b-form-select-option>
+          </template>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group
+        id="fieldset-3"
+        :label="this.$t('message.description')"
+        label-for="input-3"
+        label-class="required"
+      >
+        <b-form-textarea
+          id="input-3"
+          v-model.trim="description"
+          class="required"
+          rows="4"
+          required
+        />
+      </b-form-group>
+      <b-form-group
+        id="fieldset-4"
+        :label="this.$t('admin.mime_type')"
+        label-for="input-4"
+        label-class="required"
+      >
+        <b-form-input
+          id="input-4"
+          v-model.trim="mimeType"
+          class="required"
+          required
+        />
+      </b-form-group>
+      <b-form-group
+        id="fieldset-5"
+        :label="this.$t('admin.template')"
+        label-for="input-5"
+        label-class="required"
+      >
+        <code-mirror-editor
+          id="input-5"
+          v-model="template"
+          :label="$t('admin.template')"
+          :language="jinjaLanguage"
+          :line-wrapping="false"
+        />
+      </b-form-group>
+      <button type="submit" style="display: none" />
+    </b-form>
   </b-modal>
 </template>
 
@@ -114,6 +117,7 @@ export default {
   },
   data() {
     return {
+      submitting: false,
       name: null,
       extensionName: null,
       description: null,
@@ -141,6 +145,8 @@ export default {
       }
     },
     createTemplate: function () {
+      if (this.submitting) return;
+      this.submitting = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_NOTIFICATION_PUBLISHER}`;
       this.axios
         .put(url, {
@@ -154,11 +160,14 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.template_created'));
+          this.visible = false;
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        })
+        .finally(() => {
+          this.submitting = false;
         });
-      this.visible = false;
     },
     resetValues: function () {
       this.name = null;

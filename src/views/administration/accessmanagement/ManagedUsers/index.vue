@@ -2,10 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button
-          variant="outline-primary"
-          @click="showCreateManagedUserModal = true"
-        >
+        <b-button variant="primary" @click="showCreateManagedUserModal = true">
           <span class="fa fa-plus"></span> {{ $t('admin.create_user') }}
         </b-button>
       </div>

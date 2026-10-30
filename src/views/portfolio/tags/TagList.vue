@@ -25,7 +25,6 @@ import TaggedNotificationRuleListModal from '@/views/portfolio/tags/TaggedNotifi
 import TaggedPoliciesListModal from '@/views/portfolio/tags/TaggedPoliciesListModal.vue';
 import TaggedProjectListModal from '@/views/portfolio/tags/TaggedProjectListModal.vue';
 import TaggedVulnerabilityListModal from '@/views/portfolio/tags/TaggedVulnerabilityListModal.vue';
-import MurmurHash2 from 'imurmurhash';
 
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
@@ -122,7 +121,7 @@ export default {
             attributes: {
               title: this.$t('message.delete_selected'),
             },
-            event: () => {
+            event: async () => {
               let selected = this.$refs.table.getSelections();
               if (
                 !selected ||
@@ -131,6 +130,12 @@ export default {
                 this.$toastr.w(this.$t('message.empty_selection'));
                 return;
               }
+              if (
+                !(await this.$confirmDelete({
+                  title: this.$t('message.delete_selected'),
+                }))
+              )
+                return;
               this.deleteTags(selected.map((row) => row.name))
                 .then(() => {
                   this.$toastr.s(this.$t('message.selection_deleted'));
@@ -153,7 +158,6 @@ export default {
         },
         buttonsOrder: ['btnDeleteSelected', 'refresh', 'columns'],
         clickToSelect: true,
-        uniqueId: 'nameHash',
         search: true,
         showColumns: true,
         showRefresh: true,
@@ -170,11 +174,6 @@ export default {
           refresh: 'fa-refresh',
         },
         responseHandler: function (res, xhr) {
-          for (let tag of res) {
-            // Tag names with special characters can break table rendering.
-            // https://github.com/DependencyTrack/dependency-track/issues/4357
-            tag.nameHash = MurmurHash2(tag.name).result();
-          }
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
         },

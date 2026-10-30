@@ -3,7 +3,7 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          variant="outline-primary"
+          variant="primary"
           v-if="canCreate"
           @click="showCreateSecretModal = true"
         >
@@ -179,17 +179,12 @@ export default {
       this.showUpdateSecretModal = true;
     },
     onDeleteClicked(row) {
-      this.$confirm(
-        this.$t('admin.confirm_secret_deletion_message', { name: row.name }),
-        {
-          title: this.$t('admin.confirm_secret_deletion'),
-          size: 'md',
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      ).then((confirmed) => {
+      this.$confirmDelete({
+        title: this.$t('admin.confirm_secret_deletion'),
+        message: this.$t('admin.confirm_secret_deletion_message', {
+          name: row.name,
+        }),
+      }).then((confirmed) => {
         if (confirmed) {
           this.deleteSecret(row.name);
         }

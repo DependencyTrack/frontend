@@ -164,7 +164,7 @@ export function isUrlSaveForRedirect(redirectUrl) {
 
 export function setPageTitle(title) {
   if (title) {
-    document.title = `Dependency-Track - ${title}`;
+    document.title = `${title} - Dependency-Track`;
   }
 }
 

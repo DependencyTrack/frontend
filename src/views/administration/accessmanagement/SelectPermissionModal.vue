@@ -55,6 +55,7 @@ export default {
       ],
       data: [], // retrieved list of addable permissions
       options: {
+        clickToSelect: true,
         search: true,
         showColumns: true,
         showRefresh: true,
