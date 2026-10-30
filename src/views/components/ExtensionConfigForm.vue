@@ -27,10 +27,10 @@
             <json-schema-form-field
               :schema="enrichSchema(propSchema, propName, schema)"
               :property-name="propName"
-              :modelValue="formData[propName]"
+              :model-value="formData[propName]"
               :validation-error="getValidationError(propName)"
               :validation-errors="nestedErrorMap[propName] || {}"
-              @update:modelValue="onFieldChange(propName, $event)"
+              @update:model-value="onFieldChange(propName, $event)"
             />
           </div>
         </div>
@@ -136,6 +136,7 @@ import {
   enrichSchema,
   getDefaultValue,
   buildNestedValidationErrorMap,
+  registerCustomKeywords,
 } from '@/shared/jsonSchemaForm';
 
 const CHECK_STATUS_ORDER = { FAILED: 0, SKIPPED: 1, PASSED: 2 };
@@ -283,6 +284,7 @@ export default {
       }),
     );
     addFormats(this.ajv);
+    registerCustomKeywords(this.ajv);
     await this.fetchSchemaAndConfig();
   },
   beforeUnmount() {
@@ -370,9 +372,9 @@ export default {
       }
       const validate = this.compiledValidator;
       const valid = validate(this.normalizedFormData);
+      const nextErrors = {};
 
       if (!valid) {
-        const nextErrors = {};
         validate.errors?.forEach((error) => {
           const field = error.instancePath
             .replace(/^\//, '')
@@ -388,12 +390,9 @@ export default {
             nextErrors[field] = message;
           }
         });
-        this.validationErrors = nextErrors;
-        return false;
       }
-
-      this.validationErrors = {};
-      return true;
+      this.validationErrors = nextErrors;
+      return Object.keys(nextErrors).length === 0;
     },
     // Normalize form data by omitting fields that are null entirely.
     // Required for schema validation to correctly determine missing required fields.
@@ -458,6 +457,8 @@ export default {
             values: params.allowedValues?.join(', '),
           });
         case 'uniqueItems':
+          return this.$t('validation.schema.unique_items');
+        case 'x-unique-item-properties':
           return this.$t('validation.schema.unique_items');
         default:
           return message || this.$t('validation.schema.invalid');
