@@ -44,9 +44,7 @@ test('change and save a data source config form', async ({
 
     await page.getByRole('button', { name: 'Save' }).click();
 
-    await expect(
-      page.getByText('Record updated successfully'),
-    ).toBeVisible();
+    await expect(page.getByText('Record updated successfully')).toBeVisible();
 
     const { config } = await api.get(configPath);
 
