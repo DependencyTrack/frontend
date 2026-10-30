@@ -67,14 +67,14 @@
     >
       <span v-if="schema.minItems">
         {{
-          $tc('admin.json_schema_form.min_items', schema.minItems, {
+          $t('admin.json_schema_form.min_items', schema.minItems, {
             n: schema.minItems,
           })
         }}
       </span>
       <span v-if="schema.maxItems">
         {{
-          $tc('admin.json_schema_form.max_items', schema.maxItems, {
+          $t('admin.json_schema_form.max_items', schema.maxItems, {
             n: schema.maxItems,
           })
         }}
@@ -253,10 +253,10 @@ export default {
           .map((label) => label.trim()),
       );
       let suffix = 1;
-      let label = 'new-source';
+      let label = 'new-feed';
       while (labels.has(label)) {
         suffix += 1;
-        label = `new-source-${suffix}`;
+        label = `new-feed-${suffix}`;
       }
       return label;
     },

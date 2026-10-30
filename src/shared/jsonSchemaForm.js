@@ -68,7 +68,7 @@ export function registerCustomKeywords(ajv) {
             errors.push({
               keyword: 'x-unique-item-properties',
               instancePath: `${dataCxt.instancePath}/${i}/${prop}`,
-              parans: { property: prop },
+              params: { property: prop },
               message: 'must be unique',
             }),
           );
