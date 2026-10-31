@@ -398,7 +398,7 @@
       v-model="showProjectDetailsModal"
       :project-input="project"
       :uuid="this.uuid"
-      v-on:projectUpdated="syncProjectFields"
+      v-on:projectUpdated="initialize"
       v-on:showProperties="showProjectPropertiesModal = true"
     />
     <project-properties-modal
@@ -552,11 +552,6 @@ export default {
   methods: {
     cloneDeep: function (component) {
       return cloneDeep(component);
-    },
-    syncProjectFields: function (project) {
-      this.project = project;
-      EventBus.emit('addCrumb', this.projectLabel);
-      setPageTitle(this.projectLabel);
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;

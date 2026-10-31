@@ -75,6 +75,30 @@ test('filter the versions to switch to', async ({ page, api }) => {
   await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
 });
 
+test('list all versions after deactivating a project', async ({
+  page,
+  api,
+}) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  await api.send('PUT', '/v1/project', { name, version: '2.0.0' });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  const modal = page.getByRole('dialog', { name: 'Project Details' });
+  await modal.getByText('Active', { exact: true }).click();
+  await modal.getByRole('button', { name: 'Update' }).click();
+  await expect(page.getByText('Project updated')).toBeVisible();
+  await expect(modal).toBeHidden();
+
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: '1.0.0' })).toBeVisible();
+});
+
 test('delete a project from its details', async ({ page, api }) => {
   const name = uniqueName('e2e-delete');
   const { uuid } = await api.send('PUT', '/v1/project', { name });
