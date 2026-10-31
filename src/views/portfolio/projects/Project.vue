@@ -563,11 +563,17 @@ export default {
       return this.axios
         .get(projectUrl)
         .catch((error) => {
+          if (this._destroying) {
+            return;
+          }
           if (error.response.status === 403) {
             this.$router.replace({ name: 'Projects' });
           }
         })
         .then((response) => {
+          if (this._destroying) {
+            return;
+          }
           this.project = response.data;
           if (!Object.hasOwn(this.project, 'metrics')) {
             this.project.metrics = {};
@@ -667,6 +673,9 @@ export default {
     this.initialize()
       .then(() => {
         this.$nextTick(() => {
+          if (this._destroying) {
+            return;
+          }
           if (this.$route.params.componentUuids) {
             this.$refs.dependencygraph.activate();
           } else {
@@ -675,14 +684,23 @@ export default {
         });
       })
       .catch((e) => {
+        if (this._destroying) {
+          return;
+        }
         console.error(e);
         this.$toastr.e(this.$t('condition.forbidden'));
         this.$router.replace({ path: '/projects/' + this.uuid });
         this.$refs.overview.activate();
       });
   },
+  beforeUnmount() {
+    this._destroying = true;
+  },
   watch: {
     $route(to, from) {
+      if (!to.params.uuid) {
+        return;
+      }
       this.uuid = this.$route.params.uuid;
       if (to.params.uuid !== from.params.uuid) {
         this.versionQuery = '';

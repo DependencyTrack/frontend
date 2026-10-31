@@ -84,6 +84,31 @@ export async function search(page, text, within = page) {
   await expect(loading).toHaveCount(0);
 }
 
+export async function projectSearch(page, text) {
+  await page.getByRole('button', { name: 'Add filter' }).click();
+  await page
+    .getByRole('menuitem', { name: 'Project Name', exact: true })
+    .click();
+  await page
+    .getByRole('textbox', { name: 'Project Name contains', exact: true })
+    .fill(text);
+  const searched = page.waitForResponse((res) => {
+    const url = new URL(res.url());
+    return (
+      url.pathname === '/api/v2/projects' &&
+      url.searchParams.get('name_contains') === text
+    );
+  });
+  await page.getByRole('button', { name: 'Apply', exact: true }).click();
+  await (await searched).finished();
+  await expect(
+    page.getByText('Loading, please wait').filter({ visible: true }),
+  ).toHaveCount(0);
+  await expect(page).toHaveURL(
+    (url) => url.searchParams.get('name_contains') === text,
+  );
+}
+
 export async function auditSearch(page, text) {
   await page.getByRole('button', { name: 'Add filter' }).click();
   await page.getByRole('menuitem', { name: 'Search' }).click();

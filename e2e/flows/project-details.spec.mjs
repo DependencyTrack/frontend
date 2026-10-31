@@ -1,5 +1,5 @@
 import { seed, uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import { test, expect, login, projectSearch } from '../test.mjs';
 
 test('edit a project in the details modal', async ({ page, api }) => {
   const removed = uniqueName('tag');
@@ -101,7 +101,7 @@ test('close the delete confirmation when leaving the project', async ({
   await api.send('PUT', '/v1/project', { name });
   await login(page);
   await page.goto('projects');
-  await search(page, name);
+  await projectSearch(page, name);
   await page.getByRole('link', { name, exact: true }).click();
   await page.getByText('View Details').click();
   await page

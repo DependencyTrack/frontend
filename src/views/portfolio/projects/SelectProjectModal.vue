@@ -5,6 +5,13 @@
     no-stacking
     :title="$t('message.select_project')"
   >
+    <b-form-input
+      v-model="searchText"
+      type="search"
+      :aria-label="$t('message.search')"
+      :placeholder="$t('message.search')"
+      class="mb-2"
+    />
     <token-paginated-table
       ref="table"
       :base-url="tableBaseUrl"
@@ -48,9 +55,10 @@ export default {
       return common.setQueryParams(
         `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
         {
-          is_active: 'ACTIVE',
+          state: 'ACTIVE',
           sort_by: 'name',
           sort_direction: 'ASC',
+          name_contains: this.searchText || undefined,
         },
       );
     },
@@ -64,6 +72,7 @@ export default {
   },
   data() {
     return {
+      searchText: '',
       columns: [
         {
           field: 'state',
