@@ -367,6 +367,7 @@ export default {
     this.applyRouteFilters();
   },
   mounted() {
+    this.tableReady = true;
     if (!this.uuid) {
       this.loadAncestorOptions();
     }
@@ -455,9 +456,9 @@ export default {
       }
       if (q.show_inactive === 'true') {
         this.activeFilter = 'all';
-      } else if (q.is_active === 'INACTIVE' || q.is_active === 'false') {
+      } else if (q.state === 'INACTIVE') {
         this.activeFilter = 'false';
-      } else if (q.is_active === 'ACTIVE' || q.is_active === 'true') {
+      } else if (q.state === 'ACTIVE') {
         this.activeFilter = 'true';
       } else {
         this.activeFilter = DEFAULT_ACTIVE_FILTER;
@@ -485,7 +486,6 @@ export default {
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
           {
             has_children: true,
-            is_active: 'ACTIVE',
             limit: 1000,
             sort_by: 'name',
           },
@@ -517,11 +517,11 @@ export default {
     buildFilterParams() {
       const params = {};
       if (this.activeFilter === 'false') {
-        params.is_active = 'INACTIVE';
+        params.state = 'INACTIVE';
       } else if (this.activeFilter === 'true') {
-        params.is_active = 'ACTIVE';
+        params.state = 'ACTIVE';
       }
-      // 'all': omit is_active to include active and inactive projects.
+      // 'all': omit state to include active and inactive projects.
       if (this.nameFilter?.value) {
         params.name_contains = this.nameFilter.value;
       }
@@ -557,11 +557,11 @@ export default {
       const params = this.buildFilterParams();
       if (this.activeFilter === 'all') {
         params.show_inactive = 'true';
-        delete params.is_active;
+        delete params.state;
       } else if (this.activeFilter === 'false') {
-        params.is_active = 'INACTIVE';
+        params.state = 'INACTIVE';
       } else {
-        delete params.is_active;
+        delete params.state;
       }
       if (this.latestFilter === 'true') {
         params.is_latest = 'true';
@@ -633,6 +633,9 @@ export default {
       await this.loadPage(this.currentPageUrl);
     },
     async loadPage(pageUrl) {
+      if (!this.tableReady) {
+        return;
+      }
       this.$refs.table.showLoading();
       this.isLoading = true;
       const requestId = ++this.currentRequestId;
@@ -755,6 +758,9 @@ export default {
           }
 
           const renderExpander = () => {
+            if (!this.tableReady) {
+              return;
+            }
             this.$refs.table.$table
               .find('tbody')
               .find('tr.treegrid-' + project.uuid)
@@ -803,6 +809,9 @@ export default {
           limit: 100,
         }),
       );
+      if (!this.tableReady) {
+        return;
+      }
       const children = (response.data.items || []).map((item) => ({
         ...item,
         pid: parentProject.uuid,
@@ -826,8 +835,8 @@ export default {
         this.activeFilter = 'all';
       }
     },
-    '$route.fullPath'(newPath, oldPath) {
-      if (newPath === oldPath) {
+    $route(newRoute, oldRoute) {
+      if (newRoute.path !== oldRoute.path) {
         return;
       }
       const expected = this.buildUrlQueryParams();
@@ -871,6 +880,8 @@ export default {
     },
   },
   beforeUnmount() {
+    this.tableReady = false;
+    this.currentRequestId++;
     if (this.expandParamsTimer) {
       clearTimeout(this.expandParamsTimer);
     }
@@ -1010,6 +1021,7 @@ export default {
       nextPageUrl: null,
       pageUrlHistory: [],
       currentRequestId: 0,
+      tableReady: false,
       isLoading: false,
       totalCount: null,
       totalCountType: null,
