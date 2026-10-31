@@ -176,6 +176,12 @@
               :show-no-results="true"
               selectLabel=""
               deselectLabel=""
+              :disabled="
+                this.isNotPermitted([
+                  PERMISSIONS.PORTFOLIO_MANAGEMENT,
+                  PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+                ])
+              "
             ></multiselect>
           </div>
           <b-form-group
