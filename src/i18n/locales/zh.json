@@ -1335,6 +1335,7 @@
   "vulnerability": {
     "critical": "严重漏洞（不含别名）",
     "high": "高危漏洞（不含别名）",
+    "kev": null,
     "low": "低危漏洞（不含别名）",
     "medium": "中危漏洞（不含别名）",
     "unassigned": "未分配漏洞（不含别名）"

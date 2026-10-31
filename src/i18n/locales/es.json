@@ -1335,6 +1335,7 @@
   "vulnerability": {
     "critical": "Vulnerabilidades de gravedad crítica (excluyendo alias)",
     "high": "Vulnerabilidades de alta gravedad (excluyendo alias)",
+    "kev": null,
     "low": "Vulnerabilidades de baja gravedad (excluyendo alias)",
     "medium": "Vulnerabilidades de gravedad media (excluyendo alias)",
     "unassigned": "Vulnerabilidades no asignadas (excluyendo alias)"

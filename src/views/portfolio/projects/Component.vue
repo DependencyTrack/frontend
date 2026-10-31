@@ -32,6 +32,7 @@
                 :medium="currentMedium"
                 :low="currentLow"
                 :unassigned="currentUnassigned"
+                :kev="currentKev"
               />
             </div>
           </b-col>
@@ -165,6 +166,7 @@ export default {
       currentMedium: 0,
       currentLow: 0,
       currentUnassigned: 0,
+      currentKev: 0,
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
@@ -236,6 +238,7 @@ export default {
         response.data.unassigned,
         0,
       );
+      this.currentKev = common.valueWithDefault(response.data.kev, 0);
       this.currentRiskScore = common.valueWithDefault(
         response.data.inheritedRiskScore,
         0,

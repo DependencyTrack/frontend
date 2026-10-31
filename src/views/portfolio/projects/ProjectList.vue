@@ -448,6 +448,17 @@ export default {
             });
           }.bind(this),
         },
+        {
+          title: this.$t('message.kev'),
+          field: 'metrics.kev',
+          sortable: false,
+          align: 'center',
+          formatter(value) {
+            return value > 0
+              ? `<span class="text-danger fw-bold">${Number(value)}</span>`
+              : value;
+          },
+        },
       ],
       data: [],
       options: {

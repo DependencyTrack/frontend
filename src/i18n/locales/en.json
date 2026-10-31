@@ -1336,6 +1336,7 @@
   "vulnerability": {
     "critical": "Critical Severity Vulnerabilities (excluding aliases)",
     "high": "High Severity Vulnerabilities (excluding aliases)",
+    "kev": "Known Exploited Vulnerabilities",
     "low": "Low Severity Vulnerabilities (excluding aliases)",
     "medium": "Medium Severity Vulnerabilities (excluding aliases)",
     "unassigned": "Unassigned Vulnerabilities (excluding aliases)"

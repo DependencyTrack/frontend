@@ -227,6 +227,7 @@
                 :medium="currentMedium"
                 :low="currentLow"
                 :unassigned="currentUnassigned"
+                :kev="currentKev"
               />
             </div>
           </b-col>
@@ -543,6 +544,7 @@ export default {
       currentMedium: 0,
       currentLow: 0,
       currentUnassigned: 0,
+      currentKev: 0,
       currentRiskScore: 0,
       isAnalysisRequested: false,
       nowTick: Date.now(),
@@ -585,6 +587,10 @@ export default {
           );
           this.currentUnassigned = common.valueWithDefault(
             this.project.metrics.unassigned,
+            0,
+          );
+          this.currentKev = common.valueWithDefault(
+            this.project.metrics.kev,
             0,
           );
           this.currentRiskScore = common.valueWithDefault(
