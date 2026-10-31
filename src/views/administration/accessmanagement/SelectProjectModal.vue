@@ -117,7 +117,6 @@ export default {
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
-        silent: true,
       });
     },
   },
