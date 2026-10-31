@@ -777,6 +777,7 @@
     "legal": "법적 정보",
     "license": "라이선스",
     "license_comments": "라이선스 설명",
+    "license_created": null,
     "license_expression": "SPDX 표현식",
     "license_group": "라이선스 그룹",
     "license_group_created": "라이선스 그룹이 생성되었습니다",

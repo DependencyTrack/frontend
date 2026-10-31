@@ -156,7 +156,7 @@ export default {
         })
         .then(() => {
           this.$emit('refreshTable');
-          this.$toastr.s(this.$t('message.project_created'));
+          this.$toastr.s(this.$t('message.license_created'));
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));

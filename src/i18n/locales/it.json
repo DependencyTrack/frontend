@@ -776,6 +776,7 @@
     "legal": "Legale",
     "license": "Licenza",
     "license_comments": "Commenti sulla licenza",
+    "license_created": null,
     "license_expression": "Espressione SPDX",
     "license_group": "Gruppo di licenze",
     "license_group_created": "Gruppo di licenze creato",
