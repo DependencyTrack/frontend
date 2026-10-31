@@ -1335,6 +1335,7 @@
   "vulnerability": {
     "critical": "Schwachstellen mit kritischem Schweregrad (ohne Aliase)",
     "high": "Schwachstellen mit hohem Schweregrad (ohne Aliase)",
+    "kev": null,
     "low": "Schwachstellen mit geringem Schweregrad (ohne Aliase)",
     "medium": "Schwachstellen mit mittlerem Schweregrad (ohne Aliase)",
     "unassigned": "Nicht zugewiesene Schwachstellen (ohne Aliase)"
