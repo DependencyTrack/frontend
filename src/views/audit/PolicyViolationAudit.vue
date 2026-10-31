@@ -215,7 +215,6 @@ export default {
         if (this.$refs.table) {
           this.$refs.table.refresh({
             url: this.apiUrl(),
-            silent: true,
             pageNumber: 1,
           });
         }

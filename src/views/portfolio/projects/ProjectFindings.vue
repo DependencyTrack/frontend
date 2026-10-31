@@ -395,7 +395,6 @@ export default {
       this.$refs.table.refresh({
         url: this.apiUrl(),
         pageNumber: 1,
-        silent: true,
       });
     },
     tableLoaded: function () {
