@@ -26,7 +26,7 @@ $dt-themes: (
     inverse-fg: #101114,
     secondary: #52525b,
     severity-critical-text: #f2555a,
-    severity-high-text: #ff9a1f,
+    severity-high-text: #fb9218,
     severity-medium-text: #ffd43b,
     severity-low-text: #86e0a5,
     severity-info-text: #6c8cff,
@@ -62,11 +62,11 @@ $dt-themes: (
     severity-low-text: #1b6e3d,
     severity-info-text: #3451d1,
     severity-unassigned-text: #62626d,
-    severity-critical-fill: #7a1018,
-    severity-high-fill: #9a4a0a,
-    severity-medium-fill: #9a7a10,
-    severity-low-fill: #1f8f6c,
-    severity-unassigned-fill: #4a4a58,
+    severity-critical-fill: #b2003a,
+    severity-high-fill: #d9570a,
+    severity-medium-fill: #f2b200,
+    severity-low-fill: #00a5ae,
+    severity-unassigned-fill: #666a76,
   ),
 );
 
@@ -93,7 +93,7 @@ $white:      #fff;
 
 $blue:       dt-dark(accent) !default;
 $red:        #f2555a !default;
-$orange:     #ff9a1f !default;
+$orange:     #fb9218 !default;
 $yellow:     #ffd43b !default;
 $green:      #86e0a5 !default;
 $light-blue: #6DD9FF !default;
