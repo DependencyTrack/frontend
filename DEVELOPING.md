@@ -78,6 +78,17 @@ CI uses the API server image for the target branch: `5-snapshot` for `main`, the
 and the latest release for release branches, e.g. `5.2.0` for `5.2.x`. Set `APISERVER_VERSION` to do the same locally.
 A change that needs a new API server feature only passes once that feature is merged and `5-snapshot` is published.
 
+For local testing with an unmerged backend change, check out that backend branch and run `make build-image AGENT=1` there.
+Then start the frontend's E2E stack with the local image:
+
+```shell
+APISERVER_VERSION=local docker compose -f e2e/compose.yaml up -d
+npm run e2e
+```
+
+This override applies only to the local stack. Normal PR CI still requires the backend feature in its selected published image.
+Project filtering requires `GET /api/v2/projects`. Its active-state query parameter is `state` (`ACTIVE` or `INACTIVE`), while the response field is `is_active`.
+
 Debugging:
 
 ```shell

@@ -201,7 +201,11 @@ export default {
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays:
+        localStorage && localStorage.getItem('projectMetricDays') !== null
+          ? localStorage.getItem('projectMetricDays')
+          : 30,
+      abortController: null,
       currentCritical: 0,
       currentHigh: 0,
       currentMedium: 0,
@@ -257,26 +261,36 @@ export default {
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
+    async fetchMetrics() {
+      this.abortController?.abort();
+      const controller = new AbortController();
+      this.abortController = controller;
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
+      try {
+        const response = await this.axios.get(url, {
+          signal: controller.signal,
+        });
+        if (controller.signal.aborted) {
+          return;
+        }
         this.$refs.chartProjectVulnerabilities.render(response.data);
         this.$refs.chartPolicyViolationsState.render(response.data);
         this.$refs.chartPolicyViolationBreakdown.render(response.data);
         this.$refs.chartAuditingFindingsProgress.render(response.data);
         this.$refs.chartComponentVulnerabilities.render(response.data);
         this.extractStats(response.data);
-      });
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          throw error;
+        }
+      }
     },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('projectMetricDays') !== null
-        ? localStorage.getItem('projectMetricDays')
-        : 30;
   },
   mounted() {
     this.fetchMetrics();
+  },
+  beforeUnmount() {
+    this.abortController?.abort();
   },
   watch: {
     metricDays() {
