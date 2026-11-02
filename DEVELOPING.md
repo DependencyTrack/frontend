@@ -23,6 +23,17 @@
 | [Prettier](https://prettier.io/)                                             | Formatting        |
 | [Playwright](https://playwright.dev/)                                        | End-to-end tests  |
 
+## Architecture Constraints
+
+The following constraints apply project-wide. They exist to keep the codebase coherent
+as it evolves and to avoid steering changes in directions we are actively moving away from.
+
+## Composition API for new Vue Components
+
+The code base was originally built on Vue 2, which only supported the options API.
+Write new Vue components, or components that are being fully refactored, with the
+[Composition API](https://vuejs.org/guide/extras/composition-api-faq.html#what-is-composition-api).
+
 ## Install
 
 ```shell
@@ -60,6 +71,15 @@ Produces `ghcr.io/dependencytrack/frontend:local`.
 npm run eslint-fix
 npm run prettier-fix
 ```
+
+## Unit Tests
+
+```shell
+npm test
+```
+
+Tests live next to the code as `*.test.js` and run with [Vitest](https://vitest.dev/).
+Use them for pure logic with many input combinations, and end-to-end tests for everything a user can see.
 
 ## End-to-End Tests
 
