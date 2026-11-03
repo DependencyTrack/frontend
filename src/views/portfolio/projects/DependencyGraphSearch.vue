@@ -6,9 +6,9 @@
     <multiselect
       v-multiselect-label
       @keydown.esc.stop
+      @keydown.up.down="revealHighlightedOption"
       id="dependency-graph-search-input"
-      :model-value="nodes.get([...searched][0]) ?? null"
-      :custom-label="nodeLabel"
+      :model-value="searched.size === 1 ? nodes.get([...searched][0]) : null"
       :placeholder="$t('message.component_search')"
       :options="results"
       :searchable="true"
@@ -23,6 +23,17 @@
       @search-change="query = $event"
       @select="$emit('select', $event.uuid)"
     >
+      <template #singleLabel="{ option }">
+        <span :title="nodeLabel(option)">{{ searchResultLabel(option) }}</span>
+      </template>
+      <template #option="{ option }">
+        <span class="d-block text-wrap text-break">
+          {{ option.name }} {{ option.version }}
+          <small v-if="option.group" class="d-block text-muted">
+            {{ option.group }}
+          </small>
+        </span>
+      </template>
       <template #afterList>
         <li
           v-if="matches.length > results.length"
@@ -51,9 +62,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
-import { nodeLabel, searchNodes } from './dependencyGraph';
+import { nodeLabel, searchNodes, searchResultLabel } from './dependencyGraph';
 
 const MAX_RESULTS = 50;
 
@@ -67,6 +78,14 @@ defineEmits(['select']);
 const query = ref('');
 const matches = computed(() => searchNodes(props.nodes, query.value));
 const results = computed(() => matches.value.slice(0, MAX_RESULTS));
+
+// vue-multiselect scrolls by index * option-height, which breaks once a long group makes a row taller.
+async function revealHighlightedOption({ currentTarget }) {
+  await nextTick();
+  currentTarget
+    .querySelector('.multiselect__option--highlight')
+    ?.scrollIntoView({ block: 'nearest' });
+}
 </script>
 
 <style lang="scss">

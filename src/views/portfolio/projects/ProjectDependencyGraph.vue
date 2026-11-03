@@ -2,7 +2,7 @@
   <div
     ref="frame"
     class="dependency-graph"
-    :class="{ maximized, hovering: hovered }"
+    :class="{ maximized, hovering: hovered && !focused }"
     role="region"
     :aria-label="$t('message.dependency_graph')"
   >
@@ -271,7 +271,6 @@ const highlightedEdges = computed(() => [
 const relatedNodes = computed(
   () =>
     new Set([
-      focused.value,
       hovered.value,
       ...[
         ...pathEdges.value,
@@ -561,7 +560,18 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 0;
   border-radius: 0 0 var(--bs-border-radius-lg) var(--bs-border-radius-lg);
-  background: var(--dt-surface-recessed);
+  background:
+    radial-gradient(
+      60rem 30rem at 0% 100%,
+      var(--dt-graph-glow-brand),
+      transparent
+    ),
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      var(--dt-graph-glow-accent),
+      transparent
+    ),
+    var(--dt-surface-recessed);
 }
 .dependency-graph.maximized .dependency-graph-canvas,
 .dependency-graph.maximized .dependency-graph-viewport {

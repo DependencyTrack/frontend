@@ -19,7 +19,7 @@
     >
       <span class="dependency-graph-name text-truncate">
         <i
-          class="fa fa-fw text-muted me-1"
+          class="dependency-graph-icon fa fa-fw me-1"
           :class="icon"
           aria-hidden="true"
         />{{ node.name }}
@@ -113,14 +113,14 @@ const toggleText = computed(() =>
 }
 .dependency-graph-focus {
   position: absolute;
-  top: 0.25rem;
-  right: 1rem;
+  top: 0;
+  right: 0;
   width: 1.5rem;
   height: 1.5rem;
   padding: 0;
   opacity: 0;
   color: var(--dt-icon-subtle);
-  font-size: 1rem;
+  font-size: 0.875rem;
   border: 0;
   background: none;
 }
@@ -159,8 +159,14 @@ a.dependency-graph-card:hover {
   box-shadow: inset 4px 0 0 var(--dt-accent);
 }
 .dependency-graph-card.project {
-  border-color: var(--dt-accent);
+  border: 2px solid var(--dt-brand);
   font-weight: 600;
+}
+.dependency-graph-icon {
+  color: var(--dt-accent);
+}
+.dependency-graph-card.project .dependency-graph-icon {
+  color: var(--dt-brand);
 }
 .dependency-graph-card.searched {
   border: 2px solid var(--dt-accent);

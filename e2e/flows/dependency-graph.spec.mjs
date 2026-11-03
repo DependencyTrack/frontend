@@ -1,5 +1,12 @@
 import { seed, uniqueName } from '../api.mjs';
-import { test, expect, login, pickOption, setTheme } from '../test.mjs';
+import {
+  test,
+  expect,
+  highlightedOption,
+  login,
+  pickOption,
+  setTheme,
+} from '../test.mjs';
 
 const GRAPH_ROUTE = '**/api/v2/projects/*/dependency-graph';
 const LAYOUT_WORKER_ROUTE = '**/dependencyGraphLayout.worker*';
@@ -73,6 +80,12 @@ test('dependency graph focuses on the paths to a component', async ({
   await expect(link('below')).toHaveCount(0);
   await expect(link('bystander')).toHaveCount(0);
   await expect(graph.getByText('Showing 4 of 6 components')).toBeVisible();
+  for (const hovered of ['target', 'long']) {
+    await link(hovered).hover();
+    for (const name of ['long', 'middle', 'short', 'target']) {
+      await expect(link(name)).toHaveCSS('opacity', '1');
+    }
+  }
 
   await page.goBack();
   await expect(link('bystander')).toBeVisible();
@@ -124,9 +137,51 @@ test('dependency graph focuses on the paths to a component', async ({
   await expect(link('bystander')).toBeVisible();
   await expect(pathsTo('')).toHaveCount(0);
   await expect(clearSearch).toBeVisible();
+  await expect(searchBox(page)).not.toContainText('target');
   await graph.getByRole('button', { name: 'target 1' }).click();
   await expect(link('below')).toBeVisible();
   await expect(graph.getByText('Dependency path')).toBeVisible();
+});
+
+test('dependency graph search tells apart components that differ only late in a long group', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const group = (suffix) => `org.${'foooooo.baaaaaar.'.repeat(8)}${suffix}`;
+  const name = 'api-with-a-long-name-'.repeat(4) + 'end';
+  const suffixes = Array.from({ length: 30 }, (_, i) => `s${i}`);
+  await stubGraph(
+    page,
+    {
+      app: suffixes,
+      ...Object.fromEntries(suffixes.map((suffix) => [suffix, []])),
+    },
+    Object.fromEntries(
+      suffixes.map((suffix) => [suffix, { name, group: group(suffix) }]),
+    ),
+  );
+  await login(page);
+  await page.goto(`projects/${project.uuid}/dependencyGraph`);
+  const graph = page.getByRole('tabpanel');
+  const search = page.getByRole('textbox', { name: 'Component Search' });
+  await searchBox(page).click();
+  await search.fill('api');
+
+  await expect(
+    graph.getByRole('option').getByText(group('s0'), { exact: true }),
+  ).toBeInViewport({ ratio: 1 });
+
+  const highlighted = () => highlightedOption(page, 'Component Search');
+  for (const key of [...Array(20).fill('ArrowDown'), 'ArrowUp', 'ArrowUp']) {
+    await search.press(key);
+    await expect(await highlighted()).toBeInViewport({ ratio: 1 });
+  }
+
+  await expect(await highlighted()).toContainText(group('s18'));
+  await search.press('Enter');
+  const label = `${group('s18')}/${name} 1`;
+  await expect(graph.getByText(`Paths to ${label}`)).toBeInViewport();
+  await expect(searchBox(page).getByTitle(label)).toBeVisible();
 });
 
 test('dependency graph can be moved around without getting lost', async ({
@@ -391,7 +446,13 @@ test('large dependency graph only draws what is in view and limits search result
   await expect(page.getByText('Showing 50 of 3000')).toBeVisible();
 });
 
-async function stubGraph(page, { app, ...components }) {
+function searchBox(page) {
+  return page
+    .getByRole('combobox')
+    .filter({ has: page.getByRole('textbox', { name: 'Component Search' }) });
+}
+
+async function stubGraph(page, { app, ...components }, details = {}) {
   const uuids = Object.fromEntries(
     Object.keys(components).map((name) => [name, crypto.randomUUID()]),
   );
@@ -413,6 +474,7 @@ async function stubGraph(page, { app, ...components }) {
             name,
             version: '1',
             direct_dependencies: toUuids(dependsOn),
+            ...details[name],
           })),
         ],
       },
