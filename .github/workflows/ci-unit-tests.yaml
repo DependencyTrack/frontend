@@ -1,0 +1,33 @@
+name: Unit Tests
+on:
+  push:
+    branches:
+      - 'main' # Default branch
+      - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
+  pull_request:
+    branches:
+      - 'main' # Default branch
+      - 'feature-**' # Feature branches
+      - '[0-9]+.[0-9]+.x' # Release branches
+
+permissions: {}
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # tag=v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up NodeJs
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # tag=v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Tests
+        run: npm test

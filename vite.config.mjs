@@ -48,6 +48,7 @@ export default defineConfig(({ mode }) => {
       port: 8080,
       proxy: env.VUE_APP_SERVER_URL ? { '/api': env.VUE_APP_SERVER_URL } : {},
     },
+    test: { include: ['src/**/*.test.js'] },
     build: {
       rolldownOptions: {
         input: ['index.html', 'static/oidc-callback.html'],
