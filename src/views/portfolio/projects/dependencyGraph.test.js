@@ -10,6 +10,7 @@ import {
   nextDrawnArea,
   nodesInArea,
   searchNodes,
+  searchResultLabel,
   wheelScrollsPage,
 } from './dependencyGraph';
 
@@ -165,9 +166,40 @@ describe('searchNodes', () => {
     expect(search('CoRe')).toEqual(['2', '1']);
   });
 
-  it('matches the displayed label and a version', () => {
+  it('matches group/name and a version', () => {
     expect(search('org.core/zeta')).toEqual(['1']);
     expect(search('2.5')).toEqual(['1']);
+  });
+
+  it('orders components of the same name by group, then by numeric version', () => {
+    const sameName = new Map(
+      [
+        { uuid: 'b-10', name: 'api', group: 'org.b', version: '1.10.0' },
+        { uuid: 'b-9', name: 'api', group: 'org.b', version: '1.9.0' },
+        { uuid: 'a', name: 'api', group: 'org.a', version: '2.0.0' },
+        { uuid: 'none', name: 'api' },
+      ].map((node) => [node.uuid, { type: 'COMPONENT', ...node }]),
+    );
+    expect(searchNodes(sameName, 'api').map(({ uuid }) => uuid)).toEqual([
+      'none',
+      'a',
+      'b-9',
+      'b-10',
+    ]);
+  });
+});
+
+describe('searchResultLabel', () => {
+  it('leads with the name and version, so a long group cannot cut them off', () => {
+    const node = { group: 'org.example', name: 'core', version: '2.5' };
+    expect(searchResultLabel(node)).toBe('core 2.5 / org.example');
+  });
+
+  it('leaves out what a component does not have', () => {
+    expect(searchResultLabel({ name: 'core' })).toBe('core');
+    expect(searchResultLabel({ name: 'core', group: 'org.x' })).toBe(
+      'core / org.x',
+    );
   });
 });
 

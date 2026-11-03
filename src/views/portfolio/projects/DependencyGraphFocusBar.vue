@@ -5,12 +5,12 @@
     <span class="d-inline-flex align-items-center gap-1">
       <button
         type="button"
-        class="btn btn-link p-0"
+        class="btn btn-link p-0 text-start text-break"
         :title="$t('message.center_on_component')"
         @click="$emit('center')"
       >
         <i class="fa fa-crosshairs align-middle me-1" aria-hidden="true" />
-        {{ $t('message.paths_to_component', { name: component.name }) }}
+        {{ $t('message.paths_to_component', { name: nodeLabel(component) }) }}
       </button>
       <button
         type="button"
@@ -32,6 +32,8 @@
 </template>
 
 <script setup>
+import { nodeLabel } from './dependencyGraph';
+
 defineProps({
   component: { type: Object, required: true },
   shown: { type: Number, required: true },
