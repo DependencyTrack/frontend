@@ -66,7 +66,7 @@
     "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-playwright": "2.12.1",
-    "eslint-plugin-vue": "10.11.1",
+    "eslint-plugin-vue": "10.12.0",
     "globals": "17.13.0",
     "prettier": "3.9.10",
     "prettier-plugin-sort-json": "4.2.0",
