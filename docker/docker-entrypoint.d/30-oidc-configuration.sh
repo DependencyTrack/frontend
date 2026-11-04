@@ -29,7 +29,9 @@ else
         | .OIDC_CLIENT_ID = env.OIDC_CLIENT_ID
         | .OIDC_SCOPE = env.OIDC_SCOPE
         | .OIDC_FLOW = env.OIDC_FLOW
-        | .OIDC_LOGIN_BUTTON_TEXT = env.OIDC_LOGIN_BUTTON_TEXT' \
+        | .OIDC_LOGIN_BUTTON_TEXT = env.OIDC_LOGIN_BUTTON_TEXT
+        | .SAML_ENABLED = env.SAML_ENABLED
+        | .SAML_LOGIN_BUTTON_TEXT = env.SAML_LOGIN_BUTTON_TEXT' \
     ./static/config.json)
   echo "${CONFIG}" > ./static/config.json
   entrypoint_log "$ME: info: effective config: $(echo "${CONFIG}" | jq -c '.')"

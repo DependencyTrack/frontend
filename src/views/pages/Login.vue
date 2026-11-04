@@ -62,9 +62,17 @@
                         />
                       </b-button>
                     </b-col>
+                    <b-col cols="6" v-show="samlAvailable">
+                      <b-button
+                        :style="{ float: showLoginForm ? 'right' : 'none' }"
+                        v-on:click="samlLogin()"
+                      >
+                        {{ samlLoginButtonText() }}
+                      </b-button>
+                    </b-col>
                   </b-row>
                   <b-link
-                    v-show="oidcAvailable && !showLoginForm"
+                    v-show="(oidcAvailable || samlAvailable) && !showLoginForm"
                     v-on:click="showLoginForm = true"
                     >{{ $t('message.login_more_options') }}</b-link
                   >
@@ -107,6 +115,7 @@ import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormI
 import InformationalModal from '../modals/InformationalModal.vue';
 import EventBus from '../../shared/eventbus';
 import { getRedirectUrl, getContextPath } from '../../shared/utils';
+import { startSamlLogin, takeSamlCodeVerifier } from '../../shared/samlLogin';
 import common from '../../shared/common';
 import * as permissions from '../../shared/permissions';
 import DOMPurify from 'dompurify';
@@ -129,6 +138,7 @@ export default {
       },
       oidcAvailable: false,
       oidcUserManager: null,
+      samlAvailable: false,
       showLoginForm: false,
     };
   },
@@ -261,11 +271,85 @@ export default {
     oidcLoginButtonText() {
       return this.$oidc.LOGIN_BUTTON_TEXT;
     },
+    checkSamlAvailability() {
+      // Only ask the API server when SAML is enabled in the frontend configuration,
+      // so that API servers without SAML support see no requests they cannot answer.
+      if (!this.$saml.ENABLED) {
+        return Promise.resolve(false);
+      }
+
+      const url = this.$api.BASE_URL + '/' + this.$api.URL_SAML_AVAILABILITY;
+      return axios
+        .get(url)
+        .then((result) => result.status === 200 && result.data.enabled === true)
+        .catch(() => {
+          this.$toastr.e(this.$t('message.saml_availability_check_failed'));
+          return false;
+        });
+    },
+    samlLogin() {
+      const loginUrl = this.$api.BASE_URL + '/' + this.$api.URL_SAML_LOGIN;
+      startSamlLogin(loginUrl, getRedirectUrl(this.$router)).catch((err) => {
+        console.log(err);
+        this.$toastr.e(this.$t('message.saml_redirect_failed'));
+      });
+    },
+    samlLoginButtonText() {
+      return this.$saml.LOGIN_BUTTON_TEXT || this.$t('message.saml_login');
+    },
+    completeSamlLogin() {
+      const { code, error } = this.$route.query;
+      if (error) {
+        takeSamlCodeVerifier();
+        this.showInformationalModal = true;
+        // Map the error to a fixed message. Never render text from the URL.
+        this.loginError =
+          error === 'UNMAPPED_ACCOUNT'
+            ? this.$t('message.saml_login_unmapped')
+            : this.$t('message.saml_login_failed');
+        return;
+      }
+
+      const codeVerifier = takeSamlCodeVerifier();
+      if (!code || !codeVerifier) {
+        this.showInformationalModal = true;
+        this.loginError = this.$t('message.saml_login_failed');
+        return;
+      }
+
+      const url = this.$api.BASE_URL + '/' + this.$api.URL_SAML_TOKEN;
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      };
+      axios
+        .post(
+          url,
+          new URLSearchParams({ code, code_verifier: codeVerifier }),
+          config,
+        )
+        .then((result) =>
+          this.fetchAndCheckPermissions(
+            result.data.token,
+            getRedirectUrl(this.$router),
+          ),
+        )
+        .catch(() => {
+          this.showInformationalModal = true;
+          this.loginError = this.$t('message.saml_login_failed');
+        });
+    },
     goToLogin() {
       this.isWelcomeMessage = false;
     },
   },
-  mounted() {
+  async mounted() {
+    if (this.$route.name === 'SamlLogin') {
+      this.completeSamlLogin();
+    }
+    this.samlAvailable = await this.checkSamlAvailability();
+
     if (this.$route.query.error === 'oidc') {
       this.showInformationalModal = true;
       this.loginError = this.$t('message.oidc_login_failed');
@@ -282,7 +366,7 @@ export default {
     this.checkOidcAvailability()
       .then(async (oidcAvailable) => {
         if (!oidcAvailable) {
-          this.showLoginForm = true;
+          this.showLoginForm = !this.samlAvailable;
           return;
         }
 
