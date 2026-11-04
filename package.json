@@ -89,6 +89,9 @@
     "vue-template-compiler": "2.7.16"
   },
   "overrides": {
+    "oidc-client": {
+      "serialize-javascript": "7.1.4"
+    },
     "vue-bootstrap-toggle": {
       "merge": "2.1.1"
     }
