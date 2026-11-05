@@ -171,7 +171,7 @@ export default {
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('componentMetricDays') ?? 30,
       currentCritical: 0,
       currentHigh: 0,
       currentMedium: 0,
@@ -243,9 +243,9 @@ export default {
       let uuid = this.$route.params.uuid;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${this.metricDays}`;
       this.axios.get(url).then((response) => {
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationBreakdown.render(response.data);
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationBreakdown?.render(response.data);
         this.extractStats(response.data);
       });
     },
@@ -257,12 +257,6 @@ export default {
       }
       this.fetchMetrics();
     },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('componentMetricDays') !== null
-        ? localStorage.getItem('componentMetricDays')
-        : 30;
   },
   mounted() {
     this.fetchMetrics();

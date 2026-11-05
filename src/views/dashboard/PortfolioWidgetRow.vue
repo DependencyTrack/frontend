@@ -103,10 +103,10 @@ export default {
         metrics[metrics.length - 1].vulnerableComponents;
       this.inheritedRiskScore = metrics[metrics.length - 1].inheritedRiskScore;
 
-      this.$refs.widgetPortfolioVulnerabilities.render(metrics);
-      this.$refs.widgetPortfolioVulnerableProjects.render(metrics);
-      this.$refs.widgetPortfolioVulnerableComponents.render(metrics);
-      this.$refs.widgetPortfolioInheritedRisk.render(metrics);
+      this.$refs.widgetPortfolioVulnerabilities?.render(metrics);
+      this.$refs.widgetPortfolioVulnerableProjects?.render(metrics);
+      this.$refs.widgetPortfolioVulnerableComponents?.render(metrics);
+      this.$refs.widgetPortfolioInheritedRisk?.render(metrics);
     },
   },
 };
