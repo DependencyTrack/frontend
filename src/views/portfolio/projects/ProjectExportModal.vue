@@ -187,7 +187,7 @@ export default {
       const downloadRequest = isOriginal
         ? common.downloadAttachment(
             this.axios,
-            `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/bom/original`,
+            `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/boms/latest/content`,
             undefined,
             'bom',
           )
