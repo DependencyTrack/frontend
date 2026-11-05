@@ -39,7 +39,7 @@
     "@popperjs/core": "2.11.8",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "axios": "1.20.0",
+    "axios": "1.21.0",
     "bootstrap": "5.3.8",
     "bootstrap-table": "1.28.0",
     "bootstrap-vue-next": "1.2.2",
