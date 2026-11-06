@@ -12,6 +12,57 @@
         }}</b-form-checkbox>
       </b-form-group>
       <b-form-group
+        :label="$t('admin.original_bom_retention')"
+        label-size="lg"
+        label-class="font-weight-bold pt-0 mb-2"
+      >
+        <label class="d-flex align-items-center mb-0">
+          <c-switch
+            color="primary"
+            v-model="isOriginalBomRetentionEnabled"
+            label
+            v-bind="labelIcon"
+          />
+          <span class="ml-1">
+            {{ $t('admin.retain_original_boms') }}
+          </span>
+        </label>
+        <b-form-text>
+          {{ $t('admin.original_bom_retention_help') }}
+        </b-form-text>
+      </b-form-group>
+      <div v-if="isOriginalBomRetentionEnabled">
+        <b-form-group :label="$t('admin.original_bom_retention_policy')">
+          <b-form-text class="mb-2">
+            {{ $t('admin.original_bom_retention_policy_help') }}
+          </b-form-text>
+          <b-form-select
+            v-model="originalBomRetentionPolicy"
+            :options="originalBomRetentionPolicyOptions"
+          />
+        </b-form-group>
+        <b-form-group v-if="originalBomRetentionPolicy === 'AGE_BASED'">
+          <b-form-text class="mb-2">
+            {{ $t('admin.original_bom_expiration_days_help') }}
+          </b-form-text>
+          <div class="d-flex align-items-center">
+            <b-form-input
+              type="range"
+              v-model="originalBomExpirationDays"
+              min="1"
+              max="365"
+              step="1"
+              class="flex-grow-1"
+            />
+            <span
+              class="ml-2 font-weight-bold"
+              style="min-width: 6em; text-align: right; white-space: nowrap"
+              >{{ originalBomExpirationDays }} {{ $t('admin.days') }}</span
+            >
+          </div>
+        </b-form-group>
+      </div>
+      <b-form-group
         :label="$t('admin.bom_validation')"
         label-size="lg"
         label-class="fw-bold pt-0 mb-2"
@@ -92,10 +143,27 @@ export default {
   data() {
     return {
       isCycloneDXEnabled: false,
+      isOriginalBomRetentionEnabled: false,
+      originalBomRetentionPolicy: 'LATEST_ONLY',
+      originalBomExpirationDays: 90,
       bomValidationMode: '',
       bomValidationTagsExclusive: [],
       bomValidationTagsInclusive: [],
     };
+  },
+  computed: {
+    originalBomRetentionPolicyOptions() {
+      return [
+        {
+          value: 'LATEST_ONLY',
+          text: this.$t('admin.original_bom_retention_latest_only'),
+        },
+        {
+          value: 'AGE_BASED',
+          text: this.$t('admin.original_bom_retention_age_based'),
+        },
+      ];
+    },
   },
   methods: {
     saveChanges: function () {
@@ -104,6 +172,21 @@ export default {
           groupName: 'artifact',
           propertyName: 'cyclonedx.enabled',
           propertyValue: this.isCycloneDXEnabled,
+        },
+        {
+          groupName: 'artifact',
+          propertyName: 'bom.original.retention.enabled',
+          propertyValue: this.isOriginalBomRetentionEnabled,
+        },
+        {
+          groupName: 'artifact',
+          propertyName: 'bom.original.retention.policy',
+          propertyValue: this.originalBomRetentionPolicy,
+        },
+        {
+          groupName: 'artifact',
+          propertyName: 'bom.original.expiration.days',
+          propertyValue: this.originalBomExpirationDays,
         },
         {
           groupName: 'artifact',
@@ -133,6 +216,17 @@ export default {
         switch (item.propertyName) {
           case 'cyclonedx.enabled':
             this.isCycloneDXEnabled = common.toBoolean(item.propertyValue);
+            break;
+          case 'bom.original.retention.enabled':
+            this.isOriginalBomRetentionEnabled = common.toBoolean(
+              item.propertyValue,
+            );
+            break;
+          case 'bom.original.retention.policy':
+            this.originalBomRetentionPolicy = item.propertyValue;
+            break;
+          case 'bom.original.expiration.days':
+            this.originalBomExpirationDays = item.propertyValue;
             break;
           case 'bom.validation.mode':
             this.bomValidationMode = item.propertyValue;
