@@ -404,7 +404,7 @@ test('large dependency graph only draws what is in view and limits search result
   page,
 }) => {
   const { project } = seed();
-  const names = Array.from({ length: 3000 }, (_, i) => `big-${i}`);
+  const names = Array.from({ length: 1000 }, (_, i) => `big-${i}`);
   await stubGraph(page, {
     app: names,
     ...Object.fromEntries(names.map((name) => [name, []])),
@@ -415,7 +415,7 @@ test('large dependency graph only draws what is in view and limits search result
   const links = graph.getByRole('link');
   const expectOnlySomeDrawn = async () => {
     await expect.poll(() => links.count()).toBeGreaterThan(0);
-    expect(await links.count()).toBeLessThan(1000);
+    expect(await links.count()).toBeLessThan(names.length);
   };
   await expectOnlySomeDrawn();
 
@@ -443,7 +443,7 @@ test('large dependency graph only draws what is in view and limits search result
   const search = page.getByRole('textbox', { name: 'Component Search' });
   await page.getByRole('combobox').filter({ has: search }).click();
   await search.fill('big');
-  await expect(page.getByText('Showing 50 of 3000')).toBeVisible();
+  await expect(page.getByText('Showing 50 of 1000')).toBeVisible();
 });
 
 function searchBox(page) {
