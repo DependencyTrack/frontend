@@ -11,6 +11,8 @@
     "alert_deleted": "Alert deleted",
     "alert_log_successful_publish": "Log successful publish",
     "alert_log_successful_publish_help": "Emit a log message upon successful publishing of the alert to the destination, instead of only emitting logs when issues are encountered. Aids in debugging missing alerts, or making alert publishing auditable.",
+    "alert_policy_violation_updated_help": "Notify when the stored message of an existing policy violation changes, excluding approved or suppressed violations. Use a condition that returns a stable message.",
+    "alert_policy_violation_updated_reviewed_help": "Notify when the stored message of an approved or suppressed policy violation changes. Review decisions stay unchanged. Opting in does not replay earlier changes.",
     "alert_schedule_cron_expression": "Cron expression",
     "alert_schedule_last_triggered_at": "Last triggered at",
     "alert_schedule_next_trigger_at": "Next trigger at",

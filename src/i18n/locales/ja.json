@@ -11,6 +11,8 @@
     "alert_deleted": "アラートを削除しました",
     "alert_log_successful_publish": "発行成功のログ",
     "alert_log_successful_publish_help": "問題が発生したときにのみログを出力するのではなく、アラートが宛先に正常に発行されたときにもログ メッセージを生成します。欠落しているアラートのデバッグや、アラートの発行を検査するのに役立ちます。",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "クロンの表現",
     "alert_schedule_last_triggered_at": "最後にトリガーされました",
     "alert_schedule_next_trigger_at": "次のトリガー",

@@ -11,6 +11,8 @@
     "alert_deleted": "Avviso eliminato",
     "alert_log_successful_publish": "Registra la pubblicazione riuscita",
     "alert_log_successful_publish_help": "Emetti un messaggio di registro dopo la pubblicazione corretta dell'avviso nella destinazione, invece di emettere registri solo quando si verificano problemi. Aiuta nel debug degli avvisi mancanti o nel rendere controllabile la pubblicazione degli avvisi.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Espressione di cron",
     "alert_schedule_last_triggered_at": "Ultimo attivato a",
     "alert_schedule_next_trigger_at": "Successivo trigger a",
