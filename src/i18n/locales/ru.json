@@ -11,6 +11,8 @@
     "alert_deleted": "Оповещение удалено",
     "alert_log_successful_publish": "Успешная публикация журнала",
     "alert_log_successful_publish_help": "Создание записи в журнале при успешной публикации оповещения в пункт назначения, а не только при возникновении проблем. Полезно для отладки пропущенных оповещений или обеспечения возможности аудита публикации оповещений.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Выражение крона",
     "alert_schedule_last_triggered_at": "Последнее вызвано в",
     "alert_schedule_next_trigger_at": "Следующий триггер в",

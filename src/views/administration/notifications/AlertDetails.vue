@@ -199,6 +199,34 @@
               >
             </div>
             <div v-if="!isScheduled" class="list-group-item">
+              <b-form-checkbox
+                value="POLICY_VIOLATION_UPDATED"
+                class="text-break"
+                :aria-describedby="`policy-violation-updated-help-${uuid}`"
+                >POLICY_VIOLATION_UPDATED</b-form-checkbox
+              >
+              <div
+                :id="`policy-violation-updated-help-${uuid}`"
+                class="form-text"
+              >
+                {{ $t('admin.alert_policy_violation_updated_help') }}
+              </div>
+            </div>
+            <div v-if="!isScheduled" class="list-group-item">
+              <b-form-checkbox
+                value="POLICY_VIOLATION_UPDATED_REVIEWED"
+                class="text-break"
+                :aria-describedby="`policy-violation-updated-reviewed-help-${uuid}`"
+                >POLICY_VIOLATION_UPDATED_REVIEWED</b-form-checkbox
+              >
+              <div
+                :id="`policy-violation-updated-reviewed-help-${uuid}`"
+                class="form-text"
+              >
+                {{ $t('admin.alert_policy_violation_updated_reviewed_help') }}
+              </div>
+            </div>
+            <div v-if="!isScheduled" class="list-group-item">
               <b-form-checkbox value="PROJECT_CREATED"
                 >PROJECT_CREATED</b-form-checkbox
               >
