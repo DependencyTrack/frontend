@@ -21,6 +21,8 @@ COPY ./dist ${APP_DIR}
 # Applying these changes allows the container to run via the OpenShift default SCC "Restricted" whereby arbitrary an UID and GID=0 are assigned
 RUN chown -R 101:0 ${APP_DIR} \
     && chmod -R g=u ${APP_DIR} \
+    # pull in security fixes released after the base image was built
+    && apk --no-cache upgrade \
     # add jq to easily manipulate config.json in entrypoint script
     && apk --no-cache add jq
 
