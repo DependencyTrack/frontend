@@ -65,6 +65,37 @@ const hasRouteFilter = ({ tag, team, classifier }) =>
 const storedFlatView = () =>
   !!localStorage && localStorage.getItem('ProjectListShowFlatView') === 'true';
 
+// UUIDs of projects expanded in the tree view, persisted across visits.
+const EXPANDED_PROJECTS_KEY = 'ProjectListExpandedProjects';
+const loadExpandedProjects = () => {
+  try {
+    const stored = localStorage && localStorage.getItem(EXPANDED_PROJECTS_KEY);
+    const parsed = stored ? JSON.parse(stored) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+};
+const setProjectExpanded = (uuid, expanded) => {
+  try {
+    if (!localStorage) {
+      return;
+    }
+    const expandedProjects = loadExpandedProjects();
+    if (expanded) {
+      expandedProjects.add(uuid);
+    } else {
+      expandedProjects.delete(uuid);
+    }
+    localStorage.setItem(
+      EXPANDED_PROJECTS_KEY,
+      JSON.stringify([...expandedProjects]),
+    );
+  } catch {
+    // Storage unavailable or full: expansion state is simply not persisted.
+  }
+};
+
 export default {
   mixins: [bootstrapTableMixin, permissionsMixin, routerMixin],
   components: {
@@ -189,6 +220,24 @@ export default {
               renderExpander();
             }
           });
+        });
+        // Restore expansion state persisted from previous visits. Rows only
+        // get it once (expanded still undefined); appended children are new
+        // rows, so restoration cascades down the tree as they are fetched.
+        const expandedProjects = loadExpandedProjects();
+        this.$refs.table.getData().forEach((row) => {
+          if (row.expanded !== undefined || !expandedProjects.has(row.uuid)) {
+            return;
+          }
+          if (!row.hasChildren) {
+            setProjectExpanded(row.uuid, false);
+            return;
+          }
+          row.expanded = true;
+          if (!row.fetchedChildren) {
+            row.fetchedChildren = true;
+            this.getChildren(row);
+          }
         });
         this.$refs.table.getData().forEach((row) => {
           if (row.expanded) {
@@ -509,6 +558,7 @@ export default {
               row.fetchedChildren = true;
               this.getChildren(row);
               row.expanded = true;
+              setProjectExpanded(row.uuid, true);
             } else if (
               event.target.tagName.toLowerCase() !== 'a' &&
               ((!$element.treegrid('isLeaf') &&
@@ -520,6 +570,7 @@ export default {
             ) {
               $element.treegrid('expand');
               row.expanded = true;
+              setProjectExpanded(row.uuid, true);
             } else if (
               event.target.tagName.toLowerCase() !== 'a' &&
               ((!$element.treegrid('isLeaf') &&
@@ -531,6 +582,7 @@ export default {
             ) {
               $element.treegrid('collapse');
               row.expanded = false;
+              setProjectExpanded(row.uuid, false);
             }
           }
         },
