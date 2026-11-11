@@ -807,6 +807,7 @@
     "license_text": "라이선스 전문",
     "license_url": "라이선스 URL",
     "licenses": "라이선스",
+    "link": null,
     "loading": "로딩 중",
     "login": "로그인",
     "login_desc": "계정에 로그인하세요",

@@ -806,6 +806,7 @@
     "license_text": "Текст лицензии",
     "license_url": "URL лицензии",
     "licenses": "Лицензии",
+    "link": null,
     "loading": "Загрузка",
     "login": "Вход",
     "login_desc": "Войдите в свой аккаунт",

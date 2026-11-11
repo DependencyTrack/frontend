@@ -806,6 +806,7 @@
     "license_text": "许可证文本",
     "license_url": "许可证 URL",
     "licenses": "许可证",
+    "link": null,
     "loading": "加载中",
     "login": "登录",
     "login_desc": "登录到您的账户",

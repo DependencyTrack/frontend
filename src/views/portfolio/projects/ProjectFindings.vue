@@ -42,8 +42,9 @@
     <audit-drawer
       ref="auditDrawer"
       :title="auditTitle"
-      @change="markAuditRow(true)"
-      @closed="focusAuditRow"
+      :link="findingLink"
+      @change="onAuditChange"
+      @closed="onAuditClosed"
       @saved="onAuditSaved"
     >
       <template #default="{ row }">
@@ -84,20 +85,15 @@ export default {
     BooleanFilterPill,
   },
   beforeCreate() {
-    if (this.$route.params.vulnerability) {
-      if (this.$route.params.affectedComponent) {
-        // search for the last portion of the finding's matrix ID
-        this.initialSearchText =
-          this.$route.params.affectedComponent +
-          ':' +
-          this.$route.params.vulnerability;
-      } else {
-        this.initialSearchText = this.$route.params.vulnerability;
-      } // the route doesn't allow a component to be specified without a vulnerability
-    }
+    const { component, vulnerability } = this.$route.query;
+    this.initialSearchText =
+      component && vulnerability
+        ? `${component}:${vulnerability}`
+        : this.$route.params.vulnerability;
   },
   created() {
     this.options.url = this.apiUrl();
+    this.openLinkedFinding();
   },
   data() {
     return {
@@ -390,6 +386,45 @@ export default {
         isKev: this.showKevOnly === true ? true : null,
         totalCount: 'BOUNDED',
       });
+    },
+    findingRoute(row) {
+      return {
+        path: `/projects/${this.uuid}/findings`,
+        query: {
+          component: row.component.uuid,
+          vulnerability: row.vulnerability.uuid,
+        },
+      };
+    },
+    findingLink(row) {
+      return this.auditLink(this.findingRoute(row));
+    },
+    onAuditChange(row) {
+      this.markAuditRow(true);
+      this.$router.replace({ query: this.findingRoute(row).query });
+    },
+    onAuditClosed(row) {
+      this.focusAuditRow(row);
+      if (this.$route.query.vulnerability) {
+        this.$router.replace({ query: {} });
+      }
+    },
+    async openLinkedFinding() {
+      const { component, vulnerability } = this.$route.query;
+      if (!component || !vulnerability) {
+        return;
+      }
+      const searchText = `${component}:${vulnerability}`;
+      const response = await this.axios.get(
+        `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`,
+        { params: { searchText, suppressed: true } },
+      );
+      const finding = response.data.find(
+        (f) => f.matrix === `${this.uuid}:${searchText}`,
+      );
+      if (finding) {
+        this.$refs.auditDrawer.open([finding], 0);
+      }
     },
     refreshTable: function () {
       this.$refs.table.refresh({

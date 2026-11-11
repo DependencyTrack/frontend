@@ -806,6 +806,7 @@
     "license_text": "Texto de licencia",
     "license_url": "URL de licencia",
     "licenses": "Licencias",
+    "link": null,
     "loading": "Cargando",
     "login": "Acceso",
     "login_desc": "Iniciar sesión en su cuenta",

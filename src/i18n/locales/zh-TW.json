@@ -806,6 +806,7 @@
     "license_text": "授權文字",
     "license_url": "授權網址",
     "licenses": "授權",
+    "link": null,
     "loading": "載入中",
     "login": "登入",
     "login_desc": "登入您的帳號",

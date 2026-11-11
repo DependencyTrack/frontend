@@ -806,6 +806,7 @@
     "license_text": "ライセンステキスト",
     "license_url": "ライセンスURL",
     "licenses": "ライセンス",
+    "link": null,
     "loading": "読み込み中",
     "login": "ログイン",
     "login_desc": "アカウントにサインイン",
