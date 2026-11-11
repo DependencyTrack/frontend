@@ -1,6 +1,7 @@
 server {
   listen      8080;
   server_name _;
+  server_tokens off;
 
   location / {
     root      /opt/owasp/dependency-track-frontend;
