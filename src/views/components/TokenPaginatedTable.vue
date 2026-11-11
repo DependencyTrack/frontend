@@ -180,7 +180,7 @@ export default {
     defaultPageSize: {
       type: Number,
       default: 10,
-      validator: (value) => [5, 10, 15, 20].includes(value),
+      validator: (value) => [5, 10, 15, 20, 50, 100].includes(value),
     },
     pageSizeStorageKey: {
       type: String,
@@ -196,7 +196,7 @@ export default {
     const userOptions = this.options || {};
     const userOnColumnSwitch = userOptions.onColumnSwitch;
     const userOnColumnSwitchAll = userOptions.onColumnSwitchAll;
-    const allowedPageSizes = [5, 10, 15, 20];
+    const allowedPageSizes = [5, 10, 15, 20, 50, 100];
     const storedPageSize = this.readStoredPageSize(allowedPageSizes);
     return {
       currentPageNumber: 1,
