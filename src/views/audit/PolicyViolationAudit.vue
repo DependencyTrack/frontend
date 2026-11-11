@@ -87,6 +87,7 @@
     <audit-drawer
       ref="auditDrawer"
       :title="auditTitle"
+      :link="violationLink"
       @change="markAuditRow(true)"
       @closed="focusAuditRow"
       @saved="onAuditSaved"
@@ -177,6 +178,12 @@ export default {
         row.component,
         row.project,
       );
+    },
+    violationLink(row) {
+      return this.auditLink({
+        path: `/projects/${row.project.uuid}/policyViolations`,
+        query: { component: row.component.uuid, violation: row.uuid },
+      });
     },
     apiUrl() {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}`;

@@ -117,6 +117,9 @@ export default async function globalSetup() {
     `/v1/component/project/${upload.projectUuid}`,
   );
   const services = await api.get(`/v1/service/project/${upload.projectUuid}`);
+  const violations = await api.get(
+    `/v1/violation/project/${upload.projectUuid}`,
+  );
   const policy = await api.send('POST', '/v2/vuln-policies', {
     name: uniqueName('e2e-policy'),
     condition: `vuln.id == "${vulnId}"`,
@@ -136,6 +139,9 @@ export default async function globalSetup() {
     vulnRecommendation,
     violationMessage,
     violationPolicy: violationPolicy.name,
+    violationUuid: violations.find(
+      (v) => v.policyCondition.policy.uuid === violationPolicy.uuid,
+    ).uuid,
     vulnPolicyUuid: policy.uuid,
     workflowRunId: runs.items[0].id,
   };
