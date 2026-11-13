@@ -32,6 +32,7 @@
                 :medium="currentMedium"
                 :low="currentLow"
                 :unassigned="currentUnassigned"
+                :kev="currentKev"
               />
             </div>
           </b-col>
@@ -85,7 +86,7 @@
     <component-details-modal
       v-model="showComponentDetailsModal"
       :component="cloneDeep(component)"
-      v-on:componentUpdated="syncComponentFields"
+      v-on:componentUpdated="loadComponent"
       v-on:showProperties="showComponentPropertiesModal = true"
     />
     <component-properties-modal
@@ -165,6 +166,7 @@ export default {
       currentMedium: 0,
       currentLow: 0,
       currentUnassigned: 0,
+      currentKev: 0,
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
@@ -174,9 +176,19 @@ export default {
     cloneDeep: function (component) {
       return cloneDeep(component);
     },
-    syncComponentFields: function (component) {
-      this.component = component;
-      EventBus.emit('addCrumb', this.componentLabel);
+    loadComponent: function () {
+      let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
+      this.axios.get(componentUrl).then((response) => {
+        this.component = response.data;
+        EventBus.emit(
+          'addCrumb',
+          this.componentLabel,
+          'Project',
+          this.component.project.uuid,
+          this.projectLabel,
+        );
+        setPageTitle(this.componentLabel);
+      });
     },
     redirectToDependencyGraph: function () {
       this.$router.push({
@@ -214,18 +226,7 @@ export default {
     this.uuid = this.$route.params.uuid;
   },
   mounted() {
-    let componentUrl = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${this.uuid}`;
-    this.axios.get(componentUrl).then((response) => {
-      this.component = response.data;
-      EventBus.emit(
-        'addCrumb',
-        this.componentLabel,
-        'Project',
-        this.component.project.uuid,
-        this.projectLabel,
-      );
-      setPageTitle(this.componentLabel);
-    });
+    this.loadComponent();
 
     let metricsUrl = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.uuid}/current`;
     this.axios.get(metricsUrl).then((response) => {
@@ -237,6 +238,7 @@ export default {
         response.data.unassigned,
         0,
       );
+      this.currentKev = common.valueWithDefault(response.data.kev, 0);
       this.currentRiskScore = common.valueWithDefault(
         response.data.inheritedRiskScore,
         0,

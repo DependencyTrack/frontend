@@ -32,6 +32,12 @@
             [heading.title, ...heading.subtitles].join(', ')
           }}</span></span
         >
+        <copy-to-clipboard-button
+          v-if="row && link"
+          :value="link(row)"
+          :label="$t('message.link')"
+          size="sm"
+        />
         <!-- aria-disabled, not disabled: a disabled button would drop focus at the first or last row -->
         <b-button
           size="sm"
@@ -67,9 +73,13 @@
 </template>
 
 <script>
+import CopyToClipboardButton from './CopyToClipboardButton.vue';
+
 export default {
+  components: { CopyToClipboardButton },
   props: {
     title: Function,
+    link: Function,
   },
   emits: ['change', 'closed', 'saved'],
   provide() {

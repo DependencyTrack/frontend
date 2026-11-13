@@ -1,5 +1,9 @@
 export default {
   methods: {
+    auditLink(route) {
+      const { href } = this.$router.resolve(route);
+      return new URL(href, window.location.href).href;
+    },
     auditRowAttributes(row) {
       const { title, subtitles } = this.auditTitle(row);
       return { tabindex: '0', 'aria-label': [title, ...subtitles].join(', ') };

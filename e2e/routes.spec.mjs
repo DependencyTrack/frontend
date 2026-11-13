@@ -67,7 +67,7 @@ const routes = [
   },
   {
     path: `${project}/findings/:component/:vulnUuid`,
-    landmark: inTab(/Audit Vulnerabilities/, vulnIdLink),
+    landmark: tab(/Audit Vulnerabilities/),
     allow: [noAnalysis],
   },
   { path: `${project}/epss`, landmark: tab(/Exploit Predictions/) },

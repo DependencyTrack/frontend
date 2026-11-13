@@ -501,6 +501,12 @@ td a.detail-icon {
   color: var(--dt-text-muted);
 }
 
+.multiselect__single {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .multiselect__input:hover,
 .multiselect__single:hover {
   border-color: var(--dt-surface-input);
@@ -573,7 +579,7 @@ td a.detail-icon {
   background: var(--dt-surface-input);
   color: var(--dt-text);
   height: $input-height;
-  padding: 0.375rem 0.75rem;
+  padding: 0.375rem 2.5rem 0.375rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 400;
 }

@@ -227,6 +227,7 @@
                 :medium="currentMedium"
                 :low="currentLow"
                 :unassigned="currentUnassigned"
+                :kev="currentKev"
               />
             </div>
           </b-col>
@@ -398,7 +399,7 @@
       v-model="showProjectDetailsModal"
       :project-input="project"
       :uuid="this.uuid"
-      v-on:projectUpdated="syncProjectFields"
+      v-on:projectUpdated="initialize"
       v-on:showProperties="showProjectPropertiesModal = true"
     />
     <project-properties-modal
@@ -543,6 +544,7 @@ export default {
       currentMedium: 0,
       currentLow: 0,
       currentUnassigned: 0,
+      currentKev: 0,
       currentRiskScore: 0,
       isAnalysisRequested: false,
       nowTick: Date.now(),
@@ -552,11 +554,6 @@ export default {
   methods: {
     cloneDeep: function (component) {
       return cloneDeep(component);
-    },
-    syncProjectFields: function (project) {
-      this.project = project;
-      EventBus.emit('addCrumb', this.projectLabel);
-      setPageTitle(this.projectLabel);
     },
     initialize: function () {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
@@ -590,6 +587,10 @@ export default {
           );
           this.currentUnassigned = common.valueWithDefault(
             this.project.metrics.unassigned,
+            0,
+          );
+          this.currentKev = common.valueWithDefault(
+            this.project.metrics.kev,
             0,
           );
           this.currentRiskScore = common.valueWithDefault(

@@ -206,20 +206,11 @@ function configRoutes() {
           },
         },
         {
-          path: 'projects/:uuid/findings/:affectedComponent/:vulnerability',
-          name: 'Project Finding Lookup',
-          props: (route) => ({
-            uuid: route.params.uuid,
-            affectedComponent: route.params.componentUuid,
-            vulnerability: route.params.vulnerability,
+          path: 'projects/:uuid/findings/:component/:vulnerability',
+          redirect: ({ params: { uuid, component, vulnerability } }) => ({
+            path: `/projects/${uuid}/findings`,
+            query: { component, vulnerability },
           }),
-          component: Project,
-          meta: {
-            i18n: 'message.projects',
-            sectionPath: '/projects',
-            sectionName: 'Projects',
-            permissions: ['VIEW_PORTFOLIO'],
-          },
         },
         {
           path: 'components',
@@ -1289,7 +1280,10 @@ function configRoutes() {
 const router = createRouter({
   history: createWebHistory(getContextPath()),
   linkActiveClass: 'open active',
-  scrollBehavior(_to, _from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
+    // NB: Focusing a component in the dependency graph is a navigation, but stays on the same page.
+    const inGraph = ({ path }) => path.includes('/dependencyGraph');
+    if (inGraph(to) && inGraph(from)) return false;
     if (!savedPosition) return { top: 0 };
     // NB: Tables render their rows after loading, so the page may still be too short to scroll back.
     const deadline = Date.now() + 2000;

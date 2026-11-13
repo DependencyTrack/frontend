@@ -16,6 +16,10 @@ $dt-themes: (
     line: #52525b,
     border: rgba(#fff, .08),
     border-control: #6b6b76,
+    graph-edge: #6e769c,
+    graph-outgoing: #d65cb0,
+    graph-glow-accent: rgba(#6c8cff, .26),
+    graph-glow-brand: rgba(#ff00cf, .1),
     accent: #6c8cff,
     on-accent: #101114,
     hover: rgba(#6c8cff, .12),
@@ -26,7 +30,7 @@ $dt-themes: (
     inverse-fg: #101114,
     secondary: #52525b,
     severity-critical-text: #f2555a,
-    severity-high-text: #ff9a1f,
+    severity-high-text: #fb9218,
     severity-medium-text: #ffd43b,
     severity-low-text: #86e0a5,
     severity-info-text: #6c8cff,
@@ -47,6 +51,10 @@ $dt-themes: (
     line: #cdd4de,
     border: rgba(#1c2230, .12),
     border-control: #7d8797,
+    graph-edge: #5d6c99,
+    graph-outgoing: #b0289a,
+    graph-glow-accent: rgba(#3451d1, .12),
+    graph-glow-brand: rgba(#c2009c, .07),
     accent: #3451d1,
     on-accent: #fff,
     hover: rgba(#1c2230, .06),
@@ -62,11 +70,11 @@ $dt-themes: (
     severity-low-text: #1b6e3d,
     severity-info-text: #3451d1,
     severity-unassigned-text: #62626d,
-    severity-critical-fill: #7a1018,
-    severity-high-fill: #9a4a0a,
-    severity-medium-fill: #9a7a10,
-    severity-low-fill: #1f8f6c,
-    severity-unassigned-fill: #4a4a58,
+    severity-critical-fill: #b2003a,
+    severity-high-fill: #d9570a,
+    severity-medium-fill: #f2b200,
+    severity-low-fill: #00a5ae,
+    severity-unassigned-fill: #666a76,
   ),
 );
 
@@ -93,7 +101,7 @@ $white:      #fff;
 
 $blue:       dt-dark(accent) !default;
 $red:        #f2555a !default;
-$orange:     #ff9a1f !default;
+$orange:     #fb9218 !default;
 $yellow:     #ffd43b !default;
 $green:      #86e0a5 !default;
 $light-blue: #6DD9FF !default;

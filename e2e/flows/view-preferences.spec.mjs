@@ -1,8 +1,6 @@
 import { seed } from '../api.mjs';
 import { test, expect, login } from '../test.mjs';
 
-const graph = (s) =>
-  `projects/${s.project.uuid}/dependencyGraph/${s.componentUuid}`;
 const findings = (s) => `api/v1/finding/project/${s.project.uuid}?suppressed=`;
 const epss = (s) => `api/v1/finding/project/${s.project.uuid}?epssFrom=0`;
 
@@ -18,12 +16,6 @@ const switches = [
     label: 'Show flat project view',
     table: () => 'api/v1/project/concise?',
     param: 'onlyRoot=false',
-  },
-  { view: 'dependency graph', url: graph, label: 'Show complete graph' },
-  {
-    view: 'dependency graph',
-    url: graph,
-    label: 'Highlight outdated components',
   },
   {
     view: 'affected projects',

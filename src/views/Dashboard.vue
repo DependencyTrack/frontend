@@ -576,6 +576,17 @@
                 </b-col>
               </b-row>
             </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-danger">
+                    <small class="text-muted">{{ $t('message.kev') }}</small
+                    ><br />
+                    <strong class="h4">{{ kev }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -610,7 +621,7 @@ export default {
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('portfolioMetricDays') ?? 30,
       totalProjects: 0,
       vulnerableProjects: 0,
       vulnerableProjectsPercent: 0,
@@ -649,6 +660,7 @@ export default {
 
       vulnerabilities: 0,
       suppressed: 0,
+      kev: 0,
       critical: 0,
       criticalPercent: 0,
       high: 0,
@@ -796,6 +808,7 @@ export default {
         '0',
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
+      this.kev = common.valueWithDefault(metric.kev, '0');
       this.critical = common.valueWithDefault(metric.critical, '0');
       this.criticalPercent = common.calcProgressPercent(
         this.vulnerabilities,
@@ -835,14 +848,14 @@ export default {
     fetchMetrics() {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${this.metricDays}/days`;
       this.axios.get(url).then((response) => {
-        this.$refs.portfolioWidgetRow.render(response.data);
-        this.$refs.chartPortfolioVulnerabilities.render(response.data);
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartAuditingFindingsProgress.render(response.data);
-        this.$refs.chartAuditingViolationsProgress.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationsClassification.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
+        this.$refs.portfolioWidgetRow?.render(response.data);
+        this.$refs.chartPortfolioVulnerabilities?.render(response.data);
+        this.$refs.chartProjectVulnerabilities?.render(response.data);
+        this.$refs.chartAuditingFindingsProgress?.render(response.data);
+        this.$refs.chartAuditingViolationsProgress?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationsClassification?.render(response.data);
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
         this.extractStats(response.data);
       });
     },
@@ -854,12 +867,6 @@ export default {
       }
       this.fetchMetrics();
     },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('portfolioMetricDays') !== null
-        ? localStorage.getItem('portfolioMetricDays')
-        : 30;
   },
   mounted() {
     if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {

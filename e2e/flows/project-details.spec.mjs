@@ -1,6 +1,8 @@
 import { seed, uniqueName } from '../api.mjs';
 import { test, expect, login, search } from '../test.mjs';
 
+const PROJECT_METRICS = '**/api/v1/metrics/project/*/days/*';
+
 test('edit a project in the details modal', async ({ page, api }) => {
   const removed = uniqueName('tag');
   const { uuid } = await api.send('PUT', '/v1/project', {
@@ -73,6 +75,30 @@ test('filter the versions to switch to', async ({ page, api }) => {
   await page.getByRole('menuitem', { name: '3.0.0' }).click();
   await page.getByRole('button', { name: '3.0.0' }).click();
   await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
+});
+
+test('list all versions after deactivating a project', async ({
+  page,
+  api,
+}) => {
+  const name = uniqueName('e2e-versions');
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name,
+    version: '1.0.0',
+  });
+  await api.send('PUT', '/v1/project', { name, version: '2.0.0' });
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  const modal = page.getByRole('dialog', { name: 'Project Details' });
+  await modal.getByText('Active', { exact: true }).click();
+  await modal.getByRole('button', { name: 'Update' }).click();
+  await expect(page.getByText('Project updated')).toBeVisible();
+  await expect(modal).toBeHidden();
+
+  await page.getByRole('button', { name: '1.0.0' }).click();
+  await expect(page.getByRole('menuitem', { name: '2.0.0' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: '1.0.0' })).toBeVisible();
 });
 
 test('delete a project from its details', async ({ page, api }) => {
@@ -194,4 +220,30 @@ test('load the findings of a project only when opening their tab', async ({
     .getByRole('tab', { name: 'Audit Vulnerabilities', exact: true })
     .click();
   await loaded;
+});
+
+test('leave a project before its metrics have loaded', async ({ page }) => {
+  const { project } = seed();
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(PROJECT_METRICS, async (route) => {
+    await held;
+    await route.continue();
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}`);
+  await expect(
+    page.getByRole('heading', { name: 'Project Vulnerabilities' }),
+  ).toBeVisible();
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: 'Projects' })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+
+  const loaded = page.waitForResponse(PROJECT_METRICS);
+  release();
+  await (await loaded).finished();
+  // Lets the app handle the response before the problems fixture checks for page errors.
+  await page.evaluate(() => {});
 });

@@ -140,11 +140,18 @@ function formatDate(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
-export async function pickOption(within, label, option) {
+export async function pickOption(within, label, option, query = option) {
   const search = within.getByRole('textbox', { name: label });
   await within.getByRole('combobox').filter({ has: search }).click();
-  await search.fill(option);
+  await search.fill(query);
   await within.getByRole('option', { name: option, exact: true }).click();
+}
+
+export async function highlightedOption(within, label) {
+  const id = await within
+    .getByRole('textbox', { name: label })
+    .getAttribute('aria-activedescendant');
+  return within.getByRole('option').and(within.locator(`[id="${id}"]`));
 }
 
 // Selects a row by clicking its text rather than its checkbox. Pass text when name is a link.
