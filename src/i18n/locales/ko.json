@@ -11,6 +11,8 @@
     "alert_deleted": "알림이 삭제되었습니다",
     "alert_log_successful_publish": "발행 성공 로그 기록",
     "alert_log_successful_publish_help": "문제가 발생했을 때만 로그를 남기는 대신, 알림이 대상으로 성공적으로 발행될 때마다 로그 메시지를 남깁니다. 누락된 알림을 디버깅하거나 알림 발행을 감사 가능하게 만드는 데 도움이 됩니다.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Cron 표현식",
     "alert_schedule_last_triggered_at": "마지막 실행 시각",
     "alert_schedule_next_trigger_at": "다음 실행 시각",

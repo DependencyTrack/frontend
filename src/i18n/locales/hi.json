@@ -11,6 +11,8 @@
     "alert_deleted": "अलर्ट हटा दिया गया",
     "alert_log_successful_publish": "लॉग सफल प्रकाशन",
     "alert_log_successful_publish_help": "गंतव्य पर अलर्ट के सफल प्रकाशन पर लॉग संदेश उत्सर्जित करें, न कि केवल समस्या आने पर लॉग उत्सर्जित करें। गायब अलर्ट को डीबग करने या अलर्ट प्रकाशन को ऑडिट करने योग्य बनाने में सहायता करता है।",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "क्रोन अभिव्यक्ति",
     "alert_schedule_last_triggered_at": "अंतिम ट्रिगर",
     "alert_schedule_next_trigger_at": "अगला ट्रिगर पर",

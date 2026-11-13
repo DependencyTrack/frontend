@@ -11,6 +11,8 @@
     "alert_deleted": "Сповіщення видалено",
     "alert_log_successful_publish": "Логувати успішну публікацію",
     "alert_log_successful_publish_help": "Видавати повідомлення журналу після успішної публікації сповіщення в пункт призначення, замість того, щоб логувати лише виявлені проблеми.\nДопомагає в налагодженні відсутніх сповіщень або уможливлює аудит публікації сповіщень.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Cron вираз",
     "alert_schedule_last_triggered_at": "Востаннє спрацювало",
     "alert_schedule_next_trigger_at": "Наступне спрацювання",

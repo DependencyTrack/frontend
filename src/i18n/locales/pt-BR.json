@@ -11,6 +11,8 @@
     "alert_deleted": "Alerta excluído",
     "alert_log_successful_publish": "Registrar publicação bem-sucedida",
     "alert_log_successful_publish_help": "Emita uma mensagem de log após a publicação bem-sucedida do alerta no destino, em vez de emitir logs apenas quando forem encontrados problemas. Ajuda a depurar alertas ausentes ou a tornar a publicação de alertas auditável.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Expressão de Cron",
     "alert_schedule_last_triggered_at": "Último desencadeado em",
     "alert_schedule_next_trigger_at": "Próximo gatilho em",

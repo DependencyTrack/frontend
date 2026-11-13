@@ -11,6 +11,8 @@
     "alert_deleted": "Alerta eliminada",
     "alert_log_successful_publish": "Registrar publicación exitosa",
     "alert_log_successful_publish_help": "Emita un mensaje de registro tras la publicación exitosa de la alerta en el destino, en lugar de solo emitir registros cuando se encuentren problemas. Ayuda a depurar alertas faltantes o hacer que la publicación de alertas sea auditable.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Expresión cron",
     "alert_schedule_last_triggered_at": "Última activación en",
     "alert_schedule_next_trigger_at": "Siguiente activador en",

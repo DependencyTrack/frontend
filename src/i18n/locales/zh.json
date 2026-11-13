@@ -11,6 +11,8 @@
     "alert_deleted": "已删除告警",
     "alert_log_successful_publish": "告警日志成功发送",
     "alert_log_successful_publish_help": "成功将告警发布到目标后发送日志消息（而不是仅在遇到问题时才发送日志），便于调试丢失的告警以及审计告警消息。",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Cron 表达式",
     "alert_schedule_last_triggered_at": "最后触发时间",
     "alert_schedule_next_trigger_at": "下次触发时间",
