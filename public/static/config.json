@@ -9,5 +9,7 @@
   "OIDC_FLOW": "code",
   "OIDC_ISSUER": "",
   "OIDC_LOGIN_BUTTON_TEXT": "",
-  "OIDC_SCOPE": "openid email profile"
+  "OIDC_SCOPE": "openid email profile",
+  "SAML_ENABLED": "",
+  "SAML_LOGIN_BUTTON_TEXT": ""
 }
