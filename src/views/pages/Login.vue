@@ -278,10 +278,17 @@ export default {
         return Promise.resolve(false);
       }
 
-      const url = this.$api.BASE_URL + '/' + this.$api.URL_SAML_AVAILABILITY;
+      // The API server reports SAML in its public capabilities. Unlike other capabilities, an absent
+      // namespace is not taken as enabled, because API servers without SAML support do not report it.
+      const url =
+        this.$api.BASE_URL + '/' + this.$api.URL_SYSTEM_CAPABILITIES_PUBLIC;
       return axios
         .get(url)
-        .then((result) => result.status === 200 && result.data.enabled === true)
+        .then(
+          (result) =>
+            result.status === 200 &&
+            result.data.capabilities?.saml?.disabled === false,
+        )
         .catch(() => {
           this.$toastr.e(this.$t('message.saml_availability_check_failed'));
           return false;
