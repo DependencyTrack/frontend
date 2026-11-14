@@ -48,7 +48,16 @@ export default defineConfig(({ mode }) => {
       port: 8080,
       proxy: env.VUE_APP_SERVER_URL ? { '/api': env.VUE_APP_SERVER_URL } : {},
     },
-    test: { include: ['src/**/*.test.js'] },
+    test: {
+      include: ['src/**/*.test.js'],
+      // Report only: no thresholds are enforced.
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'lcov'],
+        reportsDirectory: 'coverage',
+        include: ['src/**/*.{js,vue}'],
+      },
+    },
     build: {
       rolldownOptions: {
         input: ['index.html', 'static/oidc-callback.html'],

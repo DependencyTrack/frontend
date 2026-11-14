@@ -24,6 +24,7 @@
     "vue-i18n-extract": "vue-i18n-extract report --ci",
     "remove-unused-i18n": "vue-i18n-extract --remove",
     "test": "vitest run",
+    "test-coverage": "vitest run --coverage",
     "e2e": "playwright test -c e2e"
   },
   "dependencies": {
@@ -63,6 +64,7 @@
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.65.0",
     "@vitejs/plugin-vue": "6.0.10",
+    "@vitest/coverage-v8": "5.1.0",
     "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-playwright": "2.12.2",

@@ -6,7 +6,12 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/', 'e2e/playwright-report/', 'e2e/test-results/'],
+    ignores: [
+      'dist/',
+      'coverage/',
+      'e2e/playwright-report/',
+      'e2e/test-results/',
+    ],
   },
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
