@@ -1,6 +1,25 @@
 import jQuery from 'jquery';
+import {
+  decodeFilters,
+  encodeFilters,
+  filterQueryKeys,
+} from '@/shared/filterQuery';
+
+const sortedJson = (query) =>
+  JSON.stringify(Object.entries(query).sort(([a], [b]) => (a < b ? -1 : 1)));
 
 export default {
+  props: {
+    // Mirrors the filters in the URL query: restores them on creation, so the
+    // first request is the filtered one. Needs typed filter defs (see
+    // filterQuery.js). The host builds that request's URL in its own created(),
+    // from filterQueryParams(), after this restore.
+    filterUrlSync: { type: Boolean, default: false },
+    // Whether this view may write the query and follow its changes. Views that
+    // share a route set it for the one the route points at, so they never fight
+    // over the URL.
+    filterUrlActive: { type: Boolean, default: true },
+  },
   data: () => ({
     booleanFilters: [],
     pendingFilters: {},
@@ -15,11 +34,14 @@ export default {
     },
   },
   created() {
+    if (this.filterUrlSync) {
+      // Before the watchers below exist, so a bookmark doesn't look like an edit.
+      this.applyFiltersFromRoute();
+    }
     this.allFilterDefs.forEach((def) => {
       const name = def.name;
-      const isBoolean =
-        this.booleanFilters && this.booleanFilters.includes(name);
-      const dataKey = isBoolean ? name : name + 'Filter';
+      const isBoolean = this.isBooleanFilter(name);
+      const dataKey = this.filterDataKey(name);
 
       this.$watch(dataKey, (val) => {
         if (!isBoolean) {
@@ -30,8 +52,27 @@ export default {
         if (!this._clearing && typeof this.refreshTable === 'function') {
           this.refreshTable();
         }
+        this.writeFiltersToRoute();
       });
     });
+  },
+  watch: {
+    // Back and forward, or a link, changed the filters from outside.
+    '$route.query'() {
+      if (
+        this.filterUrlSync &&
+        this.filterUrlActive &&
+        this.applyFiltersFromRoute()
+      ) {
+        this.refreshTable();
+      }
+    },
+    // A tab that was hidden may be stale compared to what the URL now says.
+    filterUrlActive(active) {
+      if (active && this.filterUrlSync && this.applyFiltersFromRoute()) {
+        this.refreshTable();
+      }
+    },
   },
   mounted() {
     // Move bootstrap-table's built-in toolbar controls (search, refresh, column
@@ -59,6 +100,56 @@ export default {
     }
   },
   methods: {
+    typedFilterDefs() {
+      return this.allFilterDefs.filter((def) => def.type);
+    },
+    // The data property holding a filter's value.
+    filterDataKey(name) {
+      return this.isBooleanFilter(name) ? name : name + 'Filter';
+    },
+    isBooleanFilter(name) {
+      return !!this.booleanFilters && this.booleanFilters.includes(name);
+    },
+    // Query parameters, named like the REST API's, for the filters set. Feeds
+    // both the address bar and the views' apiUrl(), so they can't drift apart.
+    filterQueryParams() {
+      const defs = this.typedFilterDefs();
+      return encodeFilters(
+        defs,
+        Object.fromEntries(
+          defs.map((def) => [def.name, this[this.filterDataKey(def.name)]]),
+        ),
+      );
+    },
+    // Returns whether any filter changed.
+    applyFiltersFromRoute() {
+      const defs = this.typedFilterDefs();
+      const decoded = decodeFilters(defs, this.$route.query);
+      let changed = false;
+      for (const def of defs) {
+        const target = decoded[def.name];
+        const key = this.filterDataKey(def.name);
+        const encode = (value) =>
+          JSON.stringify(encodeFilters([def], { [def.name]: value }));
+        if (encode(target) !== encode(this[key])) {
+          this[key] = target;
+          changed = true;
+        }
+      }
+      return changed;
+    },
+    // Replaces rather than pushes, so tweaking a filter leaves no history behind.
+    writeFiltersToRoute() {
+      if (!this.filterUrlSync || !this.filterUrlActive) return;
+      const owned = filterQueryKeys(this.typedFilterDefs());
+      const query = Object.fromEntries(
+        Object.entries(this.$route.query).filter(([key]) => !owned.has(key)),
+      );
+      Object.assign(query, this.filterQueryParams());
+      if (sortedJson(query) !== sortedJson(this.$route.query)) {
+        this.$router.replace({ query, hash: this.$route.hash });
+      }
+    },
     _queryEl(selector) {
       // `$el` is a comment placeholder when the render function throws,
       // which has no querySelector. Guard so lifecycle hooks don't pile
@@ -94,7 +185,7 @@ export default {
       });
     },
     hasFilterValue(name) {
-      if (this.booleanFilters && this.booleanFilters.includes(name)) {
+      if (this.isBooleanFilter(name)) {
         return !!this[name];
       }
       const val = this[name + 'Filter'];
@@ -104,7 +195,7 @@ export default {
       return this.pendingFilters[name] || this.hasFilterValue(name);
     },
     showFilter(name) {
-      if (this.booleanFilters && this.booleanFilters.includes(name)) {
+      if (this.isBooleanFilter(name)) {
         this[name] = true;
         return;
       }
@@ -125,7 +216,7 @@ export default {
       this._clearing = true;
       try {
         this.allFilterDefs.forEach((def) => {
-          if (this.booleanFilters && this.booleanFilters.includes(def.name)) {
+          if (this.isBooleanFilter(def.name)) {
             this[def.name] = false;
           } else {
             const key = def.name + 'Filter';
