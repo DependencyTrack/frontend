@@ -317,3 +317,9 @@ export function bomSidebarIndicator(page, projectName) {
     name: new RegExp(`BOM processing.*${projectName}`),
   });
 }
+
+export async function logout(page, username = 'admin') {
+  await page.getByRole('button', { name: username, exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Logout' }).click();
+  await expect(page).toHaveURL(/\/login/);
+}

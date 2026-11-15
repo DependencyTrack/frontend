@@ -186,4 +186,35 @@ describe('createStatusPoller', () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(fetchStatus).toHaveBeenCalledTimes(2);
   });
+
+  it.each([400, 403, 404])(
+    'stops at once on a %i, which a retry cannot fix',
+    async (status) => {
+      const fetchStatus = vi.fn(async () => {
+        throw { response: { status } };
+      });
+      const poller = createStatusPoller(fetchStatus);
+      const listener = vi.fn();
+      poller.subscribe('t', listener);
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      expect(fetchStatus).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledWith({ error: true, final: true });
+    },
+  );
+
+  it.each([500, 503])('retries a %i like a network error', async (status) => {
+    const failure = Object.assign(new Error('server'), {
+      response: { status },
+    });
+    const fetchStatus = sequence(failure, failure, completed);
+    const poller = createStatusPoller(fetchStatus);
+    const listener = vi.fn();
+    poller.subscribe('t', listener);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fetchStatus).toHaveBeenCalledTimes(3);
+    expect(listener).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 'COMPLETED', final: true }),
+    );
+  });
 });

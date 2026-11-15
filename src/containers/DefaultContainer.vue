@@ -46,32 +46,6 @@
             </template>
           </ul>
         </nav>
-        <ul v-if="activeBomUploads.length > 0" class="nav sidebar-bom-uploads">
-          <li
-            v-for="upload in activeBomUploads"
-            :key="upload.projectUuid"
-            class="nav-item"
-          >
-            <router-link
-              :to="{ name: 'Project', params: { uuid: upload.projectUuid } }"
-              class="nav-link"
-            >
-              <b-spinner small class="nav-icon" aria-hidden="true" />
-              <span class="sidebar-bom-upload-text"
-                >{{ $t('message.bom_processing_sidebar_title') }}
-                <span class="d-block small text-muted"
-                  >{{ projectLabel(upload) }} &middot;
-                  <template v-if="upload.status === 'PENDING'">{{
-                    $t('message.bom_status_queued')
-                  }}</template
-                  ><template v-else>{{
-                    $t('message.bom_status_running')
-                  }}</template></span
-                ></span
-              >
-            </router-link>
-          </li>
-        </ul>
         <ul class="nav sidebar-profile">
           <ProfileDropdown
             @editProfile="showProfileEditModal = true"
@@ -79,7 +53,29 @@
           />
         </ul>
         <div class="sidebar-footer">
+          <router-link
+            v-if="activeBomUploads.length > 0"
+            :to="{
+              name: 'Project',
+              params: { uuid: activeBomUploads[0].projectUuid },
+            }"
+            class="sidebar-bom-indicator"
+            :title="bomUploadsSummary.join('\n')"
+            :aria-label="bomUploadsLabel"
+          >
+            <b-spinner small aria-hidden="true" />
+            <span class="sidebar-bom-indicator-text" aria-hidden="true">{{
+              $t('message.bom_processing_sidebar_title')
+            }}</span>
+            <b-badge
+              v-if="activeBomUploads.length > 1"
+              variant="info"
+              aria-hidden="true"
+              >{{ activeBomUploads.length }}</b-badge
+            >
+          </router-link>
           <button
+            v-else
             class="sidebar-about"
             type="button"
             @click="showAboutModal = true"
@@ -375,6 +371,23 @@ export default {
       return Object.values(bomUploads).filter((upload) =>
         isActiveStatus(upload.status),
       );
+    },
+    // One line per upload: project and phase.
+    bomUploadsSummary() {
+      return this.activeBomUploads.map(
+        (upload) =>
+          `${this.projectLabel(upload)} · ${
+            upload.status === 'PENDING'
+              ? this.$t('message.bom_status_queued')
+              : this.$t('message.bom_status_running')
+          }`,
+      );
+    },
+    bomUploadsLabel() {
+      const title = this.$t('message.bom_processing_sidebar_title');
+      return this.activeBomUploads.length > 1
+        ? `${title} (${this.activeBomUploads.length}): ${this.bomUploadsSummary.join(', ')}`
+        : `${title}: ${this.bomUploadsSummary[0]}`;
     },
     finishedBomUploads() {
       return Object.values(bomUploads).filter((upload) =>

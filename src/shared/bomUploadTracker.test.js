@@ -74,6 +74,15 @@ describe('bomUploadTracker', () => {
     expect(tracker.getTrackedUpload('project-2')).not.toBeNull();
   });
 
+  it('forgets every upload at once', async () => {
+    tracker.trackUpload(upload());
+    tracker.trackUpload(upload({ projectUuid: 'project-2', token: 'token-9' }));
+    tracker.clearTrackedUploads();
+    expect(tracker.listTrackedUploads()).toEqual([]);
+    await load(storage);
+    expect(tracker.listTrackedUploads()).toEqual([]);
+  });
+
   it('ignores corrupt stored data', async () => {
     await load(createStorage({ 'dtrack.bomUploads': '{not json' }));
     expect(tracker.listTrackedUploads()).toEqual([]);

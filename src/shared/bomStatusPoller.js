@@ -8,7 +8,7 @@ export const MAX_CONSECUTIVE_ERRORS = 5;
  * There is at most one poll loop per token, shared by all subscribers.
  * A loop ends when the status is terminal or unknown (the server forgets
  * tokens after a while), when too many requests in a row fail,
- * or when the last subscriber leaves.
+ * or when the last subscriber leaves. A 4xx response ends it at once, as a retry cannot help.
  *
  * Listeners receive `{ status, processing, final }`, or `{ error: true, final: true }`
  * when the loop gave up. `status` is undefined for an unknown token.
@@ -39,10 +39,14 @@ export function createStatusPoller(fetchStatus) {
         final: !isActiveStatus(response.status),
       };
       loop.consecutiveErrors = 0;
-    } catch {
+    } catch (error) {
       loop.consecutiveErrors++;
+      // A refusal such as 403 or 404 gives the same answer next time.
+      // Network errors and server errors may pass.
+      const status = error?.response?.status;
+      const retryable = !(status >= 400 && status < 500);
       result =
-        loop.consecutiveErrors >= MAX_CONSECUTIVE_ERRORS
+        !retryable || loop.consecutiveErrors >= MAX_CONSECUTIVE_ERRORS
           ? { error: true, final: true }
           : null;
     }

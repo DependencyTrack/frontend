@@ -59,6 +59,10 @@ export function listTrackedUploads() {
   return Object.values(readAll());
 }
 
+export function clearTrackedUploads() {
+  writeAll({});
+}
+
 export function untrackUpload(projectUuid) {
   const remaining = { ...readAll() };
   delete remaining[projectUuid];

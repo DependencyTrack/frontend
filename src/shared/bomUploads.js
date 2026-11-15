@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import globals from './globals';
 import { createStatusPoller } from './bomStatusPoller';
 import {
+  clearTrackedUploads,
   listTrackedUploads,
   trackUpload,
   untrackUpload,
@@ -17,7 +18,8 @@ const unsubscribers = new Map();
 
 const poller = createStatusPoller(async (token) => {
   const url = `${globals.$api.BASE_URL}/${globals.$api.URL_BOM_TOKEN}/${token}`;
-  return (await axios.get(url)).data;
+  // Silent: the global error handler must not toast failures of background polls.
+  return (await axios.get(url, { silent: true })).data;
 });
 
 function follow(upload) {
@@ -68,4 +70,17 @@ export function acknowledgeBomUpload(projectUuid) {
   unsubscribers.delete(projectUuid);
   delete bomUploads[projectUuid];
   untrackUpload(projectUuid);
+}
+
+/**
+ * Forgets every upload and stops all polling, e.g. when the session ends,
+ * so that the next user of the browser tab does not inherit them.
+ */
+export function forgetAllBomUploads() {
+  unsubscribers.forEach((unsubscribe) => unsubscribe());
+  unsubscribers.clear();
+  Object.keys(bomUploads).forEach(
+    (projectUuid) => delete bomUploads[projectUuid],
+  );
+  clearTrackedUploads();
 }

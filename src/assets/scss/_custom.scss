@@ -663,32 +663,6 @@ td a.detail-icon {
   }
 }
 
-.sidebar .sidebar-bom-uploads {
-  flex: 0 0 auto;
-  min-height: 0;
-  border-top: 1px solid var(--dt-border);
-
-  .nav-link {
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-start;
-    width: 100%;
-    overflow: hidden;
-    text-align: start;
-    white-space: normal;
-  }
-
-  .nav-icon {
-    flex: none;
-    margin-top: 0.15rem;
-  }
-
-  .sidebar-bom-upload-text {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-}
-
 .sidebar-footer {
   display: flex;
   flex: 0 0 $sidebar-minimizer-height;
@@ -696,6 +670,30 @@ td a.detail-icon {
 
   .sidebar-minimizer {
     background-color: transparent;
+  }
+}
+
+.sidebar-bom-indicator {
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0 1rem;
+  overflow: hidden;
+  font-size: 85%;
+  color: var(--dt-text-muted);
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--dt-text-heading);
+    text-decoration: none;
+  }
+
+  .sidebar-bom-indicator-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -736,8 +734,7 @@ td a.detail-icon {
     }
 
     // Same hover flyout as the nav items. The open menu is anchored to the toggle, so the flyout waits until it closes.
-    .sidebar-profile,
-    .sidebar-bom-uploads {
+    .sidebar-profile {
       .nav-item {
         width: $sidebar-minimized-width;
         overflow: hidden;
@@ -764,6 +761,23 @@ td a.detail-icon {
 
     .sidebar-brand-minimized {
       display: inline;
+    }
+
+    // The minimized sidebar has room to stack the indicator above the minimizer.
+    .sidebar-footer:has(.sidebar-bom-indicator) {
+      flex-direction: column;
+      flex-basis: auto;
+
+      .sidebar-bom-indicator {
+        flex: 0 0 $sidebar-minimizer-height;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .sidebar-bom-indicator-text,
+      .badge {
+        display: none;
+      }
     }
   }
 }

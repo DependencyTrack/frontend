@@ -6,6 +6,7 @@ import {
   controlBomTokenStatus,
   expect,
   login,
+  logout,
   openSidebarLink,
   search,
   serveBomTokenStatuses,
@@ -350,5 +351,194 @@ test.describe('leaving and returning', () => {
 
     await page.reload();
     await expect(banner).toContainText(/Started [45]m ago/);
+  });
+});
+
+test.describe('background status polls', () => {
+  async function followUpload(page, project) {
+    await login(page);
+    await page.goto(`projects/${project.uuid}`);
+    await trackBomUpload(page, {
+      projectUuid: project.uuid,
+      projectName: project.name,
+      projectVersion: '1.0.0',
+    });
+  }
+
+  test('do not toast a server error and keep the banner', async ({
+    page,
+    api,
+    problems,
+  }) => {
+    // The status endpoint fails on purpose. A background poll must stay quiet about it.
+    problems.allow(/^GET \/api\/v1\/bom\/token\/.* 500$/);
+    const project = await createProject(api);
+    let polls = 0;
+    await page.route('**/api/v1/bom/token/**', (route) => {
+      polls++;
+      return route.fulfill({
+        status: 500,
+        contentType: 'application/problem+json',
+        json: { title: 'Poll broke', detail: 'Poll detail', status: 500 },
+      });
+    });
+    await followUpload(page, project);
+    await page.reload();
+    await expect.poll(() => polls).toBeGreaterThanOrEqual(2);
+    await expect(page.getByText('Poll detail')).toBeHidden();
+    await expect(page.getByText('Poll broke')).toBeHidden();
+    await expect(page.getByText('Server Error')).toBeHidden();
+    // A server error may pass, so the upload still counts as queued.
+    await expect(
+      bomStatusBanner(page, 'BOM queued for processing'),
+    ).toBeVisible();
+  });
+
+  test('stop at once and stay quiet on a refusal', async ({
+    page,
+    api,
+    problems,
+  }) => {
+    problems.allow(/^GET \/api\/v1\/bom\/token\/.* 403$/);
+    const project = await createProject(api);
+    let polls = 0;
+    await page.route('**/api/v1/bom/token/**', (route) => {
+      polls++;
+      return route.fulfill({
+        status: 403,
+        contentType: 'application/problem+json',
+        json: { title: 'Poll refused', detail: 'Poll detail', status: 403 },
+      });
+    });
+    await followUpload(page, project);
+    await page.reload();
+    await expect.poll(() => polls).toBe(1);
+    await expect(
+      page.getByRole('button', { name: 'Upload BOM' }),
+    ).toBeVisible();
+    await expect(page.getByText('Poll detail')).toBeHidden();
+    await expect(page.getByText('Poll refused')).toBeHidden();
+    // Falls back to the page without a banner, and does not retry.
+    await expect(
+      bomStatusBanner(page, 'BOM queued for processing'),
+    ).toBeHidden();
+    // Absence of a retry can only be shown by waiting past the first backoff step.
+    // eslint-disable-next-line playwright/no-wait-for-timeout
+    await page.waitForTimeout(5000);
+    expect(polls).toBe(1);
+  });
+});
+
+test.describe('after logging out', () => {
+  test('a new session does not inherit tracked uploads', async ({
+    page,
+    api,
+  }) => {
+    const project = await createProject(api);
+    await controlBomTokenStatus(page, 'PENDING');
+    await login(page);
+    await page.goto(`projects/${project.uuid}`);
+    await trackBomUpload(page, {
+      projectUuid: project.uuid,
+      projectName: project.name,
+      projectVersion: '1.0.0',
+    });
+    await page.reload();
+    await expect(bomSidebarIndicator(page, project.name)).toBeVisible();
+
+    await logout(page);
+    const tokenRequests = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/api/v1/bom/token/')) {
+        tokenRequests.push(request.url());
+      }
+    });
+    await login(page);
+    await expect(page.getByRole('navigation')).toBeVisible();
+    await expect(bomSidebarIndicator(page, project.name)).toBeHidden();
+    // Absence of polling can only be shown by waiting past the first backoff step.
+    // eslint-disable-next-line playwright/no-wait-for-timeout
+    await page.waitForTimeout(3000);
+    expect(tokenRequests).toEqual([]);
+    expect(
+      await page.evaluate(() => sessionStorage.getItem('dtrack.bomUploads')),
+    ).not.toContain(project.uuid);
+  });
+});
+
+test.describe('sidebar indicator', () => {
+  for (const minimized of [false, true]) {
+    test(`leaves the navigation visible (${minimized ? 'minimized' : 'expanded'})`, async ({
+      page,
+      api,
+    }) => {
+      const project = await createProject(api);
+      await controlBomTokenStatus(page, 'RUNNING');
+      await page.addInitScript(
+        (value) => localStorage.setItem('isSidebarMinimized', value),
+        String(minimized),
+      );
+      await login(page);
+      await page.goto(`projects/${project.uuid}`);
+      await trackBomUpload(page, {
+        projectUuid: project.uuid,
+        projectName: project.name,
+        projectVersion: '1.0.0',
+      });
+      await page.reload();
+      const indicator = bomSidebarIndicator(page, project.name);
+      await expect(indicator).toBeVisible();
+      await expect(indicator).toHaveAttribute('title', /running/);
+      const nav = page.getByRole('navigation');
+      // The navigation scrolls when it lacks room, which keeps links in the viewport but cuts them off.
+      const navBox = await nav.boundingBox();
+      for (const name of ['Policy Management', 'Administration']) {
+        const link = nav.getByRole('link', { name, exact: true });
+        await expect(link).toBeVisible();
+        const box = await link.boundingBox();
+        expect(box.y + box.height).toBeLessThanOrEqual(
+          navBox.y + navBox.height,
+        );
+      }
+      await indicator.click();
+      await expect(page).toHaveURL(new RegExp(`/projects/${project.uuid}$`));
+    });
+  }
+
+  test('shows a count and links to the first of several uploads', async ({
+    page,
+    api,
+  }) => {
+    const first = await createProject(api);
+    const second = await createProject(api);
+    await controlBomTokenStatus(page, 'RUNNING');
+    await login(page);
+    await page.goto('dashboard');
+    await page.evaluate(
+      ([a, b]) =>
+        sessionStorage.setItem(
+          'dtrack.bomUploads',
+          JSON.stringify(
+            Object.fromEntries(
+              [a, b].map((project, index) => [
+                project.uuid,
+                {
+                  token: `e2e-token-${index}`,
+                  projectUuid: project.uuid,
+                  projectName: project.name,
+                  projectVersion: '1.0.0',
+                  startedAt: Date.now() - index * 1000,
+                },
+              ]),
+            ),
+          ),
+        ),
+      [first, second],
+    );
+    await page.reload();
+    const indicator = page.getByRole('link', { name: /BOM processing.*2/ });
+    await expect(indicator).toBeVisible();
+    await indicator.click();
+    await expect(page).toHaveURL(new RegExp(`/projects/${first.uuid}$`));
   });
 });
