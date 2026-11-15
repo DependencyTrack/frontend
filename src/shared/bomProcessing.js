@@ -53,3 +53,19 @@ export function pollDelay(attempt) {
     Math.round(MIN_POLL_DELAY_MS * POLL_BACKOFF_FACTOR ** attempt),
   );
 }
+
+/**
+ * Formats a byte count with binary units and one decimal, e.g. `12.3 MB`.
+ */
+export function formatBytes(bytes) {
+  let value = Number(bytes) || 0;
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit++;
+  }
+  return unit === 0
+    ? `${Math.round(value)} B`
+    : `${value.toFixed(1)} ${units[unit]}`;
+}

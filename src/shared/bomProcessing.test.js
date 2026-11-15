@@ -3,6 +3,7 @@ import {
   MAX_POLL_DELAY_MS,
   MIN_POLL_DELAY_MS,
   elapsedSince,
+  formatBytes,
   isActiveStatus,
   isTerminalStatus,
   pollDelay,
@@ -80,5 +81,23 @@ describe('pollDelay', () => {
     }
     expect(delays[11]).toBe(MAX_POLL_DELAY_MS);
     expect(delays[1]).toBeGreaterThan(delays[0]);
+  });
+});
+
+describe('formatBytes', () => {
+  it.each([
+    [0, '0 B'],
+    [999, '999 B'],
+    [1024, '1.0 KB'],
+    [1536, '1.5 KB'],
+    [39 * 1024 * 1024, '39.0 MB'],
+    [12.34 * 1024 * 1024, '12.3 MB'],
+    [3 * 1024 ** 3, '3.0 GB'],
+  ])('formats %i bytes as %s', (bytes, text) => {
+    expect(formatBytes(bytes)).toBe(text);
+  });
+
+  it('treats a missing size as zero', () => {
+    expect(formatBytes(undefined)).toBe('0 B');
   });
 });

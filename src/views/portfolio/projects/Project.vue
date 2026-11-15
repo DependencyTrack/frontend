@@ -317,13 +317,19 @@
         </div>
       </template>
     </b-card>
+    <project-bom-status
+      :key="this.uuid"
+      :uuid="this.uuid"
+      v-on:completed="onBomProcessed"
+      v-on:upload-again="showProjectUploadBomModal = true"
+    />
     <b-tabs v-scrollable-tabs lazy nav-wrapper-class="nav-tabs-scroller">
       <b-tab ref="overview" @click="routeTo()" active>
         <template v-slot:title
           ><i class="fa fa-line-chart"></i>
           {{ $t('message.overview') }}</template
         >
-        <project-dashboard :key="this.uuid" :uuid="this.uuid" />
+        <project-dashboard :key="dataKey" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="components"
@@ -334,7 +340,7 @@
           ><i class="fa fa-cubes"></i> {{ $t('message.components') }}</template
         >
         <project-components
-          :key="this.uuid"
+          :key="dataKey"
           :uuid="this.uuid"
           :project="this.project"
         />
@@ -354,7 +360,7 @@
         <template v-slot:title
           ><i class="fa fa-exchange"></i> {{ $t('message.services') }}</template
         >
-        <project-services :key="this.uuid" :uuid="this.uuid" />
+        <project-services :key="dataKey" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="dependencygraph"
@@ -366,7 +372,7 @@
           {{ $t('message.dependency_graph') }}</template
         >
         <project-dependency-graph
-          :key="this.uuid"
+          :key="dataKey"
           :uuid="this.uuid"
           :project="this.project"
         />
@@ -375,14 +381,14 @@
         <template v-slot:title>
           <i class="fa fa-tasks"></i> {{ $t('message.audit_vulnerabilities') }}
         </template>
-        <project-findings :key="this.uuid" :uuid="this.uuid" />
+        <project-findings :key="dataKey" :uuid="this.uuid" />
       </b-tab>
       <b-tab ref="epss" v-if="isShowFindings" @click="routeTo('epss')">
         <template v-slot:title
           ><i class="fa fa-tasks"></i>
           {{ $t('message.exploit_predictions') }}</template
         >
-        <project-epss :key="this.uuid" :uuid="this.uuid" />
+        <project-epss :key="dataKey" :uuid="this.uuid" />
       </b-tab>
       <b-tab
         ref="policyviolations"
@@ -392,7 +398,7 @@
         <template v-slot:title
           ><i class="fa fa-fire"></i> {{ $t('message.policy_violations') }}
         </template>
-        <project-policy-violations :key="this.uuid" :uuid="this.uuid" />
+        <project-policy-violations :key="dataKey" :uuid="this.uuid" />
       </b-tab>
     </b-tabs>
     <project-details-modal
@@ -420,6 +426,8 @@
     <project-upload-bom-modal
       v-model="showProjectUploadBomModal"
       :uuid="this.uuid"
+      :project-name="project.name"
+      :project-version="project.version"
     />
     <project-upload-vex-modal
       v-model="showProjectUploadVexModal"
@@ -445,6 +453,7 @@ import ProjectDetailsModal from './ProjectDetailsModal.vue';
 import ProjectPropertiesModal from './ProjectPropertiesModal.vue';
 import ProjectCreatePropertyModal from './ProjectCreatePropertyModal.vue';
 import ProjectAddVersionModal from './ProjectAddVersionModal.vue';
+import ProjectBomStatus from './ProjectBomStatus.vue';
 import ProjectUploadBomModal from './ProjectUploadBomModal.vue';
 import ProjectUploadVexModal from './ProjectUploadVexModal.vue';
 import ProjectExportModal from './ProjectExportModal.vue';
@@ -459,6 +468,7 @@ export default {
     ProjectPolicyViolations,
     ProjectFindings,
     ProjectAddVersionModal,
+    ProjectBomStatus,
     ProjectUploadBomModal,
     ProjectUploadVexModal,
     ProjectExportModal,
@@ -475,6 +485,10 @@ export default {
     ExternalReferencesDropdown,
   },
   computed: {
+    // Remounts the tabs, which load their data when they are created.
+    dataKey() {
+      return `${this.uuid}-${this.dataVersion}`;
+    },
     projectLabel() {
       if (this.project.name && this.project.version) {
         return this.project.name + ' ▸ ' + this.project.version;
@@ -549,6 +563,7 @@ export default {
       isAnalysisRequested: false,
       nowTick: Date.now(),
       tabIndex: 0,
+      dataVersion: 0,
     };
   },
   methods: {
@@ -600,6 +615,10 @@ export default {
           EventBus.emit('addCrumb', this.projectLabel);
           setPageTitle(this.projectLabel);
         });
+    },
+    onBomProcessed: function () {
+      this.initialize();
+      this.dataVersion++;
     },
     initializeProjectDetailsModal: function () {
       EventBus.emit('initializeProjectDetailsModal');

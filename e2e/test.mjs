@@ -227,3 +227,39 @@ export function dismissNextDialog(page) {
     }),
   );
 }
+
+// Opens the upload dialog of the project page and uploads the file.
+// Resolves with the dialog.
+export async function uploadBom(page, file) {
+  await page.getByRole('button', { name: 'Upload BOM' }).click();
+  const modal = page.getByRole('dialog', { name: 'Upload BOM' });
+  const chooser = page.waitForEvent('filechooser');
+  await modal.getByText('Browse').click();
+  await (await chooser).setFiles(file);
+  await modal.getByRole('button', { name: 'Upload', exact: true }).click();
+  return modal;
+}
+
+// Serves the given processing statuses, one per poll, repeating the last one.
+// An entry of null serves an unknown token, which the server reports without a status.
+export async function serveBomTokenStatuses(page, statuses) {
+  let polls = 0;
+  await page.route('**/api/v1/bom/token/**', (route) => {
+    const status = statuses[Math.min(polls++, statuses.length - 1)];
+    return route.fulfill({
+      json: status
+        ? { processing: status === 'PENDING' || status === 'RUNNING', status }
+        : { processing: false },
+    });
+  });
+  return { polls: () => polls };
+}
+
+// The banner on the project page that reports the processing of an uploaded BOM.
+export function bomStatusBanner(page, title) {
+  return page
+    .getByRole(title === 'BOM processing failed' ? 'alert' : 'status')
+    .filter({
+      hasText: title,
+    });
+}
