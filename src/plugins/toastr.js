@@ -1,3 +1,4 @@
+import { h } from 'vue';
 import { useModal, useToast } from 'bootstrap-vue-next';
 
 const toastr = {};
@@ -6,9 +7,11 @@ export default {
   install(app) {
     const toasts = app.runWithContext(useToast);
     const modals = app.runWithContext(useModal);
+    // `action` adds a link to a route, `{ label, to }`, and keeps the toast longer.
     const toast =
       (variant, isStatus = false) =>
-      (message, title) => {
+      (message, title, action) => {
+        const router = app.config.globalProperties.$router;
         const controller = toasts.create({
           title,
           body: message,
@@ -16,7 +19,29 @@ export default {
           toastClass: `bg-${variant}-subtle text-${variant}-emphasis border-${variant}-subtle`,
           isStatus,
           noProgress: true,
-          modelValue: 5000,
+          modelValue: action ? 10000 : 5000,
+          slots: action
+            ? {
+                default: () => [
+                  message,
+                  h('div', { class: 'mt-2' }, [
+                    h(
+                      'a',
+                      {
+                        href: router.resolve(action.to).href,
+                        class: 'fw-bold text-reset',
+                        onClick: (event) => {
+                          event.preventDefault();
+                          router.push(action.to);
+                          controller.hide();
+                        },
+                      },
+                      action.label,
+                    ),
+                  ]),
+                ],
+              }
+            : undefined,
         });
         controller.show().then(controller.destroy);
       };

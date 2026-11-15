@@ -46,6 +46,32 @@
             </template>
           </ul>
         </nav>
+        <ul v-if="activeBomUploads.length > 0" class="nav sidebar-bom-uploads">
+          <li
+            v-for="upload in activeBomUploads"
+            :key="upload.projectUuid"
+            class="nav-item"
+          >
+            <router-link
+              :to="{ name: 'Project', params: { uuid: upload.projectUuid } }"
+              class="nav-link"
+            >
+              <b-spinner small class="nav-icon" aria-hidden="true" />
+              <span class="sidebar-bom-upload-text"
+                >{{ $t('message.bom_processing_sidebar_title') }}
+                <span class="d-block small text-muted"
+                  >{{ projectLabel(upload) }} &middot;
+                  <template v-if="upload.status === 'PENDING'">{{
+                    $t('message.bom_status_queued')
+                  }}</template
+                  ><template v-else>{{
+                    $t('message.bom_status_running')
+                  }}</template></span
+                ></span
+              >
+            </router-link>
+          </li>
+        </ul>
         <ul class="nav sidebar-profile">
           <ProfileDropdown
             @editProfile="showProfileEditModal = true"
@@ -104,6 +130,12 @@ import EventBus from '../shared/eventbus';
 import state from '../shared/state';
 import * as permissions from '../shared/permissions';
 import * as featureFlags from '@/shared/featureFlags';
+import { isActiveStatus, isTerminalStatus } from '@/shared/bomProcessing';
+import {
+  acknowledgeBomUpload,
+  bomUploads,
+  resumeFollowingBomUploads,
+} from '@/shared/bomUploads';
 
 export default {
   name: 'DefaultContainer',
@@ -226,6 +258,37 @@ export default {
     };
   },
   methods: {
+    projectLabel(upload) {
+      return [upload.projectName, upload.projectVersion]
+        .filter(Boolean)
+        .join(' ');
+    },
+    // The project page reports the outcome of its own project. Elsewhere, a toast does.
+    notifyBomOutcome(upload) {
+      const viewingProject =
+        this.$route.name === 'Project' &&
+        this.$route.params.uuid === upload.projectUuid;
+      if (viewingProject) return;
+      const project = this.projectLabel(upload);
+      const action = {
+        label: this.$t('message.bom_open_project', { project }),
+        to: { name: 'Project', params: { uuid: upload.projectUuid } },
+      };
+      if (upload.status === 'COMPLETED') {
+        this.$toastr.s(
+          this.$t('message.bom_processing_completed_toast', { project }),
+          undefined,
+          action,
+        );
+      } else {
+        this.$toastr.e(
+          this.$t('message.bom_processing_failed_toast', { project }),
+          undefined,
+          action,
+        );
+      }
+      acknowledgeBomUpload(upload.projectUuid);
+    },
     handleMinimizedUpdate() {
       this.isSidebarMinimized = !this.isSidebarMinimized;
       document.body.classList.toggle(
@@ -301,12 +364,23 @@ export default {
       this.isSidebarMinimized,
     );
     document.addEventListener('click', this.onDocumentClick);
+    resumeFollowingBomUploads();
   },
   beforeUnmount() {
     document.removeEventListener('click', this.onDocumentClick);
   },
   computed: {
     dtrack: () => state.dtrack,
+    activeBomUploads() {
+      return Object.values(bomUploads).filter((upload) =>
+        isActiveStatus(upload.status),
+      );
+    },
+    finishedBomUploads() {
+      return Object.values(bomUploads).filter((upload) =>
+        isTerminalStatus(upload.status),
+      );
+    },
     name() {
       return this.$route.name;
     },
@@ -346,6 +420,14 @@ export default {
         }
       }
       return array;
+    },
+  },
+  watch: {
+    finishedBomUploads: {
+      handler(uploads) {
+        uploads.forEach((upload) => this.notifyBomOutcome(upload));
+      },
+      immediate: true,
     },
   },
   created() {

@@ -263,3 +263,57 @@ export function bomStatusBanner(page, title) {
       hasText: title,
     });
 }
+
+// Serves one processing status for every poll, until it is changed.
+export async function controlBomTokenStatus(page, initial) {
+  let current = initial;
+  await page.route('**/api/v1/bom/token/**', (route) =>
+    route.fulfill({
+      json: {
+        processing: current === 'PENDING' || current === 'RUNNING',
+        status: current,
+      },
+    }),
+  );
+  return {
+    set(status) {
+      current = status;
+    },
+  };
+}
+
+// Makes the app follow an upload as if it had started `startedAgoMs` ago,
+// in a session that has already loaded the app once.
+export async function trackBomUpload(
+  page,
+  { projectUuid, projectName, projectVersion, startedAgoMs = 0 },
+) {
+  await page.evaluate(
+    (upload) =>
+      sessionStorage.setItem(
+        'dtrack.bomUploads',
+        JSON.stringify({ [upload.projectUuid]: upload }),
+      ),
+    {
+      token: 'e2e-token',
+      projectUuid,
+      projectName,
+      projectVersion,
+      startedAt: Date.now() - startedAgoMs,
+    },
+  );
+}
+
+export async function openSidebarLink(page, name) {
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name, exact: true })
+    .click();
+}
+
+// The sidebar entry that shows a BOM is still being processed.
+export function bomSidebarIndicator(page, projectName) {
+  return page.getByRole('link', {
+    name: new RegExp(`BOM processing.*${projectName}`),
+  });
+}

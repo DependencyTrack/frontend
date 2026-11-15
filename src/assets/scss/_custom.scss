@@ -663,6 +663,32 @@ td a.detail-icon {
   }
 }
 
+.sidebar .sidebar-bom-uploads {
+  flex: 0 0 auto;
+  min-height: 0;
+  border-top: 1px solid var(--dt-border);
+
+  .nav-link {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    width: 100%;
+    overflow: hidden;
+    text-align: start;
+    white-space: normal;
+  }
+
+  .nav-icon {
+    flex: none;
+    margin-top: 0.15rem;
+  }
+
+  .sidebar-bom-upload-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
 .sidebar-footer {
   display: flex;
   flex: 0 0 $sidebar-minimizer-height;
@@ -710,7 +736,8 @@ td a.detail-icon {
     }
 
     // Same hover flyout as the nav items. The open menu is anchored to the toggle, so the flyout waits until it closes.
-    .sidebar-profile {
+    .sidebar-profile,
+    .sidebar-bom-uploads {
       .nav-item {
         width: $sidebar-minimized-width;
         overflow: hidden;

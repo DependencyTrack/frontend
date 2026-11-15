@@ -1,11 +1,16 @@
 import { Api, uniqueName } from '../api.mjs';
 import { bomFile, cycloneDxBom, truncatedBom } from '../bom.mjs';
 import {
+  bomSidebarIndicator,
   bomStatusBanner,
+  controlBomTokenStatus,
   expect,
   login,
+  openSidebarLink,
+  search,
   serveBomTokenStatuses,
   test,
+  trackBomUpload,
   uploadBom,
 } from '../test.mjs';
 
@@ -259,5 +264,91 @@ test.describe('against the real server', () => {
         await restoring.dispose();
       }
     }
+  });
+});
+
+test.describe('leaving and returning', () => {
+  async function startUpload(page, project, status) {
+    const token = await controlBomTokenStatus(page, status);
+    await login(page);
+    await page.goto(`projects/${project.uuid}`);
+    const modal = await uploadBom(page, bomFile(cycloneDxBom(2)));
+    await modal.getByRole('button', { name: 'Close' }).click();
+    await expect(bomStatusBanner(page, 'Processing BOM…')).toBeVisible();
+    return token;
+  }
+
+  test('shows a running upload in the sidebar and the project list', async ({
+    page,
+    api,
+  }) => {
+    const project = await createProject(api);
+    await startUpload(page, project, 'RUNNING');
+
+    await openSidebarLink(page, 'Projects');
+    const indicator = bomSidebarIndicator(page, project.name);
+    await expect(indicator).toBeVisible();
+    await search(page, project.name);
+    const row = page.getByRole('row', { name: new RegExp(project.name) });
+    await expect(row.getByText('Processing BOM')).toBeVisible();
+
+    await indicator.click();
+    await expect(page).toHaveURL(new RegExp(`/projects/${project.uuid}$`));
+    await expect(bomStatusBanner(page, 'Processing BOM…')).toBeVisible();
+  });
+
+  for (const [status, message] of [
+    ['COMPLETED', 'BOM processed'],
+    ['FAILED', 'BOM processing failed'],
+  ]) {
+    test(`links to the project when processing ends as ${status} elsewhere`, async ({
+      page,
+      api,
+    }) => {
+      const project = await createProject(api);
+      const token = await startUpload(page, project, 'RUNNING');
+      await openSidebarLink(page, 'Projects');
+      await expect(bomSidebarIndicator(page, project.name)).toBeVisible();
+
+      token.set(status);
+      const toast = page.getByText(`${message} for ${project.name}`);
+      await expect(toast).toBeVisible({ timeout: 20_000 });
+      await expect(bomSidebarIndicator(page, project.name)).toBeHidden();
+
+      await page.getByRole('link', { name: `Open ${project.name}` }).click();
+      await expect(page).toHaveURL(new RegExp(`/projects/${project.uuid}$`));
+      // The toast reported it, so the page does not repeat it.
+      await expect(
+        page.getByRole('button', { name: 'Upload BOM' }),
+      ).toBeVisible();
+      await expect(bomStatusBanner(page, message)).toBeHidden();
+    });
+  }
+
+  test('keeps the time since the upload started across navigation and reloads', async ({
+    page,
+    api,
+  }) => {
+    const project = await createProject(api);
+    await controlBomTokenStatus(page, 'RUNNING');
+    await login(page);
+    await page.goto(`projects/${project.uuid}`);
+    await trackBomUpload(page, {
+      projectUuid: project.uuid,
+      projectName: project.name,
+      projectVersion: '1.0.0',
+      startedAgoMs: 4 * 60 * 1000,
+    });
+    await page.reload();
+
+    const banner = bomStatusBanner(page, 'Processing BOM…');
+    await expect(banner).toContainText(/Started [45]m ago/);
+
+    await openSidebarLink(page, 'Projects');
+    await bomSidebarIndicator(page, project.name).click();
+    await expect(banner).toContainText(/Started [45]m ago/);
+
+    await page.reload();
+    await expect(banner).toContainText(/Started [45]m ago/);
   });
 });
