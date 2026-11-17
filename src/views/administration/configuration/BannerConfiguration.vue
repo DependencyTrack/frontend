@@ -146,7 +146,9 @@ export default {
     customMode(val) {
       if (val) {
         this.message = '';
-        this.HTMLConfig = buildExampleBannerTemplate();
+        if (!this.HTMLConfig) {
+          this.HTMLConfig = buildExampleBannerTemplate();
+        }
       }
     },
   },
@@ -156,8 +158,10 @@ export default {
       this.makeBannerDismissable = !!config.makeBannerDismissable;
       this.message = config.message || '';
       this.selectedColorScheme = config.colorScheme || 'red';
+      this.HTMLConfig = config.customMode
+        ? config.html || buildExampleBannerTemplate()
+        : '';
       this.customMode = !!config.customMode;
-      this.HTMLConfig = this.customMode ? config.html || '' : '';
     },
     async saveChanges() {
       const bannerConfig = this.customMode
