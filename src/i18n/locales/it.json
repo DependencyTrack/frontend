@@ -657,6 +657,7 @@
     "dashboard": "Pannello di controllo",
     "data": "Dati",
     "dates": "Date",
+    "toggle_active": "Attiva/Disattiva",
     "default": null,
     "delete": "Eliminare",
     "delete_confirm": null,

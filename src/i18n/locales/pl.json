@@ -657,6 +657,7 @@
     "dashboard": "Panel",
     "data": "Dane",
     "dates": "Daktyle",
+    "toggle_active": "Aktywuj/Dezaktywuj",
     "default": null,
     "delete": "Usuwać",
     "delete_confirm": null,

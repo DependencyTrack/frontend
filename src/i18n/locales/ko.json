@@ -658,6 +658,7 @@
     "dashboard": "대시보드",
     "data": "데이터",
     "dates": "날짜",
+    "toggle_active": "활성/비활성 전환",
     "default": null,
     "delete": "삭제",
     "delete_confirm": null,

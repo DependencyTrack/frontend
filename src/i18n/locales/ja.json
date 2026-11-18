@@ -657,6 +657,7 @@
     "dashboard": "ダッシュボード",
     "data": "データ",
     "dates": "日付",
+    "toggle_active": "有効/無効の切り替え",
     "default": null,
     "delete": "消去",
     "delete_confirm": null,

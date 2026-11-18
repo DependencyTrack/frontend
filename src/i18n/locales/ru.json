@@ -657,6 +657,7 @@
     "dashboard": "Панель управления",
     "data": "Данные",
     "dates": "Даты",
+    "toggle_active": "Активировать/Деактивировать",
     "default": null,
     "delete": "Удалить",
     "delete_confirm": null,

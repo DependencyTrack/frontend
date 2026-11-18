@@ -11,6 +11,18 @@
       >
         <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
       </b-button>
+      <b-button
+        variant="outline-primary"
+        class="ms-2"
+        :disabled="selectedProjectUuids.length === 0 || isActiveToggling"
+        @click="toggleActiveSelectedProjects"
+        v-permission:or="[
+          PERMISSIONS.PORTFOLIO_MANAGEMENT,
+          PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
+        ]"
+      >
+        {{ $t('message.toggle_active') }}
+      </b-button>
       <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
@@ -41,6 +53,10 @@
       :options="options"
       @on-load-success="onLoadSuccess"
       @on-post-body="onPostBody"
+      @on-check="updateSelectedProjectUuids"
+      @on-uncheck="updateSelectedProjectUuids"
+      @on-check-all="updateSelectedProjectUuids"
+      @on-uncheck-all="updateSelectedProjectUuids"
     >
     </bootstrap-table>
     <project-create-project-modal v-model="showProjectCreateProjectModal" />
@@ -139,6 +155,7 @@ export default {
       });
     },
     onLoadSuccess: function () {
+      this.updateSelectedProjectUuids();
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectList',
@@ -147,12 +164,26 @@ export default {
     },
     onPostBody: function () {
       this.mountCells();
+      this.updateSelectedProjectUuids();
+      const table = this.$refs.table;
+      const projects = table.getData();
+      table.$table.find('input[name="btSelectItem"]').each((_index, input) => {
+        const project = projects[Number(input.dataset.index)];
+        input.setAttribute(
+          'aria-label',
+          `${this.$t('message.select_project')}: ${project.name}`,
+        );
+      });
+      table.$table
+        .closest('.bootstrap-table')
+        .find('input[name="btSelectAll"]')
+        .attr('aria-label', this.$t('message.select_all'));
       if (!this.showFlatView && !this.isSearching) {
         let columns = this.$refs.table.getOptions().columns;
 
-        if (columns && columns[0][0].visible) {
+        if (columns && columns[0][1].visible) {
           this.$refs.table.$table.treegrid({
-            treeColumn: 0,
+            treeColumn: 1,
             initialState: 'collapsed',
           });
         }
@@ -205,6 +236,38 @@ export default {
         });
       }
       this.$refs.table.hideLoading();
+    },
+    toggleActiveSelectedProjects: async function () {
+      this.isActiveToggling = true;
+      const table = this.$refs.table;
+      const projects = table.getData();
+
+      // Create map of project UUIDs to project objects active attribute value for toggling
+      const projectActiveMap = {};
+
+      for (let project of projects) {
+        projectActiveMap[project.uuid] = project.active;
+      }
+
+      try {
+        await Promise.all(
+          this.selectedProjectUuids.map((uuid) =>
+            this.axios.patch(
+              `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${uuid}`,
+              { active: !projectActiveMap[uuid] },
+            ),
+          ),
+        );
+        this.$toastr.s(this.$t('message.project_updated'));
+      } finally {
+        this.isActiveToggling = false;
+        this.refreshTable();
+      }
+    },
+    updateSelectedProjectUuids: function () {
+      this.selectedProjectUuids = this.$refs.table
+        .getSelections()
+        .map((project) => project.uuid);
     },
     getChildren: async function (parentProject) {
       let url = this.apiUrl(parentProject.uuid);
@@ -278,7 +341,15 @@ export default {
       // Like searching, a filter forces the flat view.
       showFlatView: hasRouteFilter(this.$route.query) || storedFlatView(),
       isSearching: false,
+      selectedProjectUuids: [],
+      isActiveToggling: false,
       columns: [
+        {
+          field: 'state',
+          checkbox: true,
+          align: 'center',
+          switchable: false,
+        },
         {
           title: this.$t('message.project_name'),
           field: 'name',
@@ -498,8 +569,8 @@ export default {
           return res;
         },
         // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
-        onClickRow: (row, $element) => {
-          if (!this.showFlatView && !this.isSearching) {
+        onClickRow: (row, $element, field) => {
+          if (field !== 'state' && !this.showFlatView && !this.isSearching) {
             if (
               event.target.tagName.toLowerCase() !== 'a' &&
               $element.treegrid('isLeaf') &&
@@ -541,6 +612,7 @@ export default {
           this.setSearchTextQuery(text);
         },
         onPageChange: (number, size) => {
+          this.updateSelectedProjectUuids();
           if (localStorage) {
             localStorage.setItem('ProjectListPageSize', size.toString());
           }
