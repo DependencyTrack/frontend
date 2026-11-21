@@ -595,6 +595,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../shared/common';
 import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow.vue';
 import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities.vue';
@@ -845,9 +846,25 @@ export default {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${this.metricDays}/days`;
-      this.axios.get(url).then((response) => {
+  },
+  watch: {
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('portfolioMetricDays', metricDays);
+        if (!this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
+          return;
+        }
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${metricDays}/days`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
         this.$refs.portfolioWidgetRow?.render(response.data);
         this.$refs.chartPortfolioVulnerabilities?.render(response.data);
         this.$refs.chartProjectVulnerabilities?.render(response.data);
@@ -857,21 +874,8 @@ export default {
         this.$refs.chartPolicyViolationsClassification?.render(response.data);
         this.$refs.chartComponentVulnerabilities?.render(response.data);
         this.extractStats(response.data);
-      });
+      },
     },
-  },
-  watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('portfolioMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
-    },
-  },
-  mounted() {
-    if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
-      this.fetchMetrics();
-    }
   },
 };
 </script>

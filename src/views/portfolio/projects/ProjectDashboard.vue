@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
 import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress.vue';
 import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities.vue';
@@ -257,27 +258,29 @@ export default {
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
+  },
+  watch: {
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('projectMetricDays', metricDays);
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${metricDays}`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
         this.$refs.chartProjectVulnerabilities?.render(response.data);
         this.$refs.chartPolicyViolationsState?.render(response.data);
         this.$refs.chartPolicyViolationBreakdown?.render(response.data);
         this.$refs.chartAuditingFindingsProgress?.render(response.data);
         this.$refs.chartComponentVulnerabilities?.render(response.data);
         this.extractStats(response.data);
-      });
-    },
-  },
-  mounted() {
-    this.fetchMetrics();
-  },
-  watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('projectMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
+      },
     },
   },
 };

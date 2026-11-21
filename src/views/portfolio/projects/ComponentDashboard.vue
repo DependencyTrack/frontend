@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
 import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
 import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState.vue';
@@ -239,27 +240,28 @@ export default {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-    fetchMetrics() {
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
+  },
+  watch: {
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('componentMetricDays', metricDays);
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.$route.params.uuid}/days/${metricDays}`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
         this.$refs.chartComponentVulnerabilities?.render(response.data);
         this.$refs.chartPolicyViolationsState?.render(response.data);
         this.$refs.chartPolicyViolationBreakdown?.render(response.data);
         this.extractStats(response.data);
-      });
+      },
     },
-  },
-  watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('componentMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
-    },
-  },
-  mounted() {
-    this.fetchMetrics();
   },
 };
 </script>
