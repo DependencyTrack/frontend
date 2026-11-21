@@ -87,6 +87,24 @@
             />
           </div>
         </b-form-group>
+        <b-form-group
+          v-if="$saml.ENABLED"
+          :label="this.$t('admin.mapped_saml_groups')"
+        >
+          <div class="list-group">
+            <actionable-list-group-item
+              v-for="samlGroup in samlGroups"
+              :key="samlGroup.uuid"
+              :value="samlGroup.name"
+              :delete-icon="true"
+              v-on:actionClicked="removeSamlGroupMapping(samlGroup)"
+            />
+            <actionable-list-group-item
+              :add-icon="true"
+              v-on:actionClicked="showSelectSamlGroupModal = true"
+            />
+          </div>
+        </b-form-group>
       </b-col>
       <b-col sm="6">
         <b-form-group
@@ -132,6 +150,20 @@
           </div>
         </b-form-group>
         <b-form-group
+          v-if="samlUsers && samlUsers.length > 0"
+          :label="this.$t('admin.saml_users')"
+        >
+          <div class="list-group">
+            <actionable-list-group-item
+              v-for="user in samlUsers"
+              :key="user.username"
+              :value="user.username"
+              :delete-icon="true"
+              v-on:actionClicked="removeUser(user, 'samlUsers')"
+            />
+          </div>
+        </b-form-group>
+        <b-form-group
           v-if="serviceAccounts && serviceAccounts.length > 0"
           :label="this.$t('admin.service_accounts')"
         >
@@ -165,6 +197,11 @@
       v-model="showSelectOidcGroupModal"
       v-on:selection="updateOidcGroupSelection"
     />
+    <select-saml-group-modal
+      v-if="$saml.ENABLED"
+      v-model="showSelectSamlGroupModal"
+      v-on:selection="updateSamlGroupSelection"
+    />
     <b-modal
       v-model="showApiKeyModal"
       :title="shownApiKey.title"
@@ -191,6 +228,9 @@ import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
 import CopyToClipboardButton from '../../../components/CopyToClipboardButton.vue';
 import SelectLdapGroupModal from '../SelectLdapGroupModal.vue';
 import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
+import SelectSamlGroupModal from '../SelectSamlGroupModal.vue';
+import { fetchAllPages } from '../../../../shared/utils';
+import common from '../../../../shared/common';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
 import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput.vue';
@@ -204,6 +244,7 @@ export default {
     CopyToClipboardButton,
     SelectLdapGroupModal,
     SelectOidcGroupModal,
+    SelectSamlGroupModal,
     SelectPermissionModal,
     BInputGroupFormInput,
   },
@@ -217,6 +258,7 @@ export default {
       showSelectPermissionModal: false,
       showSelectLdapGroupModal: false,
       showSelectOidcGroupModal: false,
+      showSelectSamlGroupModal: false,
       showApiKeyModal: false,
       shownApiKey: {},
       team: this.row,
@@ -228,6 +270,8 @@ export default {
       managedUsers: this.row.managedUsers,
       ldapUsers: this.row.ldapUsers,
       oidcUsers: this.row.oidcUsers,
+      samlUsers: this.row.samlUsers,
+      samlGroups: [],
       serviceAccounts: this.row.serviceAccounts,
       storageIdentifier: `TeamDetail:${this.row.uuid}`,
     };
@@ -254,6 +298,7 @@ export default {
         this.managedUsers = newValue.managedUsers;
         this.ldapUsers = newValue.ldapUsers;
         this.oidcUsers = newValue.oidcUsers;
+        this.samlUsers = newValue.samlUsers;
         this.serviceAccounts = newValue.serviceAccounts;
       },
       deep: true,
@@ -269,6 +314,13 @@ export default {
   },
   created() {
     this.debouncedUpdateTeam = debounce(this.updateTeam, 750);
+  },
+  mounted() {
+    // SAML group mappings are not part of the team, and are only loaded
+    // when SAML is enabled, so that API servers without SAML see no requests.
+    if (this.$saml.ENABLED) {
+      this.loadSamlGroups();
+    }
   },
   methods: {
     apiKeysToDict: function (apiKeys) {
@@ -422,6 +474,45 @@ export default {
       try {
         await this.axios.delete(endpoint);
         this.syncVariables('removeOidcMapping', mapping);
+        this.$toastr.s(this.$t('message.updated'));
+      } catch (error) {
+        console.error(error);
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+      }
+    },
+    loadSamlGroups: async function () {
+      const url = common.setQueryParams(
+        `${this.$api.BASE_URL}/${this.$api.URL_SAML_GROUP}`,
+        { team_uuid: this.team.uuid },
+      );
+      try {
+        this.samlGroups = await fetchAllPages(this.axios, url);
+      } catch (error) {
+        console.error(error);
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+      }
+    },
+    updateSamlGroupSelection: async function (selections) {
+      this.showSelectSamlGroupModal = false;
+      const baseUrl = `${this.$api.BASE_URL}/${this.$api.URL_SAML_GROUP}`;
+      try {
+        await Promise.all(
+          selections.map((group) =>
+            this.axios.put(`${baseUrl}/${group.uuid}/teams/${this.team.uuid}`),
+          ),
+        );
+        await this.loadSamlGroups();
+        this.$toastr.s(this.$t('message.updated'));
+      } catch (error) {
+        console.error(error);
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
+      }
+    },
+    removeSamlGroupMapping: async function (group) {
+      const url = `${this.$api.BASE_URL}/${this.$api.URL_SAML_GROUP}/${group.uuid}/teams/${this.team.uuid}`;
+      try {
+        await this.axios.delete(url);
+        this.samlGroups = this.samlGroups.filter((g) => g.uuid !== group.uuid);
         this.$toastr.s(this.$t('message.updated'));
       } catch (error) {
         console.error(error);

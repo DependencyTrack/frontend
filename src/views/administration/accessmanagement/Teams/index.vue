@@ -94,6 +94,9 @@ export default {
             if (row.oidcUsers) {
               count += row.oidcUsers.length;
             }
+            if (row.samlUsers) {
+              count += row.samlUsers.length;
+            }
             if (row.serviceAccounts) {
               count += row.serviceAccounts.length;
             }
