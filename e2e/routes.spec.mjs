@@ -11,7 +11,6 @@ const text = (value) => (main) => main.getByText(value);
 const link = (name) => (main) => main.getByRole('link', { name, exact: true });
 const inTab = (name, landmark) => (main, seed) =>
   landmark(main.getByRole('tabpanel', { name }), seed);
-const projectName = (main, seed) => main.getByText(seed.project.name);
 // The breadcrumb shows the same name before the page's own header.
 const header = (name) => (main, seed) => main.getByText(name(seed)).nth(1);
 const projectHeader = header((seed) => seed.project.name);
@@ -50,7 +49,7 @@ const routes = [
   },
   {
     path: `${project}/dependencyGraph`,
-    landmark: inTab(/Dependency Graph/, projectName),
+    landmark: inTab(/Dependency Graph/, text('Search for a component')),
   },
   {
     path: `${project}/dependencyGraph/:component`,

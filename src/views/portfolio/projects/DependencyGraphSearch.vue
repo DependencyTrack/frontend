@@ -4,6 +4,7 @@
       $t('message.component_search')
     }}</label>
     <multiselect
+      ref="picker"
       v-multiselect-label
       @keydown.esc.stop
       @keydown.up.down="revealHighlightedOption"
@@ -15,12 +16,14 @@
       :internal-search="false"
       :allow-empty="false"
       :show-no-options="false"
-      :show-no-results="query.length > 0"
+      :show-no-results="query.length > 0 && !loading"
+      :loading="loading"
       track-by="uuid"
       select-label=""
       deselect-label=""
       selected-label=""
       @search-change="query = $event"
+      @open="$emit('open')"
       @select="$emit('select', $event.uuid)"
     >
       <template #singleLabel="{ option }">
@@ -62,7 +65,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, useTemplateRef } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { nodeLabel, searchNodes, searchResultLabel } from './dependencyGraph';
 
@@ -72,9 +75,12 @@ const props = defineProps({
   nodes: { type: Map, required: true },
   searched: { type: Set, required: true },
   clearable: Boolean,
+  loading: Boolean,
 });
-defineEmits(['select']);
+defineEmits(['open', 'select']);
+defineExpose({ focus: () => picker.value.activate() });
 
+const picker = useTemplateRef('picker');
 const query = ref('');
 const matches = computed(() => searchNodes(props.nodes, query.value));
 const results = computed(() => matches.value.slice(0, MAX_RESULTS));

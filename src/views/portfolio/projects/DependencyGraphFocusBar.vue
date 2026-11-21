@@ -22,9 +22,14 @@
         <i class="fa fa-fw fa-times align-middle" aria-hidden="true" />
       </button>
     </span>
-    <b-form-checkbox id="shortestPathOnly" v-model="shortestOnly" switch>{{
-      $t('message.shortest_path')
-    }}</b-form-checkbox>
+    <b-form-checkbox
+      id="shortestPathOnly"
+      :model-value="shortestOnly || forced"
+      :disabled="forced"
+      switch
+      @update:model-value="shortestOnly = $event"
+      >{{ $t('message.shortest_path') }}</b-form-checkbox
+    >
     <span class="text-muted">{{
       $t('message.showing_components', { shown, total }, total)
     }}</span>
@@ -38,6 +43,7 @@ defineProps({
   component: { type: Object, required: true },
   shown: { type: Number, required: true },
   total: { type: Number, required: true },
+  forced: Boolean,
 });
 defineEmits(['center', 'clear']);
 const shortestOnly = defineModel('shortestOnly', { type: Boolean });
