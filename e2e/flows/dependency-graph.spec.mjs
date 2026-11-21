@@ -259,7 +259,7 @@ test('dependency graph follows the theme', async ({ page }) => {
   const node = page
     .getByRole('tabpanel')
     .getByRole('link', { name: 'jackson-databind' });
-  await expect(node).toHaveCSS('background-color', 'rgb(23, 21, 30)');
+  await expect(node).toHaveCSS('background-color', 'rgb(22, 24, 28)');
   await setTheme(page, 'Light');
   await expect(node).toHaveCSS('background-color', 'rgb(255, 255, 255)');
 });

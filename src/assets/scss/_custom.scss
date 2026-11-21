@@ -95,48 +95,27 @@
   font-weight: normal;
   font-size: 75%;
 }
-.label-source-nvd {
-  background-color: color-mix(in srgb, #5C9CCB 18%, transparent);
-  border: 1px solid #5C9CCB;
-}
-.label-source-npm {
-  background-color: color-mix(in srgb, #6E63CC 18%, transparent);
-  border: 1px solid #6E63CC;
-}
-.label-source-ossindex {
-  background-color: color-mix(in srgb, #73D08F 18%, transparent);
-  border: 1px solid #73D08F;
-}
-.label-source-snyk {
-  background-color: color-mix(in srgb, #73c1d0 18%, transparent);
-  border: 1px solid #73c1d0;
-}
-.label-source-vulndb {
-  background-color: color-mix(in srgb, #FE9536 18%, transparent);
-  border: 1px solid #FE9536;
-}
-.label-source-cx {
-  background-color: color-mix(in srgb, #4036fe 18%, transparent);
-  border: 1px solid #4036fe;
-}
-.label-source-victims {
-  background-color: color-mix(in srgb, #CC6666 18%, transparent);
-  border: 1px solid #CC6666;
-}
-.label-source-github {
-  background-color: color-mix(in srgb, #A66AF7 18%, transparent);
-  border: 1px solid #A66AF7;
-}
-.label-source-osv {
-  background-color: color-mix(in srgb, #cc668a 18%, transparent);
-  border: 1px solid #cc668a;
-}
-.label-source-internal {
-  background-color: color-mix(in srgb, #DCD167 18%, transparent);
-  border: 1px solid #DCD167;
+@each $source, $color in (
+  nvd: #5C9CCB,
+  npm: #6E63CC,
+  ossindex: #73D08F,
+  snyk: #73c1d0,
+  vulndb: #FE9536,
+  cx: #4036fe,
+  victims: #CC6666,
+  github: #A66AF7,
+  osv: #cc668a,
+  internal: #DCD167,
+) {
+  .label-source-#{$source} {
+    color: color-contrast($color);
+    background-color: $color;
+    border: 1px solid $color;
+  }
 }
 .label-source-unknown {
-  background-color: color-mix(in srgb, var(--severity-unassigned) 18%, transparent);
+  color: var(--dt-on-severity-unassigned);
+  background-color: var(--severity-unassigned);
   border: 1px solid var(--severity-unassigned);
 }
 .label-notification {
@@ -145,17 +124,12 @@
   font-weight: normal;
   font-size: 75%;
 }
-.label-notification-fail {
-  background-color: color-mix(in srgb, var(--notification-fail) 18%, transparent);
-  border: 1px solid var(--notification-fail);
-}
-.label-notification-warn {
-  background-color: color-mix(in srgb, var(--notification-warn) 18%, transparent);
-  border: 1px solid var(--notification-warn);
-}
-.label-notification-info {
-  background-color: color-mix(in srgb, var(--notification-info) 18%, transparent);
-  border: 1px solid var(--notification-info);
+@each $state, $severity in (fail: critical, warn: medium, info: info) {
+  .label-notification-#{$state} {
+    color: var(--dt-on-severity-#{$severity});
+    background-color: var(--notification-#{$state});
+    border: 1px solid var(--notification-#{$state});
+  }
 }
 .table {
   background-color: var(--dt-surface-card);
@@ -274,23 +248,12 @@ label.required:after {
 .card-footer-action:hover {
   background: var(--dt-hover);
 }
-.callout-severity-critical {
-  border-left-color: var(--severity-critical);
-}
-.callout-severity-high {
-  border-left-color: var(--severity-high);
-}
-.callout-severity-medium {
-  border-left-color: var(--severity-medium);
-}
-.callout-severity-low {
-  border-left-color: var(--severity-low);
-}
-.callout-severity-info {
-  border-left-color: var(--severity-info);
-}
-.callout-severity-unassigned {
-  border-left-color: var(--severity-unassigned);
+@each $severity in critical, high, medium, low, info, unassigned {
+  .callout-severity-#{$severity} {
+    h4, .h4 {
+      color: var(--dt-severity-#{$severity}-text);
+    }
+  }
 }
 .toast-body {
   white-space: pre-line;

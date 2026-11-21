@@ -78,7 +78,7 @@
                   <div class="callout callout-severity-low">
                     <small class="text-muted">{{ $t('severity.low') }}</small
                     ><br />
-                    <strong class="h5">{{ currentLow }}</strong>
+                    <strong class="h4">{{ currentLow }}</strong>
                   </div>
                 </b-col>
               </b-row>
