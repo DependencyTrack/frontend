@@ -93,8 +93,15 @@ test('expand and collapse a parent project in the project tree', async ({
   await page.goto('projects');
   const parentRow = page.getByRole('row').filter({ hasText: parent.name });
   const childLink = page.getByRole('link', { name: child });
-  await parentRow.getByRole('cell').nth(1).click();
+  const checkbox = parentRow.getByRole('checkbox', {
+    name: `Select Project: ${parent.name}`,
+  });
+  await checkbox.check();
+  await expect(checkbox).toBeChecked();
+  await expect(childLink).toBeHidden();
+  await checkbox.uncheck();
+  await parentRow.getByRole('cell').last().click();
   await expect(childLink).toBeVisible();
-  await parentRow.getByRole('cell').nth(1).click();
+  await parentRow.getByRole('cell').last().click();
   await expect(childLink).toBeHidden();
 });

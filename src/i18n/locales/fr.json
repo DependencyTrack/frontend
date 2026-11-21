@@ -657,6 +657,7 @@
     "dashboard": "Tableau de bord",
     "data": "Données",
     "dates": "Dates",
+    "toggle_active": "Basculer actif",
     "default": null,
     "delete": "Supprimer",
     "delete_confirm": null,

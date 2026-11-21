@@ -658,6 +658,7 @@
     "dashboard": "Dashboard",
     "data": "Data",
     "dates": "Dates",
+    "toggle_active": "Toggle Active",
     "default": "Default",
     "delete": "Delete",
     "delete_confirm": "This cannot be undone. Continue?",

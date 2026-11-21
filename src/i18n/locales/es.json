@@ -657,6 +657,7 @@
     "dashboard": "Panel",
     "data": "Datos",
     "dates": "fechas",
+    "toggle_active": "Alternar activo",
     "default": null,
     "delete": "Borrar",
     "delete_confirm": null,

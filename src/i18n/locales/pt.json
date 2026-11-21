@@ -657,6 +657,7 @@
     "dashboard": "Painel",
     "data": "Dados",
     "dates": "datas",
+    "toggle_active": "Ativar/Desativar",
     "default": null,
     "delete": "Excluir",
     "delete_confirm": null,

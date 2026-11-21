@@ -657,6 +657,7 @@
     "dashboard": "仪表板",
     "data": "数据",
     "dates": "日期",
+    "toggle_active": "切换启用/停用",
     "default": null,
     "delete": "删除",
     "delete_confirm": null,

@@ -657,6 +657,7 @@
     "dashboard": "Dashboard",
     "data": "Daten",
     "dates": "Termine",
+    "toggle_active": "Deaktivieren/Aktivieren",
     "default": null,
     "delete": "Löschen",
     "delete_confirm": null,
