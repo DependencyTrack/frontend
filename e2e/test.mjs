@@ -227,3 +227,19 @@ export function dismissNextDialog(page) {
     }),
   );
 }
+
+export async function addFilter(page, name) {
+  await page.getByRole('button', { name: 'Add filter' }).click();
+  await page.getByRole('menuitem', { name }).click();
+}
+
+// Navigates with the router, so the page keeps running and history gets an entry.
+export async function navigateInApp(page, location) {
+  await page.evaluate(
+    (to) =>
+      document
+        .querySelector('#app')
+        .__vue_app__.config.globalProperties.$router.push(to),
+    location,
+  );
+}
