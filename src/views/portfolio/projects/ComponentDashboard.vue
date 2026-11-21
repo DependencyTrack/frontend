@@ -51,15 +51,15 @@
                   <div class="callout callout-severity-critical">
                     <small class="text-muted">{{
                       $t('severity.critical')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ currentCritical }}</strong>
                   </div>
                 </b-col>
                 <b-col sm="6">
                   <div class="callout callout-severity-high">
-                    <small class="text-muted">{{ $t('severity.high') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('severity.high')
+                    }}</small><br />
                     <strong class="h4">{{ currentHigh }}</strong>
                   </div>
                 </b-col>
@@ -69,15 +69,17 @@
               <b-row>
                 <b-col sm="6">
                   <div class="callout callout-severity-medium">
-                    <small class="text-muted">{{ $t('severity.medium') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('severity.medium')
+                    }}</small><br />
                     <strong class="h4">{{ currentMedium }}</strong>
                   </div>
                 </b-col>
                 <b-col sm="6">
                   <div class="callout callout-severity-low">
-                    <small class="text-muted">{{ $t('severity.low') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('severity.low')
+                    }}</small><br />
                     <strong class="h4">{{ currentLow }}</strong>
                   </div>
                 </b-col>
@@ -89,8 +91,7 @@
                   <div class="callout callout-severity-unassigned">
                     <small class="text-muted">{{
                       $t('severity.unassigned')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ currentUnassigned }}</strong>
                   </div>
                 </b-col>
@@ -98,8 +99,7 @@
                   <div class="callout callout-severity-info">
                     <small class="text-muted">{{
                       $t('message.risk_score')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h5">{{ currentRiskScore }}</strong>
                   </div>
                 </b-col>
