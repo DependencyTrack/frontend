@@ -470,8 +470,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.projects')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalProjects }}</strong>
                   </div>
                 </b-col>
@@ -479,8 +478,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_projects')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerableProjects }}</strong>
                   </div>
                 </b-col>
@@ -492,8 +490,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.components')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalComponents }}</strong>
                   </div>
                 </b-col>
@@ -501,8 +498,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_components')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerableComponents }}</strong>
                   </div>
                 </b-col>
@@ -514,8 +510,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.portfolio_vulnerabilities')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerabilities }}</strong>
                   </div>
                 </b-col>
@@ -523,8 +518,7 @@
                   <div class="callout callout-warning">
                     <small class="text-muted">{{
                       $t('message.suppressed')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ suppressed }}</strong>
                   </div>
                 </b-col>
@@ -538,8 +532,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.policy_violations')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalViolations }}</strong>
                   </div>
                 </b-col>
@@ -547,8 +540,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.license')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ licenseViolations }}</strong>
                   </div>
                 </b-col>
@@ -560,8 +552,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.operational')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ operationalViolations }}</strong>
                   </div>
                 </b-col>
@@ -569,8 +560,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.security')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ securityViolations }}</strong>
                   </div>
                 </b-col>
@@ -580,8 +570,9 @@
               <b-row>
                 <b-col sm="6">
                   <div class="callout callout-danger">
-                    <small class="text-muted">{{ $t('message.kev') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('message.kev')
+                    }}</small><br />
                     <strong class="h4">{{ kev }}</strong>
                   </div>
                 </b-col>
