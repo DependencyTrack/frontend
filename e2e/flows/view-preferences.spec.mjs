@@ -1,22 +1,10 @@
 import { seed } from '../api.mjs';
-import { test, expect, login } from '../test.mjs';
+import { test, expect, login, chooseProjectView } from '../test.mjs';
 
 const findings = (s) => `api/v1/finding/project/${s.project.uuid}?suppressed=`;
 const epss = (s) => `api/v1/finding/project/${s.project.uuid}?epssFrom=0`;
 
 const switches = [
-  {
-    view: 'project list',
-    url: () => 'projects',
-    label: 'Show inactive projects',
-  },
-  {
-    view: 'project list',
-    url: () => 'projects',
-    label: 'Show flat project view',
-    table: () => 'api/v1/project/concise?',
-    param: 'onlyRoot=false',
-  },
   {
     view: 'affected projects',
     url: (s) => `vulnerabilities/INTERNAL/${s.vulnId}/affectedProjects`,
@@ -74,6 +62,46 @@ async function reloadExpectingTable(page, table, param) {
   await page.reload();
   expect((await request).url()).toContain(param);
 }
+
+test('remember the flat project view', async ({ page }) => {
+  await login(page);
+  await page.goto('projects');
+  await chooseProjectView(page, 'Flat');
+  await page.reload();
+  await expect(
+    page.getByRole('button', { name: 'Flat', pressed: true }),
+  ).toBeVisible();
+  await chooseProjectView(page, 'Tree');
+  await page.reload();
+  await expect(
+    page.getByRole('button', { name: 'Tree', pressed: true }),
+  ).toBeVisible();
+});
+
+test('remember shown and hidden project list columns', async ({ page }) => {
+  await login(page);
+  // Keys as saved before the switch to the v2 API.
+  await page.evaluate(() => {
+    localStorage.setItem('ProjectListShowLastbomimport', 'false');
+    localStorage.setItem('ProjectListShowIslatest', 'true');
+  });
+  await page.goto('projects');
+  await expect(
+    page.getByRole('columnheader', { name: 'Latest', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('columnheader', { name: 'Last BOM Import' }),
+  ).toBeHidden();
+  const classifier = page.getByRole('columnheader', { name: 'Classifier' });
+  await page.getByRole('button', { name: 'Columns' }).click();
+  await page.getByRole('checkbox', { name: 'Classifier' }).uncheck();
+  await page.keyboard.press('Escape');
+  await page.reload();
+  await expect(
+    page.getByRole('columnheader', { name: 'Version' }),
+  ).toBeVisible();
+  await expect(classifier).toBeHidden();
+});
 
 for (const { view, url, label, table, param } of switches) {
   test(`remember "${label}" in the ${view}`, async ({ page }) => {
