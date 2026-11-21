@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { request } from '@playwright/test';
 import {
   ADMIN_PASSWORD,
@@ -56,7 +57,7 @@ export default async function globalSetup() {
     [
       'compose',
       '-f',
-      new URL('compose.yaml', import.meta.url).pathname,
+      fileURLToPath(new URL('compose.yaml', import.meta.url)),
       'exec',
       '-T',
       'postgres',

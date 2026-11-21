@@ -671,7 +671,7 @@ export default {
           if (this.$route.params.componentUuids) {
             this.$refs.dependencygraph.activate();
           } else {
-            this.getTabFromRoute().activate();
+            this.getTabFromRoute()?.activate();
           }
         });
       })

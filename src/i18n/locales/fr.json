@@ -11,6 +11,8 @@
     "alert_deleted": "Alerte supprimée",
     "alert_log_successful_publish": "Journaliser les publications réussies",
     "alert_log_successful_publish_help": "Émettre un message dans le journal lors d'une publication réussie d'une alerte vers la destination, au lieu d'émettre uniquement des journaux lorsque des problèmes sont rencontrés. Aide au débogage des alertes manquantes ou à rendre la publication des alertes auditable.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Expression cron",
     "alert_schedule_last_triggered_at": "Dernière déclenché à",
     "alert_schedule_next_trigger_at": "Prochain déclencheur à",

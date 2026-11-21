@@ -11,6 +11,8 @@
     "alert_deleted": "已刪除警示",
     "alert_log_successful_publish": "成功發佈時記錄日誌",
     "alert_log_successful_publish_help": "成功將警示發佈到目的地時記錄日誌訊息（而非僅在發生問題時記錄），有助於除錯遺漏的警示或讓警示發佈可被稽核。",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Cron 表達式",
     "alert_schedule_last_triggered_at": "上次觸發於",
     "alert_schedule_next_trigger_at": "下次觸發於",

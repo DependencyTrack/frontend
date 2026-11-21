@@ -11,6 +11,8 @@
     "alert_deleted": "Alarm gelöscht",
     "alert_log_successful_publish": "Erfolgreiche Alarmierung protokollieren",
     "alert_log_successful_publish_help": "Protokolliert die erfolgreiche Alarmierung, anstatt nur bei Problemen zu protokollieren. Dies hilft beim Debuggen fehlender Alarme und macht die Alarmierung überprüfbar.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Cron-Ausdruck",
     "alert_schedule_last_triggered_at": "Zuletzt ausgelöst um",
     "alert_schedule_next_trigger_at": "Nächste Auslösung um",

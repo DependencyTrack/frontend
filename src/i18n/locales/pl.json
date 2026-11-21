@@ -11,6 +11,8 @@
     "alert_deleted": "Alert usunięty",
     "alert_log_successful_publish": "Zaloguj pomyślną publikację",
     "alert_log_successful_publish_help": "Emituj komunikat dziennika po pomyślnym opublikowaniu alertu w miejscu docelowym, zamiast emitować dzienniki tylko w przypadku napotkania problemów. Pomaga w debugowaniu brakujących alertów lub umożliwieniu audytu publikowania alertów.",
+    "alert_policy_violation_updated_help": null,
+    "alert_policy_violation_updated_reviewed_help": null,
     "alert_schedule_cron_expression": "Wyrażenie cron",
     "alert_schedule_last_triggered_at": "Ostatnim uruchomiony",
     "alert_schedule_next_trigger_at": "Następny spust",
