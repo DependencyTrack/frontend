@@ -54,3 +54,15 @@ test('verify the hashes of a component', async ({ page }) => {
   const modal = page.getByRole('dialog', { name: 'Hash verification' });
   await expect(modal).toContainText(sha1);
 });
+
+test('clear a filter from its dropdown', async ({ page }) => {
+  await login(page);
+  await page.goto('components?name_contains=jackson-databind');
+  await page.getByRole('button', { name: 'Name ~ "jackson-databind"' }).click();
+  await page.getByText('Clear', { exact: true }).click();
+  await expect(page).toHaveURL(
+    (url) =>
+      url.pathname.endsWith('/components') &&
+      !url.searchParams.has('name_contains'),
+  );
+});
