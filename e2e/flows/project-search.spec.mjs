@@ -417,3 +417,12 @@ test('expand and collapse a parent project in the project tree', async ({
   await parentRow.getByRole('cell').nth(1).click();
   await expect(childLink).toBeHidden();
 });
+
+test('select all options of a filter', async ({ page }) => {
+  await login(page);
+  await page.goto('projects');
+  await addFilter(page, 'Classifier');
+  await page.getByText('Select all', { exact: true }).click();
+  await expect(page.getByRole('checkbox', { name: 'Library' })).toBeChecked();
+  await expect(page).toHaveURL((url) => url.pathname.endsWith('/projects'));
+});
