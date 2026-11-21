@@ -537,8 +537,15 @@ export default {
       return variants[status] || 'primary';
     },
     statusLabel(status) {
-      if (!status) return '';
-      return this.$t(`message.status_${status.toLowerCase()}`);
+      const labels = {
+        CANCELLED: this.$t('message.status_cancelled'),
+        COMPLETED: this.$t('message.status_completed'),
+        CREATED: this.$t('message.status_created'),
+        FAILED: this.$t('message.status_failed'),
+        RUNNING: this.$t('message.status_running'),
+        SUSPENDED: this.$t('message.status_suspended'),
+      };
+      return labels[status] ?? status ?? '';
     },
     eventType(event) {
       const fields = Object.keys(event.event);

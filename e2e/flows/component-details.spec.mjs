@@ -34,16 +34,16 @@ test('delete selected component properties after confirming', async ({
     .getByRole('button', { name: 'Properties' })
     .click();
   const properties = page.getByRole('dialog', { name: 'Component Properties' });
-  await properties
-    .getByRole('row', { name: propertyName })
-    .getByRole('checkbox')
-    .check();
+  const row = properties.getByRole('row', { name: propertyName });
+  await row.getByRole('checkbox').check();
   await properties.getByRole('button', { name: 'Delete' }).click();
   await page
     .getByRole('dialog', { name: 'Delete' })
     .getByRole('button', { name: 'Delete' })
     .click();
   await expect(page.getByText('Property deleted')).toBeVisible();
+  await expect(properties).toBeVisible();
+  await expect(row).toBeHidden();
 });
 
 test('copy the package URL of a component', async ({ page, context, api }) => {
@@ -58,4 +58,24 @@ test('copy the package URL of a component', async ({ page, context, api }) => {
     .click();
   await expect(page.getByText('Copied to clipboard')).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(purl);
+});
+
+test('keep the component details when cancelling its deletion', async ({
+  page,
+  api,
+}) => {
+  const { uuid } = await createComponent(api);
+  const name = uniqueName('component');
+  await login(page);
+  await page.goto(`components/${uuid}`);
+  await page.getByRole('button', { name: 'View Details' }).click();
+  const modal = page.getByRole('dialog', { name: 'Component Details' });
+  await modal.getByLabel('Component name').fill(name);
+  await modal.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete' })
+    .getByRole('button', { name: 'Cancel' })
+    .click();
+  await expect(modal).toBeVisible();
+  await expect(modal.getByLabel('Component name')).toHaveValue(name);
 });

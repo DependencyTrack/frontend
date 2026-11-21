@@ -1190,7 +1190,7 @@
     "state": "状态",
     "status": "状态",
     "status_active": null,
-    "status_canceled": "已取消",
+    "status_cancelled": "已取消",
     "status_completed": "已完成",
     "status_created": "已创建",
     "status_failed": "失败",

@@ -1190,7 +1190,7 @@
     "state": "狀態",
     "status": "地位",
     "status_active": "積極的",
-    "status_canceled": "取消",
+    "status_cancelled": "取消",
     "status_completed": "完全的",
     "status_created": "已創建",
     "status_failed": "失敗的",

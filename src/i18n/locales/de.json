@@ -1190,7 +1190,7 @@
     "state": "Zustand",
     "status": "Status",
     "status_active": null,
-    "status_canceled": "Abgebrochen",
+    "status_cancelled": "Abgebrochen",
     "status_completed": "Abgeschlossen",
     "status_created": "Erstellt",
     "status_failed": "Fehlgeschlagen",

@@ -1190,7 +1190,7 @@
     "state": "Państwo",
     "status": "Status",
     "status_active": null,
-    "status_canceled": "Anulowano",
+    "status_cancelled": "Anulowano",
     "status_completed": "Ukończone",
     "status_created": "Utworzono",
     "status_failed": "Nieudane",

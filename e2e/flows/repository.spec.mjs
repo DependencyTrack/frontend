@@ -26,6 +26,30 @@ test('change a repository URL in its row details', async ({ page, api }) => {
   await expect(page.getByRole('textbox', { name: 'URL' })).toHaveValue(url);
 });
 
+test('create a repository of every type', async ({ page }) => {
+  await login(page);
+  await page.goto('admin/repositories/cargo');
+  await expect(page.getByRole('tab', { name: 'Cargo' })).toBeVisible();
+  const types = await page.getByRole('tab').allInnerTexts();
+  for (const type of types) {
+    await test.step(type, async () => {
+      const identifier = uniqueName('e2e-repository');
+      await page.getByRole('tab', { name: type, exact: true }).click();
+      await page.getByRole('button', { name: 'Create Repository' }).click();
+      const modal = page.getByRole('dialog', { name: 'Create Repository' });
+      await modal.getByLabel('Identifier').fill(identifier);
+      await modal.getByLabel('URL').fill('https://repository.example.com');
+      await modal.getByRole('checkbox', { name: 'Enabled' }).uncheck();
+      await modal.getByRole('button', { name: 'Create' }).click();
+      await expect(modal).toBeHidden();
+      await filter(page, identifier);
+      await expect(
+        page.getByRole('cell', { name: identifier, exact: true }),
+      ).toBeVisible();
+    });
+  }
+});
+
 test('change the password secret of a repository', async ({ page, api }) => {
   const identifier = uniqueName('e2e-repository');
   const [before, secret] = [uniqueName('e2e-secret'), uniqueName('e2e-secret')];

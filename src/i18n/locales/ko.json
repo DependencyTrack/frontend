@@ -1191,7 +1191,7 @@
     "state": "상태",
     "status": "상태",
     "status_active": "활성",
-    "status_canceled": "취소됨",
+    "status_cancelled": "취소됨",
     "status_completed": "완료됨",
     "status_created": "생성됨",
     "status_failed": "실패",

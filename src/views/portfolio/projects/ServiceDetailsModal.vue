@@ -2,7 +2,7 @@
   <b-modal
     v-model="visible"
     size="lg"
-    no-stacking
+    :no-stacking="!confirming"
     :title="$t('message.service_details')"
   >
     <b-tabs>
@@ -430,8 +430,8 @@ export default {
         });
     },
     deleteService: async function () {
+      if (!(await this.confirmDeleteOverModal())) return;
       this.visible = false;
-      if (!(await this.$confirmDelete())) return;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_SERVICE}/` + this.service.uuid;
       this.axios

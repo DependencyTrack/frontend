@@ -1190,7 +1190,7 @@
     "state": "Состояние",
     "status": "Статус",
     "status_active": null,
-    "status_canceled": "Отменено",
+    "status_cancelled": "Отменено",
     "status_completed": "Завершено",
     "status_created": "Создано",
     "status_failed": "Неудачно",

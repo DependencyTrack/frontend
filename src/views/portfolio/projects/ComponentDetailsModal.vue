@@ -2,7 +2,7 @@
   <b-modal
     v-model="visible"
     size="lg"
-    no-stacking
+    :no-stacking="!confirming"
     :title="$t('message.component_details')"
     @show="initializeSelectedLicense"
   >
@@ -674,8 +674,8 @@ export default {
         });
     },
     deleteComponent: async function () {
+      if (!(await this.confirmDeleteOverModal())) return;
       this.visible = false;
-      if (!(await this.$confirmDelete())) return;
       let url =
         `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/` +
         this.component.uuid;
