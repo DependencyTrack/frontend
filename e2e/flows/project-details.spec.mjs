@@ -186,16 +186,41 @@ test('delete selected project properties after confirming', async ({
     .getByRole('button', { name: 'Properties' })
     .click();
   const properties = page.getByRole('dialog', { name: 'Project Properties' });
-  await properties
-    .getByRole('row', { name: propertyName })
-    .getByRole('checkbox')
-    .check();
+  const row = properties.getByRole('row', { name: propertyName });
+  await row.getByRole('checkbox').check();
+  const confirm = page.getByRole('dialog', { name: 'Delete' });
   await properties.getByRole('button', { name: 'Delete' }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await expect(properties).toBeVisible();
+  await expect(row).toBeVisible();
+
+  await properties.getByRole('button', { name: 'Delete' }).click();
+  await confirm.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByText('Property deleted')).toBeVisible();
+  await expect(properties).toBeVisible();
+  await expect(row).toBeHidden();
+});
+
+test('keep the project details when cancelling its deletion', async ({
+  page,
+  api,
+}) => {
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-delete'),
+  });
+  const description = uniqueName('description');
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  const modal = page.getByRole('dialog', { name: 'Project Details' });
+  await modal.getByLabel('Description').fill(description);
+  await modal.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Confirm Project Deletion' })
+    .getByRole('button', { name: 'Cancel' })
+    .click();
+  await expect(modal).toBeVisible();
+  await expect(modal.getByLabel('Description')).toHaveValue(description);
 });
 
 test('load the findings of a project only when opening their tab', async ({

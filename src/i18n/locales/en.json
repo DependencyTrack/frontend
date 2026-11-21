@@ -1191,7 +1191,7 @@
     "state": "State",
     "status": "Status",
     "status_active": "Active",
-    "status_canceled": "Canceled",
+    "status_cancelled": "Canceled",
     "status_completed": "Completed",
     "status_created": "Created",
     "status_failed": "Failed",

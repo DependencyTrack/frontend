@@ -1190,7 +1190,7 @@
     "state": "राज्य",
     "status": "स्थिति",
     "status_active": null,
-    "status_canceled": "रद्द",
+    "status_cancelled": "रद्द",
     "status_completed": "पूर्ण",
     "status_created": "बनाया गया",
     "status_failed": "विफल",

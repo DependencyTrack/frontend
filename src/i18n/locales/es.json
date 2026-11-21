@@ -1190,7 +1190,7 @@
     "state": "Estado",
     "status": "Estado",
     "status_active": null,
-    "status_canceled": "Cancelado",
+    "status_cancelled": "Cancelado",
     "status_completed": "Completado",
     "status_created": "Creado",
     "status_failed": "Fallido",

@@ -1190,7 +1190,7 @@
     "state": "状態",
     "status": "ステータス",
     "status_active": null,
-    "status_canceled": "キャンセル済み",
+    "status_cancelled": "キャンセル済み",
     "status_completed": "完了",
     "status_created": "作成済み",
     "status_failed": "失敗",

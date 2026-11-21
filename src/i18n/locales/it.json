@@ -1190,7 +1190,7 @@
     "state": "Stato",
     "status": "Stato",
     "status_active": null,
-    "status_canceled": "Annullato",
+    "status_cancelled": "Annullato",
     "status_completed": "Completato",
     "status_created": "Creato",
     "status_failed": "Fallito",
