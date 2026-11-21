@@ -253,9 +253,10 @@ test('leave a project before its metrics have loaded', async ({ page }) => {
   const held = new Promise((resolve) => (release = resolve));
   await page.route(PROJECT_METRICS, async (route) => {
     await held;
-    await route.continue();
+    await route.continue().catch(() => {});
   });
   await login(page);
+  const request = page.waitForRequest(PROJECT_METRICS);
   await page.goto(`projects/${project.uuid}`);
   await expect(
     page.getByRole('heading', { name: 'Project Vulnerabilities' }),
@@ -266,9 +267,34 @@ test('leave a project before its metrics have loaded', async ({ page }) => {
     .click();
   await expect(page).toHaveURL(/\/projects$/);
 
-  const loaded = page.waitForResponse(PROJECT_METRICS);
   release();
-  await (await loaded).finished();
+  await (await (await request).response())?.finished();
   // Lets the app handle the response before the problems fixture checks for page errors.
   await page.evaluate(() => {});
+});
+
+test('leave a project before it has loaded', async ({ page }) => {
+  const { project } = seed();
+  const projectUrl = `**/api/v1/project/${project.uuid}`;
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(projectUrl, async (route) => {
+    await held;
+    await route.continue().catch(() => {});
+  });
+  await login(page);
+  const request = page.waitForRequest(projectUrl);
+  await page.goto(`projects/${project.uuid}`);
+  await request;
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: 'Projects' })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+
+  release();
+  await (await (await request).response())?.finished();
+  await page.evaluate(() => {});
+  await expect(page).toHaveTitle('Projects - Dependency-Track');
+  await expect(page.getByRole('alert')).toHaveCount(0);
 });
