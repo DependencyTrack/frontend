@@ -156,7 +156,7 @@ a.dependency-graph-card:hover {
   text-decoration: none;
 }
 .dependency-graph-card.direct {
-  box-shadow: inset 4px 0 0 var(--dt-accent);
+  border-color: var(--dt-accent);
 }
 .dependency-graph-card.project {
   border: 2px solid var(--dt-brand);

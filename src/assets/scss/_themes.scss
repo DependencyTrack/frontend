@@ -23,11 +23,6 @@
 }
 
 [data-bs-theme="light"] {
-  .sidebar .nav-link.active,
-  .list-group-item.active {
-    box-shadow: inset 3px 0 0 var(--dt-brand);
-  }
-
   .page-item.active .page-link {
     box-shadow: inset 0 -3px 0 var(--dt-brand);
   }
@@ -146,10 +141,6 @@
   --bs-list-group-active-color: var(--dt-text-heading);
   --bs-list-group-active-bg: var(--dt-selected);
   --bs-list-group-active-border-color: var(--dt-border);
-}
-
-.list-group-item.active {
-  box-shadow: inset 3px 0 0 var(--dt-accent);
 }
 
 .nav-tabs .nav-link.active {

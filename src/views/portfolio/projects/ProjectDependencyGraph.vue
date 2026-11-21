@@ -541,9 +541,9 @@ onBeforeUnmount(() => {
   vertical-align: middle;
 }
 .dependency-graph-swatch.direct {
-  width: 0.25rem;
   height: 0.75rem;
-  background: var(--dt-accent);
+  border: 1px solid var(--dt-accent);
+  border-radius: var(--bs-border-radius-sm);
 }
 .dependency-graph-swatch.path {
   border-top: 2px solid var(--dt-accent);
@@ -560,18 +560,7 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 0;
   border-radius: 0 0 var(--bs-border-radius-lg) var(--bs-border-radius-lg);
-  background:
-    radial-gradient(
-      60rem 30rem at 0% 100%,
-      var(--dt-graph-glow-brand),
-      transparent
-    ),
-    radial-gradient(
-      60rem 30rem at 100% 0%,
-      var(--dt-graph-glow-accent),
-      transparent
-    ),
-    var(--dt-surface-recessed);
+  background: var(--dt-surface-recessed);
 }
 .dependency-graph.maximized .dependency-graph-canvas,
 .dependency-graph.maximized .dependency-graph-viewport {

@@ -158,7 +158,6 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
     &.active {
       color: var(--dt-text-heading);
       background: $sidebar-nav-link-active-bg;
-      box-shadow: inset 3px 0 0 var(--dt-accent);
 
       .nav-icon {
         color: var(--dt-accent);
@@ -483,10 +482,7 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
 
 .callout {
   position: relative;
-  padding: 0 $spacer;
   margin: $spacer 0;
-  border-left: 4px solid var(--dt-border);
-  border-radius: $border-radius;
 
   h4 {
     margin-top: 0;
@@ -506,12 +502,9 @@ $navbar-toggler-icon: "data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30
   .callout-#{$color} {
     $severity: map-get($dt-severity-variants, $color);
     $callout-color: var(--dt-text-heading);
-    $callout-border: var(--dt-border-control);
     @if $severity {
       $callout-color: var(--dt-severity-#{$severity}-text);
-      $callout-border: $callout-color;
     }
-    border-left-color: $callout-border;
 
     h4 {
       color: $callout-color;

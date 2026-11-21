@@ -110,6 +110,11 @@
             >
               <div class="d-flex align-items-center mb-1">
                 <span class="fw-bold me-2">{{ eventTypeLabel(event) }}</span>
+                <small
+                  v-if="eventCorrelationId(event) !== null"
+                  class="text-muted"
+                  >#{{ eventCorrelationId(event) }}</small
+                >
                 <small class="text-muted ms-auto">{{
                   formatTs(event.event.timestamp)
                 }}</small>
@@ -323,9 +328,9 @@ const POLL_LIMIT = 50;
 // Theme tokens that clear 3:1 on both themes and don't read as severity.
 const BADGE_COLORS = [
   'var(--dt-accent)',
-  'var(--dt-focus)',
   'var(--dt-brand)',
   'var(--dt-text-muted)',
+  'var(--dt-workflow-event)',
 ];
 
 const EVENT_TYPES = [
