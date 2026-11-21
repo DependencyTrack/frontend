@@ -227,3 +227,99 @@ export function dismissNextDialog(page) {
     }),
   );
 }
+
+// Opens the upload dialog of the project page and uploads the file.
+// Resolves with the dialog.
+export async function uploadBom(page, file) {
+  await page.getByRole('button', { name: 'Upload BOM' }).click();
+  const modal = page.getByRole('dialog', { name: 'Upload BOM' });
+  const chooser = page.waitForEvent('filechooser');
+  await modal.getByText('Browse').click();
+  await (await chooser).setFiles(file);
+  await modal.getByRole('button', { name: 'Upload', exact: true }).click();
+  return modal;
+}
+
+// Serves the given processing statuses, one per poll, repeating the last one.
+// An entry of null serves an unknown token, which the server reports without a status.
+export async function serveBomTokenStatuses(page, statuses) {
+  let polls = 0;
+  await page.route('**/api/v1/bom/token/**', (route) => {
+    const status = statuses[Math.min(polls++, statuses.length - 1)];
+    return route.fulfill({
+      json: status
+        ? { processing: status === 'PENDING' || status === 'RUNNING', status }
+        : { processing: false },
+    });
+  });
+  return { polls: () => polls };
+}
+
+// The banner on the project page that reports the processing of an uploaded BOM.
+export function bomStatusBanner(page, title) {
+  return page
+    .getByRole(title === 'BOM processing failed' ? 'alert' : 'status')
+    .filter({
+      hasText: title,
+    });
+}
+
+// Serves one processing status for every poll, until it is changed.
+export async function controlBomTokenStatus(page, initial) {
+  let current = initial;
+  await page.route('**/api/v1/bom/token/**', (route) =>
+    route.fulfill({
+      json: {
+        processing: current === 'PENDING' || current === 'RUNNING',
+        status: current,
+      },
+    }),
+  );
+  return {
+    set(status) {
+      current = status;
+    },
+  };
+}
+
+// Makes the app follow an upload as if it had started `startedAgoMs` ago,
+// in a session that has already loaded the app once.
+export async function trackBomUpload(
+  page,
+  { projectUuid, projectName, projectVersion, startedAgoMs = 0 },
+) {
+  await page.evaluate(
+    (upload) =>
+      sessionStorage.setItem(
+        'dtrack.bomUploads',
+        JSON.stringify({ [upload.projectUuid]: upload }),
+      ),
+    {
+      token: 'e2e-token',
+      projectUuid,
+      projectName,
+      projectVersion,
+      startedAt: Date.now() - startedAgoMs,
+    },
+  );
+}
+
+export async function openSidebarLink(page, name) {
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name, exact: true })
+    .click();
+}
+
+// The sidebar entry that shows a BOM is still being processed.
+export function bomSidebarIndicator(page, projectName) {
+  return page.getByRole('link', {
+    name: new RegExp(`BOM processing.*${projectName}`),
+  });
+}
+
+export async function logout(page, username = 'admin') {
+  await page.getByRole('button', { name: username, exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Logout' }).click();
+  await expect(page).toHaveURL(/\/login/);
+}

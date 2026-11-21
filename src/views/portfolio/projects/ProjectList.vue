@@ -55,6 +55,8 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
 import common from '../../../shared/common';
 import EventBus from '../../../shared/eventbus';
+import { isActiveStatus } from '../../../shared/bomProcessing';
+import { bomUploads } from '../../../shared/bomUploads';
 import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar.vue';
 import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal.vue';
@@ -79,6 +81,14 @@ export default {
     this.options.url = this.apiUrl();
   },
   computed: {
+    // Projects whose BOM is being processed carry a badge in their row.
+    projectsWithBomProcessing() {
+      return Object.values(bomUploads)
+        .filter((upload) => isActiveStatus(upload.status))
+        .map((upload) => upload.projectUuid)
+        .sort()
+        .join();
+    },
     hasRouteFilter() {
       return hasRouteFilter(this.$route.query);
     },
@@ -237,6 +247,9 @@ export default {
     $route() {
       this.refreshTable();
     },
+    projectsWithBomProcessing() {
+      this.$refs.table.refresh({ silent: true });
+    },
     hasRouteFilter(filtered) {
       // Leaving a filter restores the stored preference.
       this.showFlatView = filtered || this.isSearching || storedFlatView();
@@ -297,7 +310,10 @@ export default {
               const title = common.getCollectionLogicText(this, row);
               collectionIcon = ` <i class="fa fa-calculator fa-fw icon-cellend" title="${title}"></i>`;
             }
-            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>${collectionIcon}`;
+            const processing = isActiveStatus(bomUploads[row.uuid]?.status)
+              ? ` <span class="badge text-bg-info">${xssFilters.inHTMLData(this.$t('message.bom_processing_badge'))}</span>`
+              : '';
+            return `<a href="${url}">${xssFilters.inHTMLData(value)}</a>${collectionIcon}${processing}`;
           },
         },
         {

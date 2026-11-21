@@ -25,6 +25,7 @@ import { getUrlVar } from './shared/utils';
 import { INVALID_SORT_FIELD_PROBLEM_TYPE } from './shared/problemDetails';
 import { getToken, clearPermissions } from './shared/permissions';
 import EventBus from './shared/eventbus';
+import { forgetAllBomUploads } from './shared/bomUploads';
 import state from './shared/state';
 import Banner from './views/components/Banner.vue';
 import {
@@ -83,6 +84,8 @@ export default {
         clearPermissions();
         state.currentUser = {};
         state.systemCapabilities = undefined;
+        // Uploads followed so far belong to the session that ended.
+        forgetAllBomUploads();
       }
       setAuthHeader(token);
       if (token) {
@@ -160,6 +163,10 @@ export default {
 
     this.axios.interceptors.response.use(null, (error) => {
       if (error.response?.status === 401 && endExpiredSession()) {
+        return Promise.reject(error);
+      }
+      // Background requests, such as status polls, report failures themselves.
+      if (error.config?.silent) {
         return Promise.reject(error);
       }
       if (!error.response) {

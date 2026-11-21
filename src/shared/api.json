@@ -16,6 +16,7 @@
   "URL_ACL_USER": "api/v1/acl/user",
   "URL_ANALYSIS": "api/v1/analysis",
   "URL_BOM": "api/v1/bom",
+  "URL_BOM_TOKEN": "api/v1/bom/token",
   "URL_CALCULATOR_CVSS": "api/v1/calculator/cvss",
   "URL_CALCULATOR_OWASP": "api/v1/calculator/owasp",
   "URL_COMPONENT": "api/v1/component",
