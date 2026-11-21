@@ -1,268 +1,148 @@
 <template>
   <div>
-    <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <b-form-checkbox
-        style="margin-left: 1rem; margin-right: 0.5rem"
-        id="showFlatView"
-        v-model="showFlatView"
-        :disabled="!isTreeViewAllowed"
-        v-b-tooltip.hover="$t('message.switch_view')"
-        inline
-        switch
-        ><span class="text-muted">{{
-          $t('message.show_flat_view')
-        }}</span></b-form-checkbox
-      >
-    </div>
-    <div id="projectsFilterBarRow" class="filter-bar-row">
-      <div
-        v-if="
-          isPermitted([
-            PERMISSIONS.PORTFOLIO_MANAGEMENT,
-            PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
-          ])
-        "
-        class="filter-bar-surface filter-bar-actions"
-      >
-        <b-button
-          size="sm"
-          variant="outline-primary"
-          class="btn-create-project"
-          @click="initializeProjectCreateProjectModal"
-        >
-          <span class="fa fa-plus"></span> {{ $t('message.create_project') }}
-        </b-button>
-      </div>
-      <div
-        id="projectsFilterBar"
-        class="filter-bar filter-bar-filters"
-        role="toolbar"
-        :aria-label="$t('message.filters')"
-      >
-        <div class="filter-pills">
-          <text-filter-pill
-            v-if="isFilterVisible('name')"
-            ref="filter_name"
-            :field-label="$t('message.project_name')"
-            field-name="name"
-            icon="fa-folder-open-o"
-            operator="contains"
-            v-model="nameFilter"
-            @dismiss="onFilterDismiss('name')"
-          />
-          <text-filter-pill
-            v-if="isFilterVisible('version')"
-            ref="filter_version"
-            :field-label="$t('message.version')"
-            field-name="version"
-            icon="fa-bookmark-o"
-            operator="contains"
-            v-model="versionFilter"
-            @dismiss="onFilterDismiss('version')"
-          />
-          <searchable-multi-select-filter-pill
-            v-if="isFilterVisible('classifier')"
-            ref="filter_classifier"
-            :field-label="$t('message.classifier')"
-            field-name="classifier"
-            icon="fa-cube"
-            :options="sortAvailableClassifiers"
-            v-model="classifierFilter"
-            @dismiss="onFilterDismiss('classifier')"
-          />
-          <multi-value-text-filter-pill
-            v-if="isFilterVisible('tag')"
-            ref="filter_tag"
-            :field-label="$t('message.tags')"
-            field-name="tag"
-            icon="fa-tag"
-            :input-placeholder="$t('message.tag_name')"
-            v-model="tagFilter"
-            @dismiss="onFilterDismiss('tag')"
-          />
-          <multi-value-text-filter-pill
-            v-if="isFilterVisible('team')"
-            ref="filter_team"
-            :field-label="$t('message.teams')"
-            field-name="team"
-            icon="fa-users"
-            :input-placeholder="$t('message.team_name')"
-            v-model="teamFilter"
-            @dismiss="onFilterDismiss('team')"
-          />
-          <searchable-multi-select-filter-pill
-            v-if="!uuid && isFilterVisible('ancestor')"
-            ref="filter_ancestor"
-            :field-label="$t('message.ancestor')"
-            field-name="ancestor"
-            icon="fa-sitemap"
-            :multiple="false"
-            :options="ancestorOptions"
-            :loading="ancestorOptionsLoading"
-            :search-placeholder="$t('message.search_ancestor')"
-            v-model="ancestorFilter"
-            @dismiss="onFilterDismiss('ancestor')"
-          />
-          <date-time-range-filter-pill
-            v-if="isFilterVisible('lastBomImport')"
-            ref="filter_lastBomImport"
-            :field-label="$t('message.last_bom_import')"
-            field-name="last_bom_import"
-            icon="fa-calendar"
-            date-only
-            emit-date-as-millis
-            v-model="lastBomImportFilter"
-            @dismiss="onFilterDismiss('lastBomImport')"
-          />
-          <enum-filter-pill
-            v-if="isFilterVisible('active')"
-            ref="filter_active"
-            :field-label="$t('message.active')"
-            field-name="active"
-            icon="fa-eye"
-            :options="activeFilterOptions"
-            v-model="activeFilter"
-            @dismiss="onFilterDismiss('active')"
-          />
-          <enum-filter-pill
-            v-if="isFilterVisible('latest')"
-            ref="filter_latest"
-            :field-label="$t('message.latest')"
-            field-name="latest"
-            icon="fa-bookmark"
-            :options="latestFilterOptions"
-            v-model="latestFilter"
-            @dismiss="onFilterDismiss('latest')"
-          />
-          <b-dropdown
-            v-if="addFilterOptions.length > 0"
-            size="sm"
+    <b-button
+      variant="primary"
+      class="mb-2"
+      @click="initializeProjectCreateProjectModal"
+      v-permission:or="[
+        PERMISSIONS.PORTFOLIO_MANAGEMENT,
+        PERMISSIONS.PORTFOLIO_MANAGEMENT_CREATE,
+      ]"
+    >
+      <span class="fa fa-plus" aria-hidden="true"></span>
+      {{ $t('message.create_project') }}
+    </b-button>
+    <filter-bar
+      toolbar-id="projectsToolbar"
+      :add-filter-options="addFilterOptions"
+      :active-filter-count="activeFilterCount"
+      @show-filter="showFilter"
+      @clear-all="clearAllFilters"
+    >
+      <text-filter-pill
+        v-if="isFilterVisible('name')"
+        ref="filter_name"
+        :field-label="$t('message.name')"
+        field-name="name"
+        icon="fa-folder-open-o"
+        operator="contains"
+        v-model="nameFilter"
+        @dismiss="onFilterDismiss('name')"
+      />
+      <text-filter-pill
+        v-if="isFilterVisible('version')"
+        ref="filter_version"
+        :field-label="$t('message.version')"
+        field-name="version"
+        icon="fa-bookmark-o"
+        operator="contains"
+        v-model="versionFilter"
+        @dismiss="onFilterDismiss('version')"
+      />
+      <multi-select-filter-pill
+        v-if="isFilterVisible('classifier')"
+        ref="filter_classifier"
+        :field-label="$t('message.classifier')"
+        field-name="classifier"
+        icon="fa-cube"
+        :options="sortAvailableClassifiers"
+        v-model="classifierFilter"
+        @dismiss="onFilterDismiss('classifier')"
+      />
+      <multi-value-text-filter-pill
+        v-if="isFilterVisible('tag')"
+        ref="filter_tag"
+        :field-label="$t('message.tags')"
+        field-name="tag"
+        icon="fa-tag"
+        :input-placeholder="$t('message.tag_name')"
+        v-model="tagFilter"
+        @dismiss="onFilterDismiss('tag')"
+      />
+      <project-filter-pill
+        v-if="!uuid && isFilterVisible('ancestor')"
+        ref="filter_ancestor"
+        :field-label="$t('message.ancestor')"
+        field-name="ancestor"
+        icon="fa-sitemap"
+        v-model="ancestorFilter"
+        @dismiss="onFilterDismiss('ancestor')"
+      />
+      <date-time-range-filter-pill
+        v-if="isFilterVisible('lastBomImport')"
+        ref="filter_lastBomImport"
+        :field-label="$t('message.last_bom_import')"
+        field-name="last_bom_import"
+        icon="fa-calendar"
+        date-only
+        emit-date-as-millis
+        v-model="lastBomImportFilter"
+        @dismiss="onFilterDismiss('lastBomImport')"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('showInactive')"
+        :field-label="$t('message.show_inactive')"
+        field-name="showInactive"
+        icon="fa-eye"
+        v-model="showInactive"
+      />
+      <boolean-filter-pill
+        v-if="isFilterVisible('onlyLatestVersion')"
+        :field-label="$t('message.only_latest')"
+        field-name="onlyLatestVersion"
+        icon="fa-bookmark"
+        v-model="onlyLatestVersion"
+      />
+      <template #actions>
+        <b-button-group :aria-label="$t('message.view')">
+          <!-- aria-disabled instead of disabled keeps the button focusable and hoverable, so its reason can show. -->
+          <b-button
             variant="outline-primary"
-            class="btn-more-filters"
-            no-caret
+            class="py-1"
+            :pressed="isTreeView"
+            :aria-disabled="isTreeViewAllowed ? null : 'true'"
+            :class="{ 'opacity-50': !isTreeViewAllowed }"
+            v-b-tooltip.hover.focus="
+              isTreeViewAllowed ? '' : $t('message.tree_view_unavailable')
+            "
+            :aria-describedby="
+              isTreeViewAllowed ? null : 'project-tree-view-unavailable'
+            "
+            @update:pressed="isTreeViewAllowed && (showFlatView = false)"
+            ><span class="fa fa-indent me-1" aria-hidden="true"></span
+            >{{ $t('message.tree') }}</b-button
           >
-            <template #button-content>
-              <span class="fa fa-plus" aria-hidden="true"></span>
-              {{ $t('message.add_filter') }}
-            </template>
-            <b-dropdown-item
-              v-for="filter in addFilterOptions"
-              :key="filter.name"
-              @click="showFilter(filter.name)"
-            >
-              <span
-                :class="['fa', filter.icon, 'me-2']"
-                aria-hidden="true"
-              ></span>
-              {{ filter.label }}
-            </b-dropdown-item>
-          </b-dropdown>
           <b-button
-            v-show="activeFilterCount >= 2"
-            size="sm"
-            variant="outline-danger"
-            class="btn-clear-all-filters"
-            @click="clearAllFilters"
+            variant="outline-primary"
+            class="py-1"
+            :pressed="!isTreeView"
+            @update:pressed="isTreeViewAllowed && (showFlatView = true)"
+            ><span class="fa fa-bars me-1" aria-hidden="true"></span
+            >{{ $t('message.flat') }}</b-button
           >
-            <span class="fa fa-remove" aria-hidden="true"></span>
-            {{ $t('message.clear_filters') }}
-          </b-button>
-        </div>
-      </div>
-    </div>
-    <bootstrap-table
+        </b-button-group>
+        <span
+          v-if="!isTreeViewAllowed"
+          id="project-tree-view-unavailable"
+          class="visually-hidden"
+          >{{ $t('message.tree_view_unavailable') }}</span
+        >
+      </template>
+    </filter-bar>
+    <token-paginated-table
       ref="table"
+      :base-url="listUrl"
+      :extra-query-params="expandQueryParams"
       :columns="columns"
-      :data="tableData"
       :options="options"
-      @on-load-success="onLoadSuccess"
-      @on-post-body="onPostBody"
-    >
-    </bootstrap-table>
-    <div
-      class="mt-2 d-flex flex-wrap justify-content-between align-items-center"
-    >
-      <div class="pagination-meta d-flex align-items-center flex-wrap">
-        <span
-          v-if="totalCountDisplay"
-          class="pagination-meta-text"
-          :title="
-            totalCountType === 'AT_LEAST'
-              ? $t('message.total_rows_at_least_tooltip')
-              : null
-          "
-        >
-          {{ totalCountDisplay }} {{ $t('message.total_rows') }}
-        </span>
-        <span
-          v-if="totalCountDisplay"
-          class="pagination-meta-divider"
-          aria-hidden="true"
-        ></span>
-        <label
-          class="pagination-meta-text mb-0 me-2"
-          for="project-list-page-size-select"
-        >
-          {{ $t('message.rows_per_page') }}
-        </label>
-        <b-form-select
-          id="project-list-page-size-select"
-          v-model="currentPageSize"
-          class="pagination-page-size-select"
-          :disabled="isLoading"
-        >
-          <b-form-select-option
-            v-for="pageSize in allowedPageSizes"
-            :key="`pageSize-${pageSize}`"
-            :value="pageSize"
-          >
-            {{ pageSize }}
-          </b-form-select-option>
-        </b-form-select>
-      </div>
-      <div class="d-flex align-items-center">
-        <b-button-group class="pagination-group">
-          <b-button
-            class="pagination-button"
-            :disabled="!hasPreviousPage || isLoading"
-            :aria-label="$t('message.first_page')"
-            :title="$t('message.first_page')"
-            @click="goToFirstPage"
-          >
-            <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-          </b-button>
-          <b-button
-            class="pagination-button"
-            :disabled="!hasPreviousPage || isLoading"
-            :aria-label="$t('message.previous_page')"
-            :title="$t('message.previous_page')"
-            @click="goToPrevPage"
-          >
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
-          </b-button>
-        </b-button-group>
-        <span class="page-indicator" aria-live="polite">
-          {{ $t('message.page_indicator', { n: currentPageNumber }) }}
-        </span>
-        <b-button-group class="pagination-group">
-          <b-button
-            class="pagination-button"
-            :disabled="!hasNextPage || isLoading"
-            :aria-label="$t('message.next_page')"
-            :title="$t('message.next_page')"
-            @click="goToNextPage"
-          >
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-          </b-button>
-        </b-button-group>
-      </div>
-    </div>
+      page-size-storage-key="ProjectListPageSize"
+      @visible-columns="visibleColumns = $event"
+    />
     <project-create-project-modal v-model="showProjectCreateProjectModal" />
   </div>
 </template>
 
 <script>
-import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
@@ -273,77 +153,34 @@ import EventBus from '../../../shared/eventbus';
 import PolicyViolationProgressBar from '../../components/PolicyViolationProgressBar.vue';
 import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import ProjectCreateProjectModal from './ProjectCreateProjectModal.vue';
+import FilterBar from '@/views/components/FilterBar.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
-import EnumFilterPill from '@/views/components/EnumFilterPill.vue';
-import SearchableMultiSelectFilterPill from '@/views/components/SearchableMultiSelectFilterPill.vue';
+import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
+import MultiSelectFilterPill from '@/views/components/MultiSelectFilterPill.vue';
+import ProjectFilterPill from '@/views/components/ProjectFilterPill.vue';
 import MultiValueTextFilterPill from '@/views/components/MultiValueTextFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
-
-const ALLOWED_PAGE_SIZES = [10, 25, 50, 100];
+import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 const EXPAND_BY_COLUMN = {
   'metrics.policy_violations_total': 'metrics',
   'metrics.vulnerabilities': 'metrics',
+  'metrics.kev': 'metrics',
+  'metrics.components': 'metrics',
   teams: 'teams',
 };
 
-// Columns that request expand and are visible by default when no preference is stored.
-const DEFAULT_VISIBLE_EXPAND_COLUMNS = [
-  'metrics.policy_violations_total',
-  'metrics.vulnerabilities',
-];
-
-const LEGACY_SORT_FIELD_MAP = {
+// Column fields as saved in sort and column preferences before the switch to the v2 API.
+const LEGACY_FIELDS = {
   isLatest: 'is_latest',
   lastBomImport: 'last_bom_import',
+  lastBomImportFormat: 'last_bom_import_format',
   lastRiskScore: 'last_inherited_risk_score',
+  active: 'state',
+  'metrics.policyViolationsTotal': 'metrics.policy_violations_total',
 };
 
-function normalizeSortField(field) {
-  if (!field) {
-    return field;
-  }
-  return LEGACY_SORT_FIELD_MAP[field] || field;
-}
-
-function storedColumnVisibility(field) {
-  if (typeof localStorage === 'undefined') {
-    return null;
-  }
-  const stored = localStorage.getItem(
-    'ProjectListShow' + common.capitalize(field),
-  );
-  if (stored === null) {
-    return null;
-  }
-  return stored === 'true';
-}
-
-function initialVisibleColumns() {
-  return Object.keys(EXPAND_BY_COLUMN).filter((field) => {
-    const stored = storedColumnVisibility(field);
-    if (stored !== null) {
-      return stored;
-    }
-    return DEFAULT_VISIBLE_EXPAND_COLUMNS.includes(field);
-  });
-}
-
-// Filters that force flat view; active/latest keep tree view available.
-const HEAVY_FILTER_NAMES = [
-  'name',
-  'version',
-  'classifier',
-  'tag',
-  'team',
-  'ancestor',
-  'lastBomImport',
-];
-
-const DEFAULT_ACTIVE_FILTER = 'true';
-
-const storedFlatView = () =>
-  !!localStorage && localStorage.getItem('ProjectListShowFlatView') === 'true';
+const CHILDREN_PAGE_SIZE = 25;
 
 export default {
   mixins: [
@@ -353,60 +190,46 @@ export default {
     availableClassifiersMixin,
   ],
   components: {
+    FilterBar,
     ProjectCreateProjectModal,
     TextFilterPill,
-    EnumFilterPill,
-    SearchableMultiSelectFilterPill,
+    BooleanFilterPill,
+    MultiSelectFilterPill,
+    ProjectFilterPill,
     MultiValueTextFilterPill,
     DateTimeRangeFilterPill,
+    TokenPaginatedTable,
   },
   props: {
+    // If only children from a specific project shall be shown,
+    // this must be set to the corresponding project.
     uuid: String,
   },
-  beforeMount() {
+  created() {
     this.applyRouteFilters();
-  },
-  mounted() {
-    this.tableReady = true;
-    if (!this.uuid) {
-      this.loadAncestorOptions();
+    const storedVisibility = (field) =>
+      localStorage.getItem('ProjectListShow' + common.capitalize(field));
+    this.columns.forEach((column) => {
+      const legacyField = Object.keys(LEGACY_FIELDS).find(
+        (legacy) => LEGACY_FIELDS[legacy] === column.field,
+      );
+      const stored =
+        storedVisibility(column.field) ??
+        (legacyField ? storedVisibility(legacyField) : null);
+      if (stored !== null) {
+        column.visible = stored === 'true';
+      }
+    });
+    this.visibleColumns = this.columns
+      .filter((column) => column.visible !== false)
+      .map((column) => column.field);
+    if (!this.columns.some((c) => c.sortable && c.field === this.sortBy)) {
+      this.sortBy = 'name';
     }
-    this.resetAndLoad();
+    this.options.sortName = this.sortBy;
+    this.options.sortOrder = this.sortDirection;
   },
   methods: {
-    hasFilterValue(name) {
-      if (name === 'active') {
-        return this.activeFilter === 'true' || this.activeFilter === 'false';
-      }
-      if (name === 'latest') {
-        return this.latestFilter === 'true' || this.latestFilter === 'false';
-      }
-      const val = this[name + 'Filter'];
-      return Array.isArray(val) ? val.length > 0 : !!val;
-    },
-    onFilterDismiss(name) {
-      // Active uses 'all' (show inactive too) instead of null when dismissed.
-      if (name === 'active') {
-        this.activeFilter = 'all';
-      }
-      filterPillsMixin.methods.onFilterDismiss.call(this, name);
-    },
-    showFilter(name) {
-      if (name === 'active' && this.activeFilter === 'all') {
-        this.activeFilter = DEFAULT_ACTIVE_FILTER;
-      }
-      filterPillsMixin.methods.showFilter.call(this, name);
-    },
-    isFilterVisible(name) {
-      if (name === 'active') {
-        return (
-          this.activeFilter === 'true' ||
-          this.activeFilter === 'false' ||
-          !!this.pendingFilters.active
-        );
-      }
-      return filterPillsMixin.methods.isFilterVisible.call(this, name);
-    },
     applyRouteFilters() {
       const q = this.$route.query;
       this.nameFilter = q.name_contains
@@ -420,27 +243,14 @@ export default {
           ? q.classifier
           : [q.classifier];
       } else {
-        this.classifierFilter = null;
+        this.classifierFilter = [];
       }
       if (q.tags_all) {
         this.tagFilter = Array.isArray(q.tags_all) ? q.tags_all : [q.tags_all];
-      } else if (q.tags) {
-        this.tagFilter = Array.isArray(q.tags) ? q.tags : [q.tags];
       } else if (q.tag) {
         this.tagFilter = Array.isArray(q.tag) ? q.tag : [q.tag];
       } else {
         this.tagFilter = null;
-      }
-      if (q.teams_any) {
-        this.teamFilter = Array.isArray(q.teams_any)
-          ? q.teams_any
-          : [q.teams_any];
-      } else if (q.teams) {
-        this.teamFilter = Array.isArray(q.teams) ? q.teams : [q.teams];
-      } else if (q.team) {
-        this.teamFilter = Array.isArray(q.team) ? q.team : [q.team];
-      } else {
-        this.teamFilter = null;
       }
       if (q.last_bom_import_since || q.last_bom_import_before) {
         this.lastBomImportFilter = {
@@ -454,74 +264,22 @@ export default {
       } else {
         this.lastBomImportFilter = null;
       }
-      if (q.show_inactive === 'true') {
-        this.activeFilter = 'all';
-      } else if (q.state === 'INACTIVE') {
-        this.activeFilter = 'false';
-      } else if (q.state === 'ACTIVE') {
-        this.activeFilter = 'true';
-      } else {
-        this.activeFilter = DEFAULT_ACTIVE_FILTER;
-      }
-      if (q.is_latest === 'false') {
-        this.latestFilter = 'false';
-      } else if (q.is_latest === 'true') {
-        this.latestFilter = 'true';
-      } else {
-        this.latestFilter = null;
-      }
+      this.showInactive = q.show_inactive === 'true';
+      this.onlyLatestVersion = q.is_latest === 'true';
       if (q.ancestor_uuid) {
         this.ancestorFilter = q.ancestor_uuid;
       } else {
         this.ancestorFilter = null;
       }
     },
-    initializeProjectCreateProjectModal() {
+    initializeProjectCreateProjectModal: function () {
       EventBus.emit('initializeProjectCreateProjectModal');
-    },
-    async loadAncestorOptions() {
-      this.ancestorOptionsLoading = true;
-      try {
-        const baseUrl = common.setQueryParams(
-          `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
-          {
-            has_children: true,
-            limit: 1000,
-            sort_by: 'name',
-          },
-        );
-        const items = [];
-        let pageUrl = baseUrl;
-        while (pageUrl) {
-          const response = await this.axios.get(pageUrl);
-          items.push(...(response.data.items || []));
-          const nextPageToken = response.data.next_page_token;
-          pageUrl = nextPageToken
-            ? common.setQueryParams(baseUrl, { page_token: nextPageToken })
-            : null;
-        }
-        this.ancestorOptions = items.map((item) => ({
-          value: item.uuid,
-          text: item.version ? `${item.name} : ${item.version}` : item.name,
-        }));
-      } catch (err) {
-        console.error(`Failed to load ancestor filter options: ${err}`);
-        this.ancestorOptions = [];
-      } finally {
-        this.ancestorOptionsLoading = false;
-      }
-    },
-    projectsUrl() {
-      return `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`;
     },
     buildFilterParams() {
       const params = {};
-      if (this.activeFilter === 'false') {
-        params.state = 'INACTIVE';
-      } else if (this.activeFilter === 'true') {
+      if (!this.showInactive) {
         params.state = 'ACTIVE';
       }
-      // 'all': omit state to include active and inactive projects.
       if (this.nameFilter?.value) {
         params.name_contains = this.nameFilter.value;
       }
@@ -534,13 +292,8 @@ export default {
       if (this.tagFilter?.length) {
         params.tags_all = [...this.tagFilter];
       }
-      if (this.teamFilter?.length) {
-        params.teams_any = [...this.teamFilter];
-      }
-      if (this.latestFilter === 'true') {
+      if (this.onlyLatestVersion) {
         params.is_latest = true;
-      } else if (this.latestFilter === 'false') {
-        params.is_latest = false;
       }
       if (this.lastBomImportFilter?.since) {
         params.last_bom_import_since = this.lastBomImportFilter.since;
@@ -548,27 +301,16 @@ export default {
       if (this.lastBomImportFilter?.before) {
         params.last_bom_import_before = this.lastBomImportFilter.before;
       }
-      if (this.ancestorFilter) {
+      if (this.ancestorFilter && !this.uuid) {
         params.ancestor_uuid = this.ancestorFilter;
       }
       return params;
     },
     buildUrlQueryParams() {
       const params = this.buildFilterParams();
-      if (this.activeFilter === 'all') {
+      delete params.state;
+      if (this.showInactive) {
         params.show_inactive = 'true';
-        delete params.state;
-      } else if (this.activeFilter === 'false') {
-        params.state = 'INACTIVE';
-      } else {
-        delete params.state;
-      }
-      if (this.latestFilter === 'true') {
-        params.is_latest = 'true';
-      } else if (this.latestFilter === 'false') {
-        params.is_latest = 'false';
-      } else {
-        delete params.is_latest;
       }
       return params;
     },
@@ -582,192 +324,53 @@ export default {
       }
       if (parentUuid) {
         params.parent_uuid = parentUuid;
-      } else if (this.uuid && !parentUuid) {
+      } else if (this.uuid) {
         params.parent_uuid = this.uuid;
       } else if (this.isTreeView) {
         params.only_root = true;
       }
-      return common.setQueryParams(this.projectsUrl(), params);
+      return common.setQueryParams(
+        `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
+        params,
+      );
     },
-    syncQueryParams() {
+    refreshTable() {
       const query = this.buildUrlQueryParams();
       if (!common.sameQueryParams(query, this.$route.query)) {
         this.$router.replace({ query }).catch(() => {});
       }
     },
-    clearAllFilters() {
-      this._clearing = true;
-      try {
-        this.nameFilter = null;
-        this.versionFilter = null;
-        this.classifierFilter = null;
-        this.tagFilter = null;
-        this.teamFilter = null;
-        this.ancestorFilter = null;
-        this.lastBomImportFilter = null;
-        this.activeFilter = 'all';
-        this.latestFilter = null;
-        this.clearPendingFilters();
-      } finally {
-        this._clearing = false;
-      }
-      this.syncQueryParams();
+    innerBootstrapTable() {
+      return this.$refs.table?.$refs.table;
     },
-    refreshTable() {
-      this.syncQueryParams();
-      this.resetAndLoad();
-    },
-    emitVisibleColumns() {
-      if (!this.$refs.table) {
-        return;
-      }
-      this.visibleColumns = this.$refs.table
-        .getVisibleColumns()
-        .map((column) => column.field);
-    },
-    async refreshCurrentPage() {
-      if (this.currentPageUrl === null) {
-        await this.resetAndLoad();
-        return;
-      }
-      await this.loadPage(this.currentPageUrl);
-    },
-    async loadPage(pageUrl) {
-      if (!this.tableReady) {
-        return;
-      }
-      this.$refs.table.showLoading();
-      this.isLoading = true;
-      const requestId = ++this.currentRequestId;
-
-      try {
-        const fetchUrl = common.setQueryParams(pageUrl, {
-          ...this.expandQueryParams,
-          limit: this.currentPageSize,
-        });
-        const response = await this.axios.get(fetchUrl);
-        if (requestId !== this.currentRequestId) {
-          return;
-        }
-
-        this.tableData = response.data.items || [];
-        this.currentPageUrl = pageUrl;
-
-        const nextPageToken = response.data.next_page_token;
-        if (nextPageToken) {
-          this.nextPageUrl = common.setQueryParams(pageUrl, {
-            page_token: nextPageToken,
-          });
-        } else {
-          this.nextPageUrl = null;
-        }
-
-        const total = response.data.total;
-        if (total) {
-          this.totalCount = total.count;
-          this.totalCountType = total.type;
-        } else {
-          this.totalCount = null;
-          this.totalCountType = null;
-        }
-      } catch (err) {
-        if (requestId !== this.currentRequestId) {
-          return;
-        }
-        console.error(`Failed to load projects: ${err}`);
-        this.tableData = [];
-        this.currentPageNumber = 1;
-        this.currentPageUrl = null;
-        this.nextPageUrl = null;
-        this.pageUrlHistory = [];
-        this.totalCount = null;
-        this.totalCountType = null;
-      } finally {
-        if (requestId === this.currentRequestId) {
-          this.$refs.table.hideLoading();
-          this.isLoading = false;
-        }
-      }
-    },
-    async resetAndLoad() {
-      this.currentPageNumber = 1;
-      this.pageUrlHistory = [];
-      this.nextPageUrl = null;
-      this.totalCount = null;
-      this.totalCountType = null;
-      await this.loadPage(
-        this.buildListUrl({
-          sortBy: this.sortBy,
-          sortDirection: this.sortDirection,
-        }),
-      );
-    },
-    async goToFirstPage() {
-      if (!this.hasPreviousPage) {
-        return;
-      }
-      await this.resetAndLoad();
-    },
-    async goToPrevPage() {
-      if (!this.hasPreviousPage) {
-        return;
-      }
-      this.currentPageNumber--;
-      if (this.currentPageNumber === 1) {
-        this.pageUrlHistory = [];
-        await this.loadPage(
-          this.buildListUrl({
-            sortBy: this.sortBy,
-            sortDirection: this.sortDirection,
-          }),
-        );
-      } else {
-        const prevPageUrl = this.pageUrlHistory.pop();
-        await this.loadPage(prevPageUrl);
-      }
-    },
-    async goToNextPage() {
-      if (!this.hasNextPage) {
-        return;
-      }
-      this.pageUrlHistory.push(this.currentPageUrl);
-      this.currentPageNumber++;
-      await this.loadPage(this.nextPageUrl);
-    },
-    onLoadSuccess() {
-      loadUserPreferencesForBootstrapTable(
-        this,
-        'ProjectList',
-        this.$refs.table.columns,
-      );
-      this.emitVisibleColumns();
-    },
-    onPostBody() {
+    onPostBody: function () {
       this.mountCells();
-      if (this.isTreeView) {
-        const columns = this.$refs.table.getOptions().columns;
+      const table = this.innerBootstrapTable();
+      if (table && this.isTreeView) {
+        const columns = table.getOptions().columns;
         if (columns && columns[0][0].visible) {
-          this.$refs.table.$table.treegrid({
+          table.$table.treegrid({
             treeColumn: 0,
             initialState: 'collapsed',
           });
         }
-        this.$refs.table.getData().forEach((project) => {
+        table.getData().forEach((project) => {
+          // Expander is rendered natively by treegrid when children are
+          // already loaded. No extra logic needed.
           if (project.fetchedChildren) {
             return;
           }
 
           const renderExpander = () => {
-            if (!this.tableReady) {
-              return;
-            }
-            this.$refs.table.$table
-              .find('tbody')
+            this.innerBootstrapTable()
+              ?.$table.find('tbody')
               .find('tr.treegrid-' + project.uuid)
               .addClass('treegrid-collapsed')
               .treegrid('renderExpander');
           };
 
+          // Pre-flight result already known to be positive. Just render
+          // the expander, since the tbody was just rebuilt and dropped it.
           if (project.matchesChildSearch) {
             renderExpander();
             return;
@@ -785,56 +388,74 @@ export default {
             }
           });
         });
-        this.$refs.table.getData().forEach((row) => {
+        table.getData().forEach((row) => {
           if (row.expanded) {
-            this.$refs.table.$table
+            table.$table
               .find('tbody')
               .find('tr.treegrid-' + row.uuid)
               .treegrid('expand');
           } else if (row.expanded === false) {
-            this.$refs.table.$table
+            table.$table
               .find('tbody')
               .find('tr.treegrid-' + row.uuid)
               .treegrid('collapse');
           }
+          if (row.loadMore) {
+            const cells = table.$table
+              .find('tbody')
+              .find('tr.treegrid-' + row.uuid)
+              .children('td');
+            cells.first().attr('colspan', cells.length);
+            cells.slice(1).hide();
+          }
         });
       }
-      this.$refs.table.hideLoading();
     },
-    async getChildren(parentProject) {
-      const url = this.buildListUrl({ parentUuid: parentProject.uuid });
-      const response = await this.axios.get(
-        common.setQueryParams(url, {
+    async getChildren(parentUuid, pageUrl) {
+      const url =
+        pageUrl ??
+        common.setQueryParams(this.buildListUrl({ parentUuid }), {
           ...this.expandQueryParams,
-          limit: 100,
-        }),
-      );
-      if (!this.tableReady) {
+          limit: CHILDREN_PAGE_SIZE,
+        });
+      const response = await this.axios.get(url);
+      const table = this.innerBootstrapTable();
+      if (!table) {
         return;
       }
-      const children = (response.data.items || []).map((item) => ({
+      const rows = (response.data.items || []).map((item) => ({
         ...item,
-        pid: parentProject.uuid,
+        pid: parentUuid,
       }));
-      this.$refs.table.append(children);
-    },
-    async hasMatchingChildren(project) {
-      if (!project.has_children) {
-        return false;
+      const nextPageToken = response.data.next_page_token;
+      if (nextPageToken) {
+        rows.push({
+          uuid: `${parentUuid}-more`,
+          pid: parentUuid,
+          loadMore: common.setQueryParams(url, { page_token: nextPageToken }),
+        });
       }
-      const url = this.buildListUrl({ parentUuid: project.uuid });
-      const response = await this.axios.get(
-        common.setQueryParams(url, { limit: 1 }),
-      );
-      return (response.data.total?.count ?? 0) > 0;
+      table.append(rows);
+    },
+    hasMatchingChildren: function (project) {
+      if (!project.has_children) {
+        return Promise.resolve(false);
+      }
+
+      // Perform a pre-flight search if there is at least one
+      // child project that matches the current search criteria,
+      // and is accessible to the user.
+      //
+      // While this *does* result in an additional request per project
+      // with hasChildren=true, it's still better than returning child
+      // data in the project list response.
+      let url = this.buildListUrl({ parentUuid: project.uuid });
+      return this.axios
+        .get(common.setQueryParams(url, { limit: 1 }))
+        .then((response) => response.data.total.count > 0);
     },
   },
   watch: {
-    activeFilter(value) {
-      if (value === null) {
-        this.activeFilter = 'all';
-      }
-    },
     $route(newRoute, oldRoute) {
       if (newRoute.path !== oldRoute.path) {
         return;
@@ -844,47 +465,10 @@ export default {
         return;
       }
       this.applyRouteFilters();
-      this.resetAndLoad();
     },
     showFlatView(value) {
-      // A forced flat view is not the user's preference.
-      if (localStorage && this.isTreeViewAllowed) {
-        localStorage.setItem('ProjectListShowFlatView', value.toString());
-      }
-      this.resetAndLoad();
+      localStorage.setItem('ProjectListShowFlatView', value.toString());
     },
-    hasListFilters(active) {
-      // Like main's route filters, list filters force the flat view; clearing
-      // them restores the stored preference.
-      this.showFlatView = active || storedFlatView();
-    },
-    currentPageSize(size) {
-      if (localStorage) {
-        localStorage.setItem('ProjectListPageSize', String(size));
-      }
-      this.resetAndLoad();
-    },
-    expandQueryParams(newVal, oldVal) {
-      if (this.currentPageUrl === null) {
-        return;
-      }
-      if (common.sameQueryParams(newVal, oldVal)) {
-        return;
-      }
-      if (this.expandParamsTimer) {
-        clearTimeout(this.expandParamsTimer);
-      }
-      this.expandParamsTimer = setTimeout(() => {
-        this.refreshCurrentPage();
-      }, 300);
-    },
-  },
-  beforeUnmount() {
-    this.tableReady = false;
-    this.currentRequestId++;
-    if (this.expandParamsTimer) {
-      clearTimeout(this.expandParamsTimer);
-    }
   },
   computed: {
     expandQueryParams() {
@@ -903,7 +487,7 @@ export default {
       return [
         {
           name: 'name',
-          label: this.$t('message.project_name'),
+          label: this.$t('message.name'),
           icon: 'fa-folder-open-o',
         },
         {
@@ -917,7 +501,6 @@ export default {
           icon: 'fa-cube',
         },
         { name: 'tag', label: this.$t('message.tags'), icon: 'fa-tag' },
-        { name: 'team', label: this.$t('message.teams'), icon: 'fa-users' },
         ...(!this.uuid
           ? [
               {
@@ -933,98 +516,54 @@ export default {
           icon: 'fa-calendar',
         },
         {
-          name: 'active',
-          label: this.$t('message.active'),
+          name: 'showInactive',
+          label: this.$t('message.show_inactive'),
           icon: 'fa-eye',
         },
         {
-          name: 'latest',
-          label: this.$t('message.latest'),
+          name: 'onlyLatestVersion',
+          label: this.$t('message.only_latest'),
           icon: 'fa-bookmark',
         },
       ];
     },
-    hasListFilters() {
-      return HEAVY_FILTER_NAMES.some((name) => this.hasFilterValue(name));
-    },
-    activeFilterOptions() {
-      return [
-        { value: 'true', text: this.$t('message.filter_only_active') },
-        { value: 'false', text: this.$t('message.filter_only_inactive') },
-      ];
-    },
-    latestFilterOptions() {
-      return [
-        { value: 'true', text: this.$t('message.filter_only_latest') },
-        { value: 'false', text: this.$t('message.filter_only_non_latest') },
-      ];
+    listUrl() {
+      return this.buildListUrl({
+        sortBy: this.sortBy,
+        sortDirection: this.sortDirection,
+      });
     },
     isTreeViewAllowed() {
-      return !this.uuid && !this.hasListFilters;
+      // In tree view the API applies filters to root projects only, which would hide matching children.
+      // A collection's tab lists its direct children either way, so the tree hides nothing there.
+      return (
+        !!this.uuid ||
+        !this.allFilterDefs.some(
+          ({ name }) => name !== 'showInactive' && this.hasFilterValue(name),
+        )
+      );
     },
     isTreeView() {
       return this.isTreeViewAllowed && !this.showFlatView;
     },
-    hasNextPage() {
-      return this.nextPageUrl !== undefined && this.nextPageUrl !== null;
-    },
-    hasPreviousPage() {
-      return this.pageUrlHistory.length > 0;
-    },
-    totalCountDisplay() {
-      if (this.totalCount === null) {
-        return null;
-      }
-      return this.totalCountType === 'AT_LEAST'
-        ? `${this.totalCount}+`
-        : `${this.totalCount}`;
-    },
   },
   data() {
-    let currentPageSize = 10;
-    if (typeof localStorage !== 'undefined') {
-      const stored = Number(localStorage.getItem('ProjectListPageSize'));
-      if (ALLOWED_PAGE_SIZES.includes(stored)) {
-        currentPageSize = stored;
-      }
-    }
+    const storedSortName = localStorage.getItem('ProjectListSortName');
     return {
       showProjectCreateProjectModal: false,
-      showFlatView: storedFlatView(),
+      showFlatView: localStorage.getItem('ProjectListShowFlatView') === 'true',
       nameFilter: null,
       versionFilter: null,
-      classifierFilter: null,
+      classifierFilter: [],
       tagFilter: null,
-      teamFilter: null,
       ancestorFilter: null,
-      ancestorOptions: [],
-      ancestorOptionsLoading: false,
       lastBomImportFilter: null,
-      activeFilter: DEFAULT_ACTIVE_FILTER,
-      latestFilter: null,
-      sortBy: normalizeSortField(
-        localStorage && localStorage.getItem('ProjectListSortName') !== null
-          ? localStorage.getItem('ProjectListSortName')
-          : 'name',
-      ),
-      sortDirection:
-        localStorage && localStorage.getItem('ProjectListSortOrder') !== null
-          ? localStorage.getItem('ProjectListSortOrder')
-          : 'asc',
-      tableData: [],
-      visibleColumns: initialVisibleColumns(),
-      expandParamsTimer: null,
-      currentPageNumber: 1,
-      currentPageSize,
-      allowedPageSizes: ALLOWED_PAGE_SIZES,
-      currentPageUrl: null,
-      nextPageUrl: null,
-      pageUrlHistory: [],
-      currentRequestId: 0,
-      tableReady: false,
-      isLoading: false,
-      totalCount: null,
-      totalCountType: null,
+      showInactive: false,
+      onlyLatestVersion: false,
+      booleanFilters: ['showInactive', 'onlyLatestVersion'],
+      sortBy: LEGACY_FIELDS[storedSortName] ?? storedSortName ?? 'name',
+      sortDirection: localStorage.getItem('ProjectListSortOrder') ?? 'asc',
+      visibleColumns: [],
       columns: [
         {
           title: this.$t('message.project_name'),
@@ -1033,6 +572,9 @@ export default {
           routerFunc: () => this.$router,
           $t: (key, values) => this.$t(key, values),
           formatter(value, row) {
+            if (row.loadMore) {
+              return `<button type="button" class="btn btn-link btn-sm p-0">${xssFilters.inHTMLData(this.$t('message.show_more'))}</button>`;
+            }
             let url = xssFilters.uriInUnQuotedAttr(
               this.routerFunc().resolve({
                 name: 'Project',
@@ -1052,7 +594,7 @@ export default {
           field: 'tags',
           sortable: false,
           visible: false,
-          routerFunc: () => this.$router,
+          routerFunc: () => this.$router, // Injecting $router directly causes recursion errors in Vue...
           formatter(_value, row) {
             const router = this.routerFunc();
             let tag_string = '';
@@ -1079,22 +621,20 @@ export default {
           title: this.$t('message.teams'),
           field: 'teams',
           sortable: false,
-          visible: storedColumnVisibility('teams') === true,
-          routerFunc: () => this.$router,
+          visible: false,
           formatter(_value, row) {
-            const router = this.routerFunc();
             let team_string = '';
             if (row.teams) {
               team_string =
                 row.teams
                   ?.slice(0, 2)
-                  .map((teams) => common.formatProjectTeamLabel(router, teams))
+                  .map((teams) => common.formatProjectTeamLabel(teams))
                   .join(' ') || '';
               if (row.teams.length > 2) {
                 team_string += ` <span class="d-none">`;
                 team_string += row.teams
                   .slice(2)
-                  ?.map((teams) => common.formatProjectTeamLabel(router, teams))
+                  ?.map((teams) => common.formatProjectTeamLabel(teams))
                   .join(' ');
                 team_string += `</span>`;
                 team_string += `<a href="#" title="show all teams" class="badge badge-team" onclick="this.previousElementSibling.classList.toggle('d-none')">…</a>`;
@@ -1106,7 +646,7 @@ export default {
         {
           title: this.$t('message.version'),
           field: 'version',
-          sortable: true,
+          sortable: false,
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -1118,13 +658,13 @@ export default {
             return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
-          sortable: true,
+          sortable: false,
           visible: false,
         },
         {
           title: this.$t('message.classifier'),
           field: 'classifier',
-          sortable: true,
+          sortable: false,
           routerFunc: () => this.$router,
           formatter: common.componentClassifierLabelProjectUrlFormatter(this),
         },
@@ -1134,7 +674,7 @@ export default {
           sortable: true,
           formatter(timestamp) {
             return typeof timestamp === 'number'
-              ? common.formatTimestamp(timestamp, false)
+              ? common.formatTimestamp(timestamp, true)
               : '-';
           },
         },
@@ -1151,9 +691,9 @@ export default {
         },
         {
           title: this.$t('message.active'),
-          field: 'is_active',
+          field: 'state',
           formatter(value) {
-            return value === 'ACTIVE' || value === true
+            return value === 'ACTIVE'
               ? '<i class="fa fa-check-square-o" />'
               : '';
           },
@@ -1161,25 +701,32 @@ export default {
           sortable: false,
         },
         {
+          title: this.$t('message.components'),
+          field: 'metrics.components',
+          sortable: false,
+          visible: false,
+        },
+        {
           title: this.$t('message.policy_violations'),
-          field: 'metrics.policy_violations_total',
+          field: 'metrics.policy_violations_total', // this column uses other fields, but the field id must be unique
           formatter: function (_, row) {
             let metrics = row.metrics;
             if (typeof metrics === 'undefined') {
-              return '-';
+              return '-'; // No vulnerability info available
             }
             return this.cell(PolicyViolationProgressBar, { metrics });
           }.bind(this),
         },
         {
           title: this.$t('message.vulnerabilities'),
-          field: 'metrics.vulnerabilities',
+          field: 'metrics.vulnerabilities', // this column uses other fields, but the field id must be unique
           sortable: false,
           formatter: function (_, row) {
             let metrics = row.metrics;
             if (typeof metrics === 'undefined') {
-              return '-';
+              return '-'; // No vulnerability info available
             }
+
             return this.cell(SeverityProgressBar, {
               vulnerabilities: metrics.vulnerabilities,
               critical: metrics.critical,
@@ -1206,64 +753,52 @@ export default {
         idField: 'uuid',
         parentIdField: 'pid',
         treeShowField: 'name',
-        search: false,
-        showColumns: true,
-        showRefresh: true,
-        pagination: false,
-        silentSort: false,
-        sortName: normalizeSortField(
-          localStorage && localStorage.getItem('ProjectListSortName') !== null
-            ? localStorage.getItem('ProjectListSortName')
-            : 'name',
-        ),
-        sortOrder:
-          localStorage && localStorage.getItem('ProjectListSortOrder') !== null
-            ? localStorage.getItem('ProjectListSortOrder')
-            : 'asc',
-        icons: {
-          refresh: 'fa-refresh',
-        },
-        toolbar: '#projectsFilterBarRow',
-        customSort: () => {},
+        toolbar: '#projectsToolbar',
+        onPostBody: () => this.onPostBody(),
+        // onClickRow is used instead of a tree node's onExpand event, because onExpand does not pass any arguments and therefore makes it complicated to retrieve a row's data which is needed for fetching its children and appending the data
         onClickRow: (row, $element) => {
-          if (!this.isTreeView) {
-            return;
+          if (this.isTreeView) {
+            if (row.loadMore) {
+              const table = this.innerBootstrapTable();
+              table.remove({ field: 'uuid', values: [row.uuid] });
+              this.getChildren(row.pid, row.loadMore).catch(() =>
+                table.append([row]),
+              );
+            } else if (
+              event.target.tagName.toLowerCase() !== 'a' &&
+              $element.treegrid('isLeaf') &&
+              row.has_children &&
+              !row.fetchedChildren
+            ) {
+              row.fetchedChildren = true;
+              this.getChildren(row.uuid).catch(() => {
+                row.fetchedChildren = false;
+              });
+              row.expanded = true;
+            } else if (
+              event.target.tagName.toLowerCase() !== 'a' &&
+              ((!$element.treegrid('isLeaf') &&
+                $element.treegrid('isCollapsed') &&
+                event.target.className !==
+                  'treegrid-expander treegrid-expander-collapsed') ||
+                event.target.className ===
+                  'treegrid-expander treegrid-expander-expanded')
+            ) {
+              $element.treegrid('expand');
+              row.expanded = true;
+            } else if (
+              event.target.tagName.toLowerCase() !== 'a' &&
+              ((!$element.treegrid('isLeaf') &&
+                $element.treegrid('isExpanded') &&
+                event.target.className !==
+                  'treegrid-expander treegrid-expander-expanded') ||
+                event.target.className ===
+                  'treegrid-expander treegrid-expander-collapsed')
+            ) {
+              $element.treegrid('collapse');
+              row.expanded = false;
+            }
           }
-          if (
-            event.target.tagName.toLowerCase() !== 'a' &&
-            $element.treegrid('isLeaf') &&
-            row.has_children &&
-            !row.fetchedChildren
-          ) {
-            row.fetchedChildren = true;
-            this.getChildren(row);
-            row.expanded = true;
-          } else if (
-            event.target.tagName.toLowerCase() !== 'a' &&
-            ((!$element.treegrid('isLeaf') &&
-              $element.treegrid('isCollapsed') &&
-              event.target.className !==
-                'treegrid-expander treegrid-expander-collapsed') ||
-              event.target.className ===
-                'treegrid-expander treegrid-expander-expanded')
-          ) {
-            $element.treegrid('expand');
-            row.expanded = true;
-          } else if (
-            event.target.tagName.toLowerCase() !== 'a' &&
-            ((!$element.treegrid('isLeaf') &&
-              $element.treegrid('isExpanded') &&
-              event.target.className !==
-                'treegrid-expander treegrid-expander-expanded') ||
-              event.target.className ===
-                'treegrid-expander treegrid-expander-collapsed')
-          ) {
-            $element.treegrid('collapse');
-            row.expanded = false;
-          }
-        },
-        onRefresh: () => {
-          this.refreshTable();
         },
         onColumnSwitch: (field, checked) => {
           if (localStorage) {
@@ -1272,10 +807,6 @@ export default {
               checked.toString(),
             );
           }
-          this.emitVisibleColumns();
-        },
-        onColumnSwitchAll: () => {
-          this.emitVisibleColumns();
         },
         onSort: (name, order) => {
           this.sortBy = name;
@@ -1284,74 +815,9 @@ export default {
             localStorage.setItem('ProjectListSortName', name);
             localStorage.setItem('ProjectListSortOrder', order);
           }
-          this.resetAndLoad();
         },
       },
     };
   },
 };
 </script>
-
-<style scoped src="@/views/components/filter-pills.css"></style>
-<style lang="scss" scoped>
-@import 'bootstrap/scss/functions';
-@import '@/assets/scss/variables';
-@import 'bootstrap/scss/variables';
-
-.page-indicator {
-  padding: $pagination-padding-y 0.75rem;
-  font-weight: $font-weight-normal;
-  line-height: $line-height-sm;
-  color: var(--bs-body-color);
-  cursor: default;
-  user-select: none;
-}
-
-.pagination-meta-text {
-  font-size: $font-size-base;
-  font-weight: $font-weight-normal;
-  color: var(--bs-body-color);
-}
-
-.pagination-meta-divider {
-  display: inline-block;
-  width: 1px;
-  height: 1em;
-  margin: 0 0.75rem;
-  background-color: $pagination-border-color;
-}
-
-.pagination-page-size-select {
-  width: auto;
-}
-
-.filter-bar-surface {
-  display: flex;
-  align-items: center;
-}
-
-.pagination-button {
-  position: relative;
-  display: block;
-  padding: $pagination-padding-y 1.25rem;
-  margin-left: -$border-width;
-  line-height: $line-height-sm;
-  color: $pagination-color;
-  background-color: $pagination-bg;
-  border: $pagination-border-width solid $pagination-border-color;
-
-  &:disabled {
-    z-index: 2;
-    color: $pagination-disabled-color;
-    background-color: $pagination-disabled-bg;
-    border-color: $pagination-disabled-border-color;
-  }
-
-  &:not(:disabled):hover {
-    z-index: 2;
-    color: $pagination-hover-color;
-    background-color: $pagination-hover-bg;
-    border-color: $pagination-hover-border-color;
-  }
-}
-</style>

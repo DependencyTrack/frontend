@@ -159,9 +159,6 @@ export default {
     });
 
     this.axios.interceptors.response.use(null, (error) => {
-      if (this.axios.isCancel(error)) {
-        return Promise.reject(error);
-      }
       if (error.response?.status === 401 && endExpiredSession()) {
         return Promise.reject(error);
       }

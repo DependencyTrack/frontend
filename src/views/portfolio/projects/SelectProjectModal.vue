@@ -5,21 +5,13 @@
     no-stacking
     :title="$t('message.select_project')"
   >
-    <b-form-input
-      v-model="searchText"
-      type="search"
-      :aria-label="$t('message.search')"
-      :placeholder="$t('message.search')"
-      class="mb-2"
-    />
-    <token-paginated-table
+    <bootstrap-table
       ref="table"
-      :base-url="tableBaseUrl"
       :columns="columns"
-      :options="tableOptions"
-      :default-page-size="10"
-      page-size-storage-key="SelectProjectModalPageSize"
-    />
+      :data="data"
+      :options="options"
+    >
+    </bootstrap-table>
     <template v-slot:footer="{ cancel }">
       <b-button variant="secondary" @click="cancel()">{{
         $t('message.cancel')
@@ -36,43 +28,50 @@ import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import modalMixin from '@/mixins/modalMixin';
-import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 
 export default {
   mixins: [permissionsMixin, modalMixin],
-  components: {
-    TokenPaginatedTable,
-  },
   props: {
+    // Current projects should be a list of UUIDs since names can be duplicate
     username: { type: String, default: null },
   },
   emits: ['selection'],
-  computed: {
-    tableBaseUrl() {
+  methods: {
+    apiUrl: function () {
+      let endpoint;
       if (this.username) {
-        return `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
+        endpoint = `${this.$api.BASE_URL}/${this.$api.URL_ACL_USER}/${this.username}`;
+        return endpoint;
       }
-      return common.setQueryParams(
-        `${this.$api.BASE_URL}/${this.$api.URL_PROJECTS}`,
-        {
-          state: 'ACTIVE',
-          sort_by: 'name',
-          sort_direction: 'ASC',
-          name_contains: this.searchText || undefined,
-        },
-      );
+
+      endpoint = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}`;
+      if (this.showInactiveProjects === undefined) {
+        endpoint += '?excludeInactive=true';
+      } else {
+        endpoint += '?excludeInactive=' + !this.showInactiveProjects;
+      }
+      return endpoint;
+    },
+    refreshTable: function () {
+      this.$refs.table.refresh({
+        url: this.apiUrl(),
+        pageNumber: 1,
+        silent: true,
+      });
+    },
+    handleSelection: function () {
+      this.visible = false;
+      this.$emit('selection', this.$refs.table.getSelections());
     },
   },
-  methods: {
-    handleSelection() {
-      this.visible = false;
-      const selections = this.$refs.table.$refs.table.getSelections();
-      this.$emit('selection', selections);
+  watch: {
+    showInactiveProjects() {
+      this.refreshTable();
     },
   },
   data() {
     return {
-      searchText: '',
+      showInactiveProjects: false,
       columns: [
         {
           field: 'state',
@@ -82,7 +81,7 @@ export default {
         {
           title: this.$t('message.project_name'),
           field: 'name',
-          sortable: false,
+          sortable: true,
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
@@ -90,26 +89,44 @@ export default {
         {
           title: this.$t('message.version'),
           field: 'version',
-          sortable: false,
+          sortable: true,
           formatter(value) {
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
           },
         },
         {
           title: this.$t('message.active'),
-          field: 'is_active',
+          field: 'active',
           formatter(value) {
-            return value === 'ACTIVE' || value === true
-              ? '<i class="fa fa-check-square-o" />'
-              : '';
+            return value === true ? '<i class="fa fa-check-square-o" />' : '';
           },
           align: 'center',
           class: 'tight',
+          sortable: true,
         },
       ],
-      tableOptions: {
+      data: [],
+      options: {
         clickToSelect: true,
-        search: false,
+        search: true,
+        showColumns: true,
+        showRefresh: true,
+        pagination: true,
+        silentSort: false,
+        sidePagination: 'server',
+        queryParamsType: 'pageSize',
+        pageList: '[10, 25, 50, 100]',
+        pageSize: 10,
+        icons: {
+          refresh: 'fa-refresh',
+        },
+        toolbar: '#projectsToolbar',
+        responseHandler: (res, xhr) => {
+          // console.log(this.currentProjects);
+          res.total = xhr.getResponseHeader('X-Total-Count');
+          return res;
+        },
+        url: this.apiUrl(),
       },
     };
   },

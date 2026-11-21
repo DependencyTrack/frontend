@@ -35,46 +35,29 @@ $common.formatNotificationLabel = function formatNotificationLabel(
 };
 
 /**
- * Resolves a display name from a v2 string or a v1 `{ name }` object.
- */
-function namedItemName(item) {
-  if (item == null || item === '') {
-    return '';
-  }
-  if (typeof item === 'string') {
-    return item;
-  }
-  return item.name || '';
-}
-
-/**
  * Formats and returns a specialized label for a project tag.
  */
 $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
-  const name = namedItemName(tag);
-  if (!name) {
+  if (!tag) {
     return '';
   }
   return `<a href="${
-    router.resolve({ name: 'Projects', query: { tags_all: name } }).href
+    router.resolve({ name: 'Projects', query: { tags_all: tag } }).href
   }" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(
-    name,
+    tag,
   )}</a>`;
 };
 
 /**
  * Formats and returns a specialized label for a project team.
  */
-$common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
-  const name = namedItemName(team);
-  if (!name) {
+$common.formatProjectTeamLabel = function formatProjectTeamLabel(team) {
+  if (!team) {
     return '';
   }
-  return `<a href="${
-    router.resolve({ name: 'Projects', query: { teams_any: name } }).href
-  }" class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
-    name,
-  )}</a>`;
+  return `<span class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
+    team,
+  )}</span>`;
 };
 
 /**
@@ -722,11 +705,10 @@ $common.sameQueryParams = function (a, b) {
 };
 
 $common.getCollectionLogicText = function (i18n, project) {
-  const collectionLogic = project.collection_logic ?? project.collectionLogic;
-  const collectionTag = project.collection_tag ?? project.collectionTag;
-  const tagName = namedItemName(collectionTag);
+  // ProjectList passes v2 projects, Project.vue passes v1 projects.
+  const tagName = project.collection_tag ?? project.collectionTag?.name;
   const tag = tagName ? xssFilters.inDoubleQuotedAttr(tagName) : '';
-  switch (collectionLogic) {
+  switch (project.collection_logic ?? project.collectionLogic) {
     case 'AGGREGATE_DIRECT_CHILDREN':
       return i18n.$t(
         'message.collection_logic_metrics_by_aggregate_direct_children',

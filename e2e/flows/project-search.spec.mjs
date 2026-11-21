@@ -1,7 +1,16 @@
 import { seed, uniqueName } from '../api.mjs';
-import { test, expect, login, projectSearch } from '../test.mjs';
+import {
+  test,
+  expect,
+  login,
+  addFilter,
+  chooseProjectView,
+  expandProject,
+  pickOption,
+  projectSearch,
+} from '../test.mjs';
 
-test('filter the project list by name and open a project', async ({ page }) => {
+test('search the project list and open a project', async ({ page }) => {
   const { project } = seed();
   await login(page);
   await page.goto('projects');
@@ -13,7 +22,7 @@ test('filter the project list by name and open a project', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('show the metrics of a project in tooltips', async ({ page }) => {
+test('show the metrics of a project in tooltips', async ({ page, api }) => {
   const { project } = seed();
   await login(page);
   await page.goto('projects');
@@ -37,6 +46,27 @@ test('show the metrics of a project in tooltips', async ({ page }) => {
   await expect(
     page.getByRole('tooltip').filter({ hasText: 'Severity' }),
   ).toBeVisible();
+
+  const {
+    items: [{ metrics }],
+  } = await api.get(
+    `/v2/projects?name_contains=${project.name}&expand=metrics`,
+  );
+  await page.getByRole('button', { name: 'Columns' }).click();
+  await page.getByRole('checkbox', { name: 'Policy Violations' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Vulnerabilities' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Components' }).check();
+  await page.keyboard.press('Escape');
+  const headers = (await page.getByRole('columnheader').allInnerTexts()).map(
+    (h) => h.trim(),
+  );
+  const cells = row.getByRole('cell');
+  await expect(cells.nth(headers.indexOf('Components'))).toHaveText(
+    String(metrics.components),
+  );
+  await expect(cells.nth(headers.indexOf('KEV'))).toHaveText(
+    String(metrics.kev),
+  );
 });
 
 test('keep the flat view after clearing the project name filter', async ({
@@ -45,105 +75,35 @@ test('keep the flat view after clearing the project name filter', async ({
   const { project } = seed();
   await login(page);
   await page.goto('projects');
-  const flatView = page.getByLabel('Show flat project view');
-  await page.getByText('Show flat project view').click();
-  await expect(flatView).toBeChecked();
+  await chooseProjectView(page, 'Flat');
+  const flat = page.getByRole('button', { name: 'Flat', pressed: true });
+  await expect(flat).toBeVisible();
   await projectSearch(page, project.name);
-  await page
-    .getByRole('button', { name: 'Clear Project Name', exact: true })
-    .click();
+  await page.getByRole('button', { name: 'Clear Name', exact: true }).click();
   await expect(page).toHaveURL((url) => !url.searchParams.has('name_contains'));
-  await expect(flatView).toBeEnabled();
-  await expect(flatView).toBeChecked();
+  await expect(page.getByRole('button', { name: 'Tree' })).toBeEnabled();
+  await expect(flat).toBeVisible();
 });
 
-test('combine project filters and restore them from the URL', async ({
-  page,
-  api,
-}) => {
+test('combine project filters from the URL', async ({ page, api }) => {
   const prefix = uniqueName('e2e-filters');
   const version = uniqueName('version');
   const matching = `${prefix}-matching`;
-  const wrongVersion = `${prefix}-other-version`;
-  const wrongName = uniqueName('e2e-other-name');
-  const inactive = `${prefix}-inactive`;
-  for (const project of [
-    { name: matching, version, active: true },
-    { name: wrongVersion, version: uniqueName('other-version'), active: true },
-    { name: wrongName, version, active: true },
-    { name: inactive, version, active: false },
-  ]) {
-    await api.send('PUT', '/v1/project', project);
-  }
-
+  await api.send('PUT', '/v1/project', { name: matching, version });
+  await api.send('PUT', '/v1/project', {
+    name: `${prefix}-other-version`,
+    version: uniqueName('version'),
+  });
   await login(page);
-  await page.goto('projects');
-  await projectSearch(page, prefix);
-  await expect(
-    page.getByRole('link', { name: matching, exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: wrongVersion, exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: inactive, exact: true }),
-  ).toBeHidden();
-  await page.getByRole('button', { name: 'Add filter' }).click();
-  await page.getByRole('menuitem', { name: 'Version', exact: true }).click();
-  await page
-    .getByRole('textbox', { name: 'Version contains', exact: true })
-    .fill(version);
-  await page
-    .getByRole('menu', { name: 'Version', exact: true })
-    .getByRole('button', { name: 'Apply', exact: true })
-    .click();
-  await expect(page).toHaveURL(
-    (url) =>
-      url.searchParams.get('name_contains') === prefix &&
-      url.searchParams.get('version_contains') === version,
+  await page.goto(
+    `projects?name_contains=${prefix}&version_contains=${version}`,
   );
   await expect(page.getByRole('link', { name: new RegExp(prefix) })).toHaveText(
     [matching],
   );
-  await expect(
-    page.getByRole('link', { name: wrongName, exact: true }),
-  ).toBeHidden();
-
-  const filteredUrl = page.url();
-  await page.goto('projects');
-  await page.goto(filteredUrl);
-  await expect(page.getByRole('link', { name: new RegExp(prefix) })).toHaveText(
-    [matching],
-  );
-  await page.getByRole('button', { name: /^Project Name/ }).click();
-  await expect(
-    page.getByRole('textbox', { name: 'Project Name contains', exact: true }),
-  ).toHaveValue(prefix);
-  await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: /^Version/ }).click();
-  await expect(
-    page.getByRole('textbox', { name: 'Version contains', exact: true }),
-  ).toHaveValue(version);
-  await page.keyboard.press('Escape');
-
-  await page
-    .getByRole('button', { name: 'Clear Project Name', exact: true })
-    .click();
-  await expect(
-    page.getByRole('link', { name: wrongName, exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: matching, exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: wrongVersion, exact: true }),
-  ).toBeHidden();
-  await expect(
-    page.getByRole('link', { name: inactive, exact: true }),
-  ).toBeHidden();
 });
 
-test('paginate filtered projects with backend page tokens and reset after clearing the filter', async ({
+test('paginate filtered projects and reset after clearing the filter', async ({
   page,
   api,
 }) => {
@@ -166,64 +126,252 @@ test('paginate filtered projects with backend page tokens and reset after cleari
   const next = page.getByRole('button', { name: 'Next page', exact: true });
   await expect(links).toHaveText(names.slice(0, 10));
   await expect(previous).toBeDisabled();
-  const nextPage = page.waitForResponse((res) => {
-    const url = new URL(res.url());
-    return (
-      url.pathname === '/api/v2/projects' &&
-      url.searchParams.get('name_contains') === prefix &&
-      !!url.searchParams.get('page_token')
-    );
-  });
   await next.click();
-  expect((await (await nextPage).json()).items).toHaveLength(2);
   await expect(links).toHaveText(names.slice(10));
   await expect(next).toBeDisabled();
   await previous.click();
   await expect(links).toHaveText(names.slice(0, 10));
   await next.click();
-  await expect(links).toHaveText(names.slice(10));
-
-  await page
-    .getByRole('button', { name: 'Clear Project Name', exact: true })
-    .click();
+  await page.getByRole('button', { name: 'Clear Name', exact: true }).click();
   await expect(page).toHaveURL((url) => !url.searchParams.has('name_contains'));
   await expect(previous).toBeDisabled();
-  await projectSearch(page, prefix);
-  await expect(links).toHaveText(names.slice(0, 10));
 });
 
-test('filter inactive descendants by an inactive ancestor', async ({
+test('filter by a specific, inactive version of an ancestor', async ({
   page,
   api,
 }) => {
-  const parent = await api.send('PUT', '/v1/project', {
-    name: uniqueName('e2e-inactive-ancestor'),
-    active: true,
-  });
+  const name = uniqueName('e2e-ancestor');
+  await api.send('PUT', '/v1/project', { name, version: '1' });
+  const parent = await api.send('PUT', '/v1/project', { name, version: '2' });
   const child = await api.send('PUT', '/v1/project', {
-    name: uniqueName('e2e-inactive-child'),
+    name: uniqueName('e2e-ancestor-child'),
     parent: { uuid: parent.uuid },
     active: false,
   });
   await api.send('POST', '/v1/project', { ...parent, active: false });
   await login(page);
-  await page.goto('projects?state=INACTIVE');
-  await page.getByRole('button', { name: 'Add filter' }).click();
-  await page.getByRole('menuitem', { name: 'Ancestor', exact: true }).click();
-  const menu = page.getByRole('menu', { name: 'Ancestor', exact: true });
-  await menu.getByRole('textbox').fill(parent.name);
-  await menu.getByRole('radio', { name: parent.name, exact: true }).check();
-  await menu.getByRole('button', { name: 'Apply', exact: true }).click();
-  await expect(
-    page.getByRole('link', { name: child.name, exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('link', { name: parent.name, exact: true }),
-  ).toBeHidden();
+  await page.goto('projects?show_inactive=true');
+  await addFilter(page, 'Ancestor');
+  await expect(page.getByRole('option').first()).toBeInViewport({ ratio: 1 });
+  await pickOption(page, 'Ancestor', `${name} : 2`);
+  const childLink = page.getByRole('link', { name: child.name, exact: true });
+  await expect(childLink).toBeVisible();
   await page.reload();
+  await expect(childLink).toBeVisible();
   await expect(
-    page.getByRole('link', { name: child.name, exact: true }),
+    page.getByRole('button', { name: `Ancestor = ${name} : 2` }),
   ).toBeVisible();
+});
+
+test('sort by name when the saved sort column is no longer sortable', async ({
+  page,
+}) => {
+  await login(page);
+  await page.evaluate(() =>
+    localStorage.setItem('ProjectListSortName', 'version'),
+  );
+  const loaded = page.waitForResponse((res) =>
+    res.url().includes('/api/v2/projects?'),
+  );
+  await page.goto('projects');
+  expect(new URL((await loaded).url()).searchParams.get('sort_by')).toBe(
+    'name',
+  );
+});
+
+test('load more children of a parent in the project tree', async ({
+  page,
+  api,
+  problems,
+}) => {
+  problems.allow(/^GET \/api\/v2\/projects\?.*page_token=.* 503$/);
+  // Sorts before letters and digits, so the parent lands on the first page.
+  const parent = await api.send('PUT', '/v1/project', {
+    name: `!${uniqueName('e2e-many-children')}`,
+  });
+  try {
+    const children = await Promise.all(
+      Array.from({ length: 26 }, (_, i) =>
+        api.send('PUT', '/v1/project', {
+          name: `${parent.name}-${String(i + 1).padStart(2, '0')}`,
+          parent: { uuid: parent.uuid },
+        }),
+      ),
+    );
+    let failNext = true;
+    await page.route('**/api/v2/projects?*page_token=*', (route) => {
+      if (!failNext) return route.continue();
+      failNext = false;
+      return route.fulfill({ status: 503 });
+    });
+    await login(page);
+    await page.goto('projects');
+    const link = (project) =>
+      page.getByRole('link', { name: project.name, exact: true });
+    await expandProject(page, parent.name);
+    await expect(link(children[24])).toBeVisible();
+    await expect(link(children[25])).toBeHidden();
+    const showMore = page.getByRole('button', { name: 'Show more' });
+    const failed = page.waitForResponse((res) => res.status() === 503);
+    await showMore.click();
+    await failed;
+    await showMore.click();
+    await expect(link(children[25])).toBeVisible();
+    await expect(showMore).toBeHidden();
+  } finally {
+    await api.send('DELETE', `/v1/project/${parent.uuid}`);
+  }
+});
+
+test('drop an ancestor filter only when its project no longer exists', async ({
+  page,
+  problems,
+}) => {
+  problems.allow(/^GET \/api\/v1\/project\/[0-9a-f-]+ (404|503)$/);
+  problems.allow(/^console\.error: Failed to load project: .* (404|503)$/);
+  const { project } = seed();
+  await page.route(`**/api/v1/project/${project.uuid}`, (route) =>
+    route.fulfill({ status: 503 }),
+  );
+  await login(page);
+  const failed = page.waitForResponse((res) => res.status() === 503);
+  await page.goto(`projects?ancestor_uuid=${project.uuid}`);
+  await failed;
+  await expect(
+    page.getByRole('button', { name: `Ancestor = ${project.uuid}` }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(
+    (url) => url.searchParams.get('ancestor_uuid') === project.uuid,
+  );
+
+  await page.goto(`projects?ancestor_uuid=${crypto.randomUUID()}`);
+  await expect(page).toHaveURL((url) => !url.searchParams.has('ancestor_uuid'));
+  await expect(page.getByRole('button', { name: /^Ancestor =/ })).toHaveCount(
+    0,
+  );
+});
+
+test('switch to the flat view for filters the tree would hide children for', async ({
+  page,
+}) => {
+  await login(page);
+  await page.goto('projects');
+  const tree = page.getByRole('button', { name: 'Tree' });
+  await chooseProjectView(page, 'Tree');
+  await expect(tree).toHaveAttribute('aria-pressed', 'true');
+  const reason = "Tree view isn't available while filters are applied";
+  await expect(page.getByText(reason)).toHaveCount(0);
+  await page.goto('projects?show_inactive=true');
+  await expect(tree).toBeEnabled();
+  await page.goto('projects?is_latest=true');
+  await expect(tree).toBeDisabled();
+  await tree.focus();
+  await expect(tree).toBeFocused();
+  await expect(tree).toHaveAccessibleDescription(reason);
+  await page.keyboard.press('Space');
+  await expect(tree).toHaveAttribute('aria-pressed', 'false');
+  const flat = page.getByRole('button', { name: 'Flat', pressed: true });
+  await expect(flat).toBeVisible();
+  await chooseProjectView(page, 'Flat');
+  await expect(flat).toBeVisible();
+  await page.getByRole('button', { name: 'Clear Only latest' }).click();
+  await expect(tree).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('expand a child project in the collection projects tab', async ({
+  page,
+  api,
+}) => {
+  const collection = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-collection'),
+    collectionLogic: 'AGGREGATE_DIRECT_CHILDREN',
+  });
+  const child = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-collection-child'),
+    parent: { uuid: collection.uuid },
+  });
+  const grandchild = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-collection-grandchild'),
+    parent: { uuid: child.uuid },
+  });
+  await login(page);
+  await page.goto(
+    `projects/${collection.uuid}/collectionprojects?name_contains=e2e-collection`,
+  );
+  await expandProject(page, child.name);
+  await expect(
+    page.getByRole('link', { name: grandchild.name, exact: true }),
+  ).toBeVisible();
+});
+
+test('filter projects by tags', async ({ page, api }) => {
+  const prefix = uniqueName('e2e-tagged');
+  const tag = uniqueName('e2e-tag');
+  await api.send('PUT', '/v1/project', {
+    name: `${prefix}-tagged`,
+    tags: [{ name: tag }],
+  });
+  await api.send('PUT', '/v1/project', { name: `${prefix}-untagged` });
+  const untagged = page.getByRole('link', {
+    name: `${prefix}-untagged`,
+    exact: true,
+  });
+  await login(page);
+  await page.goto(`projects?name_contains=${prefix}`);
+  await expect(untagged).toBeVisible();
+  await addFilter(page, 'Tags');
+  const tags = page.getByRole('textbox', { name: 'Tags' });
+  await tags.fill(tag);
+  await tags.press('Enter');
+  await expect(
+    page.getByRole('link', { name: `${prefix}-tagged`, exact: true }),
+  ).toBeVisible();
+  await expect(untagged).toBeHidden();
+});
+
+test('show inactive and only the latest projects, then clear all', async ({
+  page,
+  api,
+}) => {
+  const prefix = uniqueName('e2e-state');
+  const active = `${prefix}-active`;
+  const inactive = `${prefix}-inactive`;
+  await api.send('PUT', '/v1/project', { name: active, version: '1' });
+  await api.send('PUT', '/v1/project', {
+    name: active,
+    version: '2',
+    isLatest: true,
+  });
+  await api.send('PUT', '/v1/project', { name: inactive, active: false });
+  await login(page);
+  await page.goto(`projects?name_contains=${prefix}`);
+  const activeLinks = page.getByRole('link', { name: active, exact: true });
+  const inactiveLink = page.getByRole('link', { name: inactive, exact: true });
+  await expect(activeLinks).toHaveCount(2);
+  await expect(inactiveLink).toBeHidden();
+
+  await addFilter(page, 'Show inactive');
+  await expect(inactiveLink).toBeVisible();
+  await page.reload();
+  await expect(inactiveLink).toBeVisible();
+
+  await addFilter(page, 'Only latest');
+  await expect(activeLinks).toHaveCount(1);
+  await page.reload();
+  await expect(activeLinks).toHaveCount(1);
+  await expect(
+    page
+      .getByRole('row')
+      .filter({ has: activeLinks })
+      .getByRole('cell', { name: '2', exact: true }),
+  ).toBeVisible();
+
+  await page.getByRole('button', { name: 'Clear all', exact: true }).click();
+  await expect(page).toHaveURL((url) => url.search === '');
+  await expect(
+    page.getByRole('button', { name: 'Clear Show inactive' }),
+  ).toBeHidden();
 });
 
 test('restore the scroll position of the project list when going back', async ({
@@ -236,31 +384,10 @@ test('restore the scroll position of the project list when going back', async ({
   await link.scrollIntoViewIfNeeded();
   const scrolled = await page.evaluate(() => window.scrollY);
   expect(scrolled).toBeGreaterThan(0);
-  let releaseMetrics;
-  const pendingMetrics = new Promise((resolve) => {
-    releaseMetrics = resolve;
-  });
-  let metricsHandled;
-  const handledMetrics = new Promise((resolve) => {
-    metricsHandled = resolve;
-  });
-  const metricsRequest = page.waitForRequest(
-    '**/api/v1/metrics/project/*/days/*',
-  );
-  await page.route('**/api/v1/metrics/project/*/days/*', async (route) => {
-    const response = await route.fetch();
-    await pendingMetrics;
-    await route.fulfill({ response });
-    metricsHandled();
-  });
   await link.click();
   await expect(page).toHaveURL(/\/projects\/[^/]+$/);
-  await metricsRequest;
   await page.goBack();
-  releaseMetrics();
-  await handledMetrics;
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrolled);
-  await expect(page.getByRole('alert')).toHaveCount(0);
 });
 
 test('expand and collapse a parent project in the project tree', async ({

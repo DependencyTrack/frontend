@@ -85,12 +85,9 @@ export async function search(page, text, within = page) {
 }
 
 export async function projectSearch(page, text) {
-  await page.getByRole('button', { name: 'Add filter' }).click();
+  await addFilter(page, 'Name');
   await page
-    .getByRole('menuitem', { name: 'Project Name', exact: true })
-    .click();
-  await page
-    .getByRole('textbox', { name: 'Project Name contains', exact: true })
+    .getByRole('textbox', { name: 'Name contains', exact: true })
     .fill(text);
   const searched = page.waitForResponse((res) => {
     const url = new URL(res.url());
@@ -107,6 +104,27 @@ export async function projectSearch(page, text) {
   await expect(page).toHaveURL(
     (url) => url.searchParams.get('name_contains') === text,
   );
+}
+
+export async function addFilter(page, name) {
+  await page.getByRole('button', { name: 'Add filter' }).click();
+  await page.getByRole('menuitem', { name, exact: true }).click();
+}
+
+export async function expandProject(page, name) {
+  await page
+    .getByRole('row')
+    .filter({ has: page.getByRole('link', { name, exact: true }) })
+    .getByRole('cell')
+    .nth(1)
+    .click();
+}
+
+export async function chooseProjectView(page, name) {
+  await page
+    .getByRole('group', { name: 'View' })
+    .getByRole('button', { name, exact: true })
+    .click();
 }
 
 export async function auditSearch(page, text) {
@@ -167,7 +185,10 @@ function formatDate(date) {
 
 export async function pickOption(within, label, option, query = option) {
   const search = within.getByRole('textbox', { name: label });
-  await within.getByRole('combobox').filter({ has: search }).click();
+  // An open list can sit inside the combobox, where clicking its middle would pick an option.
+  if (!(await search.isVisible())) {
+    await within.getByRole('combobox').filter({ has: search }).click();
+  }
   await search.fill(query);
   await within.getByRole('option', { name: option, exact: true }).click();
 }
