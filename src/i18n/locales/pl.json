@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "Tytuł",
     "to": "Do",
+    "toggle_navigation_menu": null,
     "total": "Całkowity",
     "total_findings": "Łączne ustalenia",
     "total_rows": "łączna liczba wierszy",

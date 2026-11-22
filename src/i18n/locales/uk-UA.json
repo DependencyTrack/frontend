@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "Заголовок",
     "to": "До",
+    "toggle_navigation_menu": null,
     "total": "Загальна кількість",
     "total_findings": "Загальна кількість виявлень",
     "total_rows": "усього рядків",

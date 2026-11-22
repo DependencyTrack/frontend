@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "タイトル",
     "to": "まで",
+    "toggle_navigation_menu": null,
     "total": "合計",
     "total_findings": "合計調査結果",
     "total_rows": "総行数",

@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "Titolo",
     "to": "A",
+    "toggle_navigation_menu": null,
     "total": "Totale",
     "total_findings": "Risultati totali",
     "total_rows": "righe totali",

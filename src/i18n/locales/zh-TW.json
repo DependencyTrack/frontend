@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "標題",
     "to": "到",
+    "toggle_navigation_menu": null,
     "total": "全部",
     "total_findings": "發現總數",
     "total_rows": "總行數",
