@@ -96,6 +96,8 @@ export function expansionToggleLabel(children, expanded, visible) {
   return hidden > 0 ? `+${hidden}` : null;
 }
 
+const { compare } = new Intl.Collator(undefined, { numeric: true });
+
 export function searchNodes(nodes, query) {
   const lowerQuery = query.toLowerCase();
   if (!lowerQuery) return [];
@@ -105,7 +107,12 @@ export function searchNodes(nodes, query) {
         node.type !== 'PROJECT' &&
         nodeLabel(node).toLowerCase().includes(lowerQuery),
     )
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort(
+      (a, b) =>
+        compare(a.name, b.name) ||
+        compare(a.group ?? '', b.group ?? '') ||
+        compare(a.version ?? '', b.version ?? ''),
+    );
 }
 
 export function nodeRoute({ uuid, type }) {
@@ -116,6 +123,10 @@ export function nodeRoute({ uuid, type }) {
 
 export function nodeLabel({ group, name, version }) {
   return [group ? `${group}/${name}` : name, version].filter(Boolean).join(' ');
+}
+
+export function searchResultLabel({ group, name, version }) {
+  return [name, version, group && `/ ${group}`].filter(Boolean).join(' ');
 }
 
 export function nextDrawnArea(view, previous) {

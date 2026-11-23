@@ -14,9 +14,11 @@
     <template #value>= {{ displayValue }}</template>
 
     <div class="filter-pill-actions mb-2">
-      <b-link @click="selectAll">{{ $t('message.select_all') }}</b-link>
+      <b-link @click.prevent="selectAll">{{ $t('message.select_all') }}</b-link>
       <span class="filter-pill-actions-separator" aria-hidden="true">·</span>
-      <b-link @click="deselectAll">{{ $t('message.clear_all') }}</b-link>
+      <b-link @click.prevent="deselectAll">{{
+        $t('message.clear_all')
+      }}</b-link>
     </div>
     <div class="filter-pill-list">
       <b-form-checkbox-group

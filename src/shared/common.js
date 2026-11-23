@@ -42,24 +42,22 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
     return '';
   }
   return `<a href="${
-    router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
+    router.resolve({ name: 'Projects', query: { tags_all: tag } }).href
   }" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(
-    tag.name,
+    tag,
   )}</a>`;
 };
 
 /**
  * Formats and returns a specialized label for a project team.
  */
-$common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
+$common.formatProjectTeamLabel = function formatProjectTeamLabel(team) {
   if (!team) {
     return '';
   }
-  return `<a href="${
-    router.resolve({ name: 'Projects', query: { team: team.name } }).href
-  }" class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
-    team.name,
-  )}</a>`;
+  return `<span class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
+    team,
+  )}</span>`;
 };
 
 /**
@@ -707,10 +705,10 @@ $common.sameQueryParams = function (a, b) {
 };
 
 $common.getCollectionLogicText = function (i18n, project) {
-  const tag = project.collectionTag
-    ? xssFilters.inDoubleQuotedAttr(project.collectionTag.name)
-    : '';
-  switch (project.collectionLogic) {
+  // ProjectList passes v2 projects, Project.vue passes v1 projects.
+  const tagName = project.collection_tag ?? project.collectionTag?.name;
+  const tag = tagName ? xssFilters.inDoubleQuotedAttr(tagName) : '';
+  switch (project.collection_logic ?? project.collectionLogic) {
     case 'AGGREGATE_DIRECT_CHILDREN':
       return i18n.$t(
         'message.collection_logic_metrics_by_aggregate_direct_children',

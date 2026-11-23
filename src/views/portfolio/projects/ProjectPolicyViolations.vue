@@ -35,8 +35,9 @@
     <audit-drawer
       ref="auditDrawer"
       :title="auditTitle"
-      @change="markAuditRow(true)"
-      @closed="focusAuditRow"
+      :link="violationLink"
+      @change="onAuditChange"
+      @closed="onAuditClosed"
       @saved="onAuditSaved"
     >
       <template #default="{ row }">
@@ -71,6 +72,7 @@ export default {
   },
   created() {
     this.options.url = this.apiUrl();
+    this.openLinkedViolation();
   },
   data() {
     return {
@@ -235,6 +237,41 @@ export default {
   methods: {
     auditTitle(row) {
       return common.auditTitle(row.policyCondition.policy.name, row.component);
+    },
+    violationRoute(row) {
+      return {
+        path: `/projects/${this.uuid}/policyViolations`,
+        query: { component: row.component.uuid, violation: row.uuid },
+      };
+    },
+    violationLink(row) {
+      return this.auditLink(this.violationRoute(row));
+    },
+    onAuditChange(row) {
+      this.markAuditRow(true);
+      this.$router.replace({ query: this.violationRoute(row).query });
+    },
+    onAuditClosed(row) {
+      this.focusAuditRow(row);
+      if (this.$route.query.violation) {
+        this.$router.replace({ query: {} });
+      }
+    },
+    async openLinkedViolation() {
+      const { component, violation } = this.$route.query;
+      if (!component || !violation) {
+        return;
+      }
+      const response = await this.axios.get(
+        `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/component/${component}`,
+        { params: { suppressed: true } },
+      );
+      const row = response.data.find((v) => v.uuid === violation);
+      if (row) {
+        // ponytail: the API searches names only, so other violations of this component stay listed
+        this.$refs.table.resetSearch(row.component.name);
+        this.$refs.auditDrawer.open([row], 0);
+      }
     },
     apiUrl: function () {
       let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}/project/${this.uuid}`;

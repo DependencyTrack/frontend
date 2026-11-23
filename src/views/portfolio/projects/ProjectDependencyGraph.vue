@@ -2,7 +2,7 @@
   <div
     ref="frame"
     class="dependency-graph"
-    :class="{ maximized, hovering: hovered }"
+    :class="{ maximized, hovering: hovered && !focused }"
     role="region"
     :aria-label="$t('message.dependency_graph')"
   >
@@ -10,9 +10,12 @@
       class="dependency-graph-toolbar d-flex flex-wrap align-items-center row-gap-2 column-gap-3"
     >
       <dependency-graph-search
+        ref="search"
         :nodes="nodes"
         :searched="searched"
         :clearable="searched.size > 0 && !focused"
+        :loading="fetching"
+        @open="wanted = true"
         @select="navigateToComponent"
       />
       <div class="ms-auto btn-group" role="group">
@@ -22,16 +25,19 @@
               label: $t('message.zoom_in'),
               icon: 'fa-plus',
               action: () => viewport.zoomIn(zoomTarget()),
+              needsLayout: true,
             },
             {
               label: $t('message.zoom_out'),
               icon: 'fa-minus',
               action: () => viewport.zoomOut(),
+              needsLayout: true,
             },
             {
               label: $t('message.fit_to_view'),
               icon: 'fa-compress',
               action: () => viewport.fit(revealPoint()),
+              needsLayout: true,
             },
             {
               label: maximized
@@ -46,7 +52,7 @@
           class="btn btn-sm btn-outline-secondary"
           :aria-label="control.label"
           :title="control.label"
-          :disabled="!layout"
+          :disabled="control.needsLayout && !layout"
           @click="control.action"
         >
           <i class="fa fa-fw" :class="control.icon" aria-hidden="true" />
@@ -56,6 +62,7 @@
     <dependency-graph-focus-bar
       v-if="focused"
       v-model:shortest-only="shortestOnly"
+      :forced="tooManyPaths || layoutTimedOut"
       :component="nodes.get(focused)"
       :shown="visible.size - 1"
       :total="nodes.size - 1"
@@ -66,9 +73,24 @@
       {{ $t('message.not_found_in_dependency_graph') }}
     </p>
     <p
-      v-if="nodes.get(uuid)?.direct_dependencies.length === 0"
+      v-if="tooManyPaths"
       class="dependency-graph-message text-muted"
+      role="status"
     >
+      {{
+        $t('message.dependency_graph_too_many_paths', {
+          count: pathSearch.pathNodes.size - 1,
+        })
+      }}
+    </p>
+    <p
+      v-if="layoutTimedOut && !layoutFailed"
+      class="dependency-graph-message text-muted"
+      role="status"
+    >
+      {{ $t('message.dependency_graph_layout_timed_out') }}
+    </p>
+    <p v-if="noDependencies" class="dependency-graph-message text-muted">
       {{ $t('message.dependency_graph_no_dependencies') }}
     </p>
     <p v-if="loadFailed" class="dependency-graph-message text-muted">
@@ -82,6 +104,12 @@
       {{ $t('message.dependency_graph_layout_failed') }}
     </p>
     <div class="dependency-graph-canvas">
+      <p
+        v-if="!route.params.componentUuids && !noDependencies && !loadFailed"
+        class="position-absolute top-50 start-50 translate-middle m-0 text-muted text-center"
+      >
+        {{ $t('message.dependency_graph_search_prompt') }}
+      </p>
       <dependency-graph-viewport
         v-if="layout"
         ref="viewport"
@@ -103,7 +131,7 @@
             :node="nodes.get(nodeUuid)"
             :visible="visible"
             :expanded="expanded.has(nodeUuid)"
-            :expandable="!focused"
+            :expandable="expandable.has(nodeUuid)"
             :direct="directUuids.has(nodeUuid)"
             :searched="searched.has(nodeUuid)"
             :focused="nodeUuid === focused"
@@ -134,12 +162,19 @@
         </li>
       </ul>
       <div
-        v-if="loading || layouting"
-        class="dependency-graph-busy position-absolute d-flex align-items-center gap-2 rounded-3"
+        v-if="fetching || layouting"
+        class="dependency-graph-busy position-absolute d-flex align-items-center gap-2 rounded-3 overflow-hidden"
         role="status"
       >
         <b-spinner small />
         {{ layouting ? $t('message.laying_out_graph') : $t('message.loading') }}
+        <span
+          v-if="layouting"
+          :key="layoutRun"
+          class="dependency-graph-time-left"
+          :style="{ animationDuration: `${LAYOUT_TIMEOUT_MS}ms` }"
+          aria-hidden="true"
+        />
       </div>
     </div>
   </div>
@@ -152,6 +187,7 @@ import {
   nextTick,
   onBeforeUnmount,
   onMounted,
+  onWatcherCleanup,
   ref,
   shallowRef,
   useTemplateRef,
@@ -166,6 +202,7 @@ import DependencyGraphSearch from './DependencyGraphSearch.vue';
 import DependencyGraphViewport from './DependencyGraphViewport.vue';
 import {
   boundingBox,
+  collectReachable,
   collectVisibleEdges,
   collectVisibleNodes,
   findNodesOnPaths,
@@ -178,6 +215,9 @@ import {
 
 // Graphs this small keep every node in the DOM, and so in the tab order.
 const MAX_FULLY_DRAWN_NODES = 1000;
+// Laying out more takes dagre seconds, and grows much faster than linearly.
+const MAX_LAID_OUT_PATH_NODES = 500;
+const LAYOUT_TIMEOUT_MS = 15_000;
 const REVEAL = Symbol('reveal');
 
 const props = defineProps({
@@ -188,6 +228,7 @@ const props = defineProps({
 const route = useRoute();
 const router = useRouter();
 const viewport = useTemplateRef('viewport');
+const search = useTemplateRef('search');
 const frame = useTemplateRef('frame');
 
 const nodes = shallowRef(new Map());
@@ -197,17 +238,23 @@ const layout = shallowRef(null);
 const drawnArea = shallowRef(null);
 const layouting = ref(false);
 const layoutFailed = ref(false);
+const layoutTimedOut = ref(false);
+const layoutRun = ref(0);
 const hovered = ref(null);
 const shortestOnly = ref(false);
 const maximized = ref(false);
+const wanted = ref(false);
+const fetching = ref(false);
 const loadFailed = ref(false);
 
-let run = 0;
 let worker;
+let layoutTimer;
 let afterLayout = null;
 
-const loading = computed(
-  () => !layout.value && !loadFailed.value && !layoutFailed.value,
+const noDependencies = computed(() =>
+  nodes.value.has(props.uuid)
+    ? nodes.value.get(props.uuid).direct_dependencies.length === 0
+    : props.project.uuid === props.uuid && !props.project.directDependencies,
 );
 const pathSearch = computed(() =>
   findNodesOnPaths(nodes.value, props.uuid, searched.value),
@@ -216,20 +263,35 @@ const notFound = computed(() => !pathSearch.value.found);
 const focused = computed(() =>
   searched.value.size === 1 && !notFound.value ? [...searched.value][0] : null,
 );
-const shortest = computed(() =>
-  focused.value && shortestOnly.value
-    ? findShortestPath(nodes.value, props.uuid, focused.value)
-    : null,
+const tooManyPaths = computed(
+  () => pathSearch.value.pathNodes.size > MAX_LAID_OUT_PATH_NODES,
 );
-const pinnedNodes = computed(() =>
-  shortest.value ? new Set(shortest.value) : pathSearch.value.pathNodes,
+const shortestPathsOnly = computed(
+  () => shortestOnly.value || tooManyPaths.value || layoutTimedOut.value,
 );
+const pinnedNodes = computed(() => {
+  const { pathNodes } = pathSearch.value;
+  if (!shortestPathsOnly.value) return pathNodes;
+  return new Set(
+    [...searched.value]
+      .filter((uuid) => pathNodes.has(uuid))
+      .flatMap((uuid) => findShortestPath(nodes.value, props.uuid, uuid)),
+  );
+});
 const visible = computed(() =>
-  collectVisibleNodes(
-    nodes.value,
-    props.uuid,
-    focused.value ? new Set() : expanded.value,
-    pinnedNodes.value,
+  pinnedNodes.value.size === 0
+    ? new Set()
+    : collectVisibleNodes(
+        nodes.value,
+        props.uuid,
+        expanded.value,
+        pinnedNodes.value,
+      ),
+);
+const expandable = computed(() =>
+  collectReachable(
+    [...searched.value].filter((uuid) => nodes.value.has(uuid)),
+    (uuid) => nodes.value.get(uuid).direct_dependencies,
   ),
 );
 const directUuids = computed(
@@ -271,7 +333,6 @@ const highlightedEdges = computed(() => [
 const relatedNodes = computed(
   () =>
     new Set([
-      focused.value,
       hovered.value,
       ...[
         ...pathEdges.value,
@@ -282,44 +343,42 @@ const relatedNodes = computed(
 );
 
 async function loadGraph() {
-  if (props.project.uuid !== props.uuid) return;
-  const currentRun = ++run;
+  if (!wanted.value || props.project.uuid !== props.uuid) return;
+  const controller = new AbortController();
+  onWatcherCleanup(() => controller.abort());
+  fetching.value = true;
   let graph;
   try {
     graph = (
       await axios.get(
         `${api.BASE_URL}/api/v2/projects/${props.uuid}/dependency-graph`,
+        { signal: controller.signal },
       )
     ).data;
   } catch {
-    if (currentRun === run) loadFailed.value = true;
+    if (!controller.signal.aborted) {
+      fetching.value = false;
+      loadFailed.value = true;
+      wanted.value = false;
+    }
     return;
   }
-  if (currentRun !== run) return;
+  // A response that arrived just before the abort still resolves.
+  if (controller.signal.aborted) return;
+  fetching.value = false;
   loadFailed.value = false;
   nodes.value = new Map(graph.nodes.map((node) => [node.uuid, node]));
-  searched.value = new Set();
-  resetExpansion();
   applyRoute();
 }
 
 function applyRoute() {
+  if (route.params.componentUuids) wanted.value = true;
   if (!nodes.value.has(props.uuid)) return;
-  const previousFocus = focused.value;
   searched.value = new Set(route.params.componentUuids?.split('|'));
-  if (focused.value) {
-    shortestOnly.value = false;
-    revealWhenLaidOut();
-  } else if (previousFocus) {
-    afterLayout = previousFocus;
-  } else {
-    resetExpansion();
-    revealWhenLaidOut();
-  }
-}
-
-function resetExpansion() {
-  expanded.value = new Set(pinnedNodes.value.size > 0 ? [] : [props.uuid]);
+  expanded.value = new Set();
+  shortestOnly.value = false;
+  layoutTimedOut.value = false;
+  revealWhenLaidOut();
 }
 
 function toggleFocus(uuid) {
@@ -389,6 +448,8 @@ function setOutsideInert(inert) {
 }
 
 function navigateToComponent(uuid) {
+  // Clearing removes the control that had focus, along with the graph.
+  if (!uuid) search.value.focus();
   const path = `/projects/${props.uuid}/dependencyGraph`;
   router.push({ path: uuid ? `${path}/${uuid}` : path });
 }
@@ -408,20 +469,41 @@ async function applyLayout(data) {
   positionViewport(previous);
 }
 
+function stopLayout() {
+  worker?.terminate();
+  clearTimeout(layoutTimer);
+}
+
+function giveUpLayout() {
+  stopLayout();
+  layouting.value = false;
+  const key = layoutKey.value;
+  layoutTimedOut.value = true;
+  expanded.value = new Set();
+  if (layoutKey.value === key) {
+    layoutFailed.value = true;
+    layout.value = null;
+  }
+}
+
 function computeLayout() {
   layouting.value = true;
+  layoutRun.value++;
   worker = new Worker(
     new URL('./dependencyGraphLayout.worker.js', import.meta.url),
     { type: 'module' },
   );
+  layoutTimer = setTimeout(giveUpLayout, LAYOUT_TIMEOUT_MS);
   worker.onmessage = ({ data }) => {
-    worker.terminate();
+    stopLayout();
     applyLayout(data);
   };
   worker.onerror = (error) => {
     error.preventDefault();
+    stopLayout();
     layouting.value = false;
     layoutFailed.value = true;
+    layout.value = null;
     console.warn('Failed to lay out the dependency graph', error.message);
   };
   worker.postMessage({
@@ -463,8 +545,11 @@ function hover(uuid) {
 }
 
 // Project.vue replaces the project whenever it refetches, which needs no new graph unless the BOM changed.
-watch([() => props.project.uuid, () => props.project.lastBomImport], loadGraph);
-watch(() => route.params.componentUuids, applyRoute);
+watch(
+  [() => props.project.uuid, () => props.project.lastBomImport, wanted],
+  loadGraph,
+);
+watch(() => route.params.componentUuids, applyRoute, { immediate: true });
 watch(maximized, setOutsideInert);
 watch(
   () => route.path,
@@ -473,19 +558,23 @@ watch(
   },
 );
 watch(layoutKey, () => {
-  worker?.terminate();
+  stopLayout();
   layoutFailed.value = false;
-  computeLayout();
+  if (visible.value.size > 0) {
+    computeLayout();
+  } else {
+    layouting.value = false;
+    layout.value = null;
+  }
 });
 watch(shortestOnly, revealWhenLaidOut);
 
 onMounted(() => {
-  loadGraph();
   window.addEventListener('keydown', onKeydown);
 });
 onBeforeUnmount(() => {
   if (maximized.value) setOutsideInert(false);
-  worker?.terminate();
+  stopLayout();
   window.removeEventListener('keydown', onKeydown);
 });
 </script>
@@ -542,9 +631,9 @@ onBeforeUnmount(() => {
   vertical-align: middle;
 }
 .dependency-graph-swatch.direct {
-  width: 0.25rem;
   height: 0.75rem;
-  background: var(--dt-accent);
+  border: 1px solid var(--dt-accent);
+  border-radius: var(--bs-border-radius-sm);
 }
 .dependency-graph-swatch.path {
   border-top: 2px solid var(--dt-accent);
@@ -576,6 +665,21 @@ onBeforeUnmount(() => {
   background: var(--dt-surface-raised);
   opacity: 0;
   animation: dependency-graph-busy-delay 0s 0.3s forwards;
+}
+.dependency-graph-time-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--dt-accent);
+  transform-origin: left;
+  animation: dependency-graph-time-left linear forwards;
+}
+@keyframes dependency-graph-time-left {
+  to {
+    transform: scaleX(0);
+  }
 }
 @keyframes dependency-graph-busy-delay {
   to {

@@ -1,5 +1,7 @@
 import { seed, uniqueName } from '../api.mjs';
-import { test, expect, login, search } from '../test.mjs';
+import { test, expect, login, projectSearch } from '../test.mjs';
+
+const PROJECT_METRICS = '**/api/v1/metrics/project/*/days/*';
 
 test('edit a project in the details modal', async ({ page, api }) => {
   const removed = uniqueName('tag');
@@ -125,7 +127,7 @@ test('close the delete confirmation when leaving the project', async ({
   await api.send('PUT', '/v1/project', { name });
   await login(page);
   await page.goto('projects');
-  await search(page, name);
+  await projectSearch(page, name);
   await page.getByRole('link', { name, exact: true }).click();
   await page.getByText('View Details').click();
   await page
@@ -184,16 +186,41 @@ test('delete selected project properties after confirming', async ({
     .getByRole('button', { name: 'Properties' })
     .click();
   const properties = page.getByRole('dialog', { name: 'Project Properties' });
-  await properties
-    .getByRole('row', { name: propertyName })
-    .getByRole('checkbox')
-    .check();
+  const row = properties.getByRole('row', { name: propertyName });
+  await row.getByRole('checkbox').check();
+  const confirm = page.getByRole('dialog', { name: 'Delete' });
   await properties.getByRole('button', { name: 'Delete' }).click();
-  await page
-    .getByRole('dialog', { name: 'Delete' })
-    .getByRole('button', { name: 'Delete' })
-    .click();
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await expect(properties).toBeVisible();
+  await expect(row).toBeVisible();
+
+  await properties.getByRole('button', { name: 'Delete' }).click();
+  await confirm.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByText('Property deleted')).toBeVisible();
+  await expect(properties).toBeVisible();
+  await expect(row).toBeHidden();
+});
+
+test('keep the project details when cancelling its deletion', async ({
+  page,
+  api,
+}) => {
+  const { uuid } = await api.send('PUT', '/v1/project', {
+    name: uniqueName('e2e-delete'),
+  });
+  const description = uniqueName('description');
+  await login(page);
+  await page.goto(`projects/${uuid}`);
+  await page.getByText('View Details').click();
+  const modal = page.getByRole('dialog', { name: 'Project Details' });
+  await modal.getByLabel('Description').fill(description);
+  await modal.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Confirm Project Deletion' })
+    .getByRole('button', { name: 'Cancel' })
+    .click();
+  await expect(modal).toBeVisible();
+  await expect(modal.getByLabel('Description')).toHaveValue(description);
 });
 
 test('load the findings of a project only when opening their tab', async ({
@@ -218,4 +245,56 @@ test('load the findings of a project only when opening their tab', async ({
     .getByRole('tab', { name: 'Audit Vulnerabilities', exact: true })
     .click();
   await loaded;
+});
+
+test('leave a project before its metrics have loaded', async ({ page }) => {
+  const { project } = seed();
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(PROJECT_METRICS, async (route) => {
+    await held;
+    await route.continue().catch(() => {});
+  });
+  await login(page);
+  const request = page.waitForRequest(PROJECT_METRICS);
+  await page.goto(`projects/${project.uuid}`);
+  await expect(
+    page.getByRole('heading', { name: 'Project Vulnerabilities' }),
+  ).toBeVisible();
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: 'Projects' })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+
+  release();
+  await (await (await request).response())?.finished();
+  // Lets the app handle the response before the problems fixture checks for page errors.
+  await page.evaluate(() => {});
+});
+
+test('leave a project before it has loaded', async ({ page }) => {
+  const { project } = seed();
+  const projectUrl = `**/api/v1/project/${project.uuid}`;
+  let release;
+  const held = new Promise((resolve) => (release = resolve));
+  await page.route(projectUrl, async (route) => {
+    await held;
+    await route.continue().catch(() => {});
+  });
+  await login(page);
+  const request = page.waitForRequest(projectUrl);
+  await page.goto(`projects/${project.uuid}`);
+  await request;
+  await page
+    .getByRole('navigation')
+    .getByRole('link', { name: 'Projects' })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+
+  release();
+  await (await (await request).response())?.finished();
+  await page.evaluate(() => {});
+  await expect(page).toHaveTitle('Projects - Dependency-Track');
+  await expect(page.getByRole('alert')).toHaveCount(0);
 });

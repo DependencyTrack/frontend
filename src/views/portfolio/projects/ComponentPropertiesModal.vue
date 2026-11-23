@@ -2,7 +2,7 @@
   <b-modal
     v-model="visible"
     size="lg"
-    no-stacking
+    :no-stacking="!confirming"
     :title="$t('message.component_properties')"
   >
     <bootstrap-table
@@ -136,15 +136,14 @@ export default {
     },
     deleteProperty: async function () {
       let selections = this.$refs.table.getSelections();
-      if (!(await this.$confirmDelete())) return;
+      if (!(await this.confirmDeleteOverModal())) return;
       for (let i = 0; i < selections.length; i++) {
         this.axios.delete(`${this.apiUrl()}/${selections[i].uuid}`).then(() => {
           this.$refs.table?.refresh({ silent: true });
           this.$toastr.s(this.$t('message.property_deleted'));
         });
       }
-      // The confirmation closes this modal, which unmounts the table.
-      this.$refs.table?.uncheckAll();
+      this.$refs.table.uncheckAll();
       this.hasRowsSelected = false;
     },
   },

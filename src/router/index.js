@@ -202,20 +202,11 @@ function configRoutes() {
           },
         },
         {
-          path: 'projects/:uuid/findings/:affectedComponent/:vulnerability',
-          name: 'Project Finding Lookup',
-          props: (route) => ({
-            uuid: route.params.uuid,
-            affectedComponent: route.params.componentUuid,
-            vulnerability: route.params.vulnerability,
+          path: 'projects/:uuid/findings/:component/:vulnerability',
+          redirect: ({ params: { uuid, component, vulnerability } }) => ({
+            path: `/projects/${uuid}/findings`,
+            query: { component, vulnerability },
           }),
-          component: Project,
-          meta: {
-            i18n: 'message.projects',
-            sectionPath: '/projects',
-            sectionName: 'Projects',
-            permissions: ['VIEW_PORTFOLIO'],
-          },
         },
         {
           path: 'components',

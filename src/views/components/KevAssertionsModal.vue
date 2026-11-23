@@ -96,7 +96,6 @@ export default {
 <style scoped>
 .kev-assertion-card {
   border: 1px solid color-mix(in srgb, var(--bs-danger) 40%, transparent);
-  border-left: 4px solid var(--bs-danger);
   background-color: color-mix(in srgb, var(--bs-danger) 6%, transparent);
 }
 .kev-assertion-card :deep(.card-header) {

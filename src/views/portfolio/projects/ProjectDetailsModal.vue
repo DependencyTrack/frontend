@@ -2,7 +2,7 @@
   <b-modal
     v-model="visible"
     size="lg"
-    no-stacking
+    :no-stacking="!confirming"
     :title="$t('message.project_details')"
     @show="onShow"
     @hide="resetValues()"
@@ -827,12 +827,12 @@ export default {
         });
     },
     deleteProject: async function () {
-      this.visible = false;
-      let confirmed = await this.$confirmDelete({
+      let confirmed = await this.confirmDeleteOverModal({
         title: this.$t('message.project_delete_title'),
         message: this.$t('message.project_delete_message'),
       });
       if (confirmed) {
+        this.visible = false;
         let url =
           `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/` + this.project.uuid;
         this.axios

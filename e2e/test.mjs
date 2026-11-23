@@ -84,6 +84,49 @@ export async function search(page, text, within = page) {
   await expect(loading).toHaveCount(0);
 }
 
+export async function projectSearch(page, text) {
+  await addFilter(page, 'Name');
+  await page
+    .getByRole('textbox', { name: 'Name contains', exact: true })
+    .fill(text);
+  const searched = page.waitForResponse((res) => {
+    const url = new URL(res.url());
+    return (
+      url.pathname === '/api/v2/projects' &&
+      url.searchParams.get('name_contains') === text
+    );
+  });
+  await page.getByRole('button', { name: 'Apply', exact: true }).click();
+  await (await searched).finished();
+  await expect(
+    page.getByText('Loading, please wait').filter({ visible: true }),
+  ).toHaveCount(0);
+  await expect(page).toHaveURL(
+    (url) => url.searchParams.get('name_contains') === text,
+  );
+}
+
+export async function addFilter(page, name) {
+  await page.getByRole('button', { name: 'Add filter' }).click();
+  await page.getByRole('menuitem', { name, exact: true }).click();
+}
+
+export async function expandProject(page, name) {
+  await page
+    .getByRole('row')
+    .filter({ has: page.getByRole('link', { name, exact: true }) })
+    .getByRole('cell')
+    .nth(1)
+    .click();
+}
+
+export async function chooseProjectView(page, name) {
+  await page
+    .getByRole('group', { name: 'View' })
+    .getByRole('button', { name, exact: true })
+    .click();
+}
+
 export async function auditSearch(page, text) {
   await page.getByRole('button', { name: 'Add filter' }).click();
   await page.getByRole('menuitem', { name: 'Search' }).click();
@@ -142,9 +185,19 @@ function formatDate(date) {
 
 export async function pickOption(within, label, option, query = option) {
   const search = within.getByRole('textbox', { name: label });
-  await within.getByRole('combobox').filter({ has: search }).click();
+  // An open list can sit inside the combobox, where clicking its middle would pick an option.
+  if (!(await search.isVisible())) {
+    await within.getByRole('combobox').filter({ has: search }).click();
+  }
   await search.fill(query);
   await within.getByRole('option', { name: option, exact: true }).click();
+}
+
+export async function highlightedOption(within, label) {
+  const id = await within
+    .getByRole('textbox', { name: label })
+    .getAttribute('aria-activedescendant');
+  return within.getByRole('option').and(within.locator(`[id="${id}"]`));
 }
 
 // Selects a row by clicking its text rather than its checkbox. Pass text when name is a link.

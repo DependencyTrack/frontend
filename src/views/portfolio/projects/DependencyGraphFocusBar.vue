@@ -5,12 +5,12 @@
     <span class="d-inline-flex align-items-center gap-1">
       <button
         type="button"
-        class="btn btn-link p-0"
+        class="btn btn-link p-0 text-start text-break"
         :title="$t('message.center_on_component')"
         @click="$emit('center')"
       >
         <i class="fa fa-crosshairs align-middle me-1" aria-hidden="true" />
-        {{ $t('message.paths_to_component', { name: component.name }) }}
+        {{ $t('message.paths_to_component', { name: nodeLabel(component) }) }}
       </button>
       <button
         type="button"
@@ -22,9 +22,14 @@
         <i class="fa fa-fw fa-times align-middle" aria-hidden="true" />
       </button>
     </span>
-    <b-form-checkbox id="shortestPathOnly" v-model="shortestOnly" switch>{{
-      $t('message.shortest_path')
-    }}</b-form-checkbox>
+    <b-form-checkbox
+      id="shortestPathOnly"
+      :model-value="shortestOnly || forced"
+      :disabled="forced"
+      switch
+      @update:model-value="shortestOnly = $event"
+      >{{ $t('message.shortest_path') }}</b-form-checkbox
+    >
     <span class="text-muted">{{
       $t('message.showing_components', { shown, total }, total)
     }}</span>
@@ -32,10 +37,13 @@
 </template>
 
 <script setup>
+import { nodeLabel } from './dependencyGraph';
+
 defineProps({
   component: { type: Object, required: true },
   shown: { type: Number, required: true },
   total: { type: Number, required: true },
+  forced: Boolean,
 });
 defineEmits(['center', 'clear']);
 const shortestOnly = defineModel('shortestOnly', { type: Boolean });

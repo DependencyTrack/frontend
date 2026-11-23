@@ -14,7 +14,7 @@
 .filter-pill-wrapper.filter-pill-active:has(.show) {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: var(--bs-gray-900);
+  color: var(--dt-on-accent);
 }
 
 .filter-pill-wrapper.filter-pill-active:hover .filter-pill-segment-value,
@@ -41,7 +41,7 @@
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:focus),
 .filter-pill-wrapper.filter-pill-active :deep(.btn-outline-primary:active) {
   background: var(--bs-primary) !important;
-  color: var(--bs-gray-900) !important;
+  color: var(--dt-on-accent) !important;
 }
 
 /* The form owns all padding, and clipping keeps the footer flush with the
@@ -133,6 +133,11 @@
   outline-offset: 1px;
 }
 
+.filter-pill-wrapper.filter-pill-active:hover .filter-pill-clear,
+.filter-pill-wrapper.filter-pill-active:has(.show) .filter-pill-clear {
+  color: inherit;
+}
+
 /* --- Clear segment (used by BooleanFilterPill) --- */
 
 .filter-pill-segment-clear {
@@ -166,5 +171,5 @@
 .boolean-filter-pill:hover {
   background-color: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: var(--bs-gray-900);
+  color: var(--dt-on-accent);
 }

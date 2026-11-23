@@ -43,9 +43,11 @@
           <slot></slot>
         </div>
         <div class="filter-pill-footer" v-if="!autoApply">
-          <b-link class="filter-pill-footer-clear" @click="$emit('clear')">{{
-            $t('message.clear')
-          }}</b-link>
+          <b-link
+            class="filter-pill-footer-clear"
+            @click.prevent="$emit('clear')"
+            >{{ $t('message.clear') }}</b-link
+          >
           <b-button
             variant="primary"
             size="sm"

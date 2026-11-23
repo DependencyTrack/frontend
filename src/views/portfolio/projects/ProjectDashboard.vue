@@ -38,15 +38,15 @@
                   <div class="callout callout-severity-critical">
                     <small class="text-muted">{{
                       $t('severity.critical')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ currentCritical }}</strong>
                   </div>
                 </b-col>
                 <b-col sm="6">
                   <div class="callout callout-severity-high">
-                    <small class="text-muted">{{ $t('severity.high') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('severity.high')
+                    }}</small><br />
                     <strong class="h4">{{ currentHigh }}</strong>
                   </div>
                 </b-col>
@@ -56,16 +56,18 @@
               <b-row>
                 <b-col sm="6">
                   <div class="callout callout-severity-medium">
-                    <small class="text-muted">{{ $t('severity.medium') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('severity.medium')
+                    }}</small><br />
                     <strong class="h4">{{ currentMedium }}</strong>
                   </div>
                 </b-col>
                 <b-col sm="6">
                   <div class="callout callout-severity-low">
-                    <small class="text-muted">{{ $t('severity.low') }}</small
-                    ><br />
-                    <strong class="h5">{{ currentLow }}</strong>
+                    <small class="text-muted">{{
+                      $t('severity.low')
+                    }}</small><br />
+                    <strong class="h4">{{ currentLow }}</strong>
                   </div>
                 </b-col>
               </b-row>
@@ -76,8 +78,7 @@
                   <div class="callout callout-severity-unassigned">
                     <small class="text-muted">{{
                       $t('severity.unassigned')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ currentUnassigned }}</strong>
                   </div>
                 </b-col>
@@ -85,8 +86,7 @@
                   <div class="callout callout-severity-info">
                     <small class="text-muted">{{
                       $t('message.risk_score')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h5">{{ currentRiskScore }}</strong>
                   </div>
                 </b-col>
@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
 import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress.vue';
 import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities.vue';
@@ -201,7 +202,7 @@ export default {
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('projectMetricDays') ?? 30,
       currentCritical: 0,
       currentHigh: 0,
       currentMedium: 0,
@@ -257,33 +258,29 @@ export default {
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationBreakdown.render(response.data);
-        this.$refs.chartAuditingFindingsProgress.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.extractStats(response.data);
-      });
-    },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('projectMetricDays') !== null
-        ? localStorage.getItem('projectMetricDays')
-        : 30;
-  },
-  mounted() {
-    this.fetchMetrics();
   },
   watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('projectMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('projectMetricDays', metricDays);
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${metricDays}`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
+        this.$refs.chartProjectVulnerabilities?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationBreakdown?.render(response.data);
+        this.$refs.chartAuditingFindingsProgress?.render(response.data);
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
+        this.extractStats(response.data);
+      },
     },
   },
 };

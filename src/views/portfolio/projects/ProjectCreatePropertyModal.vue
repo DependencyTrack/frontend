@@ -86,7 +86,6 @@ export default {
         { value: 'INTEGER', text: 'INTEGER' },
         { value: 'NUMBER', text: 'NUMBER' },
         { value: 'STRING', text: 'STRING' },
-        { value: 'ENCRYPTEDSTRING', text: 'ENCRYPTEDSTRING' },
         { value: 'TIMESTAMP', text: 'TIMESTAMP' },
         { value: 'URL', text: 'URL' },
         { value: 'UUID', text: 'UUID' },

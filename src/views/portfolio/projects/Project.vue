@@ -180,7 +180,7 @@
                 <b-col class="text-lowercase fw-bold" md="auto">
                   <span v-for="tag in project.tags" :key="tag.name">
                     <b-badge
-                      :to="{ name: 'Projects', query: { tag: tag.name } }"
+                      :to="{ name: 'Projects', query: { tags_all: tag.name } }"
                       variant="tag"
                       >{{ tag.name }}</b-badge
                     >
@@ -399,7 +399,7 @@
       v-model="showProjectDetailsModal"
       :project-input="project"
       :uuid="this.uuid"
-      v-on:projectUpdated="initialize"
+      v-on:projectUpdated="initialize()"
       v-on:showProperties="showProjectPropertiesModal = true"
     />
     <project-properties-modal
@@ -430,6 +430,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
 import { cloneDeep } from 'lodash-es';
 import SeverityCircles from '../../components/SeverityCircles.vue';
@@ -473,6 +474,9 @@ export default {
     SeverityCircles,
     ProjectEpss,
     ExternalReferencesDropdown,
+  },
+  props: {
+    uuid: String,
   },
   computed: {
     projectLabel() {
@@ -537,7 +541,6 @@ export default {
       showProjectUploadBomModal: false,
       showProjectUploadVexModal: false,
       showProjectExportModal: false,
-      uuid: null,
       project: {},
       currentCritical: 0,
       currentHigh: 0,
@@ -555,11 +558,14 @@ export default {
     cloneDeep: function (component) {
       return cloneDeep(component);
     },
-    initialize: function () {
+    initialize: function (signal) {
       let projectUrl = `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}`;
       return this.axios
-        .get(projectUrl)
+        .get(projectUrl, { signal })
         .catch((error) => {
+          if (this.axios.isCancel(error)) {
+            throw error;
+          }
           if (error.response.status === 403) {
             this.$router.replace({ name: 'Projects' });
           }
@@ -663,32 +669,36 @@ export default {
       return common.getCollectionLogicText(this, project);
     },
   },
-  beforeMount() {
-    this.uuid = this.$route.params.uuid;
-    this.initialize()
-      .then(() => {
-        this.$nextTick(() => {
-          if (this.$route.params.componentUuids) {
-            this.$refs.dependencygraph.activate();
-          } else {
-            this.getTabFromRoute().activate();
-          }
-        });
-      })
-      .catch((e) => {
-        console.error(e);
-        this.$toastr.e(this.$t('condition.forbidden'));
-        this.$router.replace({ path: '/projects/' + this.uuid });
-        this.$refs.overview.activate();
-      });
-  },
   watch: {
-    $route(to, from) {
-      this.uuid = this.$route.params.uuid;
-      if (to.params.uuid !== from.params.uuid) {
+    uuid: {
+      immediate: true,
+      async handler() {
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
         this.versionQuery = '';
-        this.initialize();
-      } else if (
+        try {
+          await this.initialize(controller.signal);
+        } catch (e) {
+          if (this.axios.isCancel(e)) {
+            return;
+          }
+          console.error(e);
+          this.$toastr.e(this.$t('condition.forbidden'));
+          this.$router.replace({ path: '/projects/' + this.uuid });
+          this.$refs.overview.activate();
+          return;
+        }
+        await this.$nextTick();
+        if (this.$route.params.componentUuids) {
+          this.$refs.dependencygraph.activate();
+        } else {
+          this.getTabFromRoute().activate();
+        }
+      },
+    },
+    $route(to, from) {
+      if (
+        to.params.uuid === from.params.uuid &&
         this.$route.params.componentUuids &&
         this.$refs.dependencygraph
       ) {

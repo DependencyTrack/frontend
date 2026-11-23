@@ -1,5 +1,12 @@
 import { seed, uniqueName } from '../api.mjs';
-import { test, expect, login, pickOption, setTheme } from '../test.mjs';
+import {
+  test,
+  expect,
+  highlightedOption,
+  login,
+  pickOption,
+  setTheme,
+} from '../test.mjs';
 
 const GRAPH_ROUTE = '**/api/v2/projects/*/dependency-graph';
 const LAYOUT_WORKER_ROUTE = '**/dependencyGraphLayout.worker*';
@@ -10,25 +17,16 @@ test('dependency graph shows an uploaded BOM, including a component reached over
 }) => {
   const { projectUuid, uuids } = await uploadBom(api, ladder(30));
   await login(page);
-  await page.goto(`projects/${projectUuid}/dependencyGraph`);
+  const leaf = 'layer-30-a';
+  await page.goto(`projects/${projectUuid}/dependencyGraph/${uuids[leaf]}`);
   const graph = page.getByRole('tabpanel');
   const link = (name) => graph.getByRole('link', { name });
-  const direct = link('layer-1-a 1, direct dependency');
-  await expect(direct).toHaveAttribute(
+  await expect(link(leaf)).toBeInViewport({ ratio: 1 });
+  await expect(link('layer-1-a 1, direct dependency')).toHaveAttribute(
     'href',
     `/components/${uuids['layer-1-a']}`,
   );
   await expect(graph.getByText('Direct dependency')).toBeVisible();
-
-  const toggle = graph.getByRole('button', { name: 'layer-1-a 1' });
-  await toggle.click();
-  await expect(link(/layer-2-a 1$/)).toBeVisible();
-  await toggle.click();
-  await expect(link('layer-2-a')).toBeHidden();
-
-  const leaf = 'layer-30-a';
-  await page.goto(`projects/${projectUuid}/dependencyGraph/${uuids[leaf]}`);
-  await expect(link(leaf)).toBeInViewport({ ratio: 1 });
   // Only one component of the last layer leads to the searched component, which is itself.
   await expect(graph.getByRole('link')).toHaveCount(2 * 29 + 1);
 });
@@ -43,7 +41,8 @@ test('dependency graph focuses on the paths to a component', async ({
     middle: ['target'],
     short: ['target'],
     target: ['below'],
-    below: [],
+    below: ['deeper'],
+    deeper: [],
     bystander: [],
   });
   await login(page);
@@ -63,21 +62,42 @@ test('dependency graph focuses on the paths to a component', async ({
   const clearPaths = graph.getByRole('button', { name: 'Clear paths' });
   const clearSearch = graph.getByRole('button', { name: 'Clear search' });
   const shortest = graph.getByLabel('Shortest path');
+  const prompt = graph.getByText(
+    'Search for a component to see the paths leading to it.',
+  );
 
-  await graph.getByRole('button', { name: 'short 1' }).click();
-  await expect(link('target')).toBeVisible();
-  await expect(link('middle')).toHaveCount(0);
+  await expect(prompt).toBeVisible();
+  await expect(graph.getByRole('link')).toHaveCount(0);
+  expect(loads).toBe(0);
 
-  await showPaths('target').click();
+  await pickOption(page, 'Component Search', 'target 1', 'target');
+  await expect(prompt).toHaveCount(0);
   await expect(link('middle')).toBeVisible();
   await expect(link('below')).toHaveCount(0);
   await expect(link('bystander')).toHaveCount(0);
-  await expect(graph.getByText('Showing 4 of 6 components')).toBeVisible();
+  await expect(graph.getByText('Showing 4 of 7 components')).toBeVisible();
+
+  for (const hovered of ['target', 'long']) {
+    await link(hovered).hover();
+    for (const name of ['long', 'middle', 'short', 'target']) {
+      await expect(link(name)).toHaveCSS('opacity', '1');
+    }
+  }
+
+  const toggle = (name) => graph.getByRole('button', { name, exact: true });
+  await toggle('target 1').click();
+  await toggle('below 1').click();
+  await expect(link('deeper')).toBeVisible();
+  await expect(graph.getByText('Showing 6 of 7 components')).toBeVisible();
+  await expect(toggle('app 1')).toHaveCount(0);
+  await toggle('target 1').click();
+  await expect(link('below')).toHaveCount(0);
 
   await page.goBack();
-  await expect(link('bystander')).toBeVisible();
-  await expect(link('target')).toBeVisible();
+  await expect(prompt).toBeVisible();
+  await expect(graph.getByRole('link')).toHaveCount(0);
   await page.goForward();
+  await expect(link('target')).toBeVisible();
   await expect(link('bystander')).toHaveCount(0);
   expect(loads).toBe(1);
 
@@ -91,10 +111,10 @@ test('dependency graph focuses on the paths to a component', async ({
   for (const hidden of ['long', 'middle', 'below', 'bystander']) {
     await expect(link(hidden)).toHaveCount(0);
   }
-  await expect(graph.getByText('Showing 2 of 6 components')).toBeVisible();
+  await expect(graph.getByText('Showing 2 of 7 components')).toBeVisible();
   await shortest.click();
   await expect(link('long')).toBeVisible();
-  await expect(graph.getByText('Showing 4 of 6 components')).toBeVisible();
+  await expect(graph.getByText('Showing 4 of 7 components')).toBeVisible();
   await shortest.click();
   await expect(link('long')).toHaveCount(0);
 
@@ -109,24 +129,70 @@ test('dependency graph focuses on the paths to a component', async ({
 
   await clearPaths.click();
   await expect(pathsTo('')).toHaveCount(0);
-  await expect(link('bystander')).toBeVisible();
-  await expect(link('below')).toHaveCount(0);
+  await expect(prompt).toBeVisible();
+  await expect(graph.getByRole('link')).toHaveCount(0);
   await expect(shortest).toHaveCount(0);
   await expect(page).toHaveURL(/dependencyGraph$/);
 
-  await showPaths('long').click();
+  await pickOption(page, 'Component Search', 'long 1', 'long');
   await expect(pathsTo('long')).toBeVisible();
   await showPaths('long').click();
   await expect(pathsTo('')).toHaveCount(0);
+  await expect(prompt).toBeVisible();
+  await expect(
+    page.getByRole('textbox', { name: 'Component Search' }),
+  ).toBeFocused();
 
   await page.goto(`${base}/${uuids.target}|${uuids.bystander}`);
   await expect(link('target')).toBeVisible();
   await expect(link('bystander')).toBeVisible();
   await expect(pathsTo('')).toHaveCount(0);
   await expect(clearSearch).toBeVisible();
+  await expect(searchBox(page)).not.toContainText('target');
   await graph.getByRole('button', { name: 'target 1' }).click();
   await expect(link('below')).toBeVisible();
   await expect(graph.getByText('Dependency path')).toBeVisible();
+});
+
+test('dependency graph search tells apart components that differ only late in a long group', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const group = (suffix) => `org.${'foooooo.baaaaaar.'.repeat(8)}${suffix}`;
+  const name = 'api-with-a-long-name-'.repeat(4) + 'end';
+  const suffixes = Array.from({ length: 30 }, (_, i) => `s${i}`);
+  await stubGraph(
+    page,
+    {
+      app: suffixes,
+      ...Object.fromEntries(suffixes.map((suffix) => [suffix, []])),
+    },
+    Object.fromEntries(
+      suffixes.map((suffix) => [suffix, { name, group: group(suffix) }]),
+    ),
+  );
+  await login(page);
+  await page.goto(`projects/${project.uuid}/dependencyGraph`);
+  const graph = page.getByRole('tabpanel');
+  const search = page.getByRole('textbox', { name: 'Component Search' });
+  await searchBox(page).click();
+  await search.fill('api');
+
+  await expect(
+    graph.getByRole('option').getByText(group('s0'), { exact: true }),
+  ).toBeInViewport({ ratio: 1 });
+
+  const highlighted = () => highlightedOption(page, 'Component Search');
+  for (const key of [...Array(20).fill('ArrowDown'), 'ArrowUp', 'ArrowUp']) {
+    await search.press(key);
+    await expect(await highlighted()).toBeInViewport({ ratio: 1 });
+  }
+
+  await expect(await highlighted()).toContainText(group('s18'));
+  await search.press('Enter');
+  const label = `${group('s18')}/${name} 1`;
+  await expect(graph.getByText(`Paths to ${label}`)).toBeInViewport();
+  await expect(searchBox(page).getByTitle(label)).toBeVisible();
 });
 
 test('dependency graph can be moved around without getting lost', async ({
@@ -197,20 +263,26 @@ test('dependency graph can be moved around without getting lost', async ({
 });
 
 test('dependency graph follows the theme', async ({ page }) => {
-  const { project } = seed();
+  const { project, componentUuid } = seed();
   await page.emulateMedia({ colorScheme: 'dark' });
   await login(page);
-  await page.goto(`projects/${project.uuid}/dependencyGraph`);
-  const node = page
-    .getByRole('tabpanel')
-    .getByRole('link', { name: 'jackson-databind' });
-  await expect(node).toHaveCSS('background-color', 'rgb(23, 21, 30)');
+  await page.goto(`projects/${project.uuid}/dependencyGraph/${componentUuid}`);
+  const graph = page.getByRole('tabpanel');
+  await graph
+    .getByRole('button', {
+      name: 'com.fasterxml.jackson.core/jackson-databind 2.13.2.2',
+      exact: true,
+    })
+    .click();
+  const node = graph.getByRole('link', { name: 'jackson-core' });
+  await expect(node).toHaveCSS('background-color', 'rgb(22, 24, 28)');
   await setTheme(page, 'Light');
   await expect(node).toHaveCSS('background-color', 'rgb(255, 255, 255)');
 });
 
 test('dependency graph says what it is waiting for and what went wrong', async ({
   page,
+  api,
   problems,
 }) => {
   problems.allow(/\/dependency-graph 500/);
@@ -219,6 +291,10 @@ test('dependency graph says what it is waiting for and what went wrong', async (
   await login(page);
   const graph = page.getByRole('tabpanel');
   const busy = graph.getByRole('status');
+  const noDependencies = graph.getByText(
+    'This project has no dependency information',
+  );
+  const prompt = graph.getByText('Search for a component');
 
   const graphLoad = Promise.withResolvers();
   await page.route(GRAPH_ROUTE, async (route) => {
@@ -226,6 +302,7 @@ test('dependency graph says what it is waiting for and what went wrong', async (
     await route.fulfill({ status: 500 });
   });
   await page.goto(url);
+  await searchBox(page).click();
   await expect(busy.filter({ hasText: 'Loading' })).toBeVisible();
   graphLoad.resolve();
   await expect(
@@ -234,13 +311,34 @@ test('dependency graph says what it is waiting for and what went wrong', async (
   await expect(busy).toHaveCount(0);
 
   await page.unroute(GRAPH_ROUTE);
-  await stubGraph(page, { app: ['connected'], connected: [], orphan: [] });
+  await stubGraph(page, { app: ['retried'], retried: [] });
+  await graph.getByRole('button', { name: 'Expand graph' }).focus();
+  await pickOption(page, 'Component Search', 'retried 1', 'retried');
+  await expect(graph.getByRole('link', { name: 'retried' })).toBeVisible();
+  await expect(
+    page.getByText('The dependency graph could not be loaded'),
+  ).toHaveCount(0);
+
+  await page.unroute(GRAPH_ROUTE);
+  const uuids = await stubGraph(page, {
+    app: ['connected'],
+    connected: [],
+    orphan: [],
+  });
+  const graphStub = Promise.withResolvers();
+  await page.route(GRAPH_ROUTE, async (route) => {
+    await graphStub.promise;
+    await route.fallback();
+  });
   const layout = Promise.withResolvers();
   await page.route(LAYOUT_WORKER_ROUTE, async (route) => {
     await layout.promise;
     await route.continue();
   });
-  await page.goto(url);
+  await page.goto(`${url}/${uuids.connected}`);
+  await expect(busy.filter({ hasText: 'Loading' })).toBeVisible();
+  await expect(prompt).toHaveCount(0);
+  graphStub.resolve();
   await expect(busy.filter({ hasText: 'Laying out graph' })).toBeVisible();
   layout.resolve();
   await expect(graph.getByRole('link', { name: 'connected' })).toBeVisible();
@@ -250,16 +348,7 @@ test('dependency graph says what it is waiting for and what went wrong', async (
   await expect(
     page.getByText('Dependency could not be found in dependency graph'),
   ).toBeVisible();
-  await expect(graph.getByRole('link', { name: 'connected' })).toBeVisible();
-  await expect(graph.getByRole('link', { name: 'orphan' })).toHaveCount(0);
-
-  await page.unroute(GRAPH_ROUTE);
-  await stubGraph(page, { app: [], lonely: [] });
-  await page.goto(url);
-  await expect(
-    graph.getByText('This project has no dependency information'),
-  ).toBeVisible();
-  await expect(graph.getByText('Direct dependency')).toHaveCount(0);
+  await expect(graph.getByRole('link')).toHaveCount(0);
 
   await page.unroute(LAYOUT_WORKER_ROUTE);
   await page.route(LAYOUT_WORKER_ROUTE, (route) =>
@@ -268,32 +357,160 @@ test('dependency graph says what it is waiting for and what went wrong', async (
       body: "throw new Error('Maximum call stack size exceeded');",
     }),
   );
-  await page.goto(url);
+  await page.goto(`${url}/${uuids.connected}`);
   await expect(page.getByText('The graph could not be laid out')).toBeVisible();
   await expect(busy).toHaveCount(0);
+
+  await page.unroute(GRAPH_ROUTE);
+  await stubGraph(page, { app: [], lonely: [] });
+  await page.goto(url);
+  await searchBox(page).click();
+  await expect(noDependencies).toBeVisible();
+  await expect(prompt).toHaveCount(0);
+
+  let loads = 0;
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname.endsWith('/dependency-graph')) loads++;
+  });
+  const withoutDependencies = await api.get(`/v1/project/${project.uuid}`);
+  delete withoutDependencies.directDependencies;
+  await page.route(`**/api/v1/project/${project.uuid}`, (route) =>
+    route.fulfill({ json: withoutDependencies }),
+  );
+  await page.goto(url);
+  await expect(noDependencies).toBeVisible();
+  await expect(prompt).toHaveCount(0);
+  expect(loads).toBe(0);
+
+  await page.unroute(GRAPH_ROUTE);
+  await page.unroute(LAYOUT_WORKER_ROUTE);
+  await stubGraph(page, { app: ['found'], found: [] });
+  await pickOption(page, 'Component Search', 'found 1', 'found');
+  await expect(graph.getByRole('link', { name: 'found' })).toBeVisible();
+  await expect(noDependencies).toHaveCount(0);
+});
+
+test('dependency graph shows only the shortest path when there are too many to draw', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const middles = Array.from({ length: 500 }, (_, i) => `middle-${i}`);
+  const uuids = await stubGraph(page, {
+    app: middles,
+    ...Object.fromEntries(middles.map((name) => [name, ['target']])),
+    target: [],
+  });
+  await login(page);
+  await page.goto(`projects/${project.uuid}/dependencyGraph/${uuids.target}`);
+  const graph = page.getByRole('tabpanel');
+  const shortest = graph.getByLabel('Shortest path');
+  await expect(
+    graph.getByText(
+      'Too many components to draw (501). Showing only the shortest path.',
+    ),
+  ).toBeVisible();
+  await expect(graph.getByRole('link', { name: 'target' })).toBeVisible();
+  await expect(graph.getByRole('link')).toHaveCount(2);
+  await expect(shortest).toBeChecked();
+  await expect(shortest).toBeDisabled();
+});
+
+test('dependency graph falls back to the shortest path when laying out takes too long', async ({
+  page,
+}) => {
+  const { project } = seed();
+  const uuids = await stubGraph(page, {
+    app: ['long', 'short', 'solo'],
+    long: ['middle'],
+    middle: ['target'],
+    short: ['target'],
+    target: [],
+    solo: [],
+  });
+  let layouts = 0;
+  let hanging = 1;
+  await page.route(LAYOUT_WORKER_ROUTE, (route) => {
+    layouts++;
+    if (hanging-- <= 0) route.continue();
+  });
+  await page.clock.install();
+  await login(page);
+  await page.goto(`projects/${project.uuid}/dependencyGraph/${uuids.target}`);
+  const graph = page.getByRole('tabpanel');
+  const link = (name) => graph.getByRole('link', { name });
+  const layingOut = graph.getByText('Laying out graph');
+  const tookTooLong = graph.getByText(
+    'The graph took too long to lay out. Showing only the shortest path.',
+  );
+  const failed = graph.getByText('The graph could not be laid out');
+  await expect(layingOut).toBeVisible();
+
+  await page.clock.fastForward(15_000);
+  await expect(tookTooLong).toBeVisible();
+  await expect(link('short')).toBeVisible();
+  await expect(link('long')).toHaveCount(0);
+  await expect(graph.getByLabel('Shortest path')).toBeDisabled();
+
+  // A single path leaves nothing smaller to fall back to.
+  hanging = 1;
+  await pickOption(page, 'Component Search', 'solo 1', 'solo');
+  await expect(layingOut).toBeVisible();
+  await page.clock.fastForward(15_000);
+  await expect(failed).toBeVisible();
+  await expect(tookTooLong).toHaveCount(0);
+  await expect(layingOut).toHaveCount(0);
+  await expect(link('short')).toHaveCount(0);
+
+  hanging = Infinity;
+  await pickOption(page, 'Component Search', 'target 1', 'target');
+  await page.clock.fastForward(15_000);
+  await expect(tookTooLong).toBeVisible();
+  await page.clock.fastForward(15_000);
+  await expect(failed).toBeVisible();
+  await expect(tookTooLong).toHaveCount(0);
+  await expect(layingOut).toHaveCount(0);
+  const attempts = layouts;
+  await page.clock.fastForward(15_000);
+  await expect(failed).toBeVisible();
+  expect(layouts).toBe(attempts);
+});
+
+test('dependency graph stops loading when left', async ({ page }) => {
+  const { project } = seed();
+  await page.route(GRAPH_ROUTE, () => {});
+  await login(page);
+  await page.goto(`projects/${project.uuid}/dependencyGraph`);
+  const aborted = page.waitForEvent('requestfailed', (request) =>
+    new URL(request.url()).pathname.endsWith('/dependency-graph'),
+  );
+  await searchBox(page).click();
+  await page.getByRole('link', { name: 'Dashboard' }).click();
+  expect((await aborted).failure().errorText).toBe('net::ERR_ABORTED');
 });
 
 test('dependency graph expands to fill the window', async ({ page }) => {
   const { project } = seed();
-  await stubGraph(page, {
-    app: ['parent', 'bystander'],
-    parent: ['target'],
-    target: [],
-    bystander: [],
+  const uuids = await stubGraph(page, {
+    app: ['parent'],
+    parent: ['first', 'second'],
+    first: [],
+    second: [],
   });
   await page.setViewportSize({ width: 1024, height: 700 });
   await login(page);
-  await page.goto(`projects/${project.uuid}/dependencyGraph`);
+  await page.goto(`projects/${project.uuid}/dependencyGraph/${uuids.parent}`);
   const graph = page.getByRole('tabpanel');
   const frame = graph.getByRole('region', { name: 'Dependency Graph' });
   const expand = graph.getByRole('button', { name: 'Expand graph' });
   const collapse = graph.getByRole('button', { name: 'Collapse graph' });
   const sidebar = page.getByRole('link', { name: 'Dashboard' });
   const parent = graph.getByRole('link', { name: 'parent' });
-  const bystander = graph.getByRole('link', { name: 'bystander' });
-  await expect(parent).toBeVisible();
-  expect((await parent.boundingBox()).y).toBeLessThan(
-    (await bystander.boundingBox()).y,
+  const first = graph.getByRole('link', { name: 'first' });
+  const second = graph.getByRole('link', { name: 'second' });
+  await graph.getByRole('button', { name: 'parent 1', exact: true }).click();
+  await expect(second).toBeVisible();
+  expect((await first.boundingBox()).y).toBeLessThan(
+    (await second.boundingBox()).y,
   );
   expect((await frame.boundingBox()).width).toBeLessThan(1024);
 
@@ -312,11 +529,11 @@ test('dependency graph expands to fill the window', async ({ page }) => {
   await expect
     .poll(async () => (await parent.boundingBox()).width)
     .toBeCloseTo(272, 0);
-  await expect(parent).toBeInViewport();
-  await expect(bystander).toBeInViewport();
+  await expect(first).toBeInViewport();
+  await expect(second).toBeInViewport();
 
-  await pickOption(page, 'Component Search', 'target 1', 'target');
-  const chip = graph.getByText('Paths to target');
+  await pickOption(page, 'Component Search', 'first 1', 'first');
+  const chip = graph.getByText('Paths to first');
   await expect(chip).toBeVisible();
   await expect(collapse).toBeVisible();
 
@@ -331,6 +548,12 @@ test('dependency graph expands to fill the window', async ({ page }) => {
   expect((await frame.boundingBox()).width).toBeLessThan(1024);
   await sidebar.focus();
   await expect(sidebar).toBeFocused();
+
+  await expand.click();
+  await graph.getByRole('button', { name: 'Clear paths' }).click();
+  await expect(chip).toHaveCount(0);
+  await collapse.click();
+  await expect(expand).toBeVisible();
 
   await page.goto(`projects/${project.uuid}/components`);
   await page.getByRole('tab', { name: 'Dependency Graph' }).click();
@@ -349,18 +572,20 @@ test('large dependency graph only draws what is in view and limits search result
   page,
 }) => {
   const { project } = seed();
-  const names = Array.from({ length: 3000 }, (_, i) => `big-${i}`);
-  await stubGraph(page, {
-    app: names,
+  const names = Array.from({ length: 1000 }, (_, i) => `big-${i}`);
+  const uuids = await stubGraph(page, {
+    app: ['hub'],
+    hub: names,
     ...Object.fromEntries(names.map((name) => [name, []])),
   });
   await login(page);
-  await page.goto(`projects/${project.uuid}/dependencyGraph`);
+  await page.goto(`projects/${project.uuid}/dependencyGraph/${uuids.hub}`);
   const graph = page.getByRole('tabpanel');
   const links = graph.getByRole('link');
+  await graph.getByRole('button', { name: 'hub 1', exact: true }).click();
   const expectOnlySomeDrawn = async () => {
     await expect.poll(() => links.count()).toBeGreaterThan(0);
-    expect(await links.count()).toBeLessThan(1000);
+    expect(await links.count()).toBeLessThan(names.length);
   };
   await expectOnlySomeDrawn();
 
@@ -388,10 +613,16 @@ test('large dependency graph only draws what is in view and limits search result
   const search = page.getByRole('textbox', { name: 'Component Search' });
   await page.getByRole('combobox').filter({ has: search }).click();
   await search.fill('big');
-  await expect(page.getByText('Showing 50 of 3000')).toBeVisible();
+  await expect(page.getByText('Showing 50 of 1000')).toBeVisible();
 });
 
-async function stubGraph(page, { app, ...components }) {
+function searchBox(page) {
+  return page
+    .getByRole('combobox')
+    .filter({ has: page.getByRole('textbox', { name: 'Component Search' }) });
+}
+
+async function stubGraph(page, { app, ...components }, details = {}) {
   const uuids = Object.fromEntries(
     Object.keys(components).map((name) => [name, crypto.randomUUID()]),
   );
@@ -413,6 +644,7 @@ async function stubGraph(page, { app, ...components }) {
             name,
             version: '1',
             direct_dependencies: toUuids(dependsOn),
+            ...details[name],
           })),
         ],
       },

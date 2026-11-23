@@ -37,6 +37,7 @@ const TYPES = {
     purl: 'string',
     swid_tag_id: 'string',
     is_internal: 'bool',
+    properties: 'repeated Component.Property',
     md5: 'string',
     sha1: 'string',
     sha256: 'string',
@@ -59,6 +60,12 @@ const TYPES = {
     package_artifact_sha1: 'string',
     package_artifact_sha256: 'string',
     package_artifact_sha512: 'string',
+  },
+  'Component.Property': {
+    group: 'string',
+    name: 'string',
+    value: 'string',
+    type: 'string',
   },
   License: {
     uuid: 'string',

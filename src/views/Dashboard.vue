@@ -470,8 +470,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.projects')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalProjects }}</strong>
                   </div>
                 </b-col>
@@ -479,8 +478,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_projects')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerableProjects }}</strong>
                   </div>
                 </b-col>
@@ -492,8 +490,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.components')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalComponents }}</strong>
                   </div>
                 </b-col>
@@ -501,8 +498,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.vulnerable_components')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerableComponents }}</strong>
                   </div>
                 </b-col>
@@ -514,8 +510,7 @@
                   <div class="callout callout-danger">
                     <small class="text-muted">{{
                       $t('message.portfolio_vulnerabilities')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ vulnerabilities }}</strong>
                   </div>
                 </b-col>
@@ -523,8 +518,7 @@
                   <div class="callout callout-warning">
                     <small class="text-muted">{{
                       $t('message.suppressed')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ suppressed }}</strong>
                   </div>
                 </b-col>
@@ -538,8 +532,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('message.policy_violations')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ totalViolations }}</strong>
                   </div>
                 </b-col>
@@ -547,8 +540,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.license')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ licenseViolations }}</strong>
                   </div>
                 </b-col>
@@ -560,8 +552,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.operational')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ operationalViolations }}</strong>
                   </div>
                 </b-col>
@@ -569,8 +560,7 @@
                   <div class="callout callout-info">
                     <small class="text-muted">{{
                       $t('policy_violation.security')
-                    }}</small
-                    ><br />
+                    }}</small><br />
                     <strong class="h4">{{ securityViolations }}</strong>
                   </div>
                 </b-col>
@@ -580,8 +570,9 @@
               <b-row>
                 <b-col sm="6">
                   <div class="callout callout-danger">
-                    <small class="text-muted">{{ $t('message.kev') }}</small
-                    ><br />
+                    <small class="text-muted">{{
+                      $t('message.kev')
+                    }}</small><br />
                     <strong class="h4">{{ kev }}</strong>
                   </div>
                 </b-col>
@@ -595,6 +586,7 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../shared/common';
 import PortfolioWidgetRow from './dashboard/PortfolioWidgetRow.vue';
 import ChartPortfolioVulnerabilities from './dashboard/ChartPortfolioVulnerabilities.vue';
@@ -621,7 +613,7 @@ export default {
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('portfolioMetricDays') ?? 30,
       totalProjects: 0,
       vulnerableProjects: 0,
       vulnerableProjectsPercent: 0,
@@ -845,39 +837,36 @@ export default {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${this.metricDays}/days`;
-      this.axios.get(url).then((response) => {
-        this.$refs.portfolioWidgetRow.render(response.data);
-        this.$refs.chartPortfolioVulnerabilities.render(response.data);
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartAuditingFindingsProgress.render(response.data);
-        this.$refs.chartAuditingViolationsProgress.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationsClassification.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.extractStats(response.data);
-      });
-    },
   },
   watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('portfolioMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('portfolioMetricDays', metricDays);
+        if (!this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
+          return;
+        }
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/portfolio/${metricDays}/days`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
+        this.$refs.portfolioWidgetRow?.render(response.data);
+        this.$refs.chartPortfolioVulnerabilities?.render(response.data);
+        this.$refs.chartProjectVulnerabilities?.render(response.data);
+        this.$refs.chartAuditingFindingsProgress?.render(response.data);
+        this.$refs.chartAuditingViolationsProgress?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationsClassification?.render(response.data);
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
+        this.extractStats(response.data);
+      },
     },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('portfolioMetricDays') !== null
-        ? localStorage.getItem('portfolioMetricDays')
-        : 30;
-  },
-  mounted() {
-    if (this.isPermitted(this.PERMISSIONS.VIEW_PORTFOLIO)) {
-      this.fetchMetrics();
-    }
   },
 };
 </script>

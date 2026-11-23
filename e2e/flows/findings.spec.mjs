@@ -1,4 +1,4 @@
-import { seed } from '../api.mjs';
+import { APP_URL, seed } from '../api.mjs';
 import {
   test,
   expect,
@@ -550,7 +550,7 @@ test('keep an unsent comment when leaving during a save', async ({ page }) => {
   const dismissed = dismissNextDialog(page);
   await page.goBack();
   await dismissed;
-  await expect(page).toHaveURL(/\/findings$/);
+  await expect(page).toHaveURL(findingLink(seed()));
   release();
   await drawer.getByRole('tab', { name: 'History' }).click();
   await expect(comment).toHaveValue('Half a thought');
@@ -589,4 +589,102 @@ test('reset a findings sort the API no longer supports', async ({
       .getByRole('alert')
       .filter({ hasText: 'Sorting by "unknown" is no longer supported.' }),
   ).toBeVisible();
+});
+
+function findingLink({ project, componentUuid, vulnUuid }) {
+  return `projects/${project.uuid}/findings?component=${componentUuid}&vulnerability=${vulnUuid}`;
+}
+
+test('open a suppressed finding from its link', async ({ page }) => {
+  // Stands in for a suppressed finding, which the table hides by default.
+  await page.route('**/api/v1/finding/project/**', async (route) => {
+    const url = new URL(route.request().url());
+    const response = await route.fetch();
+    const findings = await response.json();
+    await route.fulfill({
+      response,
+      json: url.searchParams.get('suppressed') === 'true' ? findings : [],
+    });
+  });
+  await login(page);
+  await page.goto(findingLink(seed()));
+  await expect(page.getByRole('dialog', { name: seed().vulnId })).toBeVisible();
+});
+
+test('show the open finding in the address bar', async ({ page }) => {
+  const { project, vulnId } = seed();
+  await login(page);
+  await page.goto(`projects/${project.uuid}/findings`);
+  await search(page, vulnId);
+  await page.getByRole('row').filter({ hasText: vulnId }).press('Enter');
+  const drawer = page.getByRole('dialog', { name: vulnId });
+  await expect(page).toHaveURL(findingLink(seed()));
+  await drawer.getByRole('button', { name: 'Close' }).click();
+  await expect(page).toHaveURL(`projects/${project.uuid}/findings`);
+});
+
+test('copy the link to a finding', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const drawer = await openSeededFinding(page);
+  await drawer.getByRole('button', { name: 'Copy link' }).click();
+  await expect(page.getByText('Copied to clipboard')).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    `${APP_URL}/${findingLink(seed())}`,
+  );
+});
+
+test('copy the link to a finding from the vulnerability audit', async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const { project, vulnId } = seed();
+  await login(page);
+  await page.goto('vulnerabilityAudit/occurrences');
+  await auditSearch(page, vulnId);
+  await page.getByRole('row').filter({ hasText: project.name }).press('Enter');
+  await page
+    .getByRole('dialog', { name: vulnId })
+    .getByRole('button', { name: 'Copy link' })
+    .click();
+  await expect(page.getByText('Copied to clipboard')).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    `${APP_URL}/${findingLink(seed())}`,
+  );
+});
+
+test('open a finding from its old link', async ({ page }) => {
+  const { project, componentUuid, vulnId, vulnUuid } = seed();
+  await login(page);
+  await page.goto(
+    `projects/${project.uuid}/findings/${componentUuid}/${vulnUuid}`,
+  );
+  await expect(page.getByRole('dialog', { name: vulnId })).toBeVisible();
+  await expect(page).toHaveURL(findingLink(seed()));
+});
+
+test('select a linked finding in the table', async ({ page }) => {
+  const { componentUuid, vulnUuid, vulnId } = seed();
+  // Stands in for a project where the linked finding is not on the first page.
+  await page.route('**/api/v1/finding/project/**', async (route) => {
+    const url = new URL(route.request().url());
+    const response = await route.fetch();
+    const findings = await response.json();
+    await route.fulfill({
+      response,
+      json: url.searchParams.get('searchText')?.includes(componentUuid)
+        ? findings
+        : findings.filter(
+            (f) =>
+              f.component.uuid !== componentUuid ||
+              f.vulnerability.uuid !== vulnUuid,
+          ),
+    });
+  });
+  await login(page);
+  await page.goto(findingLink(seed()));
+  await expect(page.getByRole('dialog', { name: vulnId })).toBeVisible();
+  await expect(
+    page.getByRole('row').filter({ hasText: vulnId }),
+  ).toHaveAttribute('aria-current', 'true');
 });
