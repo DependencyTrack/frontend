@@ -78,7 +78,7 @@
     "vue-i18n-extract": "git+https://git@github.com/Spittal/vue-i18n-extract.git#f856484d2f62abbd931d84676519f529062d94da"
   },
   "overrides": {
-    "fast-uri": "3.1.2"
+    "fast-uri": "3.1.9"
   },
   "engines": {
     "node": ">= 22",
