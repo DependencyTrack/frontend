@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "Заголовок",
     "to": "К",
+    "toggle_navigation_menu": null,
     "total": "Всего",
     "total_findings": "Всего результатов",
     "total_rows": "всего строк",

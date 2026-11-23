@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "标题",
     "to": "至",
+    "toggle_navigation_menu": null,
     "total": "合计",
     "total_findings": "发现总数",
     "total_rows": "总行数",

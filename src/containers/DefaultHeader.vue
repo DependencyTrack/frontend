@@ -3,6 +3,7 @@
     <button
       class="navbar-toggler"
       type="button"
+      :aria-label="$t('message.toggle_navigation_menu')"
       @click.stop="toggleSidebar('sidebar-show')"
     >
       <span class="navbar-toggler-icon" />

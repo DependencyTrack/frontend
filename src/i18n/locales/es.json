@@ -1225,6 +1225,7 @@
     "theme_system": null,
     "title": "Título",
     "to": "A",
+    "toggle_navigation_menu": null,
     "total": "Total",
     "total_findings": "Hallazgos totales",
     "total_rows": "filas totales",

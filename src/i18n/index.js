@@ -1,3 +1,4 @@
+import { watch } from 'vue';
 import { createI18n } from 'vue-i18n';
 import axios from 'axios';
 import api from '../shared/api.json';
@@ -71,6 +72,13 @@ const i18n = createI18n({
   fallbackLocale: 'en',
   messages: { en },
 });
+
+// Screen readers use the lang attribute to pick a voice.
+watch(
+  i18n.global.locale,
+  (locale) => document.documentElement.setAttribute('lang', locale),
+  { immediate: true },
+);
 
 getDefaultLanguage().then(async (defaultLanguage) => {
   const matchedLocale = matchLocale(
