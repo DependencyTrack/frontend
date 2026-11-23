@@ -2,10 +2,8 @@
   <div>
     <chart-epss-vs-cvss
       ref="chartEpssVsCvss"
-      chartId="chartEpssVsCvss"
       class="chart-wrapper"
       style="height: 400px; margin-top: 40px"
-      :height="400"
     />
 
     <!--
@@ -52,7 +50,6 @@ import {
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
-import i18n from '@/i18n';
 import $ from 'jquery';
 import xssFilters from 'xss-filters';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
@@ -60,8 +57,8 @@ import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import common from '../../../shared/common';
 import FilterBar from '../../components/FilterBar.vue';
 import BooleanFilterPill from '../../components/BooleanFilterPill.vue';
-import KevAssertionsModal from '../../components/KevAssertionsModal.vue';
-import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss';
+import KevCell from '../../components/KevCell.vue';
+import ChartEpssVsCvss from '../../dashboard/ChartEpssVsCvss.vue';
 
 export default {
   props: {
@@ -73,18 +70,17 @@ export default {
     BooleanFilterPill,
     ChartEpssVsCvss,
   },
-  beforeCreate() {
-    this.showSuppressedFindings =
-      !!localStorage &&
-      localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true';
-    this.showKevOnly =
-      !!localStorage &&
-      localStorage.getItem('ProjectEpssShowKevOnly') === 'true';
+  created() {
+    this.options.url = this.apiUrl();
   },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      showKevOnly: this.showKevOnly,
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowSuppressedFindings') === 'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectEpssShowKevOnly') === 'true',
       booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
@@ -102,7 +98,7 @@ export default {
                 row.component.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -120,10 +116,11 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
+                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span></span>'
                 );
               } else if (
                 compareVersions(
@@ -133,15 +130,17 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
+                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span></span>'
                 );
               } else {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span></span>'
                 );
               }
             } else {
@@ -179,30 +178,13 @@ export default {
           field: 'vulnerability.isKev',
           sortable: false,
           class: 'tight',
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value !== true) {
               return '';
             }
-            return this.vueFormatter({
-              i18n,
-              components: { KevAssertionsModal },
-              template: `
-                <div class="text-center">
-                  <b-link
-                    v-b-modal="\`kevAssertionsModal-${index}\`"
-                    :title="$t('message.kev_show_assertions')"
-                    class="text-danger"
-                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
-                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
-                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  source: row.vulnerability.source,
-                  vulnId: row.vulnerability.vulnId,
-                };
-              },
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
             });
           },
         },
@@ -292,9 +274,8 @@ export default {
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         onPageChange: (_, size) => {
@@ -338,7 +319,6 @@ export default {
       this.$refs.table.refresh({
         url: this.apiUrl(),
         pageNumber: 1,
-        silent: true,
       });
     },
     tableLoaded: function (data) {
@@ -347,12 +327,10 @@ export default {
         'ProjectEpss',
         this.$refs.table.columns,
       );
-      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
-      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       this.$refs.chartEpssVsCvss.render(data);
     },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },

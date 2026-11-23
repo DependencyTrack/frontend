@@ -37,6 +37,7 @@ const TYPES = {
     purl: 'string',
     swid_tag_id: 'string',
     is_internal: 'bool',
+    properties: 'repeated Component.Property',
     md5: 'string',
     sha1: 'string',
     sha256: 'string',
@@ -59,6 +60,12 @@ const TYPES = {
     package_artifact_sha1: 'string',
     package_artifact_sha256: 'string',
     package_artifact_sha512: 'string',
+  },
+  'Component.Property': {
+    group: 'string',
+    name: 'string',
+    value: 'string',
+    type: 'string',
   },
   License: {
     uuid: 'string',
@@ -138,6 +145,17 @@ const TYPES = {
     seconds: 'int',
     nanos: 'int',
   },
+  // Registered JWT claims (RFC 7519). Issuers add their own, which cannot be
+  // known here. aud is either a string or a list of strings.
+  Claims: {
+    aud: 'dyn',
+    exp: 'double',
+    iat: 'double',
+    iss: 'string',
+    jti: 'string',
+    nbf: 'double',
+    sub: 'string',
+  },
 };
 
 const TOP_LEVEL = {
@@ -207,29 +225,39 @@ const CEL_GLOBALS = [
   unaryFunc('string', 'value', 'string'),
   unaryFunc('timestamp', 'string', 'Timestamp'),
   unaryFunc('duration', 'string', 'Duration'),
-  binaryFunc('spdx_expr_allows', ['expression', 'ids'], 'bool'),
-  binaryFunc('spdx_expr_requires_any', ['expression', 'ids'], 'bool'),
   { label: 'true', type: 'keyword' },
   { label: 'false', type: 'keyword' },
   { label: 'null', type: 'keyword' },
   { label: 'in', type: 'keyword', detail: 'membership test' },
 ];
 
-// Scans text for macro bindings like `vulns.exists(v,` and returns a map of
-// identifier name -> element type (e.g. { v: 'Vulnerability' }).
+const POLICY_GLOBALS = [
+  binaryFunc('cel.bind', ['var', 'init', 'expr'], 'dyn'),
+  binaryFunc('spdx_expr_allows', ['expression', 'ids'], 'bool'),
+  binaryFunc('spdx_expr_requires_any', ['expression', 'ids'], 'bool'),
+];
+
+// Scans text for macro bindings like `vulns.exists(v,` or `cel.bind(v, vuln,`
+// and returns a map of identifier name -> type (e.g. { v: 'Vulnerability' }).
 // Relies on left-to-right regex matching so outer bindings are resolved
 // before inner ones (e.g. `v` is known when resolving `v.aliases.exists(a,`).
 function findMacroBindings(text, topLevel) {
   const bindings = {};
   const re =
-    /(\w+(?:\.\w+)*)\.(exists_one|exists|all|filter|map)\(\s*(\w+)\s*,/g;
+    /cel\.bind\(\s*(?<bindVar>\w+)\s*,\s*(?<bindPath>\w+(?:\.\w+)*)\s*,|(?<listPath>\w+(?:\.\w+)*)\.(?:exists_one|exists|all|filter|map)\(\s*(?<elemVar>\w+)\s*,/g;
   let m;
   while ((m = re.exec(text)) !== null) {
-    const listPath = m[1];
-    const varName = m[3];
+    const { bindVar, bindPath, listPath, elemVar } = m.groups;
+    if (bindVar) {
+      const rawType = resolveFieldType(bindPath, bindings, topLevel);
+      if (rawType) {
+        bindings[bindVar] = rawType;
+      }
+      continue;
+    }
     const rawType = resolveFieldType(listPath, bindings, topLevel);
     if (rawType && rawType.startsWith('repeated ')) {
-      bindings[varName] = rawType.replace(/^repeated\s+/, '');
+      bindings[elemVar] = rawType.replace(/^repeated\s+/, '');
     }
   }
   return bindings;
@@ -278,7 +306,10 @@ function methodsForType(rawType) {
   return TYPE_METHODS[rawType] || [];
 }
 
-export function createCelCompletionSource(topLevelOverrides) {
+export function createCelCompletionSource(
+  topLevelOverrides,
+  globals = POLICY_GLOBALS,
+) {
   const mergedTopLevel = Object.fromEntries(
     Object.entries({ ...TOP_LEVEL, ...topLevelOverrides }).filter(
       ([, v]) => v !== undefined,
@@ -294,6 +325,14 @@ export function createCelCompletionSource(topLevelOverrides) {
     if (dotMatch) {
       const path = dotMatch[1];
       const partial = dotMatch[2];
+      const namespaced = globals.filter((g) => g.label.startsWith(`${path}.`));
+      if (namespaced.length > 0) {
+        return {
+          from: context.pos - dotMatch[0].length,
+          options: namespaced,
+          validFor: /^[\w.]*$/,
+        };
+      }
       const rawType = resolveFieldType(path, macroBindings, mergedTopLevel);
       if (!rawType) {
         return null;
@@ -336,7 +375,7 @@ export function createCelCompletionSource(topLevelOverrides) {
 
     return {
       from: word ? word.from : context.pos,
-      options: [...topLevelOptions, ...CEL_GLOBALS],
+      options: [...topLevelOptions, ...CEL_GLOBALS, ...globals],
       validFor: /^\w*$/,
     };
   };

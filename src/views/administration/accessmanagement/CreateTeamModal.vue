@@ -1,52 +1,55 @@
 <template>
   <b-modal
-    id="createTeamModal"
-    size="md"
-    @hide="resetValues()"
-    hide-header-close
+    v-model="visible"
+    @hidden="resetValues()"
     no-stacking
+    focus="name-input-input"
     :title="$t('admin.create_team')"
+    :ok-title="$t('message.create')"
+    :cancel-title="$t('message.close')"
+    :ok-disabled="submitting"
+    :no-close-on-esc="submitting"
+    :no-close-on-backdrop="submitting"
+    @ok.prevent="createUser()"
   >
-    <b-input-group-form-input
-      id="name-input"
-      input-group-size="mb-3"
-      type="text"
-      v-model="name"
-      lazy="true"
-      required="true"
-      feedback="true"
-      autofocus="false"
-      :label="$t('admin.team_name')"
-      :feedback-text="$t('admin.required_team_name')"
-    />
-
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button size="md" variant="primary" @click="createUser()">{{
-        $t('message.create')
-      }}</b-button>
-    </template>
+    <b-form @submit.prevent="createUser()">
+      <b-input-group-form-input
+        id="name-input"
+        input-group-size="mb-3"
+        type="text"
+        v-model="name"
+        lazy="true"
+        required="true"
+        feedback="true"
+        autofocus="false"
+        :label="$t('admin.team_name')"
+        :feedback-text="$t('admin.required_team_name')"
+      />
+    </b-form>
   </b-modal>
 </template>
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
+      submitting: false,
       name: null,
     };
   },
   methods: {
     createUser: function () {
+      if (this.submitting) return;
+      this.submitting = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
       this.axios
         .put(url, {
@@ -55,12 +58,14 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.team_created'));
+          this.visible = false;
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        })
+        .finally(() => {
+          this.submitting = false;
         });
-      this.$root.$emit('bv::hide::modal', 'createTeamModal');
-      this.resetValues();
     },
     resetValues: function () {
       this.name = null;

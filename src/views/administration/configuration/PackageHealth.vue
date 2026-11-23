@@ -1,49 +1,35 @@
 <template>
-  <b-card no-body :header="header">
+  <b-card no-body :header="$t('admin.package_health')">
     <b-card-body>
-      <c-switch
-        id="package-health-enabled"
-        color="primary"
-        v-model="enabled"
-        label
-        v-bind="labelIcon"
-      />{{ $t('admin.package_health_resolution_enable') }}
+      <b-form-checkbox id="package-health-enabled" v-model="enabled" switch>{{
+        $t('admin.package_health_resolution_enable')
+      }}</b-form-checkbox>
       <b-form-text>
         {{ $t('admin.package_health_resolution_help') }}
       </b-form-text>
     </b-card-body>
     <b-card-footer>
-      <b-button
-        size="md"
-        class="px-4"
-        variant="outline-primary"
-        @click="saveChanges"
-        >{{ $t('message.update') }}</b-button
-      >
+      <b-button class="px-4" variant="primary" @click="saveChanges">{{
+        $t('message.update')
+      }}</b-button>
     </b-card-footer>
   </b-card>
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
+// Options API, because the configuration property helpers are a mixin.
 import configPropertyMixin from '../mixins/configPropertyMixin';
 import common from '../../../shared/common';
 
 export default {
   mixins: [configPropertyMixin],
-  props: {
-    header: String,
-  },
-  components: {
-    cSwitch,
-  },
   data() {
     return {
       enabled: true,
     };
   },
   methods: {
-    saveChanges: function () {
+    saveChanges() {
       this.updateConfigProperties([
         {
           groupName: 'package-health',
@@ -55,14 +41,13 @@ export default {
   },
   created() {
     this.axios.get(this.configUrl).then((response) => {
-      let configItems = response.data.filter(function (item) {
-        return item.groupName === 'package-health';
-      });
-      for (let i = 0; i < configItems.length; i++) {
-        let item = configItems[i];
-        if (item.propertyName === 'enabled') {
-          this.enabled = common.toBoolean(item.propertyValue);
-        }
+      const item = response.data.find(
+        (property) =>
+          property.groupName === 'package-health' &&
+          property.propertyName === 'enabled',
+      );
+      if (item) {
+        this.enabled = common.toBoolean(item.propertyValue);
       }
     });
   },

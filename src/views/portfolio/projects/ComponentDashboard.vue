@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card style="border-left: 0; border-right: 0; border-top: 0">
+    <b-card>
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">
@@ -13,7 +13,7 @@
                 'PORTFOLIO_MANAGEMENT',
                 'PORTFOLIO_MANAGEMENT_UPDATE',
               ]"
-              class="font-weight-bold"
+              class="fw-bold"
               style="margin-left: 6px"
               v-on:click="refreshMetrics"
               ><i class="fa fa-refresh"></i
@@ -39,73 +39,75 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartComponentVulnerabilities"
-        chartId="chartComponentVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
-        :height="200"
       ></chart-portfolio-vulnerabilities>
-      <div slot="footer">
-        <b-row>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-critical">
-                  <small class="text-muted">{{ $t('severity.critical') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentCritical }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-high">
-                  <small class="text-muted">{{ $t('severity.high') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentHigh }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-medium">
-                  <small class="text-muted">{{ $t('severity.medium') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentMedium }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-low">
-                  <small class="text-muted">{{ $t('severity.low') }}</small
-                  ><br />
-                  <strong class="h5">{{ currentLow }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-unassigned">
-                  <small class="text-muted">{{
-                    $t('severity.unassigned')
-                  }}</small
-                  ><br />
-                  <strong class="h4">{{ currentUnassigned }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-info">
-                  <small class="text-muted">{{
-                    $t('message.risk_score')
-                  }}</small
-                  ><br />
-                  <strong class="h5">{{ currentRiskScore }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div>
+          <b-row>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-critical">
+                    <small class="text-muted">{{
+                      $t('severity.critical')
+                    }}</small><br />
+                    <strong class="h4">{{ currentCritical }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-high">
+                    <small class="text-muted">{{
+                      $t('severity.high')
+                    }}</small><br />
+                    <strong class="h4">{{ currentHigh }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-medium">
+                    <small class="text-muted">{{
+                      $t('severity.medium')
+                    }}</small><br />
+                    <strong class="h4">{{ currentMedium }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-low">
+                    <small class="text-muted">{{
+                      $t('severity.low')
+                    }}</small><br />
+                    <strong class="h4">{{ currentLow }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-unassigned">
+                    <small class="text-muted">{{
+                      $t('severity.unassigned')
+                    }}</small><br />
+                    <strong class="h4">{{ currentUnassigned }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-info">
+                    <small class="text-muted">{{
+                      $t('message.risk_score')
+                    }}</small><br />
+                    <strong class="h5">{{ currentRiskScore }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-row>
       <b-col sm="6">
@@ -123,10 +125,8 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-state>
         </b-card>
       </b-col>
@@ -157,11 +157,11 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
-import { Callout } from '@coreui/vue';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
-import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
+import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState.vue';
+import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown.vue';
 
 export default {
   name: 'ComponentDashboard',
@@ -169,11 +169,10 @@ export default {
     ChartPortfolioVulnerabilities,
     ChartPolicyViolationsState,
     ChartPolicyViolationBreakdown,
-    Callout,
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('componentMetricDays') ?? 30,
       currentCritical: 0,
       currentHigh: 0,
       currentMedium: 0,
@@ -241,33 +240,28 @@ export default {
         this.$toastr.s(this.$t('message.metric_refresh_requested'));
       });
     },
-    fetchMetrics() {
-      let uuid = this.$route.params.uuid;
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationBreakdown.render(response.data);
-        this.extractStats(response.data);
-      });
-    },
   },
   watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('componentMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('componentMetricDays', metricDays);
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/component/${this.$route.params.uuid}/days/${metricDays}`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationBreakdown?.render(response.data);
+        this.extractStats(response.data);
+      },
     },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('componentMetricDays') !== null
-        ? localStorage.getItem('componentMetricDays')
-        : 30;
-  },
-  mounted() {
-    this.fetchMetrics();
   },
 };
 </script>

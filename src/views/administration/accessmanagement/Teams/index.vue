@@ -2,7 +2,7 @@
   <b-card no-body :header="header">
     <b-card-body>
       <div id="customToolbar">
-        <b-button size="md" variant="outline-primary" v-b-modal.createTeamModal>
+        <b-button variant="primary" @click="showCreateTeamModal = true">
           <span class="fa fa-plus"></span> {{ $t('admin.create_team') }}
         </b-button>
       </div>
@@ -14,14 +14,17 @@
       >
       </bootstrap-table>
     </b-card-body>
-    <create-team-modal v-on:refreshTable="refreshTable" />
+    <create-team-modal
+      v-model="showCreateTeamModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
 <script>
 import xssFilters from 'xss-filters';
 import common from '../../../../shared/common';
-import CreateTeamModal from '../CreateTeamModal';
+import CreateTeamModal from '../CreateTeamModal.vue';
 import bootstrapTableMixin from '../../../../mixins/bootstrapTableMixin';
 import EventBus from '../../../../shared/eventbus';
 import TeamDetails from './TeamDetails.vue';
@@ -36,20 +39,21 @@ export default {
     CreateTeamModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       this.$refs.table.updateRow({ index, row });
       this.$refs.table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+  beforeUnmount() {
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     return {
+      showCreateTeamModal: false,
       rowEvents: {
         update: 'admin:teams:rowUpdate',
         delete: 'admin:teams:rowDeleted',
@@ -115,14 +119,13 @@ export default {
         detailViewIcon: false,
         detailViewByClick: true,
         detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            router: this.$router,
-            render: () => (
-              <TeamDetails row={row} index={index} rowEvents={this.rowEvents} />
-            ),
+          return this.cell(TeamDetails, {
+            row,
+            index,
+            rowEvents: this.rowEvents,
           });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');

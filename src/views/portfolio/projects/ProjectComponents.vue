@@ -26,7 +26,7 @@
           size="sm"
           variant="outline-primary"
           :title="$t('message.add_component')"
-          v-b-modal.projectAddComponentModal
+          @click="showProjectAddComponentModal = true"
           v-permission:or="[
             PERMISSIONS.PORTFOLIO_MANAGEMENT,
             PERMISSIONS.PORTFOLIO_MANAGEMENT_UPDATE,
@@ -76,10 +76,10 @@
       :columns="columns"
       :options="tableOptions"
       page-size-storage-key="ProjectComponentsPageSize"
-      @total="onTotal"
       @visible-columns="onVisibleColumns"
     />
     <project-add-component-modal
+      v-model="showProjectAddComponentModal"
       :uuid="this.uuid"
       v-on:refreshTable="onComponentAdded"
     />
@@ -89,18 +89,17 @@
 <script>
 import { compareVersions } from '@/shared/utils';
 import ComponentOccurrenceListModal from '@/views/portfolio/projects/ComponentOccurrenceListModal.vue';
-import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal';
+import ProjectAddComponentModal from '@/views/portfolio/projects/ProjectAddComponentModal.vue';
+import ModalLinkCell from '@/views/components/ModalLinkCell.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
 import $ from 'jquery';
-import Vue from 'vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
-import SeverityProgressBar from '../../components/SeverityProgressBar';
+import SeverityProgressBar from '../../components/SeverityProgressBar.vue';
 import { get } from 'lodash-es';
-import i18n from '@/i18n';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
@@ -173,6 +172,7 @@ export default {
     );
     const sort = readSort();
     return {
+      showProjectAddComponentModal: false,
       onlyOutdated: false,
       onlyDirect: false,
       booleanFilters: ['onlyOutdated', 'onlyDirect'],
@@ -189,7 +189,7 @@ export default {
         },
         queryParams: () => ({}),
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
           // Reloading a page rebuilds the rows, dropping any selection.
           this.updateSelectionCount();
@@ -293,7 +293,7 @@ export default {
               '../../../projects/' + this.uuid + '/dependencyGraph/' + row.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -312,22 +312,25 @@ export default {
               const cmp = compareVersions(latest, row.version);
               if (cmp > 0) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(latest) +
-                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(latest) +
+                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span></span>'
                 );
               } else if (cmp < 0) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(latest) +
-                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(latest) +
+                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span></span>'
                 );
               }
               return (
-                '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
-                xssFilters.inHTMLData(row.version)
+                '<span class="d-flex justify-content-between gap-1">' +
+                xssFilters.inHTMLData(row.version) +
+                '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span></span>'
               );
             }
             return xssFilters.inHTMLData(common.valueWithDefault(value, ''));
@@ -400,7 +403,7 @@ export default {
         },
         buildHashVerificationColumn({
           $t: this.$t.bind(this),
-          vueFormatter: this.vueFormatter,
+          cell: this.cell,
           visible: initialColumnVisible('hash_verification.status'),
         }),
         {
@@ -435,27 +438,18 @@ export default {
           sortable: false,
           class: 'tight',
           visible: initialColumnVisible('occurrence_count'),
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value) {
-              return this.vueFormatter({
-                i18n,
-                components: { ComponentOccurrenceListModal },
-                template: `
-                  <div>
-                    <b-link v-b-modal="\`componentOccurrenceListModal-${index}\`">{{ value }}</b-link>
-                    <component-occurrence-list-modal :component-uuid="componentUuid" :component-name="componentName" :index="index"/>
-                  </div>`,
-                data() {
-                  return {
-                    index: index,
-                    componentUuid: row.uuid,
-                    componentName: row.name,
-                    value: value,
-                  };
+              return this.cell(ModalLinkCell, {
+                text: value,
+                modal: ComponentOccurrenceListModal,
+                modalProps: {
+                  componentUuid: row.uuid,
+                  componentName: row.name,
                 },
               });
             }
-            return `<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span> ${value}`;
+            return `<span class="d-flex justify-content-between gap-1">${value}<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span></span>`;
           },
         },
         buildScorecardColumn({
@@ -478,42 +472,37 @@ export default {
             if (metrics == null) {
               return '-';
             }
-            const ComponentClass = Vue.extend(SeverityProgressBar);
-            const progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            const html = progressBar.$el.outerHTML;
-            progressBar.$destroy();
-            return html;
           },
         },
       ];
     },
     initializeTooltips() {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
     onVisibleColumns(fields) {
       this.visibleColumns = fields;
     },
-    onTotal(total) {
-      this.$emit('total', total != null ? total : '?');
-    },
-    removeDependencies() {
+    async removeDependencies() {
       const bt = this.innerBootstrapTable();
       if (!bt) return;
       const selections = bt.getSelections();
       if (selections.length === 0) return;
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('message.remove_component'),
+        }))
+      )
+        return;
       for (let i = 0; i < selections.length; i++) {
         const url = `${this.$api.BASE_URL}/${this.$api.URL_COMPONENT}/${selections[i].uuid}`;
         this.axios

@@ -14,9 +14,11 @@
     <template #value>= {{ displayValue }}</template>
 
     <div class="filter-pill-actions mb-2">
-      <b-link @click="selectAll">{{ $t('message.select_all') }}</b-link>
+      <b-link @click.prevent="selectAll">{{ $t('message.select_all') }}</b-link>
       <span class="filter-pill-actions-separator" aria-hidden="true">·</span>
-      <b-link @click="deselectAll">{{ $t('message.clear_all') }}</b-link>
+      <b-link @click.prevent="deselectAll">{{
+        $t('message.clear_all')
+      }}</b-link>
     </div>
     <div class="filter-pill-list">
       <b-form-checkbox-group
@@ -52,18 +54,19 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => [],
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpValue: [],
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         this.tmpValue = val && val.length > 0 ? [...val] : [];
@@ -72,11 +75,11 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.length > 0;
+      return this.modelValue && this.modelValue.length > 0;
     },
     displayValue() {
-      if (!this.value || this.value.length === 0) return '';
-      return this.value
+      if (!this.modelValue || this.modelValue.length === 0) return '';
+      return this.modelValue
         .map((v) => {
           const option = this.options.find(
             (opt) => (typeof opt === 'object' ? opt.value : opt) === v,
@@ -100,7 +103,7 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpValue = [...this.value];
+        this.tmpValue = [...this.modelValue];
       } else {
         this.tmpValue = [];
       }
@@ -109,13 +112,13 @@ export default {
       if (this.tmpValue.length === 0) {
         return;
       }
-      this.$emit('input', [...this.tmpValue]);
+      this.$emit('update:modelValue', [...this.tmpValue]);
       this.$refs.pill.hide();
     },
     clearFilter() {
       this.tmpValue = [];
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

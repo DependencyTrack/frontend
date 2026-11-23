@@ -25,7 +25,7 @@ function buildScorecardColumn({ $t, visible }) {
         $t('message.scorecard_current_repository_hint'),
       );
       return (
-        `<span class="scorecard-score-hint" data-toggle="tooltip" data-placement="bottom" ` +
+        `<span class="scorecard-score-hint" data-bs-toggle="tooltip" data-bs-placement="bottom" ` +
         `title="${hint}">${xssFilters.inHTMLData(score)}</span>`
       );
     },

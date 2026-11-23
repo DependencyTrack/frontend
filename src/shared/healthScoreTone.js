@@ -1,8 +1,9 @@
+// Text tokens, because the severity fills are too light to read on the light theme.
 const HEALTH_SCORE_COLOR = {
-  green: 'var(--severity-low)',
-  yellow: 'var(--severity-medium)',
-  orange: 'var(--severity-high)',
-  red: 'var(--severity-critical)',
+  green: 'var(--dt-severity-low-text)',
+  yellow: 'var(--dt-severity-medium-text)',
+  orange: 'var(--dt-severity-high-text)',
+  red: 'var(--dt-severity-critical-text)',
 };
 
 function parseHealthScore(raw) {

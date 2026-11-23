@@ -42,24 +42,22 @@ $common.formatProjectTagLabel = function formatProjectTagLabel(router, tag) {
     return '';
   }
   return `<a href="${
-    router.resolve({ name: 'Projects', query: { tag: tag.name } }).href
-  }" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(
-    tag.name,
+    router.resolve({ name: 'Projects', query: { tags_all: tag } }).href
+  }" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(
+    tag,
   )}</a>`;
 };
 
 /**
  * Formats and returns a specialized label for a project team.
  */
-$common.formatProjectTeamLabel = function formatProjectTeamLabel(router, team) {
+$common.formatProjectTeamLabel = function formatProjectTeamLabel(team) {
   if (!team) {
     return '';
   }
-  return `<a href="${
-    router.resolve({ name: 'Projects', query: { team: team.name } }).href
-  }" class="badge badge-team text-lowercase mr-1">${xssFilters.inHTMLData(
-    team.name,
-  )}</a>`;
+  return `<span class="badge badge-team text-lowercase me-1">${xssFilters.inHTMLData(
+    team,
+  )}</span>`;
 };
 
 /**
@@ -72,7 +70,7 @@ $common.formatVulnerabilityTagLabel = function formatVulnerabilityTagLabel(
   if (!tag) {
     return '';
   }
-  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge badge-tag text-lowercase mr-1">${xssFilters.inHTMLData(tag.name)}</a>`;
+  return `<a href="${router.resolve({ name: 'Vulnerabilities', query: { tag: tag.name } }).href}" class="badge text-bg-tag text-lowercase me-1">${xssFilters.inHTMLData(tag.name)}</a>`;
 };
 
 /**
@@ -115,10 +113,10 @@ $common.formatSeverityLabel = function formatSeverityLabel(severity) {
 
   return `
      <div style="height:24px;margin:-4px;">
-        <div class="${severityClass} text-center pull-left" style="width:24px; height:24px; color:#ffffff">
+        <div class="${severityClass} text-center float-start" style="width:24px; height:24px;">
             <i class="fa fa-bug" style="font-size:12px; padding:6px" aria-hidden="true"></i>
          </div>
-         <div class="text-center pull-left" style="height:24px;">
+         <div class="text-center float-start" style="height:24px;">
              <div style="font-size:12px; padding:4px"><span class="severity-value">${severityLabel}</span></div>
          </div>
      </div>`;
@@ -135,6 +133,16 @@ $common.formatViolationStateLabel = function formatViolationStateLabel(
   }
   let sourceClass = 'label-notification-' + violationState.toLowerCase();
   return `<span class="label label-notification ${sourceClass}">${violationState}</span>`;
+};
+
+/**
+ * Formats a policy violation message as a single truncated line, with the full message as tooltip.
+ */
+$common.formatViolationMessage = function formatViolationMessage(message) {
+  if (!message) {
+    return '';
+  }
+  return `<div class="truncate-ellipsis"><span title="${xssFilters.inDoubleQuotedAttr(message)}">${xssFilters.inHTMLData(message)}</span></div>`;
 };
 
 $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
@@ -154,7 +162,7 @@ $common.formatCweLabel = function formatCweLabel(cweId, cweName) {
 $common.formatCweShortLabel = function formatCweShortLabel(cweId, cweName) {
   if (cweId && cweName) {
     return (
-      "<span data-toggle='tooltip' data-placement='bottom' title='" +
+      "<span data-bs-toggle='tooltip' data-bs-placement='bottom' title='" +
       cweName +
       "'>CWE-" +
       cweId +
@@ -193,7 +201,7 @@ $common.formatAnalyzerLabel = function formatAnalyzerLabel(
   }
 
   const escapedLabel = xssFilters.inHTMLData($common.titleCase(analyzer));
-  let analyzerLabel = '';
+  let analyzerLabel;
   if (analyzerUrl) {
     const sanitizedUrl = xssFilters.uriInDoubleQuotedAttr(analyzerUrl);
     analyzerLabel = `<a href="${sanitizedUrl}" target="_blank">${escapedLabel} <i class="fa fa-external-link"></i></a>`;
@@ -518,6 +526,18 @@ $common.formatRelative = function formatRelative(diffMs, $t) {
 };
 
 /*
+ * Builds an audit pane title with one subtitle per component or project.
+ */
+$common.auditTitle = function auditTitle(title, ...subjects) {
+  return {
+    title,
+    subtitles: subjects.map((subject) =>
+      $common.concatenateComponentName(null, subject.name, subject.version),
+    ),
+  };
+};
+
+/*
  * Concatenates the group, name, and version of a component.
  */
 $common.concatenateComponentName = function concatenateComponentName(
@@ -570,7 +590,7 @@ $common.calcProgressPercent = function calcProgressPercent(total, completed) {
  */
 $common.sleep = function sleep(milliseconds) {
   const date = Date.now();
-  let currentDate = null;
+  let currentDate;
   do {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
@@ -685,10 +705,10 @@ $common.sameQueryParams = function (a, b) {
 };
 
 $common.getCollectionLogicText = function (i18n, project) {
-  const tag = project.collectionTag
-    ? xssFilters.inDoubleQuotedAttr(project.collectionTag.name)
-    : '';
-  switch (project.collectionLogic) {
+  // ProjectList passes v2 projects, Project.vue passes v1 projects.
+  const tagName = project.collection_tag ?? project.collectionTag?.name;
+  const tag = tagName ? xssFilters.inDoubleQuotedAttr(tagName) : '';
+  switch (project.collection_logic ?? project.collectionLogic) {
     case 'AGGREGATE_DIRECT_CHILDREN':
       return i18n.$t(
         'message.collection_logic_metrics_by_aggregate_direct_children',
@@ -740,6 +760,7 @@ export default {
   titleCase: $common.titleCase,
   formatSeverityLabel: $common.formatSeverityLabel,
   formatViolationStateLabel: $common.formatViolationStateLabel,
+  formatViolationMessage: $common.formatViolationMessage,
   formatCweLabel: $common.formatCweLabel,
   formatCweShortLabel: $common.formatCweShortLabel,
   formatAnalyzerLabel: $common.formatAnalyzerLabel,
@@ -754,6 +775,7 @@ export default {
   formatTimestamp: $common.formatTimestamp,
   formatRelative: $common.formatRelative,
   concatenateComponentName: $common.concatenateComponentName,
+  auditTitle: $common.auditTitle,
   valueWithDefault: $common.valueWithDefault,
   calcProgressPercent: $common.calcProgressPercent,
   sleep: $common.sleep,

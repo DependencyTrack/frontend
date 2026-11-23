@@ -41,6 +41,7 @@
   "URL_POLICY_VIOLATION": "api/v1/violation",
   "URL_POLICY_VIOLATION_ANALYSIS": "api/v1/violation/analysis",
   "URL_PROJECT": "api/v1/project",
+  "URL_PROJECTS": "api/v2/projects",
   "URL_PROJECT_CONCISE": "api/v1/project/concise",
   "URL_REPOSITORY": "api/v1/repository",
   "URL_SEARCH": "api/v1/search",
@@ -66,5 +67,6 @@
   "URL_VULNERABILITY": "api/v1/vulnerability",
   "URL_VULNERABILITY_POLICY": "api/v1/policy/vulnerability",
   "URL_WORKFLOW": "api/v1/workflow",
+  "URL_WORKLOAD_IDENTITY_PROVIDER": "api/v2/workload-identity-providers",
   "WITH_CREDENTIALS": ""
 }

@@ -1,7 +1,7 @@
 .scorecard-score-hint {
   display: inline-block;
   padding-bottom: 2px;
-  border-bottom: 1px dashed var(--primary);
+  border-bottom: 1px dashed var(--dt-accent);
   line-height: 1;
   cursor: help;
 }

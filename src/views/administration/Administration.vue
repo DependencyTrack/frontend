@@ -1,10 +1,10 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col xs="6" sm="4" md="4" lg="3" id="admin-menu-column">
+      <b-col cols="12" sm="4" md="4" lg="3" id="admin-menu-column">
         <admin-menu />
       </b-col>
-      <b-col xs="6" sm="8" md="8" lg="9">
+      <b-col cols="12" sm="8" md="8" lg="9">
         <div class="tab-content">
           <!-- Dynamically loads the selected admin plugin -->
           <router-view class="animated fadeIn" :header="header" />
@@ -16,7 +16,7 @@
 
 <script>
 import EventBus from '../../shared/eventbus';
-import AdminMenu from './AdminMenu';
+import AdminMenu from './AdminMenu.vue';
 
 export default {
   components: {
@@ -24,7 +24,7 @@ export default {
   },
   created() {
     // Specifies the admin plugin metadata (Vue component, i18n name, and href) of the plugin to load
-    EventBus.$on('admin:plugin', (plugin) => {
+    EventBus.on('admin:plugin', (plugin) => {
       this.header = plugin.name;
       if (plugin.href) {
         this.href = plugin.href;
@@ -40,14 +40,11 @@ export default {
 };
 </script>
 
-<style>
-.tab-content {
-  border: 0;
-}
-.tab-content .tab-pane {
+<style scoped>
+:deep(.tab-content .tab-pane) {
   padding: 0;
 }
-.card-header {
+:deep(.card-header) {
   font-weight: 700;
 }
 @media only screen and (min-device-width: 600px) {

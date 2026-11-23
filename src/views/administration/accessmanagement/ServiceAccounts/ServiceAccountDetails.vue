@@ -15,7 +15,22 @@
               v-if="!suspended"
               :add-icon="true"
               :tooltip="$t('admin.new_api_key_title')"
-              v-on:actionClicked="openCreateApiKeyModal()"
+              v-on:actionClicked="showCreateServiceAccountApiKeyModal = true"
+            />
+          </div>
+        </b-form-group>
+        <b-form-group :label="$t('admin.workload_identity_bindings')">
+          <div class="list-group">
+            <workload-identity-binding-list-group-item
+              v-for="binding in workloadIdentityBindings"
+              :key="binding.uuid"
+              :binding="binding"
+              v-on:removeClicked="removeWorkloadIdentityBinding(binding)"
+            />
+            <actionable-list-group-item
+              :add-icon="true"
+              :tooltip="$t('admin.create_workload_identity_binding')"
+              v-on:actionClicked="showCreateWorkloadIdentityBindingModal = true"
             />
           </div>
         </b-form-group>
@@ -31,9 +46,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTeamModal')
-              "
+              v-on:actionClicked="showSelectTeamModal = true"
             />
           </div>
         </b-form-group>
@@ -49,9 +62,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectPermissionModal')
-              "
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -62,7 +73,7 @@
           :label="$t('message.username')"
           input-group-size="mb-3"
           type="text"
-          :value="row.username"
+          :modelValue="row.username"
           :readonly="true"
         />
         <b-input-group-form-input
@@ -72,25 +83,21 @@
           type="text"
           v-model="email"
         />
-        <c-switch
-          id="suspended"
-          color="primary"
-          v-model="suspended"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.suspended') }}
+        <b-form-checkbox id="suspended" v-model="suspended" switch>{{
+          $t('admin.suspended')
+        }}</b-form-checkbox>
         <p class="text-muted small mt-2">
           {{ $t('admin.service_account_suspend_description') }}
         </p>
         <div style="text-align: right">
           <b-button
-            variant="outline-primary"
+            variant="primary"
             :disabled="!hasChanges"
             @click="updateServiceAccount"
             >{{ $t('message.update') }}</b-button
           >
           <b-button
-            class="ml-2"
+            class="ms-2"
             variant="outline-danger"
             @click="deleteServiceAccount"
             >{{ $t('message.delete') }}</b-button
@@ -100,36 +107,43 @@
     </b-row>
     <template v-if="loaded">
       <select-team-modal
+        v-model="showSelectTeamModal"
         :currentTeams="teams"
         v-on:selection="updateTeamSelection"
       />
       <select-permission-modal
+        v-model="showSelectPermissionModal"
         :currentPermissions="permissions"
         v-on:selection="updatePermissionSelection"
       />
     </template>
     <create-service-account-api-key-modal
+      v-model="showCreateServiceAccountApiKeyModal"
       :name="row.name"
       v-on:created="loadApiKeys"
+    />
+    <create-workload-identity-binding-modal
+      v-model="showCreateWorkloadIdentityBindingModal"
+      :name="row.name"
+      v-on:created="loadWorkloadIdentityBindings"
     />
   </div>
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
 import CreateServiceAccountApiKeyModal from '../CreateServiceAccountApiKeyModal.vue';
+import CreateWorkloadIdentityBindingModal from '../CreateWorkloadIdentityBindingModal.vue';
+import WorkloadIdentityBindingListGroupItem from '../WorkloadIdentityBindingListGroupItem.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
-import BInputGroupFormInput from '@/forms/BInputGroupFormInput';
-import common from '../../../../shared/common';
+import BInputGroupFormInput from '@/forms/BInputGroupFormInput.vue';
+import { fetchAllPages } from '@/shared/utils';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import EventBus from '../../../../shared/eventbus';
-import i18n from '../../../../i18n';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },
@@ -137,26 +151,28 @@ export default {
   },
   mixins: [userManagementMixin],
   components: {
-    cSwitch,
     ActionableListGroupItem,
     ApiKeyListGroupItem,
     CreateServiceAccountApiKeyModal,
+    CreateWorkloadIdentityBindingModal,
+    WorkloadIdentityBindingListGroupItem,
     SelectTeamModal,
     SelectPermissionModal,
     BInputGroupFormInput,
   },
   data() {
     return {
+      showSelectTeamModal: false,
+      showSelectPermissionModal: false,
+      showCreateServiceAccountApiKeyModal: false,
+      showCreateWorkloadIdentityBindingModal: false,
       email: this.row.email,
       suspended: this.row.suspended,
       teams: [],
       permissions: [],
       apiKeys: [],
+      workloadIdentityBindings: [],
       loaded: false,
-      labelIcon: {
-        dataOn: '✓',
-        dataOff: '✕',
-      },
     };
   },
   computed: {
@@ -171,7 +187,11 @@ export default {
     },
   },
   async mounted() {
-    await Promise.all([this.loadServiceAccount(), this.loadApiKeys()]);
+    await Promise.all([
+      this.loadServiceAccount(),
+      this.loadApiKeys(),
+      this.loadWorkloadIdentityBindings(),
+    ]);
   },
   methods: {
     async loadServiceAccount() {
@@ -185,28 +205,28 @@ export default {
       }
     },
     async loadApiKeys() {
-      const apiKeys = [];
-      let url = `${this.serviceAccountUrl}/api-keys`;
       try {
-        while (url) {
-          const response = await this.axios.get(url);
-          apiKeys.push(
-            ...response.data.items.map((apiKey) => ({
-              publicId: apiKey.public_id,
-              comment: apiKey.comment,
-              created: apiKey.created_at,
-              lastUsed: apiKey.last_used_at,
-              expiresAt: apiKey.expires_at,
-            })),
-          );
-          const nextPageToken = response.data.next_page_token;
-          url = nextPageToken
-            ? common.setQueryParams(`${this.serviceAccountUrl}/api-keys`, {
-                page_token: nextPageToken,
-              })
-            : null;
-        }
-        this.apiKeys = apiKeys;
+        const apiKeys = await fetchAllPages(
+          this.axios,
+          `${this.serviceAccountUrl}/api-keys`,
+        );
+        this.apiKeys = apiKeys.map((apiKey) => ({
+          publicId: apiKey.public_id,
+          comment: apiKey.comment,
+          created: apiKey.created_at,
+          lastUsed: apiKey.last_used_at,
+          expiresAt: apiKey.expires_at,
+        }));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async loadWorkloadIdentityBindings() {
+      try {
+        this.workloadIdentityBindings = await fetchAllPages(
+          this.axios,
+          `${this.serviceAccountUrl}/workload-identity-bindings`,
+        );
       } catch (error) {
         console.error(error);
       }
@@ -217,7 +237,7 @@ export default {
           email: this.email || '',
           suspended: this.suspended,
         });
-        EventBus.$emit(this.rowEvents.update, this.index, {
+        EventBus.emit(this.rowEvents.update, this.index, {
           email: this.email || null,
           suspended: this.suspended,
         });
@@ -227,40 +247,29 @@ export default {
       }
     },
     async deleteServiceAccount() {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
-        this.$t('admin.delete_service_account_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.delete_service_account'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.delete_service_account_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(this.serviceAccountUrl);
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.service_account_deleted'));
       } catch (error) {
         console.error(error);
       }
     },
-    openCreateApiKeyModal() {
-      this.$bvModal.show(`createServiceAccountApiKeyModal-${this.row.name}`);
-    },
     async removeApiKey(apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
-        this.$t('admin.remove_api_key_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_api_key'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_api_key_confirm'),
+        }))
+      )
+        return;
       try {
         await this.axios.delete(
           `${this.serviceAccountUrl}/api-keys/${encodeURIComponent(apiKey.publicId)}`,
@@ -269,6 +278,26 @@ export default {
           (key) => key.publicId !== apiKey.publicId,
         );
         this.$toastr.s(this.$t('message.updated'));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async removeWorkloadIdentityBinding(binding) {
+      if (
+        !(await this.$confirmDelete({
+          title: this.$t('admin.remove_workload_identity_binding'),
+          message: this.$t('admin.remove_workload_identity_binding_confirm'),
+        }))
+      )
+        return;
+      try {
+        await this.axios.delete(
+          `${this.serviceAccountUrl}/workload-identity-bindings/${encodeURIComponent(binding.uuid)}`,
+        );
+        this.workloadIdentityBindings = this.workloadIdentityBindings.filter(
+          (b) => b.uuid !== binding.uuid,
+        );
+        this.$toastr.s(this.$t('admin.workload_identity_binding_removed'));
       } catch (error) {
         console.error(error);
       }

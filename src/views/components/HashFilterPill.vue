@@ -11,7 +11,9 @@
     @clear="clearFilter"
     @dismiss="$emit('dismiss')"
   >
-    <template #value>{{ value.hashType }} = "{{ value.hash }}"</template>
+    <template #value
+      >{{ modelValue.hashType }} = "{{ modelValue.hash }}"</template
+    >
 
     <b-form-select
       v-model="tmpHashType"
@@ -48,11 +50,12 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
       default: () => null,
     },
   },
+  emits: ['update:modelValue', 'dismiss'],
   data() {
     return {
       tmpHashType: null,
@@ -60,7 +63,7 @@ export default {
     };
   },
   watch: {
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (val && val.hashType && val.hash) {
@@ -75,7 +78,9 @@ export default {
   },
   computed: {
     hasFilter() {
-      return this.value && this.value.hashType && this.value.hash;
+      return (
+        this.modelValue && this.modelValue.hashType && this.modelValue.hash
+      );
     },
     trimmedHash() {
       return this.tmpHash ? this.tmpHash.trim() : '';
@@ -97,8 +102,8 @@ export default {
     },
     onDropdownHide() {
       if (this.hasFilter) {
-        this.tmpHashType = this.value.hashType;
-        this.tmpHash = this.value.hash;
+        this.tmpHashType = this.modelValue.hashType;
+        this.tmpHash = this.modelValue.hash;
       } else {
         this.tmpHashType = null;
         this.tmpHash = '';
@@ -109,7 +114,7 @@ export default {
         return;
       }
 
-      this.$emit('input', {
+      this.$emit('update:modelValue', {
         hashType: this.tmpHashType,
         hash: this.trimmedHash,
       });
@@ -119,7 +124,7 @@ export default {
       this.tmpHashType = null;
       this.tmpHash = '';
       this.$refs.pill.hide();
-      this.$emit('input', null);
+      this.$emit('update:modelValue', null);
     },
   },
 };

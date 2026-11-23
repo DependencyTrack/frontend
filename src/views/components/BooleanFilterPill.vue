@@ -4,7 +4,7 @@
       <span class="filter-pill-segment">
         <span
           v-if="icon"
-          :class="['fa', icon, 'mr-1']"
+          :class="['fa', icon, 'me-1']"
           aria-hidden="true"
         ></span>
         {{ fieldLabel }}
@@ -41,14 +41,15 @@ export default {
       type: String,
       default: null,
     },
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
   },
+  emits: ['update:modelValue'],
   methods: {
     clearFilter() {
-      this.$emit('input', false);
+      this.$emit('update:modelValue', false);
     },
   },
 };

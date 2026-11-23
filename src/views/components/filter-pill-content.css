@@ -69,12 +69,12 @@
   margin: 0 -0.75rem;
 }
 
-.filter-pill-list .custom-control {
+.filter-pill-list .form-check {
   padding: 0.2rem 0.75rem 0.2rem 2.25rem;
 }
 
-.filter-pill-list .custom-control:hover {
-  background: rgb(255 255 255 / 7%);
+.filter-pill-list .form-check:hover {
+  background: var(--dt-hover);
 }
 
 /* Inline group caption, replaces a full-width b-form-group label */

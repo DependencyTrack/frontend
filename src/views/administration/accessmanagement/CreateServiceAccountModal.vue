@@ -1,8 +1,6 @@
 <template>
   <b-modal
-    id="createServiceAccountModal"
-    size="md"
-    hide-header-close
+    v-model="visible"
     no-stacking
     :title="$t('admin.create_service_account')"
     @ok="onOk"
@@ -19,12 +17,11 @@
       >
         <b-form-input
           id="service-account-name-input"
-          v-model="name"
+          v-model.trim="name"
           maxlength="59"
           type="text"
           autofocus
           required
-          trim
           :state="nameState"
         />
       </b-form-group>
@@ -34,32 +31,30 @@
       >
         <b-form-input
           id="service-account-email-input"
-          v-model="email"
+          v-model.trim="email"
           type="email"
-          trim
         />
       </b-form-group>
       <button type="submit" style="display: none" />
     </b-form>
-    <template v-slot:modal-footer="{ cancel, ok }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel, ok }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button
-        size="md"
-        variant="primary"
-        :disabled="!nameState"
-        @click="ok()"
-        >{{ $t('message.create') }}</b-button
-      >
+      <b-button variant="primary" :disabled="!nameState" @click="ok()">{{
+        $t('message.create')
+      }}</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
 const NAME_PATTERN = /^(?![sS][vV][cC]:)[a-zA-Z0-9][a-zA-Z0-9+=,.:@_-]*$/;
 
 export default {
+  mixins: [modalMixin],
+  emits: ['refreshTable'],
   data() {
     return {
       name: '',
@@ -90,7 +85,7 @@ export default {
         );
         this.$emit('refreshTable');
         this.$toastr.s(this.$t('admin.service_account_created'));
-        this.$bvModal.hide('createServiceAccountModal');
+        this.visible = false;
       } catch (error) {
         console.error(error);
       }

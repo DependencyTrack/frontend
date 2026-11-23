@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card style="border-left: 0; border-right: 0; border-top: 0">
+    <b-card>
       <b-row>
         <b-col sm="5">
           <h4 id="chart-portfolio-vulns" class="card-title mb-0">
@@ -26,73 +26,75 @@
       </b-row>
       <chart-portfolio-vulnerabilities
         ref="chartProjectVulnerabilities"
-        chartId="chartProjectVulnerabilities"
         class="chart-wrapper"
         style="height: 200px; margin-top: 40px"
-        :height="200"
       ></chart-portfolio-vulnerabilities>
-      <div slot="footer">
-        <b-row>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-critical">
-                  <small class="text-muted">{{ $t('severity.critical') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentCritical }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-high">
-                  <small class="text-muted">{{ $t('severity.high') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentHigh }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-medium">
-                  <small class="text-muted">{{ $t('severity.medium') }}</small
-                  ><br />
-                  <strong class="h4">{{ currentMedium }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-low">
-                  <small class="text-muted">{{ $t('severity.low') }}</small
-                  ><br />
-                  <strong class="h5">{{ currentLow }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="12" lg="4">
-            <b-row>
-              <b-col sm="6">
-                <Callout variant="severity-unassigned">
-                  <small class="text-muted">{{
-                    $t('severity.unassigned')
-                  }}</small
-                  ><br />
-                  <strong class="h4">{{ currentUnassigned }}</strong>
-                </Callout>
-              </b-col>
-              <b-col sm="6">
-                <Callout variant="severity-info">
-                  <small class="text-muted">{{
-                    $t('message.risk_score')
-                  }}</small
-                  ><br />
-                  <strong class="h5">{{ currentRiskScore }}</strong>
-                </Callout>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-      </div>
+      <template v-slot:footer>
+        <div>
+          <b-row>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-critical">
+                    <small class="text-muted">{{
+                      $t('severity.critical')
+                    }}</small><br />
+                    <strong class="h4">{{ currentCritical }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-high">
+                    <small class="text-muted">{{
+                      $t('severity.high')
+                    }}</small><br />
+                    <strong class="h4">{{ currentHigh }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-medium">
+                    <small class="text-muted">{{
+                      $t('severity.medium')
+                    }}</small><br />
+                    <strong class="h4">{{ currentMedium }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-low">
+                    <small class="text-muted">{{
+                      $t('severity.low')
+                    }}</small><br />
+                    <strong class="h4">{{ currentLow }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col sm="12" lg="4">
+              <b-row>
+                <b-col sm="6">
+                  <div class="callout callout-severity-unassigned">
+                    <small class="text-muted">{{
+                      $t('severity.unassigned')
+                    }}</small><br />
+                    <strong class="h4">{{ currentUnassigned }}</strong>
+                  </div>
+                </b-col>
+                <b-col sm="6">
+                  <div class="callout callout-severity-info">
+                    <small class="text-muted">{{
+                      $t('message.risk_score')
+                    }}</small><br />
+                    <strong class="h5">{{ currentRiskScore }}</strong>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
+        </div>
+      </template>
     </b-card>
     <b-row>
       <b-col sm="6">
@@ -110,10 +112,8 @@
           </b-row>
           <chart-policy-violations-state
             ref="chartPolicyViolationsState"
-            chartId="chartPolicyViolationsState"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-policy-violations-state>
         </b-card>
       </b-col>
@@ -153,10 +153,8 @@
           </b-row>
           <chart-component-vulnerabilities
             ref="chartComponentVulnerabilities"
-            chartId="chartComponentVulnerabilities"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-component-vulnerabilities>
         </b-card>
       </b-col>
@@ -172,10 +170,8 @@
           </b-row>
           <chart-auditing-findings-progress
             ref="chartAuditingFindingsProgress"
-            chartId="chartAuditingFindingsProgress"
             class="chart-wrapper"
             style="height: 200px; margin-top: 40px"
-            :height="200"
           ></chart-auditing-findings-progress>
         </b-card>
       </b-col>
@@ -184,13 +180,13 @@
 </template>
 
 <script>
+import { onWatcherCleanup } from 'vue';
 import common from '../../../shared/common';
-import { Callout } from '@coreui/vue';
-import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress';
-import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities';
-import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities';
-import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState';
-import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown';
+import ChartAuditingFindingsProgress from '../../dashboard/ChartAuditingFindingsProgress.vue';
+import ChartComponentVulnerabilities from '../../dashboard/ChartComponentVulnerabilities.vue';
+import ChartPortfolioVulnerabilities from '../../dashboard/ChartPortfolioVulnerabilities.vue';
+import ChartPolicyViolationsState from '@/views/dashboard/ChartPolicyViolationsState.vue';
+import ChartPolicyViolationBreakdown from '@/views/dashboard/ChartPolicyViolationBreakdown.vue';
 
 export default {
   name: 'project-dashboard',
@@ -200,14 +196,13 @@ export default {
     ChartAuditingFindingsProgress,
     ChartComponentVulnerabilities,
     ChartPortfolioVulnerabilities,
-    Callout,
   },
   props: {
     uuid: String,
   },
   data() {
     return {
-      metricDays: this.metricDays,
+      metricDays: localStorage.getItem('projectMetricDays') ?? 30,
       currentCritical: 0,
       currentHigh: 0,
       currentMedium: 0,
@@ -263,33 +258,29 @@ export default {
       );
       this.suppressed = common.valueWithDefault(metric.suppressed, '0');
     },
-    fetchMetrics() {
-      let url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${this.metricDays}`;
-      this.axios.get(url).then((response) => {
-        this.$refs.chartProjectVulnerabilities.render(response.data);
-        this.$refs.chartPolicyViolationsState.render(response.data);
-        this.$refs.chartPolicyViolationBreakdown.render(response.data);
-        this.$refs.chartAuditingFindingsProgress.render(response.data);
-        this.$refs.chartComponentVulnerabilities.render(response.data);
-        this.extractStats(response.data);
-      });
-    },
-  },
-  beforeMount() {
-    this.metricDays =
-      localStorage && localStorage.getItem('projectMetricDays') !== null
-        ? localStorage.getItem('projectMetricDays')
-        : 30;
-  },
-  mounted() {
-    this.fetchMetrics();
   },
   watch: {
-    metricDays() {
-      if (localStorage) {
-        localStorage.setItem('projectMetricDays', this.metricDays);
-      }
-      this.fetchMetrics();
+    metricDays: {
+      immediate: true,
+      async handler(metricDays) {
+        localStorage.setItem('projectMetricDays', metricDays);
+        const controller = new AbortController();
+        onWatcherCleanup(() => controller.abort());
+        const url = `${this.$api.BASE_URL}/${this.$api.URL_METRICS}/project/${this.uuid}/days/${metricDays}`;
+        let response;
+        try {
+          response = await this.axios.get(url, { signal: controller.signal });
+        } catch {
+          // The global axios interceptor already reports failed requests.
+          return;
+        }
+        this.$refs.chartProjectVulnerabilities?.render(response.data);
+        this.$refs.chartPolicyViolationsState?.render(response.data);
+        this.$refs.chartPolicyViolationBreakdown?.render(response.data);
+        this.$refs.chartAuditingFindingsProgress?.render(response.data);
+        this.$refs.chartComponentVulnerabilities?.render(response.data);
+        this.extractStats(response.data);
+      },
     },
   },
 };

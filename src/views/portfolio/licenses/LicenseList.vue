@@ -3,9 +3,8 @@
     <portfolio-widget-row :fetch="true" />
     <div id="licensesToolbar" class="bs-table-custom-toolbar">
       <b-button
-        size="md"
-        variant="outline-primary"
-        v-b-modal.licenseAddLicenseModal
+        variant="primary"
+        @click="showLicenseAddLicenseModal = true"
         v-permission:or="[
           PERMISSIONS.SYSTEM_CONFIGURATION,
           PERMISSIONS.SYSTEM_CONFIGURATION_CREATE,
@@ -22,17 +21,20 @@
       @on-load-success="onLoadSuccess"
     >
     </bootstrap-table>
-    <license-add-license-modal v-on:refreshTable="refreshTable" />
+    <license-add-license-modal
+      v-model="showLicenseAddLicenseModal"
+      v-on:refreshTable="refreshTable"
+    />
   </div>
 </template>
 
 <script>
 import common from '../../../shared/common';
-import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow';
+import PortfolioWidgetRow from '../../dashboard/PortfolioWidgetRow.vue';
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import routerMixin from '../../../mixins/routerMixin';
-import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal';
+import LicenseAddLicenseModal from '@/views/portfolio/licenses/LicenseAddLicenseModal.vue';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
 
 export default {
@@ -58,6 +60,7 @@ export default {
   },
   data() {
     return {
+      showLicenseAddLicenseModal: false,
       columns: [
         {
           title: this.$t('message.name'),

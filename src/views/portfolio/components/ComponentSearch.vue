@@ -116,13 +116,12 @@
 
 <script>
 import $ from 'jquery';
-import Vue from 'vue';
 import common from '../../../shared/common';
 import bootstrapTableMixin from '../../../mixins/bootstrapTableMixin';
 import permissionsMixin from '../../../mixins/permissionsMixin';
 import filterPillsMixin from '../../../mixins/filterPillsMixin';
 import xssFilters from 'xss-filters';
-import SeverityProgressBar from '@/views/components/SeverityProgressBar';
+import SeverityProgressBar from '@/views/components/SeverityProgressBar.vue';
 import TokenPaginatedTable from '@/views/components/TokenPaginatedTable.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import TextFilterPill from '@/views/components/TextFilterPill.vue';
@@ -278,7 +277,7 @@ export default {
       this.visibleColumns = fields;
     },
     initializeTooltips() {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },
@@ -409,7 +408,7 @@ export default {
                 row.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}" style="float:right; padding-top: 4px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"><i class="fa fa-sitemap" aria-hidden="true"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -529,7 +528,7 @@ export default {
         },
         buildHashVerificationColumn({
           $t: this.$t.bind(this),
-          vueFormatter: this.vueFormatter,
+          cell: this.cell,
           visible: initialColumnVisible('hash_verification.status'),
         }),
         {
@@ -553,22 +552,14 @@ export default {
               return '-';
             }
 
-            let ComponentClass = Vue.extend(SeverityProgressBar);
-            let progressBar = new ComponentClass({
-              propsData: {
-                vulnerabilities: metrics.vulnerabilities,
-                critical: metrics.critical,
-                high: metrics.high,
-                medium: metrics.medium,
-                low: metrics.low,
-                unassigned: metrics.unassigned,
-                $t: this.$t.bind(this),
-              },
+            return this.cell(SeverityProgressBar, {
+              vulnerabilities: metrics.vulnerabilities,
+              critical: metrics.critical,
+              high: metrics.high,
+              medium: metrics.medium,
+              low: metrics.low,
+              unassigned: metrics.unassigned,
             });
-            progressBar.$mount();
-            const html = progressBar.$el.outerHTML;
-            progressBar.$destroy();
-            return html;
           }.bind(this),
         },
       ],
@@ -584,7 +575,7 @@ export default {
         sortOrder: 'asc',
         customSort: () => {},
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         onSort: (name, order) => {

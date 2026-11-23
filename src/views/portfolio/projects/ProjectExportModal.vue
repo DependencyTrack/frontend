@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="projectExportModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isDownloading"
     :no-close-on-esc="isDownloading"
@@ -45,22 +43,16 @@
       />
     </b-form-group>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
-        size="md"
         variant="secondary"
         :disabled="isDownloading"
         @click="cancel()"
         >{{ $t('message.cancel') }}</b-button
       >
-      <b-button
-        size="md"
-        variant="primary"
-        :disabled="isDownloading"
-        @click="download()"
-      >
-        <b-spinner v-if="isDownloading" small class="mr-1"></b-spinner>
-        <span v-else class="fa fa-download mr-1"></span>
+      <b-button variant="primary" :disabled="isDownloading" @click="download()">
+        <b-spinner v-if="isDownloading" small class="me-1"></b-spinner>
+        <span v-else class="fa fa-download me-1"></span>
         {{ $t('message.download') }}
       </b-button>
     </template>
@@ -70,6 +62,7 @@
 <script>
 import common from '@/shared/common';
 import permissionsMixin from '@/mixins/permissionsMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 const CYCLONEDX_VERSIONS = [
   { value: '1.0', formats: ['XML'] },
@@ -84,7 +77,7 @@ const CYCLONEDX_VERSIONS = [
 
 export default {
   name: 'ProjectExportModal',
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   props: {
     uuid: String,
   },
@@ -181,7 +174,7 @@ export default {
           `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
         )
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'projectExportModal');
+          this.visible = false;
         })
         .finally(() => {
           this.isDownloading = false;

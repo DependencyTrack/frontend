@@ -2,7 +2,7 @@
 
 ## Stack
 
-Vue 2 SPA (Vue CLI, BootstrapVue, CoreUI). Node >= 22, npm >= 10.
+Vue 3 SPA (Vite, BootstrapVueNext, Bootstrap 5). Node >= 22, npm >= 10.
 
 ## Commands
 
@@ -15,11 +15,20 @@ Vue 2 SPA (Vue CLI, BootstrapVue, CoreUI). Node >= 22, npm >= 10.
 - Format (fix): `npm run prettier-fix`
 - i18n report (missing/unused keys): `npm run vue-i18n-extract`
 - i18n remove unused keys: `npm run remove-unused-i18n`
+- Unit tests: `npm test`
+- E2E tests: `docker compose -f e2e/compose.yaml up -d` and `npx playwright install chromium`, then `npm run e2e`
 
 ## Conventions
 
 - Do not hand-format code. Run `npm run prettier-fix` after edits.
 - Prefer reusing existing components/utilities over introducing new ones.
+- Write new Vue components with the Composition API (`<script setup>`).
+
+## End-to-End Tests
+
+- Find elements by role, label or text, never by CSS classes or component structure.
+- Keep widget-specific interaction in helpers in `e2e/test.mjs`. Specs must not change when a UI library is replaced.
+- See `DEVELOPING.md` for adding routes and seed data.
 
 ## Localization
 

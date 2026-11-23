@@ -4,9 +4,7 @@ export const COLLECTION_LOGIC_AGGREGATE_TAG =
   'AGGREGATE_DIRECT_CHILDREN_WITH_TAG';
 
 // Empty project-form shape. Source of truth for the fields the modals bind via
-// v-model. Declared up-front because Vue 2 doesn't make keys added after
-// initialization reactive, which silently breaks watchers and computed
-// properties (e.g. projectNameState, showCollectionTags).
+// v-model.
 export const FORM_FIELD_DEFAULTS = Object.freeze({
   name: null,
   version: null,
@@ -47,16 +45,14 @@ export default {
       submitted: false,
       isCollection: false,
       fieldFeedback: { ...INITIAL_FIELD_FEEDBACK },
-      tag: '',
       tags: [],
       tagsAutoCompleteItems: [],
       tagsAutoCompleteDebounce: null,
-      collectionTagTyping: '',
       collectionTags: [],
-      addOnKeys: [9, 13, 32, ':', ';', ','],
       isLoading: false,
       defaultParents: [],
       availableParents: [],
+      parentQuery: '',
       selectedParent: null,
     };
   },
@@ -70,12 +66,6 @@ export default {
   watch: {
     'project.version'(v) {
       if (!v) this.project.isLatest = false;
-    },
-    tag(input) {
-      this.searchTags(input);
-    },
-    collectionTagTyping(input) {
-      this.searchTags(input);
     },
   },
   computed: {
@@ -138,8 +128,6 @@ export default {
     },
     resetTagInputs() {
       clearTimeout(this.tagsAutoCompleteDebounce);
-      this.tag = '';
-      this.collectionTagTyping = '';
       this.tagsAutoCompleteItems = [];
     },
     applyValidationErrors(error) {
@@ -166,33 +154,41 @@ export default {
         : project.name;
     },
     fetchDefaultParents() {
+      this.parentQuery = '';
       this.axios
         .get(this.parentSearchUrl(''))
         .then((response) => {
           this.defaultParents = response.data || [];
-          this.availableParents = this.defaultParents;
         })
         .catch(() => {
           this.defaultParents = [];
-          this.availableParents = [];
+        })
+        .finally(() => {
+          if (!this.parentQuery) {
+            this.availableParents = this.defaultParents;
+          }
         });
     },
     asyncFind(query) {
+      this.parentQuery = query;
       if (!query) {
         this.availableParents = this.defaultParents;
+        this.isLoading = false;
         return;
       }
       this.isLoading = true;
+      // Searches can answer out of order, so only the latest one may set the options.
+      const isLatest = () => query === this.parentQuery;
       this.axios
         .get(this.parentSearchUrl(query))
         .then((response) => {
-          this.availableParents = response.data || [];
+          if (isLatest()) this.availableParents = response.data || [];
         })
         .catch(() => {
-          this.availableParents = this.defaultParents;
+          if (isLatest()) this.availableParents = this.defaultParents;
         })
         .finally(() => {
-          this.isLoading = false;
+          if (isLatest()) this.isLoading = false;
         });
     },
     searchTags(input) {
@@ -206,9 +202,7 @@ export default {
           input,
         )}&pageNumber=1&pageSize=6`;
         this.axios.get(url).then((response) => {
-          this.tagsAutoCompleteItems = response.data.map((tag) => ({
-            text: tag.name,
-          }));
+          this.tagsAutoCompleteItems = response.data.map((tag) => tag.name);
         });
       }, 250);
     },

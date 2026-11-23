@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="projectUploadVexModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :no-close-on-backdrop="isUploading"
     :no-close-on-esc="isUploading"
@@ -17,28 +15,22 @@
       :browseText="$t('message.browse')"
     ></b-form-file>
 
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" :disabled="isUploading" @click="cancel()">{{
+        $t('message.cancel')
+      }}</b-button>
       <b-button
-        size="md"
-        variant="secondary"
-        :disabled="isUploading"
-        @click="cancel()"
-        >{{ $t('message.cancel') }}</b-button
-      >
-      <b-button
-        size="md"
         variant="secondary"
         :disabled="isUploading"
         @click="file = null"
         >{{ $t('message.reset') }}</b-button
       >
       <b-button
-        size="md"
         variant="primary"
         :disabled="file == null || isUploading"
         @click="upload()"
       >
-        <b-spinner v-if="isUploading" small class="mr-1"></b-spinner>
+        <b-spinner v-if="isUploading" small class="me-1"></b-spinner>
         {{ $t('message.upload') }}
       </b-button>
     </template>
@@ -46,8 +38,11 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
   name: 'ProjectUploadVexModal',
+  mixins: [modalMixin],
   props: {
     uuid: String,
   },
@@ -76,7 +71,7 @@ export default {
       this.axios
         .post(url, data, config)
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'projectUploadVexModal');
+          this.visible = false;
           this.$toastr.s(this.$t('message.vex_uploaded'));
         })
         .finally(() => {

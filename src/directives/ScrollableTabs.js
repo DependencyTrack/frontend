@@ -7,8 +7,6 @@
  *
  *   <b-tabs v-scrollable-tabs nav-wrapper-class="nav-tabs-scroller">
  */
-import Vue from 'vue';
-
 const SCROLL_STEP_PX = 200;
 
 function createButton(nav, direction) {
@@ -27,8 +25,8 @@ function createButton(nav, direction) {
   return button;
 }
 
-Vue.directive('scrollable-tabs', {
-  inserted(el) {
+export default {
+  mounted(el) {
     const nav = el.querySelector('.nav-tabs');
     if (!nav) {
       return;
@@ -63,9 +61,9 @@ Vue.directive('scrollable-tabs', {
       mutationObserver.disconnect();
     };
   },
-  unbind(el) {
+  unmounted(el) {
     if (el.$scrollableTabsCleanup) {
       el.$scrollableTabsCleanup();
     }
   },
-});
+};

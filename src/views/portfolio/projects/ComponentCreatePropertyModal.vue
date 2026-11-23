@@ -1,9 +1,7 @@
 <template>
   <b-modal
-    id="componentCreatePropertyModal"
+    v-model="visible"
     @hide="resetValues()"
-    size="md"
-    hide-header-close
     no-stacking
     :title="$t('message.create_component_property')"
   >
@@ -12,7 +10,7 @@
       :label="this.$t('message.group_name')"
       label-for="input-1"
     >
-      <b-form-input id="input-1" v-model="groupName" trim />
+      <b-form-input id="input-1" v-model.trim="groupName" />
     </b-form-group>
     <b-form-group
       id="fieldset-2"
@@ -20,7 +18,7 @@
       label-for="input-2"
       label-class="required"
     >
-      <b-form-input id="input-2" v-model="propertyName" class="required" trim />
+      <b-form-input id="input-2" v-model.trim="propertyName" class="required" />
     </b-form-group>
     <b-form-group
       id="fieldset-3"
@@ -30,9 +28,8 @@
     >
       <b-form-textarea
         id="input-3"
-        v-model="propertyValue"
+        v-model.trim="propertyValue"
         class="required"
-        trim
       />
     </b-form-group>
     <b-form-group
@@ -53,13 +50,13 @@
       :label="this.$t('message.description')"
       label-for="input-5"
     >
-      <b-form-textarea id="input-5" v-model="description" trim />
+      <b-form-textarea id="input-5" v-model.trim="description" />
     </b-form-group>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
-      <b-button size="md" variant="primary" @click="createProperty()">{{
+      <b-button variant="primary" @click="createProperty()">{{
         $t('message.create')
       }}</b-button>
     </template>
@@ -67,11 +64,15 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+
 export default {
   name: 'ComponentCreatePropertyModal',
+  mixins: [modalMixin],
   props: {
     uuid: String,
   },
+  emits: ['propertyCreated'],
   data() {
     return {
       groupName: null,
@@ -102,8 +103,8 @@ export default {
           description: this.description,
         })
         .then(() => {
-          this.$root.$emit('bv::hide::modal', 'componentCreatePropertyModal');
-          this.$root.$emit('bv::show::modal', 'componentPropertiesModal');
+          this.visible = false;
+          this.$emit('propertyCreated');
           this.$toastr.s(this.$t('message.property_created'));
         });
     },
@@ -117,7 +118,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

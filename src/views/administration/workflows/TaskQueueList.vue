@@ -1,12 +1,7 @@
 <template>
   <div>
     <b-card no-body>
-      <b-tabs
-        v-model="tabIndex"
-        class="body-bg-color"
-        style="border-left: 0; border-right: 0; border-top: 0"
-        @input="onTabChange"
-      >
+      <b-tabs v-model:index="tabIndex" @update:index="onTabChange">
         <b-tab>
           <template v-slot:title>
             <i class="fa fa-random"></i>
@@ -30,7 +25,8 @@
       </b-card-body>
     </b-card>
     <b-modal
-      id="editCapacityModal"
+      v-model="showEditCapacityModal"
+      :no-header-close="false"
       :title="$t('admin.edit_capacity')"
       @ok.prevent="onCapacityConfirm"
       @shown="$refs.capacityInput.focus()"
@@ -62,6 +58,7 @@ export default {
   },
   data() {
     return {
+      showEditCapacityModal: false,
       types: ['WORKFLOW', 'ACTIVITY'],
       tabIndex: this.$route.query.type === 'ACTIVITY' ? 1 : 0,
       editCapacityRow: null,
@@ -97,12 +94,12 @@ export default {
                 ? this.$t('admin.click_to_pause')
                 : this.$t('admin.click_to_resume');
               return (
-                `<button type="button" class="badge badge-${variant} status-badge status-badge-interactive" ` +
-                `title="${xssFilters.inHTMLData(tooltip)}">` +
+                `<button type="button" class="badge text-bg-${variant} status-badge status-badge-interactive" ` +
+                `title="${xssFilters.inDoubleQuotedAttr(tooltip)}">` +
                 `<i class="fa ${icon}"></i> ${label}</button>`
               );
             }
-            return `<span class="badge badge-${variant} status-badge"><i class="fa ${icon}"></i> ${label}</span>`;
+            return `<span class="badge text-bg-${variant} status-badge"><i class="fa ${icon}"></i> ${label}</span>`;
           },
           events: {
             'click .status-badge-interactive': (_event, _, row) => {
@@ -183,17 +180,17 @@ export default {
     openEditCapacity(row) {
       this.editCapacityRow = row;
       this.editCapacityValue = row.capacity;
-      this.$bvModal.show('editCapacityModal');
+      this.showEditCapacityModal = true;
     },
     async onCapacityConfirm(bvModalEvent) {
       bvModalEvent.preventDefault();
       if (await this.submitCapacity()) {
-        this.$bvModal.hide('editCapacityModal');
+        this.showEditCapacityModal = false;
       }
     },
     async onCapacitySubmit() {
       if (await this.submitCapacity()) {
-        this.$bvModal.hide('editCapacityModal');
+        this.showEditCapacityModal = false;
       }
     },
     async submitCapacity() {
@@ -221,21 +218,21 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .status-badge {
+:deep(.status-badge) {
   font-size: 0.85em;
   padding: 0.35em 0.65em;
 }
-::v-deep button.status-badge-interactive {
+:deep(button.status-badge-interactive) {
   border: none;
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
   transition: opacity 0.15s;
 }
-::v-deep .status-badge-interactive:hover {
+:deep(.status-badge-interactive:hover) {
   opacity: 0.8;
 }
-::v-deep button.capacity-value {
+:deep(button.capacity-value) {
   background: transparent;
   border: none;
   border-bottom: 1px dashed currentColor;
@@ -244,7 +241,7 @@ export default {
   padding: 0;
   cursor: pointer;
 }
-::v-deep .capacity-value .fa-pencil {
+:deep(.capacity-value .fa-pencil) {
   font-size: 0.85em;
 }
 </style>

@@ -2,7 +2,7 @@
   <b-card no-body>
     <template v-if="cardHeader" #header>
       {{ cardHeader }}
-      <b-badge v-if="hasUnsavedChanges" variant="info" class="ml-2">
+      <b-badge v-if="hasUnsavedChanges" variant="info" class="ms-2">
         {{ $t('message.unsaved_changes_badge') }}
       </b-badge>
     </template>
@@ -12,7 +12,7 @@
           {{ loadError }}
         </b-alert>
 
-        <showdown
+        <markdown
           v-if="!loadError && schema && schema.description"
           :markdown="schema.description"
           class="extension-config-form__description"
@@ -22,15 +22,15 @@
           <div
             v-for="(propSchema, propName) in schema.properties"
             :key="propName"
-            class="form-group"
+            class="mb-3"
           >
             <json-schema-form-field
               :schema="enrichSchema(propSchema, propName, schema)"
               :property-name="propName"
-              :value="formData[propName]"
+              :modelValue="formData[propName]"
               :validation-error="getValidationError(propName)"
               :validation-errors="nestedErrorMap[propName] || {}"
-              @input="onFieldChange(propName, $event)"
+              @update:modelValue="onFieldChange(propName, $event)"
             />
           </div>
         </div>
@@ -45,7 +45,7 @@
           <div class="skeleton-line skeleton-line--field"></div>
           <div class="skeleton-line skeleton-line--label"></div>
           <div class="skeleton-line skeleton-line--field"></div>
-          <span class="sr-only">{{ $t('message.loading') }}</span>
+          <span class="visually-hidden">{{ $t('message.loading') }}</span>
         </div>
       </b-card-body>
       <b-card-footer v-if="!hideSubmitButton">
@@ -56,13 +56,13 @@
         >
           <b-spinner v-if="isSavingInProgress" small />
           <i v-else class="fa fa-save" />
-          {{ $t('admin.save') }}
+          {{ $t('message.save') }}
         </b-button>
         <b-button
           v-if="testable"
           variant="outline-secondary"
           :disabled="isOperationInProgress || !schema"
-          class="ml-2"
+          class="ms-2"
           @click="testConfig"
         >
           <b-spinner v-if="isTestInProgress" small />
@@ -72,7 +72,7 @@
         <b-button
           variant="outline-danger"
           :disabled="isOperationInProgress || !hasUnsavedChanges"
-          class="ml-2"
+          class="ms-2"
           @click="resetChanges"
         >
           <i class="fa fa-undo" />
@@ -87,8 +87,8 @@
     </b-form>
 
     <b-modal
-      id="testResultsModal"
-      ref="testResultsModal"
+      v-model="showTestResultsModal"
+      :no-header-close="false"
       :title="$t('admin.test_results')"
       ok-only
       :ok-title="$t('message.close')"
@@ -104,7 +104,7 @@
           show
           class="mb-2"
         >
-          <i :class="getCheckIcon(check.status)" class="mr-2"></i>
+          <i :class="getCheckIcon(check.status)" class="me-2"></i>
           <span v-if="check.status === 'PASSED'">
             {{ $t('admin.test_check_passed', { name: check.name }) }}
           </span>
@@ -126,11 +126,12 @@
 </template>
 
 <script>
+import { markRaw } from 'vue';
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import common from '../../shared/common';
 import JsonSchemaFormField from './JsonSchemaFormField.vue';
-import Showdown from './Showdown.vue';
+import Markdown from './Markdown.vue';
 import {
   enrichSchema,
   getDefaultValue,
@@ -142,7 +143,7 @@ const CHECK_STATUS_ORDER = { FAILED: 0, SKIPPED: 1, PASSED: 2 };
 export default {
   components: {
     JsonSchemaFormField,
-    Showdown,
+    Markdown,
   },
   props: {
     extensionPointName: {
@@ -185,6 +186,7 @@ export default {
   },
   data() {
     return {
+      showTestResultsModal: false,
       schema: null,
       formData: {},
       initialSnapshot: '',
@@ -272,15 +274,18 @@ export default {
     },
   },
   async mounted() {
-    this.ajv = new Ajv({
-      allErrors: true,
-      strict: false,
-      validateFormats: true,
-    });
+    // Ajv keys its caches by object identity, which a reactive proxy breaks.
+    this.ajv = markRaw(
+      new Ajv({
+        allErrors: true,
+        strict: false,
+        validateFormats: true,
+      }),
+    );
     addFormats(this.ajv);
     await this.fetchSchemaAndConfig();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.abortController?.abort();
   },
   methods: {
@@ -347,14 +352,14 @@ export default {
       return data;
     },
     onFieldChange(propName, value) {
-      this.$set(this.formData, propName, value);
+      this.formData = { ...this.formData, [propName]: value };
 
       const prefix = `${propName}.`;
-      Object.keys(this.validationErrors).forEach((key) => {
-        if (key === propName || key.startsWith(prefix)) {
-          this.$delete(this.validationErrors, key);
-        }
-      });
+      this.validationErrors = Object.fromEntries(
+        Object.entries(this.validationErrors).filter(
+          ([key]) => key !== propName && !key.startsWith(prefix),
+        ),
+      );
     },
     validateForm() {
       if (!this.schema) {
@@ -560,7 +565,7 @@ export default {
         );
 
         this.testResults = response.data;
-        this.$refs.testResultsModal.show();
+        this.showTestResultsModal = true;
       } finally {
         this.isTestInProgress = false;
       }
@@ -597,7 +602,7 @@ export default {
 .extension-config-form__description {
   margin-bottom: 1rem;
 }
-.extension-config-form__description >>> p:last-child {
+.extension-config-form__description :deep(p:last-child) {
   margin-bottom: 0;
 }
 .extension-config-form__skeleton {

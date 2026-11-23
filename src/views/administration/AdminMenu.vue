@@ -1,25 +1,46 @@
 <template>
   <div>
+    <b-input-group class="mb-2">
+      <b-form-input
+        v-model="query"
+        type="search"
+        autofocus
+        :placeholder="$t('admin.filter_menu_placeholder')"
+        :aria-label="$t('admin.filter_menu')"
+        @keydown.enter="openFirstMatch"
+      />
+      <b-button
+        v-if="query"
+        variant="outline-secondary"
+        :aria-label="$t('message.clear')"
+        :title="$t('message.clear')"
+        @click="query = ''"
+      >
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </b-button>
+    </b-input-group>
     <b-card
       no-body
       class="admin-menu"
-      v-for="section in menu"
+      v-for="section in visibleMenu"
       v-bind:key="section.id"
     >
-      <div
-        slot="header"
-        v-if="isPermitted(section.permission)"
-        v-b-toggle="section.id"
-        style="cursor: pointer"
-      >
-        <i class="fa fa-align-justify"></i
-        ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
-      </div>
+      <template v-if="isPermitted(section.permission)" v-slot:header>
+        <button
+          type="button"
+          class="btn btn-link d-block w-100 border-0 p-0 text-reset text-decoration-none text-start"
+          :aria-expanded="openSection === section.id ? 'true' : 'false'"
+          :aria-controls="section.id"
+          @click="toggleSection(section.id)"
+        >
+          <i class="fa fa-align-justify"></i
+          ><strong>&nbsp;&nbsp;{{ section.name }}</strong>
+        </button>
+      </template>
       <b-collapse
-        ref="accordion"
         v-if="isPermitted(section.permission)"
         :id="section.id"
-        accordion="admin-accordion"
+        :model-value="!!query || openSection === section.id"
         role="tabpanel"
       >
         <div class="list-group" id="list-tab" role="tablist">
@@ -38,16 +59,15 @@
               class="list-group-item list-group-item-action"
               :class="{
                 'admin-menu-item-readonly': item.configurable === false,
+                'open active': item === currentItem,
               }"
-              data-toggle="list"
               role="tab"
               :to="'/admin/' + item.route"
-              @click="emitEvent(item)"
             >
               {{ item.name }}
               <i
                 v-if="item.configurable === false"
-                class="fa fa-info-circle float-right"
+                class="fa fa-info-circle float-end"
                 :title="$t('admin.extension_no_config')"
                 aria-hidden="true"
               ></i>
@@ -63,6 +83,7 @@
 import common from '../../shared/common';
 import permissionsMixin from '../../mixins/permissionsMixin';
 import EventBus from '../../shared/eventbus';
+import { setPageTitle } from '../../shared/utils';
 import {
   ACCESS_MANAGEMENT,
   ACCESS_MANAGEMENT_CREATE,
@@ -83,9 +104,49 @@ import {
 export default {
   mixins: [permissionsMixin],
   components: {},
+  computed: {
+    visibleMenu() {
+      const query = this.query.trim().toLowerCase();
+      if (!query) return this.menu;
+      return this.menu
+        .map((section) => ({
+          ...section,
+          children: section.name.toLowerCase().includes(query)
+            ? section.children
+            : section.children.filter(
+                (item) =>
+                  !item.header && item.name.toLowerCase().includes(query),
+              ),
+        }))
+        .filter((section) => section.children.length > 0);
+    },
+    // Router 4 marks a link active only on its own route, not on the pages below it.
+    currentItem() {
+      const path = this.$route.path;
+      return this.menu
+        .flatMap((section) => section.children)
+        .find(
+          (item) =>
+            !item.header &&
+            (path === `/admin/${item.route}` ||
+              path.startsWith(`/admin/${item.route}/`)),
+        );
+    },
+  },
   methods: {
+    openFirstMatch() {
+      if (!this.query.trim()) return;
+      const first = this.visibleMenu
+        .filter((section) => this.isPermitted(section.permission))
+        .flatMap((section) => section.children)
+        .find((item) => !item.header);
+      if (first) this.$router.push('/admin/' + first.route);
+    },
+    toggleSection(id) {
+      this.openSection = this.openSection === id ? null : id;
+    },
     emitEvent: function (plugin) {
-      EventBus.$emit('admin:plugin', plugin);
+      EventBus.emit('admin:plugin', plugin);
     },
     getMenuFromRoute: function () {
       let pattern = new RegExp('/admin\\/([^\\/]*)', 'gi');
@@ -152,16 +213,27 @@ export default {
     );
   },
   mounted() {
-    this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+    this.openSection = this.getMenuFromRoute();
   },
   watch: {
+    currentItem: {
+      immediate: true,
+      handler(item) {
+        if (item) {
+          this.emitEvent(item);
+          const section = this.menu.find((s) => s.children.includes(item));
+          setPageTitle(`${item.name} - ${section.name}`);
+        }
+      },
+    },
     $route() {
-      this.$refs.accordion.forEach((menu) => (menu.show = false));
-      this.$root.$emit('bv::toggle::collapse', this.getMenuFromRoute());
+      this.openSection = this.getMenuFromRoute();
     },
   },
   data() {
     return {
+      openSection: null,
+      query: '',
       menu: [
         {
           name: this.$t('admin.configuration'),
@@ -440,6 +512,11 @@ export default {
               route: 'accessManagement/serviceAccounts',
             },
             {
+              component: 'WorkloadIdentityProviders',
+              name: this.$t('admin.workload_identity_providers'),
+              route: 'accessManagement/workloadIdentityProviders',
+            },
+            {
               component: 'Teams',
               name: this.$t('admin.teams'),
               route: 'accessManagement/teams',
@@ -480,6 +557,9 @@ export default {
 </script>
 
 <style scoped>
+input[type='search']::-webkit-search-cancel-button {
+  display: none;
+}
 .admin-menu {
   margin-bottom: 0.3rem;
 }
@@ -505,8 +585,8 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
-  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--dt-text-muted);
+  background-color: var(--dt-surface-recessed);
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
   cursor: default;

@@ -72,20 +72,37 @@
         v-model="showSuppressed"
       />
     </filter-bar>
-    <bootstrap-table
-      ref="table"
-      :columns="columns"
-      :data="data"
-      :options="options"
-      @on-load-success="onLoadSuccess"
+    <div class="audit-table" @click="onTableClick" @keydown="onTableKeydown">
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+        @on-load-success="onLoadSuccess"
+        @on-pre-body="rememberAuditFocus"
+        @on-post-body="markAuditRow()"
+      >
+      </bootstrap-table>
+    </div>
+    <audit-drawer
+      ref="auditDrawer"
+      :title="auditTitle"
+      :link="violationLink"
+      @change="markAuditRow(true)"
+      @closed="focusAuditRow"
+      @saved="onAuditSaved"
     >
-    </bootstrap-table>
+      <template #default="{ row }">
+        <policy-violation-details :key="row.uuid" :violation="row" />
+      </template>
+    </audit-drawer>
   </div>
 </template>
 
 <script>
 import permissionsMixin from '../../mixins/permissionsMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
+import auditDrawerMixin from '@/mixins/auditDrawerMixin';
 import common from '@/shared/common';
 import xssFilters from 'xss-filters';
 import { loadUserPreferencesForBootstrapTable } from '@/shared/utils';
@@ -94,10 +111,14 @@ import MultiSelectFilterPill from '@/views/components/MultiSelectFilterPill.vue'
 import TextSearchFilterPill from '@/views/components/TextSearchFilterPill.vue';
 import DateTimeRangeFilterPill from '@/views/components/DateTimeRangeFilterPill.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
+import AuditDrawer from '@/views/components/AuditDrawer.vue';
+import PolicyViolationDetails from '@/views/portfolio/projects/PolicyViolationDetails.vue';
 
 export default {
-  mixins: [permissionsMixin, filterPillsMixin],
+  mixins: [permissionsMixin, filterPillsMixin, auditDrawerMixin],
   components: {
+    AuditDrawer,
+    PolicyViolationDetails,
     FilterBar,
     MultiSelectFilterPill,
     TextSearchFilterPill,
@@ -145,12 +166,25 @@ export default {
       ];
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this._refreshTimer) {
       clearTimeout(this._refreshTimer);
     }
   },
   methods: {
+    auditTitle(row) {
+      return common.auditTitle(
+        row.policyCondition.policy.name,
+        row.component,
+        row.project,
+      );
+    },
+    violationLink(row) {
+      return this.auditLink({
+        path: `/projects/${row.project.uuid}/policyViolations`,
+        query: { component: row.component.uuid, violation: row.uuid },
+      });
+    },
     apiUrl() {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY_VIOLATION}`;
       const params = {
@@ -188,7 +222,6 @@ export default {
         if (this.$refs.table) {
           this.$refs.table.refresh({
             url: this.apiUrl(),
-            silent: true,
             pageNumber: 1,
           });
         }
@@ -281,6 +314,13 @@ export default {
           },
         },
         {
+          title: this.$t('message.violation_message'),
+          field: 'text',
+          sortable: false,
+          visible: false,
+          formatter: common.formatViolationMessage,
+        },
+        {
           title: this.$t('message.component'),
           field: 'component.name',
           sortable: true,
@@ -301,7 +341,7 @@ export default {
                   row.component.uuid,
               );
               return (
-                `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+                `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
                 `<a href="${url}">${xssFilters.inHTMLData(name)}</a>`
               );
             } else {
@@ -387,6 +427,8 @@ export default {
       ],
       data: [],
       options: {
+        uniqueId: 'uuid',
+        rowAttributes: this.auditRowAttributes,
         search: false,
         toolbar: '#policyViolationAuditToolbar',
         showColumns: true,

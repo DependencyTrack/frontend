@@ -1,9 +1,8 @@
 <template>
   <b-modal
-    id="projectPropertiesModal"
+    v-model="visible"
     size="lg"
-    hide-header-close
-    no-stacking
+    :no-stacking="!confirming"
     :title="$t('message.project_properties')"
   >
     <bootstrap-table
@@ -13,18 +12,17 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
+    <template v-slot:footer="{ cancel }">
       <b-button
         v-permission:or="[
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_DELETE',
         ]"
-        size="md"
         variant="outline-danger"
         @click="deleteProperty"
         >{{ $t('message.delete') }}</b-button
       >
-      <b-button size="md" variant="secondary" @click="cancel()">{{
+      <b-button variant="secondary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <b-button
@@ -32,9 +30,8 @@
           'PORTFOLIO_MANAGEMENT',
           'PORTFOLIO_MANAGEMENT_CREATE',
         ]"
-        size="md"
         variant="primary"
-        v-b-modal.projectCreatePropertyModal
+        @click="$emit('createProperty')"
         >{{ $t('message.create_property') }}</b-button
       >
     </template>
@@ -44,12 +41,15 @@
 <script>
 import common from '../../../shared/common';
 import xssFilters from 'xss-filters';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   name: 'ProjectPropertiesModal',
+  mixins: [modalMixin],
   props: {
     uuid: String,
   },
+  emits: ['createProperty'],
   data() {
     return {
       columns: [
@@ -126,8 +126,9 @@ export default {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_PROJECT}/${this.uuid}/property`;
     },
-    deleteProperty: function () {
+    deleteProperty: async function () {
       let selections = this.$refs.table.getSelections();
+      if (!(await this.confirmDeleteOverModal())) return;
       for (let i = 0; i < selections.length; i++) {
         this.axios
           .delete(this.apiUrl(), {
@@ -137,7 +138,7 @@ export default {
             },
           })
           .then(() => {
-            this.$refs.table.refresh({ silent: true });
+            this.$refs.table?.refresh({ silent: true });
             this.$toastr.s(this.$t('message.property_deleted'));
           })
           .catch(() => {
@@ -149,7 +150,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import '../../../assets/scss/vendors/vue-tags-input/vue-tags-input';
-</style>

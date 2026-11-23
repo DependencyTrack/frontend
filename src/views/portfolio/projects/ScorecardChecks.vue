@@ -43,13 +43,12 @@
       size="lg"
       scrollable
       centered
-      hide-header-close
-      :ok-title="$t('message.close')"
       ok-only
+      :ok-title="$t('message.close')"
       ok-variant="secondary"
       @hidden="restoreFocus"
     >
-      <template v-slot:modal-title>
+      <template v-slot:title>
         <span>{{ selectedCheck ? selectedCheck.title : '' }}</span>
         <span
           v-if="selectedCheck"
@@ -79,7 +78,7 @@
             <li
               v-for="(detail, index) in selectedCheck.details"
               :key="index"
-              :class="detailClass(detail)"
+              :class="{ 'is-warn': detail.startsWith('Warn:') }"
             >
               <span
                 v-for="(part, partIndex) in linkParts(detail)"
@@ -113,9 +112,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { compareScorecardChecks, scorecardRisk } from './scorecardRisk';
-import { parseHealthScore } from '../../../shared/healthScoreTone';
+import { parseHealthScore } from '@/shared/healthScoreTone';
 
 const ACRONYMS = new Set(['CI', 'CII', 'SAST']);
 const RISK_LABELS = {
@@ -125,153 +126,97 @@ const RISK_LABELS = {
   low: 'severity.low',
   unknown: 'message.health_unknown',
 };
+const URL_PATTERN = /https?:\/\/[^\s)]+/g;
 
-export default {
-  name: 'ScorecardChecks',
-  props: {
-    checks: {
-      type: Array,
-      default: () => [],
-    },
-    sortMode: {
-      type: String,
-      default: 'score',
-    },
-  },
-  data() {
-    return {
-      detailsOpen: false,
-      selectedCheck: null,
-      focusReturn: null,
-    };
-  },
-  computed: {
-    missingLabel() {
-      return this.$t('message.health_missing');
-    },
-    sortedChecks() {
-      const locale = this.$i18n.locale;
-      return (this.checks || [])
-        .map((check, index) => this.normalizeCheck(check, index))
-        .sort((left, right) =>
-          compareScorecardChecks(left, right, this.sortMode, locale),
-        );
-    },
-  },
-  methods: {
-    normalizeCheck(check, index) {
-      const documentation =
-        check && typeof check.documentation === 'object'
-          ? check.documentation
-          : {};
-      const rawDetails = check && check.details;
-      const details = Array.isArray(rawDetails)
-        ? rawDetails.map((detail) => this.detailText(detail)).filter(Boolean)
-        : [];
-      const score = check ? check.score : null;
-      const numeric = parseHealthScore(score);
-      const scored = numeric != null;
-      const name = (check && check.name) || '';
-      const risk = scorecardRisk(name);
-      return {
-        name,
-        rowKey: name || 'check-' + index,
-        inputIndex: index,
-        risk,
-        riskLabel: this.$t(RISK_LABELS[risk]),
-        title: this.checkTitle(name),
-        score,
-        numeric,
-        scored,
-        scoreLabel: scored
-          ? this.$t('message.health_scorecard_score_out_of', {
-              score: numeric,
-            })
-          : this.missingLabel,
-        barPercent: scored ? (numeric / 10) * 100 : 0,
-        description:
-          (check && (check.description || documentation.short)) || '',
-        reason: (check && check.reason) || '',
-        details,
-        documentationUrl:
-          (check && (check.documentation_url || documentation.url)) || '',
-      };
-    },
-    detailText(detail) {
-      if (detail == null) {
-        return '';
+const props = defineProps({
+  checks: { type: Array, default: () => [] },
+  sortMode: { type: String, default: 'score' },
+});
+
+const { t, locale } = useI18n();
+const detailsOpen = ref(false);
+const selectedCheck = ref(null);
+let focusReturn = null;
+
+const sortedChecks = computed(() =>
+  props.checks
+    .map(normalizeCheck)
+    .sort((left, right) =>
+      compareScorecardChecks(left, right, props.sortMode, locale.value),
+    ),
+);
+
+function normalizeCheck(check, index) {
+  const numeric = parseHealthScore(check.score);
+  const scored = numeric != null;
+  const name = check.name || '';
+  const risk = scorecardRisk(name);
+  return {
+    name,
+    rowKey: name || 'check-' + index,
+    inputIndex: index,
+    risk,
+    riskLabel: t(RISK_LABELS[risk]),
+    title: checkTitle(name),
+    numeric,
+    scored,
+    scoreLabel: scored
+      ? t('message.health_scorecard_score_out_of', { score: numeric })
+      : t('message.health_missing'),
+    barPercent: scored ? (numeric / 10) * 100 : 0,
+    description: check.description || '',
+    reason: check.reason || '',
+    details: (check.details || []).filter(Boolean),
+    documentationUrl: check.documentation_url || '',
+  };
+}
+
+function checkTitle(name) {
+  return name
+    .split('-')
+    .map((part) => {
+      if (ACRONYMS.has(part)) {
+        return part;
       }
-      if (typeof detail === 'string') {
-        return detail;
-      }
-      if (typeof detail === 'object') {
-        return detail.message || detail.text || '';
-      }
-      return String(detail);
-    },
-    checkTitle(name) {
-      if (!name) {
-        return '';
-      }
-      return String(name)
-        .split('-')
-        .map((part) => {
-          if (ACRONYMS.has(part) && part === part.toUpperCase()) {
-            return part;
-          }
-          const lower = part.toLowerCase();
-          return lower.charAt(0).toUpperCase() + lower.slice(1);
-        })
-        .join(' ');
-    },
-    detailClass(detail) {
-      if (typeof detail === 'string' && detail.startsWith('Warn:')) {
-        return 'is-warn';
-      }
-      return '';
-    },
-    openDetails(check, event) {
-      this.focusReturn = event && event.currentTarget;
-      this.selectedCheck = check;
-      this.detailsOpen = true;
-    },
-    restoreFocus() {
-      const target = this.focusReturn;
-      this.focusReturn = null;
-      if (target && typeof target.focus === 'function') {
-        target.focus();
-      }
-    },
-    linkParts(text) {
-      const value = text || '';
-      const pattern = /https?:\/\/[^\s)]+/g;
-      const parts = [];
-      let lastIndex = 0;
-      let match = pattern.exec(value);
-      while (match) {
-        if (match.index > lastIndex) {
-          parts.push({ text: value.slice(lastIndex, match.index) });
-        }
-        parts.push({ text: match[0], href: match[0] });
-        lastIndex = match.index + match[0].length;
-        match = pattern.exec(value);
-      }
-      if (lastIndex < value.length) {
-        parts.push({ text: value.slice(lastIndex) });
-      }
-      return parts;
-    },
-  },
-};
+      const lower = part.toLowerCase();
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join(' ');
+}
+
+function openDetails(check, event) {
+  focusReturn = event.currentTarget;
+  selectedCheck.value = check;
+  detailsOpen.value = true;
+}
+
+function restoreFocus() {
+  focusReturn?.focus();
+  focusReturn = null;
+}
+
+function linkParts(text) {
+  const parts = [];
+  let lastIndex = 0;
+  for (const match of text.matchAll(URL_PATTERN)) {
+    if (match.index > lastIndex) {
+      parts.push({ text: text.slice(lastIndex, match.index) });
+    }
+    parts.push({ text: match[0], href: match[0] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push({ text: text.slice(lastIndex) });
+  }
+  return parts;
+}
 </script>
 
-<style lang="scss" scoped>
-@import '../../../assets/scss/variables';
-
+<style scoped>
 .scorecard-checks {
   box-sizing: border-box;
   min-width: 0;
-  color: $body-color;
+  color: var(--dt-text);
 }
 
 .scorecard-checks * {
@@ -282,7 +227,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  background-color: $card-bg;
+  background-color: var(--dt-surface-card);
   font-size: 12px;
   line-height: 16px;
 }
@@ -293,16 +238,20 @@ th {
   text-align: left;
   font-size: 11px;
   font-weight: 400;
-  color: $table-head-color;
-  background: $table-head-bg;
-  border-bottom: 1px solid $border-color;
+  color: var(--dt-text-strong);
+  background: transparent;
+  border-bottom: 1px solid var(--dt-border);
+}
+
+[data-bs-theme='light'] th {
+  background: var(--dt-surface-recessed);
 }
 
 td {
   height: 18px;
   padding: 0 10px;
-  background-color: $card-bg;
-  border-bottom: 1px solid $border-color;
+  background-color: var(--dt-surface-card);
+  border-bottom: 1px solid var(--dt-border);
   font-variant-numeric: tabular-nums;
   font-weight: 400;
 }
@@ -334,9 +283,9 @@ td:nth-child(4) {
   box-sizing: border-box;
   min-width: 54px;
   padding: 0.2em 0.4em;
-  border: 1px solid $border-color;
+  border: 1px solid var(--dt-border-control);
   border-radius: 0.25rem;
-  background-color: $grey-900;
+  background-color: var(--dt-surface-recessed);
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -346,23 +295,23 @@ td:nth-child(4) {
 }
 
 .risk-badge.is-critical {
-  color: var(--severity-critical);
+  color: var(--dt-severity-critical-text);
 }
 
 .risk-badge.is-high {
-  color: var(--severity-high);
+  color: var(--dt-severity-high-text);
 }
 
 .risk-badge.is-medium {
-  color: var(--severity-medium);
+  color: var(--dt-severity-medium-text);
 }
 
 .risk-badge.is-low {
-  color: var(--severity-low);
+  color: var(--dt-severity-low-text);
 }
 
 .risk-badge.is-unknown {
-  color: var(--severity-unassigned);
+  color: var(--dt-severity-unassigned-text);
 }
 
 .check-name {
@@ -373,7 +322,7 @@ td:nth-child(4) {
   overflow: hidden;
   border: 0;
   background: transparent;
-  color: var(--primary);
+  color: var(--dt-accent);
   font: inherit;
   font-weight: 400;
   line-height: inherit;
@@ -386,39 +335,33 @@ td:nth-child(4) {
 
 .check-row:hover td,
 .check-row:focus-within td {
-  background: $grey-800;
+  background-image: linear-gradient(var(--dt-hover), var(--dt-hover));
 }
 
 .check-row:hover .check-name,
 .check-row:focus-within .check-name {
   overflow: visible;
-  color: var(--primary-lighter);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.check-name:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
 .meter {
   height: 4px;
-  background: $progress-bg;
+  background: var(--dt-line);
   border-radius: 2px;
 }
 
 .meter span {
   display: block;
   height: 4px;
-  background: $secondary;
+  background: var(--dt-accent);
   border-radius: 2px;
 }
 
 .empty {
   margin: 0;
   padding: 8px 10px;
-  color: $grey-600;
+  color: var(--dt-text-muted);
 }
 
 @media (min-width: 1400px) {
@@ -473,9 +416,7 @@ td:nth-child(4) {
 }
 </style>
 
-<style lang="scss">
-@import '../../../assets/scss/variables';
-
+<style>
 .scorecard-details-modal .modal-title {
   display: flex;
   align-items: center;
@@ -485,7 +426,7 @@ td:nth-child(4) {
 
 .scorecard-label {
   margin-bottom: 0.25rem;
-  color: $body-color;
+  color: var(--dt-text-heading);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -497,7 +438,7 @@ td:nth-child(4) {
 }
 
 .scorecard-detail-score {
-  color: $body-color;
+  color: var(--dt-text-heading);
   font-size: 1.5rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -508,12 +449,11 @@ td:nth-child(4) {
   margin: 0;
   padding: 0.75rem 0.75rem 0.75rem 1.5rem;
   overflow: auto;
-  border: 1px solid $border-color;
+  border: 1px solid var(--dt-border);
   border-radius: 0.25rem;
-  background: $grey-800;
-  color: $body-color;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
+  background: var(--dt-surface-recessed);
+  color: var(--dt-text);
+  font-family: var(--bs-font-monospace);
   font-size: 0.8125rem;
 }
 
@@ -522,6 +462,6 @@ td:nth-child(4) {
 }
 
 .scorecard-detail-list li.is-warn {
-  color: $orange;
+  color: var(--dt-severity-high-text);
 }
 </style>

@@ -6,76 +6,78 @@
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
-                <validation-observer tag="form" v-slot="{ passes }">
-                  <b-form @submit.prevent="passes(changePassword)">
-                    <h1>{{ $t('message.password_force_change') }}</h1>
-                    <p class="text-muted">
-                      {{ $t('message.password_force_change_desc') }}
-                    </p>
-                    <b-validated-input-group-form-input
-                      id="username"
-                      :label="$t('message.username')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-user"
-                      type="text"
-                      autocomplete="username email"
-                      v-model="input.username"
-                    />
-                    <b-validated-input-group-form-input
-                      id="current-password"
-                      :label="$t('message.password_current')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="current-password"
-                      v-model="input.password"
-                    />
-                    <b-validated-input-group-form-input
-                      id="new-password"
-                      :label="$t('message.password_new')"
-                      input-group-size="mb-3"
-                      rules="required"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="off"
-                      v-model="input.newPassword"
-                    />
-                    <b-validated-input-group-form-input
-                      id="confirm-password"
-                      :label="$t('message.password_confirm')"
-                      input-group-size="mb-3"
-                      rules="required|confirmed:new-password"
-                      icon="icon-lock"
-                      type="password"
-                      autocomplete="off"
-                      v-model="input.confirmPassword"
-                    />
-                    <b-row>
-                      <b-col>
-                        <b-button
-                          block
-                          variant="primary"
-                          class="px-4"
-                          type="submit"
-                          >{{ $t('message.password_change') }}</b-button
-                        >
-                      </b-col>
-                    </b-row>
-                  </b-form>
-                </validation-observer>
+                <b-form @submit.prevent="changePassword">
+                  <h1>{{ $t('message.password_force_change') }}</h1>
+                  <p class="text-muted">
+                    {{ $t('message.password_force_change_desc') }}
+                  </p>
+                  <b-validated-input-group-form-input
+                    id="username"
+                    :label="$t('message.username')"
+                    input-group-size="mb-3"
+                    required
+                    icon="fa-solid fa-user"
+                    type="text"
+                    autocomplete="username email"
+                    v-model="input.username"
+                  />
+                  <b-validated-input-group-form-input
+                    id="current-password"
+                    :label="$t('message.password_current')"
+                    input-group-size="mb-3"
+                    required
+                    icon="fa-solid fa-lock"
+                    type="password"
+                    autocomplete="current-password"
+                    v-model="input.password"
+                  />
+                  <b-validated-input-group-form-input
+                    id="new-password"
+                    :label="$t('message.password_new')"
+                    input-group-size="mb-3"
+                    required
+                    icon="fa-solid fa-lock"
+                    type="password"
+                    autocomplete="off"
+                    v-model="input.newPassword"
+                  />
+                  <b-validated-input-group-form-input
+                    id="confirm-password"
+                    :label="$t('message.password_confirm')"
+                    input-group-size="mb-3"
+                    required
+                    :custom-validity="passwordMismatch"
+                    icon="fa-solid fa-lock"
+                    type="password"
+                    autocomplete="off"
+                    v-model="input.confirmPassword"
+                  />
+                  <b-row>
+                    <b-col>
+                      <b-button
+                        variant="primary"
+                        class="px-4 w-100"
+                        type="submit"
+                        >{{ $t('message.password_change') }}</b-button
+                      >
+                    </b-col>
+                  </b-row>
+                </b-form>
               </b-card-body>
             </b-card>
-            <b-card
-              no-body
-              class="text-white bg-grey-900 py-5 d-md-down-none"
-              style="width: 44%"
-            >
+            <b-card no-body class="py-5 d-none d-lg-flex" style="width: 44%">
               <b-card-body class="text-center">
                 <div>
                   <img
+                    class="logo-dark-theme"
                     src="@/assets/img/brand/dt-logo-vertical-white-text.svg"
+                    alt="Dependency-Track Logo"
+                    width="100%"
+                  />
+                  <img
+                    class="logo-light-theme"
+                    src="@/assets/img/brand/dt-logo-vertical-dark-text.svg"
+                    alt="Dependency-Track Logo"
                     width="100%"
                   />
                 </div>
@@ -85,27 +87,28 @@
         </b-col>
       </b-row>
     </div>
-    <InformationalModal v-bind:message="passwordChangeError" />
+    <InformationalModal
+      v-model="showInformationalModal"
+      v-bind:message="passwordChangeError"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { ValidationObserver } from 'vee-validate';
-import InformationalModal from '../modals/InformationalModal';
-import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput';
+import InformationalModal from '../modals/InformationalModal.vue';
+import BValidatedInputGroupFormInput from '../../forms/BValidatedInputGroupFormInput.vue';
 import { getRedirectUrl } from '../../shared/utils';
-const qs = require('querystring');
 
 export default {
   name: 'PasswordForceChange',
   components: {
     BValidatedInputGroupFormInput,
     InformationalModal,
-    ValidationObserver,
   },
   data() {
     return {
+      showInformationalModal: false,
       passwordChangeError: '',
       input: {
         username: '',
@@ -114,6 +117,15 @@ export default {
         confirmPassword: '',
       },
     };
+  },
+  computed: {
+    passwordMismatch() {
+      return this.input.confirmPassword === this.input.newPassword
+        ? ''
+        : this.$t('validation.confirmed', {
+            _field_: this.$t('message.password_confirm'),
+          });
+    },
   },
   methods: {
     changePassword() {
@@ -130,7 +142,7 @@ export default {
         },
       };
       axios
-        .post(url, qs.stringify(requestBody), config)
+        .post(url, new URLSearchParams(requestBody), config)
         .then((result) => {
           if (result.status === 200) {
             this.$toastr.s(this.$t('message.password_change_success'));
@@ -145,10 +157,10 @@ export default {
         })
         .catch((err) => {
           if (err.response.status === 401) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.passwordChangeError = this.$t('message.password_unauthorized');
           } else if (err.response.status === 406) {
-            this.$bvModal.show('modal-informational');
+            this.showInformationalModal = true;
             this.passwordChangeError = this.$t(
               'message.password_not_acceptable',
             );

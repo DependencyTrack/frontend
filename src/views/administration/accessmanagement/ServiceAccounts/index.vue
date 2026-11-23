@@ -3,9 +3,8 @@
     <b-card-body>
       <div id="customToolbar">
         <b-button
-          size="md"
-          variant="outline-primary"
-          v-b-modal.createServiceAccountModal
+          variant="primary"
+          @click="showCreateServiceAccountModal = true"
         >
           <span class="fa fa-plus"></span> {{ $t('message.create') }}
         </b-button>
@@ -17,7 +16,10 @@
         :options="options"
       />
     </b-card-body>
-    <create-service-account-modal v-on:refreshTable="refreshTable" />
+    <create-service-account-modal
+      v-model="showCreateServiceAccountModal"
+      v-on:refreshTable="refreshTable"
+    />
   </b-card>
 </template>
 
@@ -41,21 +43,22 @@ export default {
     CreateServiceAccountModal,
   },
   mounted() {
-    EventBus.$on(this.rowEvents.update, (index, row) => {
+    EventBus.on(this.rowEvents.update, (index, row) => {
       const table = this.$refs.table.$refs.table;
       table.updateRow({ index, row });
       table.expandRow(index);
     });
-    EventBus.$on(this.rowEvents.delete, () => {
+    EventBus.on(this.rowEvents.delete, () => {
       this.refreshTable();
     });
   },
-  beforeDestroy() {
-    EventBus.$off(this.rowEvents.update);
-    EventBus.$off(this.rowEvents.delete);
+  beforeUnmount() {
+    EventBus.off(this.rowEvents.update);
+    EventBus.off(this.rowEvents.delete);
   },
   data() {
     return {
+      showCreateServiceAccountModal: false,
       searchText: null,
       rowEvents: {
         update: 'admin:serviceaccounts:rowUpdate',
@@ -95,17 +98,13 @@ export default {
         detailViewIcon: false,
         detailViewByClick: true,
         detailFormatter: (index, row) => {
-          return this.vueFormatter({
-            render: () => (
-              <ServiceAccountDetails
-                row={row}
-                index={index}
-                rowEvents={this.rowEvents}
-              />
-            ),
+          return this.cell(ServiceAccountDetails, {
+            row,
+            index,
+            rowEvents: this.rowEvents,
           });
         },
-        onExpandRow: this.vueFormatterInit,
+        onExpandRow: this.mountCells,
         toolbar: '#customToolbar',
       },
     };

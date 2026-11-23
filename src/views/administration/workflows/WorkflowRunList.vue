@@ -95,7 +95,7 @@ export default {
       sortBy: null,
       sortDirection: null,
       statusOptions: [
-        { value: 'CANCELLED', text: this.$t(`message.status_canceled`) },
+        { value: 'CANCELLED', text: this.$t(`message.status_cancelled`) },
         { value: 'COMPLETED', text: this.$t(`message.status_completed`) },
         { value: 'CREATED', text: this.$t(`message.status_created`) },
         { value: 'FAILED', text: this.$t(`message.status_failed`) },
@@ -153,8 +153,9 @@ export default {
               iconName = 'fa-check';
               textVariant = 'success';
             }
-            const i18nValue = this.$t(`message.status_${value.toLowerCase()}`);
-            return `<span class="fa ${iconName} text-${textVariant}">&nbsp;</span> ${i18nValue}`;
+            const label =
+              this.statusOptions.find((o) => o.value === value)?.text ?? value;
+            return `<span class="fa ${iconName} text-${textVariant}">&nbsp;</span> ${label}`;
           },
         },
         {

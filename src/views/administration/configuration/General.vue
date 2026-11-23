@@ -6,52 +6,52 @@
           id="base_url"
           :label="$t('admin.base_url')"
           input-group-size="mb-3"
-          rules="required"
+          required
           type="url"
           v-model="baseUrl"
           tooltip="This URL is used to construct links back to Dependency-Track from external systems."
         />
-        <c-switch
+        <b-form-checkbox
           id="isBadgesEnabled"
-          color="primary"
           v-model="isBadgesEnabled"
-          label
-          v-bind="labelIcon"
-        />{{ $t('admin.enable_svg_badge') }}
+          switch
+          >{{ $t('admin.enable_svg_badge') }}</b-form-checkbox
+        >
       </b-form-group>
       <b-form-group>
         <b-form-group
           :label="$t('admin.default_language')"
           label-size="lg"
-          label-class="font-weight-bold pt-0 mb-2"
+          label-class="fw-bold pt-0 mb-2"
         >
           <p>{{ $t('admin.default_language_desc') }}</p>
           <div id="customToolbar">
-            <c-switch
+            <b-form-checkbox
               id="default-language-enabled"
-              color="primary"
               v-model="isDefaultLanguageEnabled"
-              label
-              v-bind="labelIcon"
-            />{{ $t('admin.default_language_enable') }}
+              switch
+              >{{ $t('admin.default_language_enable') }}</b-form-checkbox
+            >
           </div>
         </b-form-group>
         <b-input-group>
-          <b-input-group-prepend :title="this.$t('message.language')" is-text>
-            <span class="fa fa-language text-primary"></span>
-          </b-input-group-prepend>
+          <template #prepend>
+            <b-input-group-text :title="$t('message.language')">
+              <span class="fa fa-language text-primary"></span>
+            </b-input-group-text>
+          </template>
           <b-form-select
             class="bg-widget"
             v-model="defaultLanguage"
             :disabled="!isDefaultLanguageEnabled"
           >
             <b-form-select-option
-              v-for="locale in $i18n.availableLocales"
+              v-for="locale in availableLocales"
               :key="`locale-${locale}`"
               :value="locale"
               :title="$t(`language.${locale}`)"
             >
-              <span class="mr-2">{{ localeToFlag(locale) }}</span>
+              <span class="me-2">{{ localeToFlag(locale) }}</span>
               {{ locale.toUpperCase() }}</b-form-select-option
             >
           </b-form-select>
@@ -60,7 +60,7 @@
     </b-card-body>
     <b-card-footer>
       <b-button
-        variant="outline-primary"
+        variant="primary"
         class="px-4"
         @click="saveChanges"
         :disabled="this.isDefaultLanguageEnabled && this.defaultLanguage === ''"
@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput';
+import BValidatedInputGroupFormInput from '../../../forms/BValidatedInputGroupFormInput.vue';
 import common from '../../../shared/common';
 import configPropertyMixin from '../mixins/configPropertyMixin';
+import { availableLocales } from '@/i18n';
 
 export default {
   mixins: [configPropertyMixin],
@@ -82,7 +82,6 @@ export default {
     header: String,
   },
   components: {
-    cSwitch,
     BValidatedInputGroupFormInput,
   },
   data() {
@@ -91,10 +90,7 @@ export default {
       isBadgesEnabled: false,
       isDefaultLanguageEnabled: false,
       defaultLanguage: 'en',
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      availableLocales,
     };
   },
   methods: {

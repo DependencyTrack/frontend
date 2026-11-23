@@ -1,8 +1,6 @@
 <template>
   <b-modal
-    :id="modalId"
-    size="md"
-    hide-header-close
+    v-model="visible"
     no-close-on-backdrop
     :title="$t('admin.new_api_key_title')"
     @show="resetValues"
@@ -11,10 +9,12 @@
     <div v-if="key">
       <p class="text-center">{{ $t('admin.new_api_key') }}</p>
       <pre
-        class="b-input-group-form-input text-white plaintext"
+        class="b-input-group-form-input plaintext"
         style="overflow-x: auto"
-        >{{ key }}</pre
-      >
+        >{{ key }}</pre>
+      <div class="text-center">
+        <copy-to-clipboard-button :value="key" />
+      </div>
     </div>
     <b-form v-else @submit.stop.prevent="createApiKey">
       <b-form-group
@@ -23,9 +23,8 @@
       >
         <b-form-input
           :id="`${modalId}-comment`"
-          v-model="comment"
+          v-model.trim="comment"
           type="text"
-          trim
         />
       </b-form-group>
       <b-form-group
@@ -55,16 +54,15 @@
         />
       </b-form-group>
     </b-form>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button v-if="key" size="md" variant="primary" @click="cancel()">{{
+    <template v-slot:footer="{ cancel }">
+      <b-button v-if="key" variant="primary" @click="cancel()">{{
         $t('message.close')
       }}</b-button>
       <template v-else>
-        <b-button size="md" variant="secondary" @click="cancel()">{{
+        <b-button variant="secondary" @click="cancel()">{{
           $t('message.cancel')
         }}</b-button>
         <b-button
-          size="md"
           variant="primary"
           :disabled="expiresInDays === null"
           @click="createApiKey"
@@ -76,10 +74,16 @@
 </template>
 
 <script>
+import modalMixin from '@/mixins/modalMixin';
+import CopyToClipboardButton from '@/views/components/CopyToClipboardButton.vue';
+
 export default {
+  mixins: [modalMixin],
+  components: { CopyToClipboardButton },
   props: {
     name: { type: String, required: true },
   },
+  emits: ['created'],
   data() {
     return {
       comment: '',

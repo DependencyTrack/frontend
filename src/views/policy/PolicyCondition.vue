@@ -25,8 +25,29 @@
         />
       </b-col>
       <b-col md="4" lg="5">
+        <b-form-group
+          v-if="subject === 'LICENSE' || subject === 'LICENSE_GROUP'"
+          :label="$t('message.value')"
+          label-for="input-value"
+          label-class="required"
+        >
+          <multiselect
+            v-multiselect-label
+            id="input-value"
+            v-model="selectedValue"
+            :options="possibleValues"
+            label="text"
+            track-by="value"
+            :searchable="true"
+            :allow-empty="false"
+            :max-height="250"
+            select-label=""
+            deselect-label=""
+          />
+        </b-form-group>
+
         <b-input-group-form-select
-          v-if="
+          v-else-if="
             subject !== 'COORDINATES' &&
             subject !== 'VERSION_DISTANCE' &&
             isSubjectSelectable
@@ -77,9 +98,7 @@
               type="text"
               v-model="coordinatesVersion"
             ></b-form-input>
-            <b-tooltip
-              target="input-value-coordinates-version"
-              triggers="hover focus"
+            <b-tooltip target="input-value-coordinates-version"
               >{{ $t('message.coordinates_version_tooltip') }}
             </b-tooltip>
           </b-input-group>
@@ -96,7 +115,7 @@
               :placeholder="$t('message.version_distance_epoch')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.epoch"
             ></b-form-input>
             <b-form-input
@@ -104,7 +123,7 @@
               :placeholder="$t('message.version_distance_major')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.major"
             ></b-form-input>
             <b-form-input
@@ -112,7 +131,7 @@
               :placeholder="$t('message.version_distance_minor')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.minor"
             ></b-form-input>
             <b-form-input
@@ -120,27 +139,19 @@
               :placeholder="$t('message.version_distance_patch')"
               type="number"
               min="0"
-              oninput="validity.valid||(value='');"
+              oninput="validity.valid || (value = '')"
               v-model="versionDistance.patch"
             ></b-form-input>
-            <b-tooltip
-              target="input-value-distance-epoch"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-epoch"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-major"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-major"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-minor"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-minor"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
-            <b-tooltip
-              target="input-value-distance-patch"
-              triggers="hover focus"
+            <b-tooltip target="input-value-distance-patch"
               >{{ $t('message.version_distance_tooltip') }}
             </b-tooltip>
           </b-input-group>
@@ -148,6 +159,7 @@
       </b-col>
       <b-col cols="auto" class="d-flex align-items-end">
         <b-button
+          class="mb-3"
           variant="outline-primary"
           :disabled="!isDirty"
           @click="saveCondition"
@@ -180,6 +192,7 @@
         </b-col>
         <b-col cols="auto" class="d-flex align-items-end">
           <b-button
+            class="mb-3"
             variant="outline-primary"
             :disabled="!isDirty"
             @click="saveCondition"
@@ -189,7 +202,7 @@
         </b-col>
       </b-row>
       <b-row class="mt-2">
-        <b-col lg="8" class="ml-3">
+        <b-col lg="8" class="ms-3">
           <CodeMirrorEditor
             id="input-value"
             v-model="value"
@@ -214,16 +227,11 @@
       </b-col>
 
       <b-col md="6" lg="7" class="d-flex align-items-center">
-        <c-switch
-          v-model="value"
-          color="primary"
-          class="m-0"
-          label
-          v-bind="labelIcon"
-        />
+        <b-form-checkbox v-model="value" class="m-0" switch />
       </b-col>
       <b-col cols="auto" class="d-flex align-items-end">
         <b-button
+          class="mb-3"
           variant="outline-primary"
           :disabled="!isDirty"
           @click="saveCondition"
@@ -236,25 +244,27 @@
 </template>
 
 <script>
-import { Switch as cSwitch } from '@coreui/vue';
-import BInputGroupFormInput from '../../forms/BInputGroupFormInput';
-import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect';
+import BInputGroupFormInput from '../../forms/BInputGroupFormInput.vue';
+import BInputGroupFormSelect from '../../forms/BInputGroupFormSelect.vue';
 import common from '../../shared/common';
-import ActionableListGroupItem from '../components/ActionableListGroupItem';
+import Multiselect from 'vue-multiselect';
+import ActionableListGroupItem from '../components/ActionableListGroupItem.vue';
 import CodeMirrorEditor from '@/views/components/CodeMirrorEditor.vue';
 import { celCompletionSource } from './celCompletions';
+import { celErrorsToMarkers } from '../../shared/utils';
 
 export default {
   props: {
     policy: Object,
     condition: Object,
   },
+  emits: ['conditionRemoved'],
   components: {
     ActionableListGroupItem,
     BInputGroupFormSelect,
     BInputGroupFormInput,
     CodeMirrorEditor,
-    cSwitch,
+    Multiselect,
   },
   created() {
     if (this.condition) {
@@ -288,10 +298,6 @@ export default {
         major: null,
         minor: null,
         patch: null,
-      },
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
       },
       savedState: null,
       subjects: [
@@ -365,6 +371,14 @@ export default {
     };
   },
   computed: {
+    selectedValue: {
+      get() {
+        return this.possibleValues.find((o) => o.value === this.value) || null;
+      },
+      set(option) {
+        this.value = option ? option.value : null;
+      },
+    },
     isSubjectSelectable: function () {
       switch (this.subject) {
         case 'AGE':
@@ -613,29 +627,7 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch((error) => {
-            if (
-              this.subject === 'EXPRESSION' &&
-              error.response &&
-              error.response.data &&
-              error.response.data.celErrors
-            ) {
-              this.editorMarkers = error.response.data.celErrors.map(
-                (celErr) => {
-                  return {
-                    startLineNumber: celErr.line,
-                    startColumn: celErr.column,
-                    endLineNumber: celErr.line,
-                    endColumn: celErr.column + 3, // Add a few columns to make it more visible
-                    message: celErr.message,
-                    severity: 8,
-                  };
-                },
-              );
-            } else {
-              this.$toastr.w(this.$t('condition.unsuccessful_action'));
-            }
-          });
+          .catch(this.onSaveError);
       } else {
         let url = `${this.$api.BASE_URL}/${this.$api.URL_POLICY}/${this.policy.uuid}/condition`;
         this.axios
@@ -659,9 +651,14 @@ export default {
             this.resetSavedState();
             this.$toastr.s(this.$t('message.updated'));
           })
-          .catch(() => {
-            this.$toastr.w(this.$t('condition.unsuccessful_action'));
-          });
+          .catch(this.onSaveError);
+      }
+    },
+    onSaveError: function (error) {
+      if (this.subject === 'EXPRESSION' && error.response?.data?.celErrors) {
+        this.editorMarkers = celErrorsToMarkers(error.response.data.celErrors);
+      } else {
+        this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
     removeCondition: function () {

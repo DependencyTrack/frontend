@@ -1,22 +1,20 @@
 <template>
   <b-list-group-item>
     <div class="d-flex w-100 justify-content-between">
-      <span class="text-truncate mr-3">
+      <span class="text-truncate me-3">
         <span
           class="text-muted"
-          v-b-tooltip.hover
-          :title="$t('admin.api_key_public_id_tooltip')"
+          v-b-tooltip.hover="$t('admin.api_key_public_id_tooltip')"
           >{{ $t('admin.api_key_public_id') }}:</span
         >
-        <span class="text-monospace ml-2">{{ apiKey.publicId }}</span>
+        <span class="font-monospace ms-2">{{ apiKey.publicId }}</span>
       </span>
       <div class="d-flex flex-shrink-0">
         <b-badge
           v-if="expiryState"
-          class="ml-3 align-self-center"
+          class="ms-3 align-self-center"
           :variant="expiryState === 'expired' ? 'danger' : 'warning'"
-          v-b-tooltip.hover
-          :title="$t('admin.api_key_replace_tooltip')"
+          v-b-tooltip.hover="$t('admin.api_key_replace_tooltip')"
           >{{
             expiryState === 'expired'
               ? $t('admin.api_key_expired')
@@ -25,9 +23,8 @@
         >
         <span
           v-if="apiKey.legacy"
-          class="ml-3"
-          v-b-tooltip.hover
-          :title="$t('admin.old_key_format')"
+          class="ms-3"
+          v-b-tooltip.hover="$t('admin.old_key_format')"
           ><i
             class="fa fa-exclamation-triangle status-warning"
             aria-hidden="true"
@@ -36,48 +33,47 @@
         <b-button
           v-if="editable"
           size="sm"
-          class="action-icon ml-3"
-          v-b-tooltip.hover
-          v-b-modal="`editApiKeyCommentModal-${keyId}`"
-          :title="$t('admin.edit_api_key_comment')"
+          class="action-icon ms-3"
+          v-b-tooltip.hover="$t('admin.edit_api_key_comment')"
+          @click="showEditApiKeyCommentModal = true"
         >
           <span class="fa fa-edit"></span>
         </b-button>
         <b-button
           v-if="editable"
           size="sm"
-          class="action-icon ml-3"
+          class="action-icon ms-3"
           v-on:click="$emit('regenerateClicked')"
-          v-b-tooltip.hover
-          :title="$t('admin.regenerate_api_key_title')"
+          v-b-tooltip.hover="$t('admin.regenerate_api_key_title')"
         >
           <span class="fa fa-repeat"></span>
         </b-button>
         <b-button
           size="sm"
-          class="action-icon ml-3"
+          class="action-icon ms-3"
           v-on:click="$emit('removeClicked')"
-          v-b-tooltip.hover
-          :title="$t('admin.remove_api_key')"
+          v-b-tooltip.hover="$t('admin.remove_api_key')"
         >
           <span class="fa fa-trash-o"></span>
         </b-button>
       </div>
     </div>
     <edit-api-key-comment-modal
+      v-model="showEditApiKeyCommentModal"
       v-if="editable"
       :key-id="keyId"
       :api-key="apiKey"
+      v-on:commentUpdated="(comment) => $emit('commentUpdated', comment)"
     />
-    <p class="my-2" :class="{ 'text-muted font-italic': !apiKey.comment }">
+    <p class="my-2" :class="{ 'text-muted fst-italic': !apiKey.comment }">
       {{ comment }}
     </p>
     <small class="api-key-timestamps text-muted">
-      <span v-b-tooltip.hover :title="$t('admin.api_key_created_tooltip')"
+      <span v-b-tooltip.hover="$t('admin.api_key_created_tooltip')"
         >{{ $t('admin.api_key_created') }}:</span
       >
       <span>{{ createdTimestamp }}</span>
-      <span v-b-tooltip.hover :title="$t('admin.api_key_last_used_tooltip')"
+      <span v-b-tooltip.hover="$t('admin.api_key_last_used_tooltip')"
         >{{ $t('admin.api_key_last_used') }}:</span
       >
       <span>{{ lastUsedTimestamp }}</span>
@@ -104,8 +100,14 @@ export default {
     apiKey: Object,
     editable: { type: Boolean, default: true },
   },
+  emits: ['regenerateClicked', 'removeClicked', 'commentUpdated'],
   components: {
     EditApiKeyCommentModal,
+  },
+  data() {
+    return {
+      showEditApiKeyCommentModal: false,
+    };
   },
   computed: {
     keyId: function () {
@@ -154,7 +156,7 @@ export default {
   column-gap: 0.5rem;
 }
 
-.list-group-item .form-group {
+.list-group-item .b-form-group {
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
@@ -173,14 +175,14 @@ export default {
 }
 
 .action-icon .fa-edit {
-  color: var(--secondary);
+  color: var(--dt-text-muted);
 }
 
 .action-icon .fa-repeat {
-  color: var(--secondary);
+  color: var(--dt-text-muted);
 }
 
 .action-icon .fa-trash-o {
-  color: var(--danger);
+  color: var(--dt-severity-critical-text);
 }
 </style>

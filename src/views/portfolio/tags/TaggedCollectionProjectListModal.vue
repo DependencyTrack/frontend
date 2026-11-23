@@ -1,10 +1,8 @@
 <template>
   <b-modal
-    :id="`taggedCollectionProjectListModal-${index}`"
+    v-model="visible"
     size="lg"
-    hide-header-close
     no-stacking
-    v-permission="'VIEW_PORTFOLIO'"
     :title="$t('message.collection_projects_using_tag', { tag: this.tag })"
   >
     <bootstrap-table
@@ -14,8 +12,8 @@
       :options="options"
     >
     </bootstrap-table>
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()"
+    <template v-slot:footer="{ cancel }">
+      <b-button variant="secondary" @click="cancel()"
         >{{ $t('message.cancel') }}
       </b-button>
     </template>
@@ -28,13 +26,13 @@ import permissionsMixin from '../../../mixins/permissionsMixin';
 import common from '../../../shared/common';
 import router from '@/router';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
   props: {
     tag: String,
-    index: Number,
   },
-  mixins: [bootstrapTableMixin, permissionsMixin],
+  mixins: [bootstrapTableMixin, permissionsMixin, modalMixin],
   methods: {
     apiUrl: function () {
       return `${this.$api.BASE_URL}/${this.$api.URL_TAG}/${encodeURIComponent(this.tag)}/collectionProject`;
@@ -49,10 +47,6 @@ export default {
   },
   data() {
     return {
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       columns: [
         {
           title: this.$t('message.name'),
@@ -63,7 +57,7 @@ export default {
             const href = router.resolve({
               name: 'Project',
               params: { uuid: row.uuid },
-            }).route.fullPath;
+            }).fullPath;
             return `<a href="${href}">${xssFilters.inHTMLData(value)}</a>`;
           },
         },

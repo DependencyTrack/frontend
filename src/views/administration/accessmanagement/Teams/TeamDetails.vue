@@ -11,8 +11,7 @@
           v-model="name"
           lazy="true"
           autofocus="true"
-          v-debounce:750ms="updateTeam"
-          :debounce-events="'keyup'"
+          @keyup="debouncedUpdateTeam"
         />
         <b-form-group :label="this.$t('admin.api_keys')">
           <p class="text-muted small">
@@ -28,6 +27,13 @@
               :api-key="apiKeys[key]"
               v-on:removeClicked="removeApiKey(apiKeys[key])"
               v-on:regenerateClicked="regenerateApiKey(apiKeys[key])"
+              v-on:commentUpdated="
+                (comment) =>
+                  syncVariables('replaceKey', {
+                    old: apiKeys[key],
+                    new: { ...apiKeys[key], comment },
+                  })
+              "
             />
             <actionable-list-group-item
               :add-icon="true"
@@ -47,9 +53,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectPermissionModal')
-              "
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -64,9 +68,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectLdapGroupModal')
-              "
+              v-on:actionClicked="showSelectLdapGroupModal = true"
             />
           </div>
         </b-form-group>
@@ -81,9 +83,7 @@
             />
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectOidcGroupModal')
-              "
+              v-on:actionClicked="showSelectOidcGroupModal = true"
             />
           </div>
         </b-form-group>
@@ -153,32 +153,55 @@
       </b-col>
     </b-row>
     <select-permission-modal
+      v-model="showSelectPermissionModal"
       :currentPermissions="permissions"
       v-on:selection="updatePermissionSelection"
     />
-    <select-ldap-group-modal v-on:selection="updateLdapGroupSelection" />
-    <select-oidc-group-modal v-on:selection="updateOidcGroupSelection" />
+    <select-ldap-group-modal
+      v-model="showSelectLdapGroupModal"
+      v-on:selection="updateLdapGroupSelection"
+    />
+    <select-oidc-group-modal
+      v-model="showSelectOidcGroupModal"
+      v-on:selection="updateOidcGroupSelection"
+    />
+    <b-modal
+      v-model="showApiKeyModal"
+      :title="shownApiKey.title"
+      ok-only
+      button-size="sm"
+      centered
+      footer-class="d-flex justify-content-center"
+      body-class="d-flex flex-column align-items-center"
+    >
+      <p class="text-center">{{ shownApiKey.message }}</p>
+      <pre
+        class="b-input-group-form-input plaintext"
+        style="overflow-x: auto"
+        >{{ shownApiKey.key }}</pre>
+      <copy-to-clipboard-button :value="shownApiKey.key" />
+    </b-modal>
   </div>
 </template>
 
 <script>
 import EventBus from '../../../../shared/eventbus';
-import ActionableListGroupItem from '../../../components/ActionableListGroupItem';
+import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import ApiKeyListGroupItem from '../ApiKeyListGroupItem.vue';
-import SelectLdapGroupModal from '../SelectLdapGroupModal';
-import SelectOidcGroupModal from '../SelectOidcGroupModal';
-import SelectPermissionModal from '../SelectPermissionModal';
+import CopyToClipboardButton from '../../../components/CopyToClipboardButton.vue';
+import SelectLdapGroupModal from '../SelectLdapGroupModal.vue';
+import SelectOidcGroupModal from '../SelectOidcGroupModal.vue';
+import SelectPermissionModal from '../SelectPermissionModal.vue';
 import permissionsMixin from '../../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput';
-import i18n from '../../../../i18n';
-import _ from 'lodash';
+import BInputGroupFormInput from '../../../../forms/BInputGroupFormInput.vue';
+import { debounce, omit } from 'lodash-es';
 
 export default {
-  i18n,
   mixins: [permissionsMixin],
   components: {
     ActionableListGroupItem,
     ApiKeyListGroupItem,
+    CopyToClipboardButton,
     SelectLdapGroupModal,
     SelectOidcGroupModal,
     SelectPermissionModal,
@@ -191,6 +214,11 @@ export default {
   },
   data() {
     return {
+      showSelectPermissionModal: false,
+      showSelectLdapGroupModal: false,
+      showSelectOidcGroupModal: false,
+      showApiKeyModal: false,
+      shownApiKey: {},
       team: this.row,
       name: this.row.name,
       apiKeys: this.apiKeysToDict(this.row.apiKeys ?? []),
@@ -201,10 +229,6 @@ export default {
       ldapUsers: this.row.ldapUsers,
       oidcUsers: this.row.oidcUsers,
       serviceAccounts: this.row.serviceAccounts,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
       storageIdentifier: `TeamDetail:${this.row.uuid}`,
     };
   },
@@ -243,6 +267,9 @@ export default {
       );
     },
   },
+  created() {
+    this.debouncedUpdateTeam = debounce(this.updateTeam, 750);
+  },
   methods: {
     apiKeysToDict: function (apiKeys) {
       return Object.fromEntries(apiKeys.map((item) => [item.publicId, item]));
@@ -253,54 +280,35 @@ export default {
       try {
         const response = await this.axios.post(endpoint, requestBody);
         this.team = response.data;
-        EventBus.$emit(this.rowEvents.update, this.index, this.team);
+        EventBus.emit(this.rowEvents.update, this.index, this.team);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
     deleteTeam: async function () {
+      if (!(await this.$confirmDelete({ title: this.$t('admin.delete_team') })))
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}`;
       const requestBody = { data: { uuid: this.team.uuid } };
       try {
         await this.axios.delete(endpoint, requestBody);
-        EventBus.$emit(this.rowEvents.delete, this.index);
+        EventBus.emit(this.rowEvents.delete, this.index);
         this.$toastr.s(this.$t('admin.team_deleted'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
-    popup: async function (title, message, key) {
-      const h = this.$createElement;
-      const titleVNode = h('div', {
-        domProps: { innerHTML: title },
-      });
-      const messageVNode = h('div', { class: ['foobar'] }, [
-        h('p', { class: ['text-center'] }, [message]),
-        h(
-          'pre',
-          {
-            class: ['b-input-group-form-input', 'text-white', 'plaintext'],
-            style: { overflowX: 'auto' },
-          },
-          key,
-        ),
-      ]);
-      return this.$bvModal.msgBoxOk([messageVNode], {
-        title: [titleVNode],
-        buttonSize: 'sm',
-        centered: true,
-        size: 'md',
-        footerClass: 'd-flex justify-content-center',
-        bodyClass: 'd-flex flex-column align-items-center',
-      });
+    popup: function (title, message, key) {
+      this.shownApiKey = { title, message, key };
+      this.showApiKeyModal = true;
     },
     async createApiKey() {
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/${this.team.uuid}/key`;
       try {
         const response = await this.axios.put(endpoint);
         this.$toastr.s(this.$t('message.updated'));
-        await this.popup(
+        this.popup(
           this.$t('admin.new_api_key_title'),
           this.$t('admin.new_api_key'),
           response.data.key,
@@ -312,7 +320,7 @@ export default {
       }
     },
     async regenerateApiKey(apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
+      const confirmed = await this.$confirm(
         this.$t('admin.regenerate_api_key_confirm'),
         {
           title: this.$t('admin.regenerate_api_key_title'),
@@ -327,7 +335,7 @@ export default {
       try {
         const response = await this.axios.post(endpoint);
         this.$toastr.s(this.$t('message.updated'));
-        await this.popup(
+        this.popup(
           this.$t('admin.regenerate_api_key_title'),
           this.$t('admin.regenerate_api_key'),
           response.data.key,
@@ -339,17 +347,13 @@ export default {
       }
     },
     removeApiKey: async function (apiKey) {
-      const confirmed = await this.$bvModal.msgBoxConfirm(
-        this.$t('admin.remove_api_key_confirm'),
-        {
+      if (
+        !(await this.$confirmDelete({
           title: this.$t('admin.remove_api_key'),
-          okVariant: 'danger',
-          okTitle: this.$t('message.delete'),
-          cancelTitle: this.$t('message.cancel'),
-          centered: true,
-        },
-      );
-      if (!confirmed) return;
+          message: this.$t('admin.remove_api_key_confirm'),
+        }))
+      )
+        return;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_TEAM}/key/${apiKey.publicId}`;
       try {
         await this.axios.delete(endpoint);
@@ -361,7 +365,7 @@ export default {
       }
     },
     updateLdapGroupSelection: async function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectLdapGroupModal');
+      this.showSelectLdapGroupModal = false;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_LDAP_MAPPING}`;
       try {
         const responses = await Promise.all(
@@ -390,12 +394,12 @@ export default {
         await this.axios.delete(endpoint);
         this.syncVariables('removeLdapMapping', mapping);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
     updateOidcGroupSelection: async function (selections) {
-      this.$root.$emit('bv::hide::modal', 'selectOidcGroupModal');
+      this.showSelectOidcGroupModal = false;
       const endpoint = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_MAPPING}`;
       try {
         const responses = await Promise.all(
@@ -447,7 +451,7 @@ export default {
         const response = await this.axios.delete(endpoint);
         this.syncVariables('team', response.data);
         this.$toastr.s(this.$t('message.updated'));
-      } catch (error) {
+      } catch {
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
       }
     },
@@ -469,7 +473,7 @@ export default {
         const response = await this.axios.get(endpoint);
         response.data.permissions = response.data.permissions ?? [];
         response.data.apiKeys = response.data.apiKeys ?? [];
-        EventBus.$emit(this.rowEvents.update, this.index, response.data);
+        EventBus.emit(this.rowEvents.update, this.index, response.data);
       } catch (error) {
         console.error(error);
         this.$toastr.w(this.$t('condition.unsuccessful_action'));
@@ -481,7 +485,7 @@ export default {
       const updateTeamArray = (prop, updater) => {
         const arr = this.team[prop] ?? [];
         const result = updater(arr);
-        this.$set(this.team, prop, result);
+        this.team = { ...this.team, [prop]: result };
       };
 
       // operations that should be done on the team instance
@@ -492,7 +496,7 @@ export default {
           this.team = data;
         },
         addKey: () => {
-          updateTeamArray('apiKeys', (arr) => [...arr, _.omit(data, 'key')]);
+          updateTeamArray('apiKeys', (arr) => [...arr, omit(data, 'key')]);
         },
         removeKey: () => {
           updateTeamArray('apiKeys', (arr) =>
@@ -502,9 +506,7 @@ export default {
         replaceKey: () => {
           const updater = (arr) =>
             arr.map((key) =>
-              key.publicId === data.old.publicId
-                ? _.omit(data.new, 'key')
-                : key,
+              key.publicId === data.old.publicId ? omit(data.new, 'key') : key,
             );
           updateTeamArray('apiKeys', updater);
         },

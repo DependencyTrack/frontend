@@ -1,52 +1,55 @@
 <template>
   <b-modal
-    id="createOidcGroupModal"
-    size="md"
-    @hide="resetValues()"
-    hide-header-close
+    v-model="visible"
+    @hidden="resetValues()"
     no-stacking
+    focus="name-input-input"
     :title="$t('admin.create_oidc_group')"
+    :ok-title="$t('message.create')"
+    :cancel-title="$t('message.close')"
+    :ok-disabled="submitting"
+    :no-close-on-esc="submitting"
+    :no-close-on-backdrop="submitting"
+    @ok.prevent="createGroup()"
   >
-    <b-input-group-form-input
-      id="name-input"
-      input-group-size="mb-3"
-      type="text"
-      v-model="name"
-      lazy="true"
-      required="true"
-      feedback="true"
-      autofocus="false"
-      :label="$t('admin.oidc_group_name')"
-      :feedback-text="$t('admin.required_oidc_group_name')"
-    />
-
-    <template v-slot:modal-footer="{ cancel }">
-      <b-button size="md" variant="secondary" @click="cancel()">{{
-        $t('message.close')
-      }}</b-button>
-      <b-button size="md" variant="primary" @click="createGroup()">{{
-        $t('message.create')
-      }}</b-button>
-    </template>
+    <b-form @submit.prevent="createGroup()">
+      <b-input-group-form-input
+        id="name-input"
+        input-group-size="mb-3"
+        type="text"
+        v-model="name"
+        lazy="true"
+        required="true"
+        feedback="true"
+        autofocus="false"
+        :label="$t('admin.oidc_group_name')"
+        :feedback-text="$t('admin.required_oidc_group_name')"
+      />
+    </b-form>
   </b-modal>
 </template>
 
 <script>
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import BInputGroupFormInput from '../../../forms/BInputGroupFormInput';
+import BInputGroupFormInput from '../../../forms/BInputGroupFormInput.vue';
+import modalMixin from '@/mixins/modalMixin';
 
 export default {
-  mixins: [permissionsMixin],
+  mixins: [permissionsMixin, modalMixin],
   components: {
     BInputGroupFormInput,
   },
+  emits: ['refreshTable'],
   data() {
     return {
+      submitting: false,
       name: null,
     };
   },
   methods: {
     createGroup: function () {
+      if (this.submitting) return;
+      this.submitting = true;
       let url = `${this.$api.BASE_URL}/${this.$api.URL_OIDC_GROUP}`;
       this.axios
         .put(url, {
@@ -55,12 +58,14 @@ export default {
         .then(() => {
           this.$emit('refreshTable');
           this.$toastr.s(this.$t('admin.oidc_group_created'));
+          this.visible = false;
         })
         .catch(() => {
           this.$toastr.w(this.$t('condition.unsuccessful_action'));
+        })
+        .finally(() => {
+          this.submitting = false;
         });
-      this.$root.$emit('bv::hide::modal', 'createOidcGroupModal');
-      this.resetValues();
     },
     resetValues: function () {
       this.name = null;

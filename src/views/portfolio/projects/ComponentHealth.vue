@@ -6,9 +6,6 @@
     <div v-else-if="state === 'empty'" class="state">
       {{ $t('message.health_no_metadata') }}
     </div>
-    <div v-else-if="state === 'in_progress'" class="state">
-      {{ $t('message.health_in_progress') }}
-    </div>
     <div v-else-if="state === 'not_available'" class="state">
       {{ $t('message.health_not_available') }}
     </div>
@@ -31,11 +28,11 @@
               <dt>{{ $t('message.health_retrieved_label') }}</dt>
               <dd>{{ retrievedAt }}</dd>
               <dt>{{ $t('message.health_project_metadata_as_of') }}</dt>
-              <dd>{{ metadataAsOf }}</dd>
+              <dd>{{ formatStamp(metrics.project_metadata_observed_at) }}</dd>
               <dt>{{ $t('message.health_scorecard_generated') }}</dt>
-              <dd>{{ scorecardGenerated }}</dd>
+              <dd>{{ formatStamp(metrics.scorecard_timestamp) }}</dd>
               <dt>{{ $t('message.health_scorecard_engine') }}</dt>
-              <dd>{{ orMissing(metrics.scorecard_reference_version) }}</dd>
+              <dd>{{ metrics.scorecard_reference_version || missingLabel }}</dd>
             </dl>
           </div>
         </details>
@@ -44,7 +41,6 @@
         <div class="stat score-stat">
           <div
             class="score-ring"
-            :class="ringTone"
             :style="ringColor ? { color: ringColor } : null"
             role="img"
             :aria-label="ringLabel"
@@ -52,19 +48,19 @@
             <svg viewBox="0 0 60 60" aria-hidden="true">
               <circle class="ring-track" cx="30" cy="30" r="26"></circle>
               <circle
-                v-if="ringPercent > 0"
+                v-if="ringScore"
                 class="ring-score"
                 cx="30"
                 cy="30"
                 r="26"
                 pathLength="100"
-                :stroke-dasharray="ringDash"
+                :stroke-dasharray="ringScore * 10 + ' 100'"
                 transform="rotate(-90 30 30)"
               ></circle>
             </svg>
             <span class="ring-number" aria-hidden="true">
-              <template v-if="ringAvailable">
-                {{ ringDisplay
+              <template v-if="ringScore != null">
+                {{ formatScorecardScore(ringScore)
                 }}<small>{{ $t('message.health_ring_scale') }}</small>
               </template>
               <template v-else>{{ missingLabel }}</template>
@@ -75,14 +71,20 @@
               $t('message.health_openssf_scorecard')
             }}</span>
             <span class="meta">{{
-              $t('message.health_generated_on', { date: generatedDate })
+              $t('message.health_generated_on', {
+                date: formatStamp(metrics.scorecard_timestamp, false),
+              })
             }}</span>
           </div>
         </div>
         <div class="stat">
           <span class="statlabel">{{ $t('message.health_last_commit') }}</span>
-          <strong class="repo-value">{{ lastCommitValue }}</strong>
-          <span class="meta">{{ lastCommitMeta }}</span>
+          <strong class="repo-value">{{
+            formatStamp(metrics.last_commit, false)
+          }}</strong>
+          <span class="meta">{{
+            $t('message.health_repository_activity')
+          }}</span>
         </div>
         <div class="stat">
           <span class="statlabel">{{ $t('message.health_repository') }}</span>
@@ -174,18 +176,12 @@
               <span class="meta">{{ $t('message.health_source_github') }}</span>
             </div>
             <dl class="metrics">
-              <dt>{{ $t('message.health_readme') }}</dt>
-              <dd :class="featureClass(metrics.has_readme)">
-                {{ featureLabel(metrics.has_readme) }}
-              </dd>
-              <dt>{{ $t('message.health_code_of_conduct') }}</dt>
-              <dd :class="featureClass(metrics.has_code_of_conduct)">
-                {{ featureLabel(metrics.has_code_of_conduct) }}
-              </dd>
-              <dt>{{ $t('message.health_security_policy') }}</dt>
-              <dd :class="featureClass(metrics.has_security_policy)">
-                {{ featureLabel(metrics.has_security_policy) }}
-              </dd>
+              <template v-for="feature in features" :key="feature.label">
+                <dt>{{ feature.label }}</dt>
+                <dd :class="feature.value === true ? 'present' : 'absent'">
+                  {{ featureLabel(feature.value) }}
+                </dd>
+              </template>
             </dl>
           </section>
         </div>
@@ -194,300 +190,201 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import axios from 'axios';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ScorecardChecks from './ScorecardChecks.vue';
+import api from '@/shared/api.json';
+import common from '@/shared/common';
 import {
   HEALTH_SCORE_COLOR,
   healthScoreTone,
   parseHealthScore,
-} from '../../../shared/healthScoreTone';
-import { formatScorecardScore } from '../../../shared/scorecardColumn';
-import common from '../../../shared/common';
+} from '@/shared/healthScoreTone';
+import { formatScorecardScore } from '@/shared/scorecardColumn';
 
-export default {
-  name: 'ComponentHealth',
-  components: {
-    ScorecardChecks,
+const GITHUB_FIELDS = [
+  'github_url',
+  'contributors',
+  'commit_frequency_weekly',
+  'open_issues',
+  'open_prs',
+  'last_commit',
+  'bus_factor',
+  'files',
+  'is_repo_archived',
+  'has_readme',
+  'has_code_of_conduct',
+  'has_security_policy',
+];
+const DEPS_DEV_FIELDS = [
+  'deps_dev_url',
+  'dependents',
+  'stars',
+  'forks',
+  'project_metadata_observed_at',
+];
+const SCORECARD_FIELDS = [
+  'scorecard_score',
+  'scorecard_checks',
+  'scorecard_timestamp',
+  'scorecard_reference_version',
+];
+
+const props = defineProps({
+  uuid: { type: String, required: true },
+});
+const emit = defineEmits(['score']);
+
+const { t, locale } = useI18n();
+const metrics = ref(null);
+const state = ref('loading');
+const checkSort = ref('score');
+
+const missingLabel = computed(() => t('message.health_missing'));
+const checkSortOptions = computed(() => [
+  { value: 'score', text: t('message.health_lowest_scores_first') },
+  { value: 'risk', text: t('message.health_highest_risk_first') },
+]);
+const retrievedAt = computed(() => formatStamp(metrics.value.last_fetch));
+const archivedLabel = computed(() => {
+  const archived = metrics.value.is_repo_archived;
+  if (archived == null) {
+    return missingLabel.value;
+  }
+  return archived
+    ? t('message.health_archived')
+    : t('message.health_not_archived');
+});
+const issueAgeLabel = computed(() => {
+  const formatted = formatNumber(metrics.value.avg_issue_age_days, 1);
+  return formatted === missingLabel.value
+    ? formatted
+    : t('message.health_days_value', { value: formatted });
+});
+const features = computed(() => [
+  { label: t('message.health_readme'), value: metrics.value.has_readme },
+  {
+    label: t('message.health_code_of_conduct'),
+    value: metrics.value.has_code_of_conduct,
   },
-  props: {
-    uuid: String,
+  {
+    label: t('message.health_security_policy'),
+    value: metrics.value.has_security_policy,
   },
-  data() {
-    return {
-      metrics: null,
-      state: 'loading',
-      checkSort: 'score',
-    };
-  },
-  computed: {
-    missingLabel() {
-      return this.$t('message.health_missing');
-    },
-    checkSortOptions() {
-      return [
-        { value: 'score', text: this.$t('message.health_lowest_scores_first') },
-        { value: 'risk', text: this.$t('message.health_highest_risk_first') },
-      ];
-    },
-    retrievedAt() {
-      return this.formatStamp(this.metrics && this.metrics.last_fetch, true);
-    },
-    metadataAsOf() {
-      return this.formatStamp(
-        this.metrics && this.metrics.project_metadata_observed_at,
-        true,
-      );
-    },
-    scorecardGenerated() {
-      return this.formatStamp(
-        this.metrics && this.metrics.scorecard_timestamp,
-        true,
-      );
-    },
-    generatedDate() {
-      return this.formatStamp(
-        this.metrics && this.metrics.scorecard_timestamp,
-        false,
-      );
-    },
-    lastCommitValue() {
-      return this.formatStamp(this.metrics && this.metrics.last_commit, false);
-    },
-    lastCommitMeta() {
-      return this.$t('message.health_repository_activity');
-    },
-    archivedLabel() {
-      const value = this.metrics && this.metrics.is_repo_archived;
-      if (value === true) {
-        return this.$t('message.health_archived');
-      }
-      if (value === false) {
-        return this.$t('message.health_not_archived');
-      }
-      return this.missingLabel;
-    },
-    issueAgeLabel() {
-      const formatted = this.formatNumber(
-        this.metrics && this.metrics.avg_issue_age_days,
-        1,
-      );
-      if (formatted === this.missingLabel) {
-        return formatted;
-      }
-      return this.$t('message.health_days_value', { value: formatted });
-    },
-    githubHref() {
-      return this.externalHref(this.metrics && this.metrics.github_url);
-    },
-    depsDevHref() {
-      return this.externalHref(this.metrics && this.metrics.deps_dev_url);
-    },
-    sourceLabel() {
-      const names = [];
-      if (this.hasGithub) {
-        names.push(this.$t('message.health_source_github'));
-      }
-      if (this.hasDepsDev) {
-        names.push(this.$t('message.health_source_deps_dev'));
-      }
-      if (this.hasScorecard) {
-        names.push(this.$t('message.health_openssf_scorecard'));
-      }
-      return names.length ? names.join(' · ') : this.missingLabel;
-    },
-    hasGithub() {
-      return this.hasAny([
-        'github_url',
-        'contributors',
-        'commit_frequency_weekly',
-        'open_issues',
-        'open_prs',
-        'last_commit',
-        'bus_factor',
-        'files',
-        'is_repo_archived',
-        'has_readme',
-        'has_code_of_conduct',
-        'has_security_policy',
-      ]);
-    },
-    hasDepsDev() {
-      return this.hasAny([
-        'deps_dev_url',
-        'dependents',
-        'stars',
-        'forks',
-        'project_metadata_observed_at',
-      ]);
-    },
-    hasScorecard() {
-      return this.hasAny([
-        'scorecard_score',
-        'scorecard_checks',
-        'scorecard_timestamp',
-        'scorecard_reference_version',
-      ]);
-    },
-    ringScore() {
-      return parseHealthScore(this.metrics && this.metrics.scorecard_score);
-    },
-    ringAvailable() {
-      return this.ringScore != null;
-    },
-    ringDisplay() {
-      return this.ringAvailable ? formatScorecardScore(this.ringScore) : '';
-    },
-    ringPercent() {
-      if (!this.ringAvailable) {
-        return 0;
-      }
-      return (this.ringScore / 10) * 100;
-    },
-    ringTone() {
-      const tone = healthScoreTone(this.ringScore);
-      return tone ? 'is-' + tone : 'is-unavailable';
-    },
-    ringColor() {
-      const tone = healthScoreTone(this.ringScore);
-      return tone ? HEALTH_SCORE_COLOR[tone] : null;
-    },
-    ringDash() {
-      return this.ringPercent + ' 100';
-    },
-    ringLabel() {
-      if (!this.ringAvailable) {
-        return this.$t('message.health_scorecard_aria_unavailable');
-      }
-      return this.$t('message.health_scorecard_aria', {
-        score: this.ringDisplay,
-      });
-    },
-  },
-  methods: {
-    hasAny(fields) {
-      return fields.some((field) => {
-        const value = this.metrics && this.metrics[field];
-        if (Array.isArray(value)) {
-          return value.length > 0;
-        }
-        return value != null && value !== '';
-      });
-    },
-    externalHref(url) {
-      if (typeof url !== 'string' || url === '') {
-        return null;
-      }
-      try {
-        const parsed = new URL(url);
-        if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
-          return parsed.href;
-        }
-      } catch {
-        return null;
-      }
-      return null;
-    },
-    isBlank(value) {
-      return value === null || value === undefined || value === '';
-    },
-    orMissing(value) {
-      return this.isBlank(value) ? this.missingLabel : value;
-    },
-    formatNumber(value, digits) {
-      if (this.isBlank(value)) {
-        return this.missingLabel;
-      }
-      const numeric = Number(value);
-      if (!Number.isFinite(numeric)) {
-        return this.missingLabel;
-      }
-      const fractionDigits =
-        digits == null
-          ? undefined
-          : { minimumFractionDigits: digits, maximumFractionDigits: digits };
-      return new Intl.NumberFormat(this.$i18n.locale, fractionDigits).format(
-        numeric,
-      );
-    },
-    featureLabel(value) {
-      if (value === true) {
-        return this.$t('message.health_present');
-      }
-      if (value === false) {
-        return this.$t('message.health_not_present');
-      }
-      return this.$t('message.health_unknown');
-    },
-    featureClass(value) {
-      return {
-        present: value === true,
-        absent: value !== true,
-      };
-    },
-    formatStamp(value, includeTime) {
-      if (this.isBlank(value) || Number.isNaN(new Date(value).getTime())) {
-        return this.missingLabel;
-      }
-      return common.formatTimestamp(value, includeTime);
-    },
-    badgeScore(data) {
-      if (
-        !data ||
-        data.status !== 'PROCESSED' ||
-        data.scorecard_score == null
-      ) {
-        return null;
-      }
-      return data.scorecard_score;
-    },
-    publishScore(data) {
-      this.$emit('score', this.badgeScore(data));
-    },
-    fetchMetrics() {
-      const url = `${this.$api.BASE_URL}/api/v2/components/${this.uuid}/health`;
-      this.axios
-        .get(url)
-        .then((response) => {
-          const data = response.data || {};
-          if (data.status === 'IN_PROGRESS') {
-            this.state = 'in_progress';
-            this.publishScore(null);
-            return;
-          }
-          if (data.status === 'NOT_AVAILABLE') {
-            this.state = 'not_available';
-            this.publishScore(null);
-            return;
-          }
-          this.metrics = data;
-          this.state = 'ready';
-          this.publishScore(data);
-        })
-        .catch((err) => {
-          if (err.response && err.response.status === 404) {
-            this.state = 'empty';
-          } else {
-            this.state = 'error';
-          }
-          this.publishScore(null);
-        });
-    },
-  },
-  mounted() {
-    this.fetchMetrics();
-  },
-};
+]);
+const githubHref = computed(() => externalHref(metrics.value.github_url));
+const depsDevHref = computed(() => externalHref(metrics.value.deps_dev_url));
+const sourceLabel = computed(() => {
+  const names = [];
+  if (hasAny(GITHUB_FIELDS)) {
+    names.push(t('message.health_source_github'));
+  }
+  if (hasAny(DEPS_DEV_FIELDS)) {
+    names.push(t('message.health_source_deps_dev'));
+  }
+  if (hasAny(SCORECARD_FIELDS)) {
+    names.push(t('message.health_openssf_scorecard'));
+  }
+  return names.length ? names.join(' · ') : missingLabel.value;
+});
+const ringScore = computed(() =>
+  parseHealthScore(metrics.value.scorecard_score),
+);
+const ringColor = computed(
+  () => HEALTH_SCORE_COLOR[healthScoreTone(ringScore.value)],
+);
+const ringLabel = computed(() =>
+  ringScore.value == null
+    ? t('message.health_scorecard_aria_unavailable')
+    : t('message.health_scorecard_aria', {
+        score: formatScorecardScore(ringScore.value),
+      }),
+);
+
+function hasAny(fields) {
+  return fields.some((field) => {
+    const value = metrics.value[field];
+    return Array.isArray(value)
+      ? value.length > 0
+      : value != null && value !== '';
+  });
+}
+
+function externalHref(url) {
+  if (!url) {
+    return null;
+  }
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:'
+      ? parsed.href
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function formatNumber(value, digits) {
+  const numeric = value == null || value === '' ? NaN : Number(value);
+  if (!Number.isFinite(numeric)) {
+    return missingLabel.value;
+  }
+  const options =
+    digits == null
+      ? undefined
+      : { minimumFractionDigits: digits, maximumFractionDigits: digits };
+  return new Intl.NumberFormat(locale.value, options).format(numeric);
+}
+
+function featureLabel(value) {
+  if (value == null) {
+    return t('message.health_unknown');
+  }
+  return value ? t('message.health_present') : t('message.health_not_present');
+}
+
+function formatStamp(value, includeTime = true) {
+  if (!value || Number.isNaN(new Date(value).getTime())) {
+    return missingLabel.value;
+  }
+  return common.formatTimestamp(value, includeTime);
+}
+
+async function fetchMetrics() {
+  try {
+    // A component without stored health is expected, so 404 must not raise the global error toast.
+    const response = await axios.get(
+      `${api.BASE_URL}/api/v2/components/${props.uuid}/health`,
+      { validateStatus: (status) => status === 200 || status === 404 },
+    );
+    if (response.status === 404) {
+      state.value = 'empty';
+    } else if (response.data.status === 'NOT_AVAILABLE') {
+      state.value = 'not_available';
+    } else {
+      metrics.value = response.data;
+      state.value = 'ready';
+      emit('score', parseHealthScore(response.data.scorecard_score));
+      return;
+    }
+  } catch {
+    state.value = 'error';
+  }
+  emit('score', null);
+}
+
+onMounted(fetchMetrics);
 </script>
 
-<style lang="scss" scoped>
-@import '../../../assets/scss/variables';
-
+<style scoped>
 .health-view {
   box-sizing: border-box;
   width: 100%;
   padding: 10px 12px;
   background: transparent;
-  color: $body-color;
+  color: var(--dt-text);
   font-size: 12px;
   line-height: 16px;
 }
@@ -498,7 +395,7 @@ export default {
 
 .state {
   padding: 16px 0;
-  color: $grey-600;
+  color: var(--dt-text-muted);
   text-align: center;
 }
 
@@ -513,6 +410,7 @@ export default {
 
 h1 {
   margin: 0;
+  color: var(--dt-text-heading);
   font-size: 14px;
   line-height: 18px;
   font-weight: 600;
@@ -520,18 +418,11 @@ h1 {
 
 .meta {
   font-size: 11px;
-  color: $grey-600;
+  color: var(--dt-text-muted);
 }
 
 .source-links a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-.source-links a:hover,
-.source-links a:focus-visible {
-  color: var(--primary-lighter);
-  text-decoration: underline;
+  color: var(--dt-accent);
 }
 
 .sources {
@@ -540,13 +431,8 @@ h1 {
 }
 
 summary {
-  color: var(--primary);
+  color: var(--dt-accent);
   cursor: pointer;
-}
-
-summary:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
 }
 
 .sources-panel {
@@ -555,13 +441,17 @@ summary:focus-visible {
   top: 23px;
   width: 310px;
   padding: 12px;
-  background: $dropdown-bg;
-  border: 1px solid $dropdown-border-color;
+  background: var(--dt-surface-raised);
+  border: 1px solid var(--dt-border-control);
   border-radius: 3px;
   z-index: 3;
   font-size: 12px;
   line-height: 19px;
   overflow-wrap: anywhere;
+}
+
+.sources-panel strong {
+  color: var(--dt-text-heading);
 }
 
 .sources-panel dl {
@@ -571,7 +461,7 @@ summary:focus-visible {
 }
 
 .sources-panel dt {
-  color: $grey-600;
+  color: var(--dt-text-muted);
   margin-top: 6px;
 }
 
@@ -580,13 +470,24 @@ summary:focus-visible {
   text-align: left;
 }
 
+.summary,
+.panel {
+  background: var(--dt-surface-card);
+  border: 1px solid var(--dt-border);
+  border-radius: 3px;
+}
+
+/* Matches the light theme's cards, which trade the faint border for a line and a shadow. */
+[data-bs-theme='light'] .summary,
+[data-bs-theme='light'] .panel {
+  border-color: var(--dt-line);
+  box-shadow: 0 1px 2px rgba(28, 34, 48, 0.08);
+}
+
 .summary {
   height: 64px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  background: $card-bg;
-  border: 1px solid $border-color;
-  border-radius: 3px;
 }
 
 .stat {
@@ -599,10 +500,11 @@ summary:focus-visible {
 }
 
 .stat + .stat {
-  border-left: 1px solid $border-color;
+  border-left: 1px solid var(--dt-border);
 }
 
 .statlabel {
+  color: var(--dt-text-heading);
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
@@ -614,7 +516,7 @@ summary:focus-visible {
 
 .repo-value {
   font-size: 16px;
-  color: $body-color;
+  color: var(--dt-text-heading);
   white-space: nowrap;
 }
 
@@ -628,9 +530,6 @@ summary:focus-visible {
 
 .panel {
   min-width: 0;
-  background: $card-bg;
-  border: 1px solid $border-color;
-  border-radius: 3px;
 }
 
 .panelhead {
@@ -640,8 +539,8 @@ summary:focus-visible {
   align-items: center;
   padding: 0 10px;
   gap: 8px;
-  background: $card-cap-bg;
-  border-bottom: 1px solid $border-color;
+  background: transparent;
+  border-bottom: 1px solid var(--dt-border);
 }
 
 .check-sort {
@@ -657,6 +556,7 @@ summary:focus-visible {
 
 h2 {
   margin: 0;
+  color: var(--dt-text-heading);
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
@@ -692,20 +592,21 @@ dd {
 .community {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid var(--dt-border);
   padding: 4px 10px;
   gap: 8px;
 }
 
 .community span {
   display: block;
-  color: $grey-600;
+  color: var(--dt-text-muted);
   font-size: 11px;
   line-height: 14px;
   font-weight: 400;
 }
 
 .community strong {
+  color: var(--dt-text-heading);
   font-size: 13px;
   font-weight: 400;
   line-height: 18px;
@@ -713,12 +614,12 @@ dd {
 }
 
 .present {
-  color: $notification-pass;
+  color: var(--dt-severity-low-text);
   font-size: 11px;
 }
 
 .absent {
-  color: $grey-600;
+  color: var(--dt-text-muted);
   font-size: 11px;
 }
 
@@ -734,7 +635,7 @@ dd {
   height: 54px;
   flex: 0 0 54px;
   position: relative;
-  color: $body-color;
+  color: var(--dt-text);
 }
 
 .score-ring svg {
@@ -745,7 +646,7 @@ dd {
 
 .ring-track {
   fill: none;
-  stroke: $progress-bg;
+  stroke: var(--dt-line);
   stroke-width: 3.5;
 }
 
@@ -767,14 +668,14 @@ dd {
   font-weight: 600;
   line-height: 19px;
   font-variant-numeric: tabular-nums;
-  color: $body-color;
+  color: var(--dt-text-heading);
 }
 
 .ring-number small {
   font-size: 11px;
   font-weight: 400;
   line-height: 13px;
-  color: $grey-600;
+  color: var(--dt-text-muted);
 }
 
 .score-caption {
@@ -782,11 +683,6 @@ dd {
   flex-direction: column;
   gap: 5px;
   min-width: 0;
-}
-
-.score-caption .statlabel {
-  font-size: 12px;
-  font-weight: 600;
 }
 
 @media (min-width: 1400px) {
@@ -871,6 +767,27 @@ dd {
   .repo-value {
     font-size: 24px;
   }
+
+  .stat.score-stat {
+    padding: 7px 18px;
+    gap: 18px;
+  }
+
+  .score-ring {
+    width: 76px;
+    height: 76px;
+    flex-basis: 76px;
+  }
+
+  .ring-number {
+    font-size: 24px;
+    line-height: 27px;
+  }
+
+  .ring-number small {
+    font-size: 13px;
+    line-height: 16px;
+  }
 }
 
 @media (max-width: 959px) {
@@ -907,6 +824,21 @@ dd {
   }
 }
 
+@media (min-width: 651px) and (max-width: 959px) {
+  .stat.score-stat {
+    gap: 9px;
+    padding: 5px 10px;
+  }
+
+  .score-caption .statlabel {
+    font-size: 11px;
+  }
+
+  .score-caption .meta {
+    line-height: 14px;
+  }
+}
+
 @media (max-width: 650px) {
   .health-view {
     padding: 10px;
@@ -935,7 +867,18 @@ dd {
 
   .stat + .stat {
     border-left: 0;
-    border-top: 1px solid $border-color;
+    border-top: 1px solid var(--dt-border);
+  }
+
+  .stat.score-stat {
+    padding: 10px 12px;
+    gap: 14px;
+  }
+
+  .score-ring {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
   }
 
   .sources {
@@ -962,61 +905,6 @@ dd {
   .heading {
     height: auto;
     min-height: 44px;
-  }
-}
-
-@media (min-width: 1400px) {
-  .stat.score-stat {
-    padding: 7px 18px;
-    gap: 18px;
-  }
-
-  .score-ring {
-    width: 76px;
-    height: 76px;
-    flex-basis: 76px;
-  }
-
-  .ring-number {
-    font-size: 24px;
-    line-height: 27px;
-  }
-
-  .ring-number small {
-    font-size: 13px;
-    line-height: 16px;
-  }
-
-  .score-caption .statlabel {
-    font-size: 15px;
-  }
-}
-
-@media (min-width: 651px) and (max-width: 959px) {
-  .stat.score-stat {
-    gap: 9px;
-    padding: 5px 10px;
-  }
-
-  .score-caption .statlabel {
-    font-size: 11px;
-  }
-
-  .score-caption .meta {
-    line-height: 14px;
-  }
-}
-
-@media (max-width: 650px) {
-  .stat.score-stat {
-    padding: 10px 12px;
-    gap: 14px;
-  }
-
-  .score-ring {
-    width: 60px;
-    height: 60px;
-    flex-basis: 60px;
   }
 }
 </style>

@@ -1,16 +1,7 @@
 <template>
   <div class="animated fadeIn">
-    <b-tabs
-      class="body-bg-color"
-      style="border-left: 0; border-right: 0; border-top: 0"
-    >
-      <b-tab
-        ref="policies"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
-        active
-        @click="routeTo()"
-      >
+    <b-tabs>
+      <b-tab ref="policies" active @click="routeTo()">
         <template v-slot:title
           ><i class="fa fa-list-alt"></i> {{ $t('message.policies') }}
           <b-badge variant="tab-total">{{ totalPolicies }}</b-badge></template
@@ -27,12 +18,7 @@
         >
         <license-group-list v-on:total="totalLicenseGroups = $event" />
       </b-tab>
-      <b-tab
-        ref="vulnerability"
-        class="body-bg-color overview-chart"
-        style="border-left: 0; border-right: 0; border-top: 0"
-        @click="routeTo('vulnerability')"
-      >
+      <b-tab ref="vulnerability" @click="routeTo('vulnerability')">
         <template v-slot:title
           ><i class="fa fa-list-alt"></i>
           {{ $t('message.vulnerability_policies') }}
@@ -49,9 +35,9 @@
 </template>
 
 <script>
-import PolicyList from './PolicyList';
-import LicenseGroupList from './LicenseGroupList';
-import VulnerabilityPolicyList from './VulnerabilityPolicyList';
+import PolicyList from './PolicyList.vue';
+import LicenseGroupList from './LicenseGroupList.vue';
+import VulnerabilityPolicyList from './VulnerabilityPolicyList.vue';
 
 export default {
   components: {
@@ -82,16 +68,14 @@ export default {
       }
     },
     getTabFromRoute: function () {
-      let pattern = new RegExp('/policy\/([^\\/?#]*)', 'gi');
+      let pattern = new RegExp('/policy/([^\\/?#]*)', 'gi');
       let tab = pattern.exec(this.$route.fullPath.toLowerCase());
       return this.$refs[tab && tab[1] ? tab[1].toLowerCase() : 'policies'];
     },
   },
   mounted() {
-    const tab = this.getTabFromRoute();
-    if (tab) {
-      tab.active = true;
-    }
+    // <b-tabs> registers its tabs after this hook.
+    this.$nextTick(() => this.getTabFromRoute()?.activate());
   },
   watch: {
     $route() {

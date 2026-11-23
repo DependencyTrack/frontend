@@ -7,7 +7,6 @@
       size="sm"
       variant="outline-primary"
       no-caret
-      boundary="viewport"
       @show="$emit('show', $event)"
       @shown="focusFirstControl"
       @hide="onDropdownHide"
@@ -16,7 +15,7 @@
         <div class="d-flex align-items-center" v-if="!hasFilter">
           <span
             v-if="icon"
-            :class="['fa', icon, 'mr-1']"
+            :class="['fa', icon, 'me-1']"
             aria-hidden="true"
           ></span>
           {{ fieldLabel }}
@@ -25,7 +24,7 @@
           <span class="filter-pill-segment filter-pill-segment-field">
             <span
               v-if="icon"
-              :class="['fa', icon, 'mr-1']"
+              :class="['fa', icon, 'me-1']"
               aria-hidden="true"
             ></span>
             {{ fieldLabel }}
@@ -35,14 +34,20 @@
           </span>
         </div>
       </template>
-      <b-dropdown-form class="filter-pill-form" @submit.stop.prevent>
+      <b-dropdown-form
+        class="filter-pill-form"
+        @submit.stop.prevent
+        @click.stop
+      >
         <div class="filter-pill-body" ref="body" @keyup.enter="onEnter">
           <slot></slot>
         </div>
         <div class="filter-pill-footer" v-if="!autoApply">
-          <b-link class="filter-pill-footer-clear" @click="$emit('clear')">{{
-            $t('message.clear')
-          }}</b-link>
+          <b-link
+            class="filter-pill-footer-clear"
+            @click.prevent="$emit('clear')"
+            >{{ $t('message.clear') }}</b-link
+          >
           <b-button
             variant="primary"
             size="sm"
@@ -98,7 +103,8 @@ export default {
       default: false,
     },
   },
-  beforeDestroy() {
+  emits: ['show', 'clear', 'apply', 'dismiss', 'hide'],
+  beforeUnmount() {
     this._destroying = true;
   },
   methods: {
@@ -126,9 +132,6 @@ export default {
       }
       this.$emit('apply');
     },
-    // Runs on `shown`, not `show`. b-dropdown queues its own focusMenu() in a
-    // $nextTick from `show`, and that runs after ours and takes the focus back.
-    //
     // Never focus a radio or checkbox. Arrow keys move *and* commit a radio
     // selection, so an auto-apply pill would fire as soon as a keyboard user
     // browsed its options. Free text beats a select regardless of DOM order.

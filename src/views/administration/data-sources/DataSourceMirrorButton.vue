@@ -1,8 +1,7 @@
 <template>
-  <span class="ml-2 text-nowrap">
+  <span class="ms-2 text-nowrap">
     <span
-      v-b-tooltip.hover.focus
-      :title="tooltipTitle"
+      v-b-tooltip.hover.focus="tooltipTitle"
       :tabindex="disabled ? 0 : -1"
       class="d-inline-block"
     >
@@ -18,21 +17,21 @@
         {{ $t('admin.data_source_mirror_now') }}
       </b-button>
     </span>
-    <b-badge v-if="failed" variant="danger" class="ml-2">
+    <b-badge v-if="failed" variant="danger" class="ms-2">
       {{
         $t('admin.data_source_mirror_status_failed', {
           relative: lastRunRelative,
         })
       }}
     </b-badge>
-    <small v-else-if="inProgress" class="ml-2 text-muted">
+    <small v-else-if="inProgress" class="ms-2 text-muted">
       {{
         $t('admin.data_source_mirror_status_running', {
           relative: lastRunRelative,
         })
       }}
     </small>
-    <small v-else-if="status === 'COMPLETED'" class="ml-2 text-muted">
+    <small v-else-if="status === 'COMPLETED'" class="ms-2 text-muted">
       {{
         $t('admin.data_source_mirror_status_completed', {
           relative: lastRunRelative,
@@ -133,7 +132,7 @@ export default {
   mounted() {
     this.fetchStatus();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopPolling();
     this.abortController?.abort();
   },

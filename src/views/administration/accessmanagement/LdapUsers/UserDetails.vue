@@ -14,9 +14,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectTeamModal')
-              "
+              v-on:actionClicked="showSelectTeamModal = true"
             />
           </div>
         </b-form-group>
@@ -32,9 +30,7 @@
             </span>
             <actionable-list-group-item
               :add-icon="true"
-              v-on:actionClicked="
-                $root.$emit('bv::show::modal', 'selectPermissionModal')
-              "
+              v-on:actionClicked="showSelectPermissionModal = true"
             />
           </div>
         </b-form-group>
@@ -48,10 +44,12 @@
       </b-col>
     </b-row>
     <select-team-modal
+      v-model="showSelectTeamModal"
       :currentTeams="teams"
       v-on:selection="updateTeamSelection"
     />
     <select-permission-modal
+      v-model="showSelectPermissionModal"
       :currentPermissions="permissions"
       v-on:selection="updatePermissionSelection"
     />
@@ -59,14 +57,12 @@
 </template>
 
 <script>
-import i18n from '../../../../i18n';
 import userManagementMixin from '../../../../mixins/userManagementMixin';
 import ActionableListGroupItem from '../../../components/ActionableListGroupItem.vue';
 import SelectPermissionModal from '../SelectPermissionModal.vue';
 import SelectTeamModal from '../SelectTeamModal.vue';
 
 export default {
-  i18n,
   props: {
     index: { type: Number, required: true },
     row: { type: Object, required: true },
@@ -80,6 +76,8 @@ export default {
   },
   data() {
     return {
+      showSelectTeamModal: false,
+      showSelectPermissionModal: false,
       username: this.row.username,
       teams: this.row.teams,
       permissions: this.row.permissions,

@@ -27,14 +27,30 @@
       />
     </filter-bar>
 
-    <bootstrap-table
-      ref="table"
-      :columns="columns"
-      :data="data"
-      :options="options"
-      @on-load-success="tableLoaded"
+    <div class="audit-table" @click="onTableClick" @keydown="onTableKeydown">
+      <bootstrap-table
+        ref="table"
+        :columns="columns"
+        :data="data"
+        :options="options"
+        @on-load-success="tableLoaded"
+        @on-pre-body="rememberAuditFocus"
+        @on-post-body="markAuditRow()"
+      >
+      </bootstrap-table>
+    </div>
+    <audit-drawer
+      ref="auditDrawer"
+      :title="auditTitle"
+      :link="findingLink"
+      @change="onAuditChange"
+      @closed="onAuditClosed"
+      @saved="onAuditSaved"
     >
-    </bootstrap-table>
+      <template #default="{ row }">
+        <finding-audit :key="row.matrix" :finding="row" :project-uuid="uuid" />
+      </template>
+    </audit-drawer>
   </div>
 </template>
 
@@ -43,52 +59,51 @@ import $ from 'jquery';
 import xssFilters from 'xss-filters';
 
 import common from '@/shared/common';
-import i18n from '@/i18n';
 import {
   applyTotalCountHeaders,
   compareVersions,
   loadUserPreferencesForBootstrapTable,
 } from '@/shared/utils';
+import auditDrawerMixin from '@/mixins/auditDrawerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
-import FindingAudit from './FindingAudit';
+import FindingAudit from './FindingAudit.vue';
+import AuditDrawer from '@/views/components/AuditDrawer.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
 import BooleanFilterPill from '@/views/components/BooleanFilterPill.vue';
-import KevAssertionsModal from '@/views/components/KevAssertionsModal.vue';
+import KevCell from '@/views/components/KevCell.vue';
 
 export default {
   props: {
     uuid: String,
   },
-  mixins: [bootstrapTableMixin, filterPillsMixin],
+  mixins: [auditDrawerMixin, bootstrapTableMixin, filterPillsMixin],
   components: {
+    AuditDrawer,
     FilterBar,
+    FindingAudit,
     BooleanFilterPill,
   },
   beforeCreate() {
-    this.showSuppressedFindings =
-      !!localStorage &&
-      localStorage.getItem('ProjectFindingsShowSuppressedFindings') === 'true';
-    this.showKevOnly =
-      !!localStorage &&
-      localStorage.getItem('ProjectFindingsShowKevOnly') === 'true';
-
-    if (this.$route.params.vulnerability) {
-      if (this.$route.params.affectedComponent) {
-        // search for the last portion of the finding's matrix ID
-        this.initialSearchText =
-          this.$route.params.affectedComponent +
-          ':' +
-          this.$route.params.vulnerability;
-      } else {
-        this.initialSearchText = this.$route.params.vulnerability;
-      } // the route doesn't allow a component to be specified without a vulnerability
-    }
+    const { component, vulnerability } = this.$route.query;
+    this.initialSearchText =
+      component && vulnerability
+        ? `${component}:${vulnerability}`
+        : this.$route.params.vulnerability;
+  },
+  created() {
+    this.options.url = this.apiUrl();
+    this.openLinkedFinding();
   },
   data() {
     return {
-      showSuppressedFindings: this.showSuppressedFindings,
-      showKevOnly: this.showKevOnly,
+      showSuppressedFindings:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowSuppressedFindings') ===
+          'true',
+      showKevOnly:
+        !!localStorage &&
+        localStorage.getItem('ProjectFindingsShowKevOnly') === 'true',
       booleanFilters: ['showSuppressedFindings', 'showKevOnly'],
       columns: [
         {
@@ -106,7 +121,7 @@ export default {
                 row.component.uuid,
             );
             return (
-              `<a href="${dependencyGraphUrl}"<i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+              `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
               `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`
             );
           },
@@ -124,10 +139,11 @@ export default {
                 ) > 0
               ) {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Outdated component. Current version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Outdated component. Current version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
+                  '"><i class="fa fa-exclamation-triangle status-warning" aria-hidden="true"></i></span></span>'
                 );
               } else if (
                 compareVersions(
@@ -137,15 +153,17 @@ export default {
               ) {
                 // should be unstable then
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
-                  xssFilters.inHTMLData(row.component.latestVersion) +
-                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Risk: Unstable component. Current stable version is: ' +
+                  xssFilters.inDoubleQuotedAttr(row.component.latestVersion) +
+                  '"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span></span>'
                 );
               } else {
                 return (
-                  '<span style="float:right" data-toggle="tooltip" data-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span> ' +
-                  xssFilters.inHTMLData(row.component.version)
+                  '<span class="d-flex justify-content-between gap-1">' +
+                  xssFilters.inHTMLData(row.component.version) +
+                  '<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Component version is the latest available from the configured repositories"><i class="fa fa-check status-passed" aria-hidden="true"></i></span></span>'
                 );
               }
             } else {
@@ -243,30 +261,13 @@ export default {
           field: 'vulnerability.isKev',
           sortable: false,
           class: 'tight',
-          formatter: (value, row, index) => {
+          formatter: (value, row) => {
             if (value !== true) {
               return '';
             }
-            return this.vueFormatter({
-              i18n,
-              components: { KevAssertionsModal },
-              template: `
-                <div class="text-center">
-                  <b-link
-                    v-b-modal="\`kevAssertionsModal-${index}\`"
-                    :title="$t('message.kev_show_assertions')"
-                    class="text-danger"
-                    style="border-bottom: 1px dashed currentColor; padding-bottom: 3px; cursor: pointer; white-space: nowrap; text-decoration: none;"
-                  ><i class="fa fa-crosshairs" /> {{ $t('message.yes') }}</b-link>
-                  <kev-assertions-modal :source="source" :vuln-id="vulnId" :index="index"/>
-                </div>`,
-              data() {
-                return {
-                  index: index,
-                  source: row.vulnerability.source,
-                  vulnId: row.vulnerability.vulnId,
-                };
-              },
+            return this.cell(KevCell, {
+              source: row.vulnerability.source,
+              vulnId: row.vulnerability.vulnId,
             });
           },
         },
@@ -315,8 +316,10 @@ export default {
       ],
       data: [],
       options: {
+        uniqueId: 'matrix',
+        rowAttributes: this.auditRowAttributes,
         onPostBody: () => {
-          this.vueFormatterInit();
+          this.mountCells();
           this.initializeTooltips();
         },
         search: true,
@@ -345,31 +348,11 @@ export default {
             : undefined,
         searchText: this.initialSearchText,
         icons: {
-          detailOpen: 'fa-fw fa-angle-right',
-          detailClose: 'fa-fw fa-angle-down',
           refresh: 'fa-refresh',
         },
-        detailView: true,
-        detailViewIcon: true,
-        detailViewByClick: false,
-        detailFormatter: (_index, row) => {
-          return (
-            row &&
-            this.vueFormatter({
-              i18n,
-              propsData: {
-                finding: row,
-                projectUuid: this.uuid,
-              },
-              ...FindingAudit,
-            })
-          );
-        },
-        onExpandRow: this.vueFormatterInit,
         responseHandler: function (res, xhr) {
           return applyTotalCountHeaders(res, xhr, this);
         },
-        url: this.apiUrl(),
         onPageChange: (_number, size) => {
           if (localStorage) {
             localStorage.setItem('ProjectFindingsPageSize', size.toString());
@@ -393,6 +376,9 @@ export default {
     };
   },
   methods: {
+    auditTitle(row) {
+      return common.auditTitle(row.vulnerability.vulnId, row.component);
+    },
     apiUrl: function () {
       const url = `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`;
       return common.setQueryParams(url, {
@@ -401,30 +387,67 @@ export default {
         totalCount: 'BOUNDED',
       });
     },
+    findingRoute(row) {
+      return {
+        path: `/projects/${this.uuid}/findings`,
+        query: {
+          component: row.component.uuid,
+          vulnerability: row.vulnerability.uuid,
+        },
+      };
+    },
+    findingLink(row) {
+      return this.auditLink(this.findingRoute(row));
+    },
+    onAuditChange(row) {
+      this.markAuditRow(true);
+      this.$router.replace({ query: this.findingRoute(row).query });
+    },
+    onAuditClosed(row) {
+      this.focusAuditRow(row);
+      if (this.$route.query.vulnerability) {
+        this.$router.replace({ query: {} });
+      }
+    },
+    async openLinkedFinding() {
+      const { component, vulnerability } = this.$route.query;
+      if (!component || !vulnerability) {
+        return;
+      }
+      const searchText = `${component}:${vulnerability}`;
+      const response = await this.axios.get(
+        `${this.$api.BASE_URL}/${this.$api.URL_FINDING}/project/${this.uuid}`,
+        { params: { searchText, suppressed: true } },
+      );
+      const finding = response.data.find(
+        (f) => f.matrix === `${this.uuid}:${searchText}`,
+      );
+      if (finding) {
+        this.$refs.auditDrawer.open([finding], 0);
+      }
+    },
     refreshTable: function () {
       this.$refs.table.refresh({
         url: this.apiUrl(),
         pageNumber: 1,
-        silent: true,
       });
     },
-    tableLoaded: function (data) {
+    tableLoaded: function () {
       loadUserPreferencesForBootstrapTable(
         this,
         'ProjectFindings',
         this.$refs.table.columns,
       );
-      // the unfiltered length
-      const boundedTotal = this.$refs.table.getOptions().boundedTotal;
-      this.$emit('total', boundedTotal ? `${boundedTotal}+` : data.total);
       if (
+        !this.deepLinkChecked &&
         this.$route.params.vulnerability &&
         this.$refs.table.getData().length === 1
       ) {
-        // If there's only one visible row due to a URL that selects a single finding, show it in full
-        // Don't expand if there are multiple findings, as it makes it harder to notice that there is more than one result
-        this.$refs.table.expandRow(0);
+        // Open a deep-linked finding only when it is the sole match,
+        // so further matches stay noticeable.
+        this.openAudit(0);
       }
+      this.deepLinkChecked = true;
     },
     persistFilter: function (key, value) {
       if (localStorage) {
@@ -432,7 +455,7 @@ export default {
       }
     },
     initializeTooltips: function () {
-      $('[data-toggle="tooltip"]').tooltip({
+      $('[data-bs-toggle="tooltip"]').tooltip({
         trigger: 'hover',
       });
     },

@@ -1,16 +1,16 @@
 <template>
   <div>
     <div id="projectsToolbar" class="bs-table-custom-toolbar">
-      <c-switch
+      <b-form-checkbox
         style="margin-left: 1rem; margin-right: 0.5rem"
         id="showInactiveProjects"
-        color="primary"
         v-model="showInactiveProjects"
-        label
-        v-bind="labelIcon"
-      /><span class="text-muted">{{
-        $t('message.show_inactive_projects')
-      }}</span>
+        inline
+        switch
+        ><span class="text-muted">{{
+          $t('message.show_inactive_projects')
+        }}</span></b-form-checkbox
+      >
     </div>
     <bootstrap-table
       ref="table"
@@ -27,33 +27,26 @@
 <script>
 import xssFilters from 'xss-filters';
 import permissionsMixin from '../../../mixins/permissionsMixin';
-import { Switch as cSwitch } from '@coreui/vue';
 
 export default {
   mixins: [permissionsMixin],
-  components: {
-    cSwitch,
-  },
-  beforeCreate() {
-    this.showInactiveProjects =
-      localStorage &&
-      localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
-        ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
-          'true'
-        : false;
+  created() {
+    this.options.url = this.apiUrl();
   },
   props: {
     source: String,
     vulnId: String,
     vulnerability: String,
   },
+  emits: ['total'],
   data() {
     return {
-      showInactiveProjects: this.showInactiveProjects,
-      labelIcon: {
-        dataOn: '\u2713',
-        dataOff: '\u2715',
-      },
+      showInactiveProjects:
+        localStorage &&
+        localStorage.getItem('AffectedProjectListShowInactiveProjects') !== null
+          ? localStorage.getItem('AffectedProjectListShowInactiveProjects') ===
+            'true'
+          : false,
       columns: [
         {
           title: this.$t('message.name'),
@@ -63,7 +56,7 @@ export default {
             const url = this.$router.resolve({
               name: 'Project Vulnerability Lookup',
               params: { uuid: row.uuid, vulnerability: this.vulnerability },
-            }).route.fullPath;
+            }).fullPath;
 
             let html = `<a href="${url}">${xssFilters.inHTMLData(value)}</a>`;
             if (row.dependencyGraphAvailable) {
@@ -75,7 +68,7 @@ export default {
                 },
               }).href;
               html =
-                `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Show in dependency graph"></i></a> ` +
+                `<a href="${dependencyGraphUrl}"><i class="fa fa-sitemap" aria-hidden="true" style="float:right; padding-top: 4px; cursor:pointer" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show in dependency graph"></i></a> ` +
                 html;
             }
 
@@ -112,7 +105,6 @@ export default {
         icons: {
           refresh: 'fa-refresh',
         },
-        url: this.apiUrl(),
         responseHandler: function (res, xhr) {
           res.total = xhr.getResponseHeader('X-Total-Count');
           return res;
