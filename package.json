@@ -56,7 +56,7 @@
     "vue-chartjs": "5.3.4",
     "vue-i18n": "11.4.19",
     "vue-multiselect": "3.5.0",
-    "vue-router": "5.5.0",
+    "vue-router": "5.5.1",
     "xss-filters": "1.2.7"
   },
   "devDependencies": {
