@@ -833,6 +833,7 @@
     "operator_help": null,
     "operator_starts_with": null,
     "optional": null,
+    "original_bom_not_available": null,
     "original_unmodified": null,
     "osi_approved": "Approvato dall'OSI",
     "outdated": null,

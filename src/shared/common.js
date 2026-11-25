@@ -625,11 +625,29 @@ $common.saveBlob = function (blob, filename) {
 /*
  * GETs an attachment and saves it under the filename from the server's
  * Content-Disposition header, or fallbackFilename if the header has none.
+ * Additional axios request options, e.g. validateStatus, can be passed via
+ * options. Only successful responses are saved. The response is returned so
+ * callers can handle other accepted statuses.
  */
-$common.downloadAttachment = function (axios, url, params, fallbackFilename) {
+$common.downloadAttachment = function (
+  axios,
+  url,
+  params,
+  fallbackFilename,
+  options = {},
+) {
   return axios
-    .request({ responseType: 'blob', url: url, method: 'get', params: params })
+    .request({
+      responseType: 'blob',
+      url: url,
+      method: 'get',
+      params: params,
+      ...options,
+    })
     .then((response) => {
+      if (response.status !== 200) {
+        return response;
+      }
       let filename = fallbackFilename;
       const disposition = response.headers['content-disposition'];
       if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -641,6 +659,7 @@ $common.downloadAttachment = function (axios, url, params, fallbackFilename) {
         }
       }
       $common.saveBlob(new Blob([response.data]), filename);
+      return response;
     });
 };
 

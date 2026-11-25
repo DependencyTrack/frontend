@@ -833,6 +833,7 @@
     "operator_help": "ANY = 任何條件匹配； ALL = 每個條件都必須匹配",
     "operator_starts_with": null,
     "optional": null,
+    "original_bom_not_available": null,
     "original_unmodified": null,
     "osi_approved": "OSI 核准",
     "outdated": null,

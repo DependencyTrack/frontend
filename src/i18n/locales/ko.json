@@ -834,6 +834,7 @@
     "operator_help": "ANY = 조건 중 하나라도 일치; ALL = 모든 조건이 일치해야 함",
     "operator_starts_with": null,
     "optional": "선택 사항",
+    "original_bom_not_available": null,
     "original_unmodified": null,
     "osi_approved": "OSI 승인",
     "outdated": null,

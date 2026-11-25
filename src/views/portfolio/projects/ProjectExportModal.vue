@@ -190,6 +190,7 @@ export default {
             `${this.$api.BASE_URL}/api/v2/projects/${this.uuid}/boms/latest/content`,
             undefined,
             'bom',
+            { validateStatus: (status) => status === 200 || status === 404 },
           )
         : common.downloadAttachment(
             this.axios,
@@ -198,7 +199,11 @@ export default {
             `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
           );
       downloadRequest
-        .then(() => {
+        .then((response) => {
+          if (response.status === 404) {
+            this.$toastr.w(this.$t('message.original_bom_not_available'));
+            return;
+          }
           this.$root.$emit('bv::hide::modal', 'projectExportModal');
         })
         .finally(() => {

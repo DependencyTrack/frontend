@@ -834,6 +834,7 @@
     "operator_help": "ANY = any condition matches; ALL = every condition must match",
     "operator_starts_with": "starts with",
     "optional": "optional",
+    "original_bom_not_available": "No original BOM is retained for this project. Original BOMs are only kept for imports made while original BOM retention is enabled.",
     "original_unmodified": "Original / Unmodified",
     "osi_approved": "OSI Approved",
     "outdated": "Outdated",
