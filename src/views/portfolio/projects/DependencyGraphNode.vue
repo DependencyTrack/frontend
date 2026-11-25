@@ -15,7 +15,15 @@
       :title="linkLabel"
       :aria-label="path ? linkLabel : undefined"
       class="dependency-graph-card"
-      :class="{ searched, project: node.type === 'PROJECT', direct }"
+      :class="[
+        {
+          searched,
+          project: node.type === 'PROJECT',
+          direct,
+          vulnerable: isVulnerable,
+        },
+        severityClass && `dependency-graph-severity-${severityClass}`,
+      ]"
     >
       <span class="dependency-graph-name text-truncate">
         <i
@@ -31,6 +39,18 @@
         <span v-if="node.group" class="dependency-graph-group text-truncate">{{
           node.group
         }}</span>
+        <span
+          v-if="isVulnerable"
+          class="dependency-graph-vuln badge"
+          :class="`severity-${severityClass}-bg`"
+          :title="vulnerabilitySummary"
+          aria-hidden="true"
+        >
+          <i class="dependency-graph-vuln-icon fa fa-bug" aria-hidden="true" />
+          <span class="dependency-graph-vuln-text text-truncate">{{
+            vulnerabilityBadgeLabel
+          }}</span>
+        </span>
       </span>
     </component>
     <button
@@ -65,13 +85,17 @@ import {
   NODE_HEIGHT,
   NODE_WIDTH,
   expansionToggleLabel,
+  formatVulnerabilityBadge,
+  formatVulnerabilityBreakdown,
   nodeLabel,
   nodeRoute,
+  normalizeSeverity,
 } from './dependencyGraph';
 
 const props = defineProps({
   node: { type: Object, required: true },
   visible: { type: Set, required: true },
+  vulnerabilities: { type: Object, default: null },
   expanded: Boolean,
   expandable: Boolean,
   direct: Boolean,
@@ -82,11 +106,47 @@ defineEmits(['focus-on', 'hover', 'toggle']);
 
 const { t } = useI18n();
 const label = computed(() => nodeLabel(props.node));
-const linkLabel = computed(() =>
-  props.direct
-    ? t('message.direct_dependency_label', { label: label.value })
-    : label.value,
+const isVulnerable = computed(
+  () =>
+    props.node.type === 'COMPONENT' && (props.vulnerabilities?.total ?? 0) > 0,
 );
+const severityClass = computed(() =>
+  isVulnerable.value
+    ? normalizeSeverity(props.vulnerabilities.highestSeverity).toLowerCase()
+    : null,
+);
+const vulnerabilityBadgeLabel = computed(() => {
+  if (!isVulnerable.value) return '';
+  return formatVulnerabilityBadge(
+    props.vulnerabilities,
+    (severity) => t(`severity.${severity.toLowerCase()}`),
+    (params) => t('message.dependency_graph_vuln_badge', params),
+    (params) => t('message.dependency_graph_vuln_badge_mixed', params),
+  );
+});
+const vulnerabilitySummary = computed(() => {
+  if (!isVulnerable.value) return '';
+  const breakdown = formatVulnerabilityBreakdown(
+    props.vulnerabilities,
+    (severity) => t(`severity.${severity.toLowerCase()}`),
+  );
+  return t(
+    'message.dependency_graph_vulnerabilities_summary',
+    { count: props.vulnerabilities.total, breakdown },
+    props.vulnerabilities.total,
+  );
+});
+const linkLabel = computed(() => {
+  const baseLabel = props.direct
+    ? t('message.direct_dependency_label', { label: label.value })
+    : label.value;
+  return isVulnerable.value
+    ? t('message.dependency_graph_vulnerable_node_label', {
+        label: baseLabel,
+        summary: vulnerabilitySummary.value,
+      })
+    : baseLabel;
+});
 const path = computed(() => nodeRoute(props.node));
 const icon = computed(
   () =>
@@ -158,6 +218,19 @@ a.dependency-graph-card:hover {
 .dependency-graph-card.direct {
   border-color: var(--dt-accent);
 }
+@each $severity in critical, high, medium, low, info, unassigned {
+  .dependency-graph-card.dependency-graph-severity-#{$severity} {
+    --dt-node-severity: var(--severity-#{$severity});
+  }
+}
+.dependency-graph-card.vulnerable {
+  border-color: var(--dt-node-severity);
+  background: color-mix(
+    in srgb,
+    var(--dt-node-severity) 10%,
+    var(--dt-surface-card)
+  );
+}
 .dependency-graph-card.project {
   border: 2px solid var(--dt-brand);
   font-weight: 600;
@@ -192,7 +265,27 @@ a.dependency-graph-card:hover {
   font-weight: 600;
   max-width: 50%;
 }
+.dependency-graph-card.vulnerable .dependency-graph-version {
+  max-width: 38%;
+}
 .dependency-graph-group {
+  min-width: 0;
+}
+.dependency-graph-vuln {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  max-width: 56%;
+  min-width: 0;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+.dependency-graph-vuln-icon {
+  flex-shrink: 0;
+}
+.dependency-graph-vuln-text {
   min-width: 0;
 }
 .dependency-graph-toggle {

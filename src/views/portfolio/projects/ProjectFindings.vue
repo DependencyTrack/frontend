@@ -59,6 +59,7 @@ import $ from 'jquery';
 import xssFilters from 'xss-filters';
 
 import common from '@/shared/common';
+import EventBus from '@/shared/eventbus';
 import {
   applyTotalCountHeaders,
   compareVersions,
@@ -67,6 +68,7 @@ import {
 import auditDrawerMixin from '@/mixins/auditDrawerMixin';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
+import { PROJECT_FINDINGS_UPDATED_EVENT } from './useProjectFindings';
 import FindingAudit from './FindingAudit.vue';
 import AuditDrawer from '@/views/components/AuditDrawer.vue';
 import FilterBar from '@/views/components/FilterBar.vue';
@@ -431,6 +433,10 @@ export default {
         url: this.apiUrl(),
         pageNumber: 1,
       });
+    },
+    onAuditSaved: function () {
+      auditDrawerMixin.methods.onAuditSaved.call(this);
+      EventBus.emit(PROJECT_FINDINGS_UPDATED_EVENT, this.uuid);
     },
     tableLoaded: function () {
       loadUserPreferencesForBootstrapTable(

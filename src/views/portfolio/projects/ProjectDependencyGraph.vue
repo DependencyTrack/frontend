@@ -13,9 +13,10 @@
         ref="search"
         :nodes="nodes"
         :searched="searched"
+        :vulnerabilities-by-component="vulnerabilitiesByComponent"
         :clearable="searched.size > 0 && !focused"
         :loading="fetching"
-        @open="wanted = true"
+        @open="onSearchOpen"
         @select="navigateToComponent"
       />
       <div class="ms-auto btn-group" role="group">
@@ -97,6 +98,20 @@
       {{ $t('message.dependency_graph_load_failed') }}
     </p>
     <p
+      v-if="findingsFailed"
+      class="dependency-graph-message text-muted"
+      role="status"
+    >
+      {{ $t('message.dependency_graph_findings_load_failed') }}
+    </p>
+    <p
+      v-if="findingsTruncated"
+      class="dependency-graph-message text-muted"
+      role="status"
+    >
+      {{ $t('message.dependency_graph_findings_truncated') }}
+    </p>
+    <p
       v-if="layoutFailed"
       class="dependency-graph-message text-muted"
       role="alert"
@@ -130,6 +145,7 @@
             v-if="nodes.has(nodeUuid)"
             :node="nodes.get(nodeUuid)"
             :visible="visible"
+            :vulnerabilities="vulnerabilitiesByComponent.get(nodeUuid)"
             :expanded="expanded.has(nodeUuid)"
             :expandable="expandable.has(nodeUuid)"
             :direct="directUuids.has(nodeUuid)"
@@ -159,6 +175,13 @@
         <li v-if="outgoingEdges.length > 0">
           <span class="dependency-graph-swatch outgoing" />
           {{ $t('message.dependencies') }}
+        </li>
+        <li v-for="severity in legendSeverities" :key="severity">
+          <span
+            class="dependency-graph-swatch severity"
+            :class="`dependency-graph-severity-${severity.toLowerCase()}`"
+          />
+          {{ $t(`severity.${severity.toLowerCase()}`) }}
         </li>
       </ul>
       <div
@@ -211,7 +234,9 @@ import {
   nextDrawnArea,
   nodeCenter,
   nodesInArea,
+  visibleSeverities,
 } from './dependencyGraph';
+import { useProjectFindings } from './useProjectFindings';
 
 // Graphs this small keep every node in the DOM, and so in the tab order.
 const MAX_FULLY_DRAWN_NODES = 1000;
@@ -244,6 +269,17 @@ const hovered = ref(null);
 const shortestOnly = ref(false);
 const maximized = ref(false);
 const wanted = ref(false);
+const {
+  vulnerabilitiesByComponent,
+  findingsFailed,
+  findingsTruncated,
+  retryFindings,
+} = useProjectFindings({
+  project: () => props.project,
+  uuid: () => props.uuid,
+  wanted,
+  routePath: () => route.path,
+});
 const fetching = ref(false);
 const loadFailed = ref(false);
 
@@ -296,6 +332,13 @@ const expandable = computed(() =>
 );
 const directUuids = computed(
   () => new Set(nodes.value.get(props.uuid)?.direct_dependencies),
+);
+const legendSeverities = computed(() =>
+  visibleSeverities(
+    visible.value,
+    vulnerabilitiesByComponent.value,
+    nodes.value,
+  ),
 );
 const edgesInView = computed(() =>
   collectVisibleEdges(nodes.value, visible.value),
@@ -369,6 +412,14 @@ async function loadGraph() {
   loadFailed.value = false;
   nodes.value = new Map(graph.nodes.map((node) => [node.uuid, node]));
   applyRoute();
+}
+
+function onSearchOpen() {
+  if (!wanted.value) {
+    wanted.value = true;
+  } else {
+    retryFindings();
+  }
 }
 
 function applyRoute() {
@@ -640,6 +691,21 @@ onBeforeUnmount(() => {
 }
 .dependency-graph-swatch.outgoing {
   border-top: 2px dashed var(--dt-graph-outgoing);
+}
+.dependency-graph-swatch.severity {
+  height: 0.75rem;
+  border: 1px solid var(--dt-node-severity);
+  border-radius: var(--bs-border-radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--dt-node-severity) 10%,
+    var(--dt-surface-card)
+  );
+}
+@each $severity in critical, high, medium, low, info, unassigned {
+  .dependency-graph-swatch.dependency-graph-severity-#{$severity} {
+    --dt-node-severity: var(--severity-#{$severity});
+  }
 }
 .dependency-graph-message {
   margin: 0;

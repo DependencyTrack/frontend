@@ -30,11 +30,26 @@
         <span :title="nodeLabel(option)">{{ searchResultLabel(option) }}</span>
       </template>
       <template #option="{ option }">
-        <span class="d-block text-wrap text-break">
-          {{ option.name }} {{ option.version }}
-          <small v-if="option.group" class="d-block text-muted">
-            {{ option.group }}
-          </small>
+        <span class="d-flex align-items-start justify-content-between gap-2">
+          <span class="text-wrap text-break">
+            {{ option.name }} {{ option.version }}
+            <small v-if="option.group" class="d-block text-muted">
+              {{ option.group }}
+            </small>
+          </span>
+          <span
+            v-if="resultBadges.has(option.uuid)"
+            class="dependency-graph-search-vuln badge flex-shrink-0"
+            :class="`severity-${resultBadges.get(option.uuid).severityClass}-bg`"
+            :title="resultBadges.get(option.uuid).summary"
+            aria-hidden="true"
+          >
+            <i class="fa fa-bug" aria-hidden="true" />
+            {{ resultBadges.get(option.uuid).badgeLabel }}
+          </span>
+          <span v-if="resultBadges.has(option.uuid)" class="visually-hidden"
+            >, {{ resultBadges.get(option.uuid).summary }}</span
+          >
         </span>
       </template>
       <template #afterList>
@@ -66,24 +81,66 @@
 
 <script setup>
 import { computed, nextTick, ref, useTemplateRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 import Multiselect from 'vue-multiselect';
-import { nodeLabel, searchNodes, searchResultLabel } from './dependencyGraph';
+import {
+  formatVulnerabilityBadge,
+  formatVulnerabilityBreakdown,
+  nodeLabel,
+  normalizeSeverity,
+  searchNodes,
+  searchResultLabel,
+} from './dependencyGraph';
 
 const MAX_RESULTS = 50;
 
 const props = defineProps({
   nodes: { type: Map, required: true },
   searched: { type: Set, required: true },
+  vulnerabilitiesByComponent: { type: Map, default: () => new Map() },
   clearable: Boolean,
   loading: Boolean,
 });
 defineEmits(['open', 'select']);
 defineExpose({ focus: () => picker.value.activate() });
 
+const { t } = useI18n();
 const picker = useTemplateRef('picker');
 const query = ref('');
 const matches = computed(() => searchNodes(props.nodes, query.value));
 const results = computed(() => matches.value.slice(0, MAX_RESULTS));
+
+const resultBadges = computed(() => {
+  const badges = new Map();
+  if (!props.vulnerabilitiesByComponent?.size) return badges;
+  for (const option of results.value) {
+    if (option.type !== 'COMPONENT') continue;
+    const summary = props.vulnerabilitiesByComponent.get(option.uuid);
+    if (!summary?.total) continue;
+    const severityClass = normalizeSeverity(
+      summary.highestSeverity,
+    ).toLowerCase();
+    const translateSeverity = (severity) =>
+      t(`severity.${severity.toLowerCase()}`);
+    const breakdown = formatVulnerabilityBreakdown(summary, translateSeverity);
+    const badgeLabel = formatVulnerabilityBadge(
+      summary,
+      translateSeverity,
+      (params) => t('message.dependency_graph_vuln_badge', params),
+      (params) => t('message.dependency_graph_vuln_badge_mixed', params),
+    );
+    badges.set(option.uuid, {
+      severityClass,
+      badgeLabel,
+      summary: t(
+        'message.dependency_graph_vulnerabilities_summary',
+        { count: summary.total, breakdown },
+        summary.total,
+      ),
+    });
+  }
+  return badges;
+});
 
 // vue-multiselect scrolls by index * option-height, which breaks once a long group makes a row taller.
 async function revealHighlightedOption({ currentTarget }) {
@@ -102,5 +159,12 @@ async function revealHighlightedOption({ currentTarget }) {
 .dependency-graph-search-limit {
   padding: 0.5rem 0.75rem;
   font-size: var(--bs-body-font-size);
+}
+.dependency-graph-search-vuln {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  line-height: 1.2;
 }
 </style>

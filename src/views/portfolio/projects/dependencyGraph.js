@@ -1,7 +1,184 @@
 export const NODE_WIDTH = 272;
 export const NODE_HEIGHT = 56;
+export const SEVERITY_ORDER = [
+  'CRITICAL',
+  'HIGH',
+  'MEDIUM',
+  'LOW',
+  'INFO',
+  'UNASSIGNED',
+];
+const SEVERITY_RANKS = new Map(
+  SEVERITY_ORDER.map((severity, index) => [severity, index]),
+);
+const DEFAULT_FINDINGS_PAGE_SIZE = 1000;
+const DEFAULT_FINDINGS_MAX_PAGES = 50;
 const ARROW_LENGTH = 8;
 const ARROW_HALF_WIDTH = 4;
+
+export function normalizeSeverity(severity) {
+  if (typeof severity === 'string') {
+    const normalized = severity.trim().toUpperCase();
+    if (SEVERITY_RANKS.has(normalized)) return normalized;
+  }
+  return 'UNASSIGNED';
+}
+
+export function severityRank(severity) {
+  return SEVERITY_RANKS.get(normalizeSeverity(severity));
+}
+
+function emptySeverityCounts() {
+  return Object.fromEntries(SEVERITY_ORDER.map((severity) => [severity, 0]));
+}
+
+function findingIdentity(finding) {
+  if (finding.vulnerability?.uuid) return finding.vulnerability.uuid;
+  if (finding.vulnerability?.source && finding.vulnerability?.vulnId) {
+    return `${finding.vulnerability.source}:${finding.vulnerability.vulnId}`;
+  }
+  return finding.matrix ?? null;
+}
+
+export function summarizeFindingsByComponent(findings) {
+  const summaries = new Map();
+  if (!Array.isArray(findings)) return summaries;
+
+  const seenByComponent = new Map();
+  for (const finding of findings) {
+    const componentUuid = finding?.component?.uuid;
+    if (!componentUuid || finding.analysis?.isSuppressed === true) continue;
+
+    const identity = findingIdentity(finding);
+    if (identity !== null) {
+      let seen = seenByComponent.get(componentUuid);
+      if (!seen) {
+        seen = new Set();
+        seenByComponent.set(componentUuid, seen);
+      }
+      if (seen.has(identity)) continue;
+      seen.add(identity);
+    }
+
+    const severity = normalizeSeverity(finding.vulnerability?.severity);
+    let summary = summaries.get(componentUuid);
+    if (!summary) {
+      summary = {
+        total: 0,
+        highestSeverity: severity,
+        counts: emptySeverityCounts(),
+      };
+      summaries.set(componentUuid, summary);
+    }
+    summary.total++;
+    summary.counts[severity]++;
+    if (severityRank(severity) < severityRank(summary.highestSeverity)) {
+      summary.highestSeverity = severity;
+    }
+  }
+  return summaries;
+}
+
+export function formatVulnerabilityBreakdown(summary, translateSeverity) {
+  if (!summary?.total) return '';
+  return SEVERITY_ORDER.filter((severity) => summary.counts?.[severity] > 0)
+    .map(
+      (severity) =>
+        `${summary.counts[severity]} ${translateSeverity(severity)}`,
+    )
+    .join(', ');
+}
+
+export function formatVulnerabilityBadge(
+  summary,
+  translateSeverity,
+  formatUniform,
+  formatMixed,
+) {
+  if (!summary?.total) return '';
+  const highest = normalizeSeverity(summary.highestSeverity);
+  const highestCount = summary.counts?.[highest] ?? summary.total;
+  const otherCount = Math.max(0, summary.total - highestCount);
+  const severity = translateSeverity(highest);
+  if (otherCount > 0) {
+    return formatMixed({ count: highestCount, severity, otherCount });
+  }
+  return formatUniform({ count: highestCount, severity });
+}
+
+export function visibleSeverities(
+  visibleUuids,
+  vulnerabilitiesByComponent,
+  nodes = null,
+) {
+  if (!visibleUuids || !vulnerabilitiesByComponent?.size) return [];
+  const present = new Set();
+  for (const uuid of visibleUuids) {
+    if (nodes && nodes.get(uuid)?.type !== 'COMPONENT') continue;
+    const summary = vulnerabilitiesByComponent.get(uuid);
+    if (summary?.total > 0) {
+      present.add(normalizeSeverity(summary.highestSeverity));
+    }
+  }
+  return SEVERITY_ORDER.filter((severity) => present.has(severity));
+}
+
+function readTotalCountHeader(headers) {
+  if (!headers) return null;
+  const raw =
+    typeof headers.get === 'function'
+      ? headers.get('x-total-count')
+      : (headers['x-total-count'] ?? headers['X-Total-Count']);
+  if (raw === undefined || raw === null || raw === '') return null;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function abortError(signal) {
+  if (signal?.reason instanceof Error) return signal.reason;
+  const error = new Error('The operation was aborted.');
+  error.name = 'AbortError';
+  return error;
+}
+
+export async function fetchProjectFindings(
+  url,
+  {
+    get,
+    signal,
+    pageSize = DEFAULT_FINDINGS_PAGE_SIZE,
+    maxPages = DEFAULT_FINDINGS_MAX_PAGES,
+  } = {},
+) {
+  const safePageSize = Math.max(1, Math.floor(pageSize));
+  const safeMaxPages = Math.max(1, Math.floor(maxPages));
+  const findings = [];
+  let total = null;
+  let truncated = false;
+
+  for (let pageNumber = 1; pageNumber <= safeMaxPages; pageNumber++) {
+    if (signal?.aborted) throw abortError(signal);
+    const response = await get(url, {
+      params: { suppressed: false, pageNumber, pageSize: safePageSize },
+      signal,
+    });
+    if (signal?.aborted) throw abortError(signal);
+    const items = Array.isArray(response?.data) ? response.data : [];
+    findings.push(...items);
+    const headerTotal = readTotalCountHeader(response?.headers);
+    if (headerTotal !== null) total = headerTotal;
+    if (
+      items.length < safePageSize ||
+      (total !== null && findings.length >= total)
+    ) {
+      break;
+    }
+    if (pageNumber === safeMaxPages) {
+      truncated = total === null || findings.length < total;
+    }
+  }
+  return { findings, truncated, total };
+}
 
 export function collectReachable(starts, neighborsOf) {
   const reached = new Set();
