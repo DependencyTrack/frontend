@@ -115,9 +115,10 @@ export function getUrlVar(name) {
  * @returns {string} redirect to url if it save for redirection
  */
 export function getRedirectUrl(router) {
-  return router.currentRoute.value.query.redirect &&
-    isUrlSaveForRedirect(router.currentRoute.value.query.redirect)
-    ? router.currentRoute.value.query.redirect
+  const redirect = router.currentRoute.value.query.redirect;
+  return typeof redirect === 'string' &&
+    isUrlSaveForRedirect(getContextPath() + redirect)
+    ? redirect
     : undefined;
 }
 
