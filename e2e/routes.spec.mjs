@@ -83,6 +83,10 @@ const routes = [
     landmark: inTab(/Vulnerabilities/, link(/^E2E-/)),
   },
   {
+    path: `${component}/health`,
+    landmark: inTab(/Health/, text('No health metadata available.')),
+  },
+  {
     path: 'services/:service',
     landmark: header(() => 'e2e-service'),
     title: () => 'e2e-service ▸ 1.0.0',
@@ -180,6 +184,10 @@ const routes = [
   {
     path: 'admin/configuration/telemetry',
     landmark: text('Enable telemetry submission'),
+  },
+  {
+    path: 'admin/configuration/packageHealth',
+    landmark: text('Enable package health metadata resolution'),
   },
   { path: 'admin/secrets/management', landmark: text('Secret Management') },
   {
@@ -327,6 +335,7 @@ test.describe('authenticated', () => {
   for (const [path, name, target] of [
     [project, /Components/, `${project}/components`],
     [component, /Vulnerabilities/, `${component}/vulnerabilities`],
+    [component, /Health/, `${component}/health`],
     [vulnerability, /Affected Projects/, `${vulnerability}/affectedProjects`],
     [license, /License Text/, `${license}/licenseText`],
     ['policy', /License Groups/, 'policy/licenseGroups'],

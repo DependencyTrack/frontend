@@ -50,7 +50,7 @@ export default async function globalSetup() {
     ],
   });
 
-  // The API can't write KEV assertions, EPSS scores, aliases or package metadata, and EPSS only reaches an internal vulnerability through a CVE alias.
+  // The API can't write KEV assertions, EPSS scores, aliases, package metadata or package health, and EPSS only reaches an internal vulnerability through a CVE alias.
   execFileSync(
     'docker',
     [
@@ -73,6 +73,33 @@ export default async function globalSetup() {
       INSERT INTO "PACKAGE_METADATA" ("PURL", "RESOLVED_AT") VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core', now()) ON CONFLICT DO NOTHING;
       INSERT INTO "PACKAGE_ARTIFACT_METADATA" ("PURL", "PACKAGE_PURL", "HASH_SHA1", "RESOLVED_FROM")
         VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core@2.13.2', 'pkg:maven/com.fasterxml.jackson.core/jackson-core', '0a6a0e0620d51833feffc67bccb51937b2345763', 'central')
+        ON CONFLICT DO NOTHING;
+      INSERT INTO "PACKAGE_HEALTH_METADATA" ("PURL", "STATUS", "LAST_FETCH", "STARS", "FORKS", "CONTRIBUTORS", "COMMIT_FREQUENCY_WEEKLY",
+          "OPEN_ISSUES", "OPEN_PRS", "LAST_COMMIT", "BUS_FACTOR", "HAS_README", "HAS_CODE_OF_CONDUCT", "HAS_SECURITY_POLICY", "FILES",
+          "IS_REPO_ARCHIVED", "SCORECARD_SCORE", "SCORECARD_REF_VERSION", "SCORECARD_TIMESTAMP", "AVG_ISSUE_AGE_DAYS",
+          "DEPS_DEV_URL", "GITHUB_URL")
+        VALUES ('pkg:maven/com.fasterxml.jackson.core/jackson-core', 'PROCESSED', now(), 11435, 1051, 144, 2.1,
+          14, 1, '2026-10-03T12:00:00Z', 1, true, false, false, 127,
+          false, 4.9, 'v5.2.1', '2026-08-24T12:00:00Z', 1727.9,
+          'https://deps.dev/maven/com.fasterxml.jackson.core%3Ajackson-core', 'https://github.com/FasterXML/jackson-core')
+        ON CONFLICT DO NOTHING;
+      INSERT INTO "PACKAGE_HEALTH_SCORECARD_CHECK" ("PURL", "CHECK_NAME", "DESCRIPTION", "SCORE", "REASON", "DETAILS", "DOCUMENTATION_URL")
+        SELECT 'pkg:maven/com.fasterxml.jackson.core/jackson-core', c.name, c.description, c.score, c.reason, c.details,
+               'https://github.com/ossf/scorecard/blob/main/docs/checks.md#' || lower(c.name)
+          FROM (VALUES
+            ('Branch-Protection', 'Determines if the default and release branches are protected with GitHub''s branch protection settings.',
+              0, 'branch protection not enabled on development/release branches', ARRAY['Warn: branch protection not enabled for branch ''master''']),
+            ('Code-Review', 'Determines if the project requires human code review before pull requests are merged.',
+              3, 'Found 9/30 approved changesets', ARRAY[]::text[]),
+            ('Dangerous-Workflow', 'Determines if the project''s GitHub Action workflows avoid dangerous patterns.',
+              10, 'no dangerous workflow patterns detected', ARRAY[]::text[]),
+            ('Maintained', 'Determines if the project is "actively maintained".',
+              10, '30 commit(s) and 2 issue activity found in the last 90 days', ARRAY[]::text[]),
+            ('License', 'Determines if the project has defined a license.',
+              10, 'license file detected', ARRAY['Info: project has a license file: LICENSE:0']),
+            ('Signed-Releases', 'Determines if the project cryptographically signs release artifacts.',
+              NULL, 'no releases found', ARRAY[]::text[])
+          ) AS c (name, description, score, reason, details)
         ON CONFLICT DO NOTHING`,
     ],
     { stdio: 'inherit' },
@@ -133,6 +160,7 @@ export default async function globalSetup() {
   const seed = {
     project: { uuid: upload.projectUuid, ...project },
     componentUuid: components.find((c) => c.purl === purl).uuid,
+    healthComponentUuid: components.find((c) => c.name === 'jackson-core').uuid,
     serviceUuid: services[0].uuid,
     vulnId,
     vulnUuid: vuln.uuid,

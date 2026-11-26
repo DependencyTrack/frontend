@@ -103,6 +103,7 @@ import { get } from 'lodash-es';
 import bootstrapTableMixin from '@/mixins/bootstrapTableMixin';
 import filterPillsMixin from '@/mixins/filterPillsMixin';
 import { buildHashVerificationColumn } from '@/shared/hashVerificationColumn';
+import { buildScorecardColumn } from '@/shared/scorecardColumn';
 
 const EXPAND_BY_COLUMN = {
   metrics: 'metrics',
@@ -125,6 +126,7 @@ const COLUMN_DEFAULT_VISIBILITY = {
   'hash_verification.status': false,
   license: true,
   occurrence_count: false,
+  scorecard_score: true,
   last_inherited_risk_score: true,
   metrics: true,
 };
@@ -450,6 +452,10 @@ export default {
             return `<span class="d-flex justify-content-between gap-1">${value}<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="${this.$t('message.occurrences_none_hint')}"><i class="fa fa-question-circle" aria-hidden="true"></i></span></span>`;
           },
         },
+        buildScorecardColumn({
+          $t: this.$t.bind(this),
+          visible: initialColumnVisible('scorecard_score'),
+        }),
         {
           title: this.$t('message.risk_score'),
           field: 'last_inherited_risk_score',
@@ -532,6 +538,7 @@ export default {
         'group',
         'internal',
         'resolved_license.license_id',
+        'scorecard_score',
         'last_inherited_risk_score',
         'metrics.vulnerabilities',
       ];

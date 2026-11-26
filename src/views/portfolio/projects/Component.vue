@@ -82,6 +82,22 @@
           v-on:total="totalVulnerabilities = $event"
         />
       </b-tab>
+      <b-tab ref="health" @click="routeTo('health')">
+        <template v-slot:title
+          ><i class="fa fa-heart"></i> {{ $t('message.health') }}
+          <b-badge
+            v-if="healthLoaded"
+            variant="tab-info"
+            :style="healthBadgeStyle"
+            >{{ healthBadgeLabel }}</b-badge
+          ></template
+        >
+        <component-health
+          :key="this.uuid"
+          :uuid="this.uuid"
+          v-on:score="onHealthScore"
+        />
+      </b-tab>
     </b-tabs>
     <component-details-modal
       v-model="showComponentDetailsModal"
@@ -108,6 +124,7 @@ import { cloneDeep } from 'lodash-es';
 import SeverityCircles from '../../components/SeverityCircles.vue';
 import ComponentDashboard from './ComponentDashboard.vue';
 import ComponentVulnerabilities from './ComponentVulnerabilities.vue';
+import ComponentHealth from './ComponentHealth.vue';
 import EventBus from '../../../shared/eventbus';
 import { setPageTitle } from '../../../shared/utils';
 import permissionsMixin from '../../../mixins/permissionsMixin';
@@ -115,6 +132,11 @@ import ComponentDetailsModal from './ComponentDetailsModal.vue';
 import ExternalReferencesDropdown from '../../components/ExternalReferencesDropdown.vue';
 import ComponentCreatePropertyModal from './ComponentCreatePropertyModal.vue';
 import ComponentPropertiesModal from './ComponentPropertiesModal.vue';
+import {
+  HEALTH_SCORE_COLOR,
+  healthScoreTone,
+} from '../../../shared/healthScoreTone';
+import { formatScorecardScore } from '../../../shared/scorecardColumn';
 
 export default {
   mixins: [permissionsMixin],
@@ -122,6 +144,7 @@ export default {
     ComponentCreatePropertyModal,
     ComponentPropertiesModal,
     ComponentDashboard,
+    ComponentHealth,
     ComponentVulnerabilities,
     SeverityCircles,
     ComponentDetailsModal,
@@ -139,6 +162,17 @@ export default {
         }
       }
       return null;
+    },
+    healthBadgeStyle() {
+      const tone = healthScoreTone(this.scorecardScore);
+      // !important beats the color that .text-bg-tab-info forces.
+      return tone ? { color: HEALTH_SCORE_COLOR[tone] + ' !important' } : null;
+    },
+    healthBadgeLabel() {
+      if (this.scorecardScore == null) {
+        return this.$t('message.health_no_score');
+      }
+      return formatScorecardScore(this.scorecardScore);
     },
     componentLabel() {
       let label = this.component.name;
@@ -170,6 +204,8 @@ export default {
       currentRiskScore: 0,
       totalVulnerabilities: 0,
       totalProjects: 0,
+      healthLoaded: false,
+      scorecardScore: null,
     };
   },
   methods: {
@@ -189,6 +225,10 @@ export default {
         );
         setPageTitle(this.componentLabel);
       });
+    },
+    onHealthScore(score) {
+      this.scorecardScore = score;
+      this.healthLoaded = true;
     },
     redirectToDependencyGraph: function () {
       this.$router.push({

@@ -286,6 +286,11 @@ export default {
               name: this.$t('admin.telemetry'),
               route: 'configuration/telemetry',
             },
+            {
+              component: 'PackageHealth',
+              name: this.$t('admin.package_health'),
+              route: 'configuration/packageHealth',
+            },
           ],
         },
         {

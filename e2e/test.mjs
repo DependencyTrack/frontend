@@ -13,7 +13,8 @@ export const test = base.extend({
   problems: [
     async ({ page }, use) => {
       const found = [];
-      const allowed = [];
+      // Every component page asks for package health, which most components don't have.
+      const allowed = [/^GET \/api\/v2\/components\/[0-9a-f-]+\/health 404$/];
       page.on('console', (msg) => {
         // The response listener already reports failed requests.
         if (
