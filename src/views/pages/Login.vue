@@ -246,9 +246,10 @@ export default {
         });
     },
     oidcLogin() {
+      const redirectTo = getRedirectUrl(this.$router);
       this.oidcUserManager
         .signinRedirect({
-          state: getRedirectUrl(this.$router),
+          state: redirectTo ? getContextPath() + redirectTo : undefined,
         })
         .catch((err) => {
           console.log(err);
