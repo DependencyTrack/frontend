@@ -12,6 +12,7 @@ import {
   storePermissions,
 } from '../shared/permissions';
 import { getContextPath, setPageTitle } from '../shared/utils';
+import { scrollBehavior } from './scrollBehavior';
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer.vue');
@@ -1233,24 +1234,7 @@ function configRoutes() {
 const router = createRouter({
   history: createWebHistory(getContextPath()),
   linkActiveClass: 'open active',
-  scrollBehavior(to, from, savedPosition) {
-    // NB: Focusing a component in the dependency graph is a navigation, but stays on the same page.
-    const inGraph = ({ path }) => path.includes('/dependencyGraph');
-    if (inGraph(to) && inGraph(from)) return false;
-    if (!savedPosition) return { top: 0 };
-    // NB: Tables render their rows after loading, so the page may still be too short to scroll back.
-    const deadline = Date.now() + 2000;
-    return new Promise((resolve) => {
-      const restore = () => {
-        const fits =
-          document.documentElement.scrollHeight >=
-          savedPosition.top + window.innerHeight;
-        if (fits || Date.now() > deadline) resolve(savedPosition);
-        else requestAnimationFrame(restore);
-      };
-      restore();
-    });
-  },
+  scrollBehavior,
   routes: configRoutes(),
 });
 
