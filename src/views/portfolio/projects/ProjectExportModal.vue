@@ -171,7 +171,7 @@ export default {
           this.axios,
           `${this.$api.BASE_URL}/${resource}/cyclonedx/project/${this.uuid}`,
           params,
-          `${isVex ? 'vex' : 'bom'}.${this.effectiveFormat.toLowerCase()}`,
+          `${this.uuid}-${this.type}.cdx.${this.effectiveFormat.toLowerCase()}`,
         )
         .then(() => {
           this.visible = false;
